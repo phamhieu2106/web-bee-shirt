@@ -1,0 +1,135 @@
+<div class="side-content">
+  <!-- Logo start -->
+  <a [routerLink]="''" class="logo">
+    <img src="assets/img/logo.svg" alt="AI Admin Dashboard" />
+  </a>
+  <nav class="side-nav">
+    <!-- BEGIN: side-nav-content -->
+    <ul class="unifyMenu" id="unifyMenu">
+      <li class="active selected">
+        <a [routerLink]="'ban-hang'">
+          <span class="has-icon">
+            <i class="icon-laptop_windows"></i>
+          </span>
+          <span class="nav-title">Bán Hàng Tại Quầy</span>
+        </a>
+      </li>
+
+      <!-- Hóa đơn -->
+      <li>
+        <a
+          class="has-arrow"
+          [routerLink]="'hoa-don/ql-hoa-don'"
+          aria-expanded="false"
+        >
+          <span class="has-icon">
+            <i class="fa-solid fa-receipt"></i>
+          </span>
+          <span class="nav-title">Quản Lý Hóa đơn</span>
+        </a>
+        <ul aria-expanded="false">
+          <li>
+            <a>Lịch Sử Hóa Đơn</a>
+          </li>
+          <li>
+            <a>Hình Thức Thanh Toán</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Quản lý sản phẩm -->
+      <li>
+        <a class="has-arrow" aria-expanded="false" style="cursor: pointer">
+          <span class="has-icon">
+            <i class="fa-solid fa-shirt"></i>
+          </span>
+          <span class="nav-title"> Quản Lý Sản Phẩm </span>
+        </a>
+        <ul aria-expanded="false">
+          <li>
+            <a [routerLink]="'ctsp/ds-chi-tiet-san-pham'">Chi Tiết Sản Phẩm</a>
+          </li>
+          <li>
+            <a [routerLink]="'sp/ds-san-pham'">Sản Phẩm</a>
+          </li>
+          <li>
+            <a [routerLink]="'mau-sac/ds-mau-sac'">Màu Sắc</a>
+          </li>
+          <li>
+            <a [routerLink]="'kich-co/ds-kich-co'">Kích Cỡ</a>
+          </li>
+          <li>
+            <a [routerLink]="'kieu-dang/ds-kieu-dang'">Kiểu Dáng</a>
+          </li>
+          <li>
+            <a [routerLink]="'kieu-thiet-ke/ds-kieu-thiet-ke'">Kiểu Thiết Kế</a>
+          </li>
+          <li>
+            <a [routerLink]="'kieu-tay-ao/ds-kieu-tay-ao'">Kiểu Tay Áo</a>
+          </li>
+          <li>
+            <a [routerLink]="'kieu-co-ao/ds-kieu-co-ao'">Kiểu Cổ Áo</a>
+          </li>
+          <li>
+            <a [routerLink]="'chat-lieu/ds-chat-lieu'">Kiểu Chất Liệu</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Khách hàng -->
+      <li>
+        <a [routerLink]="'khach-hang/ds-khach-hang'" aria-expanded="false">
+          <span class="has-icon">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <span class="nav-title">Khách Hàng</span>
+        </a>
+      </li>
+
+      <!-- Nhân viên -->
+      <li>
+        <a [routerLink]="'nhan-vien/ds-nhan-vien'" aria-expanded="false">
+          <span class="has-icon">
+            <i class="fa-solid fa-users"></i>
+          </span>
+          <span class="nav-title">Nhân Viên</span>
+        </a>
+      </li>
+
+      <!-- Phiếu giảm giá -->
+      <li>
+        <a
+          [routerLink]="'phieu-giam-gia/ds-phieu-giam-gia'"
+          aria-expanded="false"
+        >
+          <span class="has-icon">
+            <i class="fa-solid fa-tag"></i>
+          </span>
+          <span class="nav-title">Phiếu Giảm Giá</span>
+        </a>
+      </li>
+
+      <!-- Đợt giảm giá -->
+      <li>
+        <a [routerLink]="'dot-giam-gia/ds-dot-giam-gia'" aria-expanded="false">
+          <span class="has-icon">
+            <i class="fa-solid fa-tags"></i>
+          </span>
+          <span class="nav-title">Đợt Giảm Giá</span>
+        </a>
+      </li>
+
+      <!-- Thống kê -->
+      <li>
+        <a [routerLink]="'thong-ke'" aria-expanded="false">
+          <span class="has-icon">
+            <i class="fa-solid icon-chart-area-outline"></i>
+          </span>
+          <span class="nav-title">Thống Kê</span>
+        </a>
+      </li>
+    </ul>
+    <!-- END: side-nav-content -->
+  </nav>
+  <!-- END: .side-nav -->
+</div>

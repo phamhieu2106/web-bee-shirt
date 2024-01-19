@@ -1,0 +1,15 @@
+.contain{
+  background-color: white;
+  border-radius: 3px;
+}
+
+.congkhai{
+
+  background-color: #2dbd4d;
+  border-radius: 50px;
+  color: white;
+}
+
+.table td, .table th {
+  text-align: center;
+}

@@ -19,8 +19,24 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
-            "scripts": []
+            "styles": [
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/fonts/icomoon/icomoon.css",
+              "src/assets/css/main.min.css",
+              "src/assets/vendor/chartist/css/chartist.min.css",
+              "src/assets/vendor/chartist/css/chartist-custom.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              "src/assets/js/jquery.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/vendor/unifyMenu/unifyMenu.js",
+              "src/assets/vendor/onoffcanvas/onoffcanvas.js",
+              "src/assets/js/moment.js",
+              "src/assets/vendor/slimscroll/slimscroll.min.js",
+              "src/assets/vendor/slimscroll/custom-scrollbar.js",
+              "src/assets/js/common.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -1,8 +1,14 @@
 package com.datn.backend.model.khach_hang;
 
-import com.datn.backend.enumeration.Gender;
+import com.datn.backend.model.Account;
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +32,10 @@ public class KhachHang extends BaseEntity {
     private LocalDate ngaySinh;
     private String sdt;
     private String email;
-    private Gender gender;
+    private boolean gioiTinh;
     private String imageUrl;
+
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 }

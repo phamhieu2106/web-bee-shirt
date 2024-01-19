@@ -37,7 +37,4 @@ public class BaseEntity {
     @LastModifiedBy
     @JsonIgnore
     private String lastUpdatedBy;
-
-    @JsonIgnore
-    private boolean trangThai;
 }

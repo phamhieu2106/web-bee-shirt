@@ -1,0 +1,111 @@
+<app-main-heading
+  [icon]="'icon'"
+  [mainHeading]="'Kiểu Tay Áo'"
+  [title]="'Kiểu Tay Áo'"
+></app-main-heading>
+
+<h5 class="mt-5">Danh sách kiểu tay áo</h5>
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="main-heading">
+      <div class="container-fluid">
+        <!-- input: tìm kiếm, button: add -->
+        <div class="row mt-2 mb-5">
+          <div class="col-md-4">
+            <div class="right-actions">
+              <div class="input-group form-group search-block">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Tìm kiểu tay áo..."
+                />
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button">
+                    Tìm kiếm
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-lg">
+              Thêm mới <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- bảng -->
+        <table class="table mb-5">
+          <thead class="thead-default">
+            <tr>
+              <th>STT</th>
+              <th>Tên kiểu tay áo</th>
+              <th>Ngày thêm</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row">1</th>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row">1</th>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- pageSize, pagination -->
+        <div class="row mb-5">
+          <div class="col-md-2">
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+              >Số lượng</label
+            >
+            <select
+              class="custom-select my-1 mr-sm-2"
+              id="inlineFormCustomSelectPref"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </div>
+          <div class="col-md-6"></div>
+          <div class="col-md-4 mt-5">
+            <nav aria-label="...">
+              <ul class="pagination">
+                <li class="page-item disabled">
+                  <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item active">
+                  <a href="#" class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">3</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

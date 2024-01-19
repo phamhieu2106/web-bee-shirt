@@ -1,7 +1,11 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +26,8 @@ public class MauSac extends BaseEntity {
     private String ten;
     private String ma;
     private String imageUrl;
+    private boolean trangThai;
 }
+/**
+    NAVY, OLIVE, BEIGE, PEYOTE
+**/

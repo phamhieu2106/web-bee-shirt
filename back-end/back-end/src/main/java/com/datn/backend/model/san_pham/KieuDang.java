@@ -1,7 +1,11 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +23,9 @@ public class KieuDang extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String ten;
+    private boolean trangThai;
 }
+
+/**
+ Regular
+ **/

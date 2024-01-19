@@ -1,7 +1,13 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +27,6 @@ public class SanPhamChiTiet extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String ma;
     private BigDecimal giaNhap;
     private BigDecimal giaBan;
     private int soLuongTon;
@@ -45,7 +50,7 @@ public class SanPhamChiTiet extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "thiet_ke_id")
-    private ThietKe thietKe;
+    private KieuThietKe thietKe;
 
     @ManyToOne
     @JoinColumn(name = "tay_ao_id")

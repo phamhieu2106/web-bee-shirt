@@ -8,7 +8,7 @@ import { AuthModule } from "./component/auth-module/auth.module";
 import { SanPhamModule } from "./component/san-pham-module/san-pham.module";
 import { HoaDonModule } from "./component/hoa-don-module/hoa-don.module";
 import { KhachHangModule } from "./component/khach-hang-module/khach-hang.module";
-import { NhanVienModule } from "./component/nhan-vien-module/san-pham.module";
+import { NhanVienModule } from "./component/nhan-vien-module/nhan-vien.module";
 import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam-gia.module";
 import { DotGiamGiaModule } from "./component/dot-giam-gia-module/auth.module";
 import { LayoutModule } from "./component/layout-module/layout.module";

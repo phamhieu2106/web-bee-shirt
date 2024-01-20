@@ -1,0 +1,10 @@
+/* Css custom */
+.badge-number {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: bold;
+    /* Màu nền số */
+    padding: 0.25em 0.5em;
+    border-radius: 50%;
+}

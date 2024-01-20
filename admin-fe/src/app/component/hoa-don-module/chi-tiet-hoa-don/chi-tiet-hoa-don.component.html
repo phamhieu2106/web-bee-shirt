@@ -1,0 +1,441 @@
+<!-- Content heading -->
+<app-main-heading
+  [icon]="'fa-solid fa-receipt'"
+  [mainHeading]="''"
+  [title]="'Chi tiết hóa đơn'"
+></app-main-heading>
+<br />
+<!-- Order tracking -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4>Theo dõi đơn hàng</h4>
+      </div>
+
+      <div class="card-body">
+        <div
+          class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
+        >
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon"><i class="pe-7s-cart"></i></div>
+            </div>
+            <h4 class="step-title">Confirmed Order</h4>
+          </div>
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon"><i class="pe-7s-config"></i></div>
+            </div>
+            <h4 class="step-title">Processing Order</h4>
+          </div>
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon"><i class="pe-7s-medal"></i></div>
+            </div>
+            <h4 class="step-title">Quality Check</h4>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrap">
+              <div class="step-icon"><i class="pe-7s-car"></i></div>
+            </div>
+            <h4 class="step-title">Product Dispatched</h4>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrap">
+              <div class="step-icon"><i class="pe-7s-home"></i></div>
+            </div>
+            <h4 class="step-title">Product Delivered</h4>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="p-2 d-flex">
+        <button type="button" class="btn btn-primary mr-5">Xác nhận</button>
+        <button type="button" class="btn btn-warning mr-5">Quay lại</button>
+        <button type="button" class="btn btn-danger mr-5">Hủy</button>
+
+        <!-- Modal trigger -->
+        <button
+          type="button"
+          class="btn btn-success ml-auto"
+          data-toggle="modal"
+          data-target="#orderHistoryModal"
+        >
+          Lịch sử
+        </button>
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="orderHistoryModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          style="display: none"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Lịch sử hóa đơn
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thời gian</th>
+                        <th scope="col">Ghi chú</th>
+                        <th scope="col">Người xác nhận</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="">
+                        <td>1</td>
+                        <td>Chờ xác nhận</td>
+                        <td>20-01-2024 18:30:00</td>
+                        <td>hùng đã xác nhận</td>
+                        <td>Dương Việt Hùng</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-dismiss="modal"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End order tracking -->
+<!-- Order payment -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4>Lịch sử thanh toán</h4>
+      </div>
+
+      <div class="card-body">
+        <table
+          id="rowSelection_wrapper"
+          class="table dataTables_wrapper dt-bootstrap4 no-footer rounded"
+        >
+          <div class="row">
+            <div class="col-sm-12">
+              <table
+                id="rowSelection"
+                class="table table-striped table-bordered dataTable no-footer"
+                role="grid"
+                aria-describedby="rowSelection_info"
+              >
+                <thead>
+                  <tr role="row">
+                    <th
+                      class="sorting_asc"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-sort="ascending"
+                      aria-label="Name: activate to sort column descending"
+                    >
+                      STT
+                    </th>
+                    <th
+                      class="sorting_asc"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-sort="ascending"
+                      aria-label="Name: activate to sort column descending"
+                    >
+                      Mã GD
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Position: activate to sort column ascending"
+                    >
+                      Số tiền
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Office: activate to sort column ascending"
+                    >
+                      Trạng thái
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Age: activate to sort column ascending"
+                    >
+                      Thời gian
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Phương thức thanh toán
+                    </th>
+
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Người xác nhận
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Ghi chú
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="row" class="odd">
+                    <td>1</td>
+                    <td></td>
+                    <td>350,000 đ</td>
+                    <td><span class="badge bg-warning">Đang xử lý</span></td>
+                    <td>20-01-2024 18:30:00</td>
+                    <td>
+                      <span class="badge bg-success text-white">Tiền mặt</span>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END order payment -->
+
+<!-- Order info -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4>Thông tin đơn hàng: HD01</h4>
+      </div>
+
+      <div class="card-body row pl-5 pr-5">
+        <div class="col-md-6 mb-3">
+          <span
+            >Trạng thái:
+            <span class="badge bg-primary text-white">Chờ xác nhận</span>
+          </span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span
+            >Loại HD:
+            <span class="badge bg-primary text-white">Online</span>
+          </span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span>Tên người nhận: Dương Việt Hùng </span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span>Số điện thoại: 0123456789 </span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span>Địa chỉ: Chương Mỹ - Hà Nội </span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span>Ghi chú: </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END order Info -->
+
+<!-- Order product -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4 class="mr-auto">Thông tin sản phẩm</h4>
+        <div class="ml-auto">
+          <button type="button" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i>
+            Thêm sản phẩm
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <table
+          id="rowSelection_wrapper"
+          class="table dataTables_wrapper dt-bootstrap4 no-footer rounded"
+        >
+          <div class="row">
+            <div class="col-sm-12">
+              <table
+                id="rowSelection"
+                class="table table-striped table-bordered dataTable no-footer"
+                role="grid"
+                aria-describedby="rowSelection_info"
+              >
+                <thead>
+                  <tr role="row">
+                    <th
+                      class="sorting_asc"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-sort="ascending"
+                      aria-label="Name: activate to sort column descending"
+                    >
+                      STT
+                    </th>
+                    <th
+                      class="sorting_asc"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-sort="ascending"
+                      aria-label="Name: activate to sort column descending"
+                    >
+                      Hình ảnh
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Position: activate to sort column ascending"
+                    >
+                      Tên sản phẩm
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Office: activate to sort column ascending"
+                    >
+                      Size
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Age: activate to sort column ascending"
+                    >
+                      Đơn giá
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Số lượng
+                    </th>
+
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Tổng tiền
+                    </th>
+                    <th
+                      class="sorting"
+                      tabindex="0"
+                      aria-controls="rowSelection"
+                      rowspan="1"
+                      colspan="1"
+                      aria-label="Salary: activate to sort column ascending"
+                    >
+                      Hành động
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="row" class="odd">
+                    <td>1</td>
+                    <td></td>
+                    <td>Áo sơ mi nam</td>
+                    <td>L</td>
+                    <td>350,000 đ</td>
+                    <td><input type="number" class="disabled" value="2" /></td>
+                    <td>700,000 đ</td>
+                    <td>
+                      <button class="btn btn-outline-light btn-rounded">
+                        <i class="fa-solid fa-trash text-danger"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Order product -->

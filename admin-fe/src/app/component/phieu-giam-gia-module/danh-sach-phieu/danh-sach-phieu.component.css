@@ -4,10 +4,17 @@
 }
 
 .congkhai{
-
-  background-color: #2dbd4d;
+  border: 1px solid #269b43;
+  background-color: #82ea9c;
   border-radius: 50px;
-  color: white;
+  color: #0a8021;
+}
+
+.private{
+  border: 1px solid #bb2c2c;
+  background-color: rgba(255, 98, 98, 0.59);
+  border-radius: 50px;
+  color: #ad0909;
 }
 
 .table td, .table th {

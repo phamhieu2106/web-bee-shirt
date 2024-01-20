@@ -1,4 +1,5 @@
-#add-button {
+#add-button,
+#pagination {
   float: right;
 }
 #icon-button-detail {

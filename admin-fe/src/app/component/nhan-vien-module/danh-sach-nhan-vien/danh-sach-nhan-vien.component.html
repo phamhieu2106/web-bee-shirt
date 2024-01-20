@@ -27,8 +27,8 @@
                 <option value="" disabled selected hidden>
                   Chọn trạng thái
                 </option>
-                <option>True</option>
-                <option>False</option>
+                <option value="true">Đang làm việc</option>
+                <option value="false">Đã nghỉ việc</option>
               </select>
             </div>
           </div>
@@ -122,6 +122,25 @@
             </tr>
           </tbody>
         </table>
+        <nav aria-label="..." id="pagination">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -181,8 +200,7 @@
         </button>
       </div>
       <div class="modal-body">
-        Họ và tên: Ma Thu Thủy <br />
-        Ngày sinh: 2004/1/17
+        <app-chi-tiet-nhan-vien></app-chi-tiet-nhan-vien>
       </div>
       <div class="modal-footer">
         <button
@@ -210,7 +228,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="formUpdate">Thêm mới nhân viên</h5>
+        <h5 class="modal-title" id="formUpdate">Sửa nhân viên</h5>
         <button
           type="button"
           class="close"

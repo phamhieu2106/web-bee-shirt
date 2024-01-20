@@ -7,9 +7,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { LayoutModule } from "../layout-module/layout.module";
 import { SuaNhanVienComponent } from './sua-nhan-vien/sua-nhan-vien.component';
+import { ChiTietNhanVienComponent } from './chi-tiet-nhan-vien/chi-tiet-nhan-vien.component';
 
 @NgModule({
-  declarations: [DanhSachNhanVienComponent, ThemNhanVienComponent, SuaNhanVienComponent],
+  declarations: [DanhSachNhanVienComponent, ThemNhanVienComponent, SuaNhanVienComponent, ChiTietNhanVienComponent],
   imports: [NhanVienRoutingModule, BrowserModule, FormsModule, LayoutModule],
 })
 export class NhanVienModule {}

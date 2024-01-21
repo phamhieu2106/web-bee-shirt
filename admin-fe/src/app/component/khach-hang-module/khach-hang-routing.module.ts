@@ -3,6 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { DanhSachKhachHangComponent } from "./danh-sach-khach-hang/danh-sach-khach-hang.component";
 import { KhachHangDetailComponent } from "./khach-hang-detail/khach-hang-detail.component";
+import { ThemKhachHangComponent } from "./them-khach-hang/them-khach-hang.component";
+import { SuaKhachHangComponent } from "./sua-khach-hang/sua-khach-hang.component";
 
 const khachHangRoutes: Routes = [
   {
@@ -12,6 +14,14 @@ const khachHangRoutes: Routes = [
   {
     path: "khach-hang/:id",
     component: KhachHangDetailComponent,
+  },
+  {
+    path: "khach-hang/them-khach-hang",
+    component: ThemKhachHangComponent,
+  },
+  {
+    path: "khach-hang/sua-khach-hang",
+    component: SuaKhachHangComponent,
   },
 ];
 

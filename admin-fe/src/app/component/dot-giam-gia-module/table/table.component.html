@@ -1,1 +1,81 @@
-<p>table works!</p>
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div>
+        <div class="card-header">{{ titleTable }}</div>
+      </div>
+      <div class="card-body">
+        <table
+          id="rowSelection_wrapper"
+          class="table dataTables_wrapper dt-bootstrap4 no-footer"
+        >
+          <div class="row">
+            <div class="col-sm-12">
+              <table
+                id="rowSelection"
+                class="table table-striped table-bordered dataTable no-footer"
+                role="grid"
+                aria-describedby="rowSelection_info"
+              >
+                <thead>
+                  <tr role="row">
+                    <th *ngFor="let object of tHead">{{ object }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr role="row" class="odd" *ngFor="let object of listObject">
+                    <td class="sorting_1">{{ object.maDotGiamGia }}</td>
+                    <td>{{ object.tenDotGiamGia }}</td>
+                    <td>{{ object.giaTriPhanTram }}%</td>
+                    <td>{{ object.ngayBatDau }}</td>
+                    <td>{{ object.ngayKetThuc }}</td>
+                    <td>{{ object.ngaySua }}</td>
+                    <td>
+                      <button
+                        class="{{
+                          object.trangThai === 1
+                            ? 'btn btn-success btn-rounded'
+                            : object.trangThai === 0
+                            ? 'btn btn-secondary btn-rounded'
+                            : 'btn btn-info btn-rounded'
+                        }}"
+                      >
+                        {{
+                          object.trangThai === 1
+                            ? "Đang diễn ra"
+                            : object.trangThai === 0
+                            ? "Đã Kết Thúc"
+                            : "Sắp diễn ra"
+                        }}
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-outline-light btn-rounded"
+                        (click)="detail(object)"
+                      >
+                        <i
+                          class="fa-solid fa-circle-info fa-xl"
+                          style="color: #74c0fc"
+                        ></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-warning btn-rounded"
+                        (click)="update(object)"
+                      >
+                        <i
+                          class="fa-solid fa-pen-to-square"
+                          style="color: #ffd43b"
+                        ></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

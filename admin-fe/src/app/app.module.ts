@@ -10,7 +10,7 @@ import { HoaDonModule } from "./component/hoa-don-module/hoa-don.module";
 import { KhachHangModule } from "./component/khach-hang-module/khach-hang.module";
 import { NhanVienModule } from "./component/nhan-vien-module/nhan-vien.module";
 import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam-gia.module";
-import { DotGiamGiaModule } from "./component/dot-giam-gia-module/auth.module";
+import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.module";
 import { LayoutModule } from "./component/layout-module/layout.module";
 
 @NgModule({

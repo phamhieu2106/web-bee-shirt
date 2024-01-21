@@ -15,4 +15,6 @@ export class ThemDotGiamGiaComponent {
   titleTableProduct: string = "Danh Sách Sản Phẩm ";
   titleTableProducts: string = "Danh Sách Chi Tiết Sản Phẩm ";
   tHeadProduct: Array<string> = ["STT", "Tên Sản Phẩm", "Trạng Thái"];
+  formHeader: string = "Thêm Đợt Giảm Giá";
+  formButton: string = "Thêm mới";
 }

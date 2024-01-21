@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-header">Thêm Đợt Giảm Giá</div>
+  <div class="card-header">{{ formHeader }}</div>
   <div class="card-body">
     <form>
       <div class="form-group row">
@@ -46,7 +46,7 @@
           >Ngày Bắt Đầu:</label
         >
         <div class="col-sm-4 col-md-7">
-          <input type="datetime" class="form-control form-control-sm" />
+          <input type="date" class="form-control form-control-sm" />
         </div>
       </div>
       <div class="form-group row">
@@ -54,17 +54,17 @@
           >Ngày Kết Thúc:</label
         >
         <div class="col-sm-4 col-md-7">
-          <input type="datetime" class="form-control form-control-sm" />
+          <input type="date" class="form-control form-control-sm" />
         </div>
       </div>
-      <div class="text-center">
+      <div class="d-flex justify-content-end">
         <button
           type="button"
           class="btn btn-success"
           data-toggle="modal"
           data-target="#exampleModal"
         >
-          Thêm mới
+          {{ formButton }}
         </button>
       </div>
     </form>

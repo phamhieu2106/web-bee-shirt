@@ -1,15 +1,306 @@
-<div class="row gutters">
-  <div class="col-sm-4 col-12">
-    <div class="form-group">
-      <input class="form-control is-valid" type="text" />
-      <div class="valid-feedback">Looks good!</div>
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="title"
+></app-main-heading>
+<div class="row gutters mt-3">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        Danh sách khách hàng
+        <button
+          type="button"
+          class="btn btn-primary btn-lg float-md-right rounded"
+          data-toggle="modal"
+          data-target="#formThemKH"
+        >
+          <span class="icon-user-plus" style="margin-top: 20px"></span> Thêm
+          khách hàng
+        </button>
+      </div>
+      <div class="card-body">
+        <table
+          id="basicExample"
+          class="table table-striped table-bordered rounded"
+        >
+          <thead>
+            <tr>
+              <th>Họ tên</th>
+              <th>Số điên thoại</th>
+              <th>Địa chỉ</th>
+              <th>Giới tính</th>
+              <th>Email</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tiger Nixon</td>
+              <td>0911232323</td>
+              <td>Edinburgh</td>
+              <td>Nam</td>
+              <td>tiger&#64;gmail.com</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formSuaKH"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Garrett Winters</td>
+              <td>0911232323</td>
+              <td>Tokyo</td>
+              <td>Nam</td>
+              <td>tiger&#64;gmail.com</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formSuaKH"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Ashton Cox</td>
+              <td>0911232323</td>
+              <td>San Francisco</td>
+              <td>Nữ</td>
+              <td>tiger&#64;gmail.com</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formSuaKH"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Cedric Kelly</td>
+              <td>0911232323</td>
+              <td>Edinburgh</td>
+              <td>Nam</td>
+              <td>tiger&#64;gmail.com</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formSuaKH"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Airi Satou</td>
+              <td>0911232323</td>
+              <td>Tokyo</td>
+              <td>Nam</td>
+              <td>tige&#64;gmail.com</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  data-toggle="modal"
+                  data-target="#formSuaKH"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="..." id="pagination" style="float: right">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
-  <div class="col-sm-4 col-12">
-    <div class="form-group">
-      <input class="form-control is-invalid" type="text" />
-      <div class="invalid-feedback">This is required</div>
-      <P>Long</P>
+</div>
+<!-- Modal Thêm KH -->
+<div
+  class="modal fade"
+  id="formThemKH"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm khách hàng</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-them-khach-hang></app-them-khach-hang>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal sua KH -->
+<div
+  class="modal fade"
+  id="formSuaKH"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Sửa thông tin khách hàng
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-sua-khach-hang></app-sua-khach-hang>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal thong tin KH -->
+<div
+  class="modal fade"
+  id="formDetailKH"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thông tin khách hàng</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-khach-hang-detail></app-khach-hang-detail>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </div>

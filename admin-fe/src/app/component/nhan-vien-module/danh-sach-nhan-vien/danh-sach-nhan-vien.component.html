@@ -1,0 +1,266 @@
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="title"
+></app-main-heading>
+
+<!-- Filter start -->
+<div class="row gutters mt-3">
+  <div class="col-sm-12">
+    <form class="card">
+      <div class="card-header">Bộ lọc</div>
+      <div class="card-body">
+        <div class="row gutters justify-content-md-center">
+          <div class="col-sm-4 col-12">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="inputName"
+                placeholder="Tìm kiếm theo tên hoặc sdt"
+              />
+            </div>
+          </div>
+          <div class="col-sm-4 col-12">
+            <div class="form-group">
+              <select class="form-control mx-sm-4">
+                <option value="" disabled selected hidden>
+                  Chọn trạng thái
+                </option>
+                <option value="true">Đang làm việc</option>
+                <option value="false">Đã nghỉ việc</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-1">
+            <button class="btn btn-primary btn-rounded" style="float: right">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Filter ends -->
+
+<!-- Table start -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        Danh sách nhân viên
+        <button
+          class="btn btn-primary btn-rounded"
+          id="add-button"
+          data-toggle="modal"
+          data-target="#formAddButton"
+          data-whatever="@mdo"
+        >
+          <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+      </div>
+      <div class="card-body">
+        <table id="rowSelection" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Họ tên</th>
+              <th>Ngày sinh</th>
+              <th>SĐT</th>
+              <th>Giới tính</th>
+              <th>Email</th>
+              <th>Trạng thái</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let nv of listNhanVien; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ nv.hoTen }}</td>
+              <td>{{ nv.ngaySinh }}</td>
+              <td>{{ nv.sdt }}</td>
+              <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
+              <td>{{ nv.email }}</td>
+              <td>
+                <button
+                  [class]="
+                    nv.account.trangThai
+                      ? 'btn btn-success btn-rounded'
+                      : 'btn btn-secondary btn-rounded'
+                  "
+                >
+                  {{ nv.account.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
+                </button>
+              </td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded"
+                  id="button"
+                  data-toggle="modal"
+                  data-target="#formDetailButton"
+                  data-whatever="@mdo"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    id="icon-button-detail"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  id="button"
+                  data-toggle="modal"
+                  data-target="#formUpdateButton"
+                  data-whatever="@mdo"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    id="icon-button-update"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="..." id="pagination">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Table ends -->
+
+<!-- Modal Form ADD start -->
+<div
+  class="modal fade"
+  id="formAddButton"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="formAdd"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formAdd">Thêm mới nhân viên</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-them-nhan-vien></app-them-nhan-vien>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Form ADD ends -->
+
+<!-- Modal Form Detail start -->
+<div
+  class="modal fade"
+  id="formDetailButton"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="formDetail"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formDetail">Thông tin nhân viên</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-chi-tiet-nhan-vien></app-chi-tiet-nhan-vien>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-rounded"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Form Detail ends -->
+
+<!-- Modal Form Update start -->
+<div
+  class="modal fade"
+  id="formUpdateButton"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="formUpdate"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formUpdate">Sửa nhân viên</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-sua-nhan-vien></app-sua-nhan-vien>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Form Update ends -->
+
+<!-- 
+  <select class="form-control mx-sm-4">
+                <option
+                  value=""
+                  disabled
+                  selected
+                  hidden
+                >
+                  Chọn trạng thái
+                </option>
+                <option
+                  *ngFor="let nv of listNhanVien"
+                  [value]="nv.account.trangThai"
+                >
+                  {{ nv.account.trangThai }}
+                </option>
+              </select>
+ -->

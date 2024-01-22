@@ -1,0 +1,54 @@
+<div class="row gutters pt-2">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">Bộ Lọc</div>
+      <div class="card-body">
+        <div
+          class="form-inline p-4 mx-auto d-flex align-items-center justify-content-center"
+        >
+          <div class="form-group">
+            <label for="ma-giam-gia">Mã Giảm Giá: </label>
+            <input class="form-control m-4" type="text" id="ma-giam-gia" />
+          </div>
+          <div class="form-group">
+            <label for="ten-giam-gia">Tên Giảm Giá: </label>
+            <input class="form-control m-4" type="text" id="ten-giam-gia" />
+          </div>
+          <div class="form-group">
+            <label for="gia-tri-giam">Giá Trị Giảm: </label>
+            <input class="form-control m-4" type="text" id="gia-tri-giam" />
+            <select class="form-control mx-sm-4" id="trang-thai">
+              <option selected value="phanTram">%</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ngay-bat-dau">Ngày Bắt Đầu: </label>
+            <input class="form-control m-4" type="date" id="ngay-bat-dau" />
+          </div>
+          <div class="form-group">
+            <label for="ngay-ket-thuc">Ngày Kết Thúc: </label>
+            <input class="form-control m-4" type="date" id="ngay-ket-thuc" />
+          </div>
+          <div class="form-group">
+            <label for="trang-thai">Trạng Thái: </label>
+            <select class="form-control mx-sm-4" id="trang-thai">
+              <option selected>Tất Cả</option>
+              <option value="1">Đang Diễn Ra</option>
+              <option value="2">Sắp Diễn Ra</option>
+              <option value="0">Đã Kết Thúc</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-info btn-rounded m-1">Làm Mới</button>
+          <button
+            [routerLink]="'/dot-giam-gia/them-dot-giam-gia'"
+            class="btn btn-success btn-rounded m-1"
+          >
+            Thêm Mới
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

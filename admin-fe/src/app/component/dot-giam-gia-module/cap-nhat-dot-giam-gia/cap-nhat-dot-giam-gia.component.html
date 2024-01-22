@@ -1,0 +1,31 @@
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="tittle"
+></app-main-heading>
+
+<div class="row gutters pt-3">
+  <!-- Form -->
+  <div class="col col-sm-5 col-md-4">
+    <app-form [formButton]="formButton" [formHeader]="formHeader"></app-form>
+  </div>
+
+  <!-- Tables -->
+  <div class="col col-md-7 col-md-8">
+    <app-table
+      [titleTable]="titleTableProduct"
+      [tHead]="tHeadProduct"
+    ></app-table>
+    <app-table
+      [titleTable]="titleTableProducts"
+      [tHead]="tHeadProduct"
+    ></app-table>
+  </div>
+
+  <!-- Modal -->
+  <app-modal
+    [message]="modalMessage"
+    [nameAction]="modalAction"
+    [title]="modalTitle"
+  ></app-modal>
+</div>

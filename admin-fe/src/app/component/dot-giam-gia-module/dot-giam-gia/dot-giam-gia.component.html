@@ -1,0 +1,20 @@
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="tittle"
+></app-main-heading>
+
+<div class="row gutters">
+  <div class="col-sm-12">
+    <!-- Filter Form -->
+    <app-filter></app-filter>
+    <!-- End Filter Form -->
+    <!-- Row start -->
+    <app-table
+      [titleTable]="titleTable"
+      [tHead]="tHead"
+      [listObject]="listDotGiamGia"
+    ></app-table>
+    <!-- Row ends -->
+  </div>
+</div>

@@ -1,0 +1,10 @@
+#add-button,
+#pagination {
+  float: right;
+}
+#icon-button-detail {
+  color: #74c0fc;
+}
+#icon-button-update {
+  color: #ffd43b;
+}

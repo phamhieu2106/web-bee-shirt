@@ -4,9 +4,13 @@ import { HoaDonRoutingModule } from "./hoa-don-routing.module";
 import { DanhSachHoaDonComponent } from "./danh-sach-hoa-don/danh-sach-hoa-don.component";
 import { LayoutModule } from "../layout-module/layout.module";
 import { ChiTietHoaDonComponent } from './chi-tiet-hoa-don/chi-tiet-hoa-don.component';
+import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { OrderHistoryPaymentComponent } from './order-history-payment/order-history-payment.component';
+import { OrderInfoComponent } from './order-info/order-info.component';
+import { OrderProductComponent } from './order-product/order-product.component';
 
 @NgModule({
-  declarations: [DanhSachHoaDonComponent, ChiTietHoaDonComponent],
+  declarations: [DanhSachHoaDonComponent, ChiTietHoaDonComponent, OrderTrackingComponent, OrderHistoryPaymentComponent, OrderInfoComponent, OrderProductComponent],
   imports: [HoaDonRoutingModule, LayoutModule],
 })
 export class HoaDonModule {}

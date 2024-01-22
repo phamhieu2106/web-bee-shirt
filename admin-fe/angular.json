@@ -20,6 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/css/bootstrap.min.css",
               "src/assets/fonts/icomoon/icomoon.css",
               "src/assets/css/main.min.css",
@@ -28,6 +29,7 @@
               "src/styles.css"
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "src/assets/js/jquery.js",
               "src/assets/js/bootstrap.min.js",
               "src/assets/vendor/unifyMenu/unifyMenu.js",

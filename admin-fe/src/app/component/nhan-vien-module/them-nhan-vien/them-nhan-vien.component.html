@@ -41,14 +41,20 @@
                   <input
                     class="form-check-input"
                     type="radio"
-                    id="nam"
-                    [checked]="true"
+                    name="exampleRadios"
+                    value="option1"
+                    checked
                   />
-                  <label class="form-check-label" for="nam">Nam</label>
+                  <label class="form-check-label"> Nam </label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="nu" />
-                  <label class="form-check-label" for="nu">Nữ</label>
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="exampleRadios"
+                    value="option2"
+                  />
+                  <label class="form-check-label"> Nữ </label>
                 </div>
               </div>
             </div>
@@ -92,16 +98,18 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success btn-rounded mx-2">
-            <i class="fa-solid fa-plus"></i> Thêm
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary btn-rounded"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
+          <div class="text-right">
+            <button type="submit" class="btn btn-success btn-rounded mx-2">
+              <i class="fa-solid fa-plus"></i> Thêm
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-rounded"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </form>
       </div>
     </form>

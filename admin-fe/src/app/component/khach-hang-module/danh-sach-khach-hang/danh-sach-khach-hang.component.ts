@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./danh-sach-khach-hang.component.css']
 })
 export class DanhSachKhachHangComponent {
-
+  icon: string = "fa-solid fa-users";
+  title: string = "khách hàng";
+  mainHeading: string = "khách hàng";
+  
 }

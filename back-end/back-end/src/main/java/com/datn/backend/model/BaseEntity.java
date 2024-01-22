@@ -20,21 +20,17 @@ public class BaseEntity {
 
     @Column(updatable = false)
     @CreatedDate
-    @JsonIgnore
     private LocalDateTime createdAt;
 
     @Column(updatable = false)
     @CreatedBy
-    @JsonIgnore
     private String createdBy;
 
     @Column(insertable = false)
     @LastModifiedDate
-    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Column(insertable = false)
     @LastModifiedBy
-    @JsonIgnore
     private String lastUpdatedBy;
 }

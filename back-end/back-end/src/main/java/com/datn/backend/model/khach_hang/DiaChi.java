@@ -1,7 +1,13 @@
 package com.datn.backend.model.khach_hang;
 
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +29,6 @@ public class DiaChi extends BaseEntity {
     private String huyen;
     private String xa;
     private String duong;
-    private String diaChiChiTiet;
     private boolean macDinh;
 
 

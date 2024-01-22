@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "account")
@@ -27,5 +26,5 @@ public class Account {
     private String matKhau;
     private boolean trangThai;
     private String role;
-    private String[] authorities;
+//    private String[] authorities;
 }

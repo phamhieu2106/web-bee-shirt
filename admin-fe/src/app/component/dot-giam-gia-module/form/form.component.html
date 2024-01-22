@@ -1,0 +1,72 @@
+<div class="card">
+  <div class="card-header">{{ formHeader }}</div>
+  <div class="card-body">
+    <form>
+      <div class="form-group row">
+        <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
+          >Mã Đợt Giảm Giá:</label
+        >
+        <div class="col-sm-4 col-md-7">
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Mã Đợt Giảm Giá"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
+          >Tên Đợt Giảm Giá:</label
+        >
+        <div class="col-sm-4 col-md-7">
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Tên Đợt Giảm Giá"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
+          >Giá Trị Giảm:</label
+        >
+        <div class="col-sm-4 col-md-6 d-flex">
+          <input
+            type="number"
+            class="form-control form-control-md"
+            placeholder="Giá Trị Giảm"
+          />
+          <select class="select">
+            <option selected value="phanTram">%</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
+          >Ngày Bắt Đầu:</label
+        >
+        <div class="col-sm-4 col-md-7">
+          <input type="date" class="form-control form-control-sm" />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
+          >Ngày Kết Thúc:</label
+        >
+        <div class="col-sm-4 col-md-7">
+          <input type="date" class="form-control form-control-sm" />
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-success"
+          data-toggle="modal"
+          data-target="#exampleModal"
+        >
+          {{ formButton }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

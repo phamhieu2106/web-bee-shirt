@@ -1,4 +1,4 @@
-package com.datn.backend.configuration;
+package com.datn.backend.app_configuration;
 
 import com.datn.backend.utility.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;

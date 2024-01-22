@@ -1,0 +1,158 @@
+<!-- Order tracking -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4>Theo dõi đơn hàng</h4>
+      </div>
+
+      <div class="card-body">
+        <div
+          class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
+        >
+          <!-- Chờ xác nhận -->
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <!-- <i
+                    class="pe-7s-cart fa-sharp fa-solid fa-cart-circle-exclamation"
+                  ></i> -->
+                <i class="fa-solid fa-exclamation"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Chờ xác nhận</h4>
+
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+          <!-- Đã xác nhận -->
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <i class="fa-solid fa-check"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Đã xác nhận</h4>
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+          <!-- Chờ giao hàng -->
+          <div class="step completed">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <i class="fa-solid fa-truck"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Chờ giao hàng</h4>
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+          <!-- Đang giao hàng -->
+          <div class="step">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Đang giao hàng</h4>
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+          <!-- Hoàn thành -->
+          <div class="step">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <i class="fa-regular fa-credit-card"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Hoàn thành</h4>
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+          <!-- Hủy -->
+          <div class="step">
+            <div class="step-icon-wrap">
+              <div class="step-icon">
+                <i class="fa-solid fa-ban"></i>
+              </div>
+            </div>
+            <h4 class="step-title">Hủy</h4>
+            <p class="mt-1">20-01-2024 18:30:00</p>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="p-2 d-flex">
+        <button type="button" class="btn btn-primary mr-5">Xác nhận</button>
+        <button type="button" class="btn btn-warning mr-5">Quay lại</button>
+        <button type="button" class="btn btn-danger mr-5">Hủy</button>
+
+        <!-- Modal trigger -->
+        <button
+          type="button"
+          class="btn btn-success ml-auto"
+          data-toggle="modal"
+          data-target="#orderHistoryModal"
+        >
+          Lịch sử
+        </button>
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="orderHistoryModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          style="display: none"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Lịch sử hóa đơn
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thời gian</th>
+                        <th scope="col">Ghi chú</th>
+                        <th scope="col">Người xác nhận</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="">
+                        <td>1</td>
+                        <td>Chờ xác nhận</td>
+                        <td>20-01-2024 18:30:00</td>
+                        <td>hùng đã xác nhận</td>
+                        <td>Dương Việt Hùng</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-dismiss="modal"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End order tracking -->

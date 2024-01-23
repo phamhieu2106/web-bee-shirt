@@ -15,8 +15,4 @@ public class ApplicationConfiguration {
         return new AuditorAwareImpl();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

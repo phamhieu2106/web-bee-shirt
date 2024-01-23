@@ -25,7 +25,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         account.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         account.setTrangThai(true);
         account.setRole(Role.ROLE_ADMIN.name());
-        account.setAuthorities(Role.ROLE_ADMIN.getAuthority());
+//        account.setAuthorities(Role.ROLE_ADMIN.getAuthority());
 
         // nhan vien
         NhanVien nhanVien = new NhanVien();

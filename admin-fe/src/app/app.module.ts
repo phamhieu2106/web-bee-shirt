@@ -21,6 +21,9 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
   imports: [
     BrowserModule,
     HttpClientModule,
+
+    ToastrModule.forRoot(),
+
     AuthModule,
     HoaDonModule,
     KhachHangModule,
@@ -30,7 +33,6 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
     DotGiamGiaModule,
     LayoutModule,
     AppRoutingModule,
-    ToastrModule.forRoot(),
   ],
   providers: [
     {

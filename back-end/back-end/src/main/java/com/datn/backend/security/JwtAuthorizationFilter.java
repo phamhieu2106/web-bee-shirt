@@ -38,12 +38,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
             String token = authorizationHeader.substring(SecurityConstant.TOKEN_PREFIX.length());
-            String email = this.jwtTokenProvider.getSubjectFromToken(token);
+            String email = jwtTokenProvider.getSubjectFromToken(token);
 
-            if(this.jwtTokenProvider.checkEmailAndTokenExpiration(email, token)
+            System.err.println(token);
+            System.err.println(email);
+
+            if(jwtTokenProvider.checkEmailAndTokenExpiration(email, token)
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                List<GrantedAuthority> authorities = this.jwtTokenProvider.getAuthorityListFromToken(token);
-                Authentication authentication = this.jwtTokenProvider.getAuthentication(email, authorities, request);
+                List<GrantedAuthority> authorities = jwtTokenProvider.getAuthorityListFromToken(token);
+                Authentication authentication = jwtTokenProvider.getAuthentication(email, authorities, request);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 SecurityContextHolder.clearContext();

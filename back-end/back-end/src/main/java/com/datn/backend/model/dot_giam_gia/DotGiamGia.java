@@ -1,12 +1,15 @@
 package com.datn.backend.model.dot_giam_gia;
 
 import com.datn.backend.model.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,16 +20,28 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class DotGiamGia extends BaseEntity {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "ma_dot_giam_gia")
+    @NotNull(message = "DotGiamGia Code can't be null")
     private String maDotGiamGia;
+
+    @Column(name = "ten_dot_giam_gia")
+    @NotNull(message = "DotGiamGia Name can't be null")
     private String tenDotGiamGia;
-    private int giaTriPhanTram;
-    private boolean trangThai;
+
+    @Column(name = "gia_tri_phan_tram")
+    @NotNull(message = "Discount DotGiamGia can't be null")
+    private Integer giaTriPhanTram;
+
+    @Column(name = "trang_thai")
+    private Integer trangThai;
 
 
 

@@ -1,14 +1,14 @@
 <app-main-heading
   [icon]="'fa-solid fa-shirt'"
-  [mainHeading]="'Kiểu Chất Liệu'"
-  [title]="'Kiểu Chất Liệu'"
+  [mainHeading]="'Chất Liệu'"
+  [title]="'Chất Liệu'"
 ></app-main-heading>
 
 <div class="row gutters pt-2">
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="mb-2">Danh sách chất liệu</h3>
+        <h3 class="mb-2">Danh Sách Chất Liệu</h3>
         <!-- HEADER  -->
         <div>
           <div class="col col-md-12 d-flex">
@@ -38,36 +38,16 @@
           <thead class="thead-default">
             <tr>
               <th>STT</th>
-              <th>Ảnh</th>
-              <th>Mã màu</th>
-              <th>Tên màu</th>
-              <th>Ngày thêm</th>
+              <th>Tên</th>
+              <th>Ngày Thêm</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
+            <tr *ngFor="let cl of chatLieus; let i = index">
+              <th scope="row">{{ i }}</th>
+              <td>{{ cl.ten }}</td>
+              <td>{{ cl.createdAt }}</td>
               <td></td>
             </tr>
           </tbody>

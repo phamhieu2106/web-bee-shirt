@@ -1,6 +1,7 @@
 package com.datn.backend.app_configuration;
 
 import com.datn.backend.utility.AuditorAwareImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -20,6 +21,9 @@ public class ApplicationConfiguration {
     }
 
     @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -33,5 +37,6 @@ public class ApplicationConfiguration {
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
+
     }
 }

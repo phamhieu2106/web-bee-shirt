@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 import { ToastrModule } from "ngx-toastr";
@@ -21,6 +22,7 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
 
     ToastrModule.forRoot(),
 

@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-//                    authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
+                    authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
                     authorize.anyRequest().permitAll();
                 })
                 .sessionManagement(session ->

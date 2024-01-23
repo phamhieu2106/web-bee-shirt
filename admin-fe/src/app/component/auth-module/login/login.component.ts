@@ -41,6 +41,8 @@ export class LoginComponent {
   }
 
   public loginSubmit(): void {
+    console.log(this.loginForm.value);
+
     this.loading = true;
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: user vào localStorage

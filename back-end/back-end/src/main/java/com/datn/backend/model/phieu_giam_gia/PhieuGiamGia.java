@@ -1,5 +1,6 @@
-package com.datn.backend.model;
+package com.datn.backend.model.phieu_giam_gia;
 
+import com.datn.backend.model.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

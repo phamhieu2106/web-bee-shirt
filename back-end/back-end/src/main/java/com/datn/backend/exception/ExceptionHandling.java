@@ -2,22 +2,20 @@ package com.datn.backend.exception;
 
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.exception_response.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
-public class ExceptionHandler {
+public class ExceptionHandling {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
         if (ex instanceof ResourceExistsException) {
             ErrorResponse response = new ErrorResponse(ex.getMessage());
@@ -34,7 +32,11 @@ public class ExceptionHandler {
 //        } else if (ex instanceof ResourceNotFoundException || ex instanceof NoSuchElementException) {
 //            ErrorResponse error = new ErrorResponse(ex.getMessage());
             return new ResponseEntity<>("error", BAD_REQUEST);
-        } else {
+        } else if (ex instanceof AccessDeniedException) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+        else {
+            System.out.println(ex);
             return new ResponseEntity<>("Server occurs an error!", INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,5 +1,6 @@
 package com.datn.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String tenDangNhap;
+
+    @JsonIgnore
     private String matKhau;
     private boolean trangThai;
     private String role;

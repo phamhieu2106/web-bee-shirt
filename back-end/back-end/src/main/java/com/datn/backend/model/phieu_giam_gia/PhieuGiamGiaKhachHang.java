@@ -1,6 +1,6 @@
-package com.datn.backend.model.khach_hang;
+package com.datn.backend.model.phieu_giam_gia;
 
-import com.datn.backend.model.BaseEntity;
+import com.datn.backend.model.khach_hang.KhachHang;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,24 +14,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dia_chi")
+@Table(name = "phieu_giam_gia_kh")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class DiaChi extends BaseEntity {
+public class PhieuGiamGiaKhachHang {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String tinh;
-    private String huyen;
-    private String xa;
-    private String duong;
-    private boolean macDinh;
+    private String moTa;
 
     @ManyToOne
     @JoinColumn(name = "khach_hang_id")
     private KhachHang khachHang;
+
+    @ManyToOne
+    @JoinColumn(name = "phieu_giam_gia_id")
+    private PhieuGiamGia phieuGiamGia;
 }

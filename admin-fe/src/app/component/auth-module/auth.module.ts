@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 
-import { AuthRoutingModule } from './auth-routing.module';
+import { AuthRoutingModule } from "./auth-routing.module";
+import { LoginComponent } from "./login/login.component";
 
 @NgModule({
-  declarations: [],
+  declarations: [LoginComponent],
   imports: [AuthRoutingModule],
 })
 export class AuthModule {}

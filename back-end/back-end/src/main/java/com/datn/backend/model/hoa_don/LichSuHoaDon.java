@@ -2,7 +2,6 @@ package com.datn.backend.model.hoa_don;
 
 import com.datn.backend.model.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,8 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,21 +21,16 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @Builder
-public class ThanhToan extends BaseEntity {
+public class LichSuHoaDon extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String tieuDe;
     private String moTa;
-    private String maGiaoDich;
-    private BigDecimal soTien;
-    private String trangThai;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_hoa_don")
-    private HoaDon hoaDon;
 
     @ManyToOne
-    @JoinColumn(name = "id_httt")
-    private HinhThucThanhToan hinhThucThanhToan;
+    @JoinColumn(name = "id_hoa_don")
+    private HoaDon hoaDon;
 }

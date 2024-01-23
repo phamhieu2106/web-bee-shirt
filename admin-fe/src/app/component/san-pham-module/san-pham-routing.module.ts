@@ -9,39 +9,48 @@ import { DanhSachKieuDangComponent } from "./kieu-dang/danh-sach-kieu-dang/danh-
 import { DanhSachKieuThietKeComponent } from "./kieu-thiet-ke/danh-sach-kieu-thiet-ke/danh-sach-kieu-thiet-ke.component";
 import { DanhSachKieuTayAoComponent } from "./kieu-tay-ao/danh-sach-kieu-tay-ao/danh-sach-kieu-tay-ao.component";
 import { DanhSachKieuCoAoComponent } from "./kieu-co-ao/danh-sach-kieu-co-ao/danh-sach-kieu-co-ao.component";
+import { authenticationGuard } from "src/app/guard/authentication.guard";
 
 const sanPhamRoutes: Routes = [
   {
     path: "sp/ds-san-pham",
     component: DanhSachSanPhamComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "mau-sac/ds-mau-sac",
     component: DanhSachMauSacComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "kich-co/ds-kich-co",
     component: DanhSachKichCoComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "kieu-dang/ds-kieu-dang",
     component: DanhSachKieuDangComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "kieu-thiet-ke/ds-kieu-thiet-ke",
     component: DanhSachKieuThietKeComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "kieu-tay-ao/ds-kieu-tay-ao",
     component: DanhSachKieuTayAoComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "kieu-co-ao/ds-kieu-co-ao",
     component: DanhSachKieuCoAoComponent,
+    canActivate: [authenticationGuard],
   },
   {
     path: "chat-lieu/ds-chat-lieu",
     component: DanhSachChatLieuComponent,
+    canActivate: [authenticationGuard],
   },
 ];
 

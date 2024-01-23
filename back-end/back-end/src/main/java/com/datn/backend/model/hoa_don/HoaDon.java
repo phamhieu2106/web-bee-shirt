@@ -4,8 +4,8 @@ import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.model.BaseEntity;
 import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.PhieuGiamGia;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +33,7 @@ import java.util.List;
 @ToString
 @Builder
 public class HoaDon extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

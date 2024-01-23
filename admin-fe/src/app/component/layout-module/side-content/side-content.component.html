@@ -6,6 +6,16 @@
   <nav class="side-nav">
     <!-- BEGIN: side-nav-content -->
     <ul class="unifyMenu" id="unifyMenu">
+      <!-- Thống kê -->
+      <li>
+        <a [routerLink]="'thong-ke'" aria-expanded="false">
+          <span class="has-icon">
+            <i class="fa-solid icon-chart-area-outline"></i>
+          </span>
+          <span class="nav-title">Thống Kê</span>
+        </a>
+      </li>
+
       <li class="active selected">
         <a [routerLink]="'ban-hang'">
           <span class="has-icon">
@@ -125,16 +135,6 @@
             <i class="fa-solid fa-tags"></i>
           </span>
           <span class="nav-title">Đợt Giảm Giá</span>
-        </a>
-      </li>
-
-      <!-- Thống kê -->
-      <li>
-        <a [routerLink]="'thong-ke'" aria-expanded="false">
-          <span class="has-icon">
-            <i class="fa-solid icon-chart-area-outline"></i>
-          </span>
-          <span class="nav-title">Thống Kê</span>
         </a>
       </li>
     </ul>

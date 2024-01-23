@@ -135,7 +135,7 @@
                 src="assets/img/user.png"
                 alt="Admin Dashboards"
               />
-              <span class="user-name">Yuki Hayashi</span>
+              <span class="user-name">{{ loggedUser.hoTen }}</span>
               <i class="icon-chevron-small-down"></i>
             </a>
             <div
@@ -169,7 +169,7 @@
                 </li>
               </ul>
               <div class="logout-btn">
-                <a href="login.html" class="btn btn-primary">Logout</a>
+                <a class="btn btn-primary" (click)="logout()">Đăng xuất</a>
               </div>
             </div>
           </li>

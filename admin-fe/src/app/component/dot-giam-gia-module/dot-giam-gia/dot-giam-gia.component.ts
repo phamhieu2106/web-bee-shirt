@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { DotGiamGia } from "src/app/interface/dot-giam-gia";
+import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 
 @Component({
   selector: "app-dot-giam-gia",

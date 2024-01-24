@@ -16,8 +16,8 @@ public class PhieuGiamGiaImpl implements PhieuGiamGiaServce {
     @Autowired
     PhieuGiamGiaRepository repository;
     @Override
-    public List<PhieuGiamGia> getAll() {
-        return repository.findAll();
+    public List<PhieuGiamGiaResponse> getAll() {
+        return repository.getAll();
     }
 
     @Override

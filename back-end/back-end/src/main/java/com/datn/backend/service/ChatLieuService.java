@@ -8,4 +8,6 @@ public interface ChatLieuService {
     ChatLieu add(ChatLieu chatLieu);
 
     PagedResponse<ChatLieu> getAll(int pageNumber, int pageSize, String search);
+
+    ChatLieu getById(int id);
 }

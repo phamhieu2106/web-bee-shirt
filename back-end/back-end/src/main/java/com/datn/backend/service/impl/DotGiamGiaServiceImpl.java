@@ -7,6 +7,8 @@ import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.repository.DotGiamGiaRepository;
 import com.datn.backend.service.DotGiamGiaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.Optional;
 @Service
 public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
-    private DotGiamGiaRepository repository;
+    private final DotGiamGiaRepository repository;
 
     @Autowired
     public DotGiamGiaServiceImpl(DotGiamGiaRepository repository) {
@@ -26,20 +28,20 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     @Override
     public List<DotGiamGiaReponse> getAll() {
 //        Get Data form database
-        List<DotGiamGiaReponse> reponseList = repository.getAll();
-//        if Empty throw exception
+        return repository.getAll();
+    }
 
-        return reponseList;
+    @Override
+    public List<DotGiamGiaReponse> getPagination(int pageNumber, int pageSize, String search) {
+        Pageable pageable = PageRequest.of(pageNumber - 1,pageSize);
+
+        return repository.getPagination(pageable,search);
     }
 
     @Override
     public DotGiamGiaReponse getOne(Integer id) {
         //        Get Data form database
-        DotGiamGiaReponse repons = repository.getOneById(id);
-        //        if Null throw exception
-
-
-        return repons;
+        return repository.getOneById(id);
     }
 
     @Override
@@ -47,7 +49,10 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //        map requestObject to Object
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
         if(repository.existsByTenDotGiamGia(dotGiamGia.getTenDotGiamGia())){
-            throw new ResourceExistsException("Object Request is Null!");
+            throw new ResourceExistsException("Object Request Name is Exits!");
+        }
+        if(repository.existsByMaDotGiamGia(dotGiamGia.getMaDotGiamGia())){
+            throw new ResourceExistsException("Object Request Code is Exits!");
         }
 //        save to database
         return repository.save(dotGiamGia);
@@ -58,10 +63,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 //        If not empty then map request to object
-        if(!optional.isEmpty()){
-            return repository.save(object.map(optional.get()));
-        }
-        return null;
+        return optional.map(dotGiamGia -> repository.save(object.map(dotGiamGia))).orElse(null);
     }
 
     @Override
@@ -69,11 +71,11 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 //        If not empty then map request to object
-        if(!optional.isEmpty()){
-//            Set Status to 0
-            optional.get().setTrangThai(0);
-            return repository.save(optional.get());
-        }
-        return null;
+        //            Set deleted is true
+        return optional.map(dotGiamGia -> {
+            dotGiamGia.setTrangThai(0);
+            return repository.save(dotGiamGia);
+        }).orElse(null);
     }
+
 }

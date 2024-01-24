@@ -17,6 +17,7 @@ public interface ChatLieuRepository extends JpaRepository<ChatLieu, Integer> {
            FROM chat_lieu c
            WHERE c.trang_thai = 1
            AND c.ten LIKE %:search%
+           ORDER BY c.created_at DESC
            """, nativeQuery = true)
     Page<ChatLieu> getAll(Pageable pageable,
                           @Param("search") String search);

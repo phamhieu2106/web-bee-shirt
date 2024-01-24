@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { SanPhamRoutingModule } from "./san-pham-routing.module";
 import { DanhSachMauSacComponent } from "./mau-sac/danh-sach-mau-sac/danh-sach-mau-sac.component";
@@ -25,6 +26,12 @@ import { LayoutModule } from "../layout-module/layout.module";
     DanhSachKieuTayAoComponent,
     DanhSachKieuThietKeComponent,
   ],
-  imports: [CommonModule, LayoutModule, SanPhamRoutingModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    LayoutModule,
+    SanPhamRoutingModule,
+  ],
 })
 export class SanPhamModule {}

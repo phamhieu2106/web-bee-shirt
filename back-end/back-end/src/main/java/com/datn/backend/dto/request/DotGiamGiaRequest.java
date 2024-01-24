@@ -3,25 +3,27 @@ package com.datn.backend.dto.request;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Data
 public class DotGiamGiaRequest {
 
     private Integer id;
 
-    @NotNull(message = "Code can't be null")
-    @NotEmpty(message = "Code can't be empty")
     private String maDotGiamGia;
 
-    @NotNull(message = "Name can't be null")
-    @NotEmpty(message = "Name can't be empty")
     private String tenDotGiamGia;
 
-    @Min(value = 5,message = "Discount percent must gather than 5")
-    @Max(value = 100, message = "Discount percent must below 100")
+    private LocalDateTime thoiGianBatDau;
+
+    private LocalDateTime thoiGianKetThuc;
+
     private Integer giaTriPhanTram;
 
     private Integer trangThai;

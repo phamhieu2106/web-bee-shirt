@@ -4,8 +4,8 @@ import com.datn.backend.dto.request.DotGiamGiaRequest;
 import com.datn.backend.dto.response.DotGiamGiaResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
-import com.datn.backend.exception.custom_exception.ResourceNotBetweenException;
-import com.datn.backend.exception.custom_exception.ResourceNumberException;
+import com.datn.backend.exception.custom_exception.ResourceInvalidExecption;
+import com.datn.backend.exception.custom_exception.ResourceOutOfRangeException;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.repository.DotGiamGiaRepository;
 import com.datn.backend.service.DotGiamGiaService;
@@ -17,13 +17,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     private final DotGiamGiaRepository repository;
+    private static final Logger logger = Logger.getLogger(DotGiamGia.class.getName());
 
     @Autowired
     public DotGiamGiaServiceImpl(DotGiamGiaRepository repository) {
@@ -40,9 +42,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     @Override
     public PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
 //        Get Pageable
-        Pageable pageable = PageRequest.of(pageNumber - 1,pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 //        Get Page DotGiamGia Response
-        Page<DotGiamGiaResponse> dotGiamGiaPage = repository.getPagination(pageable,search);
+        Page<DotGiamGiaResponse> dotGiamGiaPage = repository.getPagination(pageable, search);
 //        Page DotGiamGia
         PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
 
@@ -63,34 +65,42 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         return repository.getOneById(id);
     }
 
+    //    Validation
+    private void validationCheck(DotGiamGiaRequest object) {
+
+        //        Check Exit by Ten
+        if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
+            throw new ResourceExistsException("Object Request Name is Exits!");
+        }
+
+        //        Check Number
+        try {
+            BigDecimal bigDecimal = BigDecimal.valueOf(object.getGiaTriPhanTram());
+        } catch (Exception e) {
+            throw new ResourceInvalidExecption("Discount Percent of Object Request is not a number");
+        }
+
+//        Check Min Max
+        if (object.getGiaTriPhanTram() > 99 || object.getGiaTriPhanTram() < 5) {
+            throw new ResourceOutOfRangeException("Discount Percent of Object Request is not between 5 and 99");
+        }
+    }
+
     @Override
     public DotGiamGia add(DotGiamGiaRequest object) {
+
+        UUID uuid = UUID.randomUUID();
+        object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
+        //        Set Code
+        object.setMaDotGiamGia(uuid.toString());
+        //        Set Status
+        object.setTrangThai(1);
         //        map requestObject to Object
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
-        try {
-//        Check Exit by Ten and Ma
-            if(repository.existsByTenDotGiamGia(dotGiamGia.getTenDotGiamGia().trim())){
-                throw new ResourceExistsException("Object Request Name is Exits!");
-            }
-            if(repository.existsByMaDotGiamGia(dotGiamGia.getMaDotGiamGia().trim())){
-                throw new ResourceExistsException("Object Request Code is Exits!");
-            }
-//        Check Number
-            try {
-                BigDecimal bigDecimal = BigDecimal.valueOf(dotGiamGia.getGiaTriPhanTram());
-            }catch(NumberFormatException e){
-                throw new ResourceNumberException("Discount Percent of Object Request is not a number");
-            }
-//        Check Min Max
-            if(dotGiamGia.getGiaTriPhanTram() > 99 || dotGiamGia.getGiaTriPhanTram() < 5){
-                throw new ResourceNotBetweenException("Discount Percent of Object Request is not between 5 and 99");
-            }
-//        Set Status
-            dotGiamGia.setTrangThai(1);
+
+//        save dotgiamgiasanpham to database
+
 //        save to database
-        }catch(Exception ex){
-            System.out.println("Somethings is wrong when try to add new DotGiamGia Request!");
-        }
         return repository.save(dotGiamGia);
     }
 
@@ -98,22 +108,33 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
-//        Set ID
-        object.setId(id);
-//        If not empty then map request to object
-        return optional.map(dotGiamGia -> repository.save(object.map(dotGiamGia))).orElse(null);
+        if (optional.isPresent()) {
+            // Set ID
+            object.setId(id);
+//            Set Code
+            object.setMaDotGiamGia(optional.get().getMaDotGiamGia());
+
+
+            DotGiamGia dotGiamGia = object.map(optional.get());
+
+            return repository.save(dotGiamGia);
+        }
+        return null;
     }
 
     @Override
-    public DotGiamGia remove(Integer id) {
+    public boolean remove(Integer id) {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
-//        If not empty then map request to object
-        //            Set deleted is true
-        return optional.map(dotGiamGia -> {
-            dotGiamGia.setTrangThai(0);
-            return repository.save(dotGiamGia);
-        }).orElse(null);
+        if (optional.isPresent()) {
+            try {
+                repository.delete(optional.get());
+                return true;
+            } catch (Exception ex) {
+                throw new ResourceInvalidExecption("Id invalid!!");
+            }
+        }
+        return false;
     }
 
 }

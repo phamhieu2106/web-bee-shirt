@@ -1,4 +1,4 @@
-<div class="app-wrap">
+<div class="app-wrap" *ngIf="isLoggin">
   <div class="app-container">
     <aside class="app-side" id="app-side">
       <app-side-content></app-side-content>
@@ -11,4 +11,8 @@
     </div>
   </div>
   <app-footer></app-footer>
+</div>
+
+<div *ngIf="!isLoggin">
+  <router-outlet></router-outlet>
 </div>

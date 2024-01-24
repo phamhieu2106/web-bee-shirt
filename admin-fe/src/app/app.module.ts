@@ -1,6 +1,9 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { HttpClientModule } from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+
+import { ToastrModule } from "ngx-toastr";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -12,12 +15,17 @@ import { NhanVienModule } from "./component/nhan-vien-module/nhan-vien.module";
 import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam-gia.module";
 import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.module";
 import { LayoutModule } from "./component/layout-module/layout.module";
+import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+
+    ToastrModule.forRoot(),
+
     AuthModule,
     HoaDonModule,
     KhachHangModule,
@@ -28,7 +36,13 @@ import { LayoutModule } from "./component/layout-module/layout.module";
     LayoutModule,
     AppRoutingModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

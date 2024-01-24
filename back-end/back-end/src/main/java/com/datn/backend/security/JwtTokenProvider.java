@@ -37,7 +37,6 @@ public class JwtTokenProvider {
         return JWT.create()
                 .withAudience(AUDIENCE)
                 .withIssuer(ISSUER)
-//                .withExpiresAt(new Date())
                 .withSubject(userDetails.getUsername())
                 .withArrayClaim(CLAIMS, claims)
                 .withExpiresAt(new Date(System.currentTimeMillis() + 432_000_000))

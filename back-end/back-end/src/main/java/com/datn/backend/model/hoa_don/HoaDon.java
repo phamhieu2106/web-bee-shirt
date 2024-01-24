@@ -33,6 +33,7 @@ import java.util.List;
 @ToString
 @Builder
 public class HoaDon extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

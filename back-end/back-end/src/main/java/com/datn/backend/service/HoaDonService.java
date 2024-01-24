@@ -10,5 +10,5 @@ import java.time.LocalDate;
  * @author HungDV
  */
 public interface HoaDonService {
-    PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, LocalDate ngayTao);
+    PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao);
 }

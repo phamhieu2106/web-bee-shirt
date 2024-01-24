@@ -19,6 +19,13 @@ INSERT INTO `datn-bee-shirt`.`hoa_don` (`id`,`dia_chi_nguoi_nhan`, `email_nguoi_
 VALUES ('4','Chương Mỹ - Hà Nội', 'duongviethung@gmail.com', 'ONLINE', 'HD01', '30000', '0123456789', 'Nguyen Van A', '650000', 'CHO_XAC_NHAN');
 INSERT INTO `datn-bee-shirt`.`hoa_don` (`id`,`dia_chi_nguoi_nhan`, `email_nguoi_nhan`, `loai_hoa_don`, `ma`, `phi_van_chuyen`, `sdt_nguoi_nhan`, `ten_nguoi_nhan`, `tong_tien`, `trang_thai`)
 VALUES ('5','Hà Đông - Hà Nội', 'nguyenthib@gmail.com', 'TAI_QUAY', 'HD02', '30000', '0123456789', 'Nguyen Thi B', '300000', 'CHO_GIAO');
+
+UPDATE `datn-bee-shirt`.`hoa_don` SET `tien_giam` = '0' WHERE (`id` = '4');
+UPDATE `datn-bee-shirt`.`hoa_don` SET `tien_giam` = '0' WHERE (`id` = '5');
+
+UPDATE `datn-bee-shirt`.`hoa_don` SET `created_at` = '2024-01-22 15:30:01' WHERE (`id` = '4');
+UPDATE `datn-bee-shirt`.`hoa_don` SET `created_at` = '2024-01-22 15:30:01' WHERE (`id` = '5');
+
 -- Hoa don chi tiet
 INSERT INTO `datn-bee-shirt`.`hoa_don_chi_tiet` (`id`,`gia_ban`, `so_luong`, `id_hoa_don`)
 VALUES ('1','30000', '1', '4');

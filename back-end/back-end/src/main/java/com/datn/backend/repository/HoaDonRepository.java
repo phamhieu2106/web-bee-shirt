@@ -12,19 +12,23 @@ import org.springframework.data.jpa.repository.Query;
 public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     /**
      * @param pageable
-     * @param keys     điều kiện tìm theo MaHD, SDTNguoiNhan, TenNguoiNhan,
-     *                 EmailNguoiNhan, TenKhachHang, SDTKhachHang
+     * @param keys       điều kiện tìm theo MaHD, SDTNguoiNhan, TenNguoiNhan,
+     *                   EmailNguoiNhan, TenKhachHang, SDTKhachHang
+     * @param loaiHoaDon
+     * @param ngayTao
      * @return
      */
     @Query("""
-            select hd from HoaDon hd 
-            join hd.khachHang kh
-            where   hd.ma like %:keys% or 
-                    hd.sdtNguoiNhan like %:keys% or
-                    hd.tenNguoiNhan like %:keys% or
-                    hd.emailNguoiNhan like %:keys% or
-                    kh.hoTen like %:keys% or
-                    kh.sdt like %:keys% 
+            select hd from HoaDon hd
+            left join hd.khachHang kh
+            where ( hd.ma like %:keys% or 
+            hd.sdtNguoiNhan like %:keys% or 
+            hd.tenNguoiNhan like %:keys% or
+            hd.emailNguoiNhan like %:keys% or 
+            kh.hoTen like %:keys% or
+            kh.sdt like %:keys% ) and
+            concat( hd.loaiHoaDon,'') like %:loaiHoaDon%  and 
+            concat( hd.createdAt,'') like %:ngayTao%  
             """)
-    Page<HoaDon> findByKeys(Pageable pageable, String keys);
+    Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao);
 }

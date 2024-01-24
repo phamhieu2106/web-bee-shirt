@@ -5,6 +5,7 @@ import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.ChatLieuRepository;
 import com.datn.backend.service.ChatLieuService;
+import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,8 +39,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         paged.setPageSize(pageSize);
         paged.setTotalElements((int) chatLieuPage.getTotalElements());
         paged.setTotalPages(chatLieuPage.getTotalPages());
+        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(chatLieuPage.getTotalPages()));
         paged.setData(chatLieuPage.getContent());
+        paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public ChatLieu getById(int id) {
+        return chatLieuRepo.findById(id).get();
     }
 }

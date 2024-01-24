@@ -5,6 +5,7 @@ import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.repository.HoaDonRepository;
 import com.datn.backend.service.HoaDonService;
+import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -31,8 +32,8 @@ public class HoaDonServiceImpl implements HoaDonService {
      * @return
      */
     @Override
-    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, LocalDate ngayTao) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findAll(pageable);
+    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao) {
+        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable,search,loaiHoaDon,ngayTao);
 
         return PagedResponse.
                 <HoaDonResponse>builder()
@@ -40,6 +41,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .pageSize(hoaDons.getSize())
                 .totalPages(hoaDons.getTotalPages())
                 .totalElements(hoaDons.getTotalElements())
+                .pageNumberArr(UtilityFunction.getPageNumberArr(hoaDons.getTotalPages()))
+                .search(search)
                 .data(
                         hoaDons.getContent().stream().map(hoaDon -> mapToHoaDonResponse(hoaDon)).toList()
                 )

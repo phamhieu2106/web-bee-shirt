@@ -28,12 +28,12 @@ public class HoaDonResource {
     @GetMapping("/ds-hoa-don")
     public ResponseEntity<PagedResponse<HoaDonResponse>> getAll(
             @RequestParam(defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(defaultValue = ApplicationConstant.DEFAULT_PAGE_NUM) int pageNum,
+            @RequestParam(defaultValue = ApplicationConstant.DEFAULT_PAGE_NUM) int pageNumber,
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "") String loaiHoaDon,
-            @RequestParam(defaultValue = "") LocalDate ngayTao
+            @RequestParam(defaultValue = "") String ngayTao
     ) {
-        Pageable pageable = PageRequest.of(pageNum,pageSize);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
         PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable,search,loaiHoaDon,ngayTao);
         return ResponseEntity.ok(hoaDons);
     }

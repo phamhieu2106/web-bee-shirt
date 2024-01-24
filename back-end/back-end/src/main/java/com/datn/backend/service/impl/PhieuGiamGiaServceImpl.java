@@ -6,6 +6,8 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.repository.PhieuGiamGiaRepository;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,4 +54,12 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
             return repository.save(phieuGiamGia);
         }).orElse(null);
     }
+
+    @Override
+    public List<PhieuGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
+        Pageable pageable = PageRequest.of(pageNumber - 1,pageSize);
+
+        return repository.getPagination(pageable,search);
+    }
+
 }

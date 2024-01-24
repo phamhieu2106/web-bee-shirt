@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Optional<Account> findByTenDangNhap(String tenDangNhap);
+
+    boolean existsByTenDangNhap(String tenDangNhap);
 }

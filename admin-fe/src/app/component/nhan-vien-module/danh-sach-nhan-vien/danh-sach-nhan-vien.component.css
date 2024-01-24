@@ -1,5 +1,6 @@
 #add-button,
-#pagination {
+#pagination,
+.search-block {
   float: right;
 }
 #icon-button-detail {

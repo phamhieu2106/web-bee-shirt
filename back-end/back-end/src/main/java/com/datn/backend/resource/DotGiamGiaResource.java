@@ -1,8 +1,6 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.DotGiamGiaRequest;
-import com.datn.backend.dto.response.DotGiamGiaReponse;
-import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.service.impl.DotGiamGiaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,11 +22,11 @@ public class DotGiamGiaResource {
 
     private final DotGiamGiaServiceImpl service;
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll(){
-//        return DotGiamGiaResponseEntity
-        return ResponseEntity.ok(service.getAll());
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<?> getAll(){
+////        return DotGiamGiaResponseEntity
+//        return ResponseEntity.ok(service.getAll());
+//    }
 
     @GetMapping
     public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber" , defaultValue = "1", required = false)

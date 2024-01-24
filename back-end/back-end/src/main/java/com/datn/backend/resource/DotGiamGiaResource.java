@@ -1,6 +1,8 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.DotGiamGiaRequest;
+import com.datn.backend.dto.response.DotGiamGiaReponse;
+import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.service.impl.DotGiamGiaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,10 +24,21 @@ public class DotGiamGiaResource {
 
     private final DotGiamGiaServiceImpl service;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAll(){
 //        return DotGiamGiaResponseEntity
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber" , defaultValue = "1", required = false)
+                                            int pageNumber,
+                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false)
+                                           int pageSize,
+                                           @RequestParam(value = "search", defaultValue = "", required = false)
+                                           String search){
+//        return DotGiamGiaResponseEntity
+        return ResponseEntity.ok(service.getPagination(pageNumber,pageSize,search));
     }
 
     @GetMapping("/{id}")

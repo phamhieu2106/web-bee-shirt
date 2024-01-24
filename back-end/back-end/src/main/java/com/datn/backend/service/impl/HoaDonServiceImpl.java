@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 /**
  * @author HungDV
  */
@@ -21,15 +23,16 @@ public class HoaDonServiceImpl implements HoaDonService {
     private final ModelMapper modelMapper;
 
     /**
-     *
      * @param pageable
-     * @param search điều kiện tìm theo MaHD, SDTNguoiNhan, TenNguoiNhan,
-     *              EmailNguoiNhan, TenKhachHang, SDTKhachHang, TenNhanVien, TenKhachHang
+     * @param search     điều kiện tìm theo MaHD, SDTNguoiNhan, TenNguoiNhan,
+     *                   EmailNguoiNhan, TenKhachHang, SDTKhachHang, TenNhanVien, TenKhachHang
+     * @param loaiHoaDon
+     * @param ngayTao
      * @return
      */
     @Override
-    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable,search);
+    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, LocalDate ngayTao) {
+        Page<HoaDon> hoaDons = hoaDonRepository.findAll(pageable);
 
         return PagedResponse.
                 <HoaDonResponse>builder()

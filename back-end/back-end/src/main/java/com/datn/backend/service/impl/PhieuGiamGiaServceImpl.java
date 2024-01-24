@@ -11,10 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PhieuGiamGiaImpl implements PhieuGiamGiaServce {
+public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
+
+
+    private PhieuGiamGiaRepository repository;
 
     @Autowired
-    PhieuGiamGiaRepository repository;
+    public PhieuGiamGiaServceImpl(PhieuGiamGiaRepository repository){
+        super();
+        this.repository=repository;
+    }
     @Override
     public List<PhieuGiamGiaResponse> getAll() {
         return repository.getAll();

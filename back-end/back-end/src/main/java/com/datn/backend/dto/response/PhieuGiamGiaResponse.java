@@ -14,7 +14,7 @@ public interface PhieuGiamGiaResponse {
 
     String getGiaTriMax();
 
-    String getDieuKiemGiam();
+    String getDieuKienGiam();
 
     String getSoLuong();
 

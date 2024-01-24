@@ -32,7 +32,7 @@ public class ThanhToan extends BaseEntity {
     private String moTa;
     private String maGiaoDich;
     private BigDecimal soTien;
-    private String trangThai;
+    private boolean trangThai;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hoa_don")

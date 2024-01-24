@@ -18,10 +18,15 @@
       <div class="card-body">
         <!-- Filter -->
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="mb-3">
               <label for="" class="form-label">Tìm kiếm:</label>
-              <input type="text" class="form-control" name="" />
+              <input
+                type="text"
+                class="form-control"
+                name=""
+                placeholder="Nhập mã hóa đơn, số điện thoại, tên, email ..."
+              />
             </div>
           </div>
           <div class="col-md-6">
@@ -30,10 +35,9 @@
               <div class="form-group">
                 <div class="input-group">
                   <select class="custom-select" id="inputGroupSelect01">
-                    <option selected="">Choose...</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="">Tất cả</option>
+                    <option value="ONLINE">Online</option>
+                    <option value="TAI_QUAY">Tại quầy</option>
                   </select>
                 </div>
               </div>
@@ -41,14 +45,7 @@
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label for="" class="form-label">Ngày bắt đầu:</label>
-              <input type="date" class="form-control" name="" />
-              <small class="form-text text-danger">Help text</small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="" class="form-label">Ngày kết thúc:</label>
+              <label for="" class="form-label">Ngày tạo:</label>
               <input type="date" class="form-control" name="" />
               <small class="form-text text-danger">Help text</small>
             </div>

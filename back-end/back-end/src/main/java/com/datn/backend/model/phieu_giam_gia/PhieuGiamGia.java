@@ -28,13 +28,13 @@ public class PhieuGiamGia extends BaseEntity {
 
     private String maPhieuGiamGia;
     private String tenPhieuGiamGia;
-    private String kieu;
-    private String loai;
+    private Integer kieu;
+    private Integer loai;
     private BigDecimal giaTri;
     private BigDecimal giaTriMax;
     private BigDecimal dieuKienGiam;
     private int soLuong;
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
-    private boolean trangThai;
+    private Integer trangThai;
 }

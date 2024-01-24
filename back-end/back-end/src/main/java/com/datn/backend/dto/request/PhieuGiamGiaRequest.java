@@ -14,9 +14,9 @@ public class PhieuGiamGiaRequest {
 
     private String tenPhieuGiamGia;
 
-    private String kieu;
+    private Integer kieu;
 
-    private String loai;
+    private Integer loai;
 
     private BigDecimal giaTri;
 
@@ -30,7 +30,7 @@ public class PhieuGiamGiaRequest {
 
     private LocalDateTime thoiGianKetThuc;
 
-    private boolean trangThai;
+    private Integer trangThai;
 
     public PhieuGiamGia giamGia(PhieuGiamGia phieu) {
         phieu.setId(this.id);

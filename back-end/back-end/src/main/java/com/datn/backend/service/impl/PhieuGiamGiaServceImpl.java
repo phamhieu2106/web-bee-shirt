@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
@@ -28,7 +29,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGiaResponse getOne(Integer id) {
-        return null;
+        return repository.getOneById(id);
     }
 
     @Override
@@ -37,12 +38,18 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest phieu) {
-        return null;
+    public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest object) {
+        Optional<PhieuGiamGia> optional = repository.findById(id);
+        return optional.map(phieuGiamGia -> repository.save(object.giamGia(phieuGiamGia))).orElse(null);
     }
 
     @Override
     public PhieuGiamGia remove(Integer id) {
-        return null;
+
+        Optional<PhieuGiamGia> optional = repository.findById(id);
+        return optional.map(phieuGiamGia -> {
+            phieuGiamGia.setTrangThai(0);
+            return repository.save(phieuGiamGia);
+        }).orElse(null);
     }
 }

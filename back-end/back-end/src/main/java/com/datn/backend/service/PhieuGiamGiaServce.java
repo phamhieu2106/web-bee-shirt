@@ -7,7 +7,7 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import java.util.List;
 
 public interface PhieuGiamGiaServce {
-    List<PhieuGiamGia> getAll();
+    List<PhieuGiamGiaResponse> getAll();
 
     PhieuGiamGiaResponse getOne(Integer id);
 

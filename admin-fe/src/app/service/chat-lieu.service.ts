@@ -13,6 +13,8 @@ export class ChatLieuService {
 
   constructor(private http: HttpClient) {}
 
+  // public functions
+  // 1
   public getAll(
     pageNumber: number = 1,
     pageSize: number = 5,
@@ -22,5 +24,15 @@ export class ChatLieuService {
     return this.http.get<PagedResponse<ChatLieu>>(
       `${this.apiUrl}/get-all${param}`
     );
+  }
+
+  // 2
+  public add(chatLieu: ChatLieu): Observable<ChatLieu> {
+    return this.http.post<ChatLieu>(`${this.apiUrl}/add`, chatLieu);
+  }
+
+  // 3
+  public getById(id: number): Observable<ChatLieu> {
+    return this.http.get<ChatLieu>(`${this.apiUrl}/get-by-id/${id}`);
   }
 }

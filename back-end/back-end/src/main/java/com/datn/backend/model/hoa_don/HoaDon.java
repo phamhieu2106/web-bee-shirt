@@ -44,6 +44,7 @@ public class HoaDon extends BaseEntity {
     private String emailNguoiNhan;
     private String diaChiNguoiNhan;
     private BigDecimal tongTien;
+    private BigDecimal tienGiam;
     private BigDecimal phiVanChuyen;
 
     @Enumerated(EnumType.STRING)

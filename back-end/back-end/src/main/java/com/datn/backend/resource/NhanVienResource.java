@@ -8,11 +8,14 @@ import com.datn.backend.model.NhanVien;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.service.ChatLieuService;
 import com.datn.backend.service.NhanVienService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +37,18 @@ public class NhanVienResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<NhanVien> add(@RequestBody AddNhanVienRequest nhanVienRequest) {
+    public ResponseEntity<NhanVien> add(@Valid @RequestBody AddNhanVienRequest nhanVienRequest) {
         return ResponseEntity.ok(nhanVienService.add(nhanVienRequest));
+    }
+
+    @GetMapping("/get-one-by-id/{id}")
+    public ResponseEntity<NhanVienResponse> getOneById(@PathVariable("id") int id) {
+        return ResponseEntity.ok(nhanVienService.getOneById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<NhanVien> update(@Valid @RequestBody AddNhanVienRequest nhanVienRequest,
+                                           @PathVariable("id") int id) {
+        return ResponseEntity.ok(nhanVienService.update(nhanVienRequest, id));
     }
 }

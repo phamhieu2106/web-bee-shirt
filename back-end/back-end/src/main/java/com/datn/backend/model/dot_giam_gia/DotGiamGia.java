@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,13 +42,13 @@ public class DotGiamGia extends BaseEntity {
     private String tenDotGiamGia;
 
     @Column(name = "gia_tri_phan_tram")
-    @Min(value = 5,message = "Discount percent must gather than 5")
+    @NotNull(message = "Discount percent can't be null")
+    @Min(value = 5, message = "Discount percent must gather than 5")
     @Max(value = 100, message = "Discount percent must below 100")
     private Integer giaTriPhanTram;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
-
 
 
 }

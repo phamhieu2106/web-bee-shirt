@@ -4,6 +4,7 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
+import com.datn.backend.exception.custom_exception.EntityNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +72,43 @@ public class NhanVienServiceImpl implements NhanVienService {
         pagedResponse.setSearch(search);
 
         return pagedResponse;
+    }
+
+    @Override
+    public NhanVienResponse getOneById(int id) {
+
+        if (nhanVienRepo.existsById(id) == false) {
+            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+        }
+
+        return nhanVienRepo.getOneById(id);
+    }
+
+    @Override
+    public NhanVien update(AddNhanVienRequest request, int id) {
+
+        Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
+
+        if(optionalNhanVien.isPresent()){
+            NhanVien nhanVien = optionalNhanVien.map(nv -> {
+                nv.setHoTen(request.getHoTen());
+                nv.setNgaySinh(request.getNgaySinh());
+                nv.setSdt(request.getSdt());
+                nv.setGioiTinh(request.isGioiTinh());
+                nv.setEmail(request.getEmail());
+                nv.setDiaChi(request.getDiaChi());
+
+                Account acc = optionalNhanVien.get().getAccount();
+                acc.setTenDangNhap(request.getTenDangNhap());
+                acc.setMatKhau(request.getMatKhau());
+                nv.setAccount(acc);
+                nhanVienRepo.save(nv);
+                return nv;
+            }).get();
+          return nhanVien;
+        } else {
+            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+        }
+
     }
 }

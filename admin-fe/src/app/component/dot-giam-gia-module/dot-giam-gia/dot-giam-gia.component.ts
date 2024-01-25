@@ -1,5 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
 
 @Component({
   selector: "app-dot-giam-gia",
@@ -17,39 +19,58 @@ export class DotGiamGiaComponent implements OnInit {
     "Giá Trị Giảm",
     "Ngày Bắt Đầu",
     "Ngày Kết Thúc",
-    "Ngày Cập Nhật",
     "Trạng Thái",
     "Hành Động",
   ];
-  listDotGiamGia: DotGiamGia[] = [
-    {
-      maDotGiamGia: "ABCD123",
-      tenDotGiamGia: "Tết 2024",
-      giaTriPhanTram: 10,
-      ngayBatDau: "2024/1/17",
-      ngayKetThuc: "2024/2/17",
-      ngaySua: "2024/1/17",
-      trangThai: 1,
-    },
-    {
-      maDotGiamGia: "AAAAAAA",
-      tenDotGiamGia: "Tết 2023",
-      giaTriPhanTram: 99,
-      ngayBatDau: "2023/1/17",
-      ngayKetThuc: "2023/2/17",
-      ngaySua: "2023/1/17",
-      trangThai: 0,
-    },
-    {
-      maDotGiamGia: "BBBBBBB",
-      tenDotGiamGia: "Tết 2025",
-      giaTriPhanTram: 20,
-      ngayBatDau: "2025/1/17",
-      ngayKetThuc: "2025/2/17",
-      ngaySua: "2024/1/17",
-      trangThai: 2,
-    },
-  ];
+  data: DotGiamGia[] = [];
+  pageNumber: number;
+  pageArray: number[];
+  pageSize: number;
+  search: string;
 
-  ngOnInit(): void {}
+  constructor(private service: DotGiamGiaService) {}
+
+  ngOnInit(): void {
+    // Load ListDotGiamGia when first loaded
+    this.getAllDotGiamGia();
+  }
+
+  private setDataTable(value: PagedResponse<DotGiamGia>) {
+    this.data = value.data;
+    this.pageArray = value.pageNumberArr;
+    this.pageSize = value.pageSize;
+    this.pageNumber = value.pageNumber;
+  }
+
+  public getAllDotGiamGia(): void {
+    // Get DotGiamGia from service
+    this.service.getAllDotGiamGia().subscribe({
+      next: (value) => {
+        this.setDataTable(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
+  public handleChangePageSize(pageSize: any) {
+    this.service.getDotGiamGiaPageSize(pageSize).subscribe({
+      next: (value) => {
+        this.setDataTable(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
+  public handleChangePageNumber(pageNumber: any) {
+    this.service.getDotGiamGiaPageNumber(this.pageSize, pageNumber).subscribe({
+      next: (value) => {
+        this.setDataTable(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
 }

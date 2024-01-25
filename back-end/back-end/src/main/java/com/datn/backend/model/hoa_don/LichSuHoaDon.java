@@ -1,7 +1,10 @@
 package com.datn.backend.model.hoa_don;
 
+import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.model.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +32,9 @@ public class LichSuHoaDon extends BaseEntity {
 
     private String tieuDe;
     private String moTa;
+
+    @Enumerated(EnumType.STRING)
+    private TrangThaiHoaDon trangThai;
 
     @ManyToOne
     @JoinColumn(name = "id_hoa_don")

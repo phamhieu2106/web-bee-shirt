@@ -22,4 +22,29 @@ export class HoaDonService {
   }
 
   // get by id
+  public getById(id: number): Observable<any> {
+    const url = `/get-by-id/${id}`;
+    return this.http.get(this.baseUrl + url);
+  }
+
+  // change order status
+  public changeOrderStatus(
+    idHoaDon: number,
+    moTa: string,
+    isNext: boolean
+  ): Observable<any> {
+    return this.http.post(this.baseUrl + "/change-status", {
+      idHoaDon,
+      moTa,
+      isNext,
+    });
+  }
+
+  // cancel order
+  public cancelOrder(idHoaDon: number, moTa: string): Observable<any> {
+    return this.http.post(this.baseUrl + "/change-status/cancel", {
+      idHoaDon,
+      moTa,
+    });
+  }
 }

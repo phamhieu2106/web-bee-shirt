@@ -1,14 +1,22 @@
 package com.datn.backend.dto.response;
 
-public interface DotGiamGiaReponse {
+public interface DotGiamGiaResponse {
 
-//    Get params using query
+    //    Get params using query
+    String getId();
+
     String getMaDotGiamGia();
+
     String getTenDotGiamGia();
+
     String getGiaTriPhanTram();
+
     String getSoLuongSanPham();
+
     String getNgayBatDau();
+
     String getNgayKetThuc();
+
     String getTrangThai();
 
 }

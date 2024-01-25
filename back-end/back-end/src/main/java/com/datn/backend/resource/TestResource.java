@@ -1,12 +1,10 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.model.san_pham.ChatLieu;
-import com.datn.backend.security.MyUserDetails;
 import com.datn.backend.service.ChatLieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

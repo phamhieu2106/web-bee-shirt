@@ -10,4 +10,8 @@ public interface NhanVienService {
     NhanVien add(AddNhanVienRequest request);
 
     PagedResponse<NhanVienResponse> getAll(int pageNumber, int pageSize, String search);
+
+    NhanVienResponse getOneById(int id);
+
+    NhanVien update(AddNhanVienRequest request, int id);
 }

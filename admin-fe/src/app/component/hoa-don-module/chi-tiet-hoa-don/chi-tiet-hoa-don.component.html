@@ -5,7 +5,11 @@
   [title]="'Chi tiết hóa đơn'"
 ></app-main-heading>
 <br />
-<app-order-tracking></app-order-tracking>
+<app-order-tracking
+  [lichSuHoaDons]="hoaDon.lichSuHoaDons"
+  [idHoaDon]="hoaDon.id"
+  [trangThaiHD]="hoaDon.trangThai"
+></app-order-tracking>
 <app-order-history-payment></app-order-history-payment>
 <app-order-info></app-order-info>
 <app-order-product></app-order-product>

@@ -8,8 +8,9 @@ import { OrderTrackingComponent } from "./order-tracking/order-tracking.componen
 import { OrderHistoryPaymentComponent } from "./order-history-payment/order-history-payment.component";
 import { OrderInfoComponent } from "./order-info/order-info.component";
 import { OrderProductComponent } from "./order-product/order-product.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,13 @@ import { CommonModule } from "@angular/common";
     OrderInfoComponent,
     OrderProductComponent,
   ],
-  imports: [HoaDonRoutingModule, LayoutModule, FormsModule, CommonModule],
+  imports: [
+    HoaDonRoutingModule,
+    LayoutModule,
+    FormsModule,
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+  ],
 })
 export class HoaDonModule {}

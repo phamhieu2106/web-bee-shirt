@@ -13,7 +13,13 @@
     <app-table
       [titleTable]="titleTable"
       [tHead]="tHead"
-      [listObject]="listDotGiamGia"
+      [listObject]="data"
+      [pageArray]="pageArray"
+      [pageNumber]="pageNumber"
+      [pageSize]="pageSize"
+      [search]="search"
+      (onPageChange)="handleChangePageSize($event)"
+      (onPageNumberChange)="handleChangePageNumber($event)"
     ></app-table>
     <!-- Row ends -->
   </div>

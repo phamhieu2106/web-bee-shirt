@@ -1,6 +1,9 @@
 package com.datn.backend.app_configuration;
 
+import com.cloudinary.Cloudinary;
 import com.datn.backend.utility.AuditorAwareImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +13,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -23,6 +28,22 @@ public class ApplicationConfiguration {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
+
+    @Bean
+    public Cloudinary cloudinary() {
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("cloud_name", "dksrpfftz");
+        valuesMap.put("api_key", "723185261285916");
+        valuesMap.put("api_secret", "KpX9q3oUUmoOxEa9j_qgl_VNonY");
+        return new Cloudinary(valuesMap);
     }
 
     @Bean

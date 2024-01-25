@@ -20,10 +20,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     private PhieuGiamGiaRepository repository;
 
     @Autowired
-    public PhieuGiamGiaServceImpl(PhieuGiamGiaRepository repository){
+    public PhieuGiamGiaServceImpl(PhieuGiamGiaRepository repository) {
         super();
-        this.repository=repository;
+        this.repository = repository;
     }
+
     @Override
     public List<PhieuGiamGiaResponse> getAll() {
         return repository.getAll();
@@ -57,9 +58,10 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public List<PhieuGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
-        Pageable pageable = PageRequest.of(pageNumber - 1,pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return repository.getPagination(pageable,search);
+//        return repository.getPagination(pageable,search);
+        return null;
     }
 
 }

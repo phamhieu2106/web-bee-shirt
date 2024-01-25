@@ -92,14 +92,14 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         UUID uuid = UUID.randomUUID();
         object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
         //        Set Code
-        object.setMaDotGiamGia(uuid.toString());
-        //        Set Status
+        String code = "DGG" + uuid.toString().substring(0, 5).toUpperCase();
+        object.setMaDotGiamGia(code);
+        //        Set Statusd
         object.setTrangThai(1);
         //        map requestObject to Object
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
 
 //        save dotgiamgiasanpham to database
-
 //        save to database
         return repository.save(dotGiamGia);
     }
@@ -113,8 +113,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             object.setId(id);
 //            Set Code
             object.setMaDotGiamGia(optional.get().getMaDotGiamGia());
-
-
+            
             DotGiamGia dotGiamGia = object.map(optional.get());
 
             return repository.save(dotGiamGia);

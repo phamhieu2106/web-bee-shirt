@@ -31,9 +31,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             WHERE dgg.trang_thai > 0
-            AND dgg.ma_dot_giam_gia LIKE %:search
+            AND (dgg.ma_dot_giam_gia LIKE %:search
             OR dgg.ten_dot_giam_gia LIKE %:search
-            OR dgg.gia_tri_phan_tram = :search
+            OR dgg.gia_tri_phan_tram = :search)
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
                         """
             , nativeQuery = true)

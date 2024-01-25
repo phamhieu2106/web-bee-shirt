@@ -5,6 +5,5 @@ export class DotGiamGia {
   giaTriPhanTram: number;
   ngayBatDau: string;
   ngayKetThuc: string;
-  ngaySua: string;
   trangThai: number;
 }

@@ -1,9 +1,7 @@
 package com.datn.backend.repository;
 
-import com.datn.backend.dto.response.DotGiamGiaReponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +22,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             "pgg.thoi_gian_bat_dau as ThoiGianBatDau," +
             "pgg.thoi_gian_ket_thuc as ThoiGianKetThuc," +
             "pgg.trang_thai as TrangThai from phieu_giam_gia pgg"
-            ,nativeQuery = true)
+            , nativeQuery = true)
     List<PhieuGiamGiaResponse> getAll();
 
     @Query(value = "select  pgg.ma_phieu_giam_gia as MaPhieuGiamGia," +
@@ -38,10 +36,10 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             "pgg.thoi_gian_bat_dau as ThoiGianBatDau," +
             "pgg.thoi_gian_ket_thuc as ThoiGianKetThuc," +
             "pgg.trang_thai as TrangThai from phieu_giam_gia pgg where pgg.id=:id"
-            ,nativeQuery = true)
-    PhieuGiamGiaResponse getOneById(@Param("id")Integer id);
+            , nativeQuery = true)
+    PhieuGiamGiaResponse getOneById(@Param("id") Integer id);
 
-    @Query(value = "")
-    List<PhieuGiamGiaResponse> getPagination(Pageable pageable, @Param("search")String search);
+//    @Query(value = "")
+//    List<PhieuGiamGiaResponse> getPagination(Pageable pageable, @Param("search") String search);
 
 }

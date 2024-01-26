@@ -41,5 +41,5 @@ public class PhieuGiamGia extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
-    private Integer trangThai;
+    private boolean trangThai;
 }

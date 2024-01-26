@@ -55,9 +55,16 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         Optional<PhieuGiamGia> optional = repository.findById(id);
         return optional.map(phieuGiamGia -> {
-            phieuGiamGia.setTrangThai(0);
+            phieuGiamGia.setTrangThai(false);
             return repository.save(phieuGiamGia);
         }).orElse(null);
+    }
+
+    @Override
+    public void changeStatus(int id) {
+        PhieuGiamGia pgg = repository.findById(id).get();
+        pgg.setTrangThai(!pgg.isTrangThai());
+        repository.save(pgg);
     }
 
     @Override

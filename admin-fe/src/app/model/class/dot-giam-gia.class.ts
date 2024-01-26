@@ -7,4 +7,5 @@ export class DotGiamGia {
   ngayKetThuc: string;
   soLuongSanPham?: number;
   trangThai?: number;
+  listSanPham?: Array<number>;
 }

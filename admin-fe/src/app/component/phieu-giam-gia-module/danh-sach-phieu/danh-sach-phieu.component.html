@@ -1,4 +1,10 @@
+<app-main-heading
+  [icon]="'fa-solid fa-shirt'"
+  [mainHeading]="'Phiếu Giảm Giá'"
+  [title]="'Phiếu Giảm Giá'"
+></app-main-heading>
 <!-- Row start -->
+
 <div class="row gutters">
   <div class="col-sm-12">
 
@@ -65,116 +71,65 @@
           </div>
         </div>
 
-        <table id="rowSelection_wrapper" class="table dataTables_wrapper dt-bootstrap4 no-footer rounded">
-          <div class="row">
-            <div class="col-sm-12">
-              <table id="rowSelection" class="table table-striped table-bordered dataTable no-footer" role="grid"
-                     aria-describedby="rowSelection_info">
-                <thead>
-                <tr role="row">
-                  <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-sort="ascending" aria-label="Name: activate to sort column descending"
-                      style="width: 10.088px;">STT
-                  </th>
-                  <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-sort="ascending" aria-label="Name: activate to sort column descending"
-                      style="width: 80.088px;">Mã
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Position: activate to sort column ascending" style="width: 100.625px;">Tên
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Office: activate to sort column ascending" style="width: 60.475px;">Kiểu
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Age: activate to sort column ascending" style="width: 29.8625px;">Loại
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Start date: activate to sort column ascending" style="width: 70.85px;">Số lượng
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Salary: activate to sort column ascending" style="width: 53.5px;">Ngày bắt đầu
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Salary: activate to sort column ascending" style="width: 53.5px;">Ngày kết thúc
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Salary: activate to sort column ascending" style="width: 73.5px;">Trạng Thái
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                      aria-label="Salary: activate to sort column ascending" style="width: 83.5px;">Hành động
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
+        <!-- table -->
 
-                <tr role="row" class="odd">
-                  <td>1</td>
-                  <td>Airi Satou</td>
-                  <td>Tokyo</td>
-                  <td>
-                    <div class="congkhai"> Công khai</div>
-                  </td>
-                  <td>33</td>
-                  <td>2008/11/28</td>
-                  <td>2008/11/28</td>
-                  <td>33</td>
-                  <td>
-                    <div class="congkhai"> Đang diễn ra</div>
-                  </td>
-                  <td>
-                    <button class="btn btn-outline-light btn-rounded">
-                      <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr role="row" class="odd">
-                  <td>1</td>
-                  <td>Airi Satou</td>
-                  <td>Tokyo</td>
-                  <td>
-                    <div class="congkhai"> Công khai</div>
-                  </td>
-                  <td>33</td>
-                  <td>2008/11/28</td>
-                  <td>2008/11/28</td>
-                  <td>33</td>
-                  <td>
-                    <div class="congkhai"> Đang diễn ra</div>
-                  </td>
-                  <td>
-                    <button class="btn btn-outline-light btn-rounded">
-                      <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr role="row" class="odd">
-                  <td>1</td>
-                  <td>Airi Satou</td>
-                  <td>Tokyo</td>
-                  <td>
-                    <div class="congkhai"> Công khai</div>
-                  </td>
-                  <td>33</td>
-                  <td>2008/11/28</td>
-                  <td>2008/11/28</td>
-                  <td>33</td>
-                  <td>
-                    <div class="private"> Đã kết thúc</div>
-                  </td>
-                  <td>
-                    <button class="btn btn-outline-light btn-rounded">
-                      <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
-                    </button>
-
-                  </td>
-                </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
+         <!-- TABLE -->
+         <table class="table">
+          <thead class="thead-default">
+            <tr>
+              <th>STT</th>
+              <th>Mã</th>
+              <th>Tên</th>
+              <th>Kiểu</th>
+              <th>Loại</th>
+              <th>Số Lượng</th>
+              <th>Ngày Bắt Đầu</th>
+              <th>Ngày Kết Thúc</th>
+              <th>Trạng Thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pgg of pagedResponseBinh?.data; let i = index">
+              <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
+              <td>{{ pgg.maPhieuGiamGia }}</td>
+              <td>{{ pgg.tenPhieuGiamGia }}</td>
+              <td>{{ pgg.kieu }}</td>
+              <td>{{ pgg.loai }}</td>
+              <td>{{ pgg.soLuong }}</td>
+              <td>{{ pgg.ngayBatDau |date : "dd-MM-yyyy" }}</td>
+              <td>{{ pgg.ngayKetThuc |date : "dd-MM-yyyy" }}</td>
+              <td>{{ pgg.trangThai }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded me-2"
+                  title="Xem chi tiết"
+                  data-toggle="modal"
+                  data-target="#chatLieuDetailsForm"
+                
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  title="Cập nhật"
+                  data-toggle="modal"
+                  data-target="#chatLieuUpdateForm"
+                
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
         </table>
+        <!--  -->
 
         <!--End table-->
 

@@ -94,14 +94,14 @@
               <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân"}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy" }}</td>
-              <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy" }}</td>
+              <td>{{ pgg.thoiGianBatDau }}</td>
+              <td>{{ pgg.thoiGianKetThuc  }}</td>
               <td>
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" [id]="'trangThai' + pgg.id"
-                    [checked]="pgg.trangThai" (click)="changeStatus(pgg.id)" />
-                  <label class="custom-control-label" [for]="'trangThai' + pgg.id">{{ pgg.trangThai ? "Khả dụng" :
-                    "Không khả dụng" }}</label>
+                    [checked]="pgg.trangThai" (click)="changeStatus(pgg.id)"/>
+                  <label class="custom-control-label" [for]="'trangThai' + pgg.id">{{ pgg.trangThai ? "Hoạt Động" :
+                    "Ngừng Hoạt Động" }}</label>
                 </div>
               </td>
               <td>

@@ -56,11 +56,5 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        service.remove(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
 
 }

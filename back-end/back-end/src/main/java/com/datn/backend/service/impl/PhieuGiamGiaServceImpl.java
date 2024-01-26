@@ -28,10 +28,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         this.repository = repository;
     }
 
-    @Override
-    public List<PhieuGiamGiaResponse> getAll() {
-        return repository.getAll();
-    }
 
     @Override
     public PhieuGiamGiaResponse getOne(Integer id) {
@@ -68,11 +64,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public PagedResponse<PhieuGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
+    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGiaResponse> phieuGiamGiaPage = repository.getPagination(pageable, search);
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search);
 
-        PagedResponse<PhieuGiamGiaResponse> paged = new PagedResponse<>();
+        PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
         paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());

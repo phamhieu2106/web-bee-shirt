@@ -50,4 +50,16 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     public ChatLieu getById(int id) {
         return chatLieuRepo.findById(id).get();
     }
+
+    @Override
+    public void changeStatus(int id) {
+        ChatLieu chatLieu = chatLieuRepo.findById(id).get();
+        chatLieu.setTrangThai(!chatLieu.isTrangThai());
+        chatLieuRepo.save(chatLieu);
+    }
+
+    @Override
+    public ChatLieu update(ChatLieu chatLieu) {
+        return chatLieuRepo.save(chatLieu);
+    }
 }

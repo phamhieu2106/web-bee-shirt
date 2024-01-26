@@ -1,6 +1,7 @@
 package com.datn.backend.model.phieu_giam_gia;
 
 import com.datn.backend.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +36,9 @@ public class PhieuGiamGia extends BaseEntity {
     private BigDecimal giaTriMax;
     private BigDecimal dieuKienGiam;
     private int soLuong;
+
+    @LastModifiedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
     private Integer trangThai;

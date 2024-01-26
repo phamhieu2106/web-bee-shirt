@@ -1,11 +1,19 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
+import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.enumeration.TrangThaiHoaDon;
+import com.datn.backend.exception.custom_exception.IdNotFoundException;
+import com.datn.backend.exception.custom_exception.OrderStatusException;
 import com.datn.backend.model.hoa_don.HoaDon;
+import com.datn.backend.model.hoa_don.LichSuHoaDon;
 import com.datn.backend.repository.HoaDonRepository;
+import com.datn.backend.repository.LichSuHoaDonRepository;
 import com.datn.backend.service.HoaDonService;
 import com.datn.backend.utility.UtilityFunction;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -13,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * @author HungDV
@@ -22,6 +31,7 @@ import java.time.LocalDate;
 public class HoaDonServiceImpl implements HoaDonService {
     private final HoaDonRepository hoaDonRepository;
     private final ModelMapper modelMapper;
+    private final LichSuHoaDonRepository lichSuHoaDonRepository;
 
     /**
      * @param pageable
@@ -33,7 +43,7 @@ public class HoaDonServiceImpl implements HoaDonService {
      */
     @Override
     public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable,search,loaiHoaDon,ngayTao);
+        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao);
 
         return PagedResponse.
                 <HoaDonResponse>builder()
@@ -47,6 +57,87 @@ public class HoaDonServiceImpl implements HoaDonService {
                         hoaDons.getContent().stream().map(hoaDon -> mapToHoaDonResponse(hoaDon)).toList()
                 )
                 .build();
+    }
+
+    @Override
+    public HoaDonResponse getById(Integer id) {
+        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        if (hoaDon.isEmpty()) {
+            throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
+        }
+        HoaDonResponse hoaDonResponse = mapToHoaDonResponse(hoaDon.get());
+        return hoaDonResponse;
+    }
+
+    @Override
+    public LichSuHoaDonResponse changeOrderStatus(ChangeOrderStatusRequest changeOrderStatus) {
+        int id = changeOrderStatus.getIdHoaDon();
+        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        if (hoaDon.isEmpty()) {
+            throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
+        }
+        HoaDon hoaDonUpdate = hoaDon.get();
+        // đổi trạng thái
+        TrangThaiHoaDon nextTrangThaiHD;
+        if (changeOrderStatus.isNext()) {
+            // nếu next = true thì next trạng thái
+            if (hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HUY || hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HOAN_THANH) {
+                // Hóa đơn đang ở trạng thái HUY hoặc HOAN_THANH thì k thể next trạng thái
+                throw new OrderStatusException("Hóa đơn này không thể thay đổi trạng thái được nữa");
+            }
+            nextTrangThaiHD = TrangThaiHoaDon.valueOf(hoaDonUpdate.getTrangThai().getNext());
+        } else {
+            // nếu next = false thì prev trạng thái
+            if (hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.TAO_DON) {
+                // Hóa đơn đang ở trạng thái TAO_DON thì k thể prev trạng thái
+                throw new OrderStatusException("Hóa đơn này không thể quay lại trạng thái được nữa");
+            }
+            nextTrangThaiHD = TrangThaiHoaDon.valueOf(hoaDonUpdate.getTrangThai().getPrev());
+        }
+        hoaDonUpdate.setTrangThai(nextTrangThaiHD);
+        //tạo 1 lịch sử hóa đơn
+        LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                .hoaDon(hoaDonUpdate)
+                .moTa(changeOrderStatus.getMoTa())
+                .tieuDe(nextTrangThaiHD.getTitle())
+                .trangThai(nextTrangThaiHD)
+                .build();
+
+        return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
+    }
+
+    @Override
+    public LichSuHoaDonResponse cancelOrder(ChangeOrderStatusRequest changeOrderStatus) {
+        int id = changeOrderStatus.getIdHoaDon();
+        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        if (hoaDon.isEmpty()) {
+            throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
+        }
+        HoaDon hoaDonUpdate = hoaDon.get();
+
+
+        // đổi trạng thái
+        if (hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.DANG_GIAO ||
+                hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HUY ||
+                hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HOAN_THANH) {
+            // Hóa đơn đang ở trạng thái DANG_GIAO || HUY || HOAN_THANH thì k thể hủy hóa đơn
+            throw new OrderStatusException("Hóa đơn này không thể thay đổi trạng thái được nữa");
+        }
+
+
+        TrangThaiHoaDon cancelOrder = TrangThaiHoaDon.HUY;
+        hoaDonUpdate.setTrangThai(cancelOrder);
+
+
+        //tạo 1 lịch sử hóa đơn
+        LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                .hoaDon(hoaDonUpdate)
+                .moTa(changeOrderStatus.getMoTa())
+                .tieuDe(cancelOrder.getTitle())
+                .trangThai(cancelOrder)
+                .build();
+
+        return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {

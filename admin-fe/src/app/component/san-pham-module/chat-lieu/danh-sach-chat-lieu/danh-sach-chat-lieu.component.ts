@@ -6,6 +6,7 @@ import { ChatLieu } from "src/app/model/class/chat-lieu.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { ChatLieuService } from "src/app/service/chat-lieu.service";
 import Swal from "sweetalert2";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-danh-sach-chat-lieu",
@@ -19,7 +20,10 @@ export class DanhSachChatLieuComponent {
   public search = "";
   public selectedDetails: ChatLieu;
 
-  constructor(private chatLieuService: ChatLieuService) {}
+  constructor(
+    private chatLieuService: ChatLieuService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.getChatLieuList();
@@ -31,7 +35,11 @@ export class DanhSachChatLieuComponent {
   public add(): void {
     this.chatLieuService.add(this.addForm.value).subscribe({
       next: (response: ChatLieu) => {
-        this.getChatLieuList();
+        this.goToPage(
+          this.pagedResponse.pageNumber,
+          this.pagedResponse.pageSize,
+          this.pagedResponse.search
+        );
         this.initAddForm();
         Swal.fire({
           icon: "success",
@@ -95,11 +103,53 @@ export class DanhSachChatLieuComponent {
     this.chatLieuService.getById(id).subscribe({
       next: (response: ChatLieu) => {
         this.updateForm = new FormGroup({
+          id: new FormControl(response.id),
           ten: new FormControl(response.ten, [Validators.required]),
+          trangThai: new FormControl(response.trangThai),
         });
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
+      },
+    });
+  }
+
+  public changeStatus(id: number): void {
+    this.chatLieuService.changeStatus(id).subscribe({
+      next: (response: string) => {
+        this.toastr.success(response, "");
+        this.goToPage(
+          this.pagedResponse.pageNumber,
+          this.pagedResponse.pageSize,
+          this.pagedResponse.search
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+  public update(): void {
+    console.log(this.updateForm.value);
+    this.chatLieuService.update(this.updateForm.value).subscribe({
+      next: (response: ChatLieu) => {
+        this.goToPage(
+          this.pagedResponse.pageNumber,
+          this.pagedResponse.pageSize,
+          this.pagedResponse.search
+        );
+        this.initUpdateForm();
+        Swal.fire({
+          icon: "success",
+          title: `Cập nhật thành công '${response.ten}'!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        document.getElementById("closeBtn").click();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message);
       },
     });
   }
@@ -118,7 +168,9 @@ export class DanhSachChatLieuComponent {
 
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
+      id: new FormControl(0),
       ten: new FormControl("", [Validators.required]),
+      trangThai: new FormControl(false),
     });
   }
 }

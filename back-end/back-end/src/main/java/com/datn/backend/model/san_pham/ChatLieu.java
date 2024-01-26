@@ -25,6 +25,3 @@ public class ChatLieu extends BaseEntity {
     private String ten;
     private boolean trangThai;
 }
-/**
- Flannel, Cotton
- **/

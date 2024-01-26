@@ -1,10 +1,13 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +28,11 @@ public class MauSac extends BaseEntity {
 
     private String ten;
     private String ma;
-    private String imageUrl;
     private boolean trangThai;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private MauSacImage image;
 }
 /**
     NAVY, OLIVE, BEIGE, PEYOTE

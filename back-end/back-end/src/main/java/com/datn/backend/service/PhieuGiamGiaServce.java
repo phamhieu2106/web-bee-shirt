@@ -1,6 +1,7 @@
 package com.datn.backend.service;
 
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
+import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 
@@ -17,5 +18,5 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia remove(Integer id);
 
-    List<PhieuGiamGiaResponse> getPagination(int pageNumber,int pageSize,String search);
+    PagedResponse<PhieuGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search);
 }

@@ -94,11 +94,11 @@
               <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
-              <td>{{ pgg.kieu }}</td>
-              <td>{{ pgg.loai }}</td>
+              <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
+              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân"}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.ngayBatDau |date : "dd-MM-yyyy" }}</td>
-              <td>{{ pgg.ngayKetThuc |date : "dd-MM-yyyy" }}</td>
+              <td>{{ pgg.ngayBatDau  }}</td>
+              <td>{{ pgg.ngayKetThuc }}</td>
               <td>{{ pgg.trangThai }}</td>
               <td>
                 <button

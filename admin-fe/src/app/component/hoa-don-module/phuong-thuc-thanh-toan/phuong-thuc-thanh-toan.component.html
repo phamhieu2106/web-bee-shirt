@@ -1,0 +1,7 @@
+<span [ngSwitch]="phuongThucThanhToan">
+  <span *ngSwitchCase="'TIEN_MAT'" class="badge badge-primary">Tiền mặt</span>
+  <span *ngSwitchCase="'CHUYEN_KHOAN'" class="badge badge-success"
+    >Chuyển khoản</span
+  >
+  <span *ngSwitchDefault>ERROR</span>
+</span>

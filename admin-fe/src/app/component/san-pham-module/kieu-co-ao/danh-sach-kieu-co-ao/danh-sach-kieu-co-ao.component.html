@@ -14,17 +14,31 @@
           <div class="col col-md-12 d-flex">
             <div class="input-group form-group search-block">
               <input
-                type="text"
+                type="search"
                 class="form-control"
-                placeholder="Tìm màu sắc..."
+                placeholder="Tìm cổ áo..."
+                (search)="onClearSearchInput()"
+                [(ngModel)]="search"
               />
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="button">Tìm kiếm</button>
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="timKiem()"
+                >
+                  Tìm kiếm
+                </button>
               </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
-              <button type="button" class="btn btn-primary btn-lg">
+              <button
+                type="button"
+                class="btn btn-primary btn-lg"
+                title="Thêm mới"
+                data-bs-toggle="modal"
+                data-bs-target="#coAoAddForm"
+              >
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
             </div>
@@ -38,37 +52,65 @@
           <thead class="thead-default">
             <tr>
               <th>STT</th>
-              <th>Ảnh</th>
-              <th>Mã màu</th>
-              <th>Tên màu</th>
-              <th>Ngày thêm</th>
+              <th>Tên</th>
+              <th>Trạng Thái</th>
+              <th>Ngày Thêm</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td></td>
+            <tr *ngFor="let ca of pagedResponse?.data; let i = index">
+              <th scope="row">
+                {{
+                  i +
+                    1 +
+                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                }}
+              </th>
+              <td>{{ ca.ten }}</td>
+              <td>
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    [id]="'trangThai' + ca.id"
+                    [checked]="ca.trangThai"
+                    (click)="changeStatus(ca.id)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    [for]="'trangThai' + ca.id"
+                    >{{ ca.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
+                  >
+                </div>
+              </td>
+              <td>{{ ca.createdAt }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded me-2"
+                  title="Xem chi tiết"
+                  data-bs-toggle="modal"
+                  data-bs-target="#coAoDetailsForm"
+                  (click)="openDetailsForm(ca.id)"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+                <button
+                  class="btn btn-outline-warning btn-rounded"
+                  title="Cập nhật"
+                  data-bs-toggle="modal"
+                  data-bs-target="#coAoUpdateForm"
+                  (click)="openUpdateForm(ca.id)"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -83,7 +125,9 @@
             <select
               class="custom-select my-1 mr-sm-2 col-md-5"
               id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize($event)"
             >
+              >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -92,20 +136,229 @@
           <div class="">
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li class="page-item">
-                  <a class="page-link" href="#">Previous</a>
+                <li
+                  class="page-item"
+                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                >
+                  <a
+                    class="page-link pointer"
+                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    >Previous</a
+                  >
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
+                <li
+                  class="page-item"
+                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                >
+                  <a
+                    class="page-link pointer"
+                    [ngClass]="
+                      pagedResponse?.pageNumber == page ? 'active' : ''
+                    "
+                    (click)="goToPage(page)"
+                    >{{ page }}</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [ngClass]="
+                    pagedResponse?.pageNumber == pagedResponse?.totalPages
+                      ? 'disabled'
+                      : ''
+                  "
+                >
+                  <a
+                    class="page-link pointer"
+                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    >Next</a
+                  >
                 </li>
               </ul>
             </nav>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- add modal -->
+<div
+  class="modal fade"
+  id="coAoAddForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Thêm mới chất liệu
+        </h1>
+      </div>
+      <form [formGroup]="addForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <label for="inputEmail4">Tên cổ áo:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                addForm.get('ten').invalid && addForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ten"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            id="closeBtn"
+            type="button"
+            class="btn btn-secondary"
+            (click)="initAddForm()"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="addForm.invalid"
+            (click)="add()"
+          >
+            Thêm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- details modal -->
+<div
+  class="modal fade"
+  id="coAoDetailsForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Chi tiết</h1>
+      </div>
+      <form>
+        <div class="modal-body">
+          <div class="form-row">
+            <label for="inputEmail4">Tên chất liệu:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.ten"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Ngày tạo:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.createdAt"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Người tạo:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.createdBy"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Ngày cập nhật gần nhất:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.updatedAt"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Người cập nhật gần nhất:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.lastUpdatedBy"
+              disabled
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div
+  class="modal fade"
+  id="coAoUpdateForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Thêm mới chất liệu
+        </h1>
+      </div>
+      <form [formGroup]="updateForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <input type="hidden" formControlName="id" />
+            <input type="hidden" formControlName="trangThai" />
+            <label>Tên chất liệu:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                updateForm.get('ten').invalid && updateForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ten"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            id="updateCloseBtn"
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="updateForm.invalid"
+            (click)="update()"
+          >
+            Cập nhật
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

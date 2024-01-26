@@ -8,11 +8,11 @@ public interface NhanVienResponse {
     String getHoTen();
     LocalDate getNgaySinh();
     String getSdt();
-    boolean getGioiTinh();
+    Boolean getGioiTinh();
     String getEmail();
     String getDiaChi();
     String getTenDangNhap();
-    String geMatKhau();
-    boolean getTrangThai();
+    String getMatKhau();
+    Boolean getTrangThai();
     String getRole();
 }

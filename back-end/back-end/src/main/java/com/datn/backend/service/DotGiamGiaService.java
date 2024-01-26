@@ -5,13 +5,14 @@ import com.datn.backend.dto.response.DotGiamGiaResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 
-import java.util.List;
-
 public interface DotGiamGiaService {
 
 //    List<DotGiamGiaResponse> getAll();
 
     PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search);
+
+    PagedResponse<DotGiamGiaResponse> getFilter(int pageNumber, int pageSize, String search
+            , int status, String startDate, String endDate);
 
     DotGiamGiaResponse getOne(Integer id);
 
@@ -19,5 +20,5 @@ public interface DotGiamGiaService {
 
     DotGiamGia update(Integer id, DotGiamGiaRequest object);
 
-    DotGiamGia remove(Integer id);
+    boolean remove(Integer id);
 }

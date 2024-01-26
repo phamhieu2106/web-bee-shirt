@@ -1,10 +1,10 @@
 export class DotGiamGia {
   id?: number;
-  maDotGiamGia: string;
+  maDotGiamGia?: string;
   tenDotGiamGia: string;
   giaTriPhanTram: number;
   ngayBatDau: string;
   ngayKetThuc: string;
-  ngaySua: string;
-  trangThai: number;
+  soLuongSanPham?: number;
+  trangThai?: number;
 }

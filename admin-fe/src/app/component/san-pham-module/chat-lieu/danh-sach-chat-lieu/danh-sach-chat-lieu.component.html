@@ -53,21 +53,44 @@
             <tr>
               <th>STT</th>
               <th>Tên</th>
+              <th>Trạng Thái</th>
               <th>Ngày Thêm</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let cl of pagedResponse?.data; let i = index">
-              <th scope="row">{{ (i + 1) * pagedResponse.pageNumber }}</th>
+              <th scope="row">
+                {{
+                  i +
+                    1 +
+                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                }}
+              </th>
               <td>{{ cl.ten }}</td>
-              <td>{{ cl.createdAt | date : "dd-MM-yyyy" }}</td>
+              <td>
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    [id]="'trangThai' + cl.id"
+                    [checked]="cl.trangThai"
+                    (click)="changeStatus(cl.id)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    [for]="'trangThai' + cl.id"
+                    >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
+                  >
+                </div>
+              </td>
+              <td>{{ cl.createdAt }}</td>
               <td>
                 <button
                   class="btn btn-outline-light btn-rounded me-2"
                   title="Xem chi tiết"
-                  data-toggle="modal"
-                  data-target="#chatLieuDetailsForm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#chatLieuDetailsForm"
                   (click)="openDetailsForm(cl.id)"
                 >
                   <i
@@ -78,8 +101,8 @@
                 <button
                   class="btn btn-outline-warning btn-rounded"
                   title="Cập nhật"
-                  data-toggle="modal"
-                  data-target="#chatLieuUpdateForm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#chatLieuUpdateForm"
                   (click)="openUpdateForm(cl.id)"
                 >
                   <i
@@ -245,9 +268,7 @@
             <input
               type="text"
               class="form-control"
-              [value]="
-                selectedDetails?.createdAt | date : 'dd-MM-yyyy HH:mm:ss'
-              "
+              [value]="selectedDetails?.createdAt"
               disabled
             />
           </div>
@@ -265,9 +286,7 @@
             <input
               type="text"
               class="form-control"
-              [value]="
-                selectedDetails?.updatedAt | date : 'dd-MM-yyyy HH:mm:ss'
-              "
+              [value]="selectedDetails?.updatedAt"
               disabled
             />
           </div>
@@ -304,6 +323,8 @@
       <form [formGroup]="updateForm">
         <div class="modal-body">
           <div class="form-row">
+            <input type="hidden" formControlName="id" />
+            <input type="hidden" formControlName="trangThai" />
             <label>Tên chất liệu:</label>
             <input
               type="text"
@@ -332,7 +353,7 @@
             type="button"
             class="btn btn-primary"
             [disabled]="updateForm.invalid"
-            (click)="add()"
+            (click)="update()"
           >
             Cập nhật
           </button>

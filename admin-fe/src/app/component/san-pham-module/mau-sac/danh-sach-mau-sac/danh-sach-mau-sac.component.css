@@ -1,0 +1,11 @@
+.thumbnail {
+  height: 150px;
+  border-radius: 5%;
+  object-fit: cover;
+}
+
+.color-img {
+  height: 30px;
+  width: 60px;
+  object-fit: cover;
+}

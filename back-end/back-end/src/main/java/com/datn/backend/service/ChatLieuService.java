@@ -10,4 +10,8 @@ public interface ChatLieuService {
     PagedResponse<ChatLieu> getAll(int pageNumber, int pageSize, String search);
 
     ChatLieu getById(int id);
+
+    void changeStatus(int id);
+
+    ChatLieu update(ChatLieu chatLieu);
 }

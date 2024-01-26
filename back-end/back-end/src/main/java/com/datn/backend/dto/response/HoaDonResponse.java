@@ -1,16 +1,21 @@
 package com.datn.backend.dto.response;
 
 import com.datn.backend.constant.ApplicationConstant;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author HungDV
@@ -21,7 +26,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-public class HoaDonResponse {
+public class HoaDonResponse extends BaseResponse{
     private Integer id;
 
     private String ma;
@@ -32,15 +37,9 @@ public class HoaDonResponse {
     private BigDecimal tongTien;
     private BigDecimal tienGiam;
     private BigDecimal phiVanChuyen;
-
     private String loaiHoaDon;
-
     private String trangThai;
-
     private String ghiChu;
-
-    @DateTimeFormat(pattern = ApplicationConstant.DEFAULT_DATE_TIME_FORMAT)
-    private LocalDateTime createdAt;
 
 //    private NhanVien nhanVien;
 //
@@ -48,9 +47,7 @@ public class HoaDonResponse {
 //
 //    private PhieuGiamGia phieuGiamGia;
 //
-//    private List<HoaDonChiTiet> hoaDonChiTiets;
-//
-//    private List<LichSuHoaDon> lichSuHoaDons;
-//
-//    private List<ThanhToan> thanhToans;
+    private List<HoaDonChiTietResponse> hoaDonChiTiets;
+    private List<LichSuHoaDonResponse> lichSuHoaDons;
+    private List<ThanhToanResponse> thanhToans;
 }

@@ -42,6 +42,15 @@ INSERT INTO `datn-bee-shirt`.`lich_su_hoa_don` (`id`, `mo_ta`, `tieu_de`, `id_ho
 VALUES ('3', 'Đã xác nhận', 'Đã xác nhận', '5');
 INSERT INTO `datn-bee-shirt`.`lich_su_hoa_don` (`id`, `mo_ta`, `tieu_de`, `id_hoa_don`)
 VALUES ('4', 'Chờ giao', 'Chờ giao', '5');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `trang_thai` = 'CHO_XAC_NHAN' WHERE (`id` = '1');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `trang_thai` = 'CHO_XAC_NHAN' WHERE (`id` = '2');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `trang_thai` = 'DA_XAC_NHAN' WHERE (`id` = '3');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `trang_thai` = 'CHO_GIAO' WHERE (`id` = '4');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `created_at` = '2024-01-25 09:43:00' WHERE (`id` = '1');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `created_at` = '2024-01-25 09:43:00' WHERE (`id` = '2');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `created_at` = '2024-01-25 09:43:00' WHERE (`id` = '3');
+UPDATE `datn-bee-shirt`.`lich_su_hoa_don` SET `created_at` = '2024-01-25 09:43:00' WHERE (`id` = '4');
+
 -- Thanh toan
 INSERT INTO `datn-bee-shirt`.`thanh_toan` (`id`, `ma_giao_dich`, `so_tien`, `trang_thai`, `id_httt`, `id_hoa_don`)
 VALUES ('1', '123456789', '650000', 0, '2', '4');

@@ -35,4 +35,16 @@ export class ChatLieuService {
   public getById(id: number): Observable<ChatLieu> {
     return this.http.get<ChatLieu>(`${this.apiUrl}/get-by-id/${id}`);
   }
+
+  // 4
+  public changeStatus(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/status/${id}`, {
+      responseType: "text",
+    });
+  }
+
+  // 5
+  public update(chatLieu: ChatLieu): Observable<ChatLieu> {
+    return this.http.put<ChatLieu>(`${this.apiUrl}/update`, chatLieu);
+  }
 }

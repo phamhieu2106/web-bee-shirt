@@ -14,12 +14,11 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
     @Query(value =
             """
-            SELECT nv.id, nv.dia_chi, nv.email, nv.gioi_tinh, nv.ho_ten, nv.ngay_sinh, nv.sdt, acc.mat_khau, acc.role, acc.ten_dang_nhap, acc.trang_thai 
-            FROM nhan_vien nv 
-            JOIN account acc 
+            SELECT nv.id, nv.dia_chi as DiaChi, nv.email, nv.gioi_tinh as GioiTinh, nv.ho_ten as HoTen, nv.ngay_sinh as NgaySinh, nv.sdt, acc.mat_khau as MatKhau, acc.role, acc.ten_dang_nhap as TenDangNhap, acc.trang_thai as TrangThai
+            FROM account acc 
+            JOIN nhan_vien nv 
             ON nv.account_id = acc.id 
-            WHERE acc.trang_thai = 1
-            AND nv.ho_ten LIKE %:search% 
+            WHERE nv.ho_ten LIKE %:search% 
             OR nv.sdt LIKE %:search%
             OR nv.email LIKE %:search%
             ORDER BY nv.created_at DESC
@@ -27,4 +26,16 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
             , nativeQuery = true)
     Page<NhanVienResponse> getAll(Pageable pageable,
                                   @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT nv.id, nv.dia_chi as DiaChi, nv.email, nv.gioi_tinh as GioiTinh, nv.ho_ten as HoTen, nv.ngay_sinh as NgaySinh, nv.sdt, acc.mat_khau as MatKhau, acc.role, acc.ten_dang_nhap as TenDangNhap, acc.trang_thai as TrangThai
+            FROM account acc 
+            JOIN nhan_vien nv 
+            ON nv.account_id = acc.id 
+            WHERE nv.id = :id
+            ORDER BY nv.created_at DESC
+            """
+            , nativeQuery = true)
+    NhanVienResponse getOneById(Integer id);
 }

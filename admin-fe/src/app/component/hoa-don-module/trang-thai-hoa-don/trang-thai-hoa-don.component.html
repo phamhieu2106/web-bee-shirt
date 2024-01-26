@@ -1,0 +1,16 @@
+<span [ngSwitch]="trangThai">
+  <span *ngSwitchCase="'TAO_DON'" class="badge badge-primary">Tạo đơn</span>
+  <span *ngSwitchCase="'HOAN_THANH'" class="badge badge-success"
+    >Hoàn thành</span
+  >
+  <span *ngSwitchCase="'HUY'" class="badge badge-danger">Hủy</span>
+  <span *ngSwitchCase="'DANG_GIAO'" class="badge badge-warning">Đang giao</span>
+  <span *ngSwitchCase="'CHO_XAC_NHAN'" class="badge badge-info"
+    >Chờ xác nhận</span
+  >
+  <span *ngSwitchCase="'CHO_GIAO'" class="badge badge-light">Chờ giao</span>
+  <span *ngSwitchCase="'DA_XAC_NHAN'" class="badge badge-dark"
+    >Đã xác nhận</span
+  >
+  <span *ngSwitchDefault>ERROR</span>
+</span>

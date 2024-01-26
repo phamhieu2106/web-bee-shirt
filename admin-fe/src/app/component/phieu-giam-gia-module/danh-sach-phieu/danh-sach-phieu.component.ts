@@ -6,6 +6,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
+import { ToastrService } from "ngx-toastr";
 
 
 @Component({
@@ -20,7 +21,10 @@ export class DanhSachPhieuComponent {
   public search = "";
   public selectedDetails: PhieuGiamGia;
 
-  constructor(private phieuGiamGiaService: PhieuGiamGiaService) {}
+  constructor(
+    private phieuGiamGiaService: PhieuGiamGiaService,
+    private toastr: ToastrService
+    ) {}
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
@@ -32,6 +36,42 @@ export class DanhSachPhieuComponent {
   public add(): void {}
 
   public initAddForm(): void {}
+
+  public goToPage(
+    page: number = 1,
+    pageSize: number = 5,
+    keyword: string = ""
+  ): void {
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
+      next: (response: PagedResponse<PhieuGiamGia>) => {
+        this.pagedResponseBinh = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+  public changeStatus(id: number): void {
+    this.phieuGiamGiaService.changeStatus(id).subscribe({
+      next: (response: string) => {
+        this.toastr.success(response, "");
+        this.goToPage(
+          this.pagedResponseBinh.pageNumber,
+          this.pagedResponseBinh.pageSize,
+          this.pagedResponseBinh.search
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+
+  public onChangePageSize(e: any): void {
+    this.goToPage(1, e.target.value, this.search);
+  }
 
   //private function
   private getPhieuGiamGiaList(): void {

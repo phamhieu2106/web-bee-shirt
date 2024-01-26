@@ -28,10 +28,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         this.repository = repository;
     }
 
-    @Override
-    public List<PhieuGiamGiaResponse> getAll() {
-        return repository.getAll();
-    }
 
     @Override
     public PhieuGiamGiaResponse getOne(Integer id) {
@@ -55,17 +51,24 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         Optional<PhieuGiamGia> optional = repository.findById(id);
         return optional.map(phieuGiamGia -> {
-            phieuGiamGia.setTrangThai(0);
+            phieuGiamGia.setTrangThai(false);
             return repository.save(phieuGiamGia);
         }).orElse(null);
     }
 
     @Override
-    public PagedResponse<PhieuGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGiaResponse> phieuGiamGiaPage = repository.getPagination(pageable, search);
+    public void changeStatus(int id) {
+        PhieuGiamGia pgg = repository.findById(id).get();
+        pgg.setTrangThai(!pgg.isTrangThai());
+        repository.save(pgg);
+    }
 
-        PagedResponse<PhieuGiamGiaResponse> paged = new PagedResponse<>();
+    @Override
+    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search);
+
+        PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
         paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());

@@ -1,71 +1,137 @@
-<form>
-  <div class="form-row">
-      <label for="inputEmail4">Họ tên</label>
-      <input type="email" class="form-control" >   
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Ngày sinh</label>
-      <input type="date" class="form-control" >
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Giới tính</label>
-      <div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-  <label class="form-check-label" for="exampleRadios1">
-    Nam
-  </label>
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="title"
+></app-main-heading>
+<div class="row gutters mt-3">
+  <div class="col-sm-12">
+    <form class="card">
+      <div class="card-header">Bộ lọc</div>
+      <div class="card-body">
+        <div class="row gutters justify-content-md-center">
+          <div class="col-sm-4 col-12">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="inputName"
+                placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+              />
+            </div>
+          </div>
+          <div class="col-sm-2 col-12 me-4">
+            <div class="form-group">
+              <select class="form-control mx-sm-4">
+                <option value="" disabled selected hidden>
+                  Chọn giới tính
+                </option>
+                <option value="true">Nam</option>
+                <option value="false">Nữ</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-2 col-12">
+            <div class="form-group">
+              <select class="form-control mx-sm-4">
+                <option value="" disabled selected hidden>
+                  Chọn trạng thái
+                </option>
+                <option value="true">Đang làm việc</option>
+                <option value="false">Đã nghỉ việc</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-1">
+            <button class="btn btn-primary btn-rounded" style="float: right">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-        <label class="form-check-label" for="exampleRadios2">
-          Nữ
-        </label>
+    </form>
+  </div>
+</div>
+<!-- <div class="row gutters mt-3">
+  <div class="col-sm-12">
+    <form>
+      <div class="form-row">
+        <label for="inputEmail4">Họ tên</label>
+        <input type="email" class="form-control" />
       </div>
-    </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Ngày sinh</label>
+          <input type="date" class="form-control" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Giới tính</label>
+          <div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="exampleRadios"
+                id="exampleRadios1"
+                value="option1"
+                checked
+              />
+              <label class="form-check-label" for="exampleRadios1"> Nam </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="exampleRadios"
+                id="exampleRadios2"
+                value="option2"
+              />
+              <label class="form-check-label" for="exampleRadios2"> Nữ </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Email</label>
+          <input type="email" class="form-control" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Số điện thoại</label>
+          <input type="email" class="form-control" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Tỉnh/Thành phố</label>
+          <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Quận/Huyện</label>
+          <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Xã/Phường </label>
+          <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Địa chỉ giao hàng</label>
+          <input type="email" class="form-control" />
+        </div>
+      </div>
+    </form>
   </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Email</label>
-      <input type="email" class="form-control" >
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Số điện thoại</label>
-      <input type="email" class="form-control" >
-    </div>    
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Tỉnh/Thành phố</label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select>
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Quận/Huyện</label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select>
-    </div>    
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Xã/Phường </label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-      </select>
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Địa chỉ giao hàng</label>
-      <input type="email" class="form-control" >
-    </div>
-  </div>
-</form>
+</div> -->

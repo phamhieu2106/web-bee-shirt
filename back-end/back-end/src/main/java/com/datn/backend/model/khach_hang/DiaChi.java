@@ -1,17 +1,8 @@
 package com.datn.backend.model.khach_hang;
 
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "dia_chi")
@@ -19,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class DiaChi extends BaseEntity {
 
     @Id
@@ -31,7 +23,7 @@ public class DiaChi extends BaseEntity {
     private String duong;
     private boolean macDinh;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "khach_hang_id")
     private KhachHang khachHang;
 }

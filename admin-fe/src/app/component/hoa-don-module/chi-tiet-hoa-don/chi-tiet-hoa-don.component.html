@@ -5,11 +5,211 @@
   [title]="'Chi tiết hóa đơn'"
 ></app-main-heading>
 <br />
+<!-- Order trackking -->
 <app-order-tracking
   [lichSuHoaDons]="hoaDon.lichSuHoaDons"
   [idHoaDon]="hoaDon.id"
   [trangThaiHD]="hoaDon.trangThai"
 ></app-order-tracking>
-<app-order-history-payment></app-order-history-payment>
-<app-order-info></app-order-info>
-<app-order-product></app-order-product>
+
+<!-- Order history payment -->
+<app-order-history-payment
+  [lichSuThanhToans]="hoaDon.thanhToans"
+></app-order-history-payment>
+
+<!-- Order info -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex">
+        <h4 class="mr-auto">Thông tin đơn hàng: {{ hoaDon.ma }}</h4>
+        <div class="ml-auto">
+          <!-- Modal trigger -->
+          <button
+            type="button"
+            class="btn btn-warning ml-auto"
+            data-toggle="modal"
+            data-target="#changeOrderInfo"
+          >
+            Đổi địa chỉ
+          </button>
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="changeOrderInfo"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            style="display: none"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    Cập nhật thông tin
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <!-- Main modal -->
+                <div class="modal-body">
+                  <!-- Control button -->
+                  <div>
+                    <button type="button" class="btn btn-primary">
+                      Chọn địa chỉ
+                    </button>
+                  </div>
+                  <!-- Form -->
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label class="form-label">Tên người nhận:</label>
+                      <input type="text" class="form-control" />
+                      <small class="form-text text-danger">Help text</small>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Số điện thoại:</label>
+                      <input type="text" class="form-control" />
+                      <small class="form-text text-danger">Help text</small>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Tỉnh / Thành phố:</label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <select class="custom-select">
+                            <option selected=""></option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Quận / Huyện:</label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <select class="custom-select">
+                            <option selected=""></option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Xã / Phường / Thị trấn:</label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <select class="custom-select">
+                            <option selected=""></option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Địa chỉ cụ thể:</label>
+                      <input type="text" class="form-control" />
+                      <small class="form-text text-danger">Help text</small>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="form-label">Ghi chú:</label>
+                      <input type="text" class="form-control" />
+                      <small class="form-text text-danger">Help text</small>
+                    </div>
+                    <hr />
+                    <!-- Shipping info -->
+                    <div class="ml-5">
+                      <p>Thời gian giao hàng dự kiến: 21-01-2024</p>
+                      <p>Phí vận chuyển: 30,000 đ</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                  >
+                    Xác nhận
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-dismiss="modal"
+                  >
+                    Hủy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body row pl-5 pr-5">
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Trạng thái: </span>
+          <app-trang-thai-hoa-don
+            [trangThai]="hoaDon.trangThai"
+          ></app-trang-thai-hoa-don>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Loại HD: </span>
+          <app-loai-hoa-don [loaiHoaDon]="hoaDon.loaiHoaDon"></app-loai-hoa-don>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Tên người nhận: </span>
+          <span>{{ hoaDon.tenNguoiNhan }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Số điện thoại: </span
+          ><span>{{ hoaDon.sdtNguoiNhan }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Địa chỉ: </span
+          ><span>{{ hoaDon.diaChiNguoiNhan }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Email: </span
+          ><span>{{ hoaDon.diaChiNguoiNhan }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Ghi chú: </span>
+          <span>{{ hoaDon.ghiChu }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Tổng tiền: </span>
+          <span>{{ hoaDon.tongTien | currency : "đ " }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Tiền giảm: </span>
+          <span>{{ hoaDon.tienGiam | currency : "đ " }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Phí vận chuyển: </span>
+          <span>{{ hoaDon.phiVanChuyen | currency : "đ " }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Ngày tạo: </span>
+          <span>{{ hoaDon.createdAt }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Người tạo: </span>
+          <span>{{ hoaDon.createdBy }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Ngày update cuối: </span>
+          <span>{{ hoaDon.updatedAt }}</span>
+        </div>
+        <div class="col-md-6 mb-3">
+          <span class="font-weight-bold">Người update cuối: </span>
+          <span>{{ hoaDon.lastUpdatedBy }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END order Info -->
+
+<app-order-product [hoaDonChiTiets]="hoaDon.hoaDonChiTiets"></app-order-product>

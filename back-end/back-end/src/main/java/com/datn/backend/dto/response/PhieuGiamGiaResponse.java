@@ -2,6 +2,7 @@ package com.datn.backend.dto.response;
 
 public interface PhieuGiamGiaResponse {
 
+    String getId();
     String getMaPhieuGiamGia();
 
     String getTenPhieuGiamGia();

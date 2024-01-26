@@ -9,4 +9,10 @@ export class ModalComponent {
   @Input() title: string;
   @Input() message: string;
   @Input() nameAction: string;
+
+  @Input() handleSubmit: Function;
+
+  public callParentFuntion() {
+    this.handleSubmit();
+  }
 }

@@ -28,19 +28,15 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "ten_dang_nhap")
     @NotBlank(message = "Tên đăng nhập không được trống")
     private String tenDangNhap;
 
     @JsonIgnore
-    @Column(name = "mat_khau")
     @NotBlank(message = "Mật khẩu không được trống")
     private String matKhau;
 
-    @Column(name = "trang_thai")
     private boolean trangThai;
 
-    @Column(name = "role")
     private String role;
 //    private String[] authorities;
 }

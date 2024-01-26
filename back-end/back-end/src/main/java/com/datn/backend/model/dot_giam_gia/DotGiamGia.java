@@ -7,10 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,19 +28,12 @@ public class DotGiamGia extends BaseEntity {
     private Integer id;
 
     @Column(name = "ma_dot_giam_gia")
-    @NotNull(message = "DotGiamGia Code can't be null")
-    @NotBlank(message = "DotGiamGia Code can't be empty")
     private String maDotGiamGia;
 
     @Column(name = "ten_dot_giam_gia")
-    @NotNull(message = "DotGiamGia Name can't be null")
-    @NotBlank(message = "DotGiamGia Name can't be empty")
     private String tenDotGiamGia;
 
     @Column(name = "gia_tri_phan_tram")
-    @NotNull(message = "Discount percent can't be null")
-    @Min(value = 5, message = "Discount percent must gather than 5")
-    @Max(value = 100, message = "Discount percent must below 100")
     private Integer giaTriPhanTram;
 
     @Column(name = "trang_thai")

@@ -1,13 +1,13 @@
 package com.datn.backend.service;
 
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
+import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 
 import java.util.List;
 
 public interface PhieuGiamGiaServce {
-    List<PhieuGiamGiaResponse> getAll();
 
     PhieuGiamGiaResponse getOne(Integer id);
 
@@ -17,5 +17,7 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia remove(Integer id);
 
-    List<PhieuGiamGiaResponse> getPagination(int pageNumber,int pageSize,String search);
+    void changeStatus(int id);
+
+    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search);
 }

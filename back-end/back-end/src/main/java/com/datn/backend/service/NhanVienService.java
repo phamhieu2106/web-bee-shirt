@@ -11,7 +11,9 @@ public interface NhanVienService {
 
     PagedResponse<NhanVienResponse> getAll(int pageNumber, int pageSize, String search);
 
-    NhanVienResponse getOneById(int id);
+    NhanVienResponse getOneById(Integer id);
 
-    NhanVien update(AddNhanVienRequest request, int id);
+    NhanVien update(AddNhanVienRequest request, Integer id);
+
+    NhanVien delete(Integer id);
 }

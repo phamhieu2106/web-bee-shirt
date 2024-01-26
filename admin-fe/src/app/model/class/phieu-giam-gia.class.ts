@@ -5,7 +5,7 @@ export class PhieuGiamGia{
     kieu:number;
     loai:number;
     soLuong:number;
-    ngayBatDau:string;
-    ngayKetThuc:string;
-    trangThai:number;
+    thoiGianBatDau:string;
+    thoiGianKetThuc:string;
+    trangThai:boolean;
 }

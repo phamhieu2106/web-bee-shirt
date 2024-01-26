@@ -12,7 +12,6 @@ import { FormComponent } from "./form/form.component";
 import { ThemDotGiamGiaComponent } from "./them-dot-giam-gia/them-dot-giam-gia.component";
 import { ChiTietDotGiamGiaComponent } from "./chi-tiet-dot-giam-gia/chi-tiet-dot-giam-gia.component";
 import { CapNhatDotGiamGiaComponent } from "./cap-nhat-dot-giam-gia/cap-nhat-dot-giam-gia.component";
-import { DatePiePipe } from './pie/date-pie.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,6 @@ import { DatePiePipe } from './pie/date-pie.pipe';
     FormComponent,
     ChiTietDotGiamGiaComponent,
     CapNhatDotGiamGiaComponent,
-    DatePiePipe,
   ],
   imports: [
     DotGiamGiaRoutingModule,

@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
@@ -14,11 +20,12 @@ export class DotGiamGiaComponent implements OnInit {
   icon: string = "fa-solid fa-tags";
   titleTable: string = "Danh Sách Đợt Giảm Giá";
   tHead: Array<string> = [
-    "Mã Giảm Giá",
-    "Tên Giảm Giá",
+    "Mã Đợt Giảm Giá",
+    "Tên Đợt Giảm Giá",
     "Giá Trị Giảm",
     "Ngày Bắt Đầu",
     "Ngày Kết Thúc",
+    "Số Lượng Sản Phẩm",
     "Trạng Thái",
     "Hành Động",
   ];
@@ -53,7 +60,28 @@ export class DotGiamGiaComponent implements OnInit {
       },
     });
   }
-  public handleChangePageSize(pageSize: any) {
+
+  // DOT GIAM GIA FILTER HANDLING
+  public getValueFromFilter(data: any) {
+    this.service
+      .getFilterDotGiamGia(data.status, data.startDate, data.endDate)
+      .subscribe({
+        next: (value) => {
+          this.setDataTable(value);
+        },
+        error(err) {
+          console.log(err);
+        },
+      });
+  }
+
+  public reloadResetFilter() {
+    this.getAllDotGiamGia();
+  }
+  // END DOT GIAM GIA FILTER HANDLING
+
+  // DOT GIAM GIA TABLE HANDLING
+  public handleChangePageSizeDGG(pageSize: any) {
     this.service.getDotGiamGiaPageSize(pageSize).subscribe({
       next: (value) => {
         this.setDataTable(value);
@@ -63,7 +91,7 @@ export class DotGiamGiaComponent implements OnInit {
       },
     });
   }
-  public handleChangePageNumber(pageNumber: any) {
+  public handleChangePageNumberDGG(pageNumber: any) {
     this.service.getDotGiamGiaPageNumber(this.pageSize, pageNumber).subscribe({
       next: (value) => {
         this.setDataTable(value);
@@ -73,4 +101,15 @@ export class DotGiamGiaComponent implements OnInit {
       },
     });
   }
+  public handleChangeSearchDGG(search: any) {
+    this.service.getDotGiamGiaSearch(search).subscribe({
+      next: (value) => {
+        this.setDataTable(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
+  // END DOT GIAM GIA TABLE HANDLING
 }

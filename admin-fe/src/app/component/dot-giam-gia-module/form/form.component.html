@@ -1,7 +1,10 @@
 <div class="card">
-  <div class="card-header">{{ formHeader }}</div>
+  <h2 class="card-header d-flex justify-content-between">
+    <div>{{ formHeader }}</div>
+    <button (click)="resetForm()" class="btn btn-info">Làm mới</button>
+  </h2>
   <div class="card-body">
-    <form>
+    <form [formGroup]="form" (submit)="handleSubmit()">
       <div class="form-group row">
         <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
           >Tên Đợt Giảm Giá:</label
@@ -10,23 +13,33 @@
           <input
             type="text"
             class="form-control form-control-sm"
+            [className]="
+              TenDotGiamGia.invalid && TenDotGiamGia.touched
+                ? 'form-control form-control-sm is-invalid'
+                : 'form-control form-control-sm'
+            "
             placeholder="Tên Đợt Giảm Giá"
+            formControlName="tenDotGiamGia"
           />
+          <div class="invalid-feedback">Tên không hợp lệ</div>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
           >Giá Trị Giảm:</label
         >
-        <div class="col-sm-4 col-md-6 d-flex">
+        <div class="col-sm-4 col-md-6">
           <input
             type="number"
-            class="form-control form-control-md"
+            [className]="
+              GiaTriPhanTram.invalid && GiaTriPhanTram.touched
+                ? 'form-control form-control-md is-invalid'
+                : 'form-control form-control-md'
+            "
             placeholder="Giá Trị Giảm"
+            formControlName="giaTriPhanTram"
           />
-          <select class="select">
-            <option selected value="phanTram">%</option>
-          </select>
+          <div class="invalid-feedback">Giá Trị Giảm không hợp lệ</div>
         </div>
       </div>
       <div class="form-group row">
@@ -34,7 +47,16 @@
           >Ngày Bắt Đầu:</label
         >
         <div class="col-sm-4 col-md-7">
-          <input type="date" class="form-control form-control-sm" />
+          <input
+            type="datetime-local"
+            [className]="
+              NgayBatDau.invalid && NgayBatDau.touched
+                ? 'form-control form-control-sm is-invalid'
+                : 'form-control form-control-sm'
+            "
+            formControlName="ngayBatDau"
+          />
+          <div class="invalid-feedback">Ngày Bắt Đầu không hợp lệ</div>
         </div>
       </div>
       <div class="form-group row">
@@ -42,15 +64,31 @@
           >Ngày Kết Thúc:</label
         >
         <div class="col-sm-4 col-md-7">
-          <input type="date" class="form-control form-control-sm" />
+          <input
+            type="datetime-local"
+            [className]="
+              NgayKetThuc.invalid && NgayKetThuc.touched
+                ? 'form-control form-control-sm is-invalid'
+                : 'form-control form-control-sm'
+            "
+            formControlName="ngayKetThuc"
+          />
+          <div class="invalid-feedback">Ngày Kết Thúc không hợp lệ</div>
         </div>
       </div>
       <div class="d-flex justify-content-end">
+        <button
+          [routerLink]="'/dot-giam-gia/ds-dot-giam-gia'"
+          class="btn btn-danger mr-2"
+        >
+          Quay Lại
+        </button>
         <button
           type="button"
           class="btn btn-success"
           data-toggle="modal"
           data-target="#exampleModal"
+          [disabled]="form.invalid"
         >
           {{ formButton }}
         </button>
@@ -58,3 +96,11 @@
     </form>
   </div>
 </div>
+
+<!-- Modal -->
+<app-modal
+  [message]="modalMessage"
+  [nameAction]="modalAction"
+  [title]="modalTitle"
+  [handleSubmit]="handleSubmit"
+></app-modal>

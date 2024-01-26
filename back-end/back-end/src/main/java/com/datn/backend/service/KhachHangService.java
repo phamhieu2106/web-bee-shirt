@@ -10,5 +10,6 @@ public interface KhachHangService {
     PagedResponse<KhachHangResponse> getAll(int pageNumber, int pageSize, String search);
     KhachHang update(Integer id, KhachHangRequest kh);
     KhachHang delete(Integer id);
+    KhachHangResponse getById(int id);
 
 }

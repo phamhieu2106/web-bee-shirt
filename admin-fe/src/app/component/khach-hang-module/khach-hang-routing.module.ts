@@ -12,7 +12,7 @@ const khachHangRoutes: Routes = [
     component: DanhSachKhachHangComponent,
   },
   {
-    path: "khach-hang/detail",
+    path: "khach-hang/detail/:id",
     component: KhachHangDetailComponent,
   },
   {

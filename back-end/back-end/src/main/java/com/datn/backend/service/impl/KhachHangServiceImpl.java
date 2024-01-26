@@ -7,8 +7,6 @@ import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
-import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
-import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import com.datn.backend.service.KhachHangService;
@@ -27,7 +25,6 @@ import java.util.Optional;
 public class KhachHangServiceImpl implements KhachHangService {
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepository;
-    private final AccountRepository accountRepo;
     private final DiaChiService diaChiService;
 
 
@@ -102,11 +99,13 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang delete(Integer id) {
         Optional<KhachHang> kh = khachHangRepository.findById(id);
-//        return kh.map(khachHang->{
-//            khachHang.setTrangThai(0);
-//            return khachHangRepository.save(khachHang);
-//        }).orElse(null);
+
         khachHangRepository.deleteById(id);
         return null;
+    }
+
+    @Override
+    public KhachHangResponse getById(int id) {
+        return khachHangRepository.getById(id);
     }
 }

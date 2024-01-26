@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { KhachHang } from 'src/app/model/class/KhachHang.class';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
@@ -25,7 +26,8 @@ export class DanhSachKhachHangComponent {
 
   constructor(
     private khachHangService: KhachHangService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -93,15 +95,8 @@ export class DanhSachKhachHangComponent {
     this.goToPage();
   }
 
-  public openDetailsForm(id: number): void {
-    this.khachHangService.getById(id).subscribe({
-      next: (response: KhachHang) => {
-        this.selectedDetails = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+  public khDetail(id: number) {
+    this.router.navigate(['/khach-hang/detail',id]);
   }
 
   public openUpdateForm(id: number): void {

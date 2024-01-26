@@ -16,6 +16,7 @@
                 class="form-control"
                 id="inputName"
                 placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+                [(ngModel)]="search"
               />
             </div>
           </div>
@@ -41,9 +42,16 @@
               </select>
             </div>
           </div>
-          <div class="col-1">
-            <button class="btn btn-primary btn-rounded" style="float: right">
-              <i class="fa-solid fa-arrows-rotate"></i>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary m-2" (click)="timKiem()">
+              Tìm kiếm
+            </button>
+            <button
+              type="button"
+              class="btn btn-success m-2"
+              (click)="onClearSearchInput()"
+            >
+              Làm mới
             </button>
           </div>
         </div>
@@ -120,8 +128,9 @@
                 <button
                   class="btn btn-outline-light btn-rounded me-2"
                   title="Xem chi tiết"
-                  routerLink="#"
-                  (click)="openDetailsForm(kh.id)"
+                  data-toggle="modal"
+                  data-target="#formDetailKH"
+                  (click)="khDetail(kh.id)"
                 >
                   <i
                     class="fa-solid fa-circle-info fa-xl"
@@ -205,6 +214,38 @@
             </nav>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="formDetailKH"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thông tin khách hàng</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-khach-hang-detail></app-khach-hang-detail>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
       </div>
     </div>
   </div>

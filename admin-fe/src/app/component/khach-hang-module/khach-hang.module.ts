@@ -7,6 +7,7 @@ import { LayoutModule } from "../layout-module/layout.module";
 import { ThemKhachHangComponent } from "./them-khach-hang/them-khach-hang.component";
 import { SuaKhachHangComponent } from "./sua-khach-hang/sua-khach-hang.component";
 import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -15,6 +16,6 @@ import { CommonModule } from "@angular/common";
     ThemKhachHangComponent,
     SuaKhachHangComponent,
   ],
-  imports: [KhachHangRoutingModule, LayoutModule,CommonModule],
+  imports: [KhachHangRoutingModule, LayoutModule, CommonModule,FormsModule],
 })
 export class KhachHangModule {}

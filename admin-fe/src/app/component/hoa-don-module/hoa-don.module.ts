@@ -6,11 +6,13 @@ import { LayoutModule } from "../layout-module/layout.module";
 import { ChiTietHoaDonComponent } from "./chi-tiet-hoa-don/chi-tiet-hoa-don.component";
 import { OrderTrackingComponent } from "./order-tracking/order-tracking.component";
 import { OrderHistoryPaymentComponent } from "./order-history-payment/order-history-payment.component";
-import { OrderInfoComponent } from "./order-info/order-info.component";
 import { OrderProductComponent } from "./order-product/order-product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { TrangThaiHoaDonComponent } from './trang-thai-hoa-don/trang-thai-hoa-don.component';
+import { LoaiHoaDonComponent } from './loai-hoa-don/loai-hoa-don.component';
+import { PhuongThucThanhToanComponent } from './phuong-thuc-thanh-toan/phuong-thuc-thanh-toan.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +20,10 @@ import { RouterModule } from "@angular/router";
     ChiTietHoaDonComponent,
     OrderTrackingComponent,
     OrderHistoryPaymentComponent,
-    OrderInfoComponent,
     OrderProductComponent,
+    TrangThaiHoaDonComponent,
+    LoaiHoaDonComponent,
+    PhuongThucThanhToanComponent,
   ],
   imports: [
     HoaDonRoutingModule,

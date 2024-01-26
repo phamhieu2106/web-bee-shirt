@@ -48,7 +48,17 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setEmail(kh.getEmail());
         khachHang.setTrangThai(0);
         khachHang.setAccount(account);
-        return khachHangRepository.save(khachHang);
+        khachHangRepository.save(khachHang);
+        DiaChi diaChi = new DiaChi();
+        diaChi.setKhachHang(khachHang);
+        diaChi.setTinh(kh.getTinh());
+        diaChi.setHuyen(kh.getHuyen());
+        diaChi.setXa(kh.getXa());
+        diaChi.setDuong(kh.getDuong());
+        diaChi.setMacDinh(true);
+        diaChiService.add(diaChi);
+
+        return null;
     }
 
     @Override

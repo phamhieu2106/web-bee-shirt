@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./them-khach-hang.component.css']
 })
 export class ThemKhachHangComponent implements OnInit {
+  icon: string = "fa-solid fa-users";
+  title: string = "khách hàng";
+  mainHeading: string = "khách hàng";
 
   constructor() { }
 

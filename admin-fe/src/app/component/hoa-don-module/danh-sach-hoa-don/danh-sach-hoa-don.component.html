@@ -216,62 +216,17 @@
                         <td>Khách Hàng</td>
                         <td>Nhân viên</td>
                         <td>
-                          {{ hd.createdAt | date : "dd-MM-yyyy HH:mm:ss" }}
+                          {{ hd.createdAt }}
                         </td>
                         <td>
-                          <div [ngSwitch]="hd.trangThai">
-                            <span
-                              *ngSwitchCase="'TAO_DON'"
-                              class="badge badge-primary"
-                              >Tạo đơn</span
-                            >
-                            <span
-                              *ngSwitchCase="'HOAN_THANH'"
-                              class="badge badge-success"
-                              >Hoàn thành</span
-                            >
-                            <span
-                              *ngSwitchCase="'HUY'"
-                              class="badge badge-danger"
-                              >Hủy</span
-                            >
-                            <span
-                              *ngSwitchCase="'DANG_GIAO'"
-                              class="badge badge-warning"
-                              >Đang giao</span
-                            >
-                            <span
-                              *ngSwitchCase="'CHO_XAC_NHAN'"
-                              class="badge badge-info"
-                              >Chờ xác nhận</span
-                            >
-                            <span
-                              *ngSwitchCase="'CHO_GIAO'"
-                              class="badge badge-light"
-                              >Chờ giao</span
-                            >
-                            <span
-                              *ngSwitchCase="'DA_XAC_NHAN'"
-                              class="badge badge-dark"
-                              >Đã xác nhận</span
-                            >
-                            <span *ngSwitchDefault>ERROR</span>
-                          </div>
+                          <app-trang-thai-hoa-don
+                            [trangThai]="hd.trangThai"
+                          ></app-trang-thai-hoa-don>
                         </td>
                         <td>
-                          <div [ngSwitch]="hd.loaiHoaDon">
-                            <span
-                              *ngSwitchCase="'ONLINE'"
-                              class="badge badge-primary"
-                              >Online</span
-                            >
-                            <span
-                              *ngSwitchCase="'TAI_QUAY'"
-                              class="badge badge-success"
-                              >Tại quầy</span
-                            >
-                            <span *ngSwitchDefault>ERROR</span>
-                          </div>
+                          <app-loai-hoa-don
+                            [loaiHoaDon]="hd.loaiHoaDon"
+                          ></app-loai-hoa-don>
                         </td>
                         <td>{{ hd.tongTien | currency : "đ " }}</td>
                         <td>

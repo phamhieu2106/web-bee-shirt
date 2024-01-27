@@ -16,7 +16,6 @@ import { ToastrService } from "ngx-toastr";
 })
 export class DanhSachPhieuComponent {
   public pagedResponseBinh: PagedResponse<PhieuGiamGia>;
-  public addForm: FormGroup;
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: PhieuGiamGia;

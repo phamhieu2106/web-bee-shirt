@@ -1,6 +1,4 @@
-import { Account } from "./account.class";
-
-export class NhanVien {
+export interface NhanVienResponse {
   id?: number;
   hoTen: string;
   ngaySinh: string;
@@ -8,5 +6,8 @@ export class NhanVien {
   gioiTinh: boolean;
   email: string;
   diaChi: string;
-  account: Account;
+  tenDangNhap: string;
+  matKhau: string;
+  trangThai: boolean;
+  role: string;
 }

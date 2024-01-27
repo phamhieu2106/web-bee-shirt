@@ -1,5 +1,5 @@
 export class Account {
-  id: number;
+  id?: number;
   tenDangNhap: string;
   matKhau: string;
   trangThai: boolean;

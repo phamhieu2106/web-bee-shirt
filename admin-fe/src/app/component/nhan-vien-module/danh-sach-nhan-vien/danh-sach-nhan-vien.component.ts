@@ -47,9 +47,6 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getAll(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<NhanVienResponse>) => {
         this.pagedResponse = response;
-        console.log("pageNumber " + page);
-        console.log("pageSize " + pageSize);
-        console.log("search " + keyword);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);

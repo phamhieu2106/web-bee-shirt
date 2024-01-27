@@ -1,1 +1,105 @@
-<p>sửa</p>
+<div class="row gutters">
+  <div class="col-sm-12">
+    <form class="card">
+      <div class="card-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- họ tên -->
+              <div class="form-group">
+                Họ tên
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Họ tên"
+                  [value]="kh?.ho_ten"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+
+            <!-- ngày sinh -->
+            <div class="col-md-6">
+              <div class="form-group">
+                Ngày sinh
+                <input
+                  type="date"
+                  class="form-control"
+                  placeholder="Ngày sinh"
+                  [value]="kh?.ngay_sinh"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- SĐT -->
+              <div class="form-group">
+                Số điện thoại
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Số điện thoại"
+                  [value]="kh?.sdt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Giới tính </label> <br />
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="exampleRadios"
+                    [checked]="kh?.gioi_tinh"
+                  />
+                  <label class="form-check-label"> Nam </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="exampleRadios"
+                    [checked]="!kh?.gioi_tinh"
+                  />
+                  <label class="form-check-label"> Nữ </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- email -->
+            <div class="col-md-6">
+              <div class="form-group">
+                Email
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Email"
+                  [value]="kh?.email"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <!-- địa chỉ -->
+            <div class="col-md-6">
+              <div class="form-group">
+                Địa chỉ
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Địa chỉ"
+                  [value]="kh?.ten_dang_nhap"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+</div>

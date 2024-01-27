@@ -106,6 +106,8 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHangResponse getById(int id) {
-        return khachHangRepository.getById(id);
+        KhachHangResponse kh = khachHangRepository.getById(id);
+
+        return null;
     }
 }

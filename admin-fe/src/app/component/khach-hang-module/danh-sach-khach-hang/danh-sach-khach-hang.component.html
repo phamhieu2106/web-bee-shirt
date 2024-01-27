@@ -43,13 +43,12 @@
             </div>
           </div>
           <div class="text-center">
-            <button type="button" class="btn btn-primary m-2" (click)="timKiem()">
+            <button type="button" class="btn btn-primary m-2">
               Tìm kiếm
             </button>
             <button
               type="button"
               class="btn btn-success m-2"
-              (click)="onClearSearchInput()"
             >
               Làm mới
             </button>
@@ -84,9 +83,10 @@
             <tr>
               <th>STT</th>
               <th>Họ tên</th>
-              <th>Số điên thoại</th>
+              <th>Số điện thoại</th>
               <th>Giới tính</th>
               <th>Email</th>
+              <th>Địa chỉ</th>
               <th>Ngày sinh</th>
               <th>Trạng thái</th>
               <th>Thao tác</th>
@@ -105,8 +105,9 @@
               <td>
                 {{ kh.sdt }}
               </td>
-              <td>{{ kh.gioi_tinh }}</td>
+              <td>{{ kh.gioi_tinh == true ?"Nam":"Nữ" }}</td>
               <td>{{ kh.email }}</td>
+              <td>{{ kh.tinh}}, {{kh.huyen}}, {{kh.xa}}, {{kh.duong}}</td>
               <td>{{ kh.ngay_sinh }}</td>
               <td>
                 <button
@@ -130,8 +131,8 @@
                   title="Xem chi tiết"
                   data-toggle="modal"
                   data-target="#formDetailKH"
-                  (click)="khDetail(kh.id)"
-                >
+                  (click)="openDetailsForm(kh.id)"
+                  >
                   <i
                     class="fa-solid fa-circle-info fa-xl"
                     style="color: #74c0fc"
@@ -140,8 +141,9 @@
                 <button
                   class="btn btn-outline-warning btn-rounded"
                   title="Cập nhật"
-                  routerLink="/khach-hang/sua-khach-hang"
-                  (click)="openUpdateForm(kh.id)"
+                  data-toggle="modal"
+                  data-target="#formUpdate"
+        
                 >
                   <i
                     class="fa-solid fa-pen-to-square"
@@ -219,17 +221,20 @@
   </div>
 </div>
 
+
+<!-- modal chi tiet kh -->
 <div
-  class="modal fade"
+  class="modal fade "
   id="formDetailKH"
   tabindex="-1"
-  aria-labelledby="exampleModalLabel"
+  role="dialog"
+  aria-labelledby="formDetail"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Thông tin khách hàng</h5>
+        <h5 class="modal-title" id="formDetail">Thông tin khách hàng</h5>
         <button
           type="button"
           class="close"
@@ -240,10 +245,55 @@
         </button>
       </div>
       <div class="modal-body">
-        <app-khach-hang-detail></app-khach-hang-detail>
+        <app-khach-hang-detail
+        [khChiTiet]="khachHangDetail">          
+      </app-khach-hang-detail>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary btn-rounded"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal update kh -->
+<div
+  class="modal fade"
+  id="formUpdate"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="formUpdate"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formDetail">sửa khách hàng</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-sua-khach-hang>          
+          </app-sua-khach-hang>
+        </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-rounded"
+          data-dismiss="modal"
+        >
           Close
         </button>
       </div>

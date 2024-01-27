@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { KhachHang } from "../model/class/KhachHang.class";
+import { KhachHangResponse } from "../model/interface/khach-hang-response.interface";
 
 @Injectable({
   providedIn: "root",
@@ -17,19 +18,19 @@ export class KhachHangService {
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
-  ): Observable<PagedResponse<KhachHang>> {
+  ): Observable<PagedResponse<KhachHangResponse>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
-    return this.http.get<PagedResponse<KhachHang>>(
+    return this.http.get<PagedResponse<KhachHangResponse>>(
       `${this.apiUrl}/get-all${param}`
     );
   }
 
-  public add(khachHang: KhachHang): Observable<KhachHang> {
-    return this.http.post<KhachHang>(`${this.apiUrl}/add-kh`, khachHang);
+  public add(khachHang: KhachHangResponse): Observable<KhachHangResponse> {
+    return this.http.post<KhachHangResponse>(`${this.apiUrl}/add-kh`, khachHang);
   }
 
-  public getById(id: number): Observable<KhachHang> {
-    return this.http.get<KhachHang>(`${this.apiUrl}/getById/${id}`);
+  public getById(id: number): Observable<KhachHangResponse> {
+    return this.http.get<KhachHangResponse>(`${this.apiUrl}/getById/${id}`);
   }
 
   public changeStatus(id: number): Observable<string> {
@@ -38,7 +39,7 @@ export class KhachHangService {
     });
   }
 
-  public update(khachHang: KhachHang): Observable<KhachHang> {
-    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh`, khachHang);
+  public update(khachHang: KhachHangResponse): Observable<KhachHangResponse> {
+    return this.http.put<KhachHangResponse>(`${this.apiUrl}/update-kh`, khachHang);
   }
 }

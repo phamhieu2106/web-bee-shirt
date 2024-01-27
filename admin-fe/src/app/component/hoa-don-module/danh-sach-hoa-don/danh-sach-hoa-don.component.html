@@ -97,6 +97,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('')"
               >Tất cả <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -109,6 +110,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('CHO_XAC_NHAN')"
               >Chờ xác nhận <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -121,6 +123,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('DA_XAC_NHAN')"
               >Đã xác nhận <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -133,6 +136,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('CHO_GIAO')"
               >Chờ giao <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -145,6 +149,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('DANG_GIAO')"
               >Đang giao <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -157,6 +162,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('HOAN_THANH')"
               >Hoàn thành <span class="badge-number text-danger">3</span></a
             >
           </li>
@@ -169,6 +175,7 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('HUY')"
             >
               Hủy
               <span class="badge-number text-danger">3</span>

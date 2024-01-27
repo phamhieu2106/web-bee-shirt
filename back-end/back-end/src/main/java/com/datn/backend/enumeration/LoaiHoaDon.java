@@ -4,6 +4,7 @@ package com.datn.backend.enumeration;
  * @author HungDV
  */
 public enum LoaiHoaDon {
-    ONLINE,
-    TAI_QUAY
+//    ONLINE,
+    TAI_QUAY,
+    GIAO_HANG
 }

@@ -3,6 +3,7 @@ import { Component, Input } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { TrangThaiHoaDon } from "src/app/model/enum/TrangThaiHoaDon";
+import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
 
 @Component({
   selector: "app-order-tracking",
@@ -10,9 +11,10 @@ import { TrangThaiHoaDon } from "src/app/model/enum/TrangThaiHoaDon";
   styleUrls: ["./order-tracking.component.css"],
 })
 export class OrderTrackingComponent {
-  @Input() lichSuHoaDons: any; // danh sách ls hóa đơn
-  @Input() idHoaDon: number; // id hóa đơn cần cập nhật
-  @Input() trangThaiHD: string; // trang thai hiện tại của hóa đơn
+  @Input({ required: true }) lichSuHoaDons: LichSuHoaDon[]; // danh sách ls hóa đơn
+  @Input({ required: true }) idHoaDon: number; // id hóa đơn cần cập nhật
+  @Input({ required: true }) trangThaiHD: string; // trang thai hiện tại của hóa đơn
+  @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc tại quầy
   public isNext = true; // trạng thái đơn hàng tiếp theo
   public changeStatusForm = this.fb.group({
     moTa: ["", [Validators.required, Validators.minLength(10)]],

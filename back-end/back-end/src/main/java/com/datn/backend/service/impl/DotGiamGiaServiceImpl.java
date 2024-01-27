@@ -4,7 +4,7 @@ import com.datn.backend.dto.request.DotGiamGiaRequest;
 import com.datn.backend.dto.response.DotGiamGiaResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
-import com.datn.backend.exception.custom_exception.ResourceInvalidExecption;
+import com.datn.backend.exception.custom_exception.ResourceInvalidException;
 import com.datn.backend.exception.custom_exception.ResourceOutOfRangeException;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.repository.DotGiamGiaRepository;
@@ -104,7 +104,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(object.getGiaTriPhanTram());
         } catch (Exception e) {
-            throw new ResourceInvalidExecption("Discount Percent of Object Request is not a number");
+            throw new ResourceInvalidException("Discount Percent of Object Request is not a number");
         }
 
 //        Check Min Max
@@ -157,7 +157,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 repository.delete(optional.get());
                 return true;
             } catch (Exception ex) {
-                throw new ResourceInvalidExecption("Id invalid!!");
+                throw new ResourceInvalidException("Id invalid!!");
             }
         }
         return false;

@@ -1,8 +1,5 @@
 package com.datn.backend.dto.response;
 
-import com.datn.backend.enumeration.LoaiHinhThuc;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +17,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class HinhThucThanhToanResponse {
-    private Integer id;
 
+    private Integer id;
     private String hinhThuc;
 }

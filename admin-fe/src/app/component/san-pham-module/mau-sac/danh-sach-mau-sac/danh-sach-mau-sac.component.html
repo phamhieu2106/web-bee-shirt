@@ -46,7 +46,7 @@
         </div>
         <!--  -->
       </div>
-      <div class="card-body">
+      <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
         <!-- TABLE -->
         <table class="table">
           <thead class="thead-default">
@@ -120,9 +120,8 @@
             </tr>
           </tbody>
         </table>
-        <!--  -->
       </div>
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
             <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
@@ -184,9 +183,14 @@
           </div>
         </div>
       </div>
+      <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
+        <h3>Không có dữ liệu!</h3>
+      </div>
     </div>
   </div>
 </div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
 
 <!-- add modal -->
 <div
@@ -247,22 +251,20 @@
                 id="inputGroupFile01"
                 aria-describedby="inputGroupFileAddon01"
                 accept="image/*"
-                (change)="imageChange($event)"
+                (change)="imageChange($event, 'thumbnail')"
               />
               <label class="custom-file-label" for="inputGroupFile01"
                 >Choose file</label
               >
             </div>
-            <div class="invalid-feedback">Không được bỏ trống</div>
-          </div>
-
-          <!-- thumbnail -->
-          <div class="text-center">
-            <img
-              id="thumbnail"
-              class="thumbnail mt-2"
-              src="assets/img/default-image.jpg"
-            />
+            <!-- thumbnail -->
+            <div class="text-center">
+              <img
+                id="thumbnail"
+                class="thumbnail mt-2"
+                src="assets/img/default-image.jpg"
+              />
+            </div>
           </div>
         </div>
 
@@ -375,10 +377,9 @@
       </div>
       <form [formGroup]="updateForm">
         <div class="modal-body">
+          <!-- ten mau sac -->
           <div class="form-row">
-            <input type="hidden" formControlName="id" />
-            <input type="hidden" formControlName="trangThai" />
-            <label>Tên màu sắc:</label>
+            <label for="inputEmail4">Tên màu sắc:</label>
             <input
               type="text"
               class="form-control"
@@ -390,6 +391,48 @@
               formControlName="ten"
             />
             <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+
+          <!-- ma mau sac -->
+          <div class="form-row mt-3">
+            <label for="inputEmail4">Mã màu sắc:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                updateForm.get('ten').invalid && updateForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ma"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+
+          <!-- file anh -->
+          <div class="form-row mt-3">
+            <label for="inputEmail4">Ảnh màu sắc:</label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="inputGroupFile01"
+                aria-describedby="inputGroupFileAddon01"
+                accept="image/*"
+                (change)="imageChange($event, 'updateThumbnail')"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >Choose file</label
+              >
+            </div>
+            <!-- thumbnail -->
+            <div class="text-center">
+              <img
+                id="updateThumbnail"
+                class="thumbnail mt-2"
+                [src]="selectedDetails?.image.imageUrl"
+              />
+            </div>
           </div>
         </div>
 

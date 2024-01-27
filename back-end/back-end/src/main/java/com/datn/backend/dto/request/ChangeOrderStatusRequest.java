@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class ChangeOrderStatusRequest {
 
-    @Min(value = 1,message = "ID hóa đơn không hợp lệ")
+    @Min(value = 1, message = "ID hóa đơn không hợp lệ")
     private int idHoaDon;
 
     @Size(min = 10, message = "Mô tả phải có ít nhất 10 kí tự")

@@ -4,11 +4,10 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
-import com.datn.backend.exception.custom_exception.EntityNotFoundException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.service.NhanVienService;
@@ -78,7 +77,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     public NhanVienResponse getOneById(Integer id) {
 
         if (nhanVienRepo.existsById(id) == false) {
-            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
 
         return nhanVienRepo.getOneById(id);
@@ -98,7 +97,7 @@ public class NhanVienServiceImpl implements NhanVienService {
             }).get();
             return nhanVien;
         } else {
-            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
     }
 

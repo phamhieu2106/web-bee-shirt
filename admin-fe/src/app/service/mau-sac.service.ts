@@ -13,6 +13,7 @@ export class MauSacService {
 
   constructor(private http: HttpClient) {}
 
+  // 1
   public add(mauSac: MauSac, file: File): Observable<MauSac> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(mauSac));
@@ -20,6 +21,7 @@ export class MauSacService {
     return this.http.post<MauSac>(`${this.apiUrl}/add`, formData);
   }
 
+  // 2
   public getAll(
     pageNumber: number = 1,
     pageSize: number = 5,
@@ -29,5 +31,25 @@ export class MauSacService {
     return this.http.get<PagedResponse<MauSac>>(
       `${this.apiUrl}/get-all${param}`
     );
+  }
+
+  // 3
+  public getById(id: number): Observable<MauSac> {
+    return this.http.get<MauSac>(`${this.apiUrl}/get-by-id/${id}`);
+  }
+
+  // 4
+  public changeStatus(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/status/${id}`, {
+      responseType: "text",
+    });
+  }
+
+  // 5
+  public update(mauSac: MauSac, file: File): Observable<MauSac> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(mauSac));
+    formData.append("mauSacImage", file);
+    return this.http.put<MauSac>(`${this.apiUrl}/update`, formData);
   }
 }

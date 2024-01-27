@@ -1,4 +1,52 @@
 package com.datn.backend.resource;
 
+import com.datn.backend.constant.ApplicationConstant;
+import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.model.san_pham.SanPham;
+import com.datn.backend.service.SanPhamService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/san-pham")
+@RequiredArgsConstructor
 public class SanPhamResource {
+
+    private final SanPhamService sanPhamService;
+
+    @GetMapping("/get-all")
+    public ResponseEntity<PagedResponse<SanPham>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(sanPhamService.getAll(pageNumber, pageSize, search));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<SanPham> add(@RequestBody SanPham sanPham) {
+        return ResponseEntity.ok(sanPhamService.add(sanPham));
+    }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<SanPham> add(@PathVariable("id") int id) {
+        return ResponseEntity.ok(sanPhamService.getById(id));
+    }
+
+    @GetMapping("/status/{id}")
+    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+        sanPhamService.changeStatus(id);
+        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<SanPham> update(@RequestBody SanPham sanPham) {
+        return ResponseEntity.ok(sanPhamService.update(sanPham));
+    }
 }

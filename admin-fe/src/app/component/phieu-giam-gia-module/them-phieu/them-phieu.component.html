@@ -107,9 +107,9 @@
               <tbody>
                 <tr *ngFor="let kh of pagedResponse?.data; let i = index">
                   <td>
-                    <input type="checkbox">
+                    <input type="checkbox" (change)="onCheckboxChange(kh.id)">
                   </td>
-                  <th scope="row">{{ (i + 1) * pagedResponse.pageNumber }}</th>
+                  <th scope="row">{{ kh.id}}</th>
                   <td>{{ kh.ho_ten }}</td>
                   <td>{{ kh.sdt }}</td>
                   <td>{{ kh.gioi_tinh }}</td>

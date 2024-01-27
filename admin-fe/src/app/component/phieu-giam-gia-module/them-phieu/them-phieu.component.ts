@@ -102,5 +102,21 @@ export class ThemPhieuComponent implements OnInit {
   }
 
 
+  // onchange check box 
+  selectedKhachHang: number[] = [];
+
+  onCheckboxChange(id: number): void {
+    const index = this.selectedKhachHang.indexOf(id);
+
+    if (index === -1) {
+      // Nếu ID không tồn tại trong danh sách, thêm vào
+      this.selectedKhachHang.push(id);
+    } else {
+      // Nếu ID đã tồn tại trong danh sách, loại bỏ nó
+      this.selectedKhachHang.splice(index, 1);
+    }
+
+    console.log(this.selectedKhachHang);
+  }
 
 }

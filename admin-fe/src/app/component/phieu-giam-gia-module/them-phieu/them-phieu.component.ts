@@ -1,7 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { KhachHang } from 'src/app/model/class/KhachHang.class';
 import { PhieuGiamGia } from 'src/app/model/class/phieu-giam-gia.class';
+import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
+import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
+import { KhachHangService } from 'src/app/service/khach-hang.service';
 import { PhieuGiamGiaService } from 'src/app/service/phieu-giam-gia.service';
 import Swal from 'sweetalert2';
 
@@ -15,8 +19,11 @@ import Swal from 'sweetalert2';
 export class ThemPhieuComponent implements OnInit {
   public addForm: FormGroup;
   phieuGiamGiaForm: FormGroup;
+  public pagedResponse: PagedResponse<KhachHangResponse>;
+  public search = "";
 
-  constructor(private phieuGiamGia: PhieuGiamGiaService) { }
+  constructor(private phieuGiamGia: PhieuGiamGiaService,
+    private khachHangService: KhachHangService) { }
 
   ngOnInit(): void {
     this.initAddForm();
@@ -25,7 +32,7 @@ export class ThemPhieuComponent implements OnInit {
   public add(): void {
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
-
+        console.log(response)
         this.initAddForm();
         Swal.fire({
           icon: "success",
@@ -56,6 +63,43 @@ export class ThemPhieuComponent implements OnInit {
       trangThai: new FormControl("", [Validators.required]),
     });
   }
+
+
+
+  //Khách hàng
+
+  public goToPage(
+    page: number = 1,
+    pageSize: number = 5,
+    keyword: string = ""
+  ): void {
+    this.khachHangService.getAll(page, pageSize, keyword).subscribe({
+      next: (response: PagedResponse<KhachHangResponse>) => {
+        this.pagedResponse = response;
+        console.log(response);
+        console.log("get dc");
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+  private getKhachHangList(): void {
+    this.khachHangService.getAll().subscribe({
+      next: (response: PagedResponse<KhachHangResponse>) => {
+        this.pagedResponse = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+  public onChangePageSize(e: any): void {
+    this.goToPage(1, e.target.value, this.search);
+  }
+
 
 
 }

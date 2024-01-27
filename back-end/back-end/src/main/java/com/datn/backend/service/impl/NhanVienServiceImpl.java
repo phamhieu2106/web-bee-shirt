@@ -74,7 +74,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
     @Override
-    public NhanVienResponse getOneById(int id) {
+    public NhanVienResponse getOneById(Integer id) {
 
         if (nhanVienRepo.existsById(id) == false) {
             throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
@@ -84,30 +84,65 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
     @Override
-    public NhanVien update(AddNhanVienRequest request, int id) {
-
+    public NhanVien delete(Integer id) {
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
         if(optionalNhanVien.isPresent()){
             NhanVien nhanVien = optionalNhanVien.map(nv -> {
-                nv.setHoTen(request.getHoTen());
-                nv.setNgaySinh(request.getNgaySinh());
-                nv.setSdt(request.getSdt());
-                nv.setGioiTinh(request.isGioiTinh());
-                nv.setEmail(request.getEmail());
-                nv.setDiaChi(request.getDiaChi());
-
                 Account acc = optionalNhanVien.get().getAccount();
-                acc.setTenDangNhap(request.getTenDangNhap());
-                acc.setMatKhau(request.getMatKhau());
+                acc.setTrangThai(false);
                 nv.setAccount(acc);
                 nhanVienRepo.save(nv);
                 return nv;
             }).get();
-          return nhanVien;
+            return nhanVien;
         } else {
             throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
+    }
 
+    @Override
+    public NhanVien update(AddNhanVienRequest request, Integer id) {
+
+            // nếu như nv tồn tại => nếu tên đăng nhập đã tồn tại => tên đăng nhập như cũ => update
+            //                                                    => tên còn lại => throw đã tồn tại
+            //                    => tên đăng nhập mới => update
+            // không tồn tại thì throw không tìm thấy
+        Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
+
+        if(optionalNhanVien.isPresent()){
+
+            if (accountRepo.existsByTenDangNhap(request.getTenDangNhap().toLowerCase())) {
+                if(optionalNhanVien.get().getAccount().getTenDangNhap().equalsIgnoreCase(request.getTenDangNhap())) {
+                    return updateForm(optionalNhanVien, request);
+                } else {
+                    throw new ResourceExistsException("Tên đăng nhập: " + request.getTenDangNhap() + " đã tồn tại.");
+                }
+            } else {
+                return updateForm(optionalNhanVien, request);
+            }
+
+        } else {
+            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+        }
+    }
+
+    public NhanVien updateForm (Optional<NhanVien> optionalNhanVien, AddNhanVienRequest request) {
+        NhanVien nhanVien = optionalNhanVien.map(nv -> {
+            nv.setHoTen(request.getHoTen());
+            nv.setNgaySinh(request.getNgaySinh());
+            nv.setSdt(request.getSdt());
+            nv.setGioiTinh(request.isGioiTinh());
+            nv.setEmail(request.getEmail());
+            nv.setDiaChi(request.getDiaChi());
+
+            Account acc = optionalNhanVien.get().getAccount();
+            acc.setTenDangNhap(request.getTenDangNhap());
+            acc.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+            nv.setAccount(acc);
+            nhanVienRepo.save(nv);
+            return nv;
+        }).get();
+        return nhanVien;
     }
 }

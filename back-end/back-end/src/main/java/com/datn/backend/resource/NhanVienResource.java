@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,13 +41,18 @@ public class NhanVienResource {
     }
 
     @GetMapping("/get-one-by-id/{id}")
-    public ResponseEntity<NhanVienResponse> getOneById(@PathVariable("id") int id) {
+    public ResponseEntity<NhanVienResponse> getOneById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(nhanVienService.getOneById(id));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<NhanVien> update(@Valid @RequestBody AddNhanVienRequest nhanVienRequest,
-                                           @PathVariable("id") int id) {
+                                           @PathVariable("id") Integer id) {
         return ResponseEntity.ok(nhanVienService.update(nhanVienRequest, id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<NhanVien> delete(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(nhanVienService.delete(id));
     }
 }

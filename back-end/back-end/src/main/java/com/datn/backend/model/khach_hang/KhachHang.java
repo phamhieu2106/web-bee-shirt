@@ -2,17 +2,9 @@ package com.datn.backend.model.khach_hang;
 
 import com.datn.backend.model.Account;
 import com.datn.backend.model.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -22,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class KhachHang extends BaseEntity {
 
     @Id
@@ -29,13 +22,15 @@ public class KhachHang extends BaseEntity {
     private Integer id;
 
     private String hoTen;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate ngaySinh;
     private String sdt;
     private String email;
     private boolean gioiTinh;
     private String imageUrl;
+    private int trangThai;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
 }

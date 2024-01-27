@@ -60,6 +60,33 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     }
 
     @Override
+    public PagedResponse<DotGiamGiaResponse> getFilter(int pageNumber, int pageSize, String search,
+                                                       int status, String startDate, String endDate) {
+
+        //        Get Pageable
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+//        Get Page DotGiamGia Response
+        Page<DotGiamGiaResponse> dotGiamGiaPage = null;
+        if (status == 3) {
+            dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate);
+        } else {
+            dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate);
+        }
+//        Page DotGiamGia
+        PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
+
+        dotGiamGiaPagedResponse.setPageNumber(pageNumber);
+        dotGiamGiaPagedResponse.setPageSize(pageSize);
+        dotGiamGiaPagedResponse.setTotalElements((int) dotGiamGiaPage.getTotalElements());
+        dotGiamGiaPagedResponse.setTotalPages(dotGiamGiaPage.getTotalPages());
+        dotGiamGiaPagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(dotGiamGiaPage.getTotalPages()));
+        dotGiamGiaPagedResponse.setData(dotGiamGiaPage.getContent());
+        dotGiamGiaPagedResponse.setSearch(search);
+
+        return dotGiamGiaPagedResponse;
+    }
+
+    @Override
     public DotGiamGiaResponse getOne(Integer id) {
         //        Get Data form database
         return repository.getOneById(id);
@@ -113,7 +140,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             object.setId(id);
 //            Set Code
             object.setMaDotGiamGia(optional.get().getMaDotGiamGia());
-            
+
             DotGiamGia dotGiamGia = object.map(optional.get());
 
             return repository.save(dotGiamGia);

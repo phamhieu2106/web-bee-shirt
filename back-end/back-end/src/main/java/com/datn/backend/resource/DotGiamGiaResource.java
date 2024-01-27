@@ -2,6 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.DotGiamGiaRequest;
 import com.datn.backend.service.impl.DotGiamGiaServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,22 @@ public class DotGiamGiaResource {
         return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search));
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<?> getFilters(@RequestParam(value = "status", defaultValue = "3", required = false)
+                                        int status,
+                                        @RequestParam(value = "startDate", defaultValue = "2024-01-01", required = false)
+                                        String startDate,
+                                        @RequestParam(value = "endDate", defaultValue = "3000-01-01", required = false)
+                                        String endDate,
+                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
+                                        int pageNumber,
+                                        @RequestParam(value = "pageSize", defaultValue = "99", required = false)
+                                        int pageSize,
+                                        @RequestParam(value = "search", defaultValue = "", required = false)
+                                        String search) {
+        return ResponseEntity.ok(service.getFilter(pageNumber, pageSize, search, status, startDate, endDate));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 //        return DotGiamGiaResponseEntity
@@ -46,13 +63,13 @@ public class DotGiamGiaResource {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody DotGiamGiaRequest request) {
+    public ResponseEntity<?> add(@Valid @RequestBody DotGiamGiaRequest request) {
 //        return DotGiamGiaResponseEntity with HttpStatus 201
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody DotGiamGiaRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody DotGiamGiaRequest request) {
 //        return DotGiamGiaResponseEntity body
         return ResponseEntity.ok().body(service.update(id, request));
     }

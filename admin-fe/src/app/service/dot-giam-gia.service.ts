@@ -15,6 +15,24 @@ export class DotGiamGiaService {
     return this.http.get<PagedResponse<DotGiamGia>>(this.apiURL);
   }
 
+  public getFilterDotGiamGia(
+    status: number,
+    startDate: string,
+    endDate: string
+  ): Observable<PagedResponse<DotGiamGia>> {
+    return this.http.get<PagedResponse<DotGiamGia>>(
+      `${this.apiURL}/filter?status=${status}&startDate=${startDate}&endDate=${endDate}`
+    );
+  }
+
+  public getDotGiamGiaSearch(
+    search: string
+  ): Observable<PagedResponse<DotGiamGia>> {
+    return this.http.get<PagedResponse<DotGiamGia>>(
+      `${this.apiURL}?search=${search}`
+    );
+  }
+
   public getDotGiamGiaPageSize(
     pageSize: number
   ): Observable<PagedResponse<DotGiamGia>> {

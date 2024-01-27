@@ -41,14 +41,15 @@ public class PhieuGiamGiaResource {
 
     @GetMapping("/status/{id}")
     public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
-        service.changeStatus(id);
+
         return ResponseEntity.ok("Cập nhật trạng thái thành công!");
     }
 
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody PhieuGiamGiaRequest phieuGiamGia) {
-        return ResponseEntity.ok(service.add(phieuGiamGia));
+        service.add(phieuGiamGia);
+        return ResponseEntity.ok("Thêm phiếu giảm giá thành công");
     }
 
     @PutMapping("/{id}")

@@ -17,7 +17,6 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia remove(Integer id);
 
-    void changeStatus(int id);
 
     PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search);
 }

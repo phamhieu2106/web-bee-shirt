@@ -97,12 +97,7 @@
               <td>{{ pgg.thoiGianBatDau }}</td>
               <td>{{ pgg.thoiGianKetThuc  }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" [id]="'trangThai' + pgg.id"
-                    [checked]="pgg.trangThai" (click)="changeStatus(pgg.id)"/>
-                  <label class="custom-control-label" [for]="'trangThai' + pgg.id">{{ pgg.trangThai ? "Hoạt Động" :
-                    "Ngừng Hoạt Động" }}</label>
-                </div>
+                {{pgg.trangThai}}
               </td>
               <td>
                 <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"

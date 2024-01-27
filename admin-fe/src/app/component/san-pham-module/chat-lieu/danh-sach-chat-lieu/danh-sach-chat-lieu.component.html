@@ -1,8 +1,4 @@
-<app-main-heading
-  [icon]="'fa-solid fa-shirt'"
-  [mainHeading]="'Chất Liệu'"
-  [title]="'Chất Liệu'"
-></app-main-heading>
+<app-main-heading [icon]="'fa-solid fa-shirt'" [mainHeading]="'Chất Liệu'" [title]="'Chất Liệu'"></app-main-heading>
 
 <div class="row gutters pt-2">
   <div class="col-sm-12">
@@ -13,32 +9,18 @@
         <div>
           <div class="col col-md-12 d-flex">
             <div class="input-group form-group search-block">
-              <input
-                type="search"
-                class="form-control"
-                placeholder="Tìm chất liệu..."
-                (search)="onClearSearchInput()"
-                [(ngModel)]="search"
-              />
+              <input type="search" class="form-control" placeholder="Tìm chất liệu..." (search)="onClearSearchInput()"
+                [(ngModel)]="search" />
               <span class="input-group-btn">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  (click)="timKiem()"
-                >
+                <button class="btn btn-primary" type="button" (click)="timKiem()">
                   Tìm kiếm
                 </button>
               </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
-              <button
-                type="button"
-                class="btn btn-primary btn-lg"
-                title="Thêm mới"
-                data-bs-toggle="modal"
-                data-bs-target="#chatLieuAddForm"
-              >
+              <button type="button" class="btn btn-primary btn-lg" title="Thêm mới" data-bs-toggle="modal"
+                data-bs-target="#chatLieuAddForm">
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
             </div>
@@ -62,53 +44,29 @@
             <tr *ngFor="let cl of pagedResponse?.data; let i = index">
               <th scope="row">
                 {{
-                  i +
-                    1 +
-                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                i +
+                1 +
+                (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
               <td>{{ cl.ten }}</td>
               <td>
                 <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + cl.id"
-                    [checked]="cl.trangThai"
-                    (click)="changeStatus(cl.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + cl.id"
-                    >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
-                  >
+                  <input type="checkbox" class="custom-control-input" [id]="'trangThai' + cl.id"
+                    [checked]="cl.trangThai" (click)="changeStatus(cl.id)" />
+                  <label class="custom-control-label" [for]="'trangThai' + cl.id">{{ cl.trangThai ? "Khả dụng" : "Không
+                    khả dụng" }}</label>
                 </div>
               </td>
               <td>{{ cl.createdAt }}</td>
               <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-bs-toggle="modal"
-                  data-bs-target="#chatLieuDetailsForm"
-                  (click)="openDetailsForm(cl.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
+                <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-bs-toggle="modal"
+                  data-bs-target="#chatLieuDetailsForm" (click)="openDetailsForm(cl.id)">
+                  <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
                 </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  data-bs-toggle="modal"
-                  data-bs-target="#chatLieuUpdateForm"
-                  (click)="openUpdateForm(cl.id)"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
+                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật" data-bs-toggle="modal"
+                  data-bs-target="#chatLieuUpdateForm" (click)="openUpdateForm(cl.id)">
+                  <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
               </td>
             </tr>
@@ -119,14 +77,10 @@
       <div class="card-footer">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-              >Số lượng:
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
             </label>
-            <select
-              class="custom-select my-1 mr-sm-2 col-md-5"
-              id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
-            >
+            <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize($event)">
               >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -136,42 +90,20 @@
           <div class="">
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li
-                  class="page-item"
-                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
-                >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
-                    >Previous</a
-                  >
+                <li class="page-item" [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''">
+                  <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber - 1)">Previous</a>
                 </li>
-                <li
-                  class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
-                >
-                  <a
-                    class="page-link pointer"
-                    [ngClass]="
+                <li class="page-item" *ngFor="let page of pagedResponse?.pageNumberArr">
+                  <a class="page-link pointer" [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
-                    "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
-                  >
+                    " (click)="goToPage(page)">{{ page }}</a>
                 </li>
-                <li
-                  class="page-item"
-                  [ngClass]="
+                <li class="page-item" [ngClass]="
                     pagedResponse?.pageNumber == pagedResponse?.totalPages
                       ? 'disabled'
                       : ''
-                  "
-                >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
-                    >Next</a
-                  >
+                  ">
+                  <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber + 1)">Next</a>
                 </li>
               </ul>
             </nav>
@@ -183,13 +115,7 @@
 </div>
 
 <!-- add modal -->
-<div
-  class="modal fade"
-  id="chatLieuAddForm"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="chatLieuAddForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -201,36 +127,20 @@
         <div class="modal-body">
           <div class="form-row">
             <label for="inputEmail4">Tên chất liệu:</label>
-            <input
-              type="text"
-              class="form-control"
-              [ngClass]="
+            <input type="text" class="form-control" [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
                   : ''
-              "
-              formControlName="ten"
-            />
+              " formControlName="ten" />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button
-            id="closeBtn"
-            type="button"
-            class="btn btn-secondary"
-            (click)="initAddForm()"
-            data-bs-dismiss="modal"
-          >
+          <button id="closeBtn" type="button" class="btn btn-secondary" (click)="initAddForm()" data-bs-dismiss="modal">
             Đóng
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            [disabled]="addForm.invalid"
-            (click)="add()"
-          >
+          <button type="button" class="btn btn-primary" [disabled]="addForm.invalid" (click)="add()">
             Thêm
           </button>
         </div>
@@ -240,13 +150,7 @@
 </div>
 
 <!-- details modal -->
-<div
-  class="modal fade"
-  id="chatLieuDetailsForm"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="chatLieuDetailsForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -256,48 +160,23 @@
         <div class="modal-body">
           <div class="form-row">
             <label for="inputEmail4">Tên chất liệu:</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedDetails?.ten"
-              disabled
-            />
+            <input type="text" class="form-control" [value]="selectedDetails?.ten" disabled />
           </div>
           <div class="form-row">
             <label for="inputEmail4">Ngày tạo:</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedDetails?.createdAt"
-              disabled
-            />
+            <input type="text" class="form-control" [value]="selectedDetails?.createdAt" disabled />
           </div>
           <div class="form-row">
             <label for="inputEmail4">Người tạo:</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedDetails?.createdBy"
-              disabled
-            />
+            <input type="text" class="form-control" [value]="selectedDetails?.createdBy" disabled />
           </div>
           <div class="form-row">
             <label for="inputEmail4">Ngày cập nhật gần nhất:</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedDetails?.updatedAt"
-              disabled
-            />
+            <input type="text" class="form-control" [value]="selectedDetails?.updatedAt" disabled />
           </div>
           <div class="form-row">
             <label for="inputEmail4">Người cập nhật gần nhất:</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedDetails?.lastUpdatedBy"
-              disabled
-            />
+            <input type="text" class="form-control" [value]="selectedDetails?.lastUpdatedBy" disabled />
           </div>
         </div>
       </form>
@@ -306,13 +185,7 @@
 </div>
 
 <!-- update modal -->
-<div
-  class="modal fade"
-  id="chatLieuUpdateForm"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="chatLieuUpdateForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -326,35 +199,20 @@
             <input type="hidden" formControlName="id" />
             <input type="hidden" formControlName="trangThai" />
             <label>Tên chất liệu:</label>
-            <input
-              type="text"
-              class="form-control"
-              [ngClass]="
+            <input type="text" class="form-control" [ngClass]="
                 updateForm.get('ten').invalid && updateForm.get('ten').touched
                   ? 'is-invalid'
                   : ''
-              "
-              formControlName="ten"
-            />
+              " formControlName="ten" />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button
-            id="updateCloseBtn"
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button id="updateCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Đóng
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            [disabled]="updateForm.invalid"
-            (click)="update()"
-          >
+          <button type="button" class="btn btn-primary" [disabled]="updateForm.invalid" (click)="update()">
             Cập nhật
           </button>
         </div>

@@ -1,105 +1,238 @@
-<div class="row gutters">
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="'Sửa thông tin khách Hàng'"
+  [title]="title"
+></app-main-heading>
+<div class="row gutters mt-3">
   <div class="col-sm-12">
-    <form class="card">
-      <div class="card-body">
-        <form>
-          <div class="row">
-            <div class="col-md-6">
-              <!-- họ tên -->
-              <div class="form-group">
-                Họ tên
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Họ tên"
-                  [value]="kh?.ho_ten"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-
-            <!-- ngày sinh -->
-            <div class="col-md-6">
-              <div class="form-group">
-                Ngày sinh
-                <input
-                  type="date"
-                  class="form-control"
-                  placeholder="Ngày sinh"
-                  [value]="kh?.ngay_sinh"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
+    <div class="row gutters">
+      <div class="col-sm-12">
+        <form class="card">
+          <div class="card-header">
+            <h3>Sửa thông tin khách hàng</h3>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <!-- SĐT -->
-              <div class="form-group">
-                Số điện thoại
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Số điện thoại"
-                  [value]="kh?.sdt"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Giới tính </label> <br />
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="exampleRadios"
-                    [checked]="kh?.gioi_tinh"
-                  />
-                  <label class="form-check-label"> Nam </label>
+          <div class="card-body">
+            <form [formGroup]="formUpdateKH">              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Họ tên
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Họ tên"
+                      value="{{ khDetail.ho_ten}}"
+                      formControlName="ho_ten"
+                    />
+                  </div>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="exampleRadios"
-                    [checked]="!kh?.gioi_tinh"
-                  />
-                  <label class="form-check-label"> Nữ </label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Ngày sinh
+                    <input
+                      type="date"
+                      class="form-control"
+                      placeholder="Ngày sinh"
+                      value="{{ khDetail.ngay_sinh }}"
+                      formControlName="ngay_sinh"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <!-- email -->
-            <div class="col-md-6">
-              <div class="form-group">
-                Email
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Email"
-                  [value]="kh?.email"
-                  [disabled]="true"
-                />
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Số điện thoại
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Số điện thoại"
+                      value="{{ khDetail.sdt }}"
+                      formControlName="sdt"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Giới tính </label> <br />
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="gioi_tinh"
+                        value="true"
+                        ngModel="{{khDetail.gioi_tinh}}"
+                        formControlName="gioi_tinh"
+                      />
+                      <label class="form-check-label"> Nam </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        name="gioi_tinh"
+                        type="radio"
+                        value="false"
+                        ngModel="{{khDetail.gioi_tinh}}"
+                        formControlName="gioi_tinh"
+                      />
+                      <label class="form-check-label"> Nữ </label>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <!-- địa chỉ -->
-            <div class="col-md-6">
-              <div class="form-group">
-                Địa chỉ
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Địa chỉ"
-                  [value]="kh?.ten_dang_nhap"
-                  [disabled]="true"
-                />
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Email
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="Email"
+                      value="{{khDetail.email}}"
+                      formControlName="email"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Trạng thái </label> <br />
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="trang_thai"
+                        value="1"
+                        ngModel="{{khDetail.trang_thai}}"
+                        formControlName="trang_thai"
+                      />
+                      <label class="form-check-label"> Đang hoạt động </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="trang_thai"
+                        value="0"
+                        ngModel="{{khDetail.trang_thai}}"
+                        formControlName="trang_thai"
+                      />
+                      <label class="form-check-label"> Ngừng hoạt động </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Tỉnh/Thành phố
+                    <select
+                      class="form-select form-select-sm mb-3"
+                      id="city"
+                      aria-label=".form-select-sm"
+                      formControlName="tinh"
+                      value="{{khDetail.tinh}}"
+                    >
+                      <option value="" selected>Chọn tỉnh thành</option>
+                      <option value="LC">LC</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Quận/Huyện
+                    <select
+                      class="form-select form-select-sm mb-3"
+                      id="district"
+                      aria-label=".form-select-sm"
+                      formControlName="huyen"
+                      value="{{khDetail.huyen}}"
+                    >
+                      <option value="" selected>Chọn quận huyện</option>
+                      <option value="SMC">SMC</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Xã/Phường
+                    <select
+                      class="form-select form-select-sm"
+                      id="ward"
+                      ria-label=".form-select-sm"
+                      formControlName="xa"
+                      value="{{khDetail.xa}}"
+                    >
+                      <option value="" selected>Chọn phường xã</option>
+                      <option value="N6">N6</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Địa chỉ giao hàng cụ thể
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Ngày sinh"
+                      formControlName="duong"
+                      value="{{khDetail.duong}}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Tài khoản
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Tên đăng nhập"
+                      value="{{khDetail.ten_dang_nhap}}"
+                      formControlName="ten_dang_nhap"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    Mật khẩu
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Mật khẩu"
+                      value="12345678"
+                      value="{{khDetail.mat_khau}}"
+                      formControlName="mat_khau"
+                    />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <div class="">
+              <div class="form-group justify-content-md-center">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger mx-sm-4 rounded"
+                  routerLink="/khach-hang/ds-khach-hang"
+                >
+                  <!-- (click)="initFormAddKh()" -->
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mx-sm-4 rounded"
+                >
+                  Lưu 
+                </button>
               </div>
             </div>
           </div>
         </form>
       </div>
-    </form>
+    </div>
   </div>
 </div>

@@ -112,8 +112,8 @@
                 <button
                   class="{{
                     kh.trang_thai === 1
-                      ? 'btn btn-success btn-rounded'                      
-                      : 'btn btn-info btn-rounded'
+                      ? 'btn btn-info btn-rounded'                      
+                      : 'btn btn-danger btn-rounded'
                   }}"
                 >
                   {{
@@ -140,8 +140,7 @@
                 <button
                   class="btn btn-outline-warning btn-rounded"
                   title="Cập nhật"
-                  data-toggle="modal"
-                  data-target="#formUpdate"
+                  routerLink="/khach-hang/sua-khach-hang/{{kh.id}}"
         
                 >
                   <i
@@ -261,41 +260,3 @@
   </div>
 </div>
 
-<!-- modal update kh -->
-<div
-  class="modal fade"
-  id="formUpdate"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="formUpdate"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formDetail">sửa khách hàng</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-sua-khach-hang>          
-          </app-sua-khach-hang>
-        </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary btn-rounded"
-          data-dismiss="modal"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>

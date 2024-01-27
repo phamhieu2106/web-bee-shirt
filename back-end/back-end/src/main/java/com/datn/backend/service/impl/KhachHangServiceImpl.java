@@ -43,7 +43,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioi_tinh());
         khachHang.setEmail(kh.getEmail());
-        khachHang.setTrangThai(0);
+        khachHang.setTrangThai(kh.getTrang_thai());
         khachHang.setAccount(account);
         khachHangRepository.save(khachHang);
         DiaChi diaChi = new DiaChi();
@@ -106,8 +106,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHangResponse getById(int id) {
-        KhachHangResponse kh = khachHangRepository.getById(id);
-
-        return null;
+//        KhachHangResponse kh = khachHangRepository.getById(id);
+        return khachHangRepository.getById(id);
     }
 }

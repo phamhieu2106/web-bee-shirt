@@ -33,12 +33,12 @@ public class ApplicationConfiguration {
         return modelMapper;
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        return mapper;
-    }
+//    @Bean("objectMapper1")
+//    public ObjectMapper objectMapper1() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        return mapper;
+//    }
 
     @Bean
     public Cloudinary cloudinary() {

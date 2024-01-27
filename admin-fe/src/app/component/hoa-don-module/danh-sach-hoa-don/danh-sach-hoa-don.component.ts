@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { HoaDon } from "src/app/model/class/hoa-don.class";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 
 import { HoaDonService } from "src/app/service/hoa-don.service";
 
@@ -10,9 +12,10 @@ import { HoaDonService } from "src/app/service/hoa-don.service";
   styleUrls: ["./danh-sach-hoa-don.component.css"],
 })
 export class DanhSachHoaDonComponent {
-  public hoaDons: any;
+  public hoaDons: PagedResponse<HoaDon>;
   public search = "";
   public loaiHoaDon = "";
+  public trangThai = "";
   public ngayTao = "";
   public pageSize = 25;
   public pageNumber = 0;
@@ -29,7 +32,8 @@ export class DanhSachHoaDonComponent {
         this.pageSize,
         this.search,
         this.loaiHoaDon,
-        this.ngayTao
+        this.ngayTao,
+        this.trangThai
       )
       .subscribe({
         next: (response: any) => {
@@ -50,6 +54,7 @@ export class DanhSachHoaDonComponent {
     this.search = "";
     this.loaiHoaDon = "";
     this.ngayTao = "";
+    this.trangThai = "";
   }
 
   changePage(page: number = 0) {
@@ -64,5 +69,10 @@ export class DanhSachHoaDonComponent {
           console.log(error);
         },
       });
+  }
+  changeStatus(status = "") {
+    this.trangThai = status;
+    this.hoaDons.data = [];
+    this.getHoaDons();
   }
 }

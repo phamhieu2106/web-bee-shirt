@@ -28,7 +28,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
             kh.hoTen like %:keys% or
             kh.sdt like %:keys% ) and
             concat( hd.loaiHoaDon,'') like %:loaiHoaDon%  and 
+            concat( hd.trangThai,'') like %:trangThai%  and 
             concat( hd.createdAt,'') like %:ngayTao%  
             """)
-    Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao);
+    Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao,String trangThai);
 }

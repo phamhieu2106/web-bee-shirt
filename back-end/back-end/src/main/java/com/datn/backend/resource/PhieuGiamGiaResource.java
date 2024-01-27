@@ -48,8 +48,7 @@ public class PhieuGiamGiaResource {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody PhieuGiamGiaRequest phieuGiamGia) {
-        service.add(phieuGiamGia);
-        return ResponseEntity.ok("Thêm phiếu giảm giá thành công");
+        return ResponseEntity.ok(service.add(phieuGiamGia));
     }
 
     @PutMapping("/{id}")

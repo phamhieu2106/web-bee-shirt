@@ -27,6 +27,7 @@ export class ThemPhieuComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddForm();
+    this.getKhachHangList();
   }
 
   public add(): void {

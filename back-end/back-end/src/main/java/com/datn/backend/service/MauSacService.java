@@ -16,5 +16,5 @@ public interface MauSacService {
 
     void changeStatus(int id);
 
-    MauSac update(MauSac mauSac);
+    MauSac update(MauSac mauSac, MultipartFile multipartFile) throws IOException;
 }

@@ -1,20 +1,13 @@
 package com.datn.backend.dto.response;
 
-import com.datn.backend.constant.ApplicationConstant;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,9 +19,9 @@ import java.util.List;
 @Setter
 @ToString
 @Builder
-public class HoaDonResponse extends BaseResponse{
-    private Integer id;
+public class HoaDonResponse extends BaseResponse {
 
+    private Integer id;
     private String ma;
     private String tenNguoiNhan;
     private String sdtNguoiNhan;
@@ -42,11 +35,8 @@ public class HoaDonResponse extends BaseResponse{
     private String ghiChu;
 
 //    private NhanVien nhanVien;
-//
 //    private KhachHang khachHang;
-//
 //    private PhieuGiamGia phieuGiamGia;
-//
     private List<HoaDonChiTietResponse> hoaDonChiTiets;
     private List<LichSuHoaDonResponse> lichSuHoaDons;
     private List<ThanhToanResponse> thanhToans;

@@ -1,15 +1,457 @@
 <app-main-heading
   [icon]="'fa-solid fa-shirt'"
-  [mainHeading]="'Sản Phẩm'"
-  [title]="'Sản Phẩm'"
+  [mainHeading]="'Sản phẩm'"
+  [title]="'Sản phẩm'"
 ></app-main-heading>
 
 <div class="row gutters pt-2">
   <div class="col-sm-12">
     <div class="card">
-      <div class="card-header">Danh sách sản phẩm</div>
-      <div class="card-body">BODY HERE</div>
-      <div class="card-footer">FOOTER HERE</div>
+      <div class="card-header">
+        <h3 class="mb-2">Danh Sách Sản Phẩm</h3>
+        <!-- HEADER  -->
+        <div>
+          <div class="col col-md-12 d-flex">
+            <div class="input-group form-group search-block">
+              <input
+                type="search"
+                class="form-control"
+                placeholder="Tìm sản phẩm..."
+                (search)="onClearSearchInput()"
+                [(ngModel)]="search"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="timKiem()"
+                >
+                  Tìm kiếm
+                </button>
+              </span>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4 text-right">
+              <button
+                type="button"
+                class="btn btn-primary btn-lg"
+                title="Thêm mới"
+                data-bs-toggle="modal"
+                data-bs-target="#sanPhamAddForm"
+              >
+                Thêm mới <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+      <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
+        <!-- TABLE -->
+        <table class="table">
+          <thead class="thead-default">
+            <tr>
+              <th>STT</th>
+              <th>Tên</th>
+              <th>Mã</th>
+              <th>Số lượng</th>
+              <th>Trạng Thái</th>
+              <th>Ngày Thêm</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of pagedResponse?.data; let i = index">
+              <th scope="row">
+                {{
+                  i +
+                    1 +
+                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                }}
+              </th>
+              <td>{{ s.ten }}</td>
+              <td>{{ s.ma }}</td>
+              <td>{{ s.sanPhamChiTiets.length }}</td>
+              <td>
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    [id]="'trangThai' + s.id"
+                    [checked]="s.trangThai"
+                    (click)="changeStatus(s.id)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    [for]="'trangThai' + s.id"
+                    >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</label
+                  >
+                </div>
+              </td>
+              <td>{{ s.createdAt }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-light btn-rounded me-2"
+                  title="Xem chi tiết"
+                  data-bs-toggle="modal"
+                  data-bs-target="#sanPhamDetailsForm"
+                  (click)="openDetailsForm(s.id)"
+                >
+                  <i
+                    class="fa-solid fa-circle-info fa-xl"
+                    style="color: #74c0fc"
+                  ></i>
+                </button>
+
+                <button
+                  class="btn btn-outline-warning btn-rounded m-2"
+                  title="Cập nhật"
+                  data-bs-toggle="modal"
+                  data-bs-target="#sanPhamUpdateForm"
+                  (click)="openUpdateForm(s.id)"
+                >
+                  <i
+                    class="fa-solid fa-pen-to-square"
+                    style="color: #ffd43b"
+                  ></i>
+                </button>
+
+                <a
+                  class="btn btn-outline-light btn-rounded"
+                  title="Thêm sản phẩm chi tiết"
+                  [routerLink]="'/sp/them-sp-chi-tiet/' + s.id"
+                >
+                  <i class="fa-solid fa-plus" style="color: greenyellow"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
+        <div class="col col-md-12 d-flex justify-content-between">
+          <div class="col-md-3">
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+              >Số lượng:
+            </label>
+            <select
+              class="custom-select my-1 mr-sm-2 col-md-5"
+              id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize($event)"
+            >
+              >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </div>
+          <div class="">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li
+                  class="page-item"
+                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                >
+                  <a
+                    class="page-link pointer"
+                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    >Previous</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                >
+                  <a
+                    class="page-link pointer"
+                    [ngClass]="
+                      pagedResponse?.pageNumber == page ? 'active' : ''
+                    "
+                    (click)="goToPage(page)"
+                    >{{ page }}</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [ngClass]="
+                    pagedResponse?.pageNumber == pagedResponse?.totalPages
+                      ? 'disabled'
+                      : ''
+                  "
+                >
+                  <a
+                    class="page-link pointer"
+                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    >Next</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
+        <h3>Không có dữ liệu!</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add modal -->
+<div
+  class="modal fade"
+  id="sanPhamAddForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Thêm mới sản phẩm
+        </h1>
+      </div>
+      <form [formGroup]="addForm">
+        <div class="modal-body">
+          <!-- ten -->
+          <div class="form-row">
+            <label for="inputEmail4">Tên sản phẩm:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                addForm.get('ten').invalid && addForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ten"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+
+          <!-- ma -->
+          <div class="form-row mt-3">
+            <label for="inputEmail4">Mã sản phẩm:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                addForm.get('ma').invalid && addForm.get('ma').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ma"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+
+          <!-- mo ta -->
+          <div class="form-row mt-3">
+            <label for="inputEmail4">Mô tả sản phẩm:</label>
+            <textarea
+              type="text"
+              class="form-control"
+              rows="10"
+              [ngClass]="
+                addForm.get('moTa').invalid && addForm.get('moTa').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="moTa"
+            ></textarea>
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            id="closeBtn"
+            type="button"
+            class="btn btn-secondary"
+            (click)="initAddForm()"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="addForm.invalid"
+            (click)="add()"
+          >
+            Thêm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- details modal -->
+<div
+  class="modal fade"
+  id="sanPhamDetailsForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Sản phẩm</h1>
+      </div>
+      <form>
+        <div class="modal-body">
+          <!-- ten -->
+          <div class="form-row">
+            <label for="inputEmail4">Tên:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.ten"
+              disabled
+            />
+          </div>
+
+          <!-- ma -->
+          <div class="form-row">
+            <label for="inputEmail4">Mã:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.ma"
+              disabled
+            />
+          </div>
+
+          <div class="form-row">
+            <label for="inputEmail4">Ngày tạo:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.createdAt"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Người tạo:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.createdBy"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Ngày cập nhật gần nhất:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.updatedAt"
+              disabled
+            />
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Người cập nhật gần nhất:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedDetails?.lastUpdatedBy"
+              disabled
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div
+  class="modal fade"
+  id="sanPhamUpdateForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Cập nhật sản phẩm
+        </h1>
+      </div>
+      <form [formGroup]="updateForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <input type="hidden" formControlName="id" />
+            <input type="hidden" formControlName="trangThai" />
+
+            <!-- ten -->
+            <label for="inputEmail4">Tên sản phẩm:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                updateForm.get('ten').invalid && updateForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ten"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+
+            <!-- ma -->
+            <label class="mt-3" for="inputEmail4">Mã sản phẩm:</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="
+                updateForm.get('ma').invalid && updateForm.get('ma').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ma"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+
+            <!-- mo ta -->
+            <label class="mt-3" for="inputEmail4">Mô tả:</label>
+            <textarea
+              type="text"
+              class="form-control"
+              rows="10"
+              [ngClass]="
+                updateForm.get('moTa').invalid && updateForm.get('moTa').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="moTa"
+            ></textarea>
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            id="updateCloseBtn"
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="updateForm.invalid"
+            (click)="update()"
+          >
+            Cập nhật
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

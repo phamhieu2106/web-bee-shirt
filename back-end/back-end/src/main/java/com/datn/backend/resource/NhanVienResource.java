@@ -5,8 +5,6 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.san_pham.ChatLieu;
-import com.datn.backend.service.ChatLieuService;
 import com.datn.backend.service.NhanVienService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

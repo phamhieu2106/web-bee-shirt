@@ -16,71 +16,75 @@
             <form [formGroup]="addForm">
               <div class="mb-3">
 
-                <input type="email" class="form-control" placeholder="Mã phiếu giảm giá">
-                <div  class="form-text text-danger">Không để trống trường này</div>
+                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá"
+                  formControlName="maPhieuGiamGia">
+                <div class="form-text text-danger">Không để trống trường này</div>
               </div>
               <div class="mb-3">
 
-                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá">
-                <div  class="form-text text-danger">Không để trống trường này</div>
+                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá"
+                  formControlName="tenPhieuGiamGia">
+                <div class="form-text text-danger">Không để trống trường này</div>
               </div>
               <div class="mb-3">
                 <label class="pr-3">
-                  <input type="radio" name="loai" value="percentage" checked="true"> Giảm theo %
+                  <input type="radio" name="loai" value="1" checked="true" formControlName="loai"> Giảm theo %
                 </label>
 
                 <label>
-                  <input type="radio" name="loai" value="amount"> Giảm theo số tiền
+                  <input type="radio" name="loai" value="0" formControlName="loai"> Giảm theo số tiền
                 </label>
               </div>
 
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá Trị">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <input type="email" class="form-control" placeholder="Giá Trị" formControlName="giaTri">
+                  <div class="form-text text-danger">Không để trống trường này</div>
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá trị tối đa">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <input type="email" class="form-control" placeholder="Giá trị tối đa" formControlName="giaTriMax">
+                  <div class="form-text text-danger">Không để trống trường này</div>
                 </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Số lượng">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <input type="email" class="form-control" placeholder="Số lượng" formControlName="soLuong">
+                  <div class="form-text text-danger">Không để trống trường này</div>
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Điều kiện">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <input type="email" class="form-control" placeholder="Điều kiện" formControlName="dieuKienGiam">
+                  <div class="form-text text-danger">Không để trống trường này</div>
                 </div>
               </div>
 
 
               <div class="mb-3">
                 <label>Từ ngày</label>
-                <input type="datetime-local" class="form-control">
-                <div  class="form-text text-danger">Không để trống trường này</div>
+                <input type="datetime-local" class="form-control" formControlName="thoiGianBatDau">
+                <div class="form-text text-danger">Không để trống trường này</div>
               </div>
               <div class="mb-3">
                 <label>Đến ngày</label>
-                <input type="datetime-local" class="form-control">
-                <div  class="form-text text-danger">Không để trống trường này</div>
+                <input type="datetime-local" class="form-control" formControlName="thoiGianKetThuc">
+                <div class="form-text text-danger">Không để trống trường này</div>
               </div>
 
               <div class="mb-3">
                 <label class="pr-3">
-                  <input type="radio" name="kieu" value="percentage" checked="true"> Công Khai
+                  <input type="radio" name="kieu" value="1" checked="true" formControlName="kieu"> Công Khai
                 </label>
 
                 <label>
-                  <input type="radio" name="kieu" value="amount"> Cá Nhân
+                  <input type="radio" name="kieu" value="0" formControlName="kieu"> Cá Nhân
                 </label>
               </div>
 
-              <button type="submit" class="btn btn-primary">Tạo mới</button>
+              <button type="submit" class="btn btn-primary" (click)="add()">Tạo mới</button>
             </form>
+
+
           </div>
 
           <div class="col-md-8">
@@ -89,55 +93,56 @@
               <div class="row">
                 <div class="col-sm-12">
                   <table id="rowSelection" class="table table-striped table-bordered dataTable no-footer" role="grid"
-                         aria-describedby="rowSelection_info">
+                    aria-describedby="rowSelection_info">
                     <thead>
-                    <tr role="row">
-                      <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
+                      <tr role="row">
+                        <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
                           aria-sort="ascending" aria-label="Name: activate to sort column descending"
                           style="width: 10.088px;"><input type="checkbox" name="" id="">
-                      </th>
-                      <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
+                        </th>
+                        <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
                           aria-sort="ascending" aria-label="Name: activate to sort column descending"
                           style="width: 80.088px;">Tên
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-label="Position: activate to sort column ascending" style="width: 100.625px;">Số điện thoại
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
+                          aria-label="Position: activate to sort column ascending" style="width: 100.625px;">Số điện
+                          thoại
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
                           aria-label="Office: activate to sort column ascending" style="width: 60.475px;">Email
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
                           aria-label="Age: activate to sort column ascending" style="width: 29.8625px;">Ngày sinh
-                      </th>
+                        </th>
 
-                    </tr>
+                      </tr>
                     </thead>
                     <tbody>
 
-                    <tr role="row" class="odd">
+                      <tr role="row" class="odd">
 
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
-                    <tr role="row" class="odd">
+                        <td> <input type="checkbox" name=""></td>
+                        <td>Airi Satou</td>
+                        <td>0345262229</td>
+                        <td>16binhpvph29510@fpt.edu.vn</td>
+                        <td>16/02/2003</td>
+                      </tr>
+                      <tr role="row" class="odd">
 
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
-                    <tr role="row" class="odd">
+                        <td> <input type="checkbox" name=""></td>
+                        <td>Airi Satou</td>
+                        <td>0345262229</td>
+                        <td>16binhpvph29510@fpt.edu.vn</td>
+                        <td>16/02/2003</td>
+                      </tr>
+                      <tr role="row" class="odd">
 
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
+                        <td> <input type="checkbox" name=""></td>
+                        <td>Airi Satou</td>
+                        <td>0345262229</td>
+                        <td>16binhpvph29510@fpt.edu.vn</td>
+                        <td>16/02/2003</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

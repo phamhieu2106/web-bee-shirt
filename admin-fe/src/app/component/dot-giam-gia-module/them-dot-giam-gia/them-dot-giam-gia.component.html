@@ -7,7 +7,15 @@
 <div class="row gutters pt-3">
   <!-- Form -->
   <div class="col col-sm-5 col-md-4">
-    <app-form [formButton]="formButton" [formHeader]="formHeader"></app-form>
+    <app-form
+      [formButton]="formButton"
+      [formHeader]="formHeader"
+      [modalTitle]="'Xác Nhận Thêm'"
+      [modalMessage]="'Bạn chắc chắn muốn thêm đợt khuyến mại mới?'"
+      [modalAction]="'Thêm mới'"
+      [typeForm]="'add'"
+      [listProduct]="listIdSanPham"
+    ></app-form>
   </div>
 
   <!-- Tables -->
@@ -21,11 +29,4 @@
       [tHead]="tHeadProduct"
     ></app-table>
   </div>
-
-  <!-- Modal -->
-  <app-modal
-    [message]="modalMessage"
-    [nameAction]="modalAction"
-    [title]="modalTitle"
-  ></app-modal>
 </div>

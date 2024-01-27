@@ -1,8 +1,5 @@
-<app-main-heading
-  [icon]="'fa-solid fa-shirt'"
-  [mainHeading]="'Phiếu Giảm Giá'"
-  [title]="'Phiếu Giảm Giá'"
-></app-main-heading>
+<app-main-heading [icon]="'fa-solid fa-shirt'" [mainHeading]="'Phiếu Giảm Giá'"
+  [title]="'Phiếu Giảm Giá'"></app-main-heading>
 <!-- Row start -->
 
 <div class="row gutters">
@@ -18,7 +15,7 @@
         <div class="row">
           <div class="col-md-6">
             <input type="text" name="" class="form-control rounded"
-                   placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên">
+              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên">
           </div>
           <div class="col-md-6 d-flex justify-content-end">
             <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
@@ -73,8 +70,8 @@
 
         <!-- table -->
 
-         <!-- TABLE -->
-         <table class="table">
+        <!-- TABLE -->
+        <table class="table">
           <thead class="thead-default">
             <tr>
               <th>STT</th>
@@ -94,36 +91,27 @@
               <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
-              <td>{{ pgg.kieu }}</td>
-              <td>{{ pgg.loai }}</td>
+              <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
+              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân"}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.ngayBatDau |date : "dd-MM-yyyy" }}</td>
-              <td>{{ pgg.ngayKetThuc |date : "dd-MM-yyyy" }}</td>
-              <td>{{ pgg.trangThai }}</td>
+              <td>{{ pgg.thoiGianBatDau }}</td>
+              <td>{{ pgg.thoiGianKetThuc  }}</td>
               <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-toggle="modal"
-                  data-target="#chatLieuDetailsForm"
-                
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" [id]="'trangThai' + pgg.id"
+                    [checked]="pgg.trangThai" (click)="changeStatus(pgg.id)"/>
+                  <label class="custom-control-label" [for]="'trangThai' + pgg.id">{{ pgg.trangThai ? "Hoạt Động" :
+                    "Ngừng Hoạt Động" }}</label>
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"
+                  data-target="#chatLieuDetailsForm">
+                  <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
                 </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  data-toggle="modal"
-                  data-target="#chatLieuUpdateForm"
-                
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
+                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật" data-toggle="modal"
+                  data-target="#chatLieuUpdateForm">
+                  <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
               </td>
             </tr>
@@ -134,26 +122,43 @@
         <!--End table-->
 
         <div class="row">
-          <div class="col-md-6">
-            Xem <select>
-            <option value="">1</option>
-            <option value="">2</option>
-          </select> Sản Phẩm
-          </div>
-          <div class="col-md-6 d-flex justify-content-end">
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-              </ul>
-            </nav>
+          <div class="col col-md-12 d-flex justify-content-between">
+            <div class="col-md-3">
+              <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
+              </label>
+              <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
+                (change)="onChangePageSize($event)">
+                >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+            <div class="">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item" [ngClass]="pagedResponseBinh?.pageNumber == 1 ? 'disabled' : ''">
+                    <a class="page-link pointer" (click)="goToPage(pagedResponseBinh?.pageNumber - 1)">Previous</a>
+                  </li>
+                  <li class="page-item" *ngFor="let page of pagedResponseBinh?.pageNumberArr">
+                    <a class="page-link pointer" [ngClass]="
+                        pagedResponseBinh?.pageNumber == page ? 'active' : ''
+                      " (click)="goToPage(page)">{{ page }}</a>
+                  </li>
+                  <li class="page-item" [ngClass]="
+                      pagedResponseBinh?.pageNumber == pagedResponseBinh?.totalPages
+                        ? 'disabled'
+                        : ''
+                    ">
+                    <a class="page-link pointer" (click)="goToPage(pagedResponseBinh?.pageNumber + 1)">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
           </div>
         </div>
-
       </div>
+
     </div>
   </div>
 </div>

@@ -23,4 +23,10 @@ export class PhieuGiamGiaService {
       `${this.apiUrl}/ds-phieu-giam-gia${param}`
     );
   }
+
+  public changeStatus(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/status/${id}`, {
+      responseType: "text",
+    });
+  }
 }

@@ -38,8 +38,10 @@ public class PhieuGiamGia extends BaseEntity {
     private int soLuong;
 
     @LastModifiedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDateTime thoiGianBatDau;
+    @LastModifiedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDateTime thoiGianKetThuc;
-    private Integer trangThai;
+    private boolean trangThai;
 }

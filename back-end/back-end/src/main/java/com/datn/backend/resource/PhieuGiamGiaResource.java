@@ -26,11 +26,11 @@ public class PhieuGiamGiaResource {
     private PhieuGiamGiaServce service;
 
     @GetMapping("/ds-phieu-giam-gia")
-    public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
-                                                 @RequestParam(value = "pageSize",defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE,required = false)int pageSize,
-                                                 @RequestParam(value = "search",defaultValue = "",required = false) String search) {
+    public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                 @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search) {
 
-        return ResponseEntity.ok(service.getPagination(pageNumber,pageSize,search));
+        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search));
     }
 
     @GetMapping("/get-by-id/{id}")
@@ -39,18 +39,21 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.getOne(id));
     }
 
+    @GetMapping("/status/{id}")
+    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+        service.changeStatus(id);
+        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+    }
+
+
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody PhieuGiamGiaRequest phieuGiamGia){
+    public ResponseEntity<?> add(@RequestBody PhieuGiamGiaRequest phieuGiamGia) {
         return ResponseEntity.ok(service.add(phieuGiamGia));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?>update(@PathVariable("id")Integer id, @RequestBody PhieuGiamGiaRequest request){
-    return ResponseEntity.ok().body(service.update(id,request));
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id")Integer id){
-        service.remove(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PhieuGiamGiaRequest request) {
+        return ResponseEntity.ok().body(service.update(id, request));
     }
 
 

@@ -7,19 +7,25 @@
 <div class="row gutters">
   <div class="col-sm-12">
     <!-- Filter Form -->
-    <app-filter></app-filter>
+    <app-filter
+      (filterFromChild)="getValueFromFilter($event)"
+      (filterReload)="reloadResetFilter()"
+    ></app-filter>
     <!-- End Filter Form -->
     <!-- Row start -->
     <app-table
       [titleTable]="titleTable"
       [tHead]="tHead"
       [listObject]="data"
+      [template]="'dotGiamGiaTable'"
       [pageArray]="pageArray"
       [pageNumber]="pageNumber"
       [pageSize]="pageSize"
       [search]="search"
-      (onPageChange)="handleChangePageSize($event)"
-      (onPageNumberChange)="handleChangePageNumber($event)"
+      [placeHolder]="'Mã..Tên..Phần Trăm.....'"
+      (onPageChange)="handleChangePageSizeDGG($event)"
+      (onPageNumberChange)="handleChangePageNumberDGG($event)"
+      (onPageChangeSearch)="handleChangeSearchDGG($event)"
     ></app-table>
     <!-- Row ends -->
   </div>

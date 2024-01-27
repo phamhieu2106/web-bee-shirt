@@ -11,6 +11,9 @@ public interface DotGiamGiaService {
 
     PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search);
 
+    PagedResponse<DotGiamGiaResponse> getFilter(int pageNumber, int pageSize, String search
+            , int status, String startDate, String endDate);
+
     DotGiamGiaResponse getOne(Integer id);
 
     DotGiamGia add(DotGiamGiaRequest object);

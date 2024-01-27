@@ -30,7 +30,7 @@ public class PhieuGiamGiaRequest {
 
     private LocalDateTime thoiGianKetThuc;
 
-    private Integer trangThai;
+    private boolean trangThai;
 
     public PhieuGiamGia giamGia(PhieuGiamGia phieu) {
         phieu.setId(this.id);

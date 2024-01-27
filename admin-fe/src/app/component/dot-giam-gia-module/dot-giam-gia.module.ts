@@ -6,12 +6,12 @@ import { FilterComponent } from "./filter/filter.component";
 import { TableComponent } from "./table/table.component";
 import { LayoutModule } from "../layout-module/layout.module";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ModalComponent } from "./modal/modal.component";
 import { FormComponent } from "./form/form.component";
 import { ThemDotGiamGiaComponent } from "./them-dot-giam-gia/them-dot-giam-gia.component";
-import { ChiTietDotGiamGiaComponent } from './chi-tiet-dot-giam-gia/chi-tiet-dot-giam-gia.component';
-import { CapNhatDotGiamGiaComponent } from './cap-nhat-dot-giam-gia/cap-nhat-dot-giam-gia.component';
+import { ChiTietDotGiamGiaComponent } from "./chi-tiet-dot-giam-gia/chi-tiet-dot-giam-gia.component";
+import { CapNhatDotGiamGiaComponent } from "./cap-nhat-dot-giam-gia/cap-nhat-dot-giam-gia.component";
 
 @NgModule({
   declarations: [
@@ -24,6 +24,12 @@ import { CapNhatDotGiamGiaComponent } from './cap-nhat-dot-giam-gia/cap-nhat-dot
     ChiTietDotGiamGiaComponent,
     CapNhatDotGiamGiaComponent,
   ],
-  imports: [DotGiamGiaRoutingModule, LayoutModule, BrowserModule, FormsModule],
+  imports: [
+    DotGiamGiaRoutingModule,
+    LayoutModule,
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class DotGiamGiaModule {}

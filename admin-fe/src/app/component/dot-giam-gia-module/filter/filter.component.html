@@ -1,31 +1,50 @@
 <div class="row gutters pt-2">
   <div class="col-sm-12">
     <div class="card">
-      <div class="card-header">Bộ Lọc</div>
+      <h2 class="card-header">Bộ Lọc</h2>
       <div class="card-body">
         <div
           class="form-inline p-4 mx-auto d-flex align-items-center justify-content-center"
         >
           <div class="form-group">
-            <label for="ngay-bat-dau">Ngày Bắt Đầu: </label>
-            <input class="form-control m-4" type="date" id="ngay-bat-dau" />
+            <label for="ngay-bat-dau">Từ Ngày: </label>
+            <input
+              [(ngModel)]="startDate"
+              (ngModelChange)="onChangeFilter()"
+              class="form-control m-2"
+              type="date"
+              id="ngay-bat-dau"
+            />
           </div>
           <div class="form-group">
-            <label for="ngay-ket-thuc">Ngày Kết Thúc: </label>
-            <input class="form-control m-4" type="date" id="ngay-ket-thuc" />
+            <label for="ngay-ket-thuc">Tới Ngày: </label>
+            <input
+              [(ngModel)]="endDate"
+              (ngModelChange)="onChangeFilter()"
+              class="form-control m-2"
+              type="date"
+              id="ngay-ket-thuc"
+            />
           </div>
           <div class="form-group">
             <label for="trang-thai">Trạng Thái: </label>
-            <select class="form-control mx-sm-4" id="trang-thai">
-              <option selected>Tất Cả</option>
-              <option value="1">Đang Diễn Ra</option>
-              <option value="2">Sắp Diễn Ra</option>
-              <option value="0">Đã Kết Thúc</option>
+            <select
+              [(ngModel)]="status"
+              class="custom-select ml-2 col-md-7.5"
+              id="trang-thai"
+              (change)="onChangeFilter()"
+            >
+              <option selected [ngValue]="3">Tất Cả</option>
+              <option [ngValue]="1">Đang Diễn Ra</option>
+              <option [ngValue]="2">Sắp Diễn Ra</option>
+              <option [ngValue]="0">Đã Kết Thúc</option>
             </select>
           </div>
         </div>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-info btn-rounded m-1">Làm Mới</button>
+          <button (click)="handleReset()" class="btn btn-info btn-rounded m-1">
+            Làm Mới
+          </button>
           <button
             [routerLink]="'/dot-giam-gia/them-dot-giam-gia'"
             class="btn btn-success btn-rounded m-1"

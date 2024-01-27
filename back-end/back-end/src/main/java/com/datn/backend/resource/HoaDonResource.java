@@ -39,10 +39,11 @@ public class HoaDonResource {
             @RequestParam(defaultValue = ApplicationConstant.DEFAULT_PAGE_NUM) int pageNumber,
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "") String loaiHoaDon,
-            @RequestParam(defaultValue = "") String ngayTao
+            @RequestParam(defaultValue = "") String ngayTao,
+            @RequestParam(defaultValue = "") String trangThai
     ) {
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable,search,loaiHoaDon,ngayTao);
+        PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable,search,loaiHoaDon,ngayTao, trangThai);
         return ResponseEntity.ok(hoaDons);
     }
     // get by id

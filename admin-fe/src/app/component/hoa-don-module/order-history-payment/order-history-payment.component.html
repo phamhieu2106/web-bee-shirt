@@ -31,7 +31,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let lstt of lichSuThanhToans; index as i">
+                  <tr *ngFor="let lstt of thanhToans; index as i">
+
                     <td>{{ i + 1 }}</td>
                     <td>{{ lstt.maGiaoDich }}</td>
                     <td>{{ lstt.soTien | currency : "đ " }}</td>
@@ -41,7 +42,8 @@
                     <td>{{ lstt.createdAt }}</td>
                     <td>
                       <app-phuong-thuc-thanh-toan
-                        [phuongThucThanhToan]="lstt.hinhThucThanhToan.hinhThuc"
+                        [phuongThucThanhToan]="lstt.hinhThucThanhToan"
+
                       ></app-phuong-thuc-thanh-toan>
                     </td>
                     <td>{{ lstt.createdBy }}</td>

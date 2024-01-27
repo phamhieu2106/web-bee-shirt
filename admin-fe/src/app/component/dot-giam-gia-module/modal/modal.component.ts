@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-modal",
@@ -12,7 +13,10 @@ export class ModalComponent {
 
   @Input() handleSubmit: Function;
 
+  constructor(private toast: ToastrService) {}
+
   public callParentFuntion() {
+    this.toast.success("Thêm mới thành công", "");
     this.handleSubmit();
   }
 }

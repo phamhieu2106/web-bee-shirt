@@ -22,6 +22,8 @@ export class DanhSachMauSacComponent {
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: MauSac;
+  public isLoadding = false;
+  public overlayText: string = "";
 
   constructor(
     private mauSacService: MauSacService,
@@ -36,9 +38,7 @@ export class DanhSachMauSacComponent {
 
   // public function
   public add(): void {
-    console.log(this.addForm.value);
-    console.log(this.selectFile);
-
+    this.turnOnOverlay("Đang thêm...");
     this.mauSacService.add(this.addForm.value, this.selectFile).subscribe({
       next: (response: MauSac) => {
         this.goToPage(
@@ -54,9 +54,11 @@ export class DanhSachMauSacComponent {
           timer: 1500,
         });
         document.getElementById("closeBtn").click();
+        this.turnOffOverlay("");
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message);
+        this.turnOffOverlay("");
       },
     });
   }
@@ -66,6 +68,9 @@ export class DanhSachMauSacComponent {
       ten: new FormControl("", [Validators.required]),
       ma: new FormControl("", [Validators.required]),
     });
+    this.selectFile = null;
+    (document.getElementById("thumbnail") as HTMLImageElement)["src"] =
+      "assets/img/default-image.jpg";
   }
 
   public goToPage(
@@ -96,84 +101,94 @@ export class DanhSachMauSacComponent {
   }
 
   public openDetailsForm(id: number): void {
-    // this.mauSacService.getById(id).subscribe({
-    //   next: (response: MauSac) => {
-    //     console.log("tay ao:", response);
-    //     this.selectedDetails = response;
-    //   },
-    //   error: (error: HttpErrorResponse) => {
-    //     console.log(error);
-    //   },
-    // });
+    this.mauSacService.getById(id).subscribe({
+      next: (response: MauSac) => {
+        console.log("tay ao:", response);
+        this.selectedDetails = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 
   public openUpdateForm(id: number): void {
-    // this.mauSacService.getById(id).subscribe({
-    //   next: (response: MauSac) => {
-    //     this.updateForm = new FormGroup({
-    //       id: new FormControl(response.id),
-    //       ten: new FormControl(response.ten, [Validators.required]),
-    //       trangThai: new FormControl(response.trangThai),
-    //     });
-    //   },
-    //   error: (error: HttpErrorResponse) => {
-    //     console.log(error);
-    //   },
-    // });
+    this.mauSacService.getById(id).subscribe({
+      next: (response: MauSac) => {
+        this.selectedDetails = response;
+        this.updateForm = new FormGroup({
+          id: new FormControl(response.id),
+          ten: new FormControl(response.ten, [Validators.required]),
+          ma: new FormControl(response.ma, [Validators.required]),
+          trangThai: new FormControl(response.trangThai),
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 
   public changeStatus(id: number): void {
-    // this.mauSacService.changeStatus(id).subscribe({
-    //   next: (response: string) => {
-    //     this.toastr.success(response, "");
-    //     this.goToPage(
-    //       this.pagedResponse.pageNumber,
-    //       this.pagedResponse.pageSize,
-    //       this.pagedResponse.search
-    //     );
-    //   },
-    //   error: (error: HttpErrorResponse) => {
-    //     console.log(error);
-    //   },
-    // });
+    this.mauSacService.changeStatus(id).subscribe({
+      next: (response: string) => {
+        this.toastr.success(response, "");
+        this.goToPage(
+          this.pagedResponse.pageNumber,
+          this.pagedResponse.pageSize,
+          this.pagedResponse.search
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 
   public update(): void {
-    // this.mauSacService.update(this.updateForm.value).subscribe({
-    //   next: (response: MauSac) => {
-    //     this.goToPage(
-    //       this.pagedResponse.pageNumber,
-    //       this.pagedResponse.pageSize,
-    //       this.pagedResponse.search
-    //     );
-    //     this.initUpdateForm();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: `Cập nhật thành công '${response.ten}'!`,
-    //       showConfirmButton: false,
-    //       timer: 1500,
-    //     });
-    //     document.getElementById("closeUpdateBtn").click();
-    //   },
-    //   error: (error: HttpErrorResponse) => {
-    //     console.log(error.message);
-    //   },
-    // });
+    this.turnOnOverlay("Đang cập nhật...");
+    this.mauSacService
+      .update(this.updateForm.value, this.selectFile)
+      .subscribe({
+        next: (response: MauSac) => {
+          this.goToPage(
+            this.pagedResponse.pageNumber,
+            this.pagedResponse.pageSize,
+            this.pagedResponse.search
+          );
+          this.initUpdateForm();
+          Swal.fire({
+            icon: "success",
+            title: `Cập nhật thành công '${response.ten}'!`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          document.getElementById("closeUpdateBtn").click();
+          this.turnOffOverlay("");
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message);
+          this.turnOffOverlay("");
+        },
+      });
   }
 
-  public imageChange(event: any): void {
+  public imageChange(event: any, thumnailId: string): void {
     this.selectFile = event.target["files"][0];
-    this.showImageThumbnail(this.selectFile);
+    this.showImageThumbnail(this.selectFile, thumnailId);
   }
 
   // private function
   private getMauSacList(): void {
+    this.isLoadding = true;
     this.mauSacService.getAll().subscribe({
       next: (response: PagedResponse<MauSac>) => {
         this.pagedResponse = response;
+        this.isLoadding = false;
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
+        this.isLoadding = false;
       },
     });
   }
@@ -185,14 +200,28 @@ export class DanhSachMauSacComponent {
       ma: new FormControl("", [Validators.required]),
       trangThai: new FormControl(false),
     });
+
+    this.selectFile = null;
+    (document.getElementById("thumbnail") as HTMLImageElement)["src"] =
+      "assets/img/default-image.jpg";
   }
 
-  private showImageThumbnail(file: File): void {
+  private showImageThumbnail(file: File, thumnailId: string): void {
     let reader = new FileReader();
     reader.onload = (e) => {
-      (document.getElementById("thumbnail") as HTMLImageElement)["src"] = e
+      (document.getElementById(thumnailId) as HTMLImageElement)["src"] = e
         .target.result as string;
     };
     reader.readAsDataURL(file);
+  }
+
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

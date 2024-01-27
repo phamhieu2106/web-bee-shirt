@@ -18,5 +18,6 @@ public interface KhachHangResponse {
     String getHuyen();
     String getXa();
     String getDuong();
+    int getTrang_thai();
 
 }

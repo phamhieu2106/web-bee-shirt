@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
@@ -14,14 +14,15 @@ export class FormComponent implements OnInit {
   @Input() formHeader: string;
   @Input() formButton: string;
   @Input() typeForm: string;
-
+  // list product
+  @Input() listProduct: Array<number>;
   public form: any;
 
   ngOnInit(): void {
-    this.loadFormAdd();
+    this.loadForm();
   }
 
-  private loadFormAdd(): void {
+  private loadForm(): void {
     this.form = new FormGroup({
       tenDotGiamGia: new FormControl(null, [
         Validators.required,
@@ -42,8 +43,8 @@ export class FormComponent implements OnInit {
 
   public handleSubmit = () => {
     if (this.typeForm === "add") {
-      console.log(this.NgayBatDau.value);
       console.log(this.form.value);
+      console.log(this.listProduct);
     } else if (this.typeForm === "update") {
       console.log("handle update");
     }

@@ -38,6 +38,4 @@ public class DotGiamGia extends BaseEntity {
 
     @Column(name = "trang_thai")
     private Integer trangThai;
-
-
 }

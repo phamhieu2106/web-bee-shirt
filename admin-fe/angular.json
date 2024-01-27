@@ -22,6 +22,7 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/assets/css/bootstrap.min.css",
               "src/assets/fonts/icomoon/icomoon.css",
               "src/assets/css/main.min.css",

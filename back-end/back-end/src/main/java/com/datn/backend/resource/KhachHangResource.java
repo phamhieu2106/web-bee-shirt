@@ -23,7 +23,10 @@ public class KhachHangResource {
                                                                              @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(khachHangService.getAll(pageNumber, pageSize, search));
     }
-
+    @GetMapping("/getById/{id}")
+    public  ResponseEntity<KhachHangResponse> getKHById(@PathVariable("id")int id){
+        return ResponseEntity.ok(khachHangService.getById(id));
+    }
     @PostMapping("/add-kh")
     public ResponseEntity<KhachHang> addKH(@RequestBody KhachHangRequest kh) {
         return ResponseEntity.ok(khachHangService.add(kh));

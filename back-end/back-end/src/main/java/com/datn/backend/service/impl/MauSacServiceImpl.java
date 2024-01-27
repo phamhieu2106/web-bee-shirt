@@ -3,6 +3,7 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.model.san_pham.MauSacImage;
+import com.datn.backend.repository.MauSacImageRepository;
 import com.datn.backend.repository.MauSacRepository;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.service.MauSacService;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class MauSacServiceImpl implements MauSacService {
 
     private final MauSacRepository mauSacRepo;
+    private final MauSacImageRepository mauSacImageRepo;
     private final CloudinaryService cloudinaryService;
 
     @Transactional
@@ -66,16 +68,46 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public MauSac getById(int id) {
-        return null;
+        return mauSacRepo.findById(id).get();
     }
 
     @Override
     public void changeStatus(int id) {
-
+        MauSac mauSac = mauSacRepo.findById(id).get();
+        mauSac.setTrangThai(!mauSac.isTrangThai());
+        mauSacRepo.save(mauSac);
     }
 
+    /**
+     * 1. không cập nhật ảnh (dùng ảnh cũ)
+     * 2. cập nhật ảnh (dùng ảnh mới) => xóa ảnh cũ trên cloudinary, cập nhật mauSacImage cho mauSac
+     **/
     @Override
-    public MauSac update(MauSac mauSac) {
-        return null;
+    public MauSac update(MauSac mauSac, MultipartFile multipartFile) throws IOException {
+        // save image to cloud
+        BufferedImage bi = null;
+        if (multipartFile != null) {
+            bi = ImageIO.read(multipartFile.getInputStream());
+        }
+        Map result = null;
+        if (bi != null) {
+            result = cloudinaryService.upload(multipartFile);
+        }
+
+        //
+        MauSac mauSacInDB = mauSacRepo.findById(mauSac.getId()).get();
+        MauSacImage image = mauSacInDB.getImage();
+        if (bi != null) {
+            // xóa ảnh cũ
+            cloudinaryService.delete(image.getImageId());
+
+            image.setImageName((String) result.get("original_filename"));
+            image.setImageUrl((String) result.get("url"));
+            image.setImageId((String) result.get("public_id"));
+        }
+        mauSacInDB.setTen(mauSac.getTen());
+        mauSacInDB.setMa(mauSac.getMa());
+
+        return mauSacRepo.save(mauSacInDB);
     }
 }

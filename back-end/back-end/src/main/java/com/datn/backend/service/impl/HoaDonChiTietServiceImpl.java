@@ -53,6 +53,10 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     @Override
     public String deleteHoaDonCT(Integer id) {
         Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findById(id);
-        return null;
+        if (hoaDonChiTiet.isEmpty()){
+            throw new IdNotFoundException("Không tìm thấy hóa đơn chi tiết id: "+id);
+        }
+        hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
+        return "Xóa thành công";
     }
 }

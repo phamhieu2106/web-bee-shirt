@@ -7,6 +7,7 @@ import com.datn.backend.service.HoaDonChiTietService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +34,7 @@ public class HoaDonChiTietResouce {
         return ResponseEntity.ok(hoaDonChiTietService.updateHoaDonCT(hoaDonChiTietRequest));
     }
     // delete
-    @PutMapping("/update/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> updateHoaDonChiTiet(@PathVariable Integer id){
         if (id.describeConstable().isEmpty()){
             throw new IdNotFoundException("ID không hợp lệ");

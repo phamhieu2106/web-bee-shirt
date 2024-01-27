@@ -4,6 +4,12 @@
       <div class="card-body">
         <form>
           <div class="row">
+            <img
+              src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x488-rddkk3u9.png"
+              alt=""
+            />
+          </div>
+          <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 Họ tên
@@ -110,63 +116,11 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                Tỉnh/Thành phố
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Họ tên"
-                  [value]="khChiTiet?.tinh"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                Quận/Huyện
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Ngày sinh"
-                  [value]="khChiTiet?.huyen"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                Xã/Phường
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Họ tên"
-                  [value]="khChiTiet?.xa"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                Địa chỉ giao hàng cụ thể
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Ngày sinh"
-                  [value]="khChiTiet?.duong"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
                 Tài khoản
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Họ tên"
+                  placeholder="Tên đăng nhập"
                   [value]="khChiTiet?.ten_dang_nhap"
                   [disabled]="true"
                 />
@@ -174,12 +128,14 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                Mật khẩu
+                Địa chỉ
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Ngày sinh"
-                  [value]="khChiTiet?.mat_khau"
+                  placeholder="Địa chỉ giao hàng"
+                  value="{{ khChiTiet?.tinh }}, {{ khChiTiet?.huyen }}, {{
+                    khChiTiet?.xa
+                  }}, {{ khChiTiet?.duong }} "
                   [disabled]="true"
                 />
               </div>

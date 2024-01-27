@@ -3,13 +3,28 @@
   [mainHeading]="mainHeading"
   [title]="title"
 ></app-main-heading>
+
 <div class="row gutters mt-3">
   <div class="col-sm-12">
-    <form class="card">
-      <div class="card-header">Bộ lọc</div>
-      <div class="card-body">
-        <div class="row gutters justify-content-md-center">
-          <div class="col-sm-4 col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="float-md-left">
+          Danh sách khách hàng
+        </h3>
+        
+          <button
+            type="button"
+            class="btn btn-primary btn-lg float-md-right rounded"
+            routerLink="/khach-hang/them-khach-hang"
+          >
+            <span class="icon-user-plus" style="margin-top: 20px"></span>
+            Thêm khách hàng
+          </button>
+            
+      </div>
+      <div class="card-body" style="padding-bottom: 1px;">
+        <div class="row justify-content-md-center">
+          <div class="col-sm-3 col-12">
             <div class="form-group">
               <input
                 type="text"
@@ -20,7 +35,7 @@
               />
             </div>
           </div>
-          <div class="col-sm-2 col-12 me-4">
+          <div class="col-sm-2 col-12 ">
             <div class="form-group">
               <select class="form-control mx-sm-4">
                 <option value="" disabled selected hidden>
@@ -42,36 +57,20 @@
               </select>
             </div>
           </div>
-          <div class="text-center">
-            <button type="button" class="btn btn-primary m-2">
-              Tìm kiếm
-            </button>
-            <button
+          <div class="col-sm-3 col-12">
+            <div class="form-group float-sm-right">
+              <button type="button" class="btn btn-primary mx-sm-4 rounded">
+                Tìm kiếm
+              </button>
+              <button
               type="button"
-              class="btn btn-success m-2"
-            >
+              class="btn btn-success mx-sm-4 rounded"
+              >
               Làm mới
             </button>
+            </div>
           </div>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-<div class="row gutters mt-3">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header">
-        Danh sách khách hàng
-        <div>
-          <button
-            type="button"
-            class="btn btn-primary btn-lg float-md-right rounded"
-            routerLink="/khach-hang/them-khach-hang"
-          >
-            <span class="icon-user-plus" style="margin-top: 20px"></span>
-            Thêm khách hàng
-          </button>
+          
         </div>
       </div>
       <div class="card-body">

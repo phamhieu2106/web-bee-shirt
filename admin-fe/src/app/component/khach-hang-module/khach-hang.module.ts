@@ -7,7 +7,7 @@ import { LayoutModule } from "../layout-module/layout.module";
 import { ThemKhachHangComponent } from "./them-khach-hang/them-khach-hang.component";
 import { SuaKhachHangComponent } from "./sua-khach-hang/sua-khach-hang.component";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -16,6 +16,12 @@ import { FormsModule } from "@angular/forms";
     ThemKhachHangComponent,
     SuaKhachHangComponent,
   ],
-  imports: [KhachHangRoutingModule, LayoutModule, CommonModule,FormsModule],
+  imports: [
+    KhachHangRoutingModule,
+    LayoutModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class KhachHangModule {}

@@ -1,9 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { KhachHang } from 'src/app/model/class/KhachHang.class';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
 import { KhachHangService } from 'src/app/service/khach-hang.service';
@@ -20,11 +18,8 @@ export class DanhSachKhachHangComponent {
   mainHeading: string = "khách hàng"; 
   
   public pagedResponse: PagedResponse<KhachHangResponse>;
-  public addForm: FormGroup;
-  public updateForm: FormGroup;
   public search = "";
   public khachHangDetail: KhachHangResponse;
-
 
   constructor(
     private khachHangService: KhachHangService,
@@ -44,8 +39,6 @@ export class DanhSachKhachHangComponent {
     this.khachHangService.getAll(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<KhachHangResponse>) => {
         this.pagedResponse = response;
-        console.log(response);
-        console.log("get dc");
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -80,4 +73,5 @@ export class DanhSachKhachHangComponent {
       },
     });
   }
+  
 }

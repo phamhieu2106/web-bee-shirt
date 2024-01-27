@@ -51,7 +51,21 @@ export class DanhSachPhieuComponent {
     });
   }
 
-
+  public changeStatus(id: number): void {
+    this.phieuGiamGiaService.changeStatus(id).subscribe({
+      next: (response: string) => {
+        this.toastr.success(response, "");
+        this.goToPage(
+          this.pagedResponseBinh.pageNumber,
+          this.pagedResponseBinh.pageSize,
+          this.pagedResponseBinh.search
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
 
 
   public onChangePageSize(e: any): void {

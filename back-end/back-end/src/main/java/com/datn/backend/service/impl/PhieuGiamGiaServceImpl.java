@@ -49,19 +49,10 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     @Override
     public PhieuGiamGia remove(Integer id) {
 
-        Optional<PhieuGiamGia> optional = repository.findById(id);
-        return optional.map(phieuGiamGia -> {
-            phieuGiamGia.setTrangThai(false);
-            return repository.save(phieuGiamGia);
-        }).orElse(null);
+      return null;
     }
 
-    @Override
-    public void changeStatus(int id) {
-        PhieuGiamGia pgg = repository.findById(id).get();
-        pgg.setTrangThai(!pgg.isTrangThai());
-        repository.save(pgg);
-    }
+
 
     @Override
     public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {

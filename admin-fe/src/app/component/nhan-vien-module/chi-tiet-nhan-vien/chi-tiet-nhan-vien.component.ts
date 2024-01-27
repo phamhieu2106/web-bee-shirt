@@ -8,4 +8,8 @@ import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.int
 })
 export class ChiTietNhanVienComponent {
   @Input() nhanVienDetails: NhanVienResponse;
+
+  ngOnInit(): void {
+    console.log(this.nhanVienDetails);
+  }
 }

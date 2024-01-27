@@ -1,6 +1,7 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +35,7 @@ public class SanPhamChiTiet extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "san_pham_id")
+    @JsonIgnore
     private SanPham sanPham;
 
     @ManyToOne
@@ -63,5 +65,4 @@ public class SanPhamChiTiet extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "chat_lieu_id")
     private ChatLieu chatLieu;
-
 }

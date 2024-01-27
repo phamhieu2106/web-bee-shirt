@@ -19,12 +19,12 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @Builder
-public class ThanhToanResponse extends BaseResponse{
+public class ThanhToanResponse extends BaseResponse {
+
     private Integer id;
     private String moTa;
     private String maGiaoDich;
     private BigDecimal soTien;
     private boolean trangThai;
-
     private HinhThucThanhToanResponse hinhThucThanhToan;
 }

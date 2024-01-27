@@ -12,8 +12,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +27,13 @@ public class ApplicationConfiguration {
 
     @Bean
     public ModelMapper modelMapper(){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper;
+        return new ModelMapper();
     }
+
 
 //    @Bean("objectMapper1")
 //    public ObjectMapper objectMapper1() {
+
 //        ObjectMapper mapper = new ObjectMapper();
 //        mapper.registerModule(new JavaTimeModule());
 //        return mapper;
@@ -43,9 +42,9 @@ public class ApplicationConfiguration {
     @Bean
     public Cloudinary cloudinary() {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cloud_name", "dksrpfftz");
-        valuesMap.put("api_key", "723185261285916");
-        valuesMap.put("api_secret", "KpX9q3oUUmoOxEa9j_qgl_VNonY");
+        valuesMap.put("cloud_name", "dpsryzyev");
+        valuesMap.put("api_key", "335188565135668");
+        valuesMap.put("api_secret", "LL813wwdYHsHUS9gLHy1ajzQ93w");
         return new Cloudinary(valuesMap);
     }
 

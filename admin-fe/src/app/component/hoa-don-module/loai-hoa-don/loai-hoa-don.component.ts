@@ -6,5 +6,7 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./loai-hoa-don.component.css"],
 })
 export class LoaiHoaDonComponent {
+
   @Input() loaiHoaDon: string;
+
 }

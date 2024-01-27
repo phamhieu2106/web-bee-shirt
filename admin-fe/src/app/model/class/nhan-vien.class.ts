@@ -1,7 +1,7 @@
 import { Account } from "./account.class";
 
 export class NhanVien {
-  id: number;
+  id?: number;
   hoTen: string;
   ngaySinh: string;
   sdt: string;

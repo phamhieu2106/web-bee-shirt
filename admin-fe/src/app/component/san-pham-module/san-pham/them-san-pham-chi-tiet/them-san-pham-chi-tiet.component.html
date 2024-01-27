@@ -1,0 +1,124 @@
+<div class="row gutters pt-2">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="mb-2">Thêm Sản Phẩm Chi Tiết</h3>
+      </div>
+      <div class="card-body">
+        <form class="form border border-secondary p-2 rounded">
+          <!-- tên sản phẩm -->
+          <div class="mb-3">
+            <label class="form-label">Sản phẩm:</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="name@example.com"
+              [value]="sanPham?.ten + ' - ' + sanPham?.ma"
+              disabled
+            />
+          </div>
+
+          <!-- Giá nhập -->
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Giá nhập"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
+            <span class="input-group-text" id="basic-addon2">VNĐ</span>
+          </div>
+
+          <!-- Giá bán -->
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Giá bán"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
+            <span class="input-group-text" id="basic-addon2">VNĐ</span>
+          </div>
+
+          <div class="row">
+            <!-- màu sắc, kích cỡ -->
+            <div class="col-6 mb-3">
+              <label class="form-label">Màu sắc:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label class="form-label">Kích cỡ:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <!-- kiểu dáng, thiết kế -->
+            <div class="col-6 mb-3">
+              <label class="form-label">Kiểu dáng:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label class="form-label">Kiểu thiết kế:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <!-- tay áo, cổ áo -->
+            <div class="col-6 mb-3">
+              <label class="form-label">Kiểu tay áo:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label class="form-label">Kiểu cổ áo:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <!-- chất liệu -->
+            <div class="col-12 mb-3">
+              <label class="form-label">Chất liệu:</label>
+              <select class="form-select">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

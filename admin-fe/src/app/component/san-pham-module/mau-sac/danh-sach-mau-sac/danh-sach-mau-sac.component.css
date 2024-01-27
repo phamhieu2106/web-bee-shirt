@@ -1,5 +1,6 @@
 .thumbnail {
   height: 150px;
+  width: 300px;
   border-radius: 5%;
   object-fit: cover;
 }
@@ -8,4 +9,12 @@
   height: 30px;
   width: 60px;
   object-fit: cover;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.modal {
+  z-index: 1200;
 }

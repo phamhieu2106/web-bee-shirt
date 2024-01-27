@@ -16,7 +16,6 @@ import { ToastrService } from "ngx-toastr";
 })
 export class DanhSachPhieuComponent {
   public pagedResponseBinh: PagedResponse<PhieuGiamGia>;
-  public addForm: FormGroup;
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: PhieuGiamGia;
@@ -52,21 +51,7 @@ export class DanhSachPhieuComponent {
     });
   }
 
-  public changeStatus(id: number): void {
-    this.phieuGiamGiaService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.goToPage(
-          this.pagedResponseBinh.pageNumber,
-          this.pagedResponseBinh.pageSize,
-          this.pagedResponseBinh.search
-        );
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
+
 
 
   public onChangePageSize(e: any): void {

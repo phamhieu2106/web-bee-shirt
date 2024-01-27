@@ -4,11 +4,10 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
-import com.datn.backend.exception.custom_exception.EntityNotFoundException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.service.NhanVienService;
@@ -78,7 +77,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     public NhanVienResponse getOneById(Integer id) {
 
         if (nhanVienRepo.existsById(id) == false) {
-            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
 
         return nhanVienRepo.getOneById(id);
@@ -88,7 +87,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     public NhanVien delete(Integer id) {
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
-        if(optionalNhanVien.isPresent()){
+        if (optionalNhanVien.isPresent()) {
             NhanVien nhanVien = optionalNhanVien.map(nv -> {
                 Account acc = optionalNhanVien.get().getAccount();
                 acc.setTrangThai(false);
@@ -98,23 +97,23 @@ public class NhanVienServiceImpl implements NhanVienService {
             }).get();
             return nhanVien;
         } else {
-            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
     }
 
     @Override
     public NhanVien update(AddNhanVienRequest request, Integer id) {
 
-            // nếu như nv tồn tại => nếu tên đăng nhập đã tồn tại => tên đăng nhập như cũ => update
-            //                                                    => tên còn lại => throw đã tồn tại
-            //                    => tên đăng nhập mới => update
-            // không tồn tại thì throw không tìm thấy
+        // nếu như nv tồn tại => nếu tên đăng nhập đã tồn tại => tên đăng nhập như cũ => update
+        //                                                    => tên còn lại => throw đã tồn tại
+        //                    => tên đăng nhập mới => update
+        // không tồn tại thì throw không tìm thấy
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
-        if(optionalNhanVien.isPresent()){
+        if (optionalNhanVien.isPresent()) {
 
             if (accountRepo.existsByTenDangNhap(request.getTenDangNhap().toLowerCase())) {
-                if(optionalNhanVien.get().getAccount().getTenDangNhap().equalsIgnoreCase(request.getTenDangNhap())) {
+                if (optionalNhanVien.get().getAccount().getTenDangNhap().equalsIgnoreCase(request.getTenDangNhap())) {
                     return updateForm(optionalNhanVien, request);
                 } else {
                     throw new ResourceExistsException("Tên đăng nhập: " + request.getTenDangNhap() + " đã tồn tại.");
@@ -124,11 +123,11 @@ public class NhanVienServiceImpl implements NhanVienService {
             }
 
         } else {
-            throw new EntityNotFoundException("Không tìm thấy nhân viên có id " + id);
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
     }
 
-    public NhanVien updateForm (Optional<NhanVien> optionalNhanVien, AddNhanVienRequest request) {
+    public NhanVien updateForm(Optional<NhanVien> optionalNhanVien, AddNhanVienRequest request) {
         NhanVien nhanVien = optionalNhanVien.map(nv -> {
             nv.setHoTen(request.getHoTen());
             nv.setNgaySinh(request.getNgaySinh());

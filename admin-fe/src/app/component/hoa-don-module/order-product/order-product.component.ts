@@ -1,7 +1,9 @@
 import { Component, Input } from "@angular/core";
+
 import { ToastrService } from "ngx-toastr";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
+
 
 @Component({
   selector: "app-order-product",
@@ -64,4 +66,5 @@ export class OrderProductComponent {
       },
     });
   }
+
 }

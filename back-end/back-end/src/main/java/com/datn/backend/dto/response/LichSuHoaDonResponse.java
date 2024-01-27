@@ -1,6 +1,5 @@
 package com.datn.backend.dto.response;
 
-import com.datn.backend.enumeration.TrangThaiHoaDon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class LichSuHoaDonResponse extends BaseResponse{
+public class LichSuHoaDonResponse extends BaseResponse {
+
     private Integer id;
     private String tieuDe;
     private String moTa;

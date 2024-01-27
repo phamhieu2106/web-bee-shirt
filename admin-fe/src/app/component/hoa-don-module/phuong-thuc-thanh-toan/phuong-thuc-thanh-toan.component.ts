@@ -1,5 +1,7 @@
 import { Component, Input } from "@angular/core";
+
 import { HinhThucThanhToan } from "src/app/model/class/hinh-thuc-thanh-toan";
+
 
 @Component({
   selector: "app-phuong-thuc-thanh-toan",
@@ -7,5 +9,7 @@ import { HinhThucThanhToan } from "src/app/model/class/hinh-thuc-thanh-toan";
   styleUrls: ["./phuong-thuc-thanh-toan.component.css"],
 })
 export class PhuongThucThanhToanComponent {
+
   @Input() phuongThucThanhToan: HinhThucThanhToan;
+
 }

@@ -7,7 +7,11 @@ export interface NhanVienResponse {
   email: string;
   diaChi: string;
   tenDangNhap: string;
-  matKhau: string;
-  trangThai: boolean;
-  role: string;
+  matKhau?: string;
+  trangThai?: boolean;
+  role?: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  lastUpdatedBy?: string;
 }

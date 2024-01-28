@@ -1,12 +1,12 @@
 export interface KhachHangResponse{
     id: number;
-    gioi_tinh: boolean,
-    trang_thai: number,
-    ho_ten: string,
-    ten_dang_nhap: string,
+    gioiTinh: boolean,
+    trangThai: number,
+    hoTen: string,
+    tenDangNhap: string,
     sdt: string,
-    ngay_sinh: string,
-    mat_khau: string,
+    ngaySinh: string,
+    matKhau: string,
     email: string,
     huyen: string,
     tinh: string,

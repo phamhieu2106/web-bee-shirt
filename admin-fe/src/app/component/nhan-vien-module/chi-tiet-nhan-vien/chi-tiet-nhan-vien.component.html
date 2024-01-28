@@ -98,6 +98,78 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Ngày tạo
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ngày tạo"
+                  [value]="nhanVienDetails?.createdAt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                Người tạo
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Người tạo"
+                  [value]="nhanVienDetails?.createdBy"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Ngày tạo gần nhất
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ngày tạo gần nhất"
+                  [value]="nhanVienDetails?.updatedAt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                Người tạo gần nhất
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Người tạo"
+                  gần
+                  nhất
+                  [value]="nhanVienDetails?.lastUpdatedBy"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <!-- tên đăng nhập -->
+              <div class="form-group">
+                Tên đăng nhập
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Tên đăng nhập"
+                  [value]="nhanVienDetails?.tenDangNhap"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </form>

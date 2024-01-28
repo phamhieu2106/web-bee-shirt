@@ -24,7 +24,6 @@ export class ThemKhachHangComponent  {
   ) {}
   ngOnInit(): void {
     this.initFormAddKh();
-    
   }
 public addKH(): void{
   this.khachHangService.add(this.formAddKh.value).subscribe({

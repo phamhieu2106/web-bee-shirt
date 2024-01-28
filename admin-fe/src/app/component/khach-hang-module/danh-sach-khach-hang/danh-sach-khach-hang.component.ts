@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
@@ -20,6 +21,8 @@ export class DanhSachKhachHangComponent {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
   public khachHangDetail: KhachHangResponse;
+  public khDetail: KhachHangResponse;
+  public formUpdateKH: FormGroup; 
 
   constructor(
     private khachHangService: KhachHangService,
@@ -73,5 +76,4 @@ export class DanhSachKhachHangComponent {
       },
     });
   }
-  
 }

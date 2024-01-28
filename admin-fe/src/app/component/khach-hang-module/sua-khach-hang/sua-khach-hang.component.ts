@@ -4,7 +4,9 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
+import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
+import { DiaChiService } from "src/app/service/dia-chi.service";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 
 @Component({
@@ -17,23 +19,29 @@ export class SuaKhachHangComponent  {
   title: string = "khách hàng";
   public kh: KhachHangResponse;
   public id: number;
+  public idKh: number;
   public formUpdateKH: FormGroup;
+  public addFormDC: FormGroup;
   public khDetail: KhachHangResponse;
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private khachHangService: KhachHangService,
     private toas: ToastrService,
-    private router: Router
+    private diaChiService: DiaChiService,
+  
   ) {}
   ngOnInit() {
     this.initFormUpdateKh();
+    this.initAddFormDC();
+    this.idKh = this.route.snapshot.params['id'];
+    console.log(this.idKh);
+    
     this.route.params.subscribe((params) => {
-      this.id = +params["id"];
+      this.id = +params["id"];      
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
-          this.khDetail = kr;
-          console.log(this.khDetail.gioiTinh);
-          
+          this.khDetail = kr;       
           this.formUpdateKH = new FormGroup({
             id: new FormControl(kr.id, [Validators.required]),
             hoTen: new FormControl(kr.hoTen, [Validators.required]),
@@ -56,7 +64,7 @@ export class SuaKhachHangComponent  {
 
   public updateKH(): void{
     console.log(this.formUpdateKH.value);    
-    this.khachHangService.update(this.id,this.formUpdateKH.value); 
+    // this.khachHangService.update(this.id,this.formUpdateKH.value); 
     this.khachHangService.update(this.id,this.formUpdateKH.value).subscribe({
       next: (kh: KhachHang)=>{
         this.toas.success('Cập nhật thông tin thành công','Thành công');
@@ -83,6 +91,31 @@ export class SuaKhachHangComponent  {
       tinh: new FormControl("",[Validators.required]),
       duong: new FormControl("",[Validators.required]),
       xa: new FormControl("",[Validators.required]),
+    })
+  }
+
+  public initAddFormDC(): void {
+    this.addFormDC = new FormGroup({
+      tinh: new FormControl("", [Validators.required]),
+      huyen: new FormControl("", [Validators.required]),
+      xa: new FormControl("", [Validators.required]),
+      duong: new FormControl("", [Validators.required]),    
+    });
+  }
+
+ 
+  public addDiaChi(): void{
+    this.diaChiService.addDC(this.id,this.addFormDC.value).subscribe({
+      next: (dc: DiaChi)=>{
+        this.initAddFormDC();        
+        this.toas.success('Thêm địa chỉ mới thành công','Thành công');
+        this.router.navigate(['/khach-hang/ds-khach-hang']);
+        
+      },error:(erros: HttpErrorResponse)=>{
+        console.log(erros.message);
+        
+      
+      }
     })
   }
 }

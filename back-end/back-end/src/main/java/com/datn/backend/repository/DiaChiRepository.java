@@ -7,15 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface DiaChiRepository extends JpaRepository<DiaChi,Integer> {
     @Query(value =
             """
-            select dc.tinh,dc.huyen,dc.xa,dc.duong,dc.mac_dinh as macDinh,dc.id,kh.ho_ten as hoTen,
-            kh.sdt 
-            from dia_chi dc 
-            join khach_hang kh 
-            on dc.khach_hang_id = kh.id 
-            where kh.id= :id
+             select
+                 dc.*
+             from dia_chi dc
+             join khach_hang kh on dc.khach_hang_id = kh.id
+             where kh.id = :id
             """, nativeQuery = true)
-    DiaChi getAll(int id);
+    List<DiaChi> getAll(int id);
 }

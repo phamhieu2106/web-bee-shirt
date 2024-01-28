@@ -8,6 +8,7 @@ import { KhachHangDetailComponent } from "./khach-hang-detail/khach-hang-detail.
 import { LayoutModule } from "../layout-module/layout.module";
 import { ThemKhachHangComponent } from "./them-khach-hang/them-khach-hang.component";
 import { SuaKhachHangComponent } from "./sua-khach-hang/sua-khach-hang.component";
+import { DiaChiDetailComponent } from "./dia-chi-detail/dia-chi-detail.component";
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { SuaKhachHangComponent } from "./sua-khach-hang/sua-khach-hang.component
     KhachHangDetailComponent,
     ThemKhachHangComponent,
     SuaKhachHangComponent,
+    DiaChiDetailComponent,
   ],
   imports: [
     KhachHangRoutingModule,

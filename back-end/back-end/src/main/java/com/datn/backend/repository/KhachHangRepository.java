@@ -23,6 +23,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
             join dia_chi dc       
             on kh.id=dc.khach_hang_id
             where  kh.ho_ten LIKE %:search%
+            and dc.mac_dinh= 1
             ORDER BY kh.created_at DESC
                     """
             , nativeQuery = true)
@@ -41,7 +42,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
             join dia_chi dc       
             on kh.id=dc.khach_hang_id
             where  kh.id = :id
-            and dc.mac_dinh=1
+            and dc.mac_dinh= 1
             ORDER BY kh.created_at DESC
                     """
             , nativeQuery = true)

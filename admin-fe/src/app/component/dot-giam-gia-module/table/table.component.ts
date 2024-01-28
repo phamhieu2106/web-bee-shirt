@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
+import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
+import { SanPham } from "src/app/model/class/san-pham.class";
+import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-san-pham-chi-tiet";
 
 @Component({
   selector: "app-table",
@@ -21,24 +24,33 @@ export class TableComponent implements OnInit {
   @Input() search: any;
   @Input() placeHolder: string;
 
+  // For DotGiamGiaComponent
   @Output() onPageChange = new EventEmitter<any>();
   @Output() onPageNumberChange = new EventEmitter<any>();
   @Output() onPageChangeSearch = new EventEmitter<any>();
 
-  onChangeSize(sizeNumber: any) {
+  // For SanPhamTable
+  @Input() listSanPham: SanPham[];
+  @Output() clickSanPham = new EventEmitter<any>();
+  listIdSanPham: Array<number> = [];
+  // For SanPhamChiTietTable
+  @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
+
+  // For DotGiamGia
+  public onChangeSize(sizeNumber: any) {
     this.onPageChange.emit(sizeNumber.target.value);
   }
 
-  onChangePage(pageNumber: any) {
+  public onChangePage(pageNumber: any) {
     this.onPageNumberChange.emit(pageNumber);
   }
 
-  onChangeSearch(searchText: any) {
+  public onChangeSearch(searchText: any) {
     this.onPageChangeSearch.emit(searchText);
   }
 
-  // Debounce make sure that the search not request server many times
-  onInputSearch(event: any) {
+  // Debounce make sure that the search not request server many times for DotGiamGia
+  public onInputSearch(event: any) {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
@@ -48,5 +60,9 @@ export class TableComponent implements OnInit {
     }, 900); // Thời gian debounce là 900 milliseconds ~ 1s
   }
 
+  // For SanPham
+  public addIdSanPham(value: any) {
+    this.clickSanPham.emit(value);
+  }
   ngOnInit(): void {}
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class PhieuKhachHangRequest {
 
-    private List<Integer> khachHangIds;
-    private Integer idPhieuGiamGia;
+    private List<Integer> selectedIds;
+    private Integer phieuGiamGiaId;
 
 }

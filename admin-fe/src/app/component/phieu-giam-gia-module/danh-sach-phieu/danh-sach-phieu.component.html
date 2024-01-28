@@ -78,7 +78,6 @@
               <th>Mã</th>
               <th>Tên</th>
               <th>Kiểu</th>
-              <th>Loại</th>
               <th>Số Lượng</th>
               <th>Ngày Bắt Đầu</th>
               <th>Ngày Kết Thúc</th>
@@ -92,10 +91,9 @@
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
-              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân"}}</td>
               <td>{{ pgg.soLuong }}</td>
               <td>{{ pgg.thoiGianBatDau }}</td>
-              <td>{{ pgg.thoiGianKetThuc  }}</td>
+              <td>{{ pgg.thoiGianKetThuc }}</td>
               <td>
                 {{pgg.trangThai}}
               </td>

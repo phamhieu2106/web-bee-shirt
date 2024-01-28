@@ -14,19 +14,27 @@
       [modalMessage]="'Bạn chắc chắn muốn thêm đợt khuyến mại mới?'"
       [modalAction]="'Thêm mới'"
       [typeForm]="'add'"
-      [listProduct]="listIdSanPham"
     ></app-form>
   </div>
 
   <!-- Tables -->
-  <div class="col col-md-7 col-md-8">
+  <div class="col col-md-8">
     <app-table
       [titleTable]="titleTableProduct"
       [tHead]="tHeadProduct"
+      [placeHolder]="'Mã..Tên..'"
+      [listSanPham]="dataSanPham"
+      [template]="'SanPhamTable'"
+      (clickSanPham)="getListIdSanPham($event)"
     ></app-table>
+  </div>
+  <div class="row">
     <app-table
       [titleTable]="titleTableProducts"
-      [tHead]="tHeadProduct"
+      [tHead]="tHeadProducts"
+      [template]="'SanPhamChiTietTable'"
+      [placeHolder]="'Mã Sản Phẩm'"
+      [listSanPhamChiTiet]="dataSanPhamChiTiet"
     ></app-table>
   </div>
 </div>

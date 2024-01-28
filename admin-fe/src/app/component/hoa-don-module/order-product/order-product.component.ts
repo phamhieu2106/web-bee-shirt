@@ -5,6 +5,7 @@ import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
 import { HoaDonService } from "src/app/service/hoa-don.service";
+import { PdfService } from "src/app/service/pdf.service";
 
 @Component({
   selector: "app-order-product",

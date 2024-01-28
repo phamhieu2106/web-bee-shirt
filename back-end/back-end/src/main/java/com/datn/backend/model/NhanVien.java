@@ -30,21 +30,16 @@ public class NhanVien extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Họ tên không được trống")
     private String hoTen;
 
-    @NotNull(message = "Ngày sinh không được trống")
     private LocalDate ngaySinh;
 
-    @NotBlank(message = "Sdt không được trống")
     private String sdt;
 
     private boolean gioiTinh;
 
-    @NotBlank(message = "Email không được trống")
     private String email;
 
-    @NotBlank(message = "Địa chỉ không được trống")
     private String diaChi;
 
     @OneToOne(cascade = CascadeType.ALL)

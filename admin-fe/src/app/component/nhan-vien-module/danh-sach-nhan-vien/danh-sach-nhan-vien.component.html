@@ -99,7 +99,7 @@
               <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
               <td>{{ nv.email }}</td>
 
-              <td>
+              <!-- <td>
                 <button
                   [class]="
                     nv.trangThai
@@ -109,7 +109,32 @@
                 >
                   {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
                 </button>
+              </td> -->
+
+              <td>
+                <div class="custom-control custom-switch">
+                  <div id="custom-switch-control ">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      [id]="'trangThai' + nv.id"
+                      [checked]="nv.trangThai"
+                      (click)="deleteNV(nv.id)"
+                    />
+                  </div>
+                  <label
+                    [for]="'trangThai' + nv.id"
+                    [class]="
+                      nv.trangThai
+                        ? 'btn btn-success btn-rounded custom-control-label'
+                        : 'btn btn-secondary btn-rounded custom-control-label'
+                    "
+                  >
+                    {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
+                  </label>
+                </div>
               </td>
+
               <td>
                 <button
                   class="btn btn-outline-light btn-rounded"
@@ -130,6 +155,7 @@
                   data-toggle="modal"
                   data-target="#formUpdateButton"
                   data-whatever="@mdo"
+                  (click)="openUpdateForm(nv.id)"
                 >
                   <i
                     class="fa-solid fa-pen-to-square"
@@ -245,7 +271,7 @@
   aria-labelledby="formDetail"
   aria-hidden="true"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="formDetail">Thông tin nhân viên</h5>
@@ -300,7 +326,10 @@
         </button>
       </div>
       <div class="modal-body">
-        <app-sua-nhan-vien></app-sua-nhan-vien>
+        <app-sua-nhan-vien
+          *ngIf="nhanVienUpdateLoaded"
+          [nhanVienDetails]="nhanVienDetails"
+        ></app-sua-nhan-vien>
       </div>
     </div>
   </div>

@@ -11,12 +11,12 @@
   [idHoaDon]="hoaDon.id"
   [trangThaiHD]="hoaDon.trangThai"
   [loaiHD]="hoaDon.loaiHoaDon"
+  [ma]="hoaDon.ma"
 ></app-order-tracking>
 
 <!-- Order history payment -->
 <app-order-history-payment
   [thanhToans]="hoaDon.thanhToans"
-
 ></app-order-history-payment>
 
 <!-- Order info -->
@@ -203,11 +203,4 @@
 </div>
 <!-- END order Info -->
 
-<app-order-product
-  [hoaDonChiTiets]="hoaDon.hoaDonChiTiets"
-  [tongTien]="hoaDon.tongTien"
-  [tienGiam]="hoaDon.tienGiam"
-  [phiVanChuyen]="hoaDon.phiVanChuyen"
-  [loaiHoaDon]="hoaDon.loaiHoaDon"
-></app-order-product>
-
+<app-order-product [hoaDon]="hoaDon"></app-order-product>

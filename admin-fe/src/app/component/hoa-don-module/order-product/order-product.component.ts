@@ -2,8 +2,9 @@ import { Component, Input } from "@angular/core";
 
 import { ToastrService } from "ngx-toastr";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
+import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
-
+import { HoaDonService } from "src/app/service/hoa-don.service";
 
 @Component({
   selector: "app-order-product",
@@ -11,15 +12,12 @@ import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
   styleUrls: ["./order-product.component.css"],
 })
 export class OrderProductComponent {
-  @Input({ required: true }) hoaDonChiTiets: HoaDonChiTiet[];
-  @Input({ required: true }) tongTien: number;
-  @Input({ required: true }) tienGiam: number;
-  @Input({ required: true }) phiVanChuyen: number;
-  @Input({ required: true }) loaiHoaDon: string;
+  @Input({ required: true }) hoaDon: HoaDon;
 
   constructor(
     private hdctService: HoaDonChiTietService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private hoaDonService: HoaDonService
   ) {}
   plus(hdct: any) {
     hdct.soLuong = hdct.soLuong + 1;
@@ -27,6 +25,7 @@ export class OrderProductComponent {
       next: (resp) => {
         hdct = resp;
         this.toastr.success("Cập nhật thành công", "");
+        this.getHoaDonById();
       },
       error: (err) => {
         console.log(err);
@@ -43,6 +42,7 @@ export class OrderProductComponent {
         next: (resp) => {
           hdct = resp;
           this.toastr.success("Cập nhật thành công", "");
+          this.getHoaDonById();
         },
         error: (err) => {
           console.log(err);
@@ -58,6 +58,7 @@ export class OrderProductComponent {
       next: (resp) => {
         hdct = resp;
         this.toastr.success("Cập nhật thành công", "");
+        this.getHoaDonById();
       },
       error: (err) => {
         console.log(err);
@@ -67,4 +68,26 @@ export class OrderProductComponent {
     });
   }
 
+  delete(id: number) {
+    this.hdctService.deleteHDCT(id).subscribe({
+      next: (resp) => {
+        // console.log(resp);
+        this.getHoaDonById();
+        this.toastr.success(resp.message);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getHoaDonById() {
+    this.hoaDonService.getById(this.hoaDon.id).subscribe({
+      next: (resp: HoaDon) => {
+        this.hoaDon = resp;
+        console.log(resp);
+      },
+      error: (err) => console.log(err),
+    });
+  }
 }

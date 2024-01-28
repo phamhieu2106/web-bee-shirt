@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
 
 @Injectable({
   providedIn: "root",
@@ -10,8 +11,8 @@ export class HoaDonChiTietService {
 
   constructor(private http: HttpClient) {}
 
-  updateHDCT(hdct: any): Observable<any> {
-    return this.http.put(this.baseUrl + "/update", hdct);
+  updateHDCT(hdct: HoaDonChiTiet): Observable<HoaDonChiTiet> {
+    return this.http.put<HoaDonChiTiet>(this.baseUrl + "/update", hdct);
   }
 
   deleteHDCT(idHDCT: number): Observable<any> {

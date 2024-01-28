@@ -8,7 +8,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            [disabled]="loaiHoaDon == 'TAI_QUAY'"
+            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
           >
             <i class="fa-solid fa-plus"></i>
             Thêm sản phẩm
@@ -40,14 +40,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let hdct of hoaDonChiTiets; index as i">
+                  <tr *ngFor="let hdct of hoaDon.hoaDonChiTiets; index as i">
                     <td>{{ i + 1 }}</td>
                     <td>file_name</td>
                     <td>tenSanPham</td>
                     <td>size</td>
                     <td>{{ hdct.giaBan | currency : "đ " }}</td>
                     <td>
-
                       <div class="input-group row">
                         <span class="input-group-prepend col-2">
                           <button
@@ -75,7 +74,6 @@
                           </button>
                         </span>
                       </div>
-
                     </td>
                     <td>
                       {{ hdct.soLuong * hdct.giaBan | currency : "đ " }}
@@ -83,7 +81,8 @@
                     <td>
                       <button
                         class="btn btn-outline-light btn-rounded"
-                        [disabled]="loaiHoaDon == 'TAI_QUAY'"
+                        [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+                        (click)="delete(hdct.id)"
                       >
                         <i class="fa-solid fa-trash text-danger"></i>
                       </button>
@@ -120,14 +119,21 @@
                         </td>
                         <td>
                           <p class="text-right">
-                            <strong>{{ tongTien | currency : "đ " }}</strong>
+                            <strong>{{
+                              hoaDon.tongTien | currency : "đ "
+                            }}</strong>
                           </p>
 
                           <p class="text-right">
-                            <strong>{{ tienGiam | currency : "đ " }}</strong>
+                            <strong>{{
+                              hoaDon.tienGiam | currency : "đ "
+                            }}</strong>
                           </p>
                           <p class="text-right">
-                            <input type="number" [(ngModel)]="phiVanChuyen" />
+                            <input
+                              type="number"
+                              [(ngModel)]="hoaDon.phiVanChuyen"
+                            />
                           </p>
                           <hr
                             style="
@@ -138,8 +144,9 @@
                           />
                           <p class="text-right text-danger">
                             <strong>{{
-                              tongTien - tienGiam + phiVanChuyen
-                                | currency : "đ "
+                              hoaDon.tongTien -
+                                hoaDon.tienGiam +
+                                hoaDon.phiVanChuyen | currency : "đ "
                             }}</strong>
                           </p>
                         </td>

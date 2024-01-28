@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.HoaDonChiTietRequest;
 import com.datn.backend.dto.response.HoaDonChiTietResponse;
+import com.datn.backend.dto.response.MessageResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.model.hoa_don.HoaDonChiTiet;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
@@ -51,12 +52,12 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
-    public String deleteHoaDonCT(Integer id) {
+    public MessageResponse deleteHoaDonCT(Integer id) {
         Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findById(id);
         if (hoaDonChiTiet.isEmpty()){
             throw new IdNotFoundException("Không tìm thấy hóa đơn chi tiết id: "+id);
         }
         hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
-        return "Xóa thành công";
+        return MessageResponse.builder().message("Xóa thành công").build();
     }
 }

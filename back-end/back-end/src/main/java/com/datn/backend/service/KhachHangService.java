@@ -8,7 +8,7 @@ import com.datn.backend.model.khach_hang.KhachHang;
 public interface KhachHangService {
     KhachHang add(KhachHangRequest kh);
     PagedResponse<KhachHangResponse> getAll(int pageNumber, int pageSize, String search);
-    KhachHang update(Integer id, KhachHangRequest kh);
+    KhachHang update(KhachHang kh);
     KhachHang delete(Integer id);
     KhachHangResponse getById(int id);
 

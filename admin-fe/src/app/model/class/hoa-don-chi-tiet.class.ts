@@ -1,5 +1,5 @@
 export class HoaDonChiTiet {
-  id: string;
+  id: number;
   soLuong: number;
   giaBan: number;
 }

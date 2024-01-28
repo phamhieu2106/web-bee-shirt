@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { KhachHangService } from 'src/app/service/khach-hang.service';
 
@@ -16,19 +18,24 @@ export class ThemKhachHangComponent  {
   public formAddKh: FormGroup;
   public khachHangResponse: KhachHangResponse;
   constructor(
-    private fb: FormBuilder,
+    private router: Router,
     private khachHangService: KhachHangService,
+    private toas: ToastrService
   ) {}
   ngOnInit(): void {
     this.initFormAddKh();
-    
   }
 public addKH(): void{
-  // this.khachHangService.add(this.formAddKh.value).subscribe({
-  //   next: (kh: KhachHangResponse)=>{
-  //     this.initFormAddKh();
-  //   },error:(erros: HttpErrorResponse)
-  // })
+  this.khachHangService.add(this.formAddKh.value).subscribe({
+    next: (kh: KhachHangResponse)=>{
+      this.initFormAddKh();
+      this.toas.success('Thêm khách hàng mới thành công','Thành công');
+      this.router.navigate(['/khach-hang/ds-khach-hang']);
+      
+    },error:(erros: HttpErrorResponse)=>{
+      console.log(erros.message);
+    }
+  })
 }
 
   public initFormAddKh(): void{

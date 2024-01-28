@@ -2,6 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.HoaDonChiTietRequest;
 import com.datn.backend.dto.response.HoaDonChiTietResponse;
+import com.datn.backend.dto.response.MessageResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonChiTietService;
 import jakarta.validation.Valid;
@@ -35,7 +36,7 @@ public class HoaDonChiTietResouce {
     }
     // delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> updateHoaDonChiTiet(@PathVariable Integer id){
+    public ResponseEntity<MessageResponse> updateHoaDonChiTiet(@PathVariable Integer id){
         if (id.describeConstable().isEmpty()){
             throw new IdNotFoundException("ID không hợp lệ");
         }

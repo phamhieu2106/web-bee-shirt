@@ -39,7 +39,7 @@ export class KhachHangService {
     });
   }
 
-  public update(khachHang: KhachHangResponse): Observable<KhachHangResponse> {
-    return this.http.put<KhachHangResponse>(`${this.apiUrl}/update-kh`, khachHang);
+  public update(khachHang: KhachHang): Observable<KhachHang> {
+    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh`, khachHang);
   }
 }

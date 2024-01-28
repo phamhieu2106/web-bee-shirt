@@ -14,7 +14,7 @@
             </h3>
           </div>
           <div class="card-body">
-            <form [formGroup]="formAddKh" (ngSubmit)="addKH()">
+            <form [formGroup]="formAddKh">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
@@ -59,6 +59,7 @@
                         class="form-check-input"
                         type="radio"
                         name="gioi_tinh"
+                        value="true"
                         formControlName="gioi_tinh"
                       />
                       <label class="form-check-label"> Nam </label>
@@ -66,8 +67,9 @@
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
-                        type="radio"
                         name="gioi_tinh"
+                        type="radio"
+                        value="false"
                         formControlName="gioi_tinh"
                       />
                       <label class="form-check-label"> Nữ </label>
@@ -95,6 +97,7 @@
                         class="form-check-input"
                         type="radio"
                         name="trang_thai"
+                        value="1"
                         formControlName="trang_thai"
                       />
                       <label class="form-check-label"> Đang hoạt động </label>
@@ -103,8 +106,9 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        formControlName="trang_thai"
                         name="trang_thai"
+                        value="0"
+                        formControlName="trang_thai"
                       />
                       <label class="form-check-label"> Ngừng hoạt động </label>
                     </div>
@@ -201,13 +205,16 @@
                 <button
                 type="button"
                 class="btn btn-outline-danger mx-sm-4 rounded"
+                routerLink="/khach-hang/ds-khach-hang"
                 >
                 Hủy
               </button>
                 <button 
-                type="submit" 
+                type="button" 
                 class="btn btn-outline-primary mx-sm-4 rounded"
-                [disabled]="!formAddKh.valid">
+                [disabled]="formAddKh.invalid"
+                (click)="addKH()"
+                >
                   Thêm khách hàng
                 </button>
               </div>

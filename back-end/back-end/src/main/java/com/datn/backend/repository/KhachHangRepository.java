@@ -13,9 +13,10 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
     @Query(value =
             """         
-            select kh.id, kh.ho_ten, kh.sdt,kh.ngay_sinh,kh.gioi_tinh, kh.email,kh.trang_thai,
+            select kh.id, kh.ho_ten as hoTen, kh.sdt,kh.ngay_sinh ngaySinh,kh.gioi_tinh as gioiTinh,
+             kh.email,kh.trang_thai as trangThai,
              dc.tinh,dc.huyen,dc.xa,dc.duong,
-            acc.ten_dang_nhap, acc.mat_khau
+            acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau
             from khach_hang kh
             join account acc
             on kh.account_id=acc.id
@@ -30,9 +31,10 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
     @Query(value =
             """         
-            select kh.id, kh.ho_ten, kh.sdt,kh.ngay_sinh,kh.gioi_tinh, kh.email,kh.trang_thai,
+            select kh.id, kh.ho_ten as hoTen, kh.sdt, kh.ngay_sinh as ngaySinh, kh.gioi_tinh as gioiTinh,
+            kh.email,kh.trang_thai as trangThai,
              dc.tinh,dc.huyen,dc.xa,dc.duong,
-            acc.ten_dang_nhap, acc.mat_khau
+            acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau
             from khach_hang kh
             join account acc
             on kh.account_id=acc.id
@@ -43,5 +45,21 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
             ORDER BY kh.created_at DESC
                     """
             , nativeQuery = true)
-    KhachHangResponse getById(int id);
+    KhachHangResponse getKHById(int id);
+
+
+
+//    @Query(value =
+//            """
+//            UPDATE khach_hang
+//            SET email = ?,
+//            gioi_tinh = ?,
+//            ho_ten = ?,
+//            image_url = ?,
+//            ngay_sinh = ?,
+//            sdt = ?
+//            WHERE id = :id;
+//                    """
+//            , nativeQuery = true)
+//    KhachHang updateKH(int id,KhachHang kh);
 }

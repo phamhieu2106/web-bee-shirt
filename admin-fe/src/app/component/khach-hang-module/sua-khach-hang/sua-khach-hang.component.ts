@@ -12,7 +12,7 @@ import { KhachHangService } from "src/app/service/khach-hang.service";
   templateUrl: "./sua-khach-hang.component.html",
   styleUrls: ["./sua-khach-hang.component.css"],
 })
-export class SuaKhachHangComponent implements OnInit {
+export class SuaKhachHangComponent  {
   icon: string = "fa-solid fa-users";
   title: string = "khách hàng";
   public kh: KhachHangResponse;
@@ -26,41 +26,63 @@ export class SuaKhachHangComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit() {
+    this.initFormUpdateKh();
     this.route.params.subscribe((params) => {
       this.id = +params["id"];
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
           this.khDetail = kr;
+          console.log(this.khDetail.gioiTinh);
+          
           this.formUpdateKH = new FormGroup({
-            id: new FormControl(kr.id),
-            ho_ten: new FormControl(kr.ho_ten, [Validators.required]),
-            gioi_tinh: new FormControl(kr.gioi_tinh, [Validators.required]),
-            trang_thai: new FormControl(kr.trang_thai, [Validators.required]),
-            ten_dang_nhap: new FormControl(kr.ten_dang_nhap, [
-              Validators.required,
-            ]),
+            id: new FormControl(kr.id, [Validators.required]),
+            hoTen: new FormControl(kr.hoTen, [Validators.required]),
+            ngaySinh: new FormControl(kr.ngaySinh, [Validators.required]),
             sdt: new FormControl(kr.sdt, [Validators.required]),
-            ngay_sinh: new FormControl(kr.ngay_sinh, [Validators.required]),
+            gioiTinh: new FormControl(kr.gioiTinh, [Validators.required]),
+            trangThai: new FormControl(kr.trangThai, [Validators.required]),
             email: new FormControl(kr.email, [Validators.required]),
+            tenDangNhap: new FormControl(kr.tenDangNhap, [Validators.required,]),
+            // mat_khau: new FormControl(kr.mat_khau,[Validators.required]),
+            // huyen: new FormControl(kr.huyen,[Validators.required]),
+            // tinh: new FormControl(kr.tinh,[Validators.required]),
+            // duong: new FormControl(kr.duong,[Validators.required]),
+            // xa: new FormControl(kr.xa,[Validators.required]),
           });
         },
       });
-      console.log(this.kh);
     });
   }
 
   public updateKH(): void{
-    this.khachHangService.update(this.formUpdateKH.value).subscribe({
+    console.log(this.formUpdateKH.value);    
+    this.khachHangService.update(this.id,this.formUpdateKH.value); 
+    this.khachHangService.update(this.id,this.formUpdateKH.value).subscribe({
       next: (kh: KhachHang)=>{
-        // this.initFormAddKh();
-        this.toas.success('Thêm khách hàng mới thành công','Thành công');
-        this.router.navigate(['/khach-hang/ds-khach-hang']);
-        console.log(this.formUpdateKH);
-        
+        this.toas.success('Cập nhật thông tin thành công','Thành công');
+        // this.router.navigate(['/khach-hang/ds-khach-hang']);
         
       },error:(erros: HttpErrorResponse)=>{
-        console.log(erros.message);
+        this.toas.error('false','XXX');
+
       }
+    })
+  }
+  public initFormUpdateKh(): void{
+    this.formUpdateKH = new FormGroup({
+      id: new FormControl("",[Validators.required]),
+      hoTen: new FormControl("",[Validators.required]),
+      gioiTinh: new FormControl("",[Validators.required]),
+      trangThai: new FormControl("",[Validators.required]),
+      tenDangNhap: new FormControl("",[Validators.required]),
+      sdt: new FormControl("",[Validators.required]),
+      ngaySinh: new FormControl("",[Validators.required]),
+      matKhau: new FormControl("",[Validators.required]),
+      email: new FormControl("",[Validators.required]),
+      huyen: new FormControl("",[Validators.required]),
+      tinh: new FormControl("",[Validators.required]),
+      duong: new FormControl("",[Validators.required]),
+      xa: new FormControl("",[Validators.required]),
     })
   }
 }

@@ -10,6 +10,5 @@ export class KhachHangDetailComponent implements OnInit{
   @Input() khChiTiet: KhachHangResponse;
 
   ngOnInit(): void {
-    console.log(this.khChiTiet);
   }
 }

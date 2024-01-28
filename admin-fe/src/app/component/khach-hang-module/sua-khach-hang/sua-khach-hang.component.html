@@ -34,7 +34,7 @@
                     <label class="custom-file-label" for="inputGroupFile01"
                       >Choose file</label
                     >
-                    <input type="text" value="{{khDetail.id}}" formControlName="id">
+                    <input type="text" formControlName="id">
                   </div>
                 </div>
                </div>
@@ -45,10 +45,9 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        name="trang_thai"
+                        name="trangThai"
                         value="1"
-                        ngModel="{{khDetail.trang_thai}}"
-                        formControlName="trang_thai"
+                        formControlName="trangThai"
                       />
                       <label class="form-check-label"> Đang hoạt động </label>
                     </div>
@@ -56,10 +55,9 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        name="trang_thai"
+                        name="trangThai"
                         value="0"
-                        ngModel="{{khDetail.trang_thai}}"
-                        formControlName="trang_thai"
+                        formControlName="trangThai"
                       />
                       <label class="form-check-label"> Ngừng hoạt động </label>
                     </div>
@@ -73,9 +71,8 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Họ tên"
-                      value="{{ khDetail.ho_ten}}"
-                      formControlName="ho_ten"
+                      placeholder="Họ tên"                     
+                      formControlName="hoTen"
                     />
                   </div>
                 </div>
@@ -86,21 +83,19 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        name="gioi_tinh"
+                        name="gioiTinh"
                         value="true"
-                        ngModel="{{khDetail.gioi_tinh}}"
-                        formControlName="gioi_tinh"
+                        formControlName="gioiTinh"
                       />
                       <label class="form-check-label"> Nam </label>
                     </div>
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
-                        name="gioi_tinh"
+                        name="gioiTinh"
                         type="radio"
                         value="false"
-                        ngModel="{{khDetail.gioi_tinh}}"
-                        formControlName="gioi_tinh"
+                        formControlName="gioiTinh"
                       />
                       <label class="form-check-label"> Nữ </label>
                     </div>
@@ -115,8 +110,8 @@
                       type="date"
                       class="form-control"
                       placeholder="Ngày sinh"
-                      value="{{ khDetail.ngay_sinh }}"
-                      formControlName="ngay_sinh"
+                      
+                      formControlName="ngaySinh"
                     />
                   </div>
                 </div>
@@ -127,7 +122,7 @@
                       type="text"
                       class="form-control"
                       placeholder="Số điện thoại"
-                      value="{{ khDetail.sdt }}"
+                     
                       formControlName="sdt"
                     />
                   </div>
@@ -143,8 +138,7 @@
                       class="form-control"
                       placeholder="Tên đăng nhập"
                       readonly
-                      value="{{khDetail.ten_dang_nhap}}"
-                      formControlName="ten_dang_nhap"
+                      formControlName="tenDangNhap"
                     />
                   </div>
                 </div>
@@ -155,9 +149,8 @@
                       type="email"
                       class="form-control"
                       placeholder="Email"
-                      value="{{khDetail.email}}"
                       formControlName="email"
-                    />
+                    />                   
                   </div>
                 </div>
               </div>

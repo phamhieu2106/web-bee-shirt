@@ -33,13 +33,7 @@ export class KhachHangService {
     return this.http.get<KhachHangResponse>(`${this.apiUrl}/getById/${id}`);
   }
 
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/delete/${id}`, {
-      responseType: "text",
-    });
-  }
-
-  public update(khachHang: KhachHang): Observable<KhachHang> {
-    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh`, khachHang);
+  public update(id:number,khachHang: KhachHang): Observable<KhachHang> {
+    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh/${id}`, khachHang);
   }
 }

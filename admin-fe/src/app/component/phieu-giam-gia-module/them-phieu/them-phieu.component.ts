@@ -22,7 +22,8 @@ export class ThemPhieuComponent implements OnInit {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
 
-  selectedKhachHang: number[] = [];
+  selectedIds: number[] = [];
+  phieuGiamGiaId: number
 
   constructor(private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService) { }
@@ -37,8 +38,16 @@ export class ThemPhieuComponent implements OnInit {
       next: (response: PhieuGiamGia) => {
 
         this.initAddForm();
-        const newPhieuGiamGiaId = response.id;
-        console.log(this.selectedKhachHang);
+        this.phieuGiamGiaId = response.id;
+        console.log(this.selectedIds);
+        console.log(this.phieuGiamGiaId);
+
+        this.phieuGiamGia.addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds).subscribe({
+          next: (phieuGiamGia: PhieuGiamGia) => {
+            console.log(`Tặng thành công '${phieuGiamGia.maPhieuGiamGia}' cho khách hàng!`)
+          }
+        })
+
         Swal.fire({
           icon: "success",
           title: `Thêm thành công '${response.tenPhieuGiamGia}'!`,
@@ -52,6 +61,9 @@ export class ThemPhieuComponent implements OnInit {
       },
     });
   }
+
+
+
 
   public initAddForm(): void {
     this.addForm = new FormGroup({
@@ -110,18 +122,20 @@ export class ThemPhieuComponent implements OnInit {
   // onchange check box 
 
 
+
+
   onCheckboxChange(id: number): void {
-    const index = this.selectedKhachHang.indexOf(id);
+    const index = this.selectedIds.indexOf(id);
 
     if (index === -1) {
       // Nếu ID không tồn tại trong danh sách, thêm vào
-      this.selectedKhachHang.push(id);
+      this.selectedIds.push(id);
     } else {
       // Nếu ID đã tồn tại trong danh sách, loại bỏ nó
-      this.selectedKhachHang.splice(index, 1);
+      this.selectedIds.splice(index, 1);
     }
-
-    console.log(this.selectedKhachHang);
   }
+
+
 
 }

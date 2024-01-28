@@ -33,4 +33,12 @@ export class PhieuGiamGiaService {
   public add(phieuGiamGia: PhieuGiamGia): Observable<PhieuGiamGia> {
     return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia);
   }
+
+  public addPhieuKhachHang(phieuGiamGiaId: number, selectedIds: number[]): Observable<PhieuGiamGia> {
+    const request = {
+      phieuGiamGiaId,
+      selectedIds,
+    };
+    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
+  }
 }

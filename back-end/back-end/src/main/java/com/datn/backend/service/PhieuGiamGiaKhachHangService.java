@@ -1,8 +1,9 @@
 package com.datn.backend.service;
 
-import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
+
+import com.datn.backend.dto.request.PhieuKhachHangRequest;
 
 public interface PhieuGiamGiaKhachHangService {
 
-    void addPhieu(PhieuGiamGiaKhachHang phieu);
+    void addPhieu(PhieuKhachHangRequest request);
 }

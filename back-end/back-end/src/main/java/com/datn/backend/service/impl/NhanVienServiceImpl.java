@@ -8,6 +8,7 @@ import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.service.NhanVienService;
@@ -85,12 +86,13 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public NhanVien delete(Integer id) {
+
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
         if (optionalNhanVien.isPresent()) {
             NhanVien nhanVien = optionalNhanVien.map(nv -> {
                 Account acc = optionalNhanVien.get().getAccount();
-                acc.setTrangThai(false);
+                acc.setTrangThai(!acc.isTrangThai());
                 nv.setAccount(acc);
                 nhanVienRepo.save(nv);
                 return nv;

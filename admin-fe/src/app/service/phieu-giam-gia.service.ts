@@ -9,7 +9,7 @@ import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
 })
 export class PhieuGiamGiaService {
   private readonly apiUrl = "http://localhost:8080/phieu-giam-gia";
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   //public function
 
@@ -28,5 +28,17 @@ export class PhieuGiamGiaService {
     return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
+  }
+
+  public add(phieuGiamGia: PhieuGiamGia): Observable<PhieuGiamGia> {
+    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia);
+  }
+
+  public addPhieuKhachHang(phieuGiamGiaId: number, selectedIds: number[]): Observable<PhieuGiamGia> {
+    const request = {
+      phieuGiamGiaId,
+      selectedIds,
+    };
+    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
   }
 }

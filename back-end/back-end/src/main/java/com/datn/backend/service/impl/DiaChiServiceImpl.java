@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DiaChiServiceImpl implements DiaChiService {
@@ -21,19 +23,9 @@ public class DiaChiServiceImpl implements DiaChiService {
     }
 
     @Override
-    public PagedResponse<DiaChi> getAll(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<DiaChi> page = diaChiRepository.getAll(pageable);
-
-        PagedResponse<DiaChi> pagedResponse = new PagedResponse<>();
-        pagedResponse.setPageNumber(pageNumber);
-        pagedResponse.setPageSize(pageSize);
-        pagedResponse.setTotalPages(page.getTotalPages());
-        pagedResponse.setTotalElements(page.getTotalElements());
-        pagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(page.getTotalPages()));
-        pagedResponse.setData(page.getContent());
-        pagedResponse.setSearch("");
-        return pagedResponse;
+    public List<DiaChi> getAllDC(int id) {
+        List<DiaChi> ds = (List<DiaChi>) diaChiRepository.getAll(id);
+        return ds;
     }
 
     @Override

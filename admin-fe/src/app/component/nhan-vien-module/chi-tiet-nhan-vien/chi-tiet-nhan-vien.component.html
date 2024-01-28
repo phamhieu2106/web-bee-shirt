@@ -1,6 +1,3 @@
-<!-- Form start -->
-
-{{ nhanVienDetails | json }}
 <div class="row gutters">
   <div class="col-sm-12">
     <form class="card">
@@ -8,17 +5,20 @@
         <form>
           <div class="row">
             <div class="col-md-6">
+              <!-- họ tên -->
               <div class="form-group">
                 Họ tên
                 <input
                   type="text"
                   class="form-control"
                   placeholder="Họ tên"
-                  value=""
+                  [value]="nhanVienDetails?.hoTen"
                   [disabled]="true"
                 />
               </div>
             </div>
+
+            <!-- ngày sinh -->
             <div class="col-md-6">
               <div class="form-group">
                 Ngày sinh
@@ -26,20 +26,22 @@
                   type="date"
                   class="form-control"
                   placeholder="Ngày sinh"
+                  [value]="nhanVienDetails?.ngaySinh"
                   [disabled]="true"
                 />
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6">
+              <!-- SĐT -->
               <div class="form-group">
                 Số điện thoại
                 <input
                   type="text"
                   class="form-control"
                   placeholder="Số điện thoại"
+                  [value]="nhanVienDetails?.sdt"
                   [disabled]="true"
                 />
               </div>
@@ -52,8 +54,7 @@
                     class="form-check-input"
                     type="radio"
                     name="exampleRadios"
-                    value="option1"
-                    checked
+                    [checked]="nhanVienDetails?.gioiTinh"
                   />
                   <label class="form-check-label"> Nam </label>
                 </div>
@@ -62,15 +63,15 @@
                     class="form-check-input"
                     type="radio"
                     name="exampleRadios"
-                    value="option2"
+                    [checked]="!nhanVienDetails?.gioiTinh"
                   />
                   <label class="form-check-label"> Nữ </label>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row">
+            <!-- email -->
             <div class="col-md-6">
               <div class="form-group">
                 Email
@@ -78,10 +79,12 @@
                   type="email"
                   class="form-control"
                   placeholder="Email"
+                  [value]="nhanVienDetails?.email"
                   [disabled]="true"
                 />
               </div>
             </div>
+            <!-- địa chỉ -->
             <div class="col-md-6">
               <div class="form-group">
                 Địa chỉ
@@ -89,6 +92,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Địa chỉ"
+                  [value]="nhanVienDetails?.diaChi"
                   [disabled]="true"
                 />
               </div>
@@ -98,21 +102,69 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                Tên đăng nhập
+                Ngày tạo
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Tên đăng nhập"
+                  placeholder="Ngày tạo"
+                  [value]="nhanVienDetails?.createdAt"
                   [disabled]="true"
                 />
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                Mật khẩu
+                Người tạo
                 <input
+                  type="text"
                   class="form-control"
-                  placeholder="Mật khẩu"
+                  placeholder="Người tạo"
+                  [value]="nhanVienDetails?.createdBy"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Ngày tạo gần nhất
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ngày tạo gần nhất"
+                  [value]="nhanVienDetails?.updatedAt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                Người tạo gần nhất
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Người tạo"
+                  gần
+                  nhất
+                  [value]="nhanVienDetails?.lastUpdatedBy"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <!-- tên đăng nhập -->
+              <div class="form-group">
+                Tên đăng nhập
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Tên đăng nhập"
+                  [value]="nhanVienDetails?.tenDangNhap"
                   [disabled]="true"
                 />
               </div>
@@ -123,4 +175,3 @@
     </form>
   </div>
 </div>
-<!-- Form ends -->

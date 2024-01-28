@@ -5,16 +5,24 @@
   [title]="'Chi tiết hóa đơn'"
 ></app-main-heading>
 <br />
+<div>
+  <button type="button" class="btn btn-primary ml-auto" (click)="printHoaDon()">
+    In hóa đơn
+  </button>
+</div>
+<br />
 <!-- Order trackking -->
 <app-order-tracking
   [lichSuHoaDons]="hoaDon.lichSuHoaDons"
   [idHoaDon]="hoaDon.id"
   [trangThaiHD]="hoaDon.trangThai"
+  [loaiHD]="hoaDon.loaiHoaDon"
+  [ma]="hoaDon.ma"
 ></app-order-tracking>
 
 <!-- Order history payment -->
 <app-order-history-payment
-  [lichSuThanhToans]="hoaDon.thanhToans"
+  [thanhToans]="hoaDon.thanhToans"
 ></app-order-history-payment>
 
 <!-- Order info -->
@@ -30,6 +38,7 @@
             class="btn btn-warning ml-auto"
             data-toggle="modal"
             data-target="#changeOrderInfo"
+            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
           >
             Đổi địa chỉ
           </button>
@@ -179,18 +188,6 @@
           <span>{{ hoaDon.ghiChu }}</span>
         </div>
         <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Tổng tiền: </span>
-          <span>{{ hoaDon.tongTien | currency : "đ " }}</span>
-        </div>
-        <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Tiền giảm: </span>
-          <span>{{ hoaDon.tienGiam | currency : "đ " }}</span>
-        </div>
-        <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Phí vận chuyển: </span>
-          <span>{{ hoaDon.phiVanChuyen | currency : "đ " }}</span>
-        </div>
-        <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Ngày tạo: </span>
           <span>{{ hoaDon.createdAt }}</span>
         </div>
@@ -212,4 +209,4 @@
 </div>
 <!-- END order Info -->
 
-<app-order-product [hoaDonChiTiets]="hoaDon.hoaDonChiTiets"></app-order-product>
+<app-order-product [hoaDon]="hoaDon"></app-order-product>

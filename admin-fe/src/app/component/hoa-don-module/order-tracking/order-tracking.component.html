@@ -58,7 +58,11 @@
           class="btn btn-warning mr-5"
           data-toggle="modal"
           data-target="#chageStatusModal"
-          [disabled]="trangThaiHD == 'CHO_XAC_NHAN' || trangThaiHD == 'TAO_DON'"
+          [disabled]="
+            loaiHD == 'TAI_QUAY' ||
+            trangThaiHD == 'CHO_XAC_NHAN' ||
+            trangThaiHD == 'TAO_DON'
+          "
           (click)="setIsNext(false)"
         >
           Quay lại
@@ -68,15 +72,18 @@
           class="btn btn-danger mr-5"
           data-toggle="modal"
           data-target="#cancelOrderModal"
-          [disabled]="
-            trangThaiHD == 'DANG_GIAO' ||
-            trangThaiHD == 'HOAN_THANH' ||
-            trangThaiHD == 'HUY'
-          "
+          [disabled]="trangThaiHD == 'DANG_GIAO' || trangThaiHD == 'HUY'"
         >
           Hủy
         </button>
 
+        <button
+          type="button"
+          class="btn btn-primary ml-auto"
+          (click)="inPhieuGiao()"
+        >
+          In Phiếu Giao
+        </button>
         <!-- Button Lịch sử -->
         <button
           type="button"

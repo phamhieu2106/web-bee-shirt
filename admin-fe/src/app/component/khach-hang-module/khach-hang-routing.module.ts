@@ -20,7 +20,7 @@ const khachHangRoutes: Routes = [
     component: ThemKhachHangComponent,
   },
   {
-    path: "khach-hang/sua-khach-hang",
+    path: "khach-hang/sua-khach-hang/:id",
     component: SuaKhachHangComponent,
   },
 ];

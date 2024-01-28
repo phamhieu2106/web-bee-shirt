@@ -1,9 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+
 import { PagedResponse } from "../model/interface/paged-response.interface";
-import { NhanVien } from "../model/class/nhan-vien.class";
 import { NhanVienResponse } from "../model/interface/nhan-vien-response.interface";
+import { NhanVien } from "../model/class/nhan-vien.class";
 
 @Injectable({
   providedIn: "root",
@@ -27,6 +28,24 @@ export class NhanVienService {
   public getOneById(id: number): Observable<NhanVienResponse> {
     return this.http.get<NhanVienResponse>(
       `${this.apiUrl}/get-one-by-id/${id}`
+    );
+  }
+
+  public add(nhanVien: NhanVienResponse): Observable<NhanVienResponse> {
+    return this.http.post<NhanVienResponse>(`${this.apiUrl}/add`, nhanVien);
+  }
+
+  public delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  }
+
+  public update(
+    nhanVien: NhanVienResponse,
+    id: number
+  ): Observable<NhanVienResponse> {
+    return this.http.put<NhanVienResponse>(
+      `${this.apiUrl}/update/${id}`,
+      nhanVien
     );
   }
 }

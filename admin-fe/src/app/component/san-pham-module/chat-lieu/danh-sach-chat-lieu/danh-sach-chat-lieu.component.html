@@ -80,7 +80,12 @@
                   <label
                     class="custom-control-label"
                     [for]="'trangThai' + cl.id"
-                    >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
+                    >{{
+                      cl.trangThai
+                        ? "Khả dụng"
+                        : "Không
+                    khả dụng"
+                    }}</label
                   >
                 </div>
               </td>

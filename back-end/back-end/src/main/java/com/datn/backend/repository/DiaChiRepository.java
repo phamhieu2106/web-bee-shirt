@@ -10,7 +10,12 @@ import org.springframework.data.repository.query.Param;
 public interface DiaChiRepository extends JpaRepository<DiaChi,Integer> {
     @Query(value =
             """
-            SELECT * FROM dia_chi
+            select dc.tinh,dc.huyen,dc.xa,dc.duong,dc.mac_dinh as macDinh,dc.id,kh.ho_ten as hoTen,
+            kh.sdt 
+            from dia_chi dc 
+            join khach_hang kh 
+            on dc.khach_hang_id = kh.id 
+            where kh.id= :id
             """, nativeQuery = true)
-    Page<DiaChi> getAll(Pageable pageable);
+    DiaChi getAll(int id);
 }

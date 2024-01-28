@@ -12,7 +12,8 @@ import { LayoutModule } from "../layout-module/layout.module";
 @NgModule({
   declarations: [
     DanhSachPhieuComponent,
-    ThemPhieuComponent
+    ThemPhieuComponent,
+
   ],
   imports: [
     PhieuGiamGiaRoutingModule,
@@ -21,4 +22,4 @@ import { LayoutModule } from "../layout-module/layout.module";
     FormsModule,
     LayoutModule,],
 })
-export class PhieuGiamGiaModule {}
+export class PhieuGiamGiaModule { }

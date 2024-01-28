@@ -7,6 +7,7 @@ import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import com.datn.backend.service.KhachHangService;
@@ -26,24 +27,25 @@ public class KhachHangServiceImpl implements KhachHangService {
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepository;
     private final DiaChiService diaChiService;
+    private final AccountRepository ar;
 
 
     @Override
     public KhachHang add(KhachHangRequest kh) {
         Account account = new Account();
-        account.setTenDangNhap(kh.getTen_dang_nhap());
-        account.setMatKhau(passwordEncoder.encode(kh.getMat_khau()));
+        account.setTenDangNhap(kh.getTenDangNhap());
+        account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
 
         // khach hang
         KhachHang khachHang = new KhachHang();
-        khachHang.setHoTen(kh.getHo_ten());
-        khachHang.setNgaySinh(kh.getNgay_sinh());
+        khachHang.setHoTen(kh.getHoTen());
+        khachHang.setNgaySinh(kh.getNgaySinh());
         khachHang.setSdt(kh.getSdt());
-        khachHang.setGioiTinh(kh.isGioi_tinh());
+        khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setEmail(kh.getEmail());
-        khachHang.setTrangThai(0);
+        khachHang.setTrangThai(kh.getTrangThai());
         khachHang.setAccount(account);
         khachHangRepository.save(khachHang);
         DiaChi diaChi = new DiaChi();
@@ -75,24 +77,17 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang update(Integer id, KhachHangRequest kh) {
-        //tài khoản
+    public KhachHang update(Integer id, KhachHang kh) {
         KhachHang khachHang = khachHangRepository.getById(id);
-        Account account = new Account();
-        account.setTenDangNhap(kh.getTen_dang_nhap());
-        account.setMatKhau(passwordEncoder.encode(kh.getMat_khau()));
-        account.setTrangThai(true);
-        account.setRole(Role.ROLE_CUSTOMER.name());
-        account.setId(khachHang.getAccount().getId());
-
-        // khach hang
+        System.out.println(khachHang);
         khachHang.setId(id);
-        khachHang.setHoTen(kh.getHo_ten());
-        khachHang.setNgaySinh(kh.getNgay_sinh());
+        khachHang.setHoTen(kh.getHoTen());
+        khachHang.setNgaySinh(kh.getNgaySinh());
         khachHang.setSdt(kh.getSdt());
-        khachHang.setGioiTinh(kh.isGioi_tinh());
+        khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setEmail(kh.getEmail());
-        khachHang.setAccount(account);
+        khachHang.setTrangThai(kh.getTrangThai());
+        khachHang.setAccount(ar.findByTenDangNhap(khachHang.getAccount().getTenDangNhap()).get());
         return khachHangRepository.save(khachHang);
     }
 
@@ -106,6 +101,8 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHangResponse getById(int id) {
-        return khachHangRepository.getById(id);
+        return khachHangRepository.getKHById(id);
     }
+
+
 }

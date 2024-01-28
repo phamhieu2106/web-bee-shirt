@@ -42,8 +42,8 @@ public class HoaDonServiceImpl implements HoaDonService {
      * @return
      */
     @Override
-    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao);
+    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao,String trangThai) {
+        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao,trangThai);
 
         return PagedResponse.
                 <HoaDonResponse>builder()

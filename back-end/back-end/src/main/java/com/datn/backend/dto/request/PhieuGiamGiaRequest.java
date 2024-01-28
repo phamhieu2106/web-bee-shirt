@@ -16,8 +16,6 @@ public class PhieuGiamGiaRequest {
 
     private Integer kieu;
 
-    private Integer loai;
-
     private BigDecimal giaTri;
 
     private BigDecimal giaTriMax;
@@ -30,14 +28,13 @@ public class PhieuGiamGiaRequest {
 
     private LocalDateTime thoiGianKetThuc;
 
-    private boolean trangThai;
+    private String trangThai;
 
     public PhieuGiamGia giamGia(PhieuGiamGia phieu) {
         phieu.setId(this.id);
         phieu.setMaPhieuGiamGia(this.maPhieuGiamGia);
         phieu.setTenPhieuGiamGia(this.tenPhieuGiamGia);
         phieu.setKieu(this.kieu);
-        phieu.setLoai(this.loai);
         phieu.setGiaTri(this.giaTri);
         phieu.setGiaTriMax(this.giaTriMax);
         phieu.setDieuKienGiam(this.dieuKienGiam);

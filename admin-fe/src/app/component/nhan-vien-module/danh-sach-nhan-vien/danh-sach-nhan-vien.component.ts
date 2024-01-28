@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { NhanVien } from "src/app/model/class/nhan-vien.class";
+import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { NhanVienService } from "src/app/service/nhan-vien.service";
@@ -19,8 +18,12 @@ export class DanhSachNhanVienComponent {
   public pagedResponse: PagedResponse<NhanVienResponse>;
   public search = "";
   public nhanVienDetails: NhanVienResponse;
+  public nhanVienUpdateLoaded: boolean;
 
-  constructor(private nhanVienService: NhanVienService) {}
+  constructor(
+    private nhanVienService: NhanVienService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.getAllNhanVien();
@@ -31,7 +34,6 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getAll().subscribe({
       next: (response: PagedResponse<NhanVienResponse>) => {
         this.pagedResponse = response;
-        console.log(this.pagedResponse);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -47,9 +49,6 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getAll(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<NhanVienResponse>) => {
         this.pagedResponse = response;
-        console.log("pageNumber " + page);
-        console.log("pageSize " + pageSize);
-        console.log("search " + keyword);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -72,8 +71,36 @@ export class DanhSachNhanVienComponent {
     });
   }
 
+  public openUpdateForm(id: number): void {
+    this.nhanVienService.getOneById(id).subscribe({
+      next: (response) => {
+        this.nhanVienDetails = response;
+        this.nhanVienUpdateLoaded = true;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
   public timKiem(e: any): void {
     console.log(e.target.value);
     this.goToPage(1, this.pagedResponse.pageSize, e.target.value);
+  }
+
+  public deleteNV(id: number): void {
+    this.nhanVienService.delete(id).subscribe({
+      next: () => {
+        this.toastr.success("Cập nhật trạng thái thành công", "Thành công");
+        this.goToPage(
+          this.pagedResponse.pageNumber,
+          this.pagedResponse.pageSize,
+          this.pagedResponse.search
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 }

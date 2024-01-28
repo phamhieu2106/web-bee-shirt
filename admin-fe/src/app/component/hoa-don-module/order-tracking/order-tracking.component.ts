@@ -2,7 +2,8 @@ import { ToastrService } from "ngx-toastr";
 import { Component, Input } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { HoaDonService } from "src/app/service/hoa-don.service";
-import { TrangThaiHoaDon } from "src/app/model/enum/TrangThaiHoaDon";
+import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
+import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 
 @Component({
   selector: "app-order-tracking",
@@ -10,9 +11,11 @@ import { TrangThaiHoaDon } from "src/app/model/enum/TrangThaiHoaDon";
   styleUrls: ["./order-tracking.component.css"],
 })
 export class OrderTrackingComponent {
-  @Input() lichSuHoaDons: any; // danh sách ls hóa đơn
-  @Input() idHoaDon: number; // id hóa đơn cần cập nhật
-  @Input() trangThaiHD: string; // trang thai hiện tại của hóa đơn
+  @Input({ required: true }) lichSuHoaDons: LichSuHoaDon[]; // danh sách ls hóa đơn
+  @Input({ required: true }) idHoaDon: number; // id hóa đơn cần cập nhật
+  @Input({ required: true }) trangThaiHD: string; // trang thai hiện tại của hóa đơn
+  @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc tại quầy
+  @Input({ required: true }) ma: string; // Loại hóa đơn GIAO_HANG hoặc tại quầy
   public isNext = true; // trạng thái đơn hàng tiếp theo
   public changeStatusForm = this.fb.group({
     moTa: ["", [Validators.required, Validators.minLength(10)]],
@@ -22,6 +25,7 @@ export class OrderTrackingComponent {
   constructor(
     private fb: FormBuilder,
     private hoaDonService: HoaDonService,
+    private giaoHangNhanhService: GiaoHangNhanhService,
     private toastr: ToastrService
   ) {}
 
@@ -96,5 +100,31 @@ export class OrderTrackingComponent {
       default:
         this.titleButton = "Tiếp tục";
     }
+  }
+
+  inPhieuGiao() {
+    let order_code = "LF7AAF";
+    // get mã đơn hàng trên hệ thống
+    // this.giaoHangNhanhService
+    //   .getOrderInforByClientOrderCode(this.ma)
+    //   .subscribe({
+    //     next: (resp) => {
+    //       order_code = resp.data.order_code;
+    //     },
+    //   });
+
+    this.giaoHangNhanhService.getTokenPhieuGiaoHang(order_code).subscribe({
+      next: (resp) => {
+        console.log(resp);
+        window.open(
+          "https://dev-online-gateway.ghn.vn/a5/public-api/printA5?token=" +
+            resp.data.token
+        );
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error("Tạo phiếu thất bại");
+      },
+    });
   }
 }

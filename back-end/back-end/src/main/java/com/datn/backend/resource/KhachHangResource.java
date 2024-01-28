@@ -32,9 +32,8 @@ public class KhachHangResource {
         return ResponseEntity.ok(khachHangService.add(kh));
     }
 
-    @PutMapping("/update-kh{id}")
-    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")Integer id,@RequestBody KhachHangRequest kh) {
-        System.out.println(kh);
+    @PutMapping("/update-kh/{id}")
+    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")int id, @RequestBody KhachHang kh) {
         return ResponseEntity.ok(khachHangService.update(id,kh));
     }
     @DeleteMapping("/delete/{id}")

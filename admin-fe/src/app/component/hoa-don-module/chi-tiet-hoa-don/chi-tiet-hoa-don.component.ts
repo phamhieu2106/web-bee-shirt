@@ -1,6 +1,8 @@
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { HoaDon } from "src/app/model/class/hoa-don.class";
+import { PdfService } from "src/app/service/pdf.service";
 
 @Component({
   selector: "app-chi-tiet-hoa-don",
@@ -9,10 +11,11 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class ChiTietHoaDonComponent {
   public id = this.activatedRoute.snapshot.params["id"];
-  public hoaDon: any;
+  public hoaDon: HoaDon;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private hoaDonService: HoaDonService
+    private hoaDonService: HoaDonService,
+    private pdfService: PdfService
   ) {}
 
   ngOnInit() {
@@ -27,5 +30,9 @@ export class ChiTietHoaDonComponent {
       },
       error: (err) => console.log(err),
     });
+  }
+
+  printHoaDon() {
+    this.pdfService.generatePDFHoaDon(this.hoaDon);
   }
 }

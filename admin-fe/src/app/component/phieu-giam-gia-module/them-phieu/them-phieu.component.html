@@ -15,74 +15,107 @@
           <div class="col-md-4">
             <form [formGroup]="addForm">
               <div class="mb-3">
-
-                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá"
-                  formControlName="maPhieuGiamGia">
-                <div class="form-text text-danger">Không để trống trường này</div>
+                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="addForm.get('maPhieuGiamGia').invalid && addForm.get('maPhieuGiamGia').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="maPhieuGiamGia">
+                <div class="invalid-feedback">
+                  Mã phiếu giảm giá không được để trống
+                </div>
               </div>
+
               <div class="mb-3">
-
-                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá"
-                  formControlName="tenPhieuGiamGia">
-                <div class="form-text text-danger">Không để trống trường này</div>
+                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="addForm.get('tenPhieuGiamGia').invalid && addForm.get('tenPhieuGiamGia').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="tenPhieuGiamGia">
+                <div class="invalid-feedback">
+                  Tên phiếu giảm giá không được để trống
+                </div>
               </div>
+
               <div class="mb-3">
                 <label class="pr-3">
-                  <input type="radio" name="loai" value="1" checked="true" formControlName="loai"> Giảm theo %
+                  <input type="radio" name="loai" value="1" checked="true" formControlName="loai">
+                  Giảm theo %
                 </label>
-
                 <label>
-                  <input type="radio" name="loai" value="0" formControlName="loai"> Giảm theo số tiền
+                  <input type="radio" name="loai" value="0" formControlName="loai">
+                  Giảm theo số tiền
                 </label>
               </div>
 
-
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá Trị" formControlName="giaTri">
-                  <div class="form-text text-danger">Không để trống trường này</div>
+                  <input type="text" class="form-control" placeholder="Giá trị" [ngClass]="addForm.get('giaTri').invalid && addForm.get('giaTri').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="giaTri">
+                  <div class="invalid-feedback">
+                    Giá trị không được để trống
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá trị tối đa" formControlName="giaTriMax">
-                  <div class="form-text text-danger">Không để trống trường này</div>
+                  <input type="text" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="giaTriMax">
+                  <div class="invalid-feedback">
+                    Giá trị tối đa không được để trống
+                  </div>
                 </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Số lượng" formControlName="soLuong">
-                  <div class="form-text text-danger">Không để trống trường này</div>
+                  <input type="text" class="form-control" placeholder="Số lượng" [ngClass]="addForm.get('soLuong').invalid && addForm.get('soLuong').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="soLuong">
+                  <div class="invalid-feedback">
+                    Số lượng không được để trống
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Điều kiện" formControlName="dieuKienGiam">
-                  <div class="form-text text-danger">Không để trống trường này</div>
+                  <input type="text" class="form-control" placeholder="Điều kiện" [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="dieuKienGiam">
+                  <div class="invalid-feedback">
+                    Điều kiện không được để trống
+                  </div>
                 </div>
               </div>
-
 
               <div class="mb-3">
                 <label>Từ ngày</label>
-                <input type="datetime-local" class="form-control" formControlName="thoiGianBatDau">
-                <div class="form-text text-danger">Không để trống trường này</div>
+                <input type="datetime-local" class="form-control" [ngClass]="addForm.get('thoiGianBatDau').invalid && addForm.get('thoiGianBatDau').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="thoiGianBatDau">
+                <div class="invalid-feedback">
+                  Từ ngày không được để trống
+                </div>
               </div>
+
               <div class="mb-3">
                 <label>Đến ngày</label>
-                <input type="datetime-local" class="form-control" formControlName="thoiGianKetThuc">
-                <div class="form-text text-danger">Không để trống trường này</div>
+                <input type="datetime-local" class="form-control" [ngClass]="addForm.get('thoiGianKetThuc').invalid && addForm.get('thoiGianKetThuc').touched
+                  ? 'is-invalid'
+                  : ''" formControlName="thoiGianKetThuc">
+                <div class="invalid-feedback">
+                  Đến ngày không được để trống
+                </div>
               </div>
 
               <div class="mb-3">
                 <label class="pr-3">
-                  <input type="radio" name="kieu" value="1" checked="true" formControlName="kieu"> Công Khai
+                  <input type="radio" name="kieu" value="1" checked formControlName="kieu">
+                  Công Khai
                 </label>
-
                 <label>
-                  <input type="radio" name="kieu" value="0" formControlName="kieu"> Cá Nhân
+                  <input type="radio" name="kieu" value="0" formControlName="kieu"> Cá
+                  Nhân
                 </label>
               </div>
 
-              <button type="submit" class="btn btn-primary" (click)="add()">Tạo mới</button>
+              <button type="button" class="btn btn-primary" (click)="add()">Tạo
+                mới</button>
             </form>
+
 
 
           </div>
@@ -95,7 +128,7 @@
                   <th>
                     <input type="checkbox">
                   </th>
-                  <th>STT</th>
+                  <th>Id</th>
                   <th>Họ Tên</th>
                   <th>Số điện thoại</th>
                   <th>Giới tính</th>

@@ -1,6 +1,7 @@
 package com.datn.backend.dto.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface NhanVienResponse {
 
@@ -15,4 +16,8 @@ public interface NhanVienResponse {
     String getMatKhau();
     Boolean getTrangThai();
     String getRole();
+    LocalDateTime getCreatedAt();
+    String getCreatedBy();
+    LocalDateTime getUpdatedAt();
+    String getLastUpdatedBy();
 }

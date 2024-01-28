@@ -27,11 +27,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Tên đăng nhập không được trống")
     private String tenDangNhap;
 
     @JsonIgnore
-    @NotBlank(message = "Mật khẩu không được trống")
     private String matKhau;
 
     private boolean trangThai;

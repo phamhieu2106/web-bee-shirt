@@ -3,10 +3,13 @@ package com.datn.backend.resource;
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
 import com.datn.backend.service.PhieuGiamGiaServce;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/phieu-giam-gia")
@@ -47,7 +52,7 @@ public class PhieuGiamGiaResource {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody PhieuGiamGiaRequest phieuGiamGia) {
+    public ResponseEntity<?> add(@Valid @RequestBody PhieuGiamGiaRequest phieuGiamGia, BindingResult result) {
         return ResponseEntity.ok(service.add(phieuGiamGia));
     }
 

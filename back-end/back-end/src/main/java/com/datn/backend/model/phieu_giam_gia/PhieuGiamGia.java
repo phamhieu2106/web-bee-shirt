@@ -7,10 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Empty;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
@@ -28,6 +32,7 @@ public class PhieuGiamGia extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "Không bỏ trống trường mã phiếu")
     private String maPhieuGiamGia;
     private String tenPhieuGiamGia;
     private Integer kieu;
@@ -40,6 +45,7 @@ public class PhieuGiamGia extends BaseEntity {
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime thoiGianBatDau;
+
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss" )
     private LocalDateTime thoiGianKetThuc;

@@ -22,6 +22,8 @@ export class ThemPhieuComponent implements OnInit {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
 
+  selectedKhachHang: number[] = [];
+
   constructor(private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService) { }
 
@@ -33,8 +35,10 @@ export class ThemPhieuComponent implements OnInit {
   public add(): void {
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
-        console.log(response)
+
         this.initAddForm();
+        const newPhieuGiamGiaId = response.id;
+        console.log(this.selectedKhachHang);
         Swal.fire({
           icon: "success",
           title: `Thêm thành công '${response.tenPhieuGiamGia}'!`,
@@ -63,6 +67,7 @@ export class ThemPhieuComponent implements OnInit {
       giaTriMax: new FormControl("", [Validators.required]),
       trangThai: new FormControl("", [Validators.required]),
     });
+    console.log("Is Form Valid?", this.addForm.invalid);
   }
 
 
@@ -103,7 +108,7 @@ export class ThemPhieuComponent implements OnInit {
 
 
   // onchange check box 
-  selectedKhachHang: number[] = [];
+
 
   onCheckboxChange(id: number): void {
     const index = this.selectedKhachHang.indexOf(id);

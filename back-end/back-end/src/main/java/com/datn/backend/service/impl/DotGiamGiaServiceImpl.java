@@ -3,6 +3,7 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.request.DotGiamGiaRequest;
 import com.datn.backend.dto.response.DotGiamGiaResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SanPhamChiTietResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceInvalidException;
 import com.datn.backend.exception.custom_exception.ResourceOutOfRangeException;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -38,6 +40,28 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 ////        Get Data form database
 //        return repository.getAll();
 //    }
+
+
+    @Override
+    public PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<SanPhamChiTietResponse> sanPhamChiTietResponsePage =
+                repository.getAllSanPhamChiTietBySanPhamId(pageable,listSanPhamId);
+
+        PagedResponse<SanPhamChiTietResponse> sanPhamChiTietResponsePagedResponse = new PagedResponse<>();
+
+        sanPhamChiTietResponsePagedResponse.setPageNumber(pageNumber);
+        sanPhamChiTietResponsePagedResponse.setPageSize(pageSize);
+        sanPhamChiTietResponsePagedResponse.setTotalElements((int) sanPhamChiTietResponsePage.getTotalElements());
+        sanPhamChiTietResponsePagedResponse.setTotalPages(sanPhamChiTietResponsePage.getTotalPages());
+        sanPhamChiTietResponsePagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamChiTietResponsePage.getTotalPages()));
+        sanPhamChiTietResponsePagedResponse.setData(sanPhamChiTietResponsePage.getContent());
+        sanPhamChiTietResponsePagedResponse.setSearch(listSanPhamId.toString());
+
+        return sanPhamChiTietResponsePagedResponse;
+    }
 
     @Override
     public PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {

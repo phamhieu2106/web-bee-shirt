@@ -1,6 +1,7 @@
 package com.datn.backend.repository;
 
 import com.datn.backend.dto.response.DotGiamGiaResponse;
+import com.datn.backend.dto.response.SanPhamChiTietResponse;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer> {
@@ -71,5 +75,22 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """
             , nativeQuery = true)
     DotGiamGiaResponse getOneById(@Param("id") Integer id);
-    
+
+
+    @Query(value = """
+    SELECT spct.id as Id, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
+    cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.Ten as TenMauSac, ta.Ten as TenTayAo,
+    tk.ten as TenThietKe
+    FROM san_pham_chi_tiet spct
+    LEFT JOIN chat_lieu cl ON cl.id = spct.chat_lieu_id
+    LEFT JOIN co_ao ca ON ca.id = spct.co_ao_id
+    LEFT JOIN kich_co kc ON kc.id = spct.kich_co_id
+    LEFT JOIN kieu_dang kd ON kd.id = spct.kieu_dang_id
+    LEFT JOIN mau_sac ms ON ms.id = spct.mau_sac_id
+    LEFT JOIN san_pham sp ON sp.id = spct.san_pham_id \s
+    LEFT JOIN tay_ao ta ON ta.id = spct.tay_ao_id
+    LEFT JOIN kieu_thiet_ke tk ON tk.id = spct.thiet_ke_id
+    WHERE sp.id IN ( :id );
+""", nativeQuery = true)
+    Page<SanPhamChiTietResponse> getAllSanPhamChiTietBySanPhamId(Pageable pageable,@Param("id")List<Integer> id);
 }

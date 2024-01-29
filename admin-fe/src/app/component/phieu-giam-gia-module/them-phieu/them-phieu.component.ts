@@ -44,7 +44,7 @@ export class ThemPhieuComponent implements OnInit {
 
         this.phieuGiamGia.addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds).subscribe({
           next: (phieuGiamGia: PhieuGiamGia) => {
-            console.log(`Tặng thành công '${phieuGiamGia.maPhieuGiamGia}' cho khách hàng!`)
+            console.log(`Tặng thành công phiếu giảm giácho khách hàng!`)
           }
         })
 

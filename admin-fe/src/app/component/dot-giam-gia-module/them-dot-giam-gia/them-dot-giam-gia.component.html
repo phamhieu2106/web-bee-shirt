@@ -14,6 +14,7 @@
       [modalMessage]="'Bạn chắc chắn muốn thêm đợt khuyến mại mới?'"
       [modalAction]="'Thêm mới'"
       [typeForm]="'add'"
+      [dotGiamGiaRequest]="dotGiamGiaRequest"
     ></app-form>
   </div>
 
@@ -35,6 +36,7 @@
       [template]="'SanPhamChiTietTable'"
       [placeHolder]="'Mã Sản Phẩm'"
       [listSanPhamChiTiet]="dataSanPhamChiTiet"
+      (clickSanPhamChiTiet)="getListIdSanPhamChiTiet($event)"
     ></app-table>
   </div>
 </div>

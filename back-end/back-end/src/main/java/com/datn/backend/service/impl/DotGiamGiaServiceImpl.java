@@ -8,7 +8,10 @@ import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceInvalidException;
 import com.datn.backend.exception.custom_exception.ResourceOutOfRangeException;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
+import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
+import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.DotGiamGiaRepository;
+import com.datn.backend.repository.DotGiamGiaSanPhamRepository;
 import com.datn.backend.service.DotGiamGiaService;
 import com.datn.backend.utility.UtilityFunction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,29 +21,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Service
 public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     private final DotGiamGiaRepository repository;
-    private static final Logger logger = Logger.getLogger(DotGiamGia.class.getName());
+    private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository;
 
     @Autowired
-    public DotGiamGiaServiceImpl(DotGiamGiaRepository repository) {
+    public DotGiamGiaServiceImpl(DotGiamGiaRepository repository,DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository) {
         super();
         this.repository = repository;
+        this.dotGiamGiaSanPhamRepository = dotGiamGiaSanPhamRepository;
     }
-//
-//    @Override
-//    public List<DotGiamGiaResponse> getAll() {
-////        Get Data form database
-//        return repository.getAll();
-//    }
-
 
     @Override
     public PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId) {
@@ -145,14 +142,24 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         //        Set Code
         String code = "DGG" + uuid.toString().substring(0, 5).toUpperCase();
         object.setMaDotGiamGia(code);
-        //        Set Statusd
-        object.setTrangThai(1);
+        //        Set Status
+        LocalDateTime today = LocalDateTime.now();
+        if (object.getThoiGianBatDau().isAfter(today)) {
+            // If thoiGianBatDau is after today, set trangThai to 2
+            object.setTrangThai(2);
+        } else {
+            // If thoiGianBatDau is not after today, set trangThai to 1
+            object.setTrangThai(1);
+        }
         //        map requestObject to Object
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
+//        Save object
+        repository.save(dotGiamGia);
+//        Create dotGiamGiaSanPham
 
-//        save dotgiamgiasanpham to database
+//        Create sanPhamChiTiet
 //        save to database
-        return repository.save(dotGiamGia);
+        return dotGiamGia;
     }
 
     @Override

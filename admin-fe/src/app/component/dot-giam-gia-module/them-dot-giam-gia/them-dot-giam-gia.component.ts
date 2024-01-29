@@ -16,15 +16,21 @@ export class ThemDotGiamGiaComponent implements OnInit {
   mainHeading: string = "Đợt Giảm Giá";
   tittle: string = "Đợt Giảm Giá";
   icon: string = "fa-solid fa-tags";
+  // Form
+  formHeader: string = "Thêm Đợt Giảm Giá";
+  formButton: string = "Thêm mới";
   // Table SanPham
   titleTableProduct: string = "Danh Sách Sản Phẩm ";
-  titleTableProducts: string = "Danh Sách Chi Tiết Sản Phẩm ";
   tHeadProduct: Array<string> = [
     "",
     "Mã Sản Phẩm",
     "Tên Sản Phẩm",
     "Trạng Thái",
   ];
+  listSanPham: PagedResponse<SanPham>;
+  dataSanPham: SanPham[] = [];
+  // Table SanPhamChiTiet
+  titleTableProducts: string = "Danh Sách Chi Tiết Sản Phẩm ";
   tHeadProducts: Array<string> = [
     "",
     "Ảnh Sản Phẩm",
@@ -34,31 +40,34 @@ export class ThemDotGiamGiaComponent implements OnInit {
     "Trạng Thái",
     "Hành Động",
   ];
-  // Table SanPham
-  listSanPham: PagedResponse<SanPham>;
-  dataSanPham: SanPham[] = [];
-  // Table SanPhamChiTiet
   listSanPhamChiTiet: PagedResponse<DotGiamGiaSanPhamChiTiet>;
   dataSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[] = [];
-  // Form
-  formHeader: string = "Thêm Đợt Giảm Giá";
-  formButton: string = "Thêm mới";
   // varribles for child elements
-  dotGiamGiaRequest: DotGiamGia;
   listIdSanPham: Array<number> = [];
+  listIdSanPhamChiTiet: Array<number> = [];
 
+  // varribles for post methods
   constructor(
     private service: DotGiamGiaService,
     private sanPhamService: SanPhamService,
     private toast: ToastrService
-  ) {}
+  ) {
+    this.dotGiamGiaRequest = {
+      tenDotGiamGia: null,
+      giaTriPhanTram: null,
+      ngayBatDau: null,
+      ngayKetThuc: null,
+      listIdSanPhamChiTiet: null,
+    };
+  }
   ngOnInit(): void {
     this.getAllSanPham();
   }
-  public setDotGiamGiaCreateRequest(): void {
-    this.dotGiamGiaRequest.listSanPham = this.listIdSanPham;
-  }
 
+  // POST Methods and object
+  dotGiamGiaRequest: DotGiamGia;
+
+  public getDotGiamGiaRequest(): void {}
   // San Pham
   public getAllSanPham(): void {
     this.sanPhamService.getAll().subscribe({
@@ -103,4 +112,22 @@ export class ThemDotGiamGiaComponent implements OnInit {
       },
     });
   }
+  public getListIdSanPhamChiTiet = (value: number) => {
+    if (this.listIdSanPhamChiTiet && Array.isArray(this.listIdSanPhamChiTiet)) {
+      const index = this.listIdSanPhamChiTiet.indexOf(Number(value));
+
+      if (index !== -1) {
+        // Giá trị đã tồn tại, nên xoá nó khỏi mảng
+        this.listIdSanPhamChiTiet.splice(index, 1);
+      } else {
+        // Giá trị không tồn tại, nên thêm vào mảng
+        this.listIdSanPhamChiTiet.push(Number(value));
+      }
+      this.dotGiamGiaRequest.listIdSanPhamChiTiet = this.listIdSanPhamChiTiet;
+      console.log(this.dotGiamGiaRequest);
+    } else {
+      this.toast.error("Mảng IdSanPhamChiTiet không được khởi tạo.");
+      console.log("Mảng IdSanPhamChiTiet không được khởi tạo.");
+    }
+  };
 }

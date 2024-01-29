@@ -7,29 +7,33 @@
 <!-- Filter start -->
 <div class="row gutters mt-3">
   <div class="col-sm-12">
-    <form class="card">
+    <div class="card">
       <div class="card-header">Bộ lọc</div>
       <div class="card-body">
         <div class="row gutters justify-content-md-center">
           <div class="col-sm-3 col-12 me-4">
             <div class="form-group">
-              <select class="form-control mx-sm-4">
-                <option value="" disabled selected hidden>
-                  -Tất cả giới tính-
-                </option>
-                <option value="true">Nam</option>
-                <option value="false">Nữ</option>
+              <select
+                class="form-control mx-sm-4"
+                [(ngModel)]="gioiTinh"
+                (change)="onChangeFilter()"
+              >
+                <option [ngValue]="[0, 1]" selected>Tất cả giới tính</option>
+                <option [ngValue]="[1]">Nam</option>
+                <option [ngValue]="[0]">Nữ</option>
               </select>
             </div>
           </div>
           <div class="col-sm-3 col-12">
             <div class="form-group">
-              <select class="form-control mx-sm-4">
-                <option value="" disabled selected hidden>
-                  -Tất cả trạng thái-
-                </option>
-                <option value="true">Đang làm việc</option>
-                <option value="false">Đã nghỉ việc</option>
+              <select
+                class="form-control mx-sm-4"
+                [(ngModel)]="trangThai"
+                (change)="onChangeFilter()"
+              >
+                <option [ngValue]="[0, 1]" selected>Tất cả trạng thái</option>
+                <option [ngValue]="[1]">Đang làm việc</option>
+                <option [ngValue]="[0]">Đã nghỉ việc</option>
               </select>
             </div>
           </div>
@@ -40,7 +44,7 @@
           </div>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </div>
 <!-- Filter ends -->
@@ -60,7 +64,7 @@
               class="form-control"
               id="inputName"
               placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-              (change)="timKiem($event)"
+              (keyup)="timKiem($event)"
             />
           </div>
         </div>
@@ -98,19 +102,6 @@
               <td>{{ nv.sdt }}</td>
               <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
               <td>{{ nv.email }}</td>
-
-              <!-- <td>
-                <button
-                  [class]="
-                    nv.trangThai
-                      ? 'btn btn-success btn-rounded'
-                      : 'btn btn-secondary btn-rounded'
-                  "
-                >
-                  {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
-                </button>
-              </td> -->
-
               <td>
                 <div class="custom-control custom-switch">
                   <div id="custom-switch-control ">
@@ -255,7 +246,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <app-them-nhan-vien></app-them-nhan-vien>
+        <app-them-nhan-vien (reloadTable)="reloadData()"></app-them-nhan-vien>
       </div>
     </div>
   </div>
@@ -327,6 +318,7 @@
       </div>
       <div class="modal-body">
         <app-sua-nhan-vien
+          (reloadTable)="reloadData()"
           *ngIf="nhanVienUpdateLoaded"
           [nhanVienDetails]="nhanVienDetails"
         ></app-sua-nhan-vien>

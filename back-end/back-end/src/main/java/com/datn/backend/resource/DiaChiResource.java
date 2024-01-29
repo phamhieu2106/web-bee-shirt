@@ -20,6 +20,7 @@ import java.util.List;
 public class DiaChiResource {
     private final DiaChiService diaChiService;
     private final KhachHangRepository khachHangRepository;
+
     @GetMapping("/get-all/{id}")
     public ResponseEntity<List<DiaChi>> getDiaChiList(@PathVariable("id") int id) {
 //        System.out.println(diaChiService.getAllDC(id).toString());
@@ -27,7 +28,7 @@ public class DiaChiResource {
     }
 
     @PostMapping("/add/{id}")
-    public ResponseEntity<DiaChiRequest> add(@PathVariable("id")int id, @RequestBody DiaChiRequest dc) {
+    public ResponseEntity<DiaChiRequest> add(@PathVariable("id") int id, @RequestBody DiaChiRequest dc) {
         KhachHang kh = khachHangRepository.getById(id);
         DiaChi diaChi = new DiaChi();
         diaChi.setId(dc.getId());
@@ -38,7 +39,7 @@ public class DiaChiResource {
         diaChi.setMacDinh(dc.isMacDinh());
         diaChi.setKhachHang(kh);
 
-        DiaChi addDC= diaChiService.add(diaChi);
+        DiaChi addDC = diaChiService.add(diaChi);
         DiaChiRequest dto = new DiaChiRequest();
         dto.setId(addDC.getId());
         dto.setTinh(addDC.getTinh());
@@ -53,10 +54,37 @@ public class DiaChiResource {
     public ResponseEntity<DiaChi> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(diaChiService.getDCById(id));
     }
-    @PutMapping("/update")
-    public ResponseEntity<DiaChi> updateDC(@RequestBody DiaChi dc) {
-        int id =1;
-        return ResponseEntity.ok(diaChiService.add(dc));
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DiaChiRequest> updateDC(@PathVariable("id") int id, @RequestBody DiaChiRequest dc) {
+        KhachHang kh = khachHangRepository.getById(id);
+        DiaChi diaChi = new DiaChi();
+        diaChi.setId(dc.getId());
+        diaChi.setTinh(dc.getTinh());
+        diaChi.setHuyen(dc.getHuyen());
+        diaChi.setXa(dc.getXa());
+        diaChi.setDuong(dc.getDuong());
+        diaChi.setMacDinh(dc.isMacDinh());
+        diaChi.setKhachHang(kh);
+
+        DiaChi addDC = diaChiService.add(diaChi);
+        DiaChiRequest dto = new DiaChiRequest();
+        dto.setId(addDC.getId());
+        dto.setTinh(addDC.getTinh());
+        dto.setHuyen(addDC.getHuyen());
+        dto.setXa(addDC.getXa());
+        dto.setDuong(addDC.getDuong());
+        dto.setMacDinh(addDC.isMacDinh());
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/delete-dc/{id}")
+    public ResponseEntity<DiaChi> deleteDC(@PathVariable("id") int id) {
+        return ResponseEntity.ok(diaChiService.deleteDC(id));
+    }
+    @PostMapping("/setDefault/{id}")
+    public void thayDoiTrangThaiDefault(@PathVariable int id) {
+        diaChiService.setDefault(id);
     }
 
 }

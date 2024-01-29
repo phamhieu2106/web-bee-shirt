@@ -4,11 +4,15 @@ import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.service.KhachHangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/khach-hang")
@@ -33,7 +37,9 @@ public class KhachHangResource {
     }
 
     @PutMapping("/update-kh/{id}")
-    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")int id, @RequestBody KhachHang kh) {
+    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")int id, @RequestBody KhachHangRequest kh) {
+        System.out.println("vào đến resource");
+
         return ResponseEntity.ok(khachHangService.update(id,kh));
     }
     @DeleteMapping("/delete/{id}")

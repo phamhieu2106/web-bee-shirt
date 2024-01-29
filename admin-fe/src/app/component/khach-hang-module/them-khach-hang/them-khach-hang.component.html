@@ -119,7 +119,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     Tỉnh/Thành phố
-                    <select 
+                    <!-- <select 
                     class="form-select form-select-sm mb-3" 
                     id="city" 
                     aria-label=".form-select-sm" 
@@ -127,13 +127,19 @@
                     >
                       <option value="" selected>Chọn tỉnh thành</option>           
                       <option value="LC" >LC</option>           
-                      </select>
+                      </select> -->
+                      <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Tỉnh/Thành phố"
+                      formControlName="tinh"
+                    />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     Quận/Huyện
-                    <select 
+                    <!-- <select 
                     class="form-select form-select-sm mb-3" 
                     id="district" 
                     aria-label=".form-select-sm"
@@ -141,7 +147,13 @@
                     >
                       <option value="" selected>Chọn quận huyện</option>
                       <option value="SMC" >SMC</option>        
-                      </select>
+                      </select> -->
+                      <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Quận/Huyện"
+                      formControlName="huyen"
+                    />
                   </div>
                 </div>
               </div>
@@ -149,7 +161,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     Xã/Phường
-                    <select 
+                    <!-- <select 
                     class="form-select form-select-sm" 
                     id="ward" 
                     ria-label=".form-select-sm"
@@ -157,7 +169,13 @@
                     >
                       <option value="" selected>Chọn phường xã</option>
                       <option value="N6" >N6</option>           
-                      </select>
+                      </select> -->
+                      <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Xã/Phường"
+                      formControlName="xa"
+                    />
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -188,10 +206,9 @@
                   <div class="form-group">
                     Mật khẩu
                     <input
-                      type="text"
+                      type="password"
                       class="form-control"
                       placeholder="Mật khẩu"
-                      value="12345678"
                       formControlName="matKhau"
                     />
                   </div>

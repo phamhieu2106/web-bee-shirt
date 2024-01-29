@@ -12,33 +12,46 @@
       <div class="card-body">
         <div class="row gutters justify-content-md-center">
           <div class="col-sm-3 col-12 me-4">
-            <div class="form-group">
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Giới tính: </label>
+              </div>
               <select
-                class="form-control mx-sm-4"
-                [(ngModel)]="gioiTinh"
+                [(ngModel)]="gioiTinhFilter"
+                class="custom-select"
                 (change)="onChangeFilter()"
               >
-                <option [ngValue]="[0, 1]" selected>Tất cả giới tính</option>
+                <!-- <option value="" disabled selected hidden>
+                    Tất cả giới tính
+                  </option> -->
+                <option [ngValue]="[0, 1]">Tất cả giới tính</option>
                 <option [ngValue]="[1]">Nam</option>
                 <option [ngValue]="[0]">Nữ</option>
               </select>
             </div>
           </div>
           <div class="col-sm-3 col-12">
-            <div class="form-group">
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Trạng thái: </label>
+              </div>
               <select
-                class="form-control mx-sm-4"
-                [(ngModel)]="trangThai"
+                class="custom-select"
+                [(ngModel)]="trangThaiFilter"
                 (change)="onChangeFilter()"
               >
-                <option [ngValue]="[0, 1]" selected>Tất cả trạng thái</option>
+                <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
                 <option [ngValue]="[1]">Đang làm việc</option>
                 <option [ngValue]="[0]">Đã nghỉ việc</option>
               </select>
             </div>
           </div>
-          <div class="col-1">
-            <button class="btn btn-primary btn-rounded" style="float: right">
+
+          <div class="col-1 d-flex justify-content-center">
+            <button
+              class="btn btn-primary btn-rounded btn-reload-filter"
+              (click)="reloadFilter()"
+            >
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>

@@ -22,8 +22,8 @@ export class DanhSachNhanVienComponent {
   private timeout: any;
 
   // FILTER
-  public trangThai: number;
-  public gioiTinh: number;
+  public trangThaiFilter: number[] = [0, 1];
+  public gioiTinhFilter: number[] = [0, 1];
 
   constructor(
     private nhanVienService: NhanVienService,
@@ -35,8 +35,28 @@ export class DanhSachNhanVienComponent {
   }
 
   onChangeFilter() {
-    console.log(this.trangThai);
-    console.log(this.gioiTinh);
+    this.nhanVienService
+      .filter(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        this.search,
+        this.gioiTinhFilter,
+        this.trangThaiFilter
+      )
+      .subscribe({
+        next: (response: PagedResponse<NhanVienResponse>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+      });
+  }
+
+  reloadFilter(): void {
+    this.trangThaiFilter = [0, 1];
+    this.gioiTinhFilter = [0, 1];
+    this.onChangeFilter();
   }
 
   // private function

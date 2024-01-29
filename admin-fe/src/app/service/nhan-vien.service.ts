@@ -48,4 +48,17 @@ export class NhanVienService {
       nhanVien
     );
   }
+
+  public filter(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    search: string = "",
+    gioiTinhFilter: number[] = [0, 1],
+    trangThaiFilter: number[] = [0, 1]
+  ): Observable<PagedResponse<NhanVienResponse>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&gioiTinhFilter=${gioiTinhFilter}&trangThaiFilter=${trangThaiFilter}`;
+    return this.http.get<PagedResponse<NhanVienResponse>>(
+      `${this.apiUrl}/filter${param}`
+    );
+  }
 }

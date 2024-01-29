@@ -1,6 +1,7 @@
 #add-button,
 #pagination,
-.search-block {
+.search-block,
+.btn-reload-filter {
   float: right;
 }
 #icon-button-detail {

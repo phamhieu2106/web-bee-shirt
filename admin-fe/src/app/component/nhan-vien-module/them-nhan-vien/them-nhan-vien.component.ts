@@ -46,6 +46,10 @@ export class ThemNhanVienComponent {
     });
   }
 
+  public reloadForm() {
+    this.initAddForm();
+  }
+
   public initAddForm(): void {
     this.addForm = new FormGroup({
       hoTen: new FormControl("", [Validators.required]),

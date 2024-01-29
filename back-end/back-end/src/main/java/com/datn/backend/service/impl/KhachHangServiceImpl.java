@@ -78,21 +78,32 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang update(Integer id, KhachHangRequest kh) {
-          Optional<KhachHang> khachHang = khachHangRepository.findById(id);
-            KhachHang updateKH =  khachHang.map(kh1 -> {
-                kh1.setHoTen(kh.getHoTen());
-                kh1.setNgaySinh(kh.getNgaySinh());
-                kh1.setSdt(kh.getSdt());
-                kh1.setEmail(kh.getEmail());
-                kh1.setGioiTinh(kh.isGioiTinh());
-                kh1.setImageUrl(kh.getImageUrl());
-                kh1.setTrangThai(kh.getTrangThai());
-                kh1.setAccount(ar.findByTenDangNhap(kh.getTenDangNhap()).get());
-                khachHangRepository.save(kh1);
-                return kh1;
-            }).get();
-        return updateKH;
+    public KhachHang update(int id,KhachHangRequest kh) {
+        System.out.println("vào đến service");
+        Account account = ar.findByTenDangNhap(kh.getTenDangNhap()).get();
+        System.out.println(kh);
+        KhachHang khachHang = new KhachHang();
+        khachHang.setId(id);
+        khachHang.setHoTen(kh.getHoTen());
+        khachHang.setNgaySinh(kh.getNgaySinh());
+        khachHang.setSdt(kh.getSdt());
+        khachHang.setGioiTinh(kh.isGioiTinh());
+        khachHang.setImageUrl(kh.getImageUrl());
+        khachHang.setTrangThai(kh.getTrangThai());
+        khachHang.setEmail(kh.getEmail());
+        khachHang.setAccount(account);
+//        KhachHang addKH = khachHangRepository.save(khachHang);
+//        KhachHangRequest request = new KhachHangRequest();
+//        request.setId(addKH.getId());
+//        request.setHoTen(addKH.getHoTen());
+//        request.setNgaySinh(addKH.getNgaySinh());
+//        request.setSdt(addKH.getSdt());
+//        request.setEmail(addKH.getEmail());
+//        request.setGioiTinh(addKH.isGioiTinh());
+//        request.setImageUrl(addKH.getImageUrl());
+        System.out.println(khachHang);
+//        System.out.println(khachHangRepository.save(khachHang).toString());
+        return khachHangRepository.save(khachHang);
     }
 
     @Override

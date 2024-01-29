@@ -27,6 +27,5 @@ public class DiaChi extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "khach_hang_id")
-
     private KhachHang khachHang;
 }

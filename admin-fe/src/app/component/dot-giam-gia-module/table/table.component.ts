@@ -35,7 +35,7 @@ export class TableComponent implements OnInit {
   listIdSanPham: Array<number> = [];
   // For SanPhamChiTietTable
   @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
-
+  @Output() clickSanPhamChiTiet = new EventEmitter<any>();
   // For DotGiamGia
   public onChangeSize(sizeNumber: any) {
     this.onPageChange.emit(sizeNumber.target.value);
@@ -63,6 +63,11 @@ export class TableComponent implements OnInit {
   // For SanPham
   public addIdSanPham(value: any) {
     this.clickSanPham.emit(value);
+  }
+
+  // For SanPhamChiTiet
+  public addIdSanPhamChiTiet(value: any) {
+    this.clickSanPhamChiTiet.emit(value);
   }
   ngOnInit(): void {}
 }

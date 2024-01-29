@@ -10,4 +10,6 @@ public interface DiaChiService {
     DiaChi updateDC(DiaChi dc);
     List<DiaChi> getAllDC(int id);
     DiaChi getDCById(int id);
+    DiaChi deleteDC(int id);
+    void setDefault(int id);
 }

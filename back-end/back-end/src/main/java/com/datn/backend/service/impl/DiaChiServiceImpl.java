@@ -21,9 +21,10 @@ import java.util.List;
 public class DiaChiServiceImpl implements DiaChiService {
     private final DiaChiRepository diaChiRepository;
     private final KhachHangRepository khachHangRepository;
+
     @Override
-    public DiaChi add( DiaChi dc) {
-        return diaChiRepository.save(dc) ;
+    public DiaChi add(DiaChi dc) {
+        return diaChiRepository.save(dc);
     }
 
     @Override
@@ -39,5 +40,30 @@ public class DiaChiServiceImpl implements DiaChiService {
     @Override
     public DiaChi getDCById(int id) {
         return diaChiRepository.findById(id).get();
+    }
+
+    @Override
+    public DiaChi deleteDC(int id) {
+        DiaChi diaChi = getDCById(id);
+        if (!diaChi.isMacDinh()) {
+            diaChiRepository.delete(diaChi);
+        }
+        return null;
+    }
+
+    @Override
+    public void setDefault(int id) {
+        DiaChi setDC = diaChiRepository.findById(id).orElse(null);
+        if (setDC != null) {
+            setDC.setMacDinh(true);
+            diaChiRepository.save(setDC);
+            List<DiaChi> ds = getAllDC(setDC.getKhachHang().getId());
+            for (DiaChi diaChi : ds) {
+                if (!diaChi.getId().equals(id)) {
+                    diaChi.setMacDinh(false);
+                    diaChiRepository.save(diaChi);
+                }
+            }
+        }
     }
 }

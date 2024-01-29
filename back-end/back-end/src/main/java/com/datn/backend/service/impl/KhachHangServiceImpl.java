@@ -78,17 +78,31 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang update(Integer id, KhachHang kh) {
-        KhachHang khachHang = khachHangRepository.getById(id);
-        System.out.println(khachHang);
+    public KhachHang update(int id,KhachHangRequest kh) {
+        System.out.println("vào đến service");
+        Account account = ar.findByTenDangNhap(kh.getTenDangNhap()).get();
+        System.out.println(kh);
+        KhachHang khachHang = new KhachHang();
         khachHang.setId(id);
         khachHang.setHoTen(kh.getHoTen());
         khachHang.setNgaySinh(kh.getNgaySinh());
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioiTinh());
-        khachHang.setEmail(kh.getEmail());
+        khachHang.setImageUrl(kh.getImageUrl());
         khachHang.setTrangThai(kh.getTrangThai());
-        khachHang.setAccount(ar.findByTenDangNhap(khachHang.getAccount().getTenDangNhap()).get());
+        khachHang.setEmail(kh.getEmail());
+        khachHang.setAccount(account);
+//        KhachHang addKH = khachHangRepository.save(khachHang);
+//        KhachHangRequest request = new KhachHangRequest();
+//        request.setId(addKH.getId());
+//        request.setHoTen(addKH.getHoTen());
+//        request.setNgaySinh(addKH.getNgaySinh());
+//        request.setSdt(addKH.getSdt());
+//        request.setEmail(addKH.getEmail());
+//        request.setGioiTinh(addKH.isGioiTinh());
+//        request.setImageUrl(addKH.getImageUrl());
+        System.out.println(khachHang);
+//        System.out.println(khachHangRepository.save(khachHang).toString());
         return khachHangRepository.save(khachHang);
     }
 

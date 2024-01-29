@@ -13,10 +13,9 @@ export class ModalComponent {
 
   @Input() handleSubmit: Function;
 
-  constructor(private toast: ToastrService) {}
+  constructor() {}
 
   public callParentFuntion() {
-    this.toast.success("Thêm mới thành công", "");
     this.handleSubmit();
   }
 }

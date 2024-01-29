@@ -1,11 +1,11 @@
 export class DotGiamGia {
   id?: number;
   maDotGiamGia?: string;
-  tenDotGiamGia: string;
-  giaTriPhanTram: number;
-  ngayBatDau: string;
-  ngayKetThuc: string;
+  tenDotGiamGia?: string;
+  giaTriPhanTram?: number;
+  ngayBatDau?: string;
+  ngayKetThuc?: string;
   soLuongSanPham?: number;
   trangThai?: number;
-  listSanPham?: Array<number>;
+  listIdSanPhamChiTiet?: Array<number>;
 }

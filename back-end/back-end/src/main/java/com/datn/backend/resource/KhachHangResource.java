@@ -33,7 +33,7 @@ public class KhachHangResource {
     }
 
     @PutMapping("/update-kh/{id}")
-    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")int id, @RequestBody KhachHang kh) {
+    public ResponseEntity<KhachHang> updateKH(@PathVariable("id")int id, @RequestBody KhachHangRequest kh) {
         return ResponseEntity.ok(khachHangService.update(id,kh));
     }
     @DeleteMapping("/delete/{id}")

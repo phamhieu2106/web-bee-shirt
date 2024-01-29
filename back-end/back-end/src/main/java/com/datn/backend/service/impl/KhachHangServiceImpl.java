@@ -78,18 +78,21 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang update(Integer id, KhachHang kh) {
-        KhachHang khachHang = khachHangRepository.getById(id);
-        System.out.println(khachHang);
-        khachHang.setId(id);
-        khachHang.setHoTen(kh.getHoTen());
-        khachHang.setNgaySinh(kh.getNgaySinh());
-        khachHang.setSdt(kh.getSdt());
-        khachHang.setGioiTinh(kh.isGioiTinh());
-        khachHang.setEmail(kh.getEmail());
-        khachHang.setTrangThai(kh.getTrangThai());
-        khachHang.setAccount(ar.findByTenDangNhap(khachHang.getAccount().getTenDangNhap()).get());
-        return khachHangRepository.save(khachHang);
+    public KhachHang update(Integer id, KhachHangRequest kh) {
+          Optional<KhachHang> khachHang = khachHangRepository.findById(id);
+            KhachHang updateKH =  khachHang.map(kh1 -> {
+                kh1.setHoTen(kh.getHoTen());
+                kh1.setNgaySinh(kh.getNgaySinh());
+                kh1.setSdt(kh.getSdt());
+                kh1.setEmail(kh.getEmail());
+                kh1.setGioiTinh(kh.isGioiTinh());
+                kh1.setImageUrl(kh.getImageUrl());
+                kh1.setTrangThai(kh.getTrangThai());
+                kh1.setAccount(ar.findByTenDangNhap(kh.getTenDangNhap()).get());
+                khachHangRepository.save(kh1);
+                return kh1;
+            }).get();
+        return updateKH;
     }
 
     @Override

@@ -34,9 +34,7 @@ export class SuaKhachHangComponent  {
   ngOnInit() {
     this.initFormUpdateKh();
     this.initAddFormDC();
-    this.idKh = this.route.snapshot.params['id'];
-    console.log(this.idKh);
-    
+    this.idKh = this.route.snapshot.params['id'];    
     this.route.params.subscribe((params) => {
       this.id = +params["id"];      
       this.khachHangService.getById(this.id).subscribe({
@@ -51,11 +49,6 @@ export class SuaKhachHangComponent  {
             trangThai: new FormControl(kr.trangThai, [Validators.required]),
             email: new FormControl(kr.email, [Validators.required]),
             tenDangNhap: new FormControl(kr.tenDangNhap, [Validators.required,]),
-            // mat_khau: new FormControl(kr.mat_khau,[Validators.required]),
-            // huyen: new FormControl(kr.huyen,[Validators.required]),
-            // tinh: new FormControl(kr.tinh,[Validators.required]),
-            // duong: new FormControl(kr.duong,[Validators.required]),
-            // xa: new FormControl(kr.xa,[Validators.required]),
           });
         },
       });
@@ -63,16 +56,12 @@ export class SuaKhachHangComponent  {
   }
 
   public updateKH(): void{
-    console.log(this.formUpdateKH.value);    
-    // this.khachHangService.update(this.id,this.formUpdateKH.value); 
     this.khachHangService.update(this.id,this.formUpdateKH.value).subscribe({
       next: (kh: KhachHang)=>{
         this.toas.success('Cập nhật thông tin thành công','Thành công');
-        // this.router.navigate(['/khach-hang/ds-khach-hang']);
-        
+        this.router.navigate(['/khach-hang/sua-khach-hang/',this.id]);
       },error:(erros: HttpErrorResponse)=>{
-        this.toas.error('false','XXX');
-
+        this.toas.error('Cập nhật thông tin không thành công','Thất bại');
       }
     })
   }

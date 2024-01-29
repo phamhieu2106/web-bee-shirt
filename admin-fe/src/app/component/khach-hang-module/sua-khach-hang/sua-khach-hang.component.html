@@ -36,7 +36,7 @@
                             for="inputGroupFile01"
                             >Choose file</label
                           >
-                          <input type="text" formControlName="id" />
+                          <input type="text" formControlName="id" hidden/>
                         </div>
                       </div>
                     </div>
@@ -48,7 +48,8 @@
                             class="form-check-input"
                             type="radio"
                             name="trangThai"
-                            value="1"
+                            [value]="1"
+
                             formControlName="trangThai"
                           />
                           <label class="form-check-label">
@@ -60,7 +61,8 @@
                             class="form-check-input"
                             type="radio"
                             name="trangThai"
-                            value="0"
+                            [value]="0"
+
                             formControlName="trangThai"
                           />
                           <label class="form-check-label">
@@ -90,7 +92,7 @@
                             class="form-check-input"
                             type="radio"
                             name="gioiTinh"
-                            value="true"
+                            [value]="true"
                             formControlName="gioiTinh"
                           />
                           <label class="form-check-label"> Nam </label>
@@ -100,7 +102,7 @@
                             class="form-check-input"
                             name="gioiTinh"
                             type="radio"
-                            value="false"
+                            [value]="false"
                             formControlName="gioiTinh"
                           />
                           <label class="form-check-label"> Nữ </label>

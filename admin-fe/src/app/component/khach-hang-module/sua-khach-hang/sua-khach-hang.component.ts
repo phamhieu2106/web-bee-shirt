@@ -70,13 +70,15 @@ export class SuaKhachHangComponent  {
   public updateKH(): void{
     this.khachHangService.update(this.id,this.formUpdateKH.value).subscribe({
       next: (kh: KhachHang)=>{
-        console.log(this.formUpdateKH.value);
+        this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
           title: `Cập nhật thành công!`,
           showConfirmButton: false,
-          timer: 1500,
+          timer: 1000,
         });
+        // document.getElementById("closeUpdateBtn").click();
+        this.reloadPage();
         // location.reload();
       },error:(erros: HttpErrorResponse)=>{
         console.log(this.formUpdateKH.value);
@@ -124,8 +126,15 @@ export class SuaKhachHangComponent  {
     this.diaChiService.addDC(this.id,this.addFormDC.value).subscribe({
       next: (dc: DiaChi)=>{
         this.initAddFormDC();        
-        this.toas.success('Thêm địa chỉ mới thành công','Thành công');
-        this.router.navigate(['/khach-hang/ds-khach-hang']);
+        this.initFormUpdateDC();
+        Swal.fire({
+          icon: "success",
+          title: `Thêm địa chỉ thành công!`,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        document.getElementById("closeUpdateBtn").click();
+        this.reloadPage();
         
       },error:(erros: HttpErrorResponse)=>{
         console.log(erros.message);
@@ -157,7 +166,7 @@ export class SuaKhachHangComponent  {
           icon: "success",
           title: `Cập nhật thành công!`,
           showConfirmButton: false,
-          timer: 1500,
+          timer: 1000,
         });
         document.getElementById("closeUpdateBtn").click();
         this.reloadPage();
@@ -177,7 +186,7 @@ export class SuaKhachHangComponent  {
           icon: "success",
           title: `Xóa thành công!`,
           showConfirmButton: false,
-          timer: 1500,
+          timer: 1000,
         });
         this.reloadPage();
       },

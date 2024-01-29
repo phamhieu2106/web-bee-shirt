@@ -32,16 +32,45 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <ng-container
-                    *ngIf="
-                      listObject && listObject.length > 0;
-                      else noDataTemplate
-                    "
-                  >
+                  <ng-container *ngIf="template === 'dotGiamGiaTable'">
                     <ng-container
-                      *ngIf="template === 'dotGiamGiaTable'; then dotGiamGia"
-                    ></ng-container
-                  ></ng-container>
+                      *ngIf="
+                        listObject && listObject.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="template === 'dotGiamGiaTable'; then dotGiamGia"
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="template === 'SanPhamTable'">
+                    <ng-container
+                      *ngIf="
+                        listSanPham && listSanPham.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="template === 'SanPhamTable'; then sanPham"
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="template === 'SanPhamChiTietTable'">
+                    <ng-container
+                      *ngIf="
+                        listSanPhamChiTiet && listSanPhamChiTiet.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="
+                          template === 'SanPhamChiTietTable';
+                          then sanPhamChiTiet
+                        "
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
                 </tbody>
               </table>
             </div>
@@ -120,6 +149,65 @@
         (click)="update(object)"
       >
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
+      </button>
+    </td>
+  </tr>
+</ng-template>
+
+<!-- Body SanPham Table -->
+<ng-template #sanPham>
+  <tr role="row" class="odd" *ngFor="let object of listSanPham">
+    <td class="sorting_1">
+      <input
+        [disabled]="object.trangThai === false ? true : false"
+        type="checkbox"
+        (change)="addIdSanPham(object.id)"
+      />
+    </td>
+    <td>{{ object.ma }}</td>
+    <td>{{ object.ten }}</td>
+    <td>
+      <button
+        class="{{
+          object.trangThai === true
+            ? 'btn btn-success btn-rounded'
+            : 'btn btn-danger btn-rounded'
+        }}"
+      >
+        {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
+      </button>
+    </td>
+  </tr>
+</ng-template>
+
+<!-- Body SanPhamChiTiet Table -->
+<ng-template #sanPhamChiTiet>
+  <tr role="row" class="odd p-3" *ngFor="let object of listSanPhamChiTiet">
+    <td class="sorting_1">
+      <input
+        [disabled]="object.trangThai === false ? true : false"
+        type="checkbox"
+        (change)="addIdSanPham(object.id)"
+      />
+    </td>
+    <td>NULL</td>
+    <td>{{ object.maSanPham }}</td>
+    <td>{{ object.tenSanPham }}</td>
+    <td>{{ object.tenMauSac }}</td>
+    <td>
+      <button
+        class="{{
+          object.trangThai === true
+            ? 'btn btn-success btn-rounded'
+            : 'btn btn-danger btn-rounded'
+        }}"
+      >
+        {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
+      </button>
+    </td>
+    <td>
+      <button class="btn btn-outline-light btn-rounded">
+        <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
       </button>
     </td>
   </tr>

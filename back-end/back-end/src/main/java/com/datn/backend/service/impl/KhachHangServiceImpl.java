@@ -8,6 +8,7 @@ import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.AccountRepository;
+import com.datn.backend.repository.DiaChiRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import com.datn.backend.service.KhachHangService;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public class KhachHangServiceImpl implements KhachHangService {
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepository;
-    private final DiaChiService diaChiService;
+    private final DiaChiRepository diaChiRepository;
     private final AccountRepository ar;
 
 
@@ -55,7 +56,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setXa(kh.getXa());
         diaChi.setDuong(kh.getDuong());
         diaChi.setMacDinh(true);
-        diaChiService.add(diaChi);
+        diaChiRepository.save(diaChi);
 
         return null;
     }

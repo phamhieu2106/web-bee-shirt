@@ -32,7 +32,7 @@ public class NhanVienResource {
     public ResponseEntity<PagedResponse<NhanVienResponse>> getNhanVienList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(nhanVienService.getAll(pageNumber, pageSize, search));
+        return ResponseEntity.ok(nhanVienService.getAll(pageNumber, pageSize, search.trim()));
     }
 
     @PostMapping("/add")

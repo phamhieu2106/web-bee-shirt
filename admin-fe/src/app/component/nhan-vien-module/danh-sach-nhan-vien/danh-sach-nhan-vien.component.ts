@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
@@ -19,6 +19,11 @@ export class DanhSachNhanVienComponent {
   public search = "";
   public nhanVienDetails: NhanVienResponse;
   public nhanVienUpdateLoaded: boolean;
+  private timeout: any;
+
+  // FILTER
+  public trangThai: number;
+  public gioiTinh: number;
 
   constructor(
     private nhanVienService: NhanVienService,
@@ -27,6 +32,11 @@ export class DanhSachNhanVienComponent {
 
   ngOnInit() {
     this.getAllNhanVien();
+  }
+
+  onChangeFilter() {
+    console.log(this.trangThai);
+    console.log(this.gioiTinh);
   }
 
   // private function
@@ -84,8 +94,17 @@ export class DanhSachNhanVienComponent {
   }
 
   public timKiem(e: any): void {
-    console.log(e.target.value);
-    this.goToPage(1, this.pagedResponse.pageSize, e.target.value);
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
   }
 
   public deleteNV(id: number): void {
@@ -99,8 +118,18 @@ export class DanhSachNhanVienComponent {
         );
       },
       error: (error: HttpErrorResponse) => {
+        this.toastr.success("Cập nhật trạng thái thất bại", "Thành công");
         console.log(error);
       },
     });
+  }
+
+  public reloadData(): void {
+    this.goToPage(
+      this.pagedResponse.pageNumber,
+      this.pagedResponse.pageSize,
+      this.pagedResponse.search
+    );
+    console.log("reload thành công");
   }
 }

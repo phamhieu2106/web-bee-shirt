@@ -1,5 +1,11 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, Input, OnChanges } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -14,6 +20,7 @@ import { NhanVienService } from "src/app/service/nhan-vien.service";
 })
 export class SuaNhanVienComponent implements OnChanges {
   @Input() nhanVienDetails: NhanVienResponse;
+  @Output() reloadTable: EventEmitter<any> = new EventEmitter<any>();
 
   nhanVienUpdated: NhanVienResponse;
 
@@ -70,11 +77,10 @@ export class SuaNhanVienComponent implements OnChanges {
   updateNhanVien(id: number): void {
     this.nhanVienService.update(this.updateForm.value, id).subscribe({
       next: () => {
-        // this.goToPage(1, 5, "");
         this.initUpdateForm();
         this.toastr.success("Sửa nhân viên thành công", "Thành công");
         document.getElementById("closeBtnUpdate").click();
-        // this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
+        this.reloadTable.emit(); // Gửi sự kiện tới cha
       },
       error: (erros: HttpErrorResponse) => {
         this.toastr.error("Sửa nhân viên thất bại", "Thất bại");

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -13,6 +13,8 @@ import { NhanVienService } from "src/app/service/nhan-vien.service";
   styleUrls: ["./them-nhan-vien.component.css"],
 })
 export class ThemNhanVienComponent {
+  @Output() reloadTable: EventEmitter<any> = new EventEmitter<any>();
+
   public addForm: any;
   private sdtRegex: string = "0[0-9]{9}";
   public pagedResponse: PagedResponse<NhanVienResponse>;
@@ -34,9 +36,11 @@ export class ThemNhanVienComponent {
         this.initAddForm();
         this.toastr.success("Thêm nhân viên mới thành công", "Thành công");
         document.getElementById("closeBtn").click();
+        this.reloadTable.emit(); // Gửi sự kiện tới cha
         // this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
       },
       error: (erros: HttpErrorResponse) => {
+        this.toastr.error("Thêm nhân viên thất bại", "Thất bại");
         console.log(erros.message);
       },
     });

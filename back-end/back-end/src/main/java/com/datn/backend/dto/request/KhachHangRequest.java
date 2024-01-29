@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @ToString
 public class KhachHangRequest {
 //    private Integer id;
-    private String ho_ten;
-    private LocalDate ngay_sinh;
+    private String hoTen;
+    private LocalDate ngaySinh;
     private String sdt;
     private String email;
-    private boolean gioi_tinh;
-    private int trang_thai;
-    private String image_url;
-    private String ten_dang_nhap;
-    private String mat_khau;
+    private boolean gioiTinh;
+    private int trangThai;
+    private String imageUrl;
+    private String tenDangNhap;
+    private String matKhau;
     private String tinh;
     private String huyen;
     private String xa;

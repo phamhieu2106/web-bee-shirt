@@ -29,6 +29,7 @@ public addKH(): void{
   this.khachHangService.add(this.formAddKh.value).subscribe({
     next: (kh: KhachHangResponse)=>{
       this.initFormAddKh();
+      
       this.toas.success('Thêm khách hàng mới thành công','Thành công');
       this.router.navigate(['/khach-hang/ds-khach-hang']);
       
@@ -40,13 +41,13 @@ public addKH(): void{
 
   public initFormAddKh(): void{
     this.formAddKh = new FormGroup({
-      ho_ten: new FormControl("",[Validators.required]),
-      gioi_tinh: new FormControl("",[Validators.required]),
-      trang_thai: new FormControl("",[Validators.required]),
-      ten_dang_nhap: new FormControl("",[Validators.required]),
+      hoTen: new FormControl("",[Validators.required]),
+      gioiTinh: new FormControl("",[Validators.required]),
+      trangThai: new FormControl("",[Validators.required]),
+      tenDangNhap: new FormControl("",[Validators.required]),
       sdt: new FormControl("",[Validators.required]),
-      ngay_sinh: new FormControl("",[Validators.required]),
-      mat_khau: new FormControl("",[Validators.required]),
+      ngaySinh: new FormControl("",[Validators.required]),
+      matKhau: new FormControl("",[Validators.required]),
       email: new FormControl("",[Validators.required]),
       huyen: new FormControl("",[Validators.required]),
       tinh: new FormControl("",[Validators.required]),

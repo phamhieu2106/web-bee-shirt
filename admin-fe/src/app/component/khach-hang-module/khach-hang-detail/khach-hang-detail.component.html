@@ -17,7 +17,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Họ tên"
-                  [value]="khChiTiet?.ho_ten"
+                  [value]="khChiTiet?.hoTen"
                   [disabled]="true"
                 />
               </div>
@@ -29,7 +29,7 @@
                   type="date"
                   class="form-control"
                   placeholder="Ngày sinh"
-                  [value]="khChiTiet?.ngay_sinh"
+                  [value]="khChiTiet?.ngaySinh"
                   [disabled]="true"
                 />
               </div>
@@ -56,7 +56,7 @@
                     class="form-check-input"
                     type="radio"
                     name="gt"
-                    [checked]="khChiTiet?.gioi_tinh"
+                    [checked]="khChiTiet?.gioiTinh"
                     [disabled]="true"
                   />
                   <label class="form-check-label"> Nam </label>
@@ -66,7 +66,7 @@
                     class="form-check-input"
                     type="radio"
                     name="gt"
-                    [checked]="!khChiTiet?.gioi_tinh"
+                    [checked]="!khChiTiet?.gioiTinh"
                     [disabled]="true"
                   />
                   <label class="form-check-label"> Nữ </label>
@@ -95,7 +95,7 @@
                     class="form-check-input"
                     type="radio"
                     name="tt"
-                    [checked]="khChiTiet?.trang_thai"
+                    [checked]="khChiTiet?.trangThai"
                     [disabled]="true"
                   />
                   <label class="form-check-label"> Đang hoạt động </label>
@@ -105,7 +105,7 @@
                     class="form-check-input"
                     type="radio"
                     name="tt"
-                    [checked]="!khChiTiet?.trang_thai"
+                    [checked]="!khChiTiet?.trangThai"
                     [disabled]="true"
                   />
                   <label class="form-check-label"> Ngừng hoạt động </label>
@@ -121,7 +121,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Tên đăng nhập"
-                  [value]="khChiTiet?.ten_dang_nhap"
+                  [value]="khChiTiet?.tenDangNhap"
                   [disabled]="true"
                 />
               </div>

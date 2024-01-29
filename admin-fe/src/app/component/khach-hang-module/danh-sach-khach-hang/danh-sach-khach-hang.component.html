@@ -100,24 +100,24 @@
                     (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
-              <td>{{ kh.ho_ten }}</td>
+              <td>{{ kh.hoTen }}</td>
               <td>
                 {{ kh.sdt }}
               </td>
-              <td>{{ kh.gioi_tinh == true ?"Nam":"Nữ" }}</td>
+              <td>{{ kh.gioiTinh == true ?"Nam":"Nữ" }}</td>
               <td>{{ kh.email }}</td>
               <td>{{ kh.tinh}}, {{kh.huyen}}, {{kh.xa}}, {{kh.duong}}</td>
-              <td>{{ kh.ngay_sinh }}</td>
+              <td>{{ kh.ngaySinh }}</td>
               <td>
                 <button
                   class="{{
-                    kh.trang_thai === 1
+                    kh.trangThai === 1
                       ? 'btn btn-info btn-rounded'                      
                       : 'btn btn-danger btn-rounded'
                   }}"
                 >
                   {{
-                    kh.trang_thai === 1
+                    kh.trangThai === 1
                       ? "Đang hoạt động"
                       :  "Ngừng hoạt động"
                       

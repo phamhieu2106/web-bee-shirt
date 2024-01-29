@@ -36,7 +36,6 @@ public class PhieuGiamGia extends BaseEntity {
     private String maPhieuGiamGia;
     private String tenPhieuGiamGia;
     private Integer kieu;
-    private Integer loai;
     private BigDecimal giaTri;
     private BigDecimal giaTriMax;
     private BigDecimal dieuKienGiam;

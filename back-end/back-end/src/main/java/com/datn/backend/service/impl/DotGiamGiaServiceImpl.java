@@ -12,6 +12,7 @@ import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.DotGiamGiaRepository;
 import com.datn.backend.repository.DotGiamGiaSanPhamRepository;
+import com.datn.backend.repository.SanPhamChiTietRepository;
 import com.datn.backend.service.DotGiamGiaService;
 import com.datn.backend.utility.UtilityFunction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,15 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     private final DotGiamGiaRepository repository;
     private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository;
+    private final SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @Autowired
-    public DotGiamGiaServiceImpl(DotGiamGiaRepository repository,DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository) {
+    public DotGiamGiaServiceImpl(DotGiamGiaRepository repository
+            ,DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository,SanPhamChiTietRepository sanPhamChiTietRepository) {
         super();
         this.repository = repository;
         this.dotGiamGiaSanPhamRepository = dotGiamGiaSanPhamRepository;
+        this.sanPhamChiTietRepository = sanPhamChiTietRepository;
     }
 
     @Override
@@ -155,9 +159,27 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
 //        Save object
         repository.save(dotGiamGia);
-//        Create dotGiamGiaSanPham
+//        Find DotGiamGia after save
+        DotGiamGia dotGiamGiaFind = repository.getDotGiamGiaByMaDotGiamGia(code);
+//        Loop to create DotGiamGiaSanPham
+        for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
 
-//        Create sanPhamChiTiet
+            Optional<SanPhamChiTiet> optional = sanPhamChiTietRepository.findById(object.getListIdSanPhamChiTiet().get(i));
+            if(optional.isPresent()){
+                //        Create sanPhamChiTiet
+                SanPhamChiTiet sanPhamChiTiet = optional.get();
+//                Create DotGiamGiaSanPham and set
+                DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
+                dotGiamGiaSanPham.setGiaCu(sanPhamChiTiet.getGiaBan());
+                dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
+                dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
+                dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
+                dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
+                dotGiamGiaSanPham.setSanPhamChiTiet(sanPhamChiTiet);
+                dotGiamGiaSanPham.setDotGiamGia(dotGiamGiaFind);
+                dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+            }
+        }
 //        save to database
         return dotGiamGia;
     }

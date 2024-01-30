@@ -26,14 +26,12 @@ public class DotGiamGiaRequest {
     @NotBlank(message = "Code can't be blank")
     private String tenDotGiamGia;
 
-    @NotEmpty(message = "Start Date can't be empty")
     @NotNull(message = "Start Date can't be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime thoiGianBatDau;
 
-    @NotEmpty(message = "End Date can't be empty")
     @NotNull(message = "End Date can't be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime thoiGianKetThuc;
 
     @Min(value = 5, message = "Discount percent must gather than 5")
@@ -44,7 +42,7 @@ public class DotGiamGiaRequest {
 
     @NotEmpty(message = "List ID can't be empty")
     @NotNull(message = "List ID can't be null")
-    private Set<Integer> listIdSanPhamChiTiet;
+    private List<Integer> listIdSanPhamChiTiet;
 
     public DotGiamGia map(DotGiamGia object) {
 

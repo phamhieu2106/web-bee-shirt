@@ -18,6 +18,8 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
     boolean existsByTenDotGiamGia(String tenDotGiamGia);
 
+    DotGiamGia getDotGiamGiaByMaDotGiamGia(String maDotGiamGia);
+
     @Query(value = """
             SELECT dgg.id as Id ,dgg.ma_dot_giam_gia as MaDotGiamGia, dgg.ten_dot_giam_gia as TenDotGiamGia,
             dgg.gia_tri_phan_tram as GiaTriPhanTram, dggsp.thoi_gian_bat_dau as NgayBatDau, dggsp.thoi_gian_ket_thuc as NgayKetThuc,

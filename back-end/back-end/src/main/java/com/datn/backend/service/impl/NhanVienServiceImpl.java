@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -101,6 +103,26 @@ public class NhanVienServiceImpl implements NhanVienService {
         } else {
             throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
+    }
+
+    @Override
+    public PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<NhanVienResponse> page = nhanVienRepo.filter(pageable, gioiTinhFilter, trangThaiFilter);
+
+        PagedResponse<NhanVienResponse> pagedResponse = new PagedResponse<>();
+
+        pagedResponse.setPageNumber(pageNumber);
+        pagedResponse.setPageSize(pageSize);
+        pagedResponse.setTotalPages(page.getTotalPages());
+        pagedResponse.setTotalElements(page.getTotalElements());
+        pagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(page.getTotalPages()));
+        pagedResponse.setData(page.getContent());
+        pagedResponse.setSearch("");
+
+        return pagedResponse;
     }
 
     @Override

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { KhachHangService } from 'src/app/service/khach-hang.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-them-khach-hang',
@@ -28,9 +29,14 @@ export class ThemKhachHangComponent  {
 public addKH(): void{
   this.khachHangService.add(this.formAddKh.value).subscribe({
     next: (kh: KhachHangResponse)=>{
-      this.initFormAddKh();
-      
-      this.toas.success('Thêm khách hàng mới thành công','Thành công');
+      this.initFormAddKh();      
+      Swal.fire({
+        icon: "success",
+        title: `Thêm khách hàng mới thành công!`,
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
       this.router.navigate(['/khach-hang/ds-khach-hang']);
       
     },error:(erros: HttpErrorResponse)=>{

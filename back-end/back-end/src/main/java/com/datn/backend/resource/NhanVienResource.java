@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/nhan-vien")
 @RequiredArgsConstructor
@@ -54,5 +56,13 @@ public class NhanVienResource {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<NhanVien> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(nhanVienService.delete(id));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<PagedResponse<NhanVienResponse>> filter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                  @RequestParam(value = "gioiTinhFilter", defaultValue = "0,1", required = false) List<Integer> gioiTinhFilter,
+                                                                  @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter) {
+        return ResponseEntity.ok(nhanVienService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter));
     }
 }

@@ -165,6 +165,13 @@
 
           <div class="text-right">
             <button
+              class="btn btn-primary btn-rounded btn-reload-filter"
+              (click)="reloadForm()"
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+
+            <button
               type="submit"
               class="btn btn-success btn-rounded mx-2"
               [disabled]="addForm.invalid"

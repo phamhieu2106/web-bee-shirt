@@ -207,12 +207,13 @@
                       <tr role="row">
                         <th>STT</th>
                         <th>Mã HD</th>
+                        <th>Mã NV</th>
                         <th>Khách Hàng</th>
-                        <th>Nhân viên</th>
+                        <th>Số điện thoại</th>
                         <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
-                        <th>Loại HD</th>
                         <th>Tổng tiền</th>
+                        <th>Loại HD</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
@@ -220,22 +221,23 @@
                       <tr *ngFor="let hd of hoaDons?.data; index as i">
                         <td>{{ i + 1 }}</td>
                         <td>{{ hd.ma }}</td>
-                        <td>Khách Hàng</td>
-                        <td>Nhân viên</td>
+                        <td>ma_nv</td>
+                        <td>ten_khach</td>
+                        <td>sdt</td>
                         <td>
                           {{ hd.createdAt }}
+                        </td>
+                        <td>{{ hd.tongTien | currency : "đ " }}</td>
+                        <td>
+                          <app-loai-hoa-don
+                            [loaiHoaDon]="hd.loaiHoaDon"
+                          ></app-loai-hoa-don>
                         </td>
                         <td>
                           <app-trang-thai-hoa-don
                             [trangThai]="hd.trangThai"
                           ></app-trang-thai-hoa-don>
                         </td>
-                        <td>
-                          <app-loai-hoa-don
-                            [loaiHoaDon]="hd.loaiHoaDon"
-                          ></app-loai-hoa-don>
-                        </td>
-                        <td>{{ hd.tongTien | currency : "đ " }}</td>
                         <td>
                           <a
                             class="btn btn-outline-light btn-rounded"

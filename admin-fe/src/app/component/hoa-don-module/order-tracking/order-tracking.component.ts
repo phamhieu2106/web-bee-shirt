@@ -50,7 +50,11 @@ export class OrderTrackingComponent {
           this.lichSuHoaDons.push(resp);
           this.trangThaiHD = resp.trangThai;
           this.chageTitleButton();
+
           this.toastr.success("Cập nhật thành công", "Thành công");
+          if (this.trangThaiHD === "DA_XAC_NHAN") {
+            this.inPhieuGiao();
+          }
         },
         error: (err) => {
           this.toastr.error(err.error.message, "Thất bại");
@@ -77,10 +81,10 @@ export class OrderTrackingComponent {
   chageTitleButton() {
     switch (this.trangThaiHD) {
       case "TAO_DON":
-        this.titleButton = "Xác nhận";
+        this.titleButton = "Chờ xác nhận";
         break;
       case "CHO_XAC_NHAN":
-        this.titleButton = "Đã xác nhận";
+        this.titleButton = "Xác nhận";
         break;
       case "DA_XAC_NHAN":
         this.titleButton = "Chờ giao hàng";

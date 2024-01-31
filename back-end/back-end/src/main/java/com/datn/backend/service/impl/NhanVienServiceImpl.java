@@ -48,6 +48,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         // nhan vien
         NhanVien nhanVien = new NhanVien();
+        nhanVien.setCccd(request.getCccd());
         nhanVien.setHoTen(request.getHoTen());
         nhanVien.setNgaySinh(request.getNgaySinh());
         nhanVien.setSdt(request.getSdt());
@@ -153,6 +154,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     public NhanVien updateForm(Optional<NhanVien> optionalNhanVien, AddNhanVienRequest request) {
         NhanVien nhanVien = optionalNhanVien.map(nv -> {
+            nv.setCccd(request.getCccd());
             nv.setHoTen(request.getHoTen());
             nv.setNgaySinh(request.getNgaySinh());
             nv.setSdt(request.getSdt());

@@ -11,6 +11,9 @@ import java.time.LocalDate;
 @Data
 public class AddNhanVienRequest {
 
+    @NotBlank(message = "CCCD không được trống")
+    private String cccd;
+
     @NotBlank(message = "Họ tên không được trống")
     private String hoTen;
 

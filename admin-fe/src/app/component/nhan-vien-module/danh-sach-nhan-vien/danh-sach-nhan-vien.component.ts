@@ -18,7 +18,6 @@ export class DanhSachNhanVienComponent {
   public pagedResponse: PagedResponse<NhanVienResponse>;
   public search = "";
   public nhanVienDetails: NhanVienResponse;
-  public nhanVienUpdateLoaded: boolean;
   private timeout: any;
 
   // FILTER
@@ -101,18 +100,6 @@ export class DanhSachNhanVienComponent {
     });
   }
 
-  public openUpdateForm(id: number): void {
-    this.nhanVienService.getOneById(id).subscribe({
-      next: (response) => {
-        this.nhanVienDetails = response;
-        this.nhanVienUpdateLoaded = true;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
-
   public timKiem(e: any): void {
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -142,14 +129,5 @@ export class DanhSachNhanVienComponent {
         console.log(error);
       },
     });
-  }
-
-  public reloadData(): void {
-    this.goToPage(
-      this.pagedResponse.pageNumber,
-      this.pagedResponse.pageSize,
-      this.pagedResponse.search
-    );
-    console.log("reload thành công");
   }
 }

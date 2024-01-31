@@ -1,13 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-} from "@angular/core";
+import { Component, OnChanges } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
@@ -18,12 +12,14 @@ import { NhanVienService } from "src/app/service/nhan-vien.service";
   templateUrl: "./sua-nhan-vien.component.html",
   styleUrls: ["./sua-nhan-vien.component.css"],
 })
-export class SuaNhanVienComponent implements OnChanges {
-  @Input() nhanVienDetails: NhanVienResponse;
-  @Output() reloadTable: EventEmitter<any> = new EventEmitter<any>();
+export class SuaNhanVienComponent {
+  icon: string = "fa-solid fa-users";
+  title: string = "Nhân Viên";
+  mainHeading: string = "Nhân Viên";
 
   nhanVienUpdated: NhanVienResponse;
 
+  public idUpdated: number;
   public updateForm: any;
   private sdtRegex: string = "0[0-9]{9}";
   public pagedResponse: PagedResponse<NhanVienResponse>;
@@ -31,42 +27,48 @@ export class SuaNhanVienComponent implements OnChanges {
   constructor(
     private nhanVienService: NhanVienService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnChanges() {
-    if (this.nhanVienDetails) {
-      this.nhanVienUpdated = this.nhanVienDetails;
-      this.initUpdateForm();
-    }
+  ngOnInit(): void {
+    this.idUpdated = this.route.snapshot.params["id"];
+    this.nhanVienService.getOneById(this.idUpdated).subscribe({
+      next: (response) => {
+        this.nhanVienUpdated = response;
+        console.log(this.nhanVienUpdated);
+        this.initUpdateForm(this.nhanVienUpdated);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 
-  public initUpdateForm(): void {
+  public initUpdateForm(nhanVienUpdated: NhanVienResponse): void {
     this.updateForm = new FormGroup({
-      hoTen: new FormControl(this.nhanVienDetails.hoTen, [Validators.required]),
-      ngaySinh: new FormControl(this.nhanVienDetails.ngaySinh, [
+      cccd: new FormControl(nhanVienUpdated.cccd, [Validators.required]),
+      hoTen: new FormControl(nhanVienUpdated.hoTen, [Validators.required]),
+      ngaySinh: new FormControl(nhanVienUpdated.ngaySinh, [
         Validators.required,
       ]),
-      sdt: new FormControl(this.nhanVienDetails.sdt, [
+      sdt: new FormControl(nhanVienUpdated.sdt, [
         Validators.required,
         Validators.pattern(this.sdtRegex),
       ]),
-      gioiTinh: new FormControl(this.nhanVienDetails.gioiTinh, [
+      gioiTinh: new FormControl(nhanVienUpdated.gioiTinh, [
         Validators.required,
       ]),
-      email: new FormControl(this.nhanVienDetails.email, [
+      email: new FormControl(nhanVienUpdated.email, [
         Validators.required,
         Validators.email,
       ]),
-      diaChi: new FormControl(this.nhanVienDetails.diaChi, [
+      diaChi: new FormControl(nhanVienUpdated.diaChi, [Validators.required]),
+      tenDangNhap: new FormControl(nhanVienUpdated.tenDangNhap, [
         Validators.required,
       ]),
-      tenDangNhap: new FormControl(this.nhanVienDetails.tenDangNhap, [
-        Validators.required,
-      ]),
-      matKhau: new FormControl(this.nhanVienDetails.matKhau, [
-        Validators.required,
-      ]),
+      matKhau: new FormControl(nhanVienUpdated.matKhau, [Validators.required]),
+
       // matKhau: new FormControl({
       //   value: this.nhanVienDetails.matKhau,
       //   disabled: true,
@@ -74,19 +76,20 @@ export class SuaNhanVienComponent implements OnChanges {
     });
   }
 
-  updateNhanVien(id: number): void {
-    this.nhanVienService.update(this.updateForm.value, id).subscribe({
-      next: () => {
-        this.initUpdateForm();
-        this.toastr.success("Sửa nhân viên thành công", "Thành công");
-        document.getElementById("closeBtnUpdate").click();
-        this.reloadTable.emit(); // Gửi sự kiện tới cha
-      },
-      error: (erros: HttpErrorResponse) => {
-        this.toastr.error("Sửa nhân viên thất bại", "Thất bại");
-        console.log(erros.message);
-      },
-    });
+  updateNhanVien(): void {
+    this.nhanVienService
+      .update(this.updateForm.value, this.idUpdated)
+      .subscribe({
+        next: () => {
+          // this.initUpdateForm();
+          this.toastr.success("Sửa nhân viên thành công", "Thành công");
+          this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
+        },
+        error: (erros: HttpErrorResponse) => {
+          this.toastr.error("Sửa nhân viên thất bại", "Thất bại");
+          console.log(erros.message);
+        },
+      });
   }
 
   public goToPage(

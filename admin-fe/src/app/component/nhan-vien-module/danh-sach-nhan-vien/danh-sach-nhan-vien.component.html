@@ -4,14 +4,36 @@
   [title]="title"
 ></app-main-heading>
 
-<!-- Filter start -->
 <div class="row gutters mt-3">
   <div class="col-sm-12">
     <div class="card">
-      <div class="card-header">Bộ lọc</div>
+      <div class="card-header">
+        <h4 class="float-md-left">Danh sách nhân viên</h4>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-lg float-md-right rounded"
+          routerLink="/nhan-vien/them-nhan-vien"
+        >
+          <span class="icon-user-plus"></span>
+          Thêm nhân viên
+        </button>
+      </div>
       <div class="card-body">
+        <!-- Filter start -->
         <div class="row gutters justify-content-md-center">
-          <div class="col-sm-3 col-12 me-4">
+          <div class="col-md-3 col-12">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="inputName"
+                placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+                (keyup)="timKiem($event)"
+              />
+            </div>
+          </div>
+          <div class="col-sm-3 col-12">
             <div class="input-group d-flex align-items-center">
               <div class="input-group-prepend">
                 <label class="me-3"> Giới tính: </label>
@@ -47,7 +69,7 @@
             </div>
           </div>
 
-          <div class="col-1 d-flex justify-content-center">
+          <div class="col-1">
             <button
               class="btn btn-primary btn-rounded btn-reload-filter"
               (click)="reloadFilter()"
@@ -56,215 +78,151 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Filter ends -->
+        <!-- Filter End -->
 
-<!-- Table start -->
-<div class="row gutters">
-  <div class="col-sm-12">
-    <div class="card">
-      <h2 class="card-header">
-        <div>Danh sách nhân viên</div>
-      </h2>
-      <div class="d-flex justify-content-between mt-4">
-        <div class="col-md-3">
-          <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="inputName"
-              placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-              (keyup)="timKiem($event)"
-            />
-          </div>
-        </div>
-        <div class="col-md-1">
-          <button
-            class="btn btn-primary btn-rounded"
-            id="add-button"
-            data-toggle="modal"
-            data-target="#formAddButton"
-            data-whatever="@mdo"
-          >
-            <i class="fa-solid fa-plus"></i> Thêm
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <table id="rowSelection" class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Họ tên</th>
-              <th>Ngày sinh</th>
-              <th>SĐT</th>
-              <th>Giới tính</th>
-              <th>Email</th>
-              <th>Trạng thái</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let nv of pagedResponse?.data; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ nv.hoTen }}</td>
-              <td>{{ nv.ngaySinh }}</td>
-              <td>{{ nv.sdt }}</td>
-              <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
-              <td>{{ nv.email }}</td>
-              <td>
-                <div class="custom-control custom-switch">
-                  <div id="custom-switch-control ">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      [id]="'trangThai' + nv.id"
-                      [checked]="nv.trangThai"
-                      (click)="deleteNV(nv.id)"
-                    />
+        <!-- Table Start -->
+        <div class="card-body">
+          <table id="rowSelection" class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Mã NV</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>SĐT</th>
+                <th>Giới tính</th>
+                <th>Email</th>
+                <th>Trạng thái</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let nv of pagedResponse?.data; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ nv.id }}</td>
+                <td>{{ nv.hoTen }}</td>
+                <td>{{ nv.ngaySinh | date : "dd-MM-yyyy" }}</td>
+                <td>{{ nv.sdt }}</td>
+                <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
+                <td>{{ nv.email }}</td>
+                <td>
+                  <div class="custom-control custom-switch">
+                    <div id="custom-switch-control ">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        [id]="'trangThai' + nv.id"
+                        [checked]="nv.trangThai"
+                        (click)="deleteNV(nv.id)"
+                      />
+                    </div>
+                    <label
+                      [for]="'trangThai' + nv.id"
+                      [class]="
+                        nv.trangThai
+                          ? 'btn btn-success btn-rounded custom-control-label'
+                          : 'btn btn-secondary btn-rounded custom-control-label'
+                      "
+                    >
+                      {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
+                    </label>
                   </div>
-                  <label
-                    [for]="'trangThai' + nv.id"
-                    [class]="
-                      nv.trangThai
-                        ? 'btn btn-success btn-rounded custom-control-label'
-                        : 'btn btn-secondary btn-rounded custom-control-label'
-                    "
-                  >
-                    {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
-                  </label>
-                </div>
-              </td>
+                </td>
 
-              <td>
-                <button
-                  class="btn btn-outline-light btn-rounded"
-                  id="button"
-                  data-toggle="modal"
-                  data-target="#formDetailButton"
-                  data-whatever="@mdo"
-                  (click)="openDetailsForm(nv.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    id="icon-button-detail"
-                  ></i>
-                </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  id="button"
-                  data-toggle="modal"
-                  data-target="#formUpdateButton"
-                  data-whatever="@mdo"
-                  (click)="openUpdateForm(nv.id)"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    id="icon-button-update"
-                  ></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="col col-md-12 d-flex justify-content-between">
-          <div class="col-md-3">
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-              >Số lượng:
-            </label>
-            <select
-              class="custom-select my-1 mr-sm-2 col-md-5"
-              id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
-            >
+                <td>
+                  <button
+                    class="btn btn-outline-light btn-rounded"
+                    id="button"
+                    data-toggle="modal"
+                    data-target="#formDetailButton"
+                    data-whatever="@mdo"
+                    (click)="openDetailsForm(nv.id)"
+                  >
+                    <i
+                      class="fa-solid fa-circle-info fa-xl"
+                      id="icon-button-detail"
+                    ></i>
+                  </button>
+
+                  <button
+                    class="btn btn-outline-warning btn-rounded"
+                    routerLink="/nhan-vien/sua-nhan-vien/{{ nv.id }}"
+                  >
+                    <i
+                      class="fa-solid fa-pen-to-square"
+                      id="icon-button-update"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col col-md-12 d-flex justify-content-between">
+            <div class="col-md-3">
+              <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+                >Số lượng:
+              </label>
+              <select
+                class="custom-select my-1 mr-sm-2 col-md-5"
+                id="inlineFormCustomSelectPref"
+                (change)="onChangePageSize($event)"
               >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select>
-          </div>
-          <div>
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li
-                  class="page-item"
-                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                 >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
-                    >Previous</a
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+            <div>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li
+                    class="page-item"
+                    [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                   >
-                </li>
-                <li
-                  class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
-                >
-                  <a
-                    class="page-link pointer"
+                    <a
+                      class="page-link pointer"
+                      (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                      >Previous</a
+                    >
+                  </li>
+                  <li
+                    class="page-item"
+                    *ngFor="let page of pagedResponse?.pageNumberArr"
+                  >
+                    <a
+                      class="page-link pointer"
+                      [ngClass]="
+                        pagedResponse?.pageNumber == page ? 'active' : ''
+                      "
+                      (click)="goToPage(page)"
+                      >{{ page }}</a
+                    >
+                  </li>
+                  <li
+                    class="page-item"
                     [ngClass]="
-                      pagedResponse?.pageNumber == page ? 'active' : ''
+                      pagedResponse?.pageNumber == pagedResponse?.totalPages
+                        ? 'disabled'
+                        : ''
                     "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
                   >
-                </li>
-                <li
-                  class="page-item"
-                  [ngClass]="
-                    pagedResponse?.pageNumber == pagedResponse?.totalPages
-                      ? 'disabled'
-                      : ''
-                  "
-                >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
-                    >Next</a
-                  >
-                </li>
-              </ul>
-            </nav>
+                    <a
+                      class="page-link pointer"
+                      (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                      >Next</a
+                    >
+                  </li>
+                </ul>
+              </nav>
+            </div>
           </div>
         </div>
+        <!-- Table End -->
       </div>
     </div>
   </div>
 </div>
-<!-- Table ends -->
-
-<!-- Modal Form ADD start -->
-<div
-  class="modal fade"
-  id="formAddButton"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="formAdd"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formAdd">Thêm mới nhân viên</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-them-nhan-vien (reloadTable)="reloadData()"></app-them-nhan-vien>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal Form ADD ends -->
 
 <!-- Modal Form Detail start -->
 <div
@@ -306,40 +264,6 @@
   </div>
 </div>
 <!-- Modal Form Detail ends -->
-
-<!-- Modal Form Update start -->
-<div
-  class="modal fade"
-  id="formUpdateButton"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="formUpdate"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formUpdate">Sửa nhân viên</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-sua-nhan-vien
-          (reloadTable)="reloadData()"
-          *ngIf="nhanVienUpdateLoaded"
-          [nhanVienDetails]="nhanVienDetails"
-        ></app-sua-nhan-vien>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal Form Update ends -->
 
 <!-- 
   <select class="form-control mx-sm-4">

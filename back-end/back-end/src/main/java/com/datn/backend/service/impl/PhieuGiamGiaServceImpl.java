@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +36,21 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public PhieuGiamGia add(PhieuGiamGiaRequest phieu) {
-        if (phieu.getThoiGianBatDau().isEqual(phieu.getThoiGianKetThuc())) {
-            phieu.setTrangThai("Đang Diễn Ra");
-        } else if (phieu.getThoiGianBatDau().isBefore(phieu.getThoiGianKetThuc())) {
-            phieu.setTrangThai("Sắp Diễn Ra");
+    public PhieuGiamGia add(PhieuGiamGiaRequest phieuGiamGia) {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đã kết thúc");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+            phieuGiamGia.setTrangThai("Sắp diễn ra");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
+                currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đang diễn ra");
         } else {
-            phieu.setTrangThai("Đã Kết Thúc");
+            phieuGiamGia.setTrangThai("Trạng thái không xác định");
         }
-        PhieuGiamGia pgg = phieu.giamGia(new PhieuGiamGia());
+
+        PhieuGiamGia pgg = phieuGiamGia.giamGia(new PhieuGiamGia());
         return repository.save(pgg);
     }
 

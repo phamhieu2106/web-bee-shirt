@@ -20,6 +20,7 @@ export class DotGiamGiaComponent implements OnInit {
   icon: string = "fa-solid fa-tags";
   titleTable: string = "Danh Sách Đợt Giảm Giá";
   tHead: Array<string> = [
+    "STT",
     "Mã Đợt Giảm Giá",
     "Tên Đợt Giảm Giá",
     "Giá Trị Giảm",

@@ -27,7 +27,7 @@
                 aria-describedby="rowSelection_info"
               >
                 <thead>
-                  <tr class="table-info" role="row">
+                  <tr class="table" role="row">
                     <th *ngFor="let object of tHead">{{ object }}</th>
                   </tr>
                 </thead>
@@ -110,8 +110,13 @@
 
 <!-- Body DotGiamGia Table -->
 <ng-template #dotGiamGia>
-  <tr role="row" class="odd" *ngFor="let object of listObject">
-    <td class="sorting_1">{{ object.maDotGiamGia }}</td>
+  <tr
+    role="row"
+    class="odd"
+    *ngFor="let object of listObject; let index = index"
+  >
+    <td class="sorting_1">{{ index + 1 }}</td>
+    <td>{{ object.maDotGiamGia }}</td>
     <td>{{ object.tenDotGiamGia }}</td>
     <td>{{ object.giaTriPhanTram }}%</td>
     <td>{{ object.ngayBatDau }}</td>

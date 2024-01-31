@@ -30,6 +30,8 @@ public class NhanVien extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String cccd;
+
     private String hoTen;
 
     private LocalDate ngaySinh;

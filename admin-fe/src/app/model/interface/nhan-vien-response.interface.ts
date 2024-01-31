@@ -1,5 +1,6 @@
 export interface NhanVienResponse {
   id?: number;
+  cccd: string;
   hoTen: string;
   ngaySinh: string;
   sdt: string;

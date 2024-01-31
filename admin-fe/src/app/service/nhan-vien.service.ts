@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { NhanVienResponse } from "../model/interface/nhan-vien-response.interface";
-import { NhanVien } from "../model/class/nhan-vien.class";
 
 @Injectable({
   providedIn: "root",

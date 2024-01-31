@@ -23,18 +23,19 @@ export class DanhSachPhieuComponent {
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
     private toastr: ToastrService
-    ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
     this.initAddForm();
     this.initUpdateForm();
+    this.startPolling();
   }
 
   //public function
-  public add(): void {}
+  public add(): void { }
 
-  public initAddForm(): void {}
+  public initAddForm(): void { }
 
   public goToPage(
     page: number = 1,
@@ -53,17 +54,10 @@ export class DanhSachPhieuComponent {
 
   public changeStatus(id: number): void {
     this.phieuGiamGiaService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.goToPage(
-          this.pagedResponseBinh.pageNumber,
-          this.pagedResponseBinh.pageSize,
-          this.pagedResponseBinh.search
-        );
+      next: (response: PhieuGiamGia) => {
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      }
     });
   }
 
@@ -87,8 +81,16 @@ export class DanhSachPhieuComponent {
 
   private initUpdateForm(): void {
     this.updateForm = new FormGroup({
-      ten:new FormControl("",[Validators.required])
+      ten: new FormControl("", [Validators.required])
 
     })
+  }
+  // change trạng thái
+  startPolling(): void {
+    this.phieuGiamGiaService.startPolling().subscribe((danhSachPhieuGiamGia: PhieuGiamGia[]) => {
+      danhSachPhieuGiamGia.forEach((phieu: PhieuGiamGia) => {
+        this.changeStatus(phieu.id);
+      });
+    });
   }
 }

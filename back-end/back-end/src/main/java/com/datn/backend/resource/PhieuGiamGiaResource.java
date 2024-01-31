@@ -43,16 +43,21 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search));
     }
 
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAll(){
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 
         return ResponseEntity.ok(service.getOne(id));
     }
 
-    @GetMapping("/status/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+    @PutMapping("/status/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable("id") int id) {
 
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+        return ResponseEntity.ok(service.changeStatus(id));
     }
 
 

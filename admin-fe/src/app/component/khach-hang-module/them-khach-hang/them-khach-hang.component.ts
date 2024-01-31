@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
+import { DiaChiService } from 'src/app/service/dia-chi.service';
 import { KhachHangService } from 'src/app/service/khach-hang.service';
 import Swal from 'sweetalert2';
 
@@ -18,13 +19,22 @@ export class ThemKhachHangComponent  {
   mainHeading: string = "khách hàng";
   public formAddKh: FormGroup;
   public khachHangResponse: KhachHangResponse;
+  public tinh: any[] = [];
+  public huyen: any[] = [];
+  public xa: any[] = [];
+  public idTinh: number;
+  public idHuyen: number;
   constructor(
     private router: Router,
     private khachHangService: KhachHangService,
-    private toas: ToastrService
+    private toas: ToastrService,
+    private diaChi: DiaChiService,
   ) {}
   ngOnInit(): void {
     this.initFormAddKh();
+    this.diaChi.getTinh().subscribe((data: any)=>{
+      this.tinh = data.results;
+    })
   }
 public addKH(): void{
   this.khachHangService.add(this.formAddKh.value).subscribe({
@@ -60,5 +70,26 @@ public addKH(): void{
       duong: new FormControl("",[Validators.required]),
       xa: new FormControl("",[Validators.required]),
     })
+  }
+  onCityChange(): void {
+    const selectedTinh  = this.tinh.find(t => t.province_name ==this.formAddKh.get('tinh')?.value);
+    if (selectedTinh) {
+      const selectedId = selectedTinh.province_id;
+      this.diaChi.getHuyen(selectedId).subscribe((data: any)=>{
+        this.huyen = data.results;
+      }) 
+    }
+
+  
+  }
+
+  ondistrictChange(): void {
+    const selectedHuyen  = this.huyen.find(t => t.district_name ==this.formAddKh.get('huyen')?.value);
+    if (selectedHuyen) {
+      const selectedId = selectedHuyen.district_id;
+      this.diaChi.getXa(selectedId).subscribe((data: any)=>{
+        this.xa = data.results;
+      }) 
+    }
   }
 }

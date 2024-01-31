@@ -41,12 +41,13 @@ public class PhieuGiamGia extends BaseEntity {
     private BigDecimal dieuKienGiam;
     private int soLuong;
 
-    @LastModifiedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+//    @LastModifiedDate
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime thoiGianBatDau;
 
-    @LastModifiedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss" )
+//    @LastModifiedDate
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss" )
     private LocalDateTime thoiGianKetThuc;
     private String trangThai;
+    
 }

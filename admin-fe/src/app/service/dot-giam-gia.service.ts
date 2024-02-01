@@ -17,6 +17,10 @@ export class DotGiamGiaService {
     return this.http.get<PagedResponse<DotGiamGia>>(this.apiURL);
   }
 
+  public getDotGiamGiaById(id: number): Observable<DotGiamGia> {
+    return this.http.get<DotGiamGia>(`${this.apiURL}/${id}`);
+  }
+
   public getFilterDotGiamGia(
     status: number,
     startDate: string,
@@ -58,5 +62,13 @@ export class DotGiamGiaService {
     return this.http.get<PagedResponse<DotGiamGiaSanPhamChiTiet>>(
       `${this.apiURL}/sanphamchitiet?id=${id}`
     );
+  }
+
+  public getIdSanPhamBySanPhamChiTietId(ids: number[]): Observable<Array<number>>{
+    return this.http.get<Array<number>>(`${this.apiURL}/listidsanpham?ids=${ids}`)
+  }
+
+  public addDotGiamGiaRequest(object: any): Observable<DotGiamGia>{
+    return this.http.post<DotGiamGia>(this.apiURL, object);
   }
 }

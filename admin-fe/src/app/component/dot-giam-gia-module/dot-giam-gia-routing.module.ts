@@ -14,7 +14,7 @@ const dotGiamGiaRoutes: Routes = [
     component: ThemDotGiamGiaComponent,
   },
   {
-    path: "dot-giam-gia/cap-nhat-dot-giam-gia",
+    path: "dot-giam-gia/cap-nhat-dot-giam-gia/:id",
     component: CapNhatDotGiamGiaComponent,
   },
 ];

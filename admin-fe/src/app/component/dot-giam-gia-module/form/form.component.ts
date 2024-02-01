@@ -1,9 +1,10 @@
-import { DatePipe } from "@angular/common";
+
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
+import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
 
 @Component({
   selector: "app-form",
@@ -25,7 +26,7 @@ export class FormComponent implements OnInit {
 
   public form: any;
 
-  constructor(private toast: ToastrService, private router: Router) {}
+  constructor(private service: DotGiamGiaService,private toast: ToastrService, private router: Router) {}
   ngOnInit(): void {
     this.loadForm();
   }
@@ -42,16 +43,16 @@ export class FormComponent implements OnInit {
         Validators.min(5),
         Validators.max(100),
       ]),
-      ngayBatDau: new FormControl(null, [Validators.required]),
-      ngayKetThuc: new FormControl(null, [Validators.required]),
+      thoiGianBatDau: new FormControl(null, [Validators.required]),
+      thoiGianKetThuc: new FormControl(null, [Validators.required]),
     });
   }
 
   public setDotGiamGiaRequest() {
     this.dotGiamGiaRequest.tenDotGiamGia = this.TenDotGiamGia._pendingValue;
     this.dotGiamGiaRequest.giaTriPhanTram = this.GiaTriPhanTram._pendingValue;
-    this.dotGiamGiaRequest.ngayBatDau = this.NgayBatDau._pendingValue;
-    this.dotGiamGiaRequest.ngayKetThuc = this.NgayKetThuc._pendingValue;
+    this.dotGiamGiaRequest.thoiGianBatDau = this.NgayBatDau._pendingValue;
+    this.dotGiamGiaRequest.thoiGianKetThuc = this.NgayKetThuc._pendingValue;
   }
 
   public resetForm() {
@@ -60,25 +61,36 @@ export class FormComponent implements OnInit {
 
   private validateForm(): boolean {
     // Kiểm tra giá trị của các trường và trả về true nếu hợp lệ, false nếu không hợp lệ
-
-    if (
-      this.dotGiamGiaRequest.tenDotGiamGia === null ||
-      this.dotGiamGiaRequest.giaTriPhanTram === null ||
-      this.dotGiamGiaRequest.ngayBatDau === null ||
-      this.dotGiamGiaRequest.ngayKetThuc === null ||
-      this.dotGiamGiaRequest.listIdSanPhamChiTiet === null ||
-      this.dotGiamGiaRequest.ngayBatDau > this.dotGiamGiaRequest.ngayKetThuc
-    ) {
+    if(this.dotGiamGiaRequest.tenDotGiamGia === null){
+      this.toast.error("Tên Đợt Giảm Giá Đang Bị Trống");
+      return false;
+    }else if(this.dotGiamGiaRequest.giaTriPhanTram === null){
+      this.toast.error("Giá Trị Phần Trăm Đang Bị Trống");
+      return false;
+    } else if(this.dotGiamGiaRequest.thoiGianBatDau === null){
+      this.toast.error("Ngày Bắt Đầu Đợt Giảm Giá Đang Bị Trống");
+      return false;
+    } else if(this.dotGiamGiaRequest.thoiGianKetThuc === null){
+      this.toast.error("Ngày Kết Thúc Đợt Giảm Giá Đang Bị Trống");
+      return false;
+    } else if(this.dotGiamGiaRequest.listIdSanPhamChiTiet === null){
+      this.toast.error("Sản Phẩm Chi Tiết Đợt Giảm Giá Đang Bị Trống");
+      return false;
+    } else if( this.dotGiamGiaRequest.thoiGianBatDau > this.dotGiamGiaRequest.thoiGianKetThuc){
+      this.toast.error("Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá");
       return false;
     }
-
     return true;
   }
 
-  public handleSubmit = () => {
+  public handleSubmit = async() => {
     if (this.typeForm === "add") {
       this.setDotGiamGiaRequest();
       if (this.validateForm()) {
+        this.service.addDotGiamGiaRequest(this.dotGiamGiaRequest).subscribe();
+        setTimeout(() => {
+          this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
+        },300);
         this.toast.success("Thêm Đợt Giảm Giá Thành Công!");
       } else {
         this.toast.error("Thêm đợt giảm giá không thành công");
@@ -87,7 +99,7 @@ export class FormComponent implements OnInit {
     } else if (this.typeForm === "update") {
       console.log("handle update");
     }
-  };
+  };  
 
   // Get FormControl
   public get TenDotGiamGia() {
@@ -97,10 +109,10 @@ export class FormComponent implements OnInit {
     return this.form.get("giaTriPhanTram");
   }
   public get NgayBatDau() {
-    return this.form.get("ngayBatDau");
+    return this.form.get("thoiGianBatDau");
   }
   public get NgayKetThuc() {
-    return this.form.get("ngayKetThuc");
+    return this.form.get("thoiGianKetThuc");
   }
   // End Get FormControl
 }

@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
   templateUrl: "./sua-khach-hang.component.html",
   styleUrls: ["./sua-khach-hang.component.css"],
 })
-export class SuaKhachHangComponent  {
+export class SuaKhachHangComponent {
   icon: string = "fa-solid fa-users";
   title: string = "khách hàng";
   public kh: KhachHangResponse;
@@ -34,24 +34,23 @@ export class SuaKhachHangComponent  {
     private khachHangService: KhachHangService,
     private toas: ToastrService,
     private diaChiService: DiaChiService,
-    private http: HttpClient,
-  
+    private http: HttpClient
   ) {}
   ngOnInit() {
     this.initFormUpdateKh();
     this.initAddFormDC();
     this.initFormUpdateDC();
-    this.idKh = this.route.snapshot.params['id'];    
+    this.idKh = this.route.snapshot.params["id"];
     this.diaChiService.getAllDc(this.idKh).subscribe({
-      next: (data: DiaChi[])=>{
-        this.dsDC=data;
+      next: (data: DiaChi[]) => {
+        this.dsDC = data;
       },
     });
     this.route.params.subscribe((params) => {
-      this.id = +params["id"];      
+      this.id = +params["id"];
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
-          this.khDetail = kr;       
+          this.khDetail = kr;
           this.formUpdateKH = new FormGroup({
             id: new FormControl(kr.id, [Validators.required]),
             hoTen: new FormControl(kr.hoTen, [Validators.required]),
@@ -67,9 +66,9 @@ export class SuaKhachHangComponent  {
     });
   }
 
-  public updateKH(): void{
-    this.khachHangService.update(this.id,this.formUpdateKH.value).subscribe({
-      next: (kh: KhachHang)=>{
+  public updateKH(): void {
+    this.khachHangService.update(this.id, this.formUpdateKH.value).subscribe({
+      next: (kh: KhachHang) => {
         this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
@@ -80,28 +79,29 @@ export class SuaKhachHangComponent  {
         // document.getElementById("closeUpdateBtn").click();
         this.reloadPage();
         // location.reload();
-      },error:(erros: HttpErrorResponse)=>{
+      },
+      error: (erros: HttpErrorResponse) => {
         console.log(this.formUpdateKH.value);
-        this.toas.error('Cập nhật thông tin không thành công','Thất bại');
-      }
-    })
+        this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
+      },
+    });
   }
-  public initFormUpdateKh(): void{
+  public initFormUpdateKh(): void {
     this.formUpdateKH = new FormGroup({
-      id: new FormControl("",[Validators.required]),
-      hoTen: new FormControl("",[Validators.required]),
-      gioiTinh: new FormControl("",[Validators.required]),
-      trangThai: new FormControl("",[Validators.required]),
-      tenDangNhap: new FormControl("",[Validators.required]),
-      sdt: new FormControl("",[Validators.required]),
-      ngaySinh: new FormControl("",[Validators.required]),
-      matKhau: new FormControl("",[Validators.required]),
-      email: new FormControl("",[Validators.required]),
-      huyen: new FormControl("",[Validators.required]),
-      tinh: new FormControl("",[Validators.required]),
-      duong: new FormControl("",[Validators.required]),
-      xa: new FormControl("",[Validators.required]),
-    })
+      id: new FormControl("", [Validators.required]),
+      hoTen: new FormControl("", [Validators.required]),
+      gioiTinh: new FormControl("", [Validators.required]),
+      trangThai: new FormControl("", [Validators.required]),
+      tenDangNhap: new FormControl("", [Validators.required]),
+      sdt: new FormControl("", [Validators.required]),
+      ngaySinh: new FormControl("", [Validators.required]),
+      matKhau: new FormControl("", [Validators.required]),
+      email: new FormControl("", [Validators.required]),
+      huyen: new FormControl("", [Validators.required]),
+      tinh: new FormControl("", [Validators.required]),
+      duong: new FormControl("", [Validators.required]),
+      xa: new FormControl("", [Validators.required]),
+    });
   }
 
   public initAddFormDC(): void {
@@ -109,23 +109,23 @@ export class SuaKhachHangComponent  {
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
-      duong: new FormControl("", [Validators.required]),    
+      duong: new FormControl("", [Validators.required]),
     });
   }
-  public initFormUpdateDC(): void{
+  public initFormUpdateDC(): void {
     this.updateFormDC = new FormGroup({
       id: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       duong: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
-    })
+    });
   }
- 
-  public addDiaChi(): void{
-    this.diaChiService.addDC(this.id,this.addFormDC.value).subscribe({
-      next: (dc: DiaChi)=>{
-        this.initAddFormDC();        
+
+  public addDiaChi(): void {
+    this.diaChiService.addDC(this.id, this.addFormDC.value).subscribe({
+      next: (dc: DiaChi) => {
+        this.initAddFormDC();
         this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
@@ -135,18 +135,18 @@ export class SuaKhachHangComponent  {
         });
         document.getElementById("closeUpdateBtn").click();
         this.reloadPage();
-        
-      },error:(erros: HttpErrorResponse)=>{
+      },
+      error: (erros: HttpErrorResponse) => {
         console.log(erros.message);
-      }
-    })
+      },
+    });
   }
 
-  public openUpdateForm(id: number): void{
-    console.log(id);    
+  public openUpdateForm(id: number): void {
+    console.log(id);
     this.diaChiService.getDCById(id).subscribe({
-      next:(dc: DiaChi)=>{     
-        console.log(dc); 
+      next: (dc: DiaChi) => {
+        console.log(dc);
         this.updateFormDC = new FormGroup({
           id: new FormControl(dc.id, [Validators.required]),
           tinh: new FormControl(dc.tinh, [Validators.required]),
@@ -154,13 +154,13 @@ export class SuaKhachHangComponent  {
           duong: new FormControl(dc.duong, [Validators.required]),
           xa: new FormControl(dc.xa, [Validators.required]),
           macDinh: new FormControl(dc.macDinh, [Validators.required]),
-        })
-      }
-    })
+        });
+      },
+    });
   }
-  public updateDC(id: number):void{    
-    this.diaChiService.updateDC(id,this.updateFormDC.value).subscribe({
-      next:(dc:DiaChi)=>{                
+  public updateDC(id: number): void {
+    this.diaChiService.updateDC(id, this.updateFormDC.value).subscribe({
+      next: (dc: DiaChi) => {
         this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
@@ -173,15 +173,15 @@ export class SuaKhachHangComponent  {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message);
-      }
-    })
+      },
+    });
   }
   public reloadPage() {
     location.reload();
   }
-  public xoaDC(id: number):void{
+  public xoaDC(id: number): void {
     this.diaChiService.deleteDC(id).subscribe({
-      next:(dc:DiaChi)=>{                
+      next: (dc: DiaChi) => {
         Swal.fire({
           icon: "success",
           title: `Xóa thành công!`,
@@ -192,15 +192,13 @@ export class SuaKhachHangComponent  {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message);
-      }
-    })
+      },
+    });
   }
 
-  public setDefault(idDC: number): void{
-    this.diaChiService.setDefaultDC(idDC).subscribe(
-      ()=> {
-        this.reloadPage();
-      }
-    )
+  public setDefault(idDC: number): void {
+    this.diaChiService.setDefaultDC(idDC).subscribe(() => {
+      this.reloadPage();
+    });
   }
 }

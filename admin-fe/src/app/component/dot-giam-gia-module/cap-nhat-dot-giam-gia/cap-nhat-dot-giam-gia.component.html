@@ -11,17 +11,25 @@
   </div>
 
   <!-- Tables -->
-  <div class="col col-md-7 col-md-8">
+  <div class="col col-md-8">
     <app-table
       [titleTable]="titleTableProduct"
       [tHead]="tHeadProduct"
-    ></app-table>
-    <app-table
-      [titleTable]="titleTableProducts"
-      [tHead]="tHeadProduct"
+      [placeHolder]="'Mã..Tên..'"
+      [listSanPham]="dataSanPham"
+      [template]="'SanPhamTable'"
+      
     ></app-table>
   </div>
-
+  <div class="row">
+    <app-table
+      [titleTable]="titleTableProducts"
+      [tHead]="tHeadProducts"
+      [listSanPhamChiTiet]="dataSanPhamChiTiet"
+      [template]="'SanPhamChiTietTable'"
+      [placeHolder]="'Mã Sản Phẩm'"
+    ></app-table>
+  </div>
   <!-- Modal -->
   <app-modal
     [message]="modalMessage"

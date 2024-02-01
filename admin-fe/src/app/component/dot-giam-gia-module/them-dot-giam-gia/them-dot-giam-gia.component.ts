@@ -55,8 +55,8 @@ export class ThemDotGiamGiaComponent implements OnInit {
     this.dotGiamGiaRequest = {
       tenDotGiamGia: null,
       giaTriPhanTram: null,
-      ngayBatDau: null,
-      ngayKetThuc: null,
+      thoiGianBatDau: null,
+      thoiGianKetThuc: null,
       listIdSanPhamChiTiet: null,
     };
   }

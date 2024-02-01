@@ -15,8 +15,6 @@ export class TableComponent implements OnInit {
   @Input() template: string;
   @Input() titleTable: string;
   @Input() tHead: Array<string>;
-  @Input() detail: Function;
-  @Input() update: Function;
   @Input() listObject: DotGiamGia[];
   @Input() pageNumber: number;
   @Input() pageSize: number;
@@ -69,5 +67,8 @@ export class TableComponent implements OnInit {
   public addIdSanPhamChiTiet(value: any) {
     this.clickSanPhamChiTiet.emit(value);
   }
+
+  // For Update DotGiamGia
+
   ngOnInit(): void {}
 }

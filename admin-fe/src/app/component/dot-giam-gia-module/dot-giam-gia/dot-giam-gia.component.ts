@@ -1,9 +1,6 @@
 import {
   Component,
-  ElementRef,
-  EventEmitter,
   OnInit,
-  Output,
 } from "@angular/core";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";

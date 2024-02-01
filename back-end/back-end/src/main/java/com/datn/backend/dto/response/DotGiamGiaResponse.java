@@ -13,9 +13,11 @@ public interface DotGiamGiaResponse {
 
     String getSoLuongSanPham();
 
-    String getNgayBatDau();
+    String getThoiGianBatDau();
 
-    String getNgayKetThuc();
+    String getThoiGianKetThuc();
+
+    String getListIdSanPhamChiTiet();
 
     String getTrangThai();
 

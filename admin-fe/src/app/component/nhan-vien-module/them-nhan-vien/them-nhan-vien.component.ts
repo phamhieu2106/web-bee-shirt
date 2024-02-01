@@ -36,6 +36,23 @@ export class ThemNhanVienComponent {
 
   ngOnInit(): void {
     this.initAddForm();
+    // const qrCodeValue =
+    //   "023686002531|134220866|Hoàng Thùy Dương|22102000|Nam|Khu 1, Minh Khương, Hàm Yên, Tuyên Quang|25052020";
+    // var arrayQR = qrCodeValue.split("|");
+
+    // const year = parseInt(arrayQR[3].substring(4, 8));
+    // const month = parseInt(arrayQR[3].substring(2, 4)) - 1;
+    // const day = parseInt(arrayQR[3].substring(0, 2));
+    // const dateObject = new Date(year, month, day);
+    // const formattedDate = dateObject.toLocaleDateString("en-CA");
+
+    // this.initAddForm(
+    //   arrayQR[0],
+    //   arrayQR[2],
+    //   formattedDate,
+    //   arrayQR[4],
+    //   arrayQR[5]
+    // );
   }
 
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {

@@ -23,7 +23,7 @@ export class DanhSachKhachHangComponent {
   public khachHangDetail: KhachHangResponse;
   public khDetail: KhachHangResponse;
   public formUpdateKH: FormGroup;
-
+ private timeout: any;
   constructor(
     private khachHangService: KhachHangService,
     private toastr: ToastrService,
@@ -52,7 +52,19 @@ export class DanhSachKhachHangComponent {
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
 
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
+  }
   // private function
   private getKhachHangList(): void {
     this.khachHangService.getAll().subscribe({

@@ -71,38 +71,44 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                Số điện thoại
+                CCCD
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Số điện thoại"
+                  placeholder="CCCD"
                   [ngClass]="
-                    updateForm.get('sdt').invalid &&
-                    updateForm.get('sdt').touched
+                    updateForm.get('cccd').invalid &&
+                    updateForm.get('cccd').touched
                       ? 'is-invalid'
                       : ''
                   "
-                  formControlName="sdt"
+                  formControlName="cccd"
                 />
-                <div class="invalid-feedback">SĐT không hợp lệ</div>
+                <div class="invalid-feedback">Không được bỏ trống</div>
+                <div
+                  *ngIf="updateForm.get('cccd').errors?.minlength"
+                  class="invalid-feedback"
+                >
+                  The full name must be atleast 5 letters long
+                </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                Email
+                Địa chỉ
                 <input
-                  type="email"
+                  type="text"
                   class="form-control"
-                  placeholder="Email"
+                  placeholder="Địa chỉ"
                   [ngClass]="
-                    updateForm.get('email').invalid &&
-                    updateForm.get('email').touched
+                    updateForm.get('diaChi').invalid &&
+                    updateForm.get('diaChi').touched
                       ? 'is-invalid'
                       : ''
                   "
-                  formControlName="email"
+                  formControlName="diaChi"
                 />
-                <div class="invalid-feedback">Email không hợp lệ</div>
+                <div class="invalid-feedback">Không được bỏ trống</div>
               </div>
             </div>
             <div class="col-md-4">
@@ -133,62 +139,38 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                Địa chỉ
+                Email
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
-                  placeholder="Địa chỉ"
+                  placeholder="Email"
                   [ngClass]="
-                    updateForm.get('diaChi').invalid &&
-                    updateForm.get('diaChi').touched
+                    updateForm.get('email').invalid &&
+                    updateForm.get('email').touched
                       ? 'is-invalid'
                       : ''
                   "
-                  formControlName="diaChi"
+                  formControlName="email"
                 />
-                <div class="invalid-feedback">Không được bỏ trống</div>
+                <div class="invalid-feedback">Email không hợp lệ</div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                Tên đăng nhập
+                Số điện thoại
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Tên đăng nhập"
+                  placeholder="Số điện thoại"
                   [ngClass]="
-                    updateForm.get('tenDangNhap').invalid &&
-                    updateForm.get('tenDangNhap').touched
+                    updateForm.get('sdt').invalid &&
+                    updateForm.get('sdt').touched
                       ? 'is-invalid'
                       : ''
                   "
-                  formControlName="tenDangNhap"
+                  formControlName="sdt"
                 />
-                <div class="invalid-feedback">Không được bỏ trống</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                CCCD
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="CCCD"
-                  [ngClass]="
-                    updateForm.get('cccd').invalid &&
-                    updateForm.get('cccd').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="cccd"
-                />
-                <div class="invalid-feedback">Không được bỏ trống</div>
-                <div
-                  *ngIf="updateForm.get('cccd').errors?.minlength"
-                  class="invalid-feedback"
-                >
-                  The full name must be atleast 5 letters long
-                </div>
+                <div class="invalid-feedback">SĐT không hợp lệ</div>
               </div>
             </div>
           </div>

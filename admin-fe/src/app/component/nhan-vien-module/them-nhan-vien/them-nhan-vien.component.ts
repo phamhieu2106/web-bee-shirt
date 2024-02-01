@@ -9,7 +9,10 @@ import {
 import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { AuthenticationService } from "src/app/service/authentication.service";
 import { NhanVienService } from "src/app/service/nhan-vien.service";
+
+import emailjs from "@emailjs/browser";
 
 @Component({
   selector: "app-them-nhan-vien",
@@ -31,7 +34,8 @@ export class ThemNhanVienComponent {
   constructor(
     private nhanVienService: NhanVienService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +85,15 @@ export class ThemNhanVienComponent {
   }
 
   addNhanVien(): void {
+    const randomPassword = this.generateRandomPassword();
+
+    // Cập nhật giá trị của trường matKhau
+    this.addForm.patchValue({
+      matKhau: randomPassword,
+    });
+
+    console.log(this.addForm.value);
+
     this.nhanVienService.add(this.addForm.value).subscribe({
       next: () => {
         // this.goToPage(1, 5, "");
@@ -93,6 +106,12 @@ export class ThemNhanVienComponent {
         console.log(erros.message);
       },
     });
+
+    this.send(
+      this.addForm.value.hoTen,
+      this.addForm.value.matKhau,
+      this.addForm.value.email
+    );
   }
 
   public reloadForm() {
@@ -134,9 +153,30 @@ export class ThemNhanVienComponent {
       diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
         Validators.required,
       ]),
-      tenDangNhap: new FormControl("", [Validators.required]),
-      matKhau: new FormControl("", [Validators.required]),
+      matKhau: new FormControl(""),
     });
+  }
+
+  private send(hoTen: string, matKhau: string, email: string) {
+    emailjs.init("XlFoYJLd1vcoTgaEY");
+    emailjs.send("service_uxvm75s", "template_k18lsvj", {
+      from_name: this.authService.getUserFromStorage().hoTen,
+      to_name: hoTen,
+      message: matKhau,
+      to_email: email,
+      // from_email: this.authService.getUserFromStorage().email,
+    });
+  }
+
+  // Hàm tạo mật khẩu ngẫu nhiên
+  private generateRandomPassword(): string {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let password = "";
+    for (let i = 0; i < 5; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters.charAt(randomIndex);
+    }
+    return password;
   }
 
   public goToPage(
@@ -154,15 +194,4 @@ export class ThemNhanVienComponent {
       },
     });
   }
-
-  // private getAllNhanVien(): void {
-  //   this.nhanVienService.getAll().subscribe({
-  //     next: (response: PagedResponse<NhanVienResponse>) => {
-  //       this.pagedResponse = response;
-  //     },
-  //     error: (error: HttpErrorResponse) => {
-  //       console.log(error);
-  //     },
-  //   });
-  // }
 }

@@ -64,10 +64,10 @@ export class SuaNhanVienComponent {
         Validators.email,
       ]),
       diaChi: new FormControl(nhanVienUpdated?.diaChi, [Validators.required]),
-      tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
-        Validators.required,
-      ]),
-      matKhau: new FormControl(nhanVienUpdated?.matKhau, [Validators.required]),
+      // tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
+      //   Validators.required,
+      // ]),
+      matKhau: new FormControl(nhanVienUpdated?.matKhau),
 
       // matKhau: new FormControl({
       //   value: this.nhanVienDetails.matKhau,

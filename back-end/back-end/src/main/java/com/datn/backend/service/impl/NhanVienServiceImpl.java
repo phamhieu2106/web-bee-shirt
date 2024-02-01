@@ -35,13 +35,13 @@ public class NhanVienServiceImpl implements NhanVienService {
     @Override
     public NhanVien add(AddNhanVienRequest request) {
         // check exist
-        if (accountRepo.existsByTenDangNhap(request.getTenDangNhap().toLowerCase())) {
-            throw new ResourceExistsException("Tên đăng nhập: " + request.getTenDangNhap() + " đã tồn tại.");
+        if (nhanVienRepo.existsByEmail(request.getEmail().toLowerCase())) {
+            throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
         }
 
         // account
         Account account = new Account();
-        account.setTenDangNhap(request.getTenDangNhap());
+        account.setTenDangNhap(request.getEmail());
         account.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         account.setTrangThai(true);
         account.setRole(Role.ROLE_ADMIN.name());
@@ -137,11 +137,11 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         if (optionalNhanVien.isPresent()) {
 
-            if (accountRepo.existsByTenDangNhap(request.getTenDangNhap().toLowerCase())) {
-                if (optionalNhanVien.get().getAccount().getTenDangNhap().equalsIgnoreCase(request.getTenDangNhap())) {
+            if (nhanVienRepo.existsByEmail(request.getEmail().toLowerCase())) {
+                if (optionalNhanVien.get().getAccount().getTenDangNhap().equalsIgnoreCase(request.getEmail())) {
                     return updateForm(optionalNhanVien, request);
                 } else {
-                    throw new ResourceExistsException("Tên đăng nhập: " + request.getTenDangNhap() + " đã tồn tại.");
+                    throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
                 }
             } else {
                 return updateForm(optionalNhanVien, request);
@@ -163,7 +163,8 @@ public class NhanVienServiceImpl implements NhanVienService {
             nv.setDiaChi(request.getDiaChi());
 
             Account acc = optionalNhanVien.get().getAccount();
-            acc.setTenDangNhap(request.getTenDangNhap());
+//            acc.setTenDangNhap(request.getTenDangNhap());
+            acc.setTenDangNhap(request.getEmail());
             acc.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
             nv.setAccount(acc);
             nhanVienRepo.save(nv);

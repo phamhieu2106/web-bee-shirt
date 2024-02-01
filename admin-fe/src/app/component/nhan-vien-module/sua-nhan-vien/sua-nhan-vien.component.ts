@@ -29,7 +29,7 @@ export class SuaNhanVienComponent {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initUpdateForm();

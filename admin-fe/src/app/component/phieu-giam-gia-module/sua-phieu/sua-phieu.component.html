@@ -5,7 +5,7 @@
 
         <div class="card">
             <div class="card-header">
-                <p>Thêm Phiếu</p>
+                <p>Sửa Phiếu</p>
             </div>
 
 
@@ -13,20 +13,19 @@
 
                 <div class="row">
                     <div class="col-md-4">
+
                         <form [formGroup]="updateForm">
                             <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="updateForm.get('maPhieuGiamGia').invalid && updateForm.get('maPhieuGiamGia').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="maPhieuGiamGia">
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá"
+                                    formControlName="maPhieuGiamGia">
+                                <div class=" invalid-feedback">
                                     Mã phiếu giảm giá không được để trống
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="updateForm.get('tenPhieuGiamGia').invalid && updateForm.get('tenPhieuGiamGia').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="tenPhieuGiamGia">
+                                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá"
+                                    formControlName="tenPhieuGiamGia">
                                 <div class="invalid-feedback">
                                     Tên phiếu giảm giá không được để trống
                                 </div>
@@ -48,36 +47,33 @@
 
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Giá trị" [ngClass]="updateForm.get('giaTri').invalid && updateForm.get('giaTri').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="giaTri">
+                                    <input type="number" class="form-control" placeholder="Giá trị"
+                                        formControlName="giaTri">
                                     <div class="invalid-feedback">
                                         Giá trị không được để trống
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="updateForm.get('giaTriMax').invalid && updateForm.get('giaTriMax').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="giaTriMax">
+                                    <input type="number" class="form-control" placeholder="Giá trị tối đa"
+                                        formControlName="giaTriMax">
                                     <div class="invalid-feedback">
                                         Giá trị tối đa không được để trống
                                     </div>
                                 </div>
                             </div>
 
+
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="updateForm.get('soLuong').invalid && updateForm.get('soLuong').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="soLuong">
+                                    <input type="number" class="form-control" placeholder="Số lượng"
+                                        formControlName="soLuong">
                                     <div class="invalid-feedback">
                                         Số lượng không được để trống
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="updateForm.get('dieuKienGiam').invalid && updateForm.get('dieuKienGiam').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="dieuKienGiam">
+                                    <input type="number" class="form-control" placeholder="Điều kiện"
+                                        formControlName="dieuKienGiam">
                                     <div class="invalid-feedback">
                                         Điều kiện không được để trống
                                     </div>
@@ -86,9 +82,7 @@
 
                             <div class="mb-3">
                                 <label>Từ ngày</label>
-                                <input type="datetime-local" class="form-control" [ngClass]="updateForm.get('thoiGianBatDau').invalid && updateForm.get('thoiGianBatDau').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="thoiGianBatDau">
+                                <input type="datetime-local" class="form-control" formControlName="thoiGianBatDau">
                                 <div class="invalid-feedback">
                                     Từ ngày không được để trống
                                 </div>
@@ -96,19 +90,15 @@
 
                             <div class="mb-3">
                                 <label>Đến ngày</label>
-                                <input type="datetime-local" class="form-control" [ngClass]="updateForm.get('thoiGianKetThuc').invalid && updateForm.get('thoiGianKetThuc').touched
-                                ? 'is-invalid'
-                                : ''" formControlName="thoiGianKetThuc">
+                                <input type="datetime-local" class="form-control" formControlName="thoiGianKetThuc">
                                 <div class="invalid-feedback">
                                     Đến ngày không được để trống
                                 </div>
                             </div>
 
-
-
-                            <button type="button" class="btn btn-primary">Sửa Phiếu</button>
+                            <button type="button" class="btn btn-primary">Tạo
+                                mới</button>
                         </form>
-
 
 
                     </div>

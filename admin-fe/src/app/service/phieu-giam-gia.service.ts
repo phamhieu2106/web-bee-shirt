@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
+import { PhieuGiamGiaKhachHang } from "../model/class/phieu-giam-gia-khach-hang.class";
 
 @Injectable({
   providedIn: "root",
@@ -45,6 +46,10 @@ export class PhieuGiamGiaService {
       selectedIds,
     };
     return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
+  }
+
+  public getAllPhieuKhachHang(): Observable<PhieuGiamGiaKhachHang[]> {
+    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang`);
   }
 
 

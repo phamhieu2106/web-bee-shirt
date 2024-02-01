@@ -4,6 +4,17 @@
     <div class="card">
       <div class="card-header d-flex">
         <h4>Lịch sử thanh toán</h4>
+        <div class="ml-auto">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#createLichSuThanhToan"
+          >
+            <i class="fa-solid fa-plus"></i>
+            Thanh toán
+          </button>
+        </div>
       </div>
 
       <div class="card-body">
@@ -32,7 +43,6 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let lstt of thanhToans; index as i">
-
                     <td>{{ i + 1 }}</td>
                     <td>{{ lstt.maGiaoDich }}</td>
                     <td>{{ lstt.soTien | currency : "đ " }}</td>
@@ -43,7 +53,6 @@
                     <td>
                       <app-phuong-thuc-thanh-toan
                         [phuongThucThanhToan]="lstt.hinhThucThanhToan"
-
                       ></app-phuong-thuc-thanh-toan>
                     </td>
                     <td>{{ lstt.createdBy }}</td>
@@ -54,6 +63,140 @@
             </div>
           </div>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Create Lịch sử thanh toán-->
+  <div
+    class="modal fade"
+    id="createLichSuThanhToan"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cập nhật thông tin</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <div class="modal-body">
+          <!-- Form -->
+          <form class="row" [formGroup]="thanhToanForm">
+            <!-- Tổng tiền -->
+            <div class="mb-3">
+              <label class="form-label">Tổng tiền:</label>
+              <input
+                type="text"
+                class="form-control"
+                value="{{ tongTien | currency : 'đ ' }}"
+                disabled
+              />
+            </div>
+            <!-- Tiền khách đưa -->
+            <div class="mb-3">
+              <label class="form-label">Tiền khách đưa:</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="tienKhachDua"
+              />
+              <small
+                class="form-text text-danger"
+                *ngIf="thanhToanForm.controls['tienKhachDua'].invalid"
+                >Tiền khách đưa phải lơn hơn hoặc bằng tổng tiền</small
+              >
+            </div>
+            <!-- Tiền thừa -->
+            <div class="mb-3">
+              <label class="form-label">Tiền thừa:</label>
+              <input
+                type="text"
+                class="form-control"
+                value="{{ thanhToanForm.value.tienThua | currency : 'đ ' }}"
+                disabled
+              />
+              <small
+                class="form-text text-danger"
+                *ngIf="thanhToanForm.controls['tienThua'].invalid"
+                >Tiền thừa không được nhỏ hơn 0</small
+              >
+            </div>
+            <!-- Ghi chú -->
+            <div class="mb-3">
+              <label class="form-label">Ghi chú:</label>
+              <br />
+              <input
+                type="text"
+                class="form-control"
+                formControlName="ghiChu"
+              />
+            </div>
+            <!-- Hình thức thanh toán -->
+            <div class="mb-3">
+              <label class="form-label">Hình thức: </label>
+              <label class="form-check form-check-inline ml-4">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="hinhThucThanhToan"
+                  value="TIEN_MAT"
+                  formControlName="hinhThucThanhToan"
+                />
+                <label class="form-check-label">Tiền mặt</label>
+              </label>
+              <label class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="hinhThucThanhToan"
+                  value="CHUYEN_KHOAN"
+                  formControlName="hinhThucThanhToan"
+                />
+                <label class="form-check-label">Chuyển khoản</label>
+              </label>
+            </div>
+            <!-- Mã giao dịch -->
+            <div class="mb-3">
+              <label class="form-label">Mã giao dịch:</label>
+              <br />
+              <input
+                type="text"
+                class="form-control"
+                formControlName="maGiaoDich"
+              />
+              <small
+                class="form-text text-danger"
+                *ngIf="thanhToanForm.controls['maGiaoDich'].invalid"
+                >Mã giao dịch không được trống</small
+              >
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal"
+            [disabled]="thanhToanForm.invalid"
+            (click)="newThanhToan()"
+          >
+            Xác nhận
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Hủy
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -35,6 +35,12 @@ public class ExceptionHandling {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(
@@ -46,6 +52,12 @@ public class ExceptionHandling {
         String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse response = new ErrorResponse(errorMessage);
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

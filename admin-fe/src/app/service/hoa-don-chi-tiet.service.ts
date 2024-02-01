@@ -10,6 +10,16 @@ export class HoaDonChiTietService {
   private readonly baseUrl = "http://localhost:8080/hoa-don-chi-tiet";
 
   constructor(private http: HttpClient) {}
+  // Tính tổng tiền
+  tinhTongTien(hdcts: HoaDonChiTiet[]): number {
+    return hdcts
+      .map((hdct) => {
+        return hdct.giaBan * hdct.soLuong;
+      })
+      .reduce((prev, curr) => {
+        return prev + curr;
+      }, 0);
+  }
 
   updateHDCT(hdct: HoaDonChiTiet): Observable<HoaDonChiTiet> {
     return this.http.put<HoaDonChiTiet>(this.baseUrl + "/update", hdct);

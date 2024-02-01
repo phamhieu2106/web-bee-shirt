@@ -31,7 +31,7 @@
                 class="form-control"
                 id="inputName"
                 placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-                [(ngModel)]="search"
+                (keyup)="timKiem($event)"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@
               </td>
               <td>{{ kh.gioiTinh == true ?"Nam":"Nữ" }}</td>
               <td>{{ kh.email }}</td>
-              <td>{{ kh.tinh}}, {{kh.huyen}}, {{kh.xa}}, {{kh.duong}}</td>
+              <td style="max-width: 350px;">{{kh.duong}}, {{kh.xa}}, {{kh.huyen}}, {{ kh.tinh}}</td>
               <td>{{ kh.ngaySinh }}</td>
               <td>
                 <button

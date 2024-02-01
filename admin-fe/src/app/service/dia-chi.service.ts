@@ -8,7 +8,7 @@ import { DiaChi } from '../model/class/dia-chi.class';
 })
 export class DiaChiService {
   private readonly apiUrl = "http://localhost:8080/dia-chi";
-
+  private readonly apiUrlDC = "https://vapi.vnappmob.com";
 constructor(private http: HttpClient) { }
 
 public getAllDc(id: number): Observable<DiaChi[]>{
@@ -29,5 +29,14 @@ public deleteDC(idDC:number): Observable<DiaChi>{
 public setDefaultDC(idDC: number): Observable<void>{
   return this.http.post<void>(`${this.apiUrl}/setDefault/${idDC}`,[]);
 }
-
+public getTinh(): Observable<any>{  
+  return this.http.get(`${this.apiUrlDC}/api/province/`);
+}
+public getHuyen(idTinh: number): Observable<any>{  
+  return this.http.get(`${this.apiUrlDC}/api/province/district/${idTinh}`);
+  
+}
+public getXa(idHuyen: number): Observable<any>{  
+  return this.http.get(`${this.apiUrlDC}/api/province/ward/${idHuyen}`);
+}
 }

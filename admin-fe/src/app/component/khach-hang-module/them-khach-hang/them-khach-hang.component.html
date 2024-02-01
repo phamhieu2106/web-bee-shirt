@@ -90,7 +90,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label class="form-label">Trạng thái </label> <br />
                     <div class="form-check form-check-inline">
                       <input
@@ -112,48 +112,38 @@
                       />
                       <label class="form-check-label"> Ngừng hoạt động </label>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     Tỉnh/Thành phố
-                    <!-- <select 
-                    class="form-select form-select-sm mb-3" 
-                    id="city" 
-                    aria-label=".form-select-sm" 
-                    formControlName="tinh"
-                    >
-                      <option value="" selected>Chọn tỉnh thành</option>           
-                      <option value="LC" >LC</option>           
-                      </select> -->
-                      <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Tỉnh/Thành phố"
+                      <select 
+                      class="form-select form-select-sm mb-3" 
+                      id="city" 
+                      aria-label=".form-select-sm" 
                       formControlName="tinh"
-                    />
+                      (change)="onCityChange()"
+                      >
+                        <option value="" selected>Chọn tỉnh thành</option>                    
+                        <option *ngFor="let dc of tinh" [value]="dc.province_name">{{dc.province_name}}</option>                    
+                        </select>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     Quận/Huyện
-                    <!-- <select 
+                    <select 
                     class="form-select form-select-sm mb-3" 
                     id="district" 
                     aria-label=".form-select-sm"
                     formControlName="huyen"
+                    (change)="ondistrictChange()"
                     >
                       <option value="" selected>Chọn quận huyện</option>
-                      <option value="SMC" >SMC</option>        
-                      </select> -->
-                      <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Quận/Huyện"
-                      formControlName="huyen"
-                    />
+                      <option *ngFor="let dc of huyen" [value]="dc.district_name">{{dc.district_name}}</option>          
+                      </select>
                   </div>
                 </div>
               </div>
@@ -161,21 +151,15 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     Xã/Phường
-                    <!-- <select 
+                    <select 
                     class="form-select form-select-sm" 
                     id="ward" 
                     ria-label=".form-select-sm"
                     formControlName="xa"
                     >
                       <option value="" selected>Chọn phường xã</option>
-                      <option value="N6" >N6</option>           
-                      </select> -->
-                      <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Xã/Phường"
-                      formControlName="xa"
-                    />
+                      <option *ngFor="let dc of xa" [value]="dc.ward_name">{{dc.ward_name}}</option>           
+                      </select>
                   </div>
                 </div>
                 <div class="col-md-6">

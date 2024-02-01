@@ -36,11 +36,18 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Autowired
     public DotGiamGiaServiceImpl(DotGiamGiaRepository repository
-            ,DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository,SanPhamChiTietRepository sanPhamChiTietRepository) {
+            , DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository, SanPhamChiTietRepository sanPhamChiTietRepository) {
         super();
         this.repository = repository;
         this.dotGiamGiaSanPhamRepository = dotGiamGiaSanPhamRepository;
         this.sanPhamChiTietRepository = sanPhamChiTietRepository;
+    }
+
+    @Override
+    public List<Integer> getListIdSanPham(String ids) {
+
+        return repository.getIdSanPhamIdBySanPhamChiTietId(ids);
+
     }
 
     @Override
@@ -49,7 +56,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         Page<SanPhamChiTietResponse> sanPhamChiTietResponsePage =
-                repository.getAllSanPhamChiTietBySanPhamId(pageable,listSanPhamId);
+                repository.getAllSanPhamChiTietBySanPhamId(pageable, listSanPhamId);
 
         PagedResponse<SanPhamChiTietResponse> sanPhamChiTietResponsePagedResponse = new PagedResponse<>();
 
@@ -165,22 +172,30 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
 
             Optional<SanPhamChiTiet> optional = sanPhamChiTietRepository.findById(object.getListIdSanPhamChiTiet().get(i));
-            if(optional.isPresent()){
+            if (optional.isPresent()) {
                 //        Create sanPhamChiTiet
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
 //                Create DotGiamGiaSanPham and set
                 DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
+
                 dotGiamGiaSanPham.setGiaCu(sanPhamChiTiet.getGiaBan());
+
+//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
+                dotGiamGiaSanPham.setGiaMoi(sanPhamChiTiet.getGiaBan()
+                        .subtract(sanPhamChiTiet.getGiaBan()
+                                .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
+                                        .divide(new BigDecimal(100)))));
+
                 dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
                 dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                 dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
                 dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
-                dotGiamGiaSanPham.setSanPhamChiTiet(sanPhamChiTiet);
-                dotGiamGiaSanPham.setDotGiamGia(dotGiamGiaFind);
+                dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(sanPhamChiTiet.getId()).build());
+                dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGiaFind.getId()).build());
+                //        save to database
                 dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
             }
         }
-//        save to database
         return dotGiamGia;
     }
 

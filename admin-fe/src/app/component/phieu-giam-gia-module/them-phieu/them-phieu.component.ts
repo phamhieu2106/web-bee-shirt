@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { KhachHang } from 'src/app/model/class/KhachHang.class';
 import { PhieuGiamGia } from 'src/app/model/class/phieu-giam-gia.class';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';

@@ -66,6 +66,30 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         return null;
     }
 
+    @Override
+    public PhieuGiamGia changeStatus(Integer id) {
+
+        PhieuGiamGia phieuGiamGia = repository.findById(id).get();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đã kết thúc");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+            phieuGiamGia.setTrangThai("Sắp diễn ra");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
+                currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đang diễn ra");
+        } else {
+            phieuGiamGia.setTrangThai("Trạng thái không xác định");
+        }
+
+        return repository.save(phieuGiamGia);
+    }
+
+    @Override
+    public List<PhieuGiamGia> getAll() {
+        return repository.findAll();
+    }
 
 
     @Override

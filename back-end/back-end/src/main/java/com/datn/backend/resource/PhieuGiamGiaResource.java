@@ -48,7 +48,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/sua-phieu/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 
         return ResponseEntity.ok(service.getOne(id));

@@ -26,6 +26,10 @@ export class PhieuGiamGiaService {
     );
   }
 
+  public getOne(id: number): Observable<PhieuGiamGia> {
+    return this.http.get<PhieuGiamGia>(`${this.apiUrl}/sua-phieu/${id}`);
+  }
+
 
   public changeStatus(id: number): Observable<PhieuGiamGia> {
     return this.http.put<PhieuGiamGia>(`${this.apiUrl}/status/${id}`, id);

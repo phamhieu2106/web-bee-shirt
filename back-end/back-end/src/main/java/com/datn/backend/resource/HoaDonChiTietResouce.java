@@ -36,7 +36,7 @@ public class HoaDonChiTietResouce {
     }
     // delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<MessageResponse> updateHoaDonChiTiet(@PathVariable Integer id){
+    public ResponseEntity<HoaDonChiTietResponse> updateHoaDonChiTiet(@PathVariable Integer id){
         if (id.describeConstable().isEmpty()){
             throw new IdNotFoundException("ID không hợp lệ");
         }

@@ -24,6 +24,7 @@ export class ThemKhachHangComponent  {
   public xa: any[] = [];
   public idTinh: number;
   public idHuyen: number;
+  selectedImage: string | ArrayBuffer | null = null;
   constructor(
     private router: Router,
     private khachHangService: KhachHangService,
@@ -36,10 +37,26 @@ export class ThemKhachHangComponent  {
       this.tinh = data.results;
     })
   }
-public addKH(): void{
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.loadImage(file);
+    }
+  }
+
+  loadImage(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.selectedImage = e.target?.result;
+    };
+    reader.readAsDataURL(file);
+  }
+public addKH(): void{ 
   this.khachHangService.add(this.formAddKh.value).subscribe({
     next: (kh: KhachHangResponse)=>{
       this.initFormAddKh();      
+
       Swal.fire({
         icon: "success",
         title: `Thêm khách hàng mới thành công!`,

@@ -38,7 +38,7 @@ export class DanhSachHoaDonComponent {
       .subscribe({
         next: (response: any) => {
           this.hoaDons = response;
-          console.log(response);
+          // console.log(response);
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -63,7 +63,7 @@ export class DanhSachHoaDonComponent {
       .subscribe({
         next: (response: any) => {
           this.hoaDons = response;
-          console.log(response);
+          // console.log(response);
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);

@@ -23,6 +23,9 @@
 <!-- Order history payment -->
 <app-order-history-payment
   [thanhToans]="hoaDon.thanhToans"
+  [loaiHoaDon]="hoaDon.loaiHoaDon"
+  [tongTien]="hoaDon.tongTien"
+  [idHoaDon]="hoaDon.id"
 ></app-order-history-payment>
 
 <!-- Order info -->
@@ -181,7 +184,7 @@
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Email: </span
-          ><span>{{ hoaDon.diaChiNguoiNhan }}</span>
+          ><span>{{ hoaDon.emailNguoiNhan }}</span>
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Ghi chú: </span>
@@ -209,4 +212,11 @@
 </div>
 <!-- END order Info -->
 
-<app-order-product [hoaDon]="hoaDon"></app-order-product>
+<app-order-product
+  [idHoaDon]="hoaDon.id"
+  [loaiHoaDon]="hoaDon.loaiHoaDon"
+  [hoaDonChiTiets]="hoaDon.hoaDonChiTiets"
+  [(tongTien)]="hoaDon.tongTien"
+  [(tienGiam)]="hoaDon.tienGiam"
+  [(phiVanChuyen)]="hoaDon.phiVanChuyen"
+></app-order-product>

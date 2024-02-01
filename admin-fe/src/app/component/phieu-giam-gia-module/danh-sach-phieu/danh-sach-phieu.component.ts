@@ -71,7 +71,7 @@ export class DanhSachPhieuComponent {
     this.phieuGiamGiaService.getAll().subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
         this.pagedResponseBinh = response;
-        console.log(this.pagedResponseBinh)
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);

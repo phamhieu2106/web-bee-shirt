@@ -10,5 +10,5 @@ import com.datn.backend.dto.response.MessageResponse;
 public interface HoaDonChiTietService {
     HoaDonChiTietResponse addHoaDonCT(HoaDonChiTietRequest hoaDonChiTietRequest);
     HoaDonChiTietResponse updateHoaDonCT(HoaDonChiTietRequest hoaDonChiTietRequest);
-    MessageResponse deleteHoaDonCT(Integer id);
+    HoaDonChiTietResponse deleteHoaDonCT(Integer id);
 }

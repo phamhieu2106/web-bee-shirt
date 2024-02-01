@@ -26,11 +26,10 @@ export class SuaPhieuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initAddForm();
     const idPhieu = this.route.snapshot.params["id"];
     this.phieuGiamGia.getOne(idPhieu).subscribe({
       next: (response: PhieuGiamGia) => {
-        this.initAddForm(response);
+        // this.initAddForm(response);
       },
       error: (error) => {
         console.error("Khong lấy được phiếu:", error);
@@ -45,26 +44,26 @@ export class SuaPhieuComponent implements OnInit {
 
   public getOne(id: number): void {}
 
-  public initAddForm(phieu?: PhieuGiamGia): void {
+  public initAddForm(phieu: PhieuGiamGia): void {
     this.updateForm = new FormGroup({
-      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia, [
+      maPhieuGiamGia: new FormControl(phieu.maPhieuGiamGia, [
         Validators.required,
       ]),
-      tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [
+      tenPhieuGiamGia: new FormControl(phieu.tenPhieuGiamGia, [
         Validators.required,
       ]),
-      kieu: new FormControl(phieu?.kieu, [Validators.required]),
-      soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
-      thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [
+      kieu: new FormControl(phieu.kieu, [Validators.required]),
+      soLuong: new FormControl(phieu.soLuong, [Validators.required]),
+      thoiGianBatDau: new FormControl(phieu.thoiGianBatDau, [
         Validators.required,
       ]),
-      thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [
+      thoiGianKetThuc: new FormControl(phieu.thoiGianKetThuc, [
         Validators.required,
       ]),
-      dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [Validators.required]),
-      giaTri: new FormControl(phieu?.giaTri, [Validators.required]),
-      giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
-      trangThai: new FormControl(phieu?.trangThai, [Validators.required]),
+      dieuKienGiam: new FormControl(phieu.dieuKienGiam, [Validators.required]),
+      giaTri: new FormControl(phieu.giaTri, [Validators.required]),
+      giaTriMax: new FormControl(phieu.giaTriMax, [Validators.required]),
+      trangThai: new FormControl(phieu.trangThai, [Validators.required]),
     });
   }
 

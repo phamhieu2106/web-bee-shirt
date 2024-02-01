@@ -28,6 +28,11 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     private KhachHangRepository khachHangRepository;
 
     @Override
+    public List<PhieuGiamGiaKhachHang> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
     public void addPhieu(PhieuKhachHangRequest request) {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findById(request.getPhieuGiamGiaId()).get();
         List<Integer> listIdKhachHang= request.getSelectedIds();

@@ -32,20 +32,22 @@
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label class="pr-3">
-                  <input type="radio" name="loai" value="1" checked="true" formControlName="loai">
-                  Giảm theo %
-                </label>
-                <label>
-                  <input type="radio" name="loai" value="0" formControlName="loai">
-                  Giảm theo số tiền
-                </label>
+              <div class=" mb-3">
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1"
+                    formControlName="kieu" />
+                  <label class="form-check-label" for="tienMat"> Tiền Mặt </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu" />
+                  <label class="form-check-label" for="%"> % </label>
+                </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Giá trị" [ngClass]="addForm.get('giaTri').invalid && addForm.get('giaTri').touched
+                  <input type="number" class="form-control" placeholder="Giá trị" [ngClass]="addForm.get('giaTri').invalid && addForm.get('giaTri').touched
                   ? 'is-invalid'
                   : ''" formControlName="giaTri">
                   <div class="invalid-feedback">
@@ -53,7 +55,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
+                  <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
                   ? 'is-invalid'
                   : ''" formControlName="giaTriMax">
                   <div class="invalid-feedback">
@@ -64,7 +66,7 @@
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Số lượng" [ngClass]="addForm.get('soLuong').invalid && addForm.get('soLuong').touched
+                  <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="addForm.get('soLuong').invalid && addForm.get('soLuong').touched
                   ? 'is-invalid'
                   : ''" formControlName="soLuong">
                   <div class="invalid-feedback">
@@ -72,7 +74,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Điều kiện" [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched
+                  <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched
                   ? 'is-invalid'
                   : ''" formControlName="dieuKienGiam">
                   <div class="invalid-feedback">
@@ -100,6 +102,20 @@
                   Đến ngày không được để trống
                 </div>
               </div>
+
+              <!-- <div class=" mb-3">
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
+                    formControlName="kieu" />
+                  <label class="form-check-label" for="congKhai"> Công Khai </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
+                    formControlName="kieu" />
+                  <label class="form-check-label" for="caNhan"> Cá Nhân</label>
+                </div>
+              </div> -->
 
               <button type="button" class="btn btn-primary" (click)="confirmCreation()">Tạo
                 mới</button>

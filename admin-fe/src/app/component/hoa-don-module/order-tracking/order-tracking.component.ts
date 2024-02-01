@@ -12,15 +12,15 @@ import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 })
 export class OrderTrackingComponent {
   @Input({ required: true }) lichSuHoaDons: LichSuHoaDon[]; // danh sách ls hóa đơn
-  @Input({ required: true }) idHoaDon: number; // id hóa đơn cần cập nhật
+  @Input({ required: true }) idHoaDon: number; // id hóa đơn của LSHD cần cập nhật (Next trạng thái, Prev trạng thái)
   @Input({ required: true }) trangThaiHD: string; // trang thai hiện tại của hóa đơn
-  @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc tại quầy
-  @Input({ required: true }) ma: string; // Loại hóa đơn GIAO_HANG hoặc tại quầy
-  public isNext = true; // trạng thái đơn hàng tiếp theo
+  @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc TAI_QUAY (Check in phiếu giao)
+  @Input({ required: true }) ma: string; // Mã hd để lấy thông tin phiếu giao
+  public isNext = true; // check trạng thái đơn hàng (Next or Prev)
   public changeStatusForm = this.fb.group({
     moTa: ["", [Validators.required, Validators.minLength(10)]],
-  }); // form
-  public titleButton: string;
+  }); // form thêm LSHD
+  public titleButton: string; // Đổi title button next
 
   constructor(
     private fb: FormBuilder,
@@ -33,11 +33,11 @@ export class OrderTrackingComponent {
     // console.log(this.lichSuHoaDons);
     this.chageTitleButton();
   }
-
+  // Bắt sự kiện next or previous
   setIsNext(value: boolean) {
     this.isNext = value;
   }
-
+  // Thay đổi trạng thái
   changeOrderStatus() {
     this.hoaDonService
       .changeOrderStatus(
@@ -47,11 +47,12 @@ export class OrderTrackingComponent {
       )
       .subscribe({
         next: (resp) => {
+          // Gán lại data cho HoaDon
           this.lichSuHoaDons.push(resp);
           this.trangThaiHD = resp.trangThai;
           this.chageTitleButton();
-
           this.toastr.success("Cập nhật thành công", "Thành công");
+          // Default in phiếu gia khi xác nhận
           if (this.trangThaiHD === "DA_XAC_NHAN") {
             this.inPhieuGiao();
           }
@@ -61,7 +62,7 @@ export class OrderTrackingComponent {
         },
       });
   }
-
+  // Xử lý khi hủy đơn
   cancelOrder() {
     this.hoaDonService
       .cancelOrder(this.idHoaDon, this.changeStatusForm.value.moTa)
@@ -77,7 +78,7 @@ export class OrderTrackingComponent {
         },
       });
   }
-
+  // Thay đổi title button
   chageTitleButton() {
     switch (this.trangThaiHD) {
       case "TAO_DON":

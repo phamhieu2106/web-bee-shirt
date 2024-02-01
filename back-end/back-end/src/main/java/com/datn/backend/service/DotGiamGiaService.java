@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DotGiamGiaService {
 
-//    List<DotGiamGiaResponse> getAll();
+    List<Integer> getListIdSanPham(String ids);
 
     PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId);
 

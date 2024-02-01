@@ -11,6 +11,10 @@ import { LichSuHoaDon } from "../model/class/lich-su-hoa-don.class";
 export class HoaDonService {
   private readonly baseUrl = "http://localhost:8080/hoa-don";
   constructor(private http: HttpClient) {}
+  // update hóa đơn
+  public putHoaDon(hoaDon: HoaDon): Observable<HoaDon> {
+    return this.http.put<HoaDon>(this.baseUrl + "/update", hoaDon);
+  }
 
   // get all
   public getAll(

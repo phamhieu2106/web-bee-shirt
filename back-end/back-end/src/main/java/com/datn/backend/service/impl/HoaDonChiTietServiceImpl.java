@@ -52,12 +52,12 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
-    public MessageResponse deleteHoaDonCT(Integer id) {
+    public HoaDonChiTietResponse deleteHoaDonCT(Integer id) {
         Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findById(id);
         if (hoaDonChiTiet.isEmpty()){
             throw new IdNotFoundException("Không tìm thấy hóa đơn chi tiết id: "+id);
         }
         hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
-        return MessageResponse.builder().message("Xóa thành công").build();
+        return modelMapper.map(hoaDonChiTiet.get(),HoaDonChiTietResponse.class);
     }
 }

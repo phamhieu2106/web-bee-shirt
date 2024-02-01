@@ -29,14 +29,14 @@ export class SuaNhanVienComponent {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.initUpdateForm();
     this.idUpdated = this.route.snapshot.params["id"];
     this.nhanVienService.getOneById(this.idUpdated).subscribe({
       next: (response) => {
         this.nhanVienUpdated = response;
-        console.log(this.nhanVienUpdated);
         this.initUpdateForm(this.nhanVienUpdated);
       },
       error: (error: HttpErrorResponse) => {
@@ -45,29 +45,29 @@ export class SuaNhanVienComponent {
     });
   }
 
-  public initUpdateForm(nhanVienUpdated: NhanVienResponse): void {
+  public initUpdateForm(nhanVienUpdated?: NhanVienResponse): void {
     this.updateForm = new FormGroup({
-      cccd: new FormControl(nhanVienUpdated.cccd, [Validators.required]),
-      hoTen: new FormControl(nhanVienUpdated.hoTen, [Validators.required]),
-      ngaySinh: new FormControl(nhanVienUpdated.ngaySinh, [
+      cccd: new FormControl(nhanVienUpdated?.cccd, [Validators.required]),
+      hoTen: new FormControl(nhanVienUpdated?.hoTen, [Validators.required]),
+      ngaySinh: new FormControl(nhanVienUpdated?.ngaySinh, [
         Validators.required,
       ]),
-      sdt: new FormControl(nhanVienUpdated.sdt, [
+      sdt: new FormControl(nhanVienUpdated?.sdt, [
         Validators.required,
         Validators.pattern(this.sdtRegex),
       ]),
-      gioiTinh: new FormControl(nhanVienUpdated.gioiTinh, [
+      gioiTinh: new FormControl(nhanVienUpdated?.gioiTinh, [
         Validators.required,
       ]),
-      email: new FormControl(nhanVienUpdated.email, [
+      email: new FormControl(nhanVienUpdated?.email, [
         Validators.required,
         Validators.email,
       ]),
-      diaChi: new FormControl(nhanVienUpdated.diaChi, [Validators.required]),
-      tenDangNhap: new FormControl(nhanVienUpdated.tenDangNhap, [
+      diaChi: new FormControl(nhanVienUpdated?.diaChi, [Validators.required]),
+      tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
         Validators.required,
       ]),
-      matKhau: new FormControl(nhanVienUpdated.matKhau, [Validators.required]),
+      matKhau: new FormControl(nhanVienUpdated?.matKhau, [Validators.required]),
 
       // matKhau: new FormControl({
       //   value: this.nhanVienDetails.matKhau,

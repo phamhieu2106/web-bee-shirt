@@ -33,7 +33,7 @@ public class PhieuGiamGiaResource {
     private PhieuGiamGiaServce service;
 
     @Autowired
-    private PhieuGiamGiaKhachHangService phieuGiamGiaService;
+    private PhieuGiamGiaKhachHangService phieuGiamGiaKhachHangService;
 
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
@@ -48,7 +48,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/sua-phieu/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 
         return ResponseEntity.ok(service.getOne(id));
@@ -66,11 +66,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.add(phieuGiamGia));
     }
 
-    @PostMapping("/add-phieu")
-    public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
-        phieuGiamGiaService.addPhieu(request);
-        return ResponseEntity.ok(request);
-    }
+
 
 
     @PutMapping("/{id}")
@@ -78,6 +74,17 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
+/// Phiếu Giảm Giá Khách Hàng
+    @PostMapping("/add-phieu")
+    public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
+        phieuGiamGiaKhachHangService.addPhieu(request);
+        return ResponseEntity.ok(request);
+    }
+
+    @GetMapping("/get-phieu-khach-hang")
+    public ResponseEntity<?>getAllPhieuKhachHang(){
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
+    }
 
 
 

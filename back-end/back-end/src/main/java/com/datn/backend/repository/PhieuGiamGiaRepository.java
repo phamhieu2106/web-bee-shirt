@@ -17,7 +17,6 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
     @Query(value = "select pgg.id  as id,  pgg.ma_phieu_giam_gia as MaPhieuGiamGia," +
             " pgg.ten_phieu_giam_gia  as TenPhieuGiamGia ," +
             "pgg.kieu as Kieu," +
-            "pgg.loai as Loai," +
             "pgg.gia_tri as GiaTri," +
             "pgg.gia_tri_max as GiaTriMax," +
             "pgg.dieu_kien_giam as DieuKienGiam," +

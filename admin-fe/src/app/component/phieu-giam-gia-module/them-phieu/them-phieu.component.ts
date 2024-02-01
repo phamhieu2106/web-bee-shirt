@@ -71,7 +71,6 @@ export class ThemPhieuComponent implements OnInit {
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
       kieu: new FormControl("", [Validators.required]),
-      loai: new FormControl("", [Validators.required]),
       soLuong: new FormControl("", [Validators.required]),
       thoiGianBatDau: new FormControl("", [Validators.required]),
       thoiGianKetThuc: new FormControl("", [Validators.required]),
@@ -81,7 +80,7 @@ export class ThemPhieuComponent implements OnInit {
       trangThai: new FormControl("", [Validators.required]),
 
     });
-    console.log("Is Form Valid?", this.addForm.invalid);
+
   }
 
 
@@ -147,6 +146,8 @@ export class ThemPhieuComponent implements OnInit {
       this.add();
     }
   }
+
+
 
 
 

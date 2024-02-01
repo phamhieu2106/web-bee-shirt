@@ -63,9 +63,7 @@
             </div>
           </div>
 
-          <div class="col-md-2 d-flex justify-content-end">
-            <button class="btn btn-success rounded">Xuất Exel</button>
-          </div>
+
         </div>
 
         <!-- table -->
@@ -90,7 +88,7 @@
               <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
-              <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
+              <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.soLuong }}</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
@@ -102,8 +100,8 @@
                   data-target="#chatLieuDetailsForm">
                   <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
                 </button>
-                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật" data-toggle="modal"
-                  data-target="#chatLieuUpdateForm">
+                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật"
+                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}">
                   <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
               </td>

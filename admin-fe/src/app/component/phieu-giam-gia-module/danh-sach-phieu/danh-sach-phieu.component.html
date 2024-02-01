@@ -92,8 +92,8 @@
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.thoiGianBatDau }}</td>
-              <td>{{ pgg.thoiGianKetThuc }}</td>
+              <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
+              <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>
                 {{pgg.trangThai}}
               </td>

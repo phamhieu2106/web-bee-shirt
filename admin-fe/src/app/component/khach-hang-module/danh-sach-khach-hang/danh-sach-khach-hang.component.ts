@@ -1,29 +1,29 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
-import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
-import { KhachHangService } from 'src/app/service/khach-hang.service';
-import Swal from 'sweetalert2';
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { KhachHangService } from "src/app/service/khach-hang.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-danh-sach-khach-hang',
-  templateUrl: './danh-sach-khach-hang.component.html',
-  styleUrls: ['./danh-sach-khach-hang.component.css']
+  selector: "app-danh-sach-khach-hang",
+  templateUrl: "./danh-sach-khach-hang.component.html",
+  styleUrls: ["./danh-sach-khach-hang.component.css"],
 })
 export class DanhSachKhachHangComponent {
   icon: string = "fa-solid fa-users";
   title: string = "khách hàng";
-  mainHeading: string = "khách hàng"; 
-  
+  mainHeading: string = "khách hàng";
+
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
   public khachHangDetail: KhachHangResponse;
   public khDetail: KhachHangResponse;
-  public formUpdateKH: FormGroup; 
-
+  public formUpdateKH: FormGroup;
+ private timeout: any;
   constructor(
     private khachHangService: KhachHangService,
     private toastr: ToastrService,
@@ -34,7 +34,7 @@ export class DanhSachKhachHangComponent {
     this.getKhachHangList();
   }
 
-    public goToPage(
+  public goToPage(
     page: number = 1,
     pageSize: number = 5,
     keyword: string = ""
@@ -52,9 +52,20 @@ export class DanhSachKhachHangComponent {
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
 
- 
-    // private function
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
+  }
+  // private function
   private getKhachHangList(): void {
     this.khachHangService.getAll().subscribe({
       next: (response: PagedResponse<KhachHangResponse>) => {

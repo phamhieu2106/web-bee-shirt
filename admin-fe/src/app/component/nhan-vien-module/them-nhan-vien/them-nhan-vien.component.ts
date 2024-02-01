@@ -1,7 +1,11 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import {
+  NgxScannerQrcodeComponent,
+  ScannerQRCodeResult,
+} from "ngx-scanner-qrcode";
 import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
@@ -13,10 +17,15 @@ import { NhanVienService } from "src/app/service/nhan-vien.service";
   styleUrls: ["./them-nhan-vien.component.css"],
 })
 export class ThemNhanVienComponent {
-  @Output() reloadTable: EventEmitter<any> = new EventEmitter<any>();
+  icon: string = "fa-solid fa-users";
+  title: string = "Nhân Viên";
+  mainHeading: string = "Nhân Viên";
+
+  @ViewChild("action") action!: NgxScannerQrcodeComponent;
 
   public addForm: any;
   private sdtRegex: string = "0[0-9]{9}";
+  public arrayQR: any[];
   public pagedResponse: PagedResponse<NhanVienResponse>;
 
   constructor(
@@ -29,15 +38,38 @@ export class ThemNhanVienComponent {
     this.initAddForm();
   }
 
+  public onEvent(e: ScannerQRCodeResult[], action?: any): void {
+    if (e && e.length > 0) {
+      const qrCodeValue = e[0].value;
+      action.stop();
+      document.getElementById("closeFormQRCode").click();
+
+      var arrayQR = qrCodeValue.split("|");
+
+      const year = parseInt(arrayQR[3].substring(4, 8));
+      const month = parseInt(arrayQR[3].substring(2, 4)) - 1;
+      const day = parseInt(arrayQR[3].substring(0, 2));
+      const dateObject = new Date(year, month, day);
+      const formattedDate = dateObject.toLocaleDateString("en-CA");
+
+      this.initAddForm(
+        arrayQR[0],
+        arrayQR[2],
+        formattedDate,
+        arrayQR[4],
+        arrayQR[5]
+      );
+      // 023686002531|134220866|Hoàng Thùy Dương|22102000|Nữ|Khu 1, Minh Khương, Hàm Yên, Tuyên Quang|25052020
+    }
+  }
+
   addNhanVien(): void {
     this.nhanVienService.add(this.addForm.value).subscribe({
       next: () => {
         // this.goToPage(1, 5, "");
         this.initAddForm();
         this.toastr.success("Thêm nhân viên mới thành công", "Thành công");
-        document.getElementById("closeBtn").click();
-        this.reloadTable.emit(); // Gửi sự kiện tới cha
-        // this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
+        this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
       },
       error: (erros: HttpErrorResponse) => {
         this.toastr.error("Thêm nhân viên thất bại", "Thất bại");
@@ -50,17 +82,41 @@ export class ThemNhanVienComponent {
     this.initAddForm();
   }
 
-  public initAddForm(): void {
+  public initAddForm(
+    cccdQR?: string,
+    hoTenQR?: string,
+    ngaySinhQR?: string,
+    gioiTinhQR?: string,
+    diaChiQR?: string
+  ): void {
     this.addForm = new FormGroup({
-      hoTen: new FormControl("", [Validators.required]),
-      ngaySinh: new FormControl("", [Validators.required]),
+      cccd: new FormControl(cccdQR === undefined ? "" : cccdQR, [
+        Validators.required,
+        Validators.minLength(12),
+        Validators.maxLength(12),
+      ]),
+      hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR, [
+        Validators.required,
+      ]),
+      ngaySinh: new FormControl(ngaySinhQR === undefined ? "" : ngaySinhQR, [
+        Validators.required,
+      ]),
       sdt: new FormControl("", [
         Validators.required,
         Validators.pattern(this.sdtRegex),
       ]),
-      gioiTinh: new FormControl(true, [Validators.required]),
+      gioiTinh: new FormControl(
+        gioiTinhQR === undefined
+          ? "true"
+          : gioiTinhQR === "Nam"
+          ? "true"
+          : "false",
+        [Validators.required]
+      ),
       email: new FormControl("", [Validators.required, Validators.email]),
-      diaChi: new FormControl("", [Validators.required]),
+      diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
+        Validators.required,
+      ]),
       tenDangNhap: new FormControl("", [Validators.required]),
       matKhau: new FormControl("", [Validators.required]),
     });

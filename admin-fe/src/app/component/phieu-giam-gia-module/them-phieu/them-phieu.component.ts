@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { KhachHang } from 'src/app/model/class/KhachHang.class';
 import { PhieuGiamGia } from 'src/app/model/class/phieu-giam-gia.class';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
@@ -26,7 +25,7 @@ export class ThemPhieuComponent implements OnInit {
   phieuGiamGiaId: number
 
   constructor(private phieuGiamGia: PhieuGiamGiaService,
-    private khachHangService: KhachHangService) { }
+    private khachHangService: KhachHangService,) { }
 
   ngOnInit(): void {
     this.initAddForm();
@@ -66,6 +65,8 @@ export class ThemPhieuComponent implements OnInit {
 
 
   public initAddForm(): void {
+
+
     this.addForm = new FormGroup({
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
@@ -78,6 +79,7 @@ export class ThemPhieuComponent implements OnInit {
       giaTri: new FormControl("", [Validators.required]),
       giaTriMax: new FormControl("", [Validators.required]),
       trangThai: new FormControl("", [Validators.required]),
+
     });
     console.log("Is Form Valid?", this.addForm.invalid);
   }
@@ -135,6 +137,18 @@ export class ThemPhieuComponent implements OnInit {
       this.selectedIds.splice(index, 1);
     }
   }
+
+  confirmCreation() {
+    console.log('Giá trị của addForm:', this.addForm.value);
+    const isConfirmed = window.confirm('Bạn có chắc chăn thêm phiếu giảm giá này không');
+
+    if (isConfirmed) {
+      // Perform the actual creation logic here
+      this.add();
+    }
+  }
+
+
 
 
 

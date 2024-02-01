@@ -1,12 +1,36 @@
-<!-- Form start -->
+<app-main-heading
+  [icon]="icon"
+  [mainHeading]="mainHeading"
+  [title]="title"
+></app-main-heading>
 
-<div class="row gutters">
+<!-- Form start -->
+<div class="row gutters mt-3">
   <div class="col-sm-12">
     <form class="card">
+      <div class="card-header">
+        <h4 class="float-md-left">Sửa nhân viên</h4>
+      </div>
       <div class="card-body">
         <form [formGroup]="updateForm">
           <div class="row">
-            <div class="col-md-6">
+            <!-- <div class="form-group col-md-4">
+              Hình ảnh
+              <div class="input-group mb-3">
+                <div class="input-group-prepend"></div>
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="inputGroupFile03"
+                  />
+                  <label class="custom-file-label" for="inputGroupFile03"
+                    >Choose file</label
+                  >
+                </div>
+              </div>
+            </div> -->
+            <div class="col-md-4">
               <div class="form-group">
                 Họ tên
                 <input
@@ -24,7 +48,7 @@
                 <div class="invalid-feedback">Không được bỏ trống</div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 Ngày sinh
                 <input
@@ -45,7 +69,7 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 Số điện thoại
                 <input
@@ -63,7 +87,25 @@
                 <div class="invalid-feedback">SĐT không hợp lệ</div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+              <div class="form-group">
+                Email
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Email"
+                  [ngClass]="
+                    updateForm.get('email').invalid &&
+                    updateForm.get('email').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  formControlName="email"
+                />
+                <div class="invalid-feedback">Email không hợp lệ</div>
+              </div>
+            </div>
+            <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label">Giới tính </label> <br />
                 <div class="form-check form-check-inline">
@@ -89,25 +131,7 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                Email
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Email"
-                  [ngClass]="
-                    updateForm.get('email').invalid &&
-                    updateForm.get('email').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="email"
-                />
-                <div class="invalid-feedback">Email không hợp lệ</div>
-              </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 Địa chỉ
                 <input
@@ -125,10 +149,7 @@
                 <div class="invalid-feedback">Không được bỏ trống</div>
               </div>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 Tên đăng nhập
                 <input
@@ -146,7 +167,34 @@
                 <div class="invalid-feedback">Không được bỏ trống</div>
               </div>
             </div>
-            <!-- <div class="col-md-6">
+            <div class="col-md-4">
+              <div class="form-group">
+                CCCD
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="CCCD"
+                  [ngClass]="
+                    updateForm.get('cccd').invalid &&
+                    updateForm.get('cccd').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  formControlName="cccd"
+                />
+                <div class="invalid-feedback">Không được bỏ trống</div>
+                <div
+                  *ngIf="updateForm.get('cccd').errors?.minlength"
+                  class="invalid-feedback"
+                >
+                  The full name must be atleast 5 letters long
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 Mật khẩu
                 <input
@@ -164,18 +212,17 @@
               type="submit"
               class="btn btn-outline-warning btn-rounded mx-2"
               [disabled]="updateForm.invalid"
-              (click)="updateNhanVien(nhanVienDetails?.id)"
+              (click)="updateNhanVien()"
             >
               <i class="fa-solid fa-pen-to-square" id="icon-button-update"></i>
               Sửa
             </button>
             <button
-              id="closeBtnUpdate"
               type="button"
               class="btn btn-secondary btn-rounded"
-              data-dismiss="modal"
+              routerLink="/nhan-vien/ds-nhan-vien"
             >
-              Close
+              Back
             </button>
           </div>
         </form>

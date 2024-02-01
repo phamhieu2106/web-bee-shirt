@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, interval } from "rxjs";
+import { switchMap } from 'rxjs/operators';
+
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
 
@@ -24,10 +26,9 @@ export class PhieuGiamGiaService {
     );
   }
 
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}`, {
-      responseType: "text",
-    });
+
+  public changeStatus(id: number): Observable<PhieuGiamGia> {
+    return this.http.put<PhieuGiamGia>(`${this.apiUrl}/status/${id}`, id);
   }
 
   public add(phieuGiamGia: PhieuGiamGia): Observable<PhieuGiamGia> {
@@ -40,5 +41,18 @@ export class PhieuGiamGiaService {
       selectedIds,
     };
     return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
+  }
+
+
+
+  getPhieuGiamGiaList(): Observable<PhieuGiamGia[]> {
+    return this.http.get<PhieuGiamGia[]>(`${this.apiUrl}/get-all`);
+  }
+
+  startPolling(): Observable<PhieuGiamGia[]> {
+    return interval(5000)  // Cứ sau mỗi 5 giây, bạn có thể điều chỉnh thời gian
+      .pipe(
+        switchMap(() => this.getPhieuGiamGiaList())
+      );
   }
 }

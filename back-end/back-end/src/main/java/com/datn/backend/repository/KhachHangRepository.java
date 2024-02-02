@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
     @Query(value =
@@ -50,17 +52,22 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
 
 
-//    @Query(value =
-//            """
-//            UPDATE khach_hang
-//            SET email = ?,
-//            gioi_tinh = ?,
-//            ho_ten = ?,
-//            image_url = ?,
-//            ngay_sinh = ?,
-//            sdt = ?
-//            WHERE id = :id;
-//                    """
-//            , nativeQuery = true)
-//    KhachHang updateKH(int id,KhachHang kh);
+    @Query(value =
+            """         
+            select kh.id, kh.ho_ten as hoTen, kh.sdt,kh.ngay_sinh ngaySinh,kh.gioi_tinh as gioiTinh,
+             kh.email,kh.trang_thai as trangThai,
+             dc.tinh,dc.huyen,dc.xa,dc.duong,
+            acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau
+            from khach_hang kh
+            join account acc
+            on kh.account_id=acc.id
+            join dia_chi dc       
+            on kh.id=dc.khach_hang_id
+            WHERE kh.gioi_tinh IN ( :gioiTinhFilter )
+            AND kh.trang_thai IN ( :trangThaiFilter )
+            and dc.mac_dinh= 1
+            ORDER BY kh.created_at DESC
+                    """
+            , nativeQuery = true)
+    Page<KhachHangResponse> filter(Pageable pageable, @Param("gioiTinhFilter") List<Integer> gioiTinhFilter, @Param("trangThaiFilter")List<Integer> trangThaiFilter);
 }

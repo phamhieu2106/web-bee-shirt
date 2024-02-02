@@ -23,8 +23,8 @@
             
       </div>
       <div class="card-body" style="padding-bottom: 1px;">
-        <div class="row justify-content-md-center">
-          <div class="col-sm-3 col-12">
+        <div class="row gutters justify-content-md-center">
+          <div class="col-md-3 col-12">
             <div class="form-group">
               <input
                 type="text"
@@ -35,42 +35,50 @@
               />
             </div>
           </div>
-          <div class="col-sm-2 col-12 ">
-            <div class="form-group">
-              <select class="form-control mx-sm-4">
-                <option value="" disabled selected hidden>
-                  Chọn giới tính
-                </option>
-                <option value="true">Nam</option>
-                <option value="false">Nữ</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-2 col-12">
-            <div class="form-group">
-              <select class="form-control mx-sm-4">
-                <option value="" disabled selected hidden>
-                  Chọn trạng thái
-                </option>
-                <option value="true">Đang làm việc</option>
-                <option value="false">Đã nghỉ việc</option>
+          <div class="col-sm-3 col-12">
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Giới tính: </label>
+              </div>
+              <select
+                [(ngModel)]="gioiTinhFilter"
+                class="custom-select"
+                (change)="onChangeFilter()"
+              >
+                <!-- <option value="" disabled selected hidden>
+                    Tất cả giới tính
+                  </option> -->
+                <option [ngValue]="[0, 1]">Tất cả giới tính</option>
+                <option [ngValue]="[1]">Nam</option>
+                <option [ngValue]="[0]">Nữ</option>
               </select>
             </div>
           </div>
           <div class="col-sm-3 col-12">
-            <div class="form-group float-sm-right">
-              <button type="button" class="btn btn-primary mx-sm-4 rounded">
-                Tìm kiếm
-              </button>
-              <button
-              type="button"
-              class="btn btn-success mx-sm-4 rounded"
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Trạng thái: </label>
+              </div>
+              <select
+                class="custom-select"
+                [(ngModel)]="trangThaiFilter"
+                (change)="onChangeFilter()"
               >
-              Làm mới
-            </button>
+                <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
+                <option [ngValue]="[1]">Đang làm việc</option>
+                <option [ngValue]="[0]">Đã nghỉ việc</option>
+              </select>
             </div>
           </div>
-          
+
+          <div class="col-1">
+            <button
+              class="btn btn-primary btn-rounded btn-reload-filter"
+              (click)="reloadFilter()"
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="card-body">

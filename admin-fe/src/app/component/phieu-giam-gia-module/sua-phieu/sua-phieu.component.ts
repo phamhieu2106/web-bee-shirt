@@ -7,6 +7,7 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { ActivatedRoute } from "@angular/router";
+import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
 
 @Component({
   selector: "app-sua-phieu",
@@ -14,22 +15,52 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./sua-phieu.component.css"],
 })
 export class SuaPhieuComponent implements OnInit {
-  public updateForm: FormGroup;
   phieuGiamGiaForm: FormGroup;
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
+
+  public idPhieu: number
+
+  phieu: PhieuGiamGia;
+
+  public updateForm: any;
+
+  public khachHangList: any
+  public khachHangListKhongCo: any
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    const idPhieu = this.route.snapshot.params["id"];
-    this.phieuGiamGia.getOne(idPhieu).subscribe({
-      next: (response: PhieuGiamGia) => {
-        // this.initAddForm(response);
+    this.initUpdateForm();
+    this.idPhieu = this.route.snapshot.params["id"];
+    this.phieuGiamGia.getOne(this.idPhieu).subscribe({
+      next: (response) => {
+        this.phieu = response;
+        this.initUpdateForm(this.phieu);
+
+        this.phieuGiamGia.getKhachHangTang(this.idPhieu).subscribe({
+          next: (response: PhieuGiamGiaKhachHang[]) => {
+
+            this.khachHangList = response
+          },
+          error: (error) => {
+            console.error('Error fetching data:', error);
+          }
+        });
+
+        this.phieuGiamGia.getKhachHangTangKhongCo(this.idPhieu).subscribe({
+          next: (response: PhieuGiamGiaKhachHang[]) => {
+
+            this.khachHangListKhongCo = response
+          },
+          error: (error) => {
+            console.error('Error fetching data:', error);
+          }
+        });
       },
       error: (error) => {
         console.error("Khong lấy được phiếu:", error);
@@ -38,32 +69,24 @@ export class SuaPhieuComponent implements OnInit {
     });
 
     this.getKhachHangList();
+    this.getPhieuKhachHang();
   }
 
   // Phiếu giảm giá
 
-  public getOne(id: number): void {}
+  public getOne(id: number): void { }
 
-  public initAddForm(phieu: PhieuGiamGia): void {
+  public initUpdateForm(phieu?: PhieuGiamGia): void {
     this.updateForm = new FormGroup({
-      maPhieuGiamGia: new FormControl(phieu.maPhieuGiamGia, [
-        Validators.required,
-      ]),
-      tenPhieuGiamGia: new FormControl(phieu.tenPhieuGiamGia, [
-        Validators.required,
-      ]),
-      kieu: new FormControl(phieu.kieu, [Validators.required]),
-      soLuong: new FormControl(phieu.soLuong, [Validators.required]),
-      thoiGianBatDau: new FormControl(phieu.thoiGianBatDau, [
-        Validators.required,
-      ]),
-      thoiGianKetThuc: new FormControl(phieu.thoiGianKetThuc, [
-        Validators.required,
-      ]),
-      dieuKienGiam: new FormControl(phieu.dieuKienGiam, [Validators.required]),
-      giaTri: new FormControl(phieu.giaTri, [Validators.required]),
-      giaTriMax: new FormControl(phieu.giaTriMax, [Validators.required]),
-      trangThai: new FormControl(phieu.trangThai, [Validators.required]),
+      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia, [Validators.required]),
+      tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [Validators.required]),
+      kieu: new FormControl(phieu?.kieu, [Validators.required]),
+      giaTri: new FormControl(phieu?.giaTri, [Validators.required]),
+      giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
+      soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
+      dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [Validators.required]),
+      thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required]),
+      thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required]),
     });
   }
 
@@ -95,6 +118,10 @@ export class SuaPhieuComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  private getPhieuKhachHang(): void {
+
   }
 
   public onChangePageSize(e: any): void {

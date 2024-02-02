@@ -44,7 +44,7 @@ public class PhieuGiamGiaResource {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
@@ -67,14 +67,12 @@ public class PhieuGiamGiaResource {
     }
 
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PhieuGiamGiaRequest request) {
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
-/// Phiếu Giảm Giá Khách Hàng
+    /// Phiếu Giảm Giá Khách Hàng
     @PostMapping("/add-phieu")
     public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
         phieuGiamGiaKhachHangService.addPhieu(request);
@@ -82,11 +80,21 @@ public class PhieuGiamGiaResource {
     }
 
     @GetMapping("/get-phieu-khach-hang")
-    public ResponseEntity<?>getAllPhieuKhachHang(){
+    public ResponseEntity<?> getAllPhieuKhachHang() {
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
     }
 
+    @GetMapping("/get-phieu-khach-hang/{id}")
+    public ResponseEntity<?> getKhachHangTang(@PathVariable("id") Integer id) {
+        System.out.println(id);
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,1));
+    }
 
+    @GetMapping("/get-phieu-Khong-co/{id}")
+    public ResponseEntity<?> getKhachHangTangKhongCo(@PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,0));
+    }
 
 
 }

@@ -51,6 +51,14 @@ export class PhieuGiamGiaService {
   public getAllPhieuKhachHang(): Observable<PhieuGiamGiaKhachHang[]> {
     return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang`);
   }
+  public getKhachHangTang(id: number): Observable<PhieuGiamGiaKhachHang[]> {
+    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang/${id}`);
+  }
+
+  public getKhachHangTangKhongCo(id: number): Observable<PhieuGiamGiaKhachHang[]> {
+    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-Khong-co/${id}`);
+  }
+
 
 
 

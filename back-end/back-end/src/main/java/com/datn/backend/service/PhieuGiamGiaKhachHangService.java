@@ -10,4 +10,7 @@ public interface PhieuGiamGiaKhachHangService {
     List<PhieuGiamGiaKhachHang> getAll();
 
     void addPhieu(PhieuKhachHangRequest request);
+
+    List<PhieuGiamGiaKhachHang> getKhachHangTang(Integer id,Integer check);
+
 }

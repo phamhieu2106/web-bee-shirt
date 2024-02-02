@@ -72,4 +72,10 @@ export class PhieuGiamGiaService {
         switchMap(() => this.getPhieuGiamGiaList())
       );
   }
+
+  public update(id: number,
+    phieu: PhieuGiamGia
+  ): Observable<PhieuGiamGia> {
+    return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieu);
+  }
 }

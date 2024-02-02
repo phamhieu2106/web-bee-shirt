@@ -8,6 +8,7 @@ import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { ActivatedRoute } from "@angular/router";
 import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-sua-phieu",
@@ -31,7 +32,8 @@ export class SuaPhieuComponent implements OnInit {
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -81,6 +83,7 @@ export class SuaPhieuComponent implements OnInit {
       maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia, [Validators.required]),
       tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [Validators.required]),
       kieu: new FormControl(phieu?.kieu, [Validators.required]),
+      loai: new FormControl(phieu?.loai, [Validators.required]),
       giaTri: new FormControl(phieu?.giaTri, [Validators.required]),
       giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
       soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
@@ -88,6 +91,8 @@ export class SuaPhieuComponent implements OnInit {
       thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required]),
       thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required]),
     });
+
+
   }
 
   // Khách Hàng
@@ -142,4 +147,32 @@ export class SuaPhieuComponent implements OnInit {
       this.selectedIds.splice(index, 1);
     }
   }
+
+  isCustomerSelected(id: number): boolean {
+    for (const selectedId of this.selectedIds) {
+      if (selectedId === id) {
+        console.log("Tìm thấy")
+        return true; // ID được tìm thấy trong danh sách
+      }
+    }
+    return false; // ID không được tìm thấy trong danh sách
+  }
+
+
+  updatePhieu(): void {
+    this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
+      next: () => {
+        this.toastr.success("Sửa nhân viên thành công", "Thành Công");
+
+      },
+      error: (erros: HttpErrorResponse) => {
+        console.log(this.updateForm.value)
+        this.toastr.error("Sửa nhân viên thất bại", "Thất bại");
+        console.log(erros.message);
+      },
+    })
+  }
+
+
+
 }

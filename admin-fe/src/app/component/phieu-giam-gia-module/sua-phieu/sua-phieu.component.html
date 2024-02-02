@@ -45,6 +45,21 @@
                                 </div>
                             </div>
 
+                            <div class=" mb-3">
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
+                                        formControlName="loai" checked="true" />
+                                    <label class="form-check-label" for="congKhai"> Công Khai </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
+                                        formControlName="loai" />
+                                    <label class="form-check-label" for="caNhan"> Cá Nhân </label>
+                                </div>
+                            </div>
+
+
                             <div class="mb-3 row">
                                 <div class="col-md-6">
                                     <input type="number" class="form-control" placeholder="Giá trị"
@@ -96,8 +111,7 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-primary">Tạo
-                                mới</button>
+                            <button type="button" class="btn btn-primary" (click)="updatePhieu()">Sửa Phiếu</button>
                         </form>
 
 
@@ -124,7 +138,8 @@
                                     <tbody>
                                         <tr *ngFor="let kh of khachHangList">
                                             <td>
-                                                <input type="checkbox" (change)="onCheckboxChange(kh.id)">
+                                                <input type="checkbox" checked="isCustomerSelected(kh.id)"
+                                                    (change)="onCheckboxChange(kh.id)">
                                             </td>
                                             <th scope="row">{{ kh.id }}</th>
                                             <td>{{ kh.khachHang.hoTen }}</td>

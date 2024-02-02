@@ -93,4 +93,19 @@ export class DanhSachPhieuComponent {
       });
     });
   }
+
+
+  // Đổi màu
+  getColorByStatus(status: string): string {
+    switch (status) {
+      case 'Đã kết thúc':
+        return '#FF0000'; // Đỏ
+      case 'Sắp diễn ra':
+        return '#FFD700'; // Vàng
+      case 'Đang Diễn Ra':
+        return '#4CAF50'; // Xanh lá cây
+      default:
+        return '#74c0fc'; // Mặc định là xanh dương
+    }
+  }
 }

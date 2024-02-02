@@ -76,6 +76,7 @@
               <th>Mã</th>
               <th>Tên</th>
               <th>Kiểu</th>
+              <th>Loại</th>
               <th>Số Lượng</th>
               <th>Ngày Bắt Đầu</th>
               <th>Ngày Kết Thúc</th>
@@ -89,11 +90,19 @@
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
+              <td>{{ pgg.loai == 0?"Công Khai":"Cá Nhân" }}</td>
               <td>{{ pgg.soLuong }}</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>
-                {{pgg.trangThai}}
+                <div [ngStyle]="{
+                    'padding': '10px',
+                    'border-radius': '30px',
+                    'color': 'white',
+                    'background-color': getColorByStatus(pgg.trangThai)
+                }">
+                  {{ pgg.trangThai }}
+                </div>
               </td>
               <td>
                 <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"

@@ -58,6 +58,7 @@ export class SuaPhieuComponent implements OnInit {
           next: (response: PhieuGiamGiaKhachHang[]) => {
 
             this.khachHangListKhongCo = response
+            console.log(this.khachHangListKhongCo)
           },
           error: (error) => {
             console.error('Error fetching data:', error);

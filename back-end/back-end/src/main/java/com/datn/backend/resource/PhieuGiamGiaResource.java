@@ -64,7 +64,7 @@ public class PhieuGiamGiaResource {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PhieuGiamGiaRequest request) {
-        System.out.println(request);
+
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
@@ -82,7 +82,7 @@ public class PhieuGiamGiaResource {
 
     @GetMapping("/get-phieu-khach-hang/{id}")
     public ResponseEntity<?> getKhachHangTang(@PathVariable("id") Integer id) {
-        System.out.println(id);
+
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,1));
     }
 

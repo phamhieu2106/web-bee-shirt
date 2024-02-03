@@ -110,7 +110,7 @@ export class PhieuGiamGiaService {
       currentTime > thoiGianBatDau && currentTime < thoiGianKetThuc) {
       return 'Đang diễn ra';
     } else {
-      return 'Trạng thái không xác định';
+      return 'Đã hủy';
     }
   }
 

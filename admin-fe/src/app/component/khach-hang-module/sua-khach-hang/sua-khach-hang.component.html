@@ -202,7 +202,6 @@
                     <h4 class="float-md-left">Danh sách địa chỉ</h4>
                   </div>
                   <!-- nút thêm dc cũ -->
-                  
                 </div>
               </div>
 
@@ -333,14 +332,15 @@
                               </div>
                             </div>
                           </div>
-                          <button
+                          <div class="offset-md-4 d-flex justify-content-end ">
+                            <button
                             type="button"
-                            class="btn btn-primary"
-                            (click)="addDiaChi()"
-                          >
-                            <!-- [disabled]="addForm.invalid" -->
-                            Thêm
+                            class="btn btn-primary rounded-3"
+                            (click)="addDiaChi()">
+                            <i class="fa-solid fa-location-dot"></i> Thêm
                           </button>
+                          </div>
+                          
                         </form>
                       </div>
                     </div>
@@ -367,12 +367,12 @@
                             type="button"
                             (click)="toggleCollapse(i)"
                           >
-                            <b> Địa chỉ {{i+1}}</b>
+                            <b> Địa chỉ {{ i + 1 }}</b>
                           </button>
                         </h6>
                       </div>
                       <div
-                        id="collapse{{i}}"
+                        id="collapse{{ i }}"
                         class="collapse"
                         [class.show]="!diaChi.isCollapsed"
                         data-bs-parent="#accordionExample"
@@ -384,7 +384,8 @@
                                 <div class="form-group">
                                   <label class="input_label"
                                     ><b style="color: red">*</b>Địa chỉ cụ
-                                    thể</label>
+                                    thể</label
+                                  >
                                   <input
                                     type="text"
                                     class="form-control input"
@@ -400,7 +401,7 @@
                                 <div class="form-group">
                                   <label class="input_label"
                                     ><b style="color: red">*</b>Tỉnh/Thành
-                                    phố {{diaChi.tinh}}</label
+                                    phố</label
                                   >
                                   <select
                                     class="form-select form-select-sm mb-3 input"
@@ -416,10 +417,11 @@
                                     <option
                                       *ngFor="let dc of tinh"
                                       [value]="dc.province_name"
-                                      [selected]="dc.province_name.toLowerCase() == diaChi.tinh.toLowerCase()"
+                                      [selected]="
+                                        dc.province_name === diaChi.tinh
+                                      "
                                     >
-                                      {{dc.province_name}}-{{diaChi.tinh}}
-                                      
+                                      {{ dc.province_name }}
                                     </option>
                                   </select>
                                 </div>
@@ -475,22 +477,39 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="col">
-                              <button
-                                data-toggle="modal"
-                                data-target="#formDetailDC"
-                                class="btn btn-primary"
-                                (click)="openUpdateForm(diaChi.id)"
-                              >
-                                Cập nhật
-                              </button>
-                              <button
-                                class="btn btn-secondary"
-                                *ngIf="diaChi.macDinh === false"
-                                (click)="xoaDC(diaChi.id)"
-                              >
-                                Xóa
-                              </button>
+                            <div class="row ">
+                              <div class="col ">
+                                <div class="" *ngIf="diaChi.macDinh === true">
+                                  <span class="btnDefault disabled">
+                                    Mặc định
+                                  </span>
+                                </div>
+                                <div class="" *ngIf="diaChi.macDinh === false">
+                                  <label class="toggle">
+                                    <span class="toggle-label">Địa chỉ mặc định</span>
+                                    <input class="toggle-checkbox" type="checkbox" (click)="setDefault(diaChi.id)">
+                                    <div class="toggle-switch"></div>
+                                  </label>                                  
+                                </div>
+                              </div>
+                              <div class="col-md-4 offset-md-4   d-flex justify-content-end">
+                                <button
+                                  class="btn btn-secondary rounded-3"
+                                  *ngIf="diaChi.macDinh === false"
+                                  (click)="xoaDC(diaChi.id)"
+                                >
+                                <i class="fa-solid fa-trash" style="color: #fafafa;"></i>
+                                </button>
+                                <button
+                                  data-toggle="modal"
+                                  data-target="#formDetailDC"
+                                  class="btn btn-primary rounded-3"
+                                  style="margin-left: 5px;"
+                                  (click)="openUpdateForm(diaChi.id)"
+                                >
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                                </button>
+                              </div>
                             </div>
                           </form>
                         </div>
@@ -498,58 +517,7 @@
                     </div>
                   </div>
                 </div>
-                <br>
-              </div>
-              <div
-                class="card-body border-bottom"
-                *ngFor="let dc of dsDC; let i = index"
-              >
-                <div class="row">
-                  <div class="col col-md-6 d-flex flex-row">
-                    <div>
-                      <h6>Địa chỉ {{ i + 1 }}</h6>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <button
-                      data-toggle="modal"
-                      data-target="#formDetailDC"
-                      class="btnUpdate"
-                      (click)="openUpdateForm(dc.id)"
-                    >
-                      Cập nhật
-                    </button>
-                    <button
-                      class="btnUpdate"
-                      *ngIf="dc.macDinh === false"
-                      (click)="xoaDC(dc.id)"
-                    >
-                      Xóa
-                    </button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col col-md-6 flex-column">
-                    <div class="">{{ dc.duong }}</div>
-                    <div class="">
-                      {{ dc.xa }}, {{ dc.huyen }}, {{ dc.tinh }}
-                    </div>
-                  </div>
-                  <div class="col col-md-5 float-md-right">
-                    <button
-                      class="btn btn-info"
-                      [class.disabled]="dc.macDinh"
-                      (click)="setDefault(dc.id)"
-                    >
-                      Thiết lập mặc định
-                    </button>
-                  </div>
-                </div>
-                <div class="row" style="margin-top: 5px">
-                  <div class="col-sm-3" *ngIf="dc.macDinh === true">
-                    <span class="btnDefault disabled">Mặc định</span>
-                  </div>
-                </div>
+                <br />
               </div>
             </div>
           </div>

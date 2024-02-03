@@ -205,7 +205,7 @@ export class SuaKhachHangComponent {
           icon: "success",
           title: `Xóa thành công!`,
           showConfirmButton: false,
-          timer: 1000,
+          timer: 1500,
         });
         this.reloadPage();
       },
@@ -217,6 +217,7 @@ export class SuaKhachHangComponent {
 
   public setDefault(idDC: number): void {
     this.diaChiService.setDefaultDC(idDC).subscribe(() => {
+     
       this.reloadPage();
     });
   }

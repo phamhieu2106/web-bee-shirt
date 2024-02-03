@@ -56,6 +56,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest object) {
+
         Optional<PhieuGiamGia> optional = repository.findById(id);
         return optional.map(phieuGiamGia -> repository.save(object.giamGia(phieuGiamGia))).orElse(null);
     }
@@ -80,7 +81,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
             phieuGiamGia.setTrangThai("Đang diễn ra");
         } else {
-            phieuGiamGia.setTrangThai("Trạng thái không xác định");
+            phieuGiamGia.setTrangThai("Đã hủy");
         }
 
         return repository.save(phieuGiamGia);

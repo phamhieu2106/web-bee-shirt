@@ -7,6 +7,7 @@ import { DanhSachPhieuComponent } from './danh-sach-phieu/danh-sach-phieu.compon
 import { ThemPhieuComponent } from './them-phieu/them-phieu.component';
 import { LayoutModule } from "../layout-module/layout.module";
 import { SuaPhieuComponent } from './sua-phieu/sua-phieu.component';
+import { ChiTietPhieuComponent } from './chi-tiet-phieu/chi-tiet-phieu.component';
 
 
 
@@ -15,6 +16,7 @@ import { SuaPhieuComponent } from './sua-phieu/sua-phieu.component';
     DanhSachPhieuComponent,
     ThemPhieuComponent,
     SuaPhieuComponent,
+    ChiTietPhieuComponent,
 
   ],
   imports: [

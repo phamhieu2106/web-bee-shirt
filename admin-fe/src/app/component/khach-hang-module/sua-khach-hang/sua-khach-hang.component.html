@@ -1,8 +1,8 @@
-<!-- <app-main-heading
+<app-main-heading
   [icon]="icon"
   [mainHeading]="'khách Hàng'"
   [title]="'Sửa thông tin khách Hàng'"
-></app-main-heading> -->
+></app-main-heading>
 
 <div class="row gutters mt-3">
   <div class="col-sm-12">
@@ -11,7 +11,7 @@
         <form class="card">
           <div class="row g-0">
             <!-- thông tin khách hàng -->
-            <div class="col-md-7">
+            <div class="col-md-5">
               <div
                 class="card-header border-bottom border-light-subtle border-3"
               >
@@ -19,52 +19,125 @@
               </div>
               <div class="card-body">
                 <form [formGroup]="formUpdateKH">
+                  <input type="text" formControlName="id" hidden />
+                  <div class="form-group">
+                    <div class="d-flex justify-content-center">
+                      <input
+                        type="file"
+                        (change)="onFileSelected($event)"
+                        #fileInput
+                        style="display: none"
+                      />
+                      <button (click)="openFileInput()" class="button-anh">
+                        <img
+                          *ngIf="imageUrl"
+                          [src]="imageUrl"
+                          alt="Selected Image"
+                        />
+                        <span *ngIf="!imageUrl">Thêm ảnh đại diện</span>
+                      </button>
+                    </div>
+                  </div>
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col">
                       <div class="form-group">
-                        <!-- <img src="assets/img/default-image.jpg" class="color-img">
-                  <input type="file"> -->
-                        <label>Ảnh đại diện</label>
-                        <div class="custom-file">
-                          <input
-                            type="file"
-                            class="custom-file-input"
-                            id="inputGroupFile01"
-                            aria-describedby="inputGroupFileAddon01"
-                          />
-                          <label
-                            class="custom-file-label"
-                            for="inputGroupFile01"
-                            >Choose file</label
-                          >
-                          <input type="text" formControlName="id" hidden />
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Tên khách hàng</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control input"
+                          placeholder="Nhập họ tên khách hàng"
+                          formControlName="hoTen"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Số điện thoại</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control input"
+                          placeholder="Nhập số điện thoại"
+                          formControlName="sdt"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Ngày sinh</label
+                        >
+                        <input
+                          type="date"
+                          class="form-control input"
+                          formControlName="ngaySinh"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Giới tính</label
+                        >
+                        <br />
+                        <div class="button_ngang">
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="gioiTinh"
+                              [value]="true"
+                              formControlName="gioiTinh"
+                            />
+                            <span class="radio"></span>
+                            Nam
+                          </label>
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="gioiTinh"
+                              [value]="false"
+                              formControlName="gioiTinh"
+                            />
+                            <span class="radio"></span>
+                            Nữ
+                          </label>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                       <div class="form-group">
-                        <label class="form-label">Trạng thái </label> <br />
-                        <div class="form-check form-check-inline">
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            name="trangThai"
-                            [value]="1"
-                            formControlName="trangThai"
-                          />
-                          <label class="form-check-label">
-                            Đang hoạt động
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Trạng thái</label
+                        >
+                        <br />
+                        <div class="button_ngang">
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="trangThai"
+                              [value]="1"
+                              formControlName="trangThai"
+                            />
+                            <span class="radio"></span>
+                            Hoạt động
                           </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            name="trangThai"
-                            [value]="0"
-                            formControlName="trangThai"
-                          />
-                          <label class="form-check-label">
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="trangThai"
+                              [value]="0"
+                              formControlName="trangThai"
+                            />
+                            <span class="radio"></span>
                             Ngừng hoạt động
                           </label>
                         </div>
@@ -72,93 +145,28 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col">
                       <div class="form-group">
-                        Họ tên
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Email</label
+                        >
                         <input
                           type="text"
-                          class="form-control"
-                          placeholder="Họ tên"
-                          formControlName="hoTen"
-                        />
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="form-label">Giới tính </label> <br />
-                        <div class="form-check form-check-inline">
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            name="gioiTinh"
-                            [value]="true"
-                            formControlName="gioiTinh"
-                          />
-                          <label class="form-check-label"> Nam </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <input
-                            class="form-check-input"
-                            name="gioiTinh"
-                            type="radio"
-                            [value]="false"
-                            formControlName="gioiTinh"
-                          />
-                          <label class="form-check-label"> Nữ </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        Ngày sinh
-                        <input
-                          type="date"
-                          class="form-control"
-                          placeholder="Ngày sinh"
-                          formControlName="ngaySinh"
-                        />
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        Số điện thoại
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Số điện thoại"
-                          formControlName="sdt"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        Tài khoản
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Tên đăng nhập"
-                          readonly
-                          formControlName="tenDangNhap"
-                        />
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        Email
-                        <input
-                          type="email"
-                          class="form-control"
-                          placeholder="Email"
+                          class="form-control input"
+                          placeholder="Nhập email khách hàng"
                           formControlName="email"
                         />
                       </div>
                     </div>
                   </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Tên đăng nhập"
+                    readonly
+                    formControlName="tenDangNhap"
+                    hidden
+                  />
                 </form>
               </div>
               <div class="card-footer">
@@ -184,7 +192,7 @@
             </div>
 
             <!-- địa chỉ -->
-            <div class="col-md-5">
+            <div class="col-md-7">
               <!-- thêm địa chỉ -->
               <div
                 class="card-header border-bottom border-light-subtle border-3"
@@ -193,63 +201,324 @@
                   <div class="col">
                     <h4 class="float-md-left">Danh sách địa chỉ</h4>
                   </div>
-                  <div class="col">
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-lg float-md-right rounded"
-                      data-toggle="modal"
-                      data-target="#formAddDC"
-                      (click)="initAddFormDC()"
-                    >
-                      <span
-                        class="icon-user-plus"
-                        style="margin-top: 20px"
-                      ></span>
-                      Thêm địa chỉ mới
-                    </button>
-                  </div>
+                  <!-- nút thêm dc cũ -->
                 </div>
               </div>
 
               <!-- ds địa chỉ -->
-              <div class="card-body border-bottom" *ngFor="let dc of dsDC let i = index">
-                <div class="row">
-                  <div class="col col-md-6 d-flex flex-row">
-                    <div><h6>Địa chỉ {{i+1}}</h6></div>
-                  </div>
-                  <div class="col">
-                    <button
-                      data-toggle="modal"
-                      data-target="#formDetailDC"
-                      class="btnUpdate"
-                      (click)="openUpdateForm(dc.id)"
-                    >
-                      Cập nhật
-                    </button>
-                    <button class="btnUpdate" *ngIf="dc.macDinh === false" (click)="xoaDC(dc.id)">Xóa</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col col-md-6 flex-column">
-                    <div class="">{{dc.duong}}</div>
-                    <div class="">
-                      {{dc.xa}}, {{dc.huyen}}, {{dc.tinh}}
+              <br />
+              <div class="container">
+                <div class="accordion" id="accordionExample">
+                  <div class="accordion-item">
+                    <div style="min-height: 40px; padding: 20px 0px 20xp 0px">
+                      <h6 class="accordion-header">
+                        <button
+                          class="btn btn-light rounded-top"
+                          style="
+                            min-width: 100%;
+                            min-height: 40px;
+                            text-align: left;
+                            border: none;
+                            padding-left: 10px;
+                            color: #125dd4;
+                          "
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseOne"
+                          aria-expanded="false"
+                          aria-controls="collapseOne"
+                        >
+                          <b> Thêm địa chỉ mới</b>
+                        </button>
+                      </h6>
                     </div>
-                  </div>
-                  <div class="col col-md-5 float-md-right">
-                    <button class="btn btn-info"  [class.disabled]="dc.macDinh" (click)="setDefault(dc.id)">
-                      Thiết lập mặc định
-                    </button>
-                  </div>
-                </div>
-                
-                <div class="row" style="margin-top: 5px">
-                  <div class="col-sm-3" *ngIf="dc.macDinh === true">
-                    <span class="btnDefault disabled">Mặc định</span>
+                    <div
+                      id="collapseOne"
+                      class="collapse"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <form [formGroup]="addFormDC">
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label class="input_label"
+                                  ><b style="color: red">*</b>Địa chỉ cụ
+                                  thể</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control input"
+                                  placeholder="Nhập số nhà, tên đường,...."
+                                  formControlName="duong"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label class="input_label"
+                                  ><b style="color: red">*</b>Tỉnh/Thành
+                                  phố</label
+                                >
+                                <select
+                                  class="form-select form-select-sm mb-3 input"
+                                  style="padding: 5px 10px 5px 10px"
+                                  id="city"
+                                  aria-label=".form-select-sm"
+                                  formControlName="tinh"
+                                  (change)="onCityChange()"
+                                >
+                                  <option value="" selected>
+                                    Chọn tỉnh thành
+                                  </option>
+                                  <option
+                                    *ngFor="let dc of tinh"
+                                    [value]="dc.province_name"
+                                  >
+                                    {{ dc.province_name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col">
+                              <div class="form-group">
+                                <label class="input_label"
+                                  ><b style="color: red">*</b>Quận/Huyện</label
+                                >
+                                <select
+                                  class="form-select form-select-sm mb-3 input"
+                                  style="padding: 5px 10px 5px 10px"
+                                  id="district"
+                                  aria-label=".form-select-sm"
+                                  formControlName="huyen"
+                                  (change)="ondistrictChange()"
+                                >
+                                  <option value="" selected>
+                                    Chọn quận huyện
+                                  </option>
+                                  <option
+                                    *ngFor="let dc of huyen"
+                                    [value]="dc.district_name"
+                                  >
+                                    {{ dc.district_name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col">
+                              <div class="form-group">
+                                <label class="input_label"
+                                  ><b style="color: red">*</b>Xã/Phường</label
+                                >
+                                <select
+                                  class="form-select input"
+                                  style="padding: 5px 10px 5px 10px"
+                                  id="ward"
+                                  ria-label=".form-select-sm"
+                                  formControlName="xa"
+                                >
+                                  <option value="" selected>
+                                    Chọn phường xã
+                                  </option>
+                                  <option
+                                    *ngFor="let dc of xa"
+                                    [value]="dc.ward_name"
+                                  >
+                                    {{ dc.ward_name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="offset-md-4 d-flex justify-content-end ">
+                            <button
+                            type="button"
+                            class="btn btn-primary rounded-3"
+                            (click)="addDiaChi()">
+                            <i class="fa-solid fa-location-dot"></i> Thêm
+                          </button>
+                          </div>
+                          
+                        </form>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
+              <br />
+              <div *ngFor="let diaChi of dsDC; let i = index">
+                <div class="container">
+                  <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <div style="min-height: 40px; padding: 20px 0px 20xp 0px">
+                        <h6 class="accordion-header">
+                          <button
+                            class="btn btn-light rounded-top"
+                            style="
+                              min-width: 100%;
+                              min-height: 40px;
+                              text-align: left;
+                              border: none;
+                              padding-left: 10px;
+                              color: #125dd4;
+                            "
+                            type="button"
+                            (click)="toggleCollapse(i)"
+                          >
+                            <b> Địa chỉ {{ i + 1 }}</b>
+                          </button>
+                        </h6>
+                      </div>
+                      <div
+                        id="collapse{{ i }}"
+                        class="collapse"
+                        [class.show]="!diaChi.isCollapsed"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          <form [formGroup]="updateFormDC">
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label class="input_label"
+                                    ><b style="color: red">*</b>Địa chỉ cụ
+                                    thể</label
+                                  >
+                                  <input
+                                    type="text"
+                                    class="form-control input"
+                                    placeholder="Nhập số nhà, tên đường,...."
+                                    [value]="diaChi.duong"
+                                    formControlName="duong"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label class="input_label"
+                                    ><b style="color: red">*</b>Tỉnh/Thành
+                                    phố</label
+                                  >
+                                  <select
+                                    class="form-select form-select-sm mb-3 input"
+                                    style="padding: 5px 10px 5px 10px"
+                                    id="city"
+                                    aria-label=".form-select-sm"
+                                    formControlName="tinh"
+                                    (change)="onCityChange()"
+                                  >
+                                    <option value="" selected>
+                                      Chọn tỉnh thành
+                                    </option>
+                                    <option
+                                      *ngFor="let dc of tinh"
+                                      [value]="dc.province_name"
+                                      [selected]="
+                                        dc.province_name === diaChi.tinh
+                                      "
+                                    >
+                                      {{ dc.province_name }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <label class="input_label"
+                                    ><b style="color: red">*</b
+                                    >Quận/Huyện</label
+                                  >
+                                  <select
+                                    class="form-select form-select-sm mb-3 input"
+                                    style="padding: 5px 10px 5px 10px"
+                                    id="district"
+                                    aria-label=".form-select-sm"
+                                    formControlName="huyen"
+                                    (change)="ondistrictChange()"
+                                  >
+                                    <option value="" selected>
+                                      Chọn quận huyện
+                                    </option>
+                                    <option
+                                      *ngFor="let dc of huyen"
+                                      [value]="dc.district_name"
+                                    >
+                                      {{ dc.district_name }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <label class="input_label"
+                                    ><b style="color: red">*</b>Xã/Phường</label
+                                  >
+                                  <select
+                                    class="form-select input"
+                                    style="padding: 5px 10px 5px 10px"
+                                    id="ward"
+                                    ria-label=".form-select-sm"
+                                    formControlName="xa"
+                                  >
+                                    <option value="" selected>
+                                      Chọn phường xã
+                                    </option>
+                                    <option
+                                      *ngFor="let dc of xa"
+                                      [value]="dc.ward_name"
+                                    >
+                                      {{ dc.ward_name }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row ">
+                              <div class="col ">
+                                <div class="" *ngIf="diaChi.macDinh === true">
+                                  <span class="btnDefault disabled">
+                                    Mặc định
+                                  </span>
+                                </div>
+                                <div class="" *ngIf="diaChi.macDinh === false">
+                                  <label class="toggle">
+                                    <span class="toggle-label">Địa chỉ mặc định</span>
+                                    <input class="toggle-checkbox" type="checkbox" (click)="setDefault(diaChi.id)">
+                                    <div class="toggle-switch"></div>
+                                  </label>                                  
+                                </div>
+                              </div>
+                              <div class="col-md-4 offset-md-4   d-flex justify-content-end">
+                                <button
+                                  class="btn btn-secondary rounded-3"
+                                  *ngIf="diaChi.macDinh === false"
+                                  (click)="xoaDC(diaChi.id)"
+                                >
+                                <i class="fa-solid fa-trash" style="color: #fafafa;"></i>
+                                </button>
+                                <button
+                                  data-toggle="modal"
+                                  data-target="#formDetailDC"
+                                  class="btn btn-primary rounded-3"
+                                  style="margin-left: 5px;"
+                                  (click)="openUpdateForm(diaChi.id)"
+                                >
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+              </div>
             </div>
           </div>
         </form>
@@ -331,7 +600,12 @@
           <div class="form-row">
             <label for="inputEmail4">Tỉnh</label>
             <input type="text" class="form-control" formControlName="tinh" />
-            <input type="text" class="form-control" formControlName="id" hidden/>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="id"
+              hidden
+            />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
 
@@ -354,7 +628,12 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeUpdateBtn">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            id="closeUpdateBtn"
+          >
             Đóng
           </button>
           <button type="button" class="btn btn-primary" (click)="updateDC(id)">

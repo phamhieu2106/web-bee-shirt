@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -27,7 +27,14 @@ export class SuaKhachHangComponent {
   public addFormDC: FormGroup;
   public updateFormDC: FormGroup;
   public dsDC: DiaChi[];
-  public DCds: DiaChi[];
+  public tinh: any[] = [];
+  public huyen: any[] = [];
+  public xa: any[] = [];
+  public idTinh: number;
+  public idHuyen: number;
+  imageUrl: string;
+  public isCollapsed: boolean = true;
+  @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -40,12 +47,15 @@ export class SuaKhachHangComponent {
     this.initFormUpdateKh();
     this.initAddFormDC();
     this.initFormUpdateDC();
+    this.diaChiService.getTinh().subscribe((data: any)=>{
+      this.tinh = data.results;
+    })
     this.idKh = this.route.snapshot.params["id"];
     this.diaChiService.getAllDc(this.idKh).subscribe({
       next: (data: DiaChi[]) => {
         this.dsDC = data;
       },
-    });
+    });    
     this.route.params.subscribe((params) => {
       this.id = +params["id"];
       this.khachHangService.getById(this.id).subscribe({
@@ -65,8 +75,17 @@ export class SuaKhachHangComponent {
       });
     });
   }
+  openFileInput() {
+    this.fileInput.nativeElement.click();
+  }
 
-  public updateKH(): void {
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.imageUrl = URL.createObjectURL(file);
+    }
+  }
+  public updateKH(): void { 
     this.khachHangService.update(this.id, this.formUpdateKH.value).subscribe({
       next: (kh: KhachHang) => {
         this.initFormUpdateDC();
@@ -186,7 +205,7 @@ export class SuaKhachHangComponent {
           icon: "success",
           title: `Xóa thành công!`,
           showConfirmButton: false,
-          timer: 1000,
+          timer: 1500,
         });
         this.reloadPage();
       },
@@ -198,7 +217,33 @@ export class SuaKhachHangComponent {
 
   public setDefault(idDC: number): void {
     this.diaChiService.setDefaultDC(idDC).subscribe(() => {
+     
       this.reloadPage();
     });
+  }
+  onCityChange(): void {
+    const selectedTinh  = this.tinh.find(t => t.province_name ==this.addFormDC.get('tinh')?.value);
+    if (selectedTinh) {
+      const selectedId = selectedTinh.province_id;
+      this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+        this.huyen = data.results;
+      }) 
+    }
+
+  
+  }
+
+  ondistrictChange(): void {
+    const selectedHuyen  = this.huyen.find(t => t.district_name ==this.addFormDC.get('huyen')?.value);
+    if (selectedHuyen) {
+      const selectedId = selectedHuyen.district_id;
+      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
+        this.xa = data.results;
+      }) 
+    }
+  }
+
+  toggleCollapse(index: number): void {
+    this.dsDC[index].isCollapsed = !this.dsDC[index].isCollapsed;
   }
 }

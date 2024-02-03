@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -24,7 +24,8 @@ export class ThemKhachHangComponent  {
   public xa: any[] = [];
   public idTinh: number;
   public idHuyen: number;
-  selectedImage: string | ArrayBuffer | null = null;
+  imageUrl: string;
+  @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
     private router: Router,
     private khachHangService: KhachHangService,
@@ -37,22 +38,19 @@ export class ThemKhachHangComponent  {
       this.tinh = data.results;
     })
   }
+  openFileInput() {
+    this.fileInput.nativeElement.click();
+  }
 
-  onFileSelected(event: any): void {
+  onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.loadImage(file);
+      this.imageUrl = URL.createObjectURL(file);
     }
   }
 
-  loadImage(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.selectedImage = e.target?.result;
-    };
-    reader.readAsDataURL(file);
-  }
 public addKH(): void{ 
+  console.log(this.formAddKh.value);
   this.khachHangService.add(this.formAddKh.value).subscribe({
     next: (kh: KhachHangResponse)=>{
       this.initFormAddKh();      
@@ -76,11 +74,11 @@ public addKH(): void{
     this.formAddKh = new FormGroup({
       hoTen: new FormControl("",[Validators.required]),
       gioiTinh: new FormControl("",[Validators.required]),
-      trangThai: new FormControl("",[Validators.required]),
-      tenDangNhap: new FormControl("",[Validators.required]),
+      trangThai: new FormControl("1"),
       sdt: new FormControl("",[Validators.required]),
+      // imageUrl: new FormControl(""),
       ngaySinh: new FormControl("",[Validators.required]),
-      matKhau: new FormControl("",[Validators.required]),
+      matKhau: new FormControl("12345678"),
       email: new FormControl("",[Validators.required]),
       huyen: new FormControl("",[Validators.required]),
       tinh: new FormControl("",[Validators.required]),

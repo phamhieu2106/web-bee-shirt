@@ -51,23 +51,24 @@
 
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
-                    formControlName="loai" checked="true" />
+                    formControlName="loai" checked="true" (change)="onLoaiChange()" />
                   <label class="form-check-label" for="congKhai"> Công Khai </label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
-                    formControlName="loai" />
+                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0" formControlName="loai"
+                    (change)="onLoaiChange()" />
                   <label class="form-check-label" for="caNhan"> Cá Nhân </label>
                 </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="number" class="form-control" placeholder="Giá trị" [ngClass]="addForm.get('giaTri').invalid && addForm.get('giaTri').touched
-                  ? 'is-invalid'
-                  : ''" formControlName="giaTri">
-                  <div class="invalid-feedback">
-                    Giá trị không được để trống
+                  <input type="number" class="form-control" placeholder="Giá trị"
+                    [ngClass]="addForm.get('giaTri').invalid && addForm.get('giaTri').touched ? 'is-invalid' : ''"
+                    formControlName="giaTri">
+                  <div *ngIf="addForm.get('giaTri').hasError('giaTri') && addForm.get('giaTri').touched"
+                    class="invalid-feedback">
+                    {{ addForm.get('giaTri').getError('giaTri') }}
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -119,20 +120,6 @@
                 </div>
               </div>
 
-              <!-- <div class=" mb-3">
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
-                    formControlName="kieu" />
-                  <label class="form-check-label" for="congKhai"> Công Khai </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
-                    formControlName="kieu" />
-                  <label class="form-check-label" for="caNhan"> Cá Nhân</label>
-                </div>
-              </div> -->
-
               <button type="button" class="btn btn-primary" (click)="confirmCreation()">Tạo
                 mới</button>
             </form>
@@ -161,7 +148,7 @@
               <tbody>
                 <tr *ngFor="let kh of pagedResponse?.data; let i = index">
                   <td>
-                    <input type="checkbox" (change)="onCheckboxChange(kh.id)">
+                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled">
                   </td>
                   <th scope="row">{{ kh.id}}</th>
                   <td>{{ kh.hoTen }}</td>

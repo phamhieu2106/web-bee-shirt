@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-md-4">
+    <label class="form-label">Tỉnh / Thành phố:</label>
+    <div class="form-group">
+      <div class="input-group">
+        <select
+          class="custom-select"
+          [(ngModel)]="diaChiVaPhiVanChuyen.tinhId"
+          (change)="getAllHuyenByTinh()"
+        >
+          <option *ngFor="let t of tinhs" value="{{ t.ProvinceID }}">
+            {{ t.ProvinceName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Quận / Huyện:</label>
+    <div class="form-group">
+      <div class="input-group">
+        <select
+          class="custom-select"
+          [(ngModel)]="diaChiVaPhiVanChuyen.huyenId"
+          (change)="getAllXaByHuyen()"
+        >
+          <option *ngFor="let h of huyens" value="{{ h.DistrictID }}">
+            {{ h.DistrictName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Xã / Phường / Thị trấn:</label>
+    <div class="form-group">
+      <div class="input-group">
+        <select
+          class="custom-select"
+          (change)="onFinishChooseDiaChi()"
+          [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
+        >
+          <option *ngFor="let x of xas" value="{{ x.WardCode }}">
+            {{ x.WardName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <label class="form-label">Địa chỉ cụ thể:</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="diaChiVaPhiVanChuyen.cuThe"
+    />
+  </div>
+
+  <hr />
+  <!-- Shipping info -->
+  <div class="ml-5">
+    <p>
+      Thời gian giao hàng dự kiến:
+      {{ diaChiVaPhiVanChuyen.duKien | date : "dd-MM-yyyy" }}
+    </p>
+    <p>
+      Phí vận chuyển: {{ diaChiVaPhiVanChuyen.phiVanChuyen | currency : "đ " }}
+    </p>
+  </div>
+</div>

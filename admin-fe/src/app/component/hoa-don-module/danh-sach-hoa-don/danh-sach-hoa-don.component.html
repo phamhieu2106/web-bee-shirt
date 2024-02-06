@@ -98,7 +98,7 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('')"
-              >Tất cả <span class="badge-number text-danger">3</span></a
+              >Tất cả</a
             >
           </li>
           <li class="nav-item">
@@ -111,7 +111,12 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('CHO_XAC_NHAN')"
-              >Chờ xác nhận <span class="badge-number text-danger">3</span></a
+              >Chờ xác nhận
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.choXacNhanQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.choXacNhanQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -124,7 +129,12 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('DA_XAC_NHAN')"
-              >Đã xác nhận <span class="badge-number text-danger">3</span></a
+              >Đã xác nhận
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.daXacNhanQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.daXacNhanQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -137,7 +147,12 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('CHO_GIAO')"
-              >Chờ giao <span class="badge-number text-danger">3</span></a
+              >Chờ giao
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.choGiaoQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.choGiaoQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -150,7 +165,12 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('DANG_GIAO')"
-              >Đang giao <span class="badge-number text-danger">3</span></a
+              >Đang giao
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.dangGiaoQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.dangGiaoQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -163,7 +183,12 @@
               aria-controls="home"
               aria-selected="true"
               (click)="changeStatus('HOAN_THANH')"
-              >Hoàn thành <span class="badge-number text-danger">3</span></a
+              >Hoàn thành
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.hoanThanhQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.hoanThanhQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -178,7 +203,11 @@
               (click)="changeStatus('HUY')"
             >
               Hủy
-              <span class="badge-number text-danger">3</span>
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.huyQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.huyQuantity
+              }}</span>
               <!-- Số thông báo -->
             </a>
           </li>

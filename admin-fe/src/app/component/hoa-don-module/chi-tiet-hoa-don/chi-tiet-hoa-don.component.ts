@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
 import { ToastrService } from "ngx-toastr";
+import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 
 @Component({
   selector: "app-chi-tiet-hoa-don",
@@ -13,6 +14,7 @@ import { ToastrService } from "ngx-toastr";
 export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   id: number = -1;
   hoaDon: HoaDon = new HoaDon();
+  diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   constructor(
     private activatedRoute: ActivatedRoute,
     private hoaDonService: HoaDonService,
@@ -51,5 +53,24 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
 
   printHoaDon() {
     this.pdfService.generatePDFHoaDon(this.hoaDon);
+  }
+
+  changeDiaChi() {
+    if (
+      this.diaChiVaPhiVanChuyen.tinh &&
+      this.diaChiVaPhiVanChuyen.huyen &&
+      this.diaChiVaPhiVanChuyen.xa
+    ) {
+      this.hoaDon.diaChiNguoiNhan = `${
+        this.diaChiVaPhiVanChuyen.cuThe == undefined
+          ? ""
+          : this.diaChiVaPhiVanChuyen.cuThe
+      },${this.diaChiVaPhiVanChuyen.xa},${this.diaChiVaPhiVanChuyen.huyen},${
+        this.diaChiVaPhiVanChuyen.tinh
+      }`;
+      this.hoaDon.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
+    } else {
+      this.toastr.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
+    }
   }
 }

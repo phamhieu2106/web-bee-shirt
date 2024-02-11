@@ -36,19 +36,19 @@
 
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
-                    checked="true" />
+                    checked="true" (change)="onKieuChange()" />
                   <label class="form-check-label" for="tienMat"> Tiền Mặt </label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu" />
+                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
+                    (change)="onKieuChange()" />
                   <label class="form-check-label" for="%"> % </label>
                 </div>
               </div>
 
 
 
-              <div class=" mb-3">
-
+              <div class="mb-3">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
                     formControlName="loai" checked="true" (change)="onLoaiChange()" />

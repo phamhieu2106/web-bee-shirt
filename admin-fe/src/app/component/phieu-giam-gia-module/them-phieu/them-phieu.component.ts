@@ -95,22 +95,40 @@ export class ThemPhieuComponent implements OnInit {
       const giaTri = control.value;
       console.log(kieu)
 
-      if (kieu === '1' && giaTri > 1000000) {
+      // Kiểm tra nếu ô giá trị trống
+      if (!giaTri) {
+        return { giaTri: 'Vui lòng nhập giá trị' };
+      }
 
+      // Tiếp tục kiểm tra giá trị nhập vào khi không trống
+      if (kieu === '1' && giaTri > 1000000) {
         return { giaTri: 'Giá trị tối đa là 1.000.000 VNĐ' };
       } else if (kieu === '1' && giaTri < 10000) {
         return { giaTri: 'Giá trị nhỏ nhất là 10.000 VNĐ' };
-      }
-      else if (kieu === '0' && giaTri > 100) {
+      } else if (kieu === '0' && giaTri > 100) {
         return { giaTri: 'Giá trị lớn nhất là 100%' };
-      }
-      else if (kieu === '0' && giaTri < 1) {
+      } else if (kieu === '0' && giaTri < 1) {
         return { giaTri: 'Giá trị nhỏ nhất là 1%' };
-      } else {
-        return null;
       }
+
+      return null; // Trả về null nếu không có lỗi
     };
   }
+
+  onKieuChange() {
+    const loaiValue = this.addForm.get('kieu').value;
+    console.log(loaiValue)
+    this.addForm.get('giaTri').updateValueAndValidity();
+  }
+
+
+  isTableDisabled: boolean = false;
+
+  onLoaiChange() {
+    this.isTableDisabled = !this.isTableDisabled;
+  }
+
+
 
 
 
@@ -178,19 +196,9 @@ export class ThemPhieuComponent implements OnInit {
   }
 
 
-  isTableDisabled: boolean = false;
 
-  onLoaiChange() {
-    const loaiValue = this.addForm.get('loai').value;
 
-    // Kiểm tra giá trị của loại
-    if (loaiValue == 1) {
 
-      this.isTableDisabled = false;
-    } else {
-      this.isTableDisabled = true;
-    }
-  }
 
 
 

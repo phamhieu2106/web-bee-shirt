@@ -79,7 +79,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             JOIN san_pham_chi_tiet spct ON spct.id = dggsp.san_pham_chi_tiet_id
             JOIN san_pham sp ON sp.id = spct.san_pham_id
-            WHERE dgg.id = 3
+            WHERE dgg.id = :id
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
             """
             , nativeQuery = true)
@@ -110,5 +110,14 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 GROUP BY sp.id
             """, nativeQuery = true)
     List<Integer> getIdSanPhamIdBySanPhamChiTietId(@Param("ids") String ids);
+
+    @Query(value = """
+            SELECT san_pham_chi_tiet_id
+            FROM dot_giam_gia_san_pham
+            JOIN san_pham_chi_tiet ON san_pham_chi_tiet.id = dot_giam_gia_san_pham.san_pham_chi_tiet_id
+            JOIN dot_giam_gia ON dot_giam_gia.id = dot_giam_gia_san_pham.dot_giam_gia_id
+            WHERE dot_giam_gia.id = :id
+            """, nativeQuery = true)
+    List<Integer> getListIdSanPhamChiTiet(@Param("id") Integer id);
 
 }

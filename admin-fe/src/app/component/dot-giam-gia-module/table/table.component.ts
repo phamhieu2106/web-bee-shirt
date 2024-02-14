@@ -1,6 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
-import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-san-pham-chi-tiet";
 
@@ -32,8 +38,21 @@ export class TableComponent implements OnInit {
   @Output() clickSanPham = new EventEmitter<any>();
   listIdSanPham: Array<number> = [];
   // For SanPhamChiTietTable
+  @Input() listIdSanPhamChiTiet: Array<number>;
   @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
   @Output() clickSanPhamChiTiet = new EventEmitter<any>();
+
+  constructor() {}
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes["listSanPhamChiTiet"] &&
+      changes["listSanPhamChiTiet"].currentValue
+    ) {
+      // Update numberArray based on the new dataFromParent
+      this;
+    }
+  }
+
   // For DotGiamGia
   public onChangeSize(sizeNumber: any) {
     this.onPageChange.emit(sizeNumber.target.value);

@@ -64,11 +64,22 @@ export class DotGiamGiaService {
     );
   }
 
-  public getIdSanPhamBySanPhamChiTietId(ids: number[]): Observable<Array<number>>{
-    return this.http.get<Array<number>>(`${this.apiURL}/listidsanpham?ids=${ids}`)
+  public getIdSanPhamBySanPhamChiTietId(
+    ids: number[]
+  ): Observable<Array<number>> {
+    return this.http.get<Array<number>>(
+      `${this.apiURL}/listidsanpham?ids=${ids}`
+    );
   }
 
-  public addDotGiamGiaRequest(object: any): Observable<DotGiamGia>{
+  public addDotGiamGiaRequest(object: any): Observable<DotGiamGia> {
     return this.http.post<DotGiamGia>(this.apiURL, object);
+  }
+
+  public updateDotGiamGiaRequest(object: any): Observable<DotGiamGia> {
+    return this.http.put<DotGiamGia>(`${this.apiURL}/${object.id}`, object);
+  }
+  public deleteDotGiamGiaRequest(id: number): Observable<DotGiamGia> {
+    return this.http.delete<DotGiamGia>(`${this.apiURL}/${id}`);
   }
 }

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormControl, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { PhieuGiamGia } from 'src/app/model/class/phieu-giam-gia.class';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
@@ -65,24 +65,71 @@ export class ThemPhieuComponent implements OnInit {
 
 
   public initAddForm(): void {
-
-
     this.addForm = new FormGroup({
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
-      kieu: new FormControl("", [Validators.required]),
-      loai: new FormControl("", [Validators.required]),
+      kieu: new FormControl("1"),
+      loai: new FormControl("1"),
       soLuong: new FormControl("", [Validators.required]),
       thoiGianBatDau: new FormControl("", [Validators.required]),
       thoiGianKetThuc: new FormControl("", [Validators.required]),
       dieuKienGiam: new FormControl("", [Validators.required]),
-      giaTri: new FormControl("", [Validators.required]),
-      giaTriMax: new FormControl("", [Validators.required]),
+      giaTri: new FormControl("", [Validators.required, this.validateVip()]),
+      giaTriMax: new FormControl("", [Validators.required, Validators.min(1), Validators.max(100)]),
       trangThai: new FormControl("", [Validators.required]),
+    })
 
-    });
-    console.log("Is Form Valid?", this.addForm.invalid);
+
   }
+
+  private validateVip(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const addForm = this.addForm;
+
+      if (!addForm) {
+        // Gọi initAddForm() hoặc xử lý khởi tạo addForm ở đây
+        return null;
+      }
+
+      const kieu = addForm.get('kieu').value;
+      const giaTri = control.value;
+      console.log(kieu)
+
+      // Kiểm tra nếu ô giá trị trống
+      if (!giaTri) {
+        return { giaTri: 'Vui lòng nhập giá trị' };
+      }
+
+      // Tiếp tục kiểm tra giá trị nhập vào khi không trống
+      if (kieu === '1' && giaTri > 1000000) {
+        return { giaTri: 'Giá trị tối đa là 1.000.000 VNĐ' };
+      } else if (kieu === '1' && giaTri < 10000) {
+        return { giaTri: 'Giá trị nhỏ nhất là 10.000 VNĐ' };
+      } else if (kieu === '0' && giaTri > 100) {
+        return { giaTri: 'Giá trị lớn nhất là 100%' };
+      } else if (kieu === '0' && giaTri < 1) {
+        return { giaTri: 'Giá trị nhỏ nhất là 1%' };
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+  onKieuChange() {
+    const loaiValue = this.addForm.get('kieu').value;
+    console.log(loaiValue)
+    this.addForm.get('giaTri').updateValueAndValidity();
+  }
+
+
+  isTableDisabled: boolean = false;
+
+  onLoaiChange() {
+    this.isTableDisabled = !this.isTableDisabled;
+  }
+
+
+
 
 
 
@@ -147,6 +194,13 @@ export class ThemPhieuComponent implements OnInit {
       this.add();
     }
   }
+
+
+
+
+
+
+
 
 
 

@@ -2,9 +2,11 @@ package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
+import com.datn.backend.dto.request.HoaDonRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SoLuongDonHangResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,7 +68,16 @@ public class HoaDonResource {
         LichSuHoaDonResponse lichSuHoaDonResponse = hoaDonService.cancelOrder(changeOrderStatus);
         return ResponseEntity.ok(lichSuHoaDonResponse);
     }
-    // create
     // update
+    @PutMapping("/update")
+    public ResponseEntity<HoaDonResponse> updateHoaDon(@Valid @RequestBody HoaDonRequest hoaDonRequest) {
+        HoaDonResponse hoaDonResponse = hoaDonService.updateHoaDon(hoaDonRequest);
+        return ResponseEntity.ok(hoaDonResponse);
+    }
     // delete
+    @GetMapping("/get-order-quantity-all")
+    public ResponseEntity<SoLuongDonHangResponse> getSoLuongDonHang() {
+        SoLuongDonHangResponse soLuongDonHangResponse = hoaDonService.getSoLuongDonHang();
+        return ResponseEntity.ok(soLuongDonHangResponse);
+    }
 }

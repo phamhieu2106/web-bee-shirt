@@ -3,11 +3,12 @@ export class PhieuGiamGia {
     maPhieuGiamGia: string;
     tenPhieuGiamGia: string;
     kieu: number;
+    loai: number;
     giaTri: number;
     giaTriMax: number;
     dieuKienGiam: number;
     soLuong: number;
     thoiGianBatDau: string;
     thoiGianKetThuc: string;
-    trangThai: boolean;
+    trangThai: string;
 }

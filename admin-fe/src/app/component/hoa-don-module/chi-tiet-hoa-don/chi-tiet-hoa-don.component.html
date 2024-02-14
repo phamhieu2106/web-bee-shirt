@@ -23,6 +23,9 @@
 <!-- Order history payment -->
 <app-order-history-payment
   [thanhToans]="hoaDon.thanhToans"
+  [loaiHoaDon]="hoaDon.loaiHoaDon"
+  [tongTien]="hoaDon.tongTien"
+  [idHoaDon]="hoaDon.id"
 ></app-order-history-payment>
 
 <!-- Order info -->
@@ -78,60 +81,34 @@
                   <div class="row">
                     <div class="col-md-6">
                       <label class="form-label">Tên người nhận:</label>
-                      <input type="text" class="form-control" />
-                      <small class="form-text text-danger">Help text</small>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="hoaDon.tenNguoiNhan"
+                      />
+                      <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
                     <div class="col-md-6">
                       <label class="form-label">Số điện thoại:</label>
-                      <input type="text" class="form-control" />
-                      <small class="form-text text-danger">Help text</small>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Tỉnh / Thành phố:</label>
-                      <div class="form-group">
-                        <div class="input-group">
-                          <select class="custom-select">
-                            <option selected=""></option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Quận / Huyện:</label>
-                      <div class="form-group">
-                        <div class="input-group">
-                          <select class="custom-select">
-                            <option selected=""></option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Xã / Phường / Thị trấn:</label>
-                      <div class="form-group">
-                        <div class="input-group">
-                          <select class="custom-select">
-                            <option selected=""></option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Địa chỉ cụ thể:</label>
-                      <input type="text" class="form-control" />
-                      <small class="form-text text-danger">Help text</small>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="hoaDon.sdtNguoiNhan"
+                      />
+                      <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
                     <div class="col-md-12">
                       <label class="form-label">Ghi chú:</label>
-                      <input type="text" class="form-control" />
-                      <small class="form-text text-danger">Help text</small>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="hoaDon.ghiChu"
+                      />
+                      <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
-                    <hr />
-                    <!-- Shipping info -->
-                    <div class="ml-5">
-                      <p>Thời gian giao hàng dự kiến: 21-01-2024</p>
-                      <p>Phí vận chuyển: 30,000 đ</p>
-                    </div>
+                    <app-get-dia-chi-va-phi-van-chuyen
+                      [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
+                    ></app-get-dia-chi-va-phi-van-chuyen>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -139,6 +116,7 @@
                     type="button"
                     class="btn btn-primary"
                     data-dismiss="modal"
+                    (click)="changeDiaChi()"
                   >
                     Xác nhận
                   </button>
@@ -181,7 +159,7 @@
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Email: </span
-          ><span>{{ hoaDon.diaChiNguoiNhan }}</span>
+          ><span>{{ hoaDon.emailNguoiNhan }}</span>
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Ghi chú: </span>
@@ -209,4 +187,11 @@
 </div>
 <!-- END order Info -->
 
-<app-order-product [hoaDon]="hoaDon"></app-order-product>
+<app-order-product
+  [idHoaDon]="hoaDon.id"
+  [loaiHoaDon]="hoaDon.loaiHoaDon"
+  [hoaDonChiTiets]="hoaDon.hoaDonChiTiets"
+  [(tongTien)]="hoaDon.tongTien"
+  [(tienGiam)]="hoaDon.tienGiam"
+  [(phiVanChuyen)]="hoaDon.phiVanChuyen"
+></app-order-product>

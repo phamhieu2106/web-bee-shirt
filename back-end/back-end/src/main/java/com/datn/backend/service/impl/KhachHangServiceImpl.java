@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.response.KhachHangResponse;
+import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +36,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang add(KhachHangRequest kh) {
         Account account = new Account();
-        account.setTenDangNhap(kh.getTenDangNhap());
+        account.setTenDangNhap(kh.getSdt());
         account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
@@ -45,6 +47,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setNgaySinh(kh.getNgaySinh());
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioiTinh());
+        khachHang.setImageUrl("assets/img/default-image.jpg");
         khachHang.setEmail(kh.getEmail());
         khachHang.setTrangThai(kh.getTrangThai());
         khachHang.setAccount(account);
@@ -117,6 +120,25 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHangResponse getById(int id) {
         return khachHangRepository.getKHById(id);
+    }
+
+    @Override
+    public PagedResponse<KhachHangResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<KhachHangResponse> page = khachHangRepository.filter(pageable, gioiTinhFilter, trangThaiFilter);
+
+        PagedResponse<KhachHangResponse> pagedResponse = new PagedResponse<>();
+
+        pagedResponse.setPageNumber(pageNumber);
+        pagedResponse.setPageSize(pageSize);
+        pagedResponse.setTotalPages(page.getTotalPages());
+        pagedResponse.setTotalElements(page.getTotalElements());
+        pagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(page.getTotalPages()));
+        pagedResponse.setData(page.getContent());
+        pagedResponse.setSearch("");
+
+        return pagedResponse;
     }
 
 

@@ -8,4 +8,5 @@ export class DiaChi {
     tinh: string;
     macDinh: boolean;
     khachHang: KhachHang;
+    isCollapsed: boolean = true;
 }

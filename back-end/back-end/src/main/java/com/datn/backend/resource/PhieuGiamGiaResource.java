@@ -8,11 +8,8 @@ import com.datn.backend.service.PhieuGiamGiaServce;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/phieu-giam-gia")
@@ -33,7 +28,7 @@ public class PhieuGiamGiaResource {
     private PhieuGiamGiaServce service;
 
     @Autowired
-    private PhieuGiamGiaKhachHangService phieuGiamGiaService;
+    private PhieuGiamGiaKhachHangService phieuGiamGiaKhachHangService;
 
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
@@ -44,11 +39,11 @@ public class PhieuGiamGiaResource {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/sua-phieu/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 
         return ResponseEntity.ok(service.getOne(id));
@@ -66,20 +61,36 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(service.add(phieuGiamGia));
     }
 
-    @PostMapping("/add-phieu")
-    public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
-        phieuGiamGiaService.addPhieu(request);
-        return ResponseEntity.ok(request);
-    }
 
-
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PhieuGiamGiaRequest request) {
+
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
+    /// Phiếu Giảm Giá Khách Hàng
+    @PostMapping("/add-phieu")
+    public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
+        phieuGiamGiaKhachHangService.addPhieu(request);
+        return ResponseEntity.ok(request);
+    }
 
+    @GetMapping("/get-phieu-khach-hang")
+    public ResponseEntity<?> getAllPhieuKhachHang() {
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
+    }
 
+    @GetMapping("/get-phieu-khach-hang/{id}")
+    public ResponseEntity<?> getKhachHangTang(@PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,1));
+    }
+
+    @GetMapping("/get-phieu-Khong-co/{id}")
+    public ResponseEntity<?> getKhachHangTangKhongCo(@PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,0));
+    }
 
 
 }

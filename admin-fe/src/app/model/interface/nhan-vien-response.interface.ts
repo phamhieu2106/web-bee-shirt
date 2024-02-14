@@ -7,7 +7,7 @@ export interface NhanVienResponse {
   gioiTinh: boolean;
   email: string;
   diaChi: string;
-  tenDangNhap: string;
+  tenDangNhap?: string;
   matKhau?: string;
   trangThai?: boolean;
   role?: string;

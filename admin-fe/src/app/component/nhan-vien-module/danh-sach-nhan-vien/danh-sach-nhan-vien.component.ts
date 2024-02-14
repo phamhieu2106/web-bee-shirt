@@ -27,7 +27,7 @@ export class DanhSachNhanVienComponent {
   constructor(
     private nhanVienService: NhanVienService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getAllNhanVien();
@@ -93,6 +93,7 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getOneById(id).subscribe({
       next: (response) => {
         this.nhanVienDetails = response;
+        console.log(this.nhanVienDetails)
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);

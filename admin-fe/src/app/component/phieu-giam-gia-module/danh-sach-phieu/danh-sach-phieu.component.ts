@@ -19,6 +19,7 @@ export class DanhSachPhieuComponent {
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: PhieuGiamGia;
+  public phieuDetails: PhieuGiamGia;
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
@@ -71,7 +72,7 @@ export class DanhSachPhieuComponent {
     this.phieuGiamGiaService.getAll().subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
         this.pagedResponseBinh = response;
-        console.log(this.pagedResponseBinh)
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -91,6 +92,32 @@ export class DanhSachPhieuComponent {
       danhSachPhieuGiamGia.forEach((phieu: PhieuGiamGia) => {
         this.changeStatus(phieu.id);
       });
+    });
+  }
+
+
+  // Đổi màu
+  getColorByStatus(status: string): string {
+    switch (status) {
+      case 'Đã kết thúc':
+        return '#FF0000'; // Đỏ
+      case 'Sắp diễn ra':
+        return '#FFD700'; // Vàng
+      case 'Đang Diễn Ra':
+        return '#4CAF50'; // Xanh lá cây
+      default:
+        return '#74c0fc'; // Mặc định là xanh dương
+    }
+  }
+
+  public openDetailsForm(id: number): void {
+    this.phieuGiamGiaService.getOne(id).subscribe({
+      next: (response) => {
+        this.phieuDetails = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
     });
   }
 }

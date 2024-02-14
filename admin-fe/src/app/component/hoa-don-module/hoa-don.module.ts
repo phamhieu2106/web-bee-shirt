@@ -10,9 +10,10 @@ import { OrderProductComponent } from "./order-product/order-product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { TrangThaiHoaDonComponent } from './trang-thai-hoa-don/trang-thai-hoa-don.component';
-import { LoaiHoaDonComponent } from './loai-hoa-don/loai-hoa-don.component';
-import { PhuongThucThanhToanComponent } from './phuong-thuc-thanh-toan/phuong-thuc-thanh-toan.component';
+import { TrangThaiHoaDonComponent } from "./trang-thai-hoa-don/trang-thai-hoa-don.component";
+import { LoaiHoaDonComponent } from "./loai-hoa-don/loai-hoa-don.component";
+import { PhuongThucThanhToanComponent } from "./phuong-thuc-thanh-toan/phuong-thuc-thanh-toan.component";
+import { CommonComponentModule } from "../common-component/common-component.module";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { PhuongThucThanhToanComponent } from './phuong-thuc-thanh-toan/phuong-th
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
+    CommonComponentModule,
   ],
 })
 export class HoaDonModule {}

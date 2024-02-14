@@ -55,6 +55,7 @@
                     type="radio"
                     name="exampleRadios"
                     [checked]="nhanVienDetails?.gioiTinh"
+                    disabled="true"
                   />
                   <label class="form-check-label"> Nam </label>
                 </div>
@@ -64,6 +65,7 @@
                     type="radio"
                     name="exampleRadios"
                     [checked]="!nhanVienDetails?.gioiTinh"
+                    disabled="true"
                   />
                   <label class="form-check-label"> Nữ </label>
                 </div>
@@ -156,9 +158,9 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6">
-              <!-- tên đăng nhập -->
-              <div class="form-group">
+            <!-- <div class="col-md-6"> -->
+            <!-- tên đăng nhập -->
+            <!-- <div class="form-group">
                 Tên đăng nhập
                 <input
                   type="text"
@@ -168,7 +170,7 @@
                   [disabled]="true"
                 />
               </div>
-            </div>
+            </div> -->
             <div class="col-md-6">
               <!-- cccd -->
               <div class="form-group">

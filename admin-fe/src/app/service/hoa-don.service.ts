@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { HoaDon } from "../model/class/hoa-don.class";
 import { LichSuHoaDon } from "../model/class/lich-su-hoa-don.class";
+import { SoLuongDonHang } from "../model/class/so-luong-don-hang.class";
 
 @Injectable({
   providedIn: "root",
@@ -11,6 +12,10 @@ import { LichSuHoaDon } from "../model/class/lich-su-hoa-don.class";
 export class HoaDonService {
   private readonly baseUrl = "http://localhost:8080/hoa-don";
   constructor(private http: HttpClient) {}
+  // update hóa đơn
+  public putHoaDon(hoaDon: HoaDon): Observable<HoaDon> {
+    return this.http.put<HoaDon>(this.baseUrl + "/update", hoaDon);
+  }
 
   // get all
   public getAll(
@@ -55,5 +60,11 @@ export class HoaDonService {
         moTa,
       }
     );
+  }
+
+  //get số lượng đơn hàng all
+  public getSoLuongDonHang(): Observable<SoLuongDonHang> {
+    const url = this.baseUrl + `/get-order-quantity-all`;
+    return this.http.get<SoLuongDonHang>(url);
   }
 }

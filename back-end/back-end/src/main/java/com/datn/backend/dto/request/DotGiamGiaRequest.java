@@ -1,19 +1,12 @@
 package com.datn.backend.dto.request;
 
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
-import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 public class DotGiamGiaRequest {
@@ -27,11 +20,11 @@ public class DotGiamGiaRequest {
     private String tenDotGiamGia;
 
     @NotNull(message = "Start Date can't be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S")
     private LocalDateTime thoiGianBatDau;
 
     @NotNull(message = "End Date can't be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S")
     private LocalDateTime thoiGianKetThuc;
 
     @Min(value = 5, message = "Discount percent must gather than 5")

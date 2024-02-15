@@ -143,15 +143,13 @@
     </td>
     <td>
       <button
-        class="btn btn-outline-light btn-rounded"
-      >
-        <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
-      </button>
-      <button
         class="btn btn-outline-warning btn-rounded"
-        [routerLink]="['/dot-giam-gia/cap-nhat-dot-giam-gia/',object.id]"
+        [routerLink]="['/dot-giam-gia/cap-nhat-dot-giam-gia/', object.id]"
       >
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
+      </button>
+      <button class="btn btn-outline-light btn-rounded">
+        <i class="fa-solid fa-trash fa-xl" style="color: #f20101"></i>
       </button>
     </td>
   </tr>
@@ -188,6 +186,9 @@
   <tr role="row" class="odd p-3" *ngFor="let object of listSanPhamChiTiet">
     <td class="sorting_1">
       <input
+        [checked]="
+          listIdSanPhamChiTiet && listIdSanPhamChiTiet.includes(+object.id)
+        "
         [disabled]="object.trangThai === false ? true : false"
         type="checkbox"
         (change)="addIdSanPhamChiTiet(object.id)"

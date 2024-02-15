@@ -203,16 +203,59 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
+
         if (optional.isPresent()) {
-            // Set ID
-            object.setId(id);
-//            Set Code
-            object.setMaDotGiamGia(optional.get().getMaDotGiamGia());
+            object.setId(optional.get().getId());
+            object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
 
+            LocalDateTime today = LocalDateTime.now();
+            if (object.getThoiGianBatDau().isAfter(today)) {
+                // If thoiGianBatDau is after today, set trangThai to 2
+                object.setTrangThai(2);
+            } else {
+                // If thoiGianBatDau is not after today, set trangThai to 1
+                object.setTrangThai(1);
+            }
             DotGiamGia dotGiamGia = object.map(optional.get());
+            repository.save(dotGiamGia);
+//        Find DotGiamGia after save
+            DotGiamGia dotGiamGiaFind = repository.getDotGiamGiaByMaDotGiamGia(dotGiamGia.getMaDotGiamGia());
 
-            return repository.save(dotGiamGia);
+            for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
+
+                Optional<SanPhamChiTiet> optionalSanPhamChiTiet = sanPhamChiTietRepository.findById(object.getListIdSanPhamChiTiet().get(i));
+
+
+                if (optionalSanPhamChiTiet.isPresent()) {
+                    if (repository.getListIdSanPhamChiTiet(dotGiamGiaFind.getId()).contains(object.getListIdSanPhamChiTiet().get(i))){
+
+                    }
+                        //        Create sanPhamChiTiet
+                        SanPhamChiTiet sanPhamChiTiet = optionalSanPhamChiTiet.get();
+//                Create DotGiamGiaSanPham and set
+                    DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
+
+                    dotGiamGiaSanPham.setGiaCu(sanPhamChiTiet.getGiaBan());
+
+//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
+                    dotGiamGiaSanPham.setGiaMoi(sanPhamChiTiet.getGiaBan()
+                            .subtract(sanPhamChiTiet.getGiaBan()
+                                    .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
+                                            .divide(new BigDecimal(100)))));
+
+                    dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
+                    dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
+                    dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
+                    dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
+                    dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(sanPhamChiTiet.getId()).build());
+                    dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGiaFind.getId()).build());
+                    //        save to database
+                    dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+                }
+            }
+            return dotGiamGia;
         }
+
         return null;
     }
 

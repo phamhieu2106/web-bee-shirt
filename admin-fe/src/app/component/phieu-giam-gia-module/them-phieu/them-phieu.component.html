@@ -72,10 +72,11 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
-                  ? 'is-invalid'
-                  : ''" formControlName="giaTriMax">
-                  <div class="invalid-feedback">
+                  <input type="text" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
+                           ? 'is-invalid'
+                           : ''" formControlName="giaTriMax" (input)="formatCurrency(addForm.get('giaTriMax'))">
+                  <div *ngIf="addForm.get('giaTriMax').hasError('required') && addForm.get('giaTriMax').touched"
+                    class="invalid-feedback">
                     Giá trị tối đa không được để trống
                   </div>
                 </div>
@@ -91,10 +92,11 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched
-                  ? 'is-invalid'
-                  : ''" formControlName="dieuKienGiam">
-                  <div class="invalid-feedback">
+                  <input type="text" class="form-control" placeholder="Điều kiện"
+                    [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched ? 'is-invalid' : ''"
+                    formControlName="dieuKienGiam" (input)="formatCurrency(addForm.get('dieuKienGiam'))">
+                  <div *ngIf="addForm.get('dieuKienGiam').hasError('required') && addForm.get('dieuKienGiam').touched"
+                    class="invalid-feedback">
                     Điều kiện không được để trống
                   </div>
                 </div>
@@ -120,7 +122,7 @@
                 </div>
               </div>
 
-              <button type="button" class="btn btn-primary" (click)="confirmCreation()">Tạo
+              <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="confirmCreation()">Tạo
                 mới</button>
             </form>
 

@@ -74,7 +74,7 @@
                 <div class="col-md-6">
                   <input type="text" class="form-control" placeholder="Giá trị tối đa" [ngClass]="addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
                            ? 'is-invalid'
-                           : ''" formControlName="giaTriMax" (input)="formatCurrency(addForm.get('giaTriMax'))">
+                           : ''" formControlName="giaTriMax" >
                   <div *ngIf="addForm.get('giaTriMax').hasError('required') && addForm.get('giaTriMax').touched"
                     class="invalid-feedback">
                     Giá trị tối đa không được để trống
@@ -94,7 +94,7 @@
                 <div class="col-md-6">
                   <input type="text" class="form-control" placeholder="Điều kiện"
                     [ngClass]="addForm.get('dieuKienGiam').invalid && addForm.get('dieuKienGiam').touched ? 'is-invalid' : ''"
-                    formControlName="dieuKienGiam" (input)="formatCurrency(addForm.get('dieuKienGiam'))">
+                    formControlName="dieuKienGiam" >
                   <div *ngIf="addForm.get('dieuKienGiam').hasError('required') && addForm.get('dieuKienGiam').touched"
                     class="invalid-feedback">
                     Điều kiện không được để trống

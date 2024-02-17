@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormControl, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormGroup, Validators, FormControl, ValidationErrors, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
 import { PhieuGiamGia } from 'src/app/model/class/phieu-giam-gia.class';
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
@@ -25,7 +25,8 @@ export class ThemPhieuComponent implements OnInit {
   phieuGiamGiaId: number
 
   constructor(private phieuGiamGia: PhieuGiamGiaService,
-    private khachHangService: KhachHangService,) { }
+    private khachHangService: KhachHangService,
+    private formBuilder: FormBuilder,) { }
 
   ngOnInit(): void {
     this.initAddForm();
@@ -65,20 +66,20 @@ export class ThemPhieuComponent implements OnInit {
 
 
   public initAddForm(): void {
-    this.addForm = new FormGroup({
+    this.addForm = this.formBuilder.group({
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
-      kieu: new FormControl("1"),
-      loai: new FormControl("1"),
+      kieu: new FormControl("1", [Validators.required]),
+      loai: new FormControl("1", [Validators.required]),
       soLuong: new FormControl("", [Validators.required]),
       thoiGianBatDau: new FormControl("", [Validators.required]),
       thoiGianKetThuc: new FormControl("", [Validators.required]),
       dieuKienGiam: new FormControl("", [Validators.required]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl("", [Validators.required, Validators.min(1), Validators.max(100)]),
-      trangThai: new FormControl("", [Validators.required]),
-    })
+      giaTriMax: new FormControl("", [Validators.required]),
 
+    })
+    console.log(this.addForm)
 
   }
 
@@ -87,17 +88,17 @@ export class ThemPhieuComponent implements OnInit {
       const addForm = this.addForm;
 
       if (!addForm) {
-        // Gọi initAddForm() hoặc xử lý khởi tạo addForm ở đây
+
         return null;
       }
 
       const kieu = addForm.get('kieu').value;
       const giaTri = control.value;
-      console.log(kieu)
+
 
       // Kiểm tra nếu ô giá trị trống
       if (!giaTri) {
-        return { giaTri: 'Vui lòng nhập giá trị' };
+        return { giaTri: 'Không để trống giá trị' };
       }
 
       // Tiếp tục kiểm tra giá trị nhập vào khi không trống
@@ -117,7 +118,7 @@ export class ThemPhieuComponent implements OnInit {
 
   onKieuChange() {
     const loaiValue = this.addForm.get('kieu').value;
-    console.log(loaiValue)
+
     this.addForm.get('giaTri').updateValueAndValidity();
   }
 
@@ -126,6 +127,18 @@ export class ThemPhieuComponent implements OnInit {
 
   onLoaiChange() {
     this.isTableDisabled = !this.isTableDisabled;
+  }
+
+  formatCurrency(control: AbstractControl): void {
+    let value: string = control.value;
+    if (value !== null && value !== undefined && value !== '') {
+      // Xóa bỏ tất cả các ký tự không phải số
+      value = value.replace(/\D/g, '');
+      // Chuyển đổi giá trị sang số và định dạng thành chuỗi có một dấu chấm ở hàng nghìn
+      value = (parseFloat(value) || 0).toLocaleString('vi-VN');
+      // Thêm đơn vị tiền tệ vào cuối chuỗi
+      control.patchValue(value + ' VNĐ', { emitEvent: false });
+    }
   }
 
 

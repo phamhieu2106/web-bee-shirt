@@ -2,8 +2,20 @@ package com.datn.backend.repository;
 
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSanPham,Integer> {
+public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSanPham, Integer> {
+
+    @Query(value = """
+            SELECT id, gia_cu, gia_moi, giam_gia, san_pham_chi_tiet_id, trang_thai , dot_giam_gia_id ,
+            thoi_gian_bat_dau, thoi_gian_ket_thuc, created_at, updated_at, created_by, last_updated_by
+            FROM dot_giam_gia_san_pham
+            WHERE dot_giam_gia_id = :id ;
+            """, nativeQuery = true)
+    List<DotGiamGiaSanPham> getAll(@Param("id") Integer id);
 }

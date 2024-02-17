@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -204,59 +205,75 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 
-        if (optional.isPresent()) {
-            object.setId(optional.get().getId());
-            object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
+        if (optional.isEmpty()) {
+            return null;
+        }
+        DotGiamGia dotGiamGia = optional.get();
 
-            LocalDateTime today = LocalDateTime.now();
-            if (object.getThoiGianBatDau().isAfter(today)) {
-                // If thoiGianBatDau is after today, set trangThai to 2
-                object.setTrangThai(2);
-            } else {
-                // If thoiGianBatDau is not after today, set trangThai to 1
-                object.setTrangThai(1);
-            }
-            DotGiamGia dotGiamGia = object.map(optional.get());
-            repository.save(dotGiamGia);
-//        Find DotGiamGia after save
-            DotGiamGia dotGiamGiaFind = repository.getDotGiamGiaByMaDotGiamGia(dotGiamGia.getMaDotGiamGia());
+        List<DotGiamGiaSanPham> listDotGiamGiaSanPham = dotGiamGiaSanPhamRepository.getAll(dotGiamGia.getId());
+        for (Integer sanPhamChiTietID : object.getListIdSanPhamChiTiet()) {
+            boolean found = false;
+            for (DotGiamGiaSanPham dotGiamGiaSanPham : listDotGiamGiaSanPham) {
+                if (Objects.equals(sanPhamChiTietID, dotGiamGiaSanPham.getSanPhamChiTiet().getId())) {
+                    found = true;
+                    SanPhamChiTiet spct = sanPhamChiTietRepository
+                            .findById(sanPhamChiTietID).get();
 
-            for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
-
-                Optional<SanPhamChiTiet> optionalSanPhamChiTiet = sanPhamChiTietRepository.findById(object.getListIdSanPhamChiTiet().get(i));
-
-
-                if (optionalSanPhamChiTiet.isPresent()) {
-                    if (repository.getListIdSanPhamChiTiet(dotGiamGiaFind.getId()).contains(object.getListIdSanPhamChiTiet().get(i))){
-
-                    }
-                        //        Create sanPhamChiTiet
-                        SanPhamChiTiet sanPhamChiTiet = optionalSanPhamChiTiet.get();
-//                Create DotGiamGiaSanPham and set
-                    DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
-
-                    dotGiamGiaSanPham.setGiaCu(sanPhamChiTiet.getGiaBan());
-
+                    dotGiamGiaSanPham.setGiaCu(spct.getGiaBan());
 //                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
-                    dotGiamGiaSanPham.setGiaMoi(sanPhamChiTiet.getGiaBan()
-                            .subtract(sanPhamChiTiet.getGiaBan()
+                    dotGiamGiaSanPham.setGiaMoi(spct.getGiaBan()
+                            .subtract(spct.getGiaBan()
                                     .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
                                             .divide(new BigDecimal(100)))));
 
                     dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
                     dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                     dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
-                    dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
-                    dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(sanPhamChiTiet.getId()).build());
-                    dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGiaFind.getId()).build());
-                    //        save to database
+                    dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());
+                    dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
+                    dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
                     dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+                    System.out.println("Update Successfully");
+                    break;
                 }
             }
-            return dotGiamGia;
+            if (!found) {
+                SanPhamChiTiet spct = sanPhamChiTietRepository
+                        .findById(sanPhamChiTietID).get();
+                DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
+
+                dotGiamGiaSanPham.setGiaCu(spct.getGiaBan());
+//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
+                dotGiamGiaSanPham.setGiaMoi(spct.getGiaBan()
+                        .subtract(spct.getGiaBan()
+                                .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
+                                        .divide(new BigDecimal(100)))));
+
+                dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
+                dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
+                dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
+                dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());
+                dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
+                dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
+                dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+                System.out.println("Add Successfully");
+            }
+        }
+        for (DotGiamGiaSanPham dotGiamGiaSanPham : listDotGiamGiaSanPham) {
+            boolean found = false;
+            for (Integer idSPCT : object.getListIdSanPhamChiTiet()) {
+                if (Objects.equals(dotGiamGiaSanPham.getSanPhamChiTiet().getId(), idSPCT)) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                dotGiamGiaSanPham.setTrangThai(false);
+                dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+                System.out.println("Set Status");
+            }
         }
 
-        return null;
+        return dotGiamGia;
     }
 
     @Override
@@ -264,8 +281,10 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
         if (optional.isPresent()) {
+            DotGiamGia dotGiamGia = optional.get();
             try {
-                repository.delete(optional.get());
+                dotGiamGia.setTrangThai(0);
+                repository.save(dotGiamGia);
                 return true;
             } catch (Exception ex) {
                 throw new ResourceInvalidException("Id invalid!!");

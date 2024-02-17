@@ -74,7 +74,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 dggsp.thoi_gian_bat_dau AS ThoiGianBatDau,
                 dggsp.thoi_gian_ket_thuc AS ThoiGianKetThuc,
                 dgg.trang_thai AS TrangThai,
-                GROUP_CONCAT(dggsp.id) AS ListIdSanPhamChiTiet
+                GROUP_CONCAT(spct.id) AS ListIdSanPhamChiTiet
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             JOIN san_pham_chi_tiet spct ON spct.id = dggsp.san_pham_chi_tiet_id

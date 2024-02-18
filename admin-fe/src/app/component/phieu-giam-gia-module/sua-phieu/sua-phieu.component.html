@@ -16,100 +16,125 @@
 
                         <form [formGroup]="updateForm">
                             <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá"
-                                    formControlName="maPhieuGiamGia">
-                                <div class=" invalid-feedback">
-                                    Mã phiếu giảm giá không được để trống
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá"
-                                    formControlName="tenPhieuGiamGia">
+                                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="updateForm.get('maPhieuGiamGia').invalid && updateForm.get('maPhieuGiamGia').touched
+                                  ? 'is-invalid'
+                                  : ''" formControlName="maPhieuGiamGia">
                                 <div class="invalid-feedback">
-                                    Tên phiếu giảm giá không được để trống
+                                  Mã phiếu giảm giá không được để trống
                                 </div>
-                            </div>
-
-                            <div class=" mb-3">
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1"
-                                        formControlName="kieu" />
-                                    <label class="form-check-label" for="tienMat"> Tiền Mặt </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" name="kieu" id="%" type="radio" value="0"
-                                        formControlName="kieu" />
-                                    <label class="form-check-label" for="%"> % </label>
-                                </div>
-                            </div>
-
-                            <div class=" mb-3">
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
-                                        formControlName="loai" checked="true" />
-                                    <label class="form-check-label" for="congKhai"> Công Khai </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
-                                        formControlName="loai" />
-                                    <label class="form-check-label" for="caNhan"> Cá Nhân </label>
-                                </div>
-                            </div>
-
-
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Giá trị"
-                                        formControlName="giaTri">
-                                    <div class="invalid-feedback">
-                                        Giá trị không được để trống
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Giá trị tối đa"
-                                        formControlName="giaTriMax">
-                                    <div class="invalid-feedback">
-                                        Giá trị tối đa không được để trống
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Số lượng"
-                                        formControlName="soLuong">
-                                    <div class="invalid-feedback">
-                                        Số lượng không được để trống
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Điều kiện"
-                                        formControlName="dieuKienGiam">
-                                    <div class="invalid-feedback">
-                                        Điều kiện không được để trống
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Từ ngày</label>
-                                <input type="datetime-local" class="form-control" formControlName="thoiGianBatDau">
+                              </div>
+                
+                              <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="updateForm.get('tenPhieuGiamGia').invalid && updateForm.get('tenPhieuGiamGia').touched
+                                  ? 'is-invalid'
+                                  : ''" formControlName="tenPhieuGiamGia">
                                 <div class="invalid-feedback">
-                                    Từ ngày không được để trống
+                                  Tên phiếu giảm giá không được để trống
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Đến ngày</label>
-                                <input type="datetime-local" class="form-control" formControlName="thoiGianKetThuc">
-                                <div class="invalid-feedback">
-                                    Đến ngày không được để trống
+                              </div>
+                
+                              <div class=" mb-3">
+                
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
+                                    checked="true" (change)="onKieuChange()" />
+                                  <label class="form-check-label" for="tienMat"> Tiền Mặt </label>
                                 </div>
-                            </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
+                                    (change)="onKieuChange()" />
+                                  <label class="form-check-label" for="%"> % </label>
+                                </div>
+                              </div>
+                
+                
+                
+                              <div class="mb-3">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
+                                    formControlName="loai" checked="true" (change)="onLoaiChange()" />
+                                  <label class="form-check-label" for="congKhai"> Công Khai </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0" formControlName="loai"
+                                    (change)="onLoaiChange()" />
+                                  <label class="form-check-label" for="caNhan"> Cá Nhân </label>
+                                </div>
+                              </div>
+                
+                              <div class="mb-3 row">
+                                <div class="col-md-6">
+                                  <input type="number" class="form-control" placeholder="Giá trị"
+                                    [ngClass]="updateForm.get('giaTri').invalid && updateForm.get('giaTri').touched ? 'is-invalid' : ''"
+                                    formControlName="giaTri">
+                                  <div *ngIf="updateForm.get('giaTri').hasError('giaTri') && updateForm.get('giaTri').touched"
+                                    class="invalid-feedback">
+                                    {{ updateForm.get('giaTri').getError('giaTri') }}
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <input type="number" class="form-control" placeholder="Giá trị tối đa" 
+                                         [ngClass]="updateForm.get('giaTriMax').invalid && updateForm.get('giaTriMax').touched ? 'is-invalid' : ''" 
+                                         formControlName="giaTriMax">
+                                  <div *ngIf="updateForm.get('giaTriMax').hasError('required') && updateForm.get('giaTriMax').touched"
+                                       class="invalid-feedback">
+                                    Giá trị tối đa không được để trống
+                                  </div>
+                                </div>
+                              </div>
+                
+                              <div class="mb-3 row">
+                                <div class="col-md-6">
+                                  <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="updateForm.get('soLuong').invalid && updateForm.get('soLuong').touched
+                                  ? 'is-invalid'
+                                  : ''" formControlName="soLuong">
+                                  <div class="invalid-feedback">
+                                    Số lượng không được để trống
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <input type="text" class="form-control" placeholder="Điều kiện"
+                                    [ngClass]="updateForm.get('dieuKienGiam').invalid && updateForm.get('dieuKienGiam').touched ? 'is-invalid' : ''"
+                                    formControlName="dieuKienGiam" >
+                                  <div *ngIf="updateForm.get('dieuKienGiam').hasError('required') && updateForm.get('dieuKienGiam').touched"
+                                    class="invalid-feedback">
+                                    Điều kiện không được để trống
+                                  </div>
+                                </div>
+                              </div>
+                
+                              <div class="mb-3">
+                                <label>Ngày bắt đầu</label>
+                                <input type="datetime-local" class="form-control" [ngClass]="
+                                    updateForm.get('thoiGianBatDau').invalid &&
+                                    updateForm.get('thoiGianBatDau').touched
+                                      ? 'is-invalid'
+                                      : ''
+                                  " formControlName="thoiGianBatDau" (blur)="checkThoiGian()"/>
+                               <div *ngIf="
+                               updateForm.get('thoiGianBatDau').hasError('ngayBatDau') &&
+                               updateForm.get('thoiGianBatDau').touched
+                           " class="invalid-feedback">
+                                 {{ updateForm.get("thoiGianBatDau").getError("ngayBatDau") }}
+                               </div>
+                              </div>
+                
+                              <div class="mb-3">
+                                <label>Ngày kết thúc</label>
+                                <input type="datetime-local" class="form-control" [ngClass]="
+                                    updateForm.get('thoiGianKetThuc').invalid &&
+                                    updateForm.get('thoiGianKetThuc').touched
+                                      ? 'is-invalid'
+                                      : ''
+                                  " formControlName="thoiGianKetThuc" (blur)="checkThoiGian()" />
+                                <div *ngIf="
+                                updateForm.get('thoiGianKetThuc').hasError('ngayKetThuc') &&
+                                updateForm.get('thoiGianKetThuc').touched
+                            " class="invalid-feedback">
+                                  {{ updateForm.get("thoiGianKetThuc").getError("ngayKetThuc") }}
+                                </div>
+                
+                              </div>
 
                             <button type="button" class="btn btn-primary" (click)="updatePhieu()">Sửa Phiếu</button>
                         </form>

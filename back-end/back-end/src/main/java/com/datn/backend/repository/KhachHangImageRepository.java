@@ -1,7 +1,7 @@
 package com.datn.backend.repository;
 
-import com.datn.backend.model.san_pham.MauSacImage;
+import com.datn.backend.model.khach_hang.KhachHangImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MauSacImageRepository extends JpaRepository<MauSacImage, Integer> {
+public interface KhachHangImageRepository extends JpaRepository<KhachHangImage, Integer> {
 }

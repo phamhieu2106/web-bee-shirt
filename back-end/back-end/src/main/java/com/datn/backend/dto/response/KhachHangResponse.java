@@ -19,5 +19,6 @@ public interface KhachHangResponse {
     String getXa();
     String getDuong();
     int getTrangThai();
+    String getAnhUrl();
 
 }

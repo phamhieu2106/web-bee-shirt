@@ -9,187 +9,264 @@
       <div class="col-sm-12">
         <form class="card">
           <div class="card-header">
-            <h3 class="float-md-left">
-              Thêm khách hàng
-            </h3>
+            <h3 class="float-md-left">Thêm khách hàng</h3>
             <button
-            class="btn btn-primary btn-rounded float-md-right"
-            id="add-button"
-            data-toggle="modal"
-            data-target="#formQRCode"
-            data-whatever="@mdo"
-          >
-            <i class="fa-solid fa-qrcode"></i> Quét QR CCCD
-          </button>
+              class="btn btn-primary btn-rounded float-md-right"
+              id="add-button"
+              data-toggle="modal"
+              data-target="#formQRCode"
+              data-whatever="@mdo"
+            >
+              <i class="fa-solid fa-qrcode"></i> Quét QR CCCD
+            </button>
           </div>
-          <div class="card-body ">
+          <div class="card-body">
             <form [formGroup]="formAddKh">
-            <div class="row justify-content-center">
-              <div class="col-md-4 ">
-                <div class="form-group">
+              <div class="row justify-content-center">
+                <div class="col-md-4">
+                  <div class="form-group">
                     <div class="d-flex justify-content-center">
-                    <input type="file" 
-                    (change)="onFileSelected($event)" 
-                    #fileInput 
-                    style="display:none" 
+                      <input
+                        type="file"
+                        accept="image/*"
+                        (change)="onFileSelected($event)"
+                        (change)="imageChange($event)"
+                        #fileInput
+                        style="display: none"
+                      />
+                      <button (click)="openFileInput()" class="button-anh">
+                        <img
+                          *ngIf="imageUrl"
+                          [src]="imageUrl"
+                          alt="Selected Image"
+                        />
+                        <span *ngIf="!imageUrl">Thêm ảnh đại diện</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="input_label"
+                      ><b style="color: red">*</b>Tên khách hàng</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control input"
+                      placeholder="Nhập tên khách hàng"
+                      formControlName="hoTen"
+                      [ngClass]="
+                        formAddKh.get('hoTen').invalid &&
+                        formAddKh.get('hoTen').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
                     />
-                    <button (click)="openFileInput()" class="button-anh">
-                      <img *ngIf="imageUrl" [src]="imageUrl" alt="Selected Image" />
-                      <span *ngIf="!imageUrl">Thêm ảnh đại diện</span>
-                    </button>
+                    <div class="invalid-feedback">Không được bỏ trống</div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label class="input_label"><b style="color: red;">*</b>Tên khách hàng</label>
-                  <input
-                    type="text"
-                    class="form-control input" 
-                    placeholder="Nhập tên khách hàng"
-                    formControlName="hoTen"
-                  />
-                </div>
-              </div>
-              <div class="col-md-7">
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Số điện thoại</label>
-                      <input
-                        type="text"
-                        class="form-control input" 
-                        placeholder="Nhập số điện thoại"
-                        formControlName="sdt"
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Email</label>
-                      <input
-                        type="text"
-                        class="form-control input" 
-                        placeholder="Nhập email khách hàng"
-                        formControlName="email"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Ngày sinh</label>
-                      <input
-                        type="date"
-                        class="form-control input" 
-                        formControlName="ngaySinh"
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Giới tính</label>
-                      <br>
-                      <div class="button_ngang">
-                        <label class="radio-button">
-                          <input type="radio" name="gioiTinh" value="true"
-                          formControlName="gioiTinh">
-                          <span class="radio"></span>
-                          Nam
-                        </label>
-                        
-                        <label class="radio-button">
-                          <input type="radio" name="gioiTinh" value="false"
-                          formControlName="gioiTinh">
-                          <span class="radio"></span>
-                          Nữ
-                        </label>
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Số điện thoại</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control input"
+                          placeholder="Nhập số điện thoại"
+                          formControlName="sdt"
+                          [ngClass]="
+                            formAddKh.get('sdt').invalid &&
+                            formAddKh.get('sdt').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
+                        />
+                        <div class="invalid-feedback">Không được bỏ trống</div>
                       </div>
-                      
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Email</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control input"
+                          placeholder="Nhập email khách hàng"
+                          formControlName="email"
+                          [ngClass]="
+                            formAddKh.get('email').invalid &&
+                            formAddKh.get('email').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
+                        />
+                        <div class="invalid-feedback">Email không hợp lệ</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Tỉnh/Thành phố</label>
-                      <select 
-                      class="form-select form-select-sm mb-3 input" 
-                      style="padding: 5px 10px 5px 10px;"
-                      id="city" 
-                      aria-label=".form-select-sm" 
-                      formControlName="tinh"
-                      (change)="onCityChange()"
-                      >
-                        <option value="" selected>Chọn tỉnh thành</option>                    
-                        <option *ngFor="let dc of tinh" [value]="dc.province_name">{{dc.province_name}}</option>                    
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Ngày sinh</label
+                        >
+                        <input
+                          type="date"
+                          class="form-control input"
+                          formControlName="ngaySinh"
+                          [ngClass]="
+                            formAddKh.get('ngaySinh').invalid &&
+                            formAddKh.get('ngaySinh').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
+                        />
+                        <div class="invalid-feedback">Không được bỏ trống</div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Giới tính</label
+                        >
+                        <br />
+                        <div class="button_ngang">
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="gioiTinh"
+                              value="true"
+                              formControlName="gioiTinh"
+                            />
+                            <span class="radio"></span>
+                            Nam
+                          </label>
+
+                          <label class="radio-button">
+                            <input
+                              type="radio"
+                              name="gioiTinh"
+                              value="false"
+                              formControlName="gioiTinh"
+                            />
+                            <span class="radio"></span>
+                            Nữ
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Tỉnh/Thành phố</label
+                        >
+                        <select
+                          class="form-select form-select-sm mb-3 input"
+                          style="padding: 5px 10px 5px 10px"
+                          id="city"
+                          aria-label=".form-select-sm"
+                          formControlName="tinh"
+                          (change)="onCityChange()"                          
+                        >
+                          <option value="" selected>Chọn tỉnh thành</option>
+                          <option
+                            *ngFor="let dc of tinh"
+                            [value]="dc.province_name"
+                          >
+                            {{ dc.province_name }}
+                          </option>
                         </select>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Quận/Huyện</label>
-                      <select 
-                      class="form-select form-select-sm mb-3 input" 
-                      style="padding: 5px 10px 5px 10px;"
-                      id="district" 
-                      aria-label=".form-select-sm"
-                      formControlName="huyen"
-                      (change)="ondistrictChange()"
-                      >
-                        <option value="" selected>Chọn quận huyện</option>
-                        <option *ngFor="let dc of huyen" [value]="dc.district_name">{{dc.district_name}}</option>          
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Quận/Huyện</label
+                        >
+                        <select
+                          class="form-select form-select-sm mb-3 input"
+                          style="padding: 5px 10px 5px 10px"
+                          id="district"
+                          aria-label=".form-select-sm"
+                          formControlName="huyen"
+                          (change)="ondistrictChange()"
+                        >
+                          <option value="" selected>Chọn quận huyện</option>
+                          <option
+                            *ngFor="let dc of huyen"
+                            [value]="dc.district_name"
+                          >
+                            {{ dc.district_name }}
+                          </option>
                         </select>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Xã/Phường</label>
-                      <select 
-                      class="form-select input" 
-                      style="padding: 5px 10px 5px 10px;"
-                      id="ward" 
-                      ria-label=".form-select-sm"
-                      formControlName="xa"
-                      >
-                        <option value="" selected>Chọn phường xã</option>
-                        <option *ngFor="let dc of xa" [value]="dc.ward_name">{{dc.ward_name}}</option>           
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Xã/Phường</label
+                        >
+                        <select
+                          class="form-select input"
+                          style="padding: 5px 10px 5px 10px"
+                          id="ward"
+                          ria-label=".form-select-sm"
+                          formControlName="xa"
+                        >
+                          <option value="" selected>Chọn phường xã</option>
+                          <option *ngFor="let dc of xa" [value]="dc.ward_name">
+                            {{ dc.ward_name }}
+                          </option>
                         </select>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="input_label"><b style="color: red;">*</b>Địa chỉ cụ thể</label>
-                      <input
-                        type="text"
-                        class="form-control input" 
-                        placeholder="Nhập số nhà, tên đường,...."
-                        formControlName="duong"
-                      />
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="input_label"
+                          ><b style="color: red">*</b>Địa chỉ cụ thể</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control input"
+                          placeholder="Nhập số nhà, tên đường,...."
+                          formControlName="duong"
+                          [ngClass]="
+                          formAddKh.get('duong').invalid &&
+                          formAddKh.get('duong').touched
+                            ? 'is-invalid'
+                            : ''
+                        "
+                        />
+                        <div class="invalid-feedback">Không được bỏ trống</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
           </div>
-          <div class="card-footer ">
+          <div class="card-footer">
             <div class="d-flex justify-content-end">
               <div class="form-group justify-content-md-center">
                 <button
-                type="button"
-                class="btn btn-outline-danger mx-sm-4 rounded"
-                routerLink="/khach-hang/ds-khach-hang"
+                  type="button"
+                  class="btn btn-outline-danger mx-sm-4 rounded"
+                  routerLink="/khach-hang/ds-khach-hang"
                 >
-                Hủy
-              </button>
-                <button 
-                type="button" 
-                class="btn btn-outline-primary mx-sm-4 rounded"
-                (click)="addKH()"
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mx-sm-4 rounded"
+                  (click)="addKH()"
+                  [disabled]="formAddKh.invalid"
                 >
-                <!-- [disabled]="formAddKh.invalid" -->
                   Thêm khách hàng
                 </button>
               </div>

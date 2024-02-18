@@ -1,3 +1,5 @@
+import { KhachHangImage } from "../class/khach-hang-image.class";
+
 export interface KhachHangResponse{
     id: number;
     gioiTinh: boolean,
@@ -11,5 +13,6 @@ export interface KhachHangResponse{
     huyen: string,
     tinh: string,
     duong: string,
-    xa: string
+    xa: string,
+    anhUrl: string
 }

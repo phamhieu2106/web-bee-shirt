@@ -5,9 +5,7 @@ import com.datn.backend.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "khach_hang")
@@ -28,10 +26,12 @@ public class KhachHang extends BaseEntity {
     private String sdt;
     private String email;
     private boolean gioiTinh;
-    private String imageUrl;
     private int trangThai;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private KhachHangImage image;
 }

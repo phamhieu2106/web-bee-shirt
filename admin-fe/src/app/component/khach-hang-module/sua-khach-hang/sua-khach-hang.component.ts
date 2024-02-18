@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { Observable } from "rxjs";
+import { Observable, delay } from "rxjs";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 export class SuaKhachHangComponent {
   icon: string = "fa-solid fa-users";
   title: string = "khách hàng";
+  public seletedDetail: KhachHangResponse;
   public kh: KhachHangResponse;
   public id: number;
   public idKh: number;
@@ -30,9 +31,18 @@ export class SuaKhachHangComponent {
   public tinh: any[] = [];
   public huyen: any[] = [];
   public xa: any[] = [];
+  public tinhDetail: any[] = [];
+  public huyenDetail: any[] = [];
+  public xaDetail: any[] = [];
   public idTinh: number;
   public idHuyen: number;
+  public idDC: number;
+  public idTinhDetail: number;
+  public idHuyenDetail: number;
+  public idDCDetail: number;
+  private selectFile: File;
   imageUrl: string;
+  selectedAddress: DiaChi;
   public isCollapsed: boolean = true;
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
@@ -50,17 +60,18 @@ export class SuaKhachHangComponent {
     this.diaChiService.getTinh().subscribe((data: any)=>{
       this.tinh = data.results;
     })
-    this.idKh = this.route.snapshot.params["id"];
+    const ma = this.route.snapshot.paramMap.get("id");
+    this.idKh = parseInt(ma, 10);
     this.diaChiService.getAllDc(this.idKh).subscribe({
       next: (data: DiaChi[]) => {
         this.dsDC = data;
       },
     });    
     this.route.params.subscribe((params) => {
-      this.id = +params["id"];
+      this.id = +params["id"];     
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
-          this.khDetail = kr;
+          this.khDetail = kr;      
           this.formUpdateKH = new FormGroup({
             id: new FormControl(kr.id, [Validators.required]),
             hoTen: new FormControl(kr.hoTen, [Validators.required]),
@@ -74,6 +85,10 @@ export class SuaKhachHangComponent {
         },
       });
     });
+    
+  }
+  public imageChange(event: any): void {
+    this.selectFile = event.target["files"][0];
   }
   openFileInput() {
     this.fileInput.nativeElement.click();
@@ -86,18 +101,20 @@ export class SuaKhachHangComponent {
     }
   }
   public updateKH(): void { 
-    this.khachHangService.update(this.id, this.formUpdateKH.value).subscribe({
+    this.khachHangService.update(this.id, this.formUpdateKH.value,this.selectFile).subscribe({
+      
       next: (kh: KhachHang) => {
+        
+        console.log(this.selectFile);
         this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
           title: `Cập nhật thành công!`,
           showConfirmButton: false,
-          timer: 1000,
+          timer: 2000,
         });
-        // document.getElementById("closeUpdateBtn").click();
-        this.reloadPage();
-        // location.reload();
+     
+
       },
       error: (erros: HttpErrorResponse) => {
         console.log(this.formUpdateKH.value);
@@ -119,7 +136,7 @@ export class SuaKhachHangComponent {
       huyen: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       duong: new FormControl("", [Validators.required]),
-      xa: new FormControl("", [Validators.required]),
+      xa: new FormControl("", [Validators.required]),   
     });
   }
 
@@ -132,12 +149,14 @@ export class SuaKhachHangComponent {
     });
   }
   public initFormUpdateDC(): void {
+   
     this.updateFormDC = new FormGroup({
-      id: new FormControl("", [Validators.required]),
+      idDC: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       duong: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
+      macDinh: new FormControl("", [Validators.required]),
     });
   }
 
@@ -162,24 +181,50 @@ export class SuaKhachHangComponent {
   }
 
   public openUpdateForm(id: number): void {
-    console.log(id);
     this.diaChiService.getDCById(id).subscribe({
       next: (dc: DiaChi) => {
-        console.log(dc);
+        this.selectedAddress= dc;
+        this.idDC=id;
         this.updateFormDC = new FormGroup({
-          id: new FormControl(dc.id, [Validators.required]),
+          idDC: new FormControl(dc.id, [Validators.required]),
           tinh: new FormControl(dc.tinh, [Validators.required]),
           huyen: new FormControl(dc.huyen, [Validators.required]),
           duong: new FormControl(dc.duong, [Validators.required]),
           xa: new FormControl(dc.xa, [Validators.required]),
           macDinh: new FormControl(dc.macDinh, [Validators.required]),
         });
+        this.diaChiService.getTinh().subscribe((data: any)=>{
+          this.tinhDetail = data.results;
+        })
+        const selectedTinh  = this.tinh.find(t => t.province_name ==this.updateFormDC.get('tinh')?.value);
+        if (selectedTinh) {
+          const selectedId = selectedTinh.province_id;
+          this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+            this.huyen = data.results;
+          }) 
+
+        };
+        const selectedHuyen  = this.huyen.find(t => t.district_name ==this.updateFormDC.get('huyen')?.value);
+         if (selectedHuyen) {
+      const selectedId = selectedHuyen.district_id;
+      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
+        this.xa = data.results;
+      }) 
+    }
+    console.log(this.huyen);
+    
       },
     });
   }
   public updateDC(id: number): void {
-    this.diaChiService.updateDC(id, this.updateFormDC.value).subscribe({
+    console.log(this.idDC);
+    console.log(this.id);
+    
+    console.log(this.updateFormDC.value);
+    
+    this.diaChiService.updateDC(this.idDC, this.updateFormDC.value).subscribe({
       next: (dc: DiaChi) => {
+      
         this.initFormUpdateDC();
         Swal.fire({
           icon: "success",
@@ -229,8 +274,6 @@ export class SuaKhachHangComponent {
         this.huyen = data.results;
       }) 
     }
-
-  
   }
 
   ondistrictChange(): void {
@@ -243,6 +286,25 @@ export class SuaKhachHangComponent {
     }
   }
 
+  onCityDetailChange(): void {
+    const selectedTinh  = this.tinhDetail.find(t => t.province_name ==this.updateFormDC.get('tinh')?.value);
+    if (selectedTinh) {
+      const selectedId = selectedTinh.province_id;
+      this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+        this.huyenDetail = data.results;
+      }) 
+    }
+  }
+
+  ondistrictDetailChange(): void {
+    const selectedHuyen  = this.huyenDetail.find(t => t.district_name ==this.updateFormDC.get('huyen')?.value);
+    if (selectedHuyen) {
+      const selectedId = selectedHuyen.district_id;
+      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
+        this.xaDetail = data.results;
+      }) 
+    }
+  }
   toggleCollapse(index: number): void {
     this.dsDC[index].isCollapsed = !this.dsDC[index].isCollapsed;
   }

@@ -24,6 +24,7 @@ export class ThemKhachHangComponent  {
   public xa: any[] = [];
   public idTinh: number;
   public idHuyen: number;
+  private selectFile: File;
   imageUrl: string;
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
@@ -48,10 +49,11 @@ export class ThemKhachHangComponent  {
       this.imageUrl = URL.createObjectURL(file);
     }
   }
-
-public addKH(): void{ 
-  console.log(this.formAddKh.value);
-  this.khachHangService.add(this.formAddKh.value).subscribe({
+  public imageChange(event: any): void {
+    this.selectFile = event.target["files"][0];
+  }
+public addKH(): void{  
+  this.khachHangService.add(this.formAddKh.value,this.selectFile).subscribe({
     next: (kh: KhachHangResponse)=>{
       this.initFormAddKh();      
 
@@ -75,11 +77,13 @@ public addKH(): void{
       hoTen: new FormControl("",[Validators.required]),
       gioiTinh: new FormControl("",[Validators.required]),
       trangThai: new FormControl("1"),
-      sdt: new FormControl("",[Validators.required]),
+      sdt: new FormControl("",[Validators.required,
+        Validators.pattern(/^(84|\+84|0)[1-9][0-9]{8}$/),]),
       // imageUrl: new FormControl(""),
       ngaySinh: new FormControl("",[Validators.required]),
       matKhau: new FormControl("12345678"),
-      email: new FormControl("",[Validators.required]),
+      email: new FormControl("",[Validators.required, 
+        Validators.pattern(/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/),]),
       huyen: new FormControl("",[Validators.required]),
       tinh: new FormControl("",[Validators.required]),
       duong: new FormControl("",[Validators.required]),

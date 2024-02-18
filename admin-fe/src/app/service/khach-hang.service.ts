@@ -15,7 +15,7 @@ export class KhachHangService {
   constructor(private http: HttpClient) {}
 
   public getAll(
-    pageNumber: number = 1,
+    pageNumber: number = 1, 
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<KhachHangResponse>> {
@@ -25,16 +25,22 @@ export class KhachHangService {
     );
   }
 
-  public add(khachHang: KhachHangResponse): Observable<KhachHangResponse> {
-    return this.http.post<KhachHangResponse>(`${this.apiUrl}/add-kh`, khachHang);
+  public add(khachHang: KhachHangResponse,file: File): Observable<KhachHangResponse> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(khachHang));
+    formData.append("khachHangImage", file);
+    return this.http.post<KhachHangResponse>(`${this.apiUrl}/add-kh`, formData);
   }
 
   public getById(id: number): Observable<KhachHangResponse> {
     return this.http.get<KhachHangResponse>(`${this.apiUrl}/getById/${id}`);
   }
 
-  public update(id:number,khachHang: KhachHang): Observable<KhachHang> {
-    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh/${id}`, khachHang);
+  public update(id:number,khachHang: KhachHang,file: File): Observable<KhachHang> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(khachHang));
+    formData.append("khachHangImage", file);
+    return this.http.put<KhachHang>(`${this.apiUrl}/update-kh/${id}`, formData);
   }
 
   public filter(

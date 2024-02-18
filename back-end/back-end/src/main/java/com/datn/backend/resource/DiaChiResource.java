@@ -5,6 +5,7 @@ import com.datn.backend.dto.request.DiaChiRequest;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.repository.DiaChiRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class DiaChiResource {
     private final DiaChiService diaChiService;
+    private final DiaChiRepository diaChiRepository;
     private final KhachHangRepository khachHangRepository;
 
     @GetMapping("/get-all/{id}")
@@ -57,16 +59,15 @@ public class DiaChiResource {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<DiaChiRequest> updateDC(@PathVariable("id") int id, @RequestBody DiaChiRequest dc) {
-        KhachHang kh = khachHangRepository.getById(id);
+        KhachHang kh = diaChiRepository.findById(id).get().getKhachHang();
         DiaChi diaChi = new DiaChi();
-        diaChi.setId(dc.getId());
+        diaChi.setId(id);
         diaChi.setTinh(dc.getTinh());
         diaChi.setHuyen(dc.getHuyen());
         diaChi.setXa(dc.getXa());
         diaChi.setDuong(dc.getDuong());
         diaChi.setMacDinh(dc.isMacDinh());
         diaChi.setKhachHang(kh);
-
         DiaChi addDC = diaChiService.add(diaChi);
         DiaChiRequest dto = new DiaChiRequest();
         dto.setId(addDC.getId());

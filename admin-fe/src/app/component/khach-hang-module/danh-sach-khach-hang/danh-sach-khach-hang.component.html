@@ -115,7 +115,7 @@
               <td>{{ kh.gioiTinh == true ?"Nam":"Nữ" }}</td>
               <td>{{ kh.email }}</td>
               <td style="max-width: 350px;">{{kh.duong}}, {{kh.xa}}, {{kh.huyen}}, {{ kh.tinh}}</td>
-              <td>{{ kh.ngaySinh }}</td>
+              <td>{{ kh.ngaySinh | date : "dd-MM-yyyy" }}</td>
               <td>
                 <button
                   class="{{

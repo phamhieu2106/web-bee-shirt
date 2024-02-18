@@ -5,6 +5,7 @@ import com.datn.backend.dto.request.HoaDonRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SoLuongDonHangResponse;
 import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
@@ -166,6 +167,11 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonUpdate.setGhiChu(hoaDonRequest.getGhiChu());
 
         return modelMapper.map(hoaDonRepository.save(hoaDonUpdate),HoaDonResponse.class);
+    }
+
+    @Override
+    public SoLuongDonHangResponse getSoLuongDonHang() {
+        return hoaDonRepository.getSoLuongDonHang();
     }
 
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {

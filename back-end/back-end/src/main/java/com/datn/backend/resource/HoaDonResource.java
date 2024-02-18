@@ -6,6 +6,7 @@ import com.datn.backend.dto.request.HoaDonRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SoLuongDonHangResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
@@ -74,4 +75,9 @@ public class HoaDonResource {
         return ResponseEntity.ok(hoaDonResponse);
     }
     // delete
+    @GetMapping("/get-order-quantity-all")
+    public ResponseEntity<SoLuongDonHangResponse> getSoLuongDonHang() {
+        SoLuongDonHangResponse soLuongDonHangResponse = hoaDonService.getSoLuongDonHang();
+        return ResponseEntity.ok(soLuongDonHangResponse);
+    }
 }

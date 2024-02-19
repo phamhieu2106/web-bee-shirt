@@ -89,6 +89,17 @@ export class ThemDotGiamGiaComponent implements OnInit {
       if (index !== -1) {
         // Giá trị đã tồn tại, nên xoá nó khỏi mảng
         this.listIdSanPham.splice(index, 1);
+        // Khi xoá khỏi mảng cũng xoá các sản phẩm chi tiết
+        this.service.getIdSanPhamChiTietBySanPhamId(value).subscribe({
+          next: (value) => {
+            value.forEach((number) => {
+              const index = this.listIdSanPhamChiTiet.indexOf(number);
+              if (index !== -1) {
+                this.listIdSanPhamChiTiet.splice(index, 1);
+              }
+            });
+          },
+        });
       } else {
         // Giá trị không tồn tại, nên thêm vào mảng
         this.listIdSanPham.push(value);
@@ -124,7 +135,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
         this.listIdSanPhamChiTiet.push(Number(value));
       }
       this.dotGiamGiaRequest.listIdSanPhamChiTiet = this.listIdSanPhamChiTiet;
-      console.log(this.dotGiamGiaRequest);
+      console.log(this.dotGiamGiaRequest.listIdSanPhamChiTiet);
     } else {
       this.toast.error("Mảng IdSanPhamChiTiet không được khởi tạo.");
       console.log("Mảng IdSanPhamChiTiet không được khởi tạo.");

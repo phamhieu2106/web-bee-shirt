@@ -73,7 +73,7 @@ public class DotGiamGiaResource {
                                                List<Integer> id,
                                                @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
                                                int pageNumber,
-                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false)
+                                               @RequestParam(value = "pageSize", defaultValue = "1000", required = false)
                                                int pageSize) {
 //        return SanPhamChiTietResponse
         return ResponseEntity.ok(service.getAllSanPhamChiTiet(pageNumber, pageSize, id));
@@ -82,6 +82,7 @@ public class DotGiamGiaResource {
     @GetMapping("/listidsanpham")
     public ResponseEntity<?> getListIdSanPham(@RequestParam(value = "ids", defaultValue = "", required = false)
                                               String ids) {
+
         return ResponseEntity.ok(service.getListIdSanPham(ids));
     }
 

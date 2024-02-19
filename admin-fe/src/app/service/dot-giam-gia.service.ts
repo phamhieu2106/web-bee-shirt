@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { DotGiamGia } from "../model/class/dot-giam-gia.class";
@@ -70,6 +70,10 @@ export class DotGiamGiaService {
     return this.http.get<Array<number>>(
       `${this.apiURL}/listidsanpham?ids=${ids}`
     );
+  }
+
+  public getIdSanPhamChiTietBySanPhamId(id: number): Observable<Array<number>> {
+    return this.http.get<Array<number>>(`${this.apiURL}/sanphamchitiet/${id}`);
   }
 
   public getAllListIdSanPhamChiTietByIdDotGiamGiaSanPham(

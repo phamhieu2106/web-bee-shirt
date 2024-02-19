@@ -62,14 +62,14 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
       next: async (value) => {
         this.dotGiamGiaUpdateRequest = value;
         await this.getAllSanPham();
-        this.service
+        await this.service
           .getAllListIdSanPhamChiTietByIdDotGiamGiaSanPham(id)
           .subscribe((data) => {
             this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet = data;
           });
-        this.getListIdSanPham(
-          this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet
-        );
+
+        this.getListIdSanPham();
+
         console.log(this.dotGiamGiaUpdateRequest);
       },
       error(err) {
@@ -80,8 +80,9 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
 
   // Load List Id SanPham
   listIdSanPham: number[] = [];
-  public getListIdSanPham(ids: number[]) {
+  public getListIdSanPham() {
     setTimeout(() => {
+      console.log(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet);
       this.service
         .getIdSanPhamBySanPhamChiTietId(
           this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet
@@ -89,6 +90,7 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
         .subscribe({
           next: (value) => {
             this.listIdSanPham = value;
+            console.log(this.listIdSanPham);
             this.getAllSanPhamChiTietById(value);
           },
         });
@@ -121,7 +123,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     } else {
       this.toast.error("Danh Sách Sản Phẩm Chi Tiết không được khởi tạo.");
     }
-    console.log(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet);
   };
   public async getAllSanPhamChiTietById(id: Array<number>) {
     this.service.getAllSanPhamChiTietById(id).subscribe({
@@ -152,12 +153,28 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
       if (index !== -1) {
         // Giá trị đã tồn tại, xoá nó khỏi mảng
         this.listIdSanPham.splice(index, 1);
+        // Khi xoá khỏi mảng cũng xoá các sản phẩm chi tiết
+        this.service.getIdSanPhamChiTietBySanPhamId(value).subscribe({
+          next: (value) => {
+            value.forEach((number) => {
+              const index =
+                this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.indexOf(
+                  number
+                );
+              if (index !== -1) {
+                this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.splice(
+                  index,
+                  1
+                );
+              }
+            });
+          },
+        });
       } else {
         // Giá trị không tồn tại, thêm vào mảng
         this.listIdSanPham.push(value);
       }
       this.getAllSanPhamChiTietById(this.listIdSanPham);
-      console.log(this.listIdSanPham);
     } else {
       this.toast.error("Danh Sách Sản Phẩm không được khởi tạo.");
       console.log("Danh Sách Sản Phẩm không được khởi tạo.");

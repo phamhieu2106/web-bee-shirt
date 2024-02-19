@@ -23,10 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DotGiamGiaServiceImpl implements DotGiamGiaService {
@@ -46,8 +44,13 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public List<Integer> getListIdSanPham(String ids) {
+        String[] idStrings = ids.split(",");
 
-        return repository.getIdSanPhamIdBySanPhamChiTietId(ids);
+        // Chuyển đổi mảng chuỗi thành mảng số nguyên
+        List<Integer> idList = Arrays.stream(idStrings)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+        return repository.getIdSanPhamIdBySanPhamChiTietId(idList);
     }
 
     @Override

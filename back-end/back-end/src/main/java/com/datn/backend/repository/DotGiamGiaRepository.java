@@ -106,9 +106,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 SELECT sp.id FROM san_pham sp
                 JOIN san_pham_chi_tiet spct ON spct.san_pham_id = sp.id
                 WHERE spct.id IN ( :ids )
-                GROUP BY sp.id
+                GROUP BY sp.id;
             """, nativeQuery = true)
-    List<Integer> getIdSanPhamIdBySanPhamChiTietId(@Param("ids") String ids);
+    List<Integer> getIdSanPhamIdBySanPhamChiTietId(@Param("ids") List<Integer> ids);
 
     @Query(value = """
             SELECT san_pham_chi_tiet_id
@@ -119,5 +119,10 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTiet(@Param("id") Integer id);
 
+    @Query(value = """
+            SELECT spct.id FROM san_pham_chi_tiet spct
+            JOIN san_pham sp ON sp.id = spct.san_pham_id
+            WHERE sp.id = :id
+            """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
 }

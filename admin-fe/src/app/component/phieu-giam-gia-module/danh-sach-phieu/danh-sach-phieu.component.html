@@ -77,7 +77,10 @@
               <th>Tên</th>
               <th>Kiểu</th>
               <th>Loại</th>
+              <th>Giá Trị </th>
+              <th>Giá Trị Tối Đa </th>
               <th>Số Lượng</th>
+              <th>Điều Kiện </th>
               <th>Ngày Bắt Đầu</th>
               <th>Ngày Kết Thúc</th>
               <th>Trạng Thái</th>
@@ -90,8 +93,11 @@
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
-              <td>{{ pgg.loai == 0?"Công Khai":"Cá Nhân" }}</td>
+              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân" }}</td>
+              <td>{{ pgg.giaTri }}</td>
+              <td>{{ pgg.giaTriMax | number}}VND</td>
               <td>{{ pgg.soLuong }}</td>
+              <td>{{ pgg.dieuKienGiam | number}}VND</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>

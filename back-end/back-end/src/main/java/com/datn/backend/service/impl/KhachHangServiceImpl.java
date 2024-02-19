@@ -66,7 +66,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setEmail(kh.getEmail());
-        khachHang.setTrangThai(kh.getTrangThai());
+        khachHang.setTrangThai(1);
         khachHang.setImage(image);
         khachHang.setAccount(account);
         khachHangRepository.save(khachHang);

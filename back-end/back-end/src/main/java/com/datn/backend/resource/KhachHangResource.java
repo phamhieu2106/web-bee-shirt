@@ -37,7 +37,7 @@ public class KhachHangResource {
         return ResponseEntity.ok(khachHangService.getById(id));
     }
     @PostMapping("/add-kh")
-    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh,@RequestParam("mauSacImage") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh,@RequestParam("khachHangImage") MultipartFile multipartFile) throws IOException {
         KhachHangRequest khachHang = objectMapper.readValue(kh, KhachHangRequest.class);
         return ResponseEntity.ok(khachHangService.add(khachHang,multipartFile));
     }

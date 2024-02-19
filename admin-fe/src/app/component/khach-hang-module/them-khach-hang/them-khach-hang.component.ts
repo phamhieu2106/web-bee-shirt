@@ -3,6 +3,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import {
+  NgxScannerQrcodeComponent,
+  ScannerQRCodeResult,
+} from "ngx-scanner-qrcode";
 import { KhachHangResponse } from 'src/app/model/interface/khach-hang-response.interface';
 import { DiaChiService } from 'src/app/service/dia-chi.service';
 import { KhachHangService } from 'src/app/service/khach-hang.service';
@@ -18,6 +22,7 @@ export class ThemKhachHangComponent  {
   title: string = "khách hàng";
   mainHeading: string = "khách hàng";
   public formAddKh: FormGroup;
+  private sdtRegex: string = "0[0-9]{9}";
   public khachHangResponse: KhachHangResponse;
   public tinh: any[] = [];
   public huyen: any[] = [];
@@ -27,6 +32,7 @@ export class ThemKhachHangComponent  {
   private selectFile: File;
   imageUrl: string;
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild("action") action!: NgxScannerQrcodeComponent;
   constructor(
     private router: Router,
     private khachHangService: KhachHangService,
@@ -39,6 +45,60 @@ export class ThemKhachHangComponent  {
       this.tinh = data.results;
     })
   }
+  public onEvent(e: ScannerQRCodeResult[], action?: any): void {
+    if (e && e.length > 0) {
+      const qrCodeValue = e[0].value;
+      action.stop();
+      document.getElementById("closeFormQRCode").click();
+
+      var arrayQR = qrCodeValue.split("|");
+
+      const year = parseInt(arrayQR[3].substring(4, 8));
+      const month = parseInt(arrayQR[3].substring(2, 4)) - 1;
+      const day = parseInt(arrayQR[3].substring(0, 2));
+      const address = arrayQR[5].split(",");
+      const dateObject = new Date(year, month, day);
+      const formattedDate = dateObject.toLocaleDateString("en-CA");
+      console.log(address[3]);
+      this.formAddKh = new FormGroup({     
+        hoTen: new FormControl(arrayQR[2] === undefined ? "" : arrayQR[2], [
+          Validators.required,
+        ]),
+        ngaySinh: new FormControl(formattedDate === undefined ? "" : formattedDate, [
+          Validators.required,
+        ]),
+        gioiTinh: new FormControl(
+          arrayQR[4] === undefined
+            ? "true"
+            : arrayQR[4] === "Nam"
+            ? "true"
+            : "false",
+          [Validators.required]
+        ),
+        duong: new FormControl(address[0] === undefined ? "" : address[0], [
+          Validators.required,
+        ]),
+        sdt: new FormControl("",[Validators.required,
+          Validators.pattern(/^(84|\+84|0)[1-9][0-9]{8}$/),]),
+        imageUrl: new FormControl(""),
+        matKhau: new FormControl("12345678"),
+        email: new FormControl("",[Validators.required, 
+          Validators.pattern(/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/),]),
+        huyen: new FormControl("",[Validators.required]),
+        tinh: new FormControl(address[3] === undefined ? "" : address[3],[Validators.required]),
+        xa: new FormControl("",[Validators.required]),
+      });
+      // this.initAddForm(
+      //   arrayQR[2],
+      //   formattedDate,
+      //   arrayQR[4],
+       
+      // );
+      
+      // 023686002531|134220866|Hoàng Thùy Dương|22102000|Nữ|Khu 1, Minh Khương, Hàm Yên, Tuyên Quang|25052020
+    }
+  }
+ 
   openFileInput() {
     this.fileInput.nativeElement.click();
   }
@@ -67,7 +127,7 @@ public addKH(): void{
       this.router.navigate(['/khach-hang/ds-khach-hang']);
       
     },error:(erros: HttpErrorResponse)=>{
-      console.log(erros.message);
+
     }
   })
 }

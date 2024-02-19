@@ -48,7 +48,16 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     public List<Integer> getListIdSanPham(String ids) {
 
         return repository.getIdSanPhamIdBySanPhamChiTietId(ids);
+    }
 
+    @Override
+    public List<Integer> getListIdSanPhamChiTietByIdSanPham(Integer id) {
+        return repository.getListIdSanPhamChiTietByIdSanPham(id);
+    }
+
+    @Override
+    public List<Integer> getListSanPhamChiTietByIdDotGiamGiaSanPham(Integer id) {
+        return repository.getListIdSanPhamChiTiet(id);
     }
 
     @Override
@@ -202,13 +211,14 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
+        System.out.println(object.getId());
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 
         if (optional.isEmpty()) {
             return null;
         }
-        DotGiamGia dotGiamGia = optional.get();
+        DotGiamGia dotGiamGia = object.map(optional.get());
 
         List<DotGiamGiaSanPham> listDotGiamGiaSanPham = dotGiamGiaSanPhamRepository.getAll(dotGiamGia.getId());
         for (Integer sanPhamChiTietID : object.getListIdSanPhamChiTiet()) {
@@ -272,7 +282,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 System.out.println("Set Status");
             }
         }
-
+        System.out.println(dotGiamGia);
+        repository.save(dotGiamGia);
         return dotGiamGia;
     }
 

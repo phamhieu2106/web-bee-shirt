@@ -55,19 +55,22 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     });
   }
 
-  // Set Object
+  // Set Object and Load SanPham Table
   dotGiamGiaUpdateRequest: DotGiamGia;
   loadForm(id: number) {
     this.service.getDotGiamGiaById(id).subscribe({
-      next: (value) => {
+      next: async (value) => {
         this.dotGiamGiaUpdateRequest = value;
-        console.log(this.dotGiamGiaUpdateRequest);
-        // Get List ID SanPham
-        // Load SanPham table
-        this.getAllSanPham();
+        await this.getAllSanPham();
+        this.service
+          .getAllListIdSanPhamChiTietByIdDotGiamGiaSanPham(id)
+          .subscribe((data) => {
+            this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet = data;
+          });
         this.getListIdSanPham(
           this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet
         );
+        console.log(this.dotGiamGiaUpdateRequest);
       },
       error(err) {
         console.log(err);
@@ -76,64 +79,66 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
   }
 
   // Load List Id SanPham
-  listIdSanPham: number[];
-  public async getListIdSanPham(ids: number[]) {
-    this.service.getIdSanPhamBySanPhamChiTietId(ids).subscribe({
-      next: async (value) => {
-        this.listIdSanPham = value;
-        // Get Ids SanPhamChiTiet
-        //  Get SanPhamChiTiet after get List Id San Pham
-        await this.getListIdSanPhamChiTiet(ids);
-        await this.getAllSanPhamChiTietById(this.listIdSanPham);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+  listIdSanPham: number[] = [];
+  public getListIdSanPham(ids: number[]) {
+    setTimeout(() => {
+      this.service
+        .getIdSanPhamBySanPhamChiTietId(
+          this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet
+        )
+        .subscribe({
+          next: (value) => {
+            this.listIdSanPham = value;
+            this.getAllSanPhamChiTietById(value);
+          },
+        });
+    }, 500);
   }
   // Load San Pham Chi Tiet
   listIdSanPhamChiTiet: number[];
-  public async getListIdSanPhamChiTiet(ids: number[]) {
-    const stringIDS = JSON.stringify(ids);
-    this.listIdSanPhamChiTiet = stringIDS
-      .split(",")
-      .map((type) => type.replace(/"/g, ""))
-      .map((x) => parseInt(x.trim(), 10));
-  }
   // Page SPCT
   listSanPhamChiTiet: PagedResponse<DotGiamGiaSanPhamChiTiet>;
   // Data Table
   dataSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[] = [];
   public setListIdSanPhamChiTiet = (value: number) => {
-    if (this.listIdSanPhamChiTiet && Array.isArray(this.listIdSanPhamChiTiet)) {
-      const index = this.listIdSanPhamChiTiet.indexOf(Number(value));
+    if (
+      this.dotGiamGiaUpdateRequest &&
+      Array.isArray(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet)
+    ) {
+      const index = this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.indexOf(
+        Number(value)
+      );
 
       if (index !== -1) {
         // Giá trị đã tồn tại, nên xoá nó khỏi mảng
-        this.listIdSanPhamChiTiet.splice(index, 1);
+        this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.splice(index, 1);
       } else {
         // Giá trị không tồn tại, nên thêm vào mảng
-        this.listIdSanPhamChiTiet.push(Number(value));
+        this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.push(Number(value));
       }
       this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet =
         this.listIdSanPhamChiTiet;
     } else {
-      this.toast.error("Mảng IdSanPhamChiTiet không được khởi tạo.");
-      console.log("Mảng IdSanPhamChiTiet không được khởi tạo.");
+      this.toast.error("Danh Sách Sản Phẩm Chi Tiết không được khởi tạo.");
     }
+    console.log(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet);
   };
-  public getAllSanPhamChiTietById(id: Array<number>): void {
+  public async getAllSanPhamChiTietById(id: Array<number>) {
     this.service.getAllSanPhamChiTietById(id).subscribe({
       next: (value) => {
         this.listSanPhamChiTiet = value;
         this.dataSanPhamChiTiet = this.listSanPhamChiTiet.data;
+        // Set ListIDSanPhamChiTiet from  Dot Giam Gia Update Request
       },
       error: (message) => {
         this.toast.error("Có lỗi khi lấy ra danh sách sản phẩm chi tiết");
         console.log(message);
       },
     });
+    this.listIdSanPhamChiTiet =
+      this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet;
   }
+
   //For Table SanPham
   // Page SanPham
   listSanPham: PagedResponse<SanPham>;
@@ -152,9 +157,10 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
         this.listIdSanPham.push(value);
       }
       this.getAllSanPhamChiTietById(this.listIdSanPham);
+      console.log(this.listIdSanPham);
     } else {
-      this.toast.error("Mảng this.listIdSanPham không được khởi tạo.");
-      console.log("Mảng this.listIdSanPham không được khởi tạo.");
+      this.toast.error("Danh Sách Sản Phẩm không được khởi tạo.");
+      console.log("Danh Sách Sản Phẩm không được khởi tạo.");
     }
   };
   public getAllSanPham(): void {

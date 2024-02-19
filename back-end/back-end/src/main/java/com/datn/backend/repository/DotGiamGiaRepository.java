@@ -73,8 +73,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 dgg.gia_tri_phan_tram AS GiaTriPhanTram,
                 dggsp.thoi_gian_bat_dau AS ThoiGianBatDau,
                 dggsp.thoi_gian_ket_thuc AS ThoiGianKetThuc,
-                dgg.trang_thai AS TrangThai,
-                GROUP_CONCAT(spct.id) AS ListIdSanPhamChiTiet
+                dgg.trang_thai AS TrangThai
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             JOIN san_pham_chi_tiet spct ON spct.id = dggsp.san_pham_chi_tiet_id
@@ -120,4 +119,5 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTiet(@Param("id") Integer id);
 
+    List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
 }

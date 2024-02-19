@@ -23,7 +23,7 @@ public class DotGiamGiaResource {
         super();
         this.service = service;
     }
-    
+
 
     @GetMapping
     public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber", defaultValue = "1", required = false)
@@ -56,6 +56,16 @@ public class DotGiamGiaResource {
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
 //        return DotGiamGiaResponseEntity
         return ResponseEntity.ok(service.getOne(id));
+    }
+
+    @GetMapping("/dotgiamgiasanpham/{id}")
+    public ResponseEntity<?> getListSanPhamChiTietByIdDotGiamGiaSanPham(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.getListSanPhamChiTietByIdDotGiamGiaSanPham(id));
+    }
+
+    @GetMapping("/sanphamchitiet/{id}")
+    public ResponseEntity<?> getListIdSanPhamChiTietByIdSanPham(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.getListIdSanPhamChiTietByIdSanPham(id));
     }
 
     @GetMapping("/sanphamchitiet")

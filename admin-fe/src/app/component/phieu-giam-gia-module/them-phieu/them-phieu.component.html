@@ -72,7 +72,7 @@
                         addForm.get('giaTri').touched
                           ? 'is-invalid'
                           : ''
-                      " formControlName="giaTri" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                      " formControlName="giaTri" aria-label="Recipient's username" aria-describedby="basic-addon2" value="" />
                     <span class="input-group-text" id="basic-addon2"
                       *ngIf="addForm.get('kieu').value === '1'">VNĐ</span>
                     <span class="input-group-text" id="basic-addon2" *ngIf="addForm.get('kieu').value === '0'">%</span>
@@ -208,7 +208,7 @@
                   <td>{{ kh.email }}</td>
                   <td>{{ kh.xa }}</td>
                   <td>
-                    {{ kh.ngaySinh }}
+                    {{ kh.ngaySinh  | date:"dd-MM-yyyy" }}
                   </td>
                 </tr>
               </tbody>

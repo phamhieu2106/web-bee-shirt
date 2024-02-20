@@ -146,14 +146,8 @@ export class FormComponent implements OnInit {
     } else if (this.typeForm === "update") {
       this.setDotGiamGiaRequest();
       if (this.validateForm()) {
-        const stringIDS = JSON.stringify(
-          this.dotGiamGiaRequest.listIdSanPhamChiTiet
-        );
-        // Map String to Number[]
-        this.dotGiamGiaRequest.listIdSanPhamChiTiet = stringIDS
-          .split(",")
-          .map((type) => type.replace(/"/g, ""))
-          .map((x) => parseInt(x.trim(), 10));
+        // Set DotGiamGiaRequest
+        this.setDotGiamGiaRequest();
         // Call Service
         this.service
           .updateDotGiamGiaRequest(this.dotGiamGiaRequest)

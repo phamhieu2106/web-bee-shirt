@@ -23,10 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DotGiamGiaServiceImpl implements DotGiamGiaService {
@@ -46,9 +44,23 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public List<Integer> getListIdSanPham(String ids) {
+        String[] idStrings = ids.split(",");
 
-        return repository.getIdSanPhamIdBySanPhamChiTietId(ids);
+        // Chuyển đổi mảng chuỗi thành mảng số nguyên
+        List<Integer> idList = Arrays.stream(idStrings)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+        return repository.getIdSanPhamIdBySanPhamChiTietId(idList);
+    }
 
+    @Override
+    public List<Integer> getListIdSanPhamChiTietByIdSanPham(Integer id) {
+        return repository.getListIdSanPhamChiTietByIdSanPham(id);
+    }
+
+    @Override
+    public List<Integer> getListSanPhamChiTietByIdDotGiamGiaSanPham(Integer id) {
+        return repository.getListIdSanPhamChiTiet(id);
     }
 
     @Override
@@ -202,13 +214,14 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
+        System.out.println(object.getId());
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 
         if (optional.isEmpty()) {
             return null;
         }
-        DotGiamGia dotGiamGia = optional.get();
+        DotGiamGia dotGiamGia = object.map(optional.get());
 
         List<DotGiamGiaSanPham> listDotGiamGiaSanPham = dotGiamGiaSanPhamRepository.getAll(dotGiamGia.getId());
         for (Integer sanPhamChiTietID : object.getListIdSanPhamChiTiet()) {
@@ -272,7 +285,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 System.out.println("Set Status");
             }
         }
-
+        System.out.println(dotGiamGia);
+        repository.save(dotGiamGia);
         return dotGiamGia;
     }
 

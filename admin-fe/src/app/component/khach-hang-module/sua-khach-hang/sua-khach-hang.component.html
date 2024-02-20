@@ -280,7 +280,7 @@
                                     Chọn tỉnh thành
                                   </option>
                                   <option
-                                    *ngFor="let dc of tinh"
+                                    *ngFor="let dc of dstinh"
                                     [value]="dc.province_name"
                                   >
                                     {{ dc.province_name }}
@@ -305,7 +305,7 @@
                                     Chọn quận huyện
                                   </option>
                                   <option
-                                    *ngFor="let dc of huyen"
+                                    *ngFor="let dc of dshuyen"
                                     [value]="dc.district_name"
                                   >
                                     {{ dc.district_name }}
@@ -329,7 +329,7 @@
                                     Chọn phường xã
                                   </option>
                                   <option
-                                    *ngFor="let dc of xa"
+                                    *ngFor="let dc of dsxa"
                                     [value]="dc.ward_name"
                                   >
                                     {{ dc.ward_name }}
@@ -543,12 +543,6 @@
               class="form-control input"
               formControlName="tinh"
             />
-            <input
-              type="text"
-              class="form-control"
-              formControlName="idDC"
-              
-            />
             <div class="invalid-feedback">Không được bỏ trống</div>
             <select 
                       class="form-select form-select-sm mb-3 input" 
@@ -559,7 +553,7 @@
                       (change)="onCityDetailChange()"
                       >
                         <option value="" selected>Chọn tỉnh thành</option>                    
-                        <option *ngFor="let dc of tinhDetail" [value]="dc.province_name">{{dc.province_name}}</option>                    
+                        <option *ngFor="let dc of dstinh" [value]="dc.province_name">{{dc.province_name}}</option>                    
                         </select>
           </div>
 
@@ -576,7 +570,7 @@
             (change)="ondistrictDetailChange()"
             >
               <option value="" selected>Chọn quận huyện</option>
-              <option *ngFor="let dc of huyenDetail" [value]="dc.district_name">{{dc.district_name}}</option>          
+              <option *ngFor="let dc of dshuyen" [value]="dc.district_name">{{dc.district_name}}</option>          
               </select>
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
@@ -592,7 +586,7 @@
             formControlName="xa"
             >
               <option value="" selected>Chọn phường xã</option>
-              <option *ngFor="let dc of xaDetail" [value]="dc.ward_name">{{dc.ward_name}}</option>           
+              <option *ngFor="let dc of dsxa" [value]="dc.ward_name">{{dc.ward_name}}</option>           
               </select>
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>

@@ -73,8 +73,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 dgg.gia_tri_phan_tram AS GiaTriPhanTram,
                 dggsp.thoi_gian_bat_dau AS ThoiGianBatDau,
                 dggsp.thoi_gian_ket_thuc AS ThoiGianKetThuc,
-                dgg.trang_thai AS TrangThai,
-                GROUP_CONCAT(spct.id) AS ListIdSanPhamChiTiet
+                dgg.trang_thai AS TrangThai
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             JOIN san_pham_chi_tiet spct ON spct.id = dggsp.san_pham_chi_tiet_id
@@ -107,9 +106,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 SELECT sp.id FROM san_pham sp
                 JOIN san_pham_chi_tiet spct ON spct.san_pham_id = sp.id
                 WHERE spct.id IN ( :ids )
-                GROUP BY sp.id
+                GROUP BY sp.id;
             """, nativeQuery = true)
-    List<Integer> getIdSanPhamIdBySanPhamChiTietId(@Param("ids") String ids);
+    List<Integer> getIdSanPhamIdBySanPhamChiTietId(@Param("ids") List<Integer> ids);
 
     @Query(value = """
             SELECT san_pham_chi_tiet_id
@@ -120,4 +119,10 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTiet(@Param("id") Integer id);
 
+    @Query(value = """
+            SELECT spct.id FROM san_pham_chi_tiet spct
+            JOIN san_pham sp ON sp.id = spct.san_pham_id
+            WHERE sp.id = :id
+            """, nativeQuery = true)
+    List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
 }

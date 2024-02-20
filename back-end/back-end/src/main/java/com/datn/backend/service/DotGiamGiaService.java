@@ -12,6 +12,10 @@ public interface DotGiamGiaService {
 
     List<Integer> getListIdSanPham(String ids);
 
+    List<Integer> getListIdSanPhamChiTietByIdSanPham(Integer id);
+
+    List<Integer> getListSanPhamChiTietByIdDotGiamGiaSanPham(Integer id);
+
     PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId);
 
     PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search);

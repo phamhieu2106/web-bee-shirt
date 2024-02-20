@@ -23,7 +23,7 @@ public class DotGiamGiaResource {
         super();
         this.service = service;
     }
-    
+
 
     @GetMapping
     public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber", defaultValue = "1", required = false)
@@ -58,12 +58,22 @@ public class DotGiamGiaResource {
         return ResponseEntity.ok(service.getOne(id));
     }
 
+    @GetMapping("/dotgiamgiasanpham/{id}")
+    public ResponseEntity<?> getListSanPhamChiTietByIdDotGiamGiaSanPham(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.getListSanPhamChiTietByIdDotGiamGiaSanPham(id));
+    }
+
+    @GetMapping("/sanphamchitiet/{id}")
+    public ResponseEntity<?> getListIdSanPhamChiTietByIdSanPham(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.getListIdSanPhamChiTietByIdSanPham(id));
+    }
+
     @GetMapping("/sanphamchitiet")
     public ResponseEntity<?> getSanPhamChiTiet(@RequestParam(value = "id", defaultValue = "", required = false)
                                                List<Integer> id,
                                                @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
                                                int pageNumber,
-                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false)
+                                               @RequestParam(value = "pageSize", defaultValue = "1000", required = false)
                                                int pageSize) {
 //        return SanPhamChiTietResponse
         return ResponseEntity.ok(service.getAllSanPhamChiTiet(pageNumber, pageSize, id));
@@ -72,6 +82,7 @@ public class DotGiamGiaResource {
     @GetMapping("/listidsanpham")
     public ResponseEntity<?> getListIdSanPham(@RequestParam(value = "ids", defaultValue = "", required = false)
                                               String ids) {
+
         return ResponseEntity.ok(service.getListIdSanPham(ids));
     }
 

@@ -21,9 +21,10 @@ export class PhieuGiamGiaService {
   public getAll(
     pageNumber: number = 1,
     pageSize: number = 5,
-    search: string = ""
+    search: string = "",
+    kieu: string = ""
   ): Observable<PagedResponse<PhieuGiamGia>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&kieu=${kieu}`;
     return this.http.get<PagedResponse<PhieuGiamGia>>(
       `${this.apiUrl}/ds-phieu-giam-gia${param}`
     );

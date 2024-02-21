@@ -1,4 +1,5 @@
 import { Account } from "./account.class";
+import { KhachHangImage } from "./khach-hang-image.class";
 
 export class NhanVien {
   id?: number;
@@ -10,4 +11,5 @@ export class NhanVien {
   email: string;
   diaChi: string;
   account: Account;
+  image: KhachHangImage;
 }

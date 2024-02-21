@@ -60,6 +60,9 @@ export class DanhSachChatLieuComponent {
       ten: new FormControl("", [Validators.required]),
     });
   }
+  searchPhieuGiamGia(keyword: string): void {
+    this.goToPage(1, 5, keyword); // Gọi hàm goToPage với từ khoá tìm kiếm
+  }
 
   public goToPage(
     page: number = 1,

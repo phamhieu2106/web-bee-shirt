@@ -30,8 +30,14 @@ export class NhanVienService {
     );
   }
 
-  public add(nhanVien: NhanVienResponse): Observable<NhanVienResponse> {
-    return this.http.post<NhanVienResponse>(`${this.apiUrl}/add`, nhanVien);
+  public add(
+    nhanVien: NhanVienResponse,
+    file: File
+  ): Observable<NhanVienResponse> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(nhanVien));
+    formData.append("khachHangImage", file);
+    return this.http.post<NhanVienResponse>(`${this.apiUrl}/add`, formData);
   }
 
   public delete(id: number): Observable<any> {
@@ -40,11 +46,15 @@ export class NhanVienService {
 
   public update(
     nhanVien: NhanVienResponse,
-    id: number
+    id: number,
+    file: File
   ): Observable<NhanVienResponse> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(nhanVien));
+    formData.append("khachHangImage", file);
     return this.http.put<NhanVienResponse>(
       `${this.apiUrl}/update/${id}`,
-      nhanVien
+      formData
     );
   }
 

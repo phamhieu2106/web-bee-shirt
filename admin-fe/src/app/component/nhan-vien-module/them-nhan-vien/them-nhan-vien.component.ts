@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -23,13 +23,18 @@ export class ThemNhanVienComponent {
   icon: string = "fa-solid fa-users";
   title: string = "Nhân Viên";
   mainHeading: string = "Nhân Viên";
+  errorMessage: string = "";
 
   @ViewChild("action") action!: NgxScannerQrcodeComponent;
+  @ViewChild("fileInput") fileInput: ElementRef;
 
   public addForm: any;
   private sdtRegex: string = "0[0-9]{9}";
+  private cccdRegex: string = "0[0-9]{11}";
   public arrayQR: any[];
   public pagedResponse: PagedResponse<NhanVienResponse>;
+  public imageUrl: string;
+  private selectFile: File;
 
   constructor(
     private nhanVienService: NhanVienService,
@@ -57,6 +62,21 @@ export class ThemNhanVienComponent {
     //   arrayQR[4],
     //   arrayQR[5]
     // );
+  }
+
+  openFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.imageUrl = URL.createObjectURL(file);
+    }
+  }
+
+  public imageChange(event: any): void {
+    this.selectFile = event.target["files"][0];
   }
 
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {
@@ -94,16 +114,22 @@ export class ThemNhanVienComponent {
 
     console.log(this.addForm.value);
 
-    this.nhanVienService.add(this.addForm.value).subscribe({
+    this.nhanVienService.add(this.addForm.value, this.selectFile).subscribe({
       next: () => {
         // this.goToPage(1, 5, "");
         this.initAddForm();
         this.toastr.success("Thêm nhân viên mới thành công", "Thành công");
         this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
       },
-      error: (erros: HttpErrorResponse) => {
-        this.toastr.error("Thêm nhân viên thất bại", "Thất bại");
-        console.log(erros.message);
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          // Trích xuất thông điệp lỗi từ response
+          this.errorMessage = error.error.message;
+          this.toastr.error(this.errorMessage, "Thất bại");
+        } else {
+          this.toastr.error("Thêm nhân viên thất bại", "Thất bại");
+          console.log(error.message);
+        }
       },
     });
 
@@ -128,10 +154,9 @@ export class ThemNhanVienComponent {
     this.addForm = new FormGroup({
       cccd: new FormControl(cccdQR === undefined ? "" : cccdQR, [
         Validators.required,
-        Validators.minLength(12),
-        Validators.maxLength(12),
+        Validators.pattern(this.cccdRegex),
       ]),
-      hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR, [
+      hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR.trim(), [
         Validators.required,
       ]),
       ngaySinh: new FormControl(ngaySinhQR === undefined ? "" : ngaySinhQR, [

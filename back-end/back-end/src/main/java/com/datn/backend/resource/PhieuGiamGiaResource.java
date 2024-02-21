@@ -33,9 +33,10 @@ public class PhieuGiamGiaResource {
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search,
+                                                 @RequestParam(value = "kieu", defaultValue = "", required = false) String kieu) {
 
-        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search));
+        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search,kieu));
     }
 
     @GetMapping("/get-all")

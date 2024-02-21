@@ -1,0 +1,13 @@
+img {
+  width: fit-content;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  /* position: absolute; */
+  top: 0;
+  left: 0;
+}
+
+.img-row {
+  height: 200px;
+}

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public interface NhanVienResponse {
 
     Integer getId();
+    String getImageUrl();
     String getCccd();
     String getHoTen();
     LocalDate getNgaySinh();

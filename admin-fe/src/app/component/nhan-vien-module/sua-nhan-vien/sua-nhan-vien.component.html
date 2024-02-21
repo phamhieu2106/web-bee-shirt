@@ -13,29 +13,35 @@
       </div>
       <div class="card-body">
         <form [formGroup]="updateForm">
-          <div class="row">
-            <!-- <div class="form-group col-md-4">
-              Hình ảnh
-              <div class="input-group mb-3">
-                <div class="input-group-prepend"></div>
-                <div class="custom-file">
-                  <input
-                    type="file"
-                    class="custom-file-input"
-                    id="inputGroupFile03"
-                  />
-                  <label class="custom-file-label" for="inputGroupFile03"
-                    >Choose file</label
-                  >
-                </div>
-              </div>
-            </div> -->
+          <div class="row justify-content-center">
             <div class="col-md-4">
+              <div class="d-flex justify-content-center">
+                <input
+                  type="file"
+                  (change)="onFileSelected($event)"
+                  (change)="imageChange($event)"
+                  #fileInput
+                  style="display: none"
+                />
+                <button (click)="openFileInput()" class="button-anh">
+                  <img
+                    *ngIf="!imageNew"
+                    [src]="nhanVienUpdated?.imageUrl"
+                    alt=""
+                  />
+                  <span *ngIf="!imageNew"
+                    ><i class="fa-solid fa-plus fa-xl" style="color: red"></i
+                  ></span>
+                  <img *ngIf="imageNew" [src]="imageNew" alt="Selected Image" />
+                </button>
+              </div>
               <div class="form-group">
-                Họ tên
+                <label class="input_label">
+                  <b class="b-red-required">*</b>Họ tên</label
+                >
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control input"
                   placeholder="Họ tên"
                   [ngClass]="
                     updateForm.get('hoTen').invalid &&
@@ -48,129 +54,142 @@
                 <div class="invalid-feedback">Không được bỏ trống</div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                Ngày sinh
-                <input
-                  type="date"
-                  class="form-control"
-                  placeholder="Ngày sinh"
-                  [ngClass]="
-                    updateForm.get('ngaySinh').invalid &&
-                    updateForm.get('ngaySinh').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="ngaySinh"
-                />
-                <div class="invalid-feedback">Không được bỏ trống</div>
-              </div>
-            </div>
-          </div>
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label class="input_label">
+                      <b class="b-red-required">*</b>CCCD</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control input"
+                      placeholder="CCCD"
+                      [ngClass]="
+                        updateForm.get('cccd').invalid &&
+                        updateForm.get('cccd').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="cccd"
+                    />
+                    <div class="invalid-feedback">CCCD không hợp lệ</div>
+                  </div>
+                </div>
 
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                CCCD
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="CCCD"
-                  [ngClass]="
-                    updateForm.get('cccd').invalid &&
-                    updateForm.get('cccd').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="cccd"
-                />
-                <div class="invalid-feedback">Không được bỏ trống</div>
-                <div
-                  *ngIf="updateForm.get('cccd').errors?.minlength"
-                  class="invalid-feedback"
-                >
-                  The full name must be atleast 5 letters long
+                <div class="col">
+                  <div class="form-group">
+                    <label class="input_label">
+                      <b class="b-red-required">*</b>Ngày sinh</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control input"
+                      placeholder="Ngày sinh"
+                      [ngClass]="
+                        updateForm.get('ngaySinh').invalid &&
+                        updateForm.get('ngaySinh').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="ngaySinh"
+                    />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                Địa chỉ
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Địa chỉ"
-                  [ngClass]="
-                    updateForm.get('diaChi').invalid &&
-                    updateForm.get('diaChi').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="diaChi"
-                />
-                <div class="invalid-feedback">Không được bỏ trống</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label">Giới tính </label> <br />
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    [value]="true"
-                    formControlName="gioiTinh"
-                  />
-                  <label class="form-check-label"> Nam </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    [value]="false"
-                    formControlName="gioiTinh"
-                  />
-                  <label class="form-check-label"> Nữ </label>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                Email
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Email"
-                  [ngClass]="
-                    updateForm.get('email').invalid &&
-                    updateForm.get('email').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="email"
-                />
-                <div class="invalid-feedback">Email không hợp lệ</div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label class="input_label">
+                      <b class="b-red-required">*</b>Địa chỉ</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control input"
+                      placeholder="Địa chỉ"
+                      [ngClass]="
+                        updateForm.get('diaChi').invalid &&
+                        updateForm.get('diaChi').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="diaChi"
+                    />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label class="form-label input_label">
+                      <b class="b-red-required">*</b>Giới tính
+                    </label>
+                    <br />
+
+                    <div class="form-check form-check-inline ms-1">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        [value]="true"
+                        formControlName="gioiTinh"
+                      />
+                      <label class="form-check-label me-3"> Nam </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        [value]="false"
+                        formControlName="gioiTinh"
+                      />
+                      <label class="form-check-label"> Nữ </label>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                Số điện thoại
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Số điện thoại"
-                  [ngClass]="
-                    updateForm.get('sdt').invalid &&
-                    updateForm.get('sdt').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="sdt"
-                />
-                <div class="invalid-feedback">SĐT không hợp lệ</div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label class="input_label">
+                      <b class="b-red-required">*</b>Số điện thoại</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control input"
+                      placeholder="Số điện thoại"
+                      [ngClass]="
+                        updateForm.get('sdt').invalid &&
+                        updateForm.get('sdt').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="sdt"
+                    />
+                    <div class="invalid-feedback">SĐT không hợp lệ</div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label class="input_label">
+                      <b class="b-red-required">*</b>Email
+                    </label>
+                    <input
+                      type="email"
+                      class="form-control input"
+                      placeholder="Email"
+                      [ngClass]="
+                        updateForm.get('email').invalid &&
+                        updateForm.get('email').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="email"
+                    />
+                    <div class="invalid-feedback">Email không hợp lệ</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

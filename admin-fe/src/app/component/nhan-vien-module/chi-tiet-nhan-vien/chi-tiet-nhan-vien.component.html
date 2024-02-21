@@ -5,21 +5,34 @@
         <form>
           <div class="row">
             <div class="col-md-6">
-              <!-- họ tên -->
-              <div class="form-group">
-                Họ tên
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Họ tên"
-                  [value]="nhanVienDetails?.hoTen"
-                  [disabled]="true"
-                />
+              <div class="row img-row">
+                <div class="col d-flex justify-content-center">
+                  <!-- image -->
+                  <img
+                    *ngIf="nhanVienDetails?.imageUrl; else defaultImage"
+                    [src]="nhanVienDetails?.imageUrl"
+                    alt=""
+                  />
+                  <ng-template #defaultImage>
+                    <img
+                      src="assets/img/default-image.jpg"
+                      alt="Default Image"
+                    />
+                  </ng-template>
+                </div>
               </div>
             </div>
 
-            <!-- ngày sinh -->
             <div class="col-md-6">
+              CCCD
+              <input
+                type="text"
+                class="form-control"
+                placeholder="CCCD"
+                [value]="nhanVienDetails?.cccd"
+                [disabled]="true"
+              />
+
               <div class="form-group">
                 Ngày sinh
                 <input
@@ -30,10 +43,7 @@
                   [disabled]="true"
                 />
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
+
               <!-- SĐT -->
               <div class="form-group">
                 Số điện thoại
@@ -42,6 +52,22 @@
                   class="form-control"
                   placeholder="Số điện thoại"
                   [value]="nhanVienDetails?.sdt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <!-- họ tên -->
+              <div class="form-group">
+                Họ tên
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Họ tên"
+                  [value]="nhanVienDetails?.hoTen"
                   [disabled]="true"
                 />
               </div>
@@ -171,19 +197,6 @@
                 />
               </div>
             </div> -->
-            <div class="col-md-6">
-              <!-- cccd -->
-              <div class="form-group">
-                CCCD
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="CCCD"
-                  [value]="nhanVienDetails?.cccd"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
           </div>
         </form>
       </div>

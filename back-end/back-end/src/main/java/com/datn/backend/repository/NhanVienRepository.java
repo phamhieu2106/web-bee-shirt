@@ -33,10 +33,12 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
     @Query(value =
             """
-            SELECT nv.id, nv.created_at as CreatedAt, nv.created_by as CreatedBy, nv.updated_at as UpdatedAt, nv.last_updated_by as LastUpdatedBy, nv.dia_chi as DiaChi, nv.email, nv.gioi_tinh as GioiTinh, nv.ho_ten as HoTen, nv.ngay_sinh as NgaySinh, nv.sdt, acc.mat_khau as MatKhau, acc.role, acc.ten_dang_nhap as TenDangNhap, acc.trang_thai as TrangThai, nv.cccd
+            SELECT nv.id, nv.created_at as CreatedAt, nv.created_by as CreatedBy, nv.updated_at as UpdatedAt, nv.last_updated_by as LastUpdatedBy, nv.dia_chi as DiaChi, nv.email, nv.gioi_tinh as GioiTinh, nv.ho_ten as HoTen, nv.ngay_sinh as NgaySinh, nv.sdt, acc.mat_khau as MatKhau, acc.role, acc.ten_dang_nhap as TenDangNhap, acc.trang_thai as TrangThai, nv.cccd, khi.image_url as ImageUrl
             FROM account acc 
             JOIN nhan_vien nv 
-            ON nv.account_id = acc.id 
+            ON nv.account_id = acc.id
+            LEFT JOIN khach_hang_image khi
+            ON nv.image_id = khi.id
             WHERE nv.id = :id
             ORDER BY nv.created_at DESC
             """

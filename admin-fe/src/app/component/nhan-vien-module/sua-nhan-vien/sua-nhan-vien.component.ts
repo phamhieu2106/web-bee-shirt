@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnChanges } from "@angular/core";
+import { Component, ElementRef, OnChanges, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -19,17 +19,21 @@ export class SuaNhanVienComponent {
 
   nhanVienUpdated: NhanVienResponse;
 
+  @ViewChild("fileInput") fileInput: ElementRef;
+
   public idUpdated: number;
   public updateForm: any;
   private sdtRegex: string = "0[0-9]{9}";
   public pagedResponse: PagedResponse<NhanVienResponse>;
+  public imageNew: string;
+  private selectFile: File;
 
   constructor(
     private nhanVienService: NhanVienService,
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initUpdateForm();
@@ -46,6 +50,7 @@ export class SuaNhanVienComponent {
   }
 
   public initUpdateForm(nhanVienUpdated?: NhanVienResponse): void {
+    console.log(nhanVienUpdated);
     this.updateForm = new FormGroup({
       cccd: new FormControl(nhanVienUpdated?.cccd, [Validators.required]),
       hoTen: new FormControl(nhanVienUpdated?.hoTen, [Validators.required]),
@@ -68,17 +73,12 @@ export class SuaNhanVienComponent {
       //   Validators.required,
       // ]),
       matKhau: new FormControl(nhanVienUpdated?.matKhau),
-
-      // matKhau: new FormControl({
-      //   value: this.nhanVienDetails.matKhau,
-      //   disabled: true,
-      // }),
     });
   }
 
   updateNhanVien(): void {
     this.nhanVienService
-      .update(this.updateForm.value, this.idUpdated)
+      .update(this.updateForm.value, this.idUpdated, this.selectFile)
       .subscribe({
         next: () => {
           // this.initUpdateForm();
@@ -90,6 +90,21 @@ export class SuaNhanVienComponent {
           console.log(erros.message);
         },
       });
+  }
+
+  openFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.imageNew = URL.createObjectURL(file);
+    }
+  }
+
+  public imageChange(event: any): void {
+    this.selectFile = event.target["files"][0];
   }
 
   public goToPage(

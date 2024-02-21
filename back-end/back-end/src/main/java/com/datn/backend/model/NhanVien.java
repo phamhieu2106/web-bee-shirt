@@ -1,5 +1,6 @@
 package com.datn.backend.model;
 
+import com.datn.backend.model.khach_hang.KhachHangImage;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,4 +48,8 @@ public class NhanVien extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private KhachHangImage image;
 }

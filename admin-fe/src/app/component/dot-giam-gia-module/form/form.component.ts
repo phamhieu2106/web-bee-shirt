@@ -116,7 +116,7 @@ export class FormComponent implements OnInit {
       this.toast.error("Ngày Kết Thúc Đợt Giảm Giá Đang Bị Trống");
       return false;
     } else if (this.dotGiamGiaRequest.listIdSanPhamChiTiet === null) {
-      this.toast.error("Sản Phẩm Chi Tiết Đợt Giảm Giá Đang Bị Trống");
+      this.toast.error("Sản Phẩm Của Đợt Giảm Giá Đang Bị Trống");
       return false;
     } else if (
       this.dotGiamGiaRequest.thoiGianBatDau >

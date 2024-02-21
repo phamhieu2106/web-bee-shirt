@@ -57,7 +57,7 @@
                       <ng-container
                         *ngIf="
                           dataSanPham && dataSanPham.length > 0;
-                          else noDataTemplate
+                          else noDataTemplate1
                         "
                       >
                         <tr
@@ -99,23 +99,6 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-              <div class="cart-footer d-flex justify-content-between">
-                <div class="d-flex">
-                  <label class="col-md-8">Hiển Thị</label>
-                  <select class="custom-select my-1 mr-sm-2 col-md-9">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                  </select>
-                </div>
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li>
-                      <a class="page-link pointer"></a>
-                    </li>
-                  </ul>
-                </nav>
               </div>
             </table>
           </div>
@@ -216,23 +199,6 @@
                   </table>
                 </div>
               </div>
-              <div class="cart-footer d-flex justify-content-between">
-                <div class="d-flex">
-                  <label class="col-md-8">Hiển Thị</label>
-                  <select class="custom-select my-1 mr-sm-2 col-md-9">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                  </select>
-                </div>
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li>
-                      <a class="page-link pointer"></a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
             </table>
           </div>
         </div>
@@ -244,6 +210,14 @@
 <ng-template #noDataTemplate>
   <tr>
     <td [colSpan]="tHeadProducts.length" class="text-center">
+      Úi Bạn Ơi Không Có Dữ Liệu!!!
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #noDataTemplate1>
+  <tr>
+    <td [colSpan]="dataSanPham.length" class="text-center">
       Úi Bạn Ơi Không Có Dữ Liệu!!!
     </td>
   </tr>

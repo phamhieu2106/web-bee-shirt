@@ -6,6 +6,7 @@ import {
   Output,
   SimpleChanges,
 } from "@angular/core";
+import { Router } from "@angular/router";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-san-pham-chi-tiet";
@@ -16,8 +17,7 @@ import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-s
   styleUrls: ["./table.component.css"],
 })
 export class TableComponent implements OnInit {
-  private timeout: any;
-
+  idRemove: number;
   @Input() template: string;
   @Input() titleTable: string;
   @Input() tHead: Array<string>;
@@ -31,8 +31,7 @@ export class TableComponent implements OnInit {
   // For DotGiamGiaComponent
   @Output() onPageChange = new EventEmitter<any>();
   @Output() onPageNumberChange = new EventEmitter<any>();
-  @Output() onPageChangeSearch = new EventEmitter<any>();
-
+  @Output() onRemoveDotGiamGia = new EventEmitter<any>();
   // For SanPhamTable
   @Input() listSanPham: SanPham[];
   @Output() clickSanPham = new EventEmitter<any>();
@@ -42,7 +41,7 @@ export class TableComponent implements OnInit {
   @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
   @Output() clickSanPhamChiTiet = new EventEmitter<any>();
 
-  constructor() {}
+  constructor(private router: Router) {}
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes["listSanPhamChiTiet"] &&
@@ -62,21 +61,15 @@ export class TableComponent implements OnInit {
     this.onPageNumberChange.emit(pageNumber);
   }
 
-  public onChangeSearch(searchText: any) {
-    this.onPageChangeSearch.emit(searchText);
+  public onSelectRemove(id: number) {
+    this.idRemove = id;
+  }
+  public onRemove(id: number) {
+    console.log(id);
+    this.onRemoveDotGiamGia.emit(id);
   }
 
   // Debounce make sure that the search not request server many times for DotGiamGia
-  public onInputSearch(event: any) {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-
-    this.timeout = setTimeout(() => {
-      this.onChangeSearch(event.target.value);
-    }, 900); // Thời gian debounce là 900 milliseconds ~ 1s
-  }
-
   // For SanPham
   public addIdSanPham(value: any) {
     this.clickSanPham.emit(value);
@@ -86,8 +79,6 @@ export class TableComponent implements OnInit {
   public addIdSanPhamChiTiet(value: any) {
     this.clickSanPhamChiTiet.emit(value);
   }
-
-  // For Update DotGiamGia
 
   ngOnInit(): void {}
 }

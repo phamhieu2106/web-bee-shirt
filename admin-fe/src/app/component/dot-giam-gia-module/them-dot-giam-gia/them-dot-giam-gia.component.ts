@@ -81,7 +81,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
       },
     });
   }
-  public getListIdSanPham = (value: number) => {
+  public setListIdSanPham = (value: number) => {
     // Kiểm tra xem this.listIdSanPham đã được khởi tạo chưa
     if (this.listIdSanPham && Array.isArray(this.listIdSanPham)) {
       const index = this.listIdSanPham.indexOf(Number(value));
@@ -123,7 +123,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
       },
     });
   }
-  public getListIdSanPhamChiTiet = (value: number) => {
+  public setListIdSanPhamChiTiet = (value: number) => {
     if (this.listIdSanPhamChiTiet && Array.isArray(this.listIdSanPhamChiTiet)) {
       const index = this.listIdSanPhamChiTiet.indexOf(Number(value));
 
@@ -135,7 +135,6 @@ export class ThemDotGiamGiaComponent implements OnInit {
         this.listIdSanPhamChiTiet.push(Number(value));
       }
       this.dotGiamGiaRequest.listIdSanPhamChiTiet = this.listIdSanPhamChiTiet;
-      console.log(this.dotGiamGiaRequest.listIdSanPhamChiTiet);
     } else {
       this.toast.error("Mảng IdSanPhamChiTiet không được khởi tạo.");
       console.log("Mảng IdSanPhamChiTiet không được khởi tạo.");

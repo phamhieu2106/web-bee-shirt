@@ -44,8 +44,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public List<Integer> getListIdSanPham(String ids) {
+        //   Lấy danh sách id Sản Phẩm
         String[] idStrings = ids.split(",");
-
         // Chuyển đổi mảng chuỗi thành mảng số nguyên
         List<Integer> idList = Arrays.stream(idStrings)
                 .map(Integer::parseInt)
@@ -55,24 +55,25 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public List<Integer> getListIdSanPhamChiTietByIdSanPham(Integer id) {
+//        Trả về 1 danh sách id sản phẩm chi tiết qua id sản phẩm
         return repository.getListIdSanPhamChiTietByIdSanPham(id);
     }
 
     @Override
     public List<Integer> getListSanPhamChiTietByIdDotGiamGiaSanPham(Integer id) {
+//        Trả về 1 danh sách id sản phẩm chi tiết có trong đợt giảm giá
         return repository.getListIdSanPhamChiTiet(id);
     }
 
     @Override
     public PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId) {
-
+//        Page Sản Phẩm Chi Tiết
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         Page<SanPhamChiTietResponse> sanPhamChiTietResponsePage =
                 repository.getAllSanPhamChiTietBySanPhamId(pageable, listSanPhamId);
 
         PagedResponse<SanPhamChiTietResponse> sanPhamChiTietResponsePagedResponse = new PagedResponse<>();
-
         sanPhamChiTietResponsePagedResponse.setPageNumber(pageNumber);
         sanPhamChiTietResponsePagedResponse.setPageSize(pageSize);
         sanPhamChiTietResponsePagedResponse.setTotalElements((int) sanPhamChiTietResponsePage.getTotalElements());
@@ -86,13 +87,11 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search) {
-//        Get Pageable
+//        Page Đợt Giảm Giá
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-//        Get Page DotGiamGia Response
         Page<DotGiamGiaResponse> dotGiamGiaPage = repository.getPagination(pageable, search);
-//        Page DotGiamGia
-        PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
 
+        PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
         dotGiamGiaPagedResponse.setPageNumber(pageNumber);
         dotGiamGiaPagedResponse.setPageSize(pageSize);
         dotGiamGiaPagedResponse.setTotalElements((int) dotGiamGiaPage.getTotalElements());
@@ -107,19 +106,17 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     @Override
     public PagedResponse<DotGiamGiaResponse> getFilter(int pageNumber, int pageSize, String search,
                                                        int status, String startDate, String endDate) {
-
-        //        Get Pageable
+//        Page Đợt Giảm Giá Sau Khi Lọc
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-//        Get Page DotGiamGia Response
         Page<DotGiamGiaResponse> dotGiamGiaPage = null;
+
         if (status == 3) {
             dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate);
         } else {
             dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate);
         }
-//        Page DotGiamGia
-        PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
 
+        PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
         dotGiamGiaPagedResponse.setPageNumber(pageNumber);
         dotGiamGiaPagedResponse.setPageSize(pageSize);
         dotGiamGiaPagedResponse.setTotalElements((int) dotGiamGiaPage.getTotalElements());
@@ -139,7 +136,6 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     //    Validation
     private void validationCheck(DotGiamGiaRequest object) {
-
         //        Check Exit by Ten
         if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
             throw new ResourceExistsException("Object Request Name is Exits!");
@@ -160,14 +156,18 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public DotGiamGia add(DotGiamGiaRequest object) {
-
+//      Tự Động Tạo Mã Đợt Giảm Giá
         UUID uuid = UUID.randomUUID();
-        object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
         //        Set Code
         String code = "DGG" + uuid.toString().substring(0, 5).toUpperCase();
         object.setMaDotGiamGia(code);
+
+//          Set Name
+        object.setTenDotGiamGia(object.getTenDotGiamGia().trim());
+
         //        Set Status
         LocalDateTime today = LocalDateTime.now();
+
         if (object.getThoiGianBatDau().isAfter(today)) {
             // If thoiGianBatDau is after today, set trangThai to 2
             object.setTrangThai(2);
@@ -175,12 +175,14 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             // If thoiGianBatDau is not after today, set trangThai to 1
             object.setTrangThai(1);
         }
+
         //        map requestObject to Object
         DotGiamGia dotGiamGia = object.map(new DotGiamGia());
-//        Save object
         repository.save(dotGiamGia);
+
 //        Find DotGiamGia after save
         DotGiamGia dotGiamGiaFind = repository.getDotGiamGiaByMaDotGiamGia(code);
+
 //        Loop to create DotGiamGiaSanPham
         for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
 
@@ -214,7 +216,6 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
-        System.out.println(object.getId());
 //        Find Object from Database
         Optional<DotGiamGia> optional = repository.findById(id);
 
@@ -246,7 +247,6 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                     dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
                     dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
                     dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
-                    System.out.println("Update Successfully");
                     break;
                 }
             }
@@ -269,7 +269,6 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
                 dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
                 dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
-                System.out.println("Add Successfully");
             }
         }
         for (DotGiamGiaSanPham dotGiamGiaSanPham : listDotGiamGiaSanPham) {
@@ -282,10 +281,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             if (!found) {
                 dotGiamGiaSanPham.setTrangThai(false);
                 dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
-                System.out.println("Set Status");
             }
         }
-        System.out.println(dotGiamGia);
         repository.save(dotGiamGia);
         return dotGiamGia;
     }

@@ -11,7 +11,7 @@ export class ModalComponent {
   @Input() message: string;
   @Input() nameAction: string;
 
-  @Input() handleSubmit: Function;
+  @Input() handleSubmit: any;
 
   constructor() {}
 

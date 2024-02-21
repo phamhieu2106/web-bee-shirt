@@ -21,14 +21,14 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
     @Query(value = """
             SELECT dgg.id as Id ,dgg.ma_dot_giam_gia as MaDotGiamGia, dgg.ten_dot_giam_gia as TenDotGiamGia,
-            dgg.gia_tri_phan_tram as GiaTriPhanTram, dggsp.thoi_gian_bat_dau as ThoiGianBatDau, dggsp.thoi_gian_ket_thuc as ThoiGianKetThuc,
-            COUNT(dggsp.id) as SoLuongSanPham, dgg.trang_thai as TrangThai
-            FROM dot_giam_gia dgg
-            JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
-            WHERE dgg.ma_dot_giam_gia LIKE %:search%
-            OR dgg.ten_dot_giam_gia LIKE %:search%
-            OR dgg.gia_tri_phan_tram = :search
-            GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
+                        dgg.gia_tri_phan_tram as GiaTriPhanTram, dggsp.thoi_gian_bat_dau as ThoiGianBatDau, dggsp.thoi_gian_ket_thuc as ThoiGianKetThuc,
+                        COUNT(dggsp.id) as SoLuongSanPham, dgg.trang_thai as TrangThai
+                        FROM dot_giam_gia dgg
+                        JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
+                        WHERE dggsp.trang_thai = 1
+                        AND dgg.trang_thai > 0
+                        GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
+                        ORDER BY dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getPagination(Pageable pageable,
@@ -112,10 +112,10 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
     @Query(value = """
             SELECT san_pham_chi_tiet_id
-            FROM dot_giam_gia_san_pham
-            JOIN san_pham_chi_tiet ON san_pham_chi_tiet.id = dot_giam_gia_san_pham.san_pham_chi_tiet_id
-            JOIN dot_giam_gia ON dot_giam_gia.id = dot_giam_gia_san_pham.dot_giam_gia_id
-            WHERE dot_giam_gia.id = :id
+                        FROM dot_giam_gia_san_pham
+                        JOIN san_pham_chi_tiet ON san_pham_chi_tiet.id = dot_giam_gia_san_pham.san_pham_chi_tiet_id
+                        JOIN dot_giam_gia ON dot_giam_gia.id = dot_giam_gia_san_pham.dot_giam_gia_id
+                        WHERE dot_giam_gia.id = :id  AND dot_giam_gia_san_pham.trang_thai = 1
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTiet(@Param("id") Integer id);
 
@@ -125,4 +125,5 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             WHERE sp.id = :id
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
+
 }

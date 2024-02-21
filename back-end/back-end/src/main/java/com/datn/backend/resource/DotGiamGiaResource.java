@@ -101,12 +101,10 @@ public class DotGiamGiaResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
 //        Check remove success or not
-        boolean isSuccess = service.remove(id);
-        if (isSuccess) {
-            return ResponseEntity.status(HttpStatus.FOUND).body("Deleted Successfully with ID: " + id);
+        if (service.remove(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't Delete with ID: " + id);
         }
-//        return NOT FOUND if fail
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't Delete with ID: " + id);
     }
-
 }

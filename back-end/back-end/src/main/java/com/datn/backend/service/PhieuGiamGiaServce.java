@@ -22,5 +22,5 @@ public interface PhieuGiamGiaServce {
     List<PhieuGiamGia> getAll();
 
 
-    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search);
+    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,String kieu);
 }

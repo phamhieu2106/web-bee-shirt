@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-md-6">
             <input type="text" name="" class="form-control rounded"
-              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên">
+              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
           </div>
           <div class="col-md-6 d-flex justify-content-end">
             <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
@@ -30,24 +30,24 @@
             <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày">
           </div>
 
-          <div class="col-md-1 ">
+          <div class="col-md-2 ">
             <div>
 
-              <select class="form-control">
-                <option value="">-Kiểu-</option>
-                <option value="">Công Khai</option>
-                <option value="">Cá Nhân</option>
+              <select class="form-control" >
+                <option value="">- Chọn kiểu -</option>
+                <option value="1">Công Khai</option>
+                <option value="0">Cá Nhân</option>
               </select>
             </div>
           </div>
 
-          <div class="col-md-1 ">
+          <div class="col-md-2 ">
             <div>
 
-              <select class="form-control">
-                <option value="">-Loại-</option>
-                <option value="">%</option>
-                <option value="">Tiền</option>
+              <select class="form-control " (change)="filterPhieuGiamGia($event)">
+                <option value="2">-Kiểu-</option>
+                <option value="0">%</option>
+                <option value="1">Tiền Mặt</option>
               </select>
             </div>
           </div>
@@ -57,6 +57,7 @@
 
               <select class="form-control">
                 <option value="">-Trạng Thái-</option>
+                <option value="">Sắp diễn ra</option>
                 <option value="">Đang diễn ra</option>
                 <option value="">Đã kết thúc</option>
               </select>

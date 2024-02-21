@@ -38,20 +38,42 @@ export class DanhSachPhieuComponent {
 
   public initAddForm(): void { }
 
+  kieu:string ="";
+  keyword: string
+  
+
+  searchPhieuGiamGia(event: any): void {
+    this.keyword = event.target.value;
+    this.goToPage(1, 5,  this.keyword,this.kieu);
+}
+
+filterPhieuGiamGia(event: any): void {
+  this.kieu = event.target.value;
+  if (this.kieu !== "") {
+      this.goToPage(1, 5, this.keyword, this.kieu);
+  } else {
+      this.goToPage(1, 5, '', '');
+  }
+}
+
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = ""
+    keyword: string = "",
+    kieu: string = ""
   ): void {
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword,kieu).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
         this.pagedResponseBinh = response;
+       
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
       },
     });
   }
+
+  
 
   public changeStatus(id: number): void {
     this.phieuGiamGiaService.changeStatus(id).subscribe({

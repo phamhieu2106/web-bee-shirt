@@ -222,9 +222,11 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         if (optional.isEmpty()) {
             return null;
         }
+
         DotGiamGia dotGiamGia = object.map(optional.get());
 
         List<DotGiamGiaSanPham> listDotGiamGiaSanPham = dotGiamGiaSanPhamRepository.getAll(dotGiamGia.getId());
+
         for (Integer sanPhamChiTietID : object.getListIdSanPhamChiTiet()) {
             boolean found = false;
             for (DotGiamGiaSanPham dotGiamGiaSanPham : listDotGiamGiaSanPham) {

@@ -133,6 +133,9 @@
       </button>
     </td>
     <td>
+      <button class="btn btn-outline-info btn-rounded m-1" id="button">
+        <i class="fa-solid fa-circle-info fa-xl" id="icon-button-detail"></i>
+      </button>
       <button
         class="btn btn-outline-warning btn-rounded"
         [routerLink]="['/dot-giam-gia/cap-nhat-dot-giam-gia/', object.id]"
@@ -140,7 +143,7 @@
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
       </button>
       <button
-        class="btn btn-outline-light btn-rounded"
+        class="btn btn-outline btn-rounded"
         data-toggle="modal"
         data-target="#exampleModal"
         (click)="onSelectRemove(object.id)"

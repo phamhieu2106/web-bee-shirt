@@ -13,6 +13,7 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { NhanVienService } from "src/app/service/nhan-vien.service";
 
 import emailjs from "@emailjs/browser";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-them-nhan-vien",
@@ -29,8 +30,10 @@ export class ThemNhanVienComponent {
   @ViewChild("fileInput") fileInput: ElementRef;
 
   public addForm: any;
+  // private hoTenRegex: string = "^[\\p{L}\\s]+$";
   private sdtRegex: string = "0[0-9]{9}";
   private cccdRegex: string = "0[0-9]{11}";
+  private emailRegex: string = "^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$";
   public arrayQR: any[];
   public pagedResponse: PagedResponse<NhanVienResponse>;
   public imageUrl: string;
@@ -105,39 +108,90 @@ export class ThemNhanVienComponent {
   }
 
   addNhanVien(): void {
-    const randomPassword = this.generateRandomPassword();
+    if (this.selectFile == null) {
+      this.toastr.error("Chưa thêm ảnh", "Thất bại");
+      return;
+    } else if (
+      new Date(this.addForm.value.ngaySinh) > new Date() ||
+      new Date(this.addForm.value.ngaySinh).toDateString() ===
+        new Date().toDateString()
+    ) {
+      this.toastr.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+      return;
+    }
 
-    // Cập nhật giá trị của trường matKhau
-    this.addForm.patchValue({
-      matKhau: randomPassword,
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý thêm không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const randomPassword = this.generateRandomPassword();
+
+        // Cập nhật giá trị của trường matKhau
+        this.addForm.patchValue({
+          matKhau: randomPassword,
+        });
+
+        console.log(this.addForm.value);
+
+        this.nhanVienService
+          .add(this.addForm.value, this.selectFile)
+          .subscribe({
+            next: () => {
+              // this.goToPage(1, 5, "");
+              this.initAddForm();
+              Swal.fire({
+                toast: true,
+                icon: "success",
+                position: "top-end",
+                title: "Thêm nhân viên thành công",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
+            },
+            error: (error: HttpErrorResponse) => {
+              if (error.status === 400) {
+                // Trích xuất thông điệp lỗi từ response
+                this.errorMessage = error.error.message;
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: this.errorMessage,
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              } else {
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: "Thêm nhân viên thất bại",
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+                console.log(error.message);
+              }
+            },
+          });
+
+        this.send(
+          this.addForm.value.hoTen,
+          this.addForm.value.matKhau,
+          this.addForm.value.email
+        );
+      }
     });
-
-    console.log(this.addForm.value);
-
-    this.nhanVienService.add(this.addForm.value, this.selectFile).subscribe({
-      next: () => {
-        // this.goToPage(1, 5, "");
-        this.initAddForm();
-        this.toastr.success("Thêm nhân viên mới thành công", "Thành công");
-        this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 400) {
-          // Trích xuất thông điệp lỗi từ response
-          this.errorMessage = error.error.message;
-          this.toastr.error(this.errorMessage, "Thất bại");
-        } else {
-          this.toastr.error("Thêm nhân viên thất bại", "Thất bại");
-          console.log(error.message);
-        }
-      },
-    });
-
-    this.send(
-      this.addForm.value.hoTen,
-      this.addForm.value.matKhau,
-      this.addForm.value.email
-    );
   }
 
   public reloadForm() {
@@ -158,6 +212,7 @@ export class ThemNhanVienComponent {
       ]),
       hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR.trim(), [
         Validators.required,
+        Validators.pattern(/^[\p{L}\s]+$/u),
       ]),
       ngaySinh: new FormControl(ngaySinhQR === undefined ? "" : ngaySinhQR, [
         Validators.required,
@@ -174,7 +229,10 @@ export class ThemNhanVienComponent {
           : "false",
         [Validators.required]
       ),
-      email: new FormControl("", [Validators.required, Validators.email]),
+      email: new FormControl("", [
+        Validators.required,
+        Validators.pattern(this.emailRegex),
+      ]),
       diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
         Validators.required,
       ]),

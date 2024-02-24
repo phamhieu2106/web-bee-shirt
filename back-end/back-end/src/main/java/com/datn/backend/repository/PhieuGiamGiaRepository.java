@@ -29,9 +29,10 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
     PhieuGiamGiaResponse getOneById(@Param("id") Integer id);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
-            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  AND (pgg.kieu = :kieu) " +
-            "ORDER BY pgg.created_at DESC"
-            , nativeQuery = true)
-    Page<PhieuGiamGia> getPagination(Pageable pageable, @Param("search") String search, @Param("kieu") String kieu);
+            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  " +
+            "AND pgg.kieu IN (:kieu) " +
+            "ORDER BY pgg.created_at DESC",
+            nativeQuery = true)
+    Page<PhieuGiamGia> getPagination(Pageable pageable, @Param("search") String search, @Param("kieu")List<Integer> kieu);
 
 }

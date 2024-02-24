@@ -31,7 +31,7 @@ export class DanhSachHoaDonComponent {
     this.hoaDonService.getSoLuongDonHang().subscribe({
       next: (resp: SoLuongDonHang) => {
         this.soLuongDonHang = resp;
-        console.log(resp);
+        // console.log(resp);
       },
       error: (err) => {
         console.log(err);

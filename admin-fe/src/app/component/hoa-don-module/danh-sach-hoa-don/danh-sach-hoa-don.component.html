@@ -250,9 +250,17 @@
                       <tr *ngFor="let hd of hoaDons?.data; index as i">
                         <td>{{ i + 1 }}</td>
                         <td>{{ hd.ma }}</td>
-                        <td>ma_nv</td>
-                        <td>ten_khach</td>
-                        <td>sdt</td>
+                        <td>{{ hd.nhanVien == null ? "" : hd.nhanVien.id }}</td>
+                        <td>
+                          {{
+                            hd.khachHang == null
+                              ? "Khách lẻ"
+                              : hd.khachHang.hoTen
+                          }}
+                        </td>
+                        <td>
+                          {{ hd.khachHang == null ? "" : hd.khachHang.sdt }}
+                        </td>
                         <td>
                           {{ hd.createdAt }}
                         </td>

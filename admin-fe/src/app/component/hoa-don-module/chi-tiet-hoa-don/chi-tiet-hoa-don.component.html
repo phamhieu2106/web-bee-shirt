@@ -41,7 +41,7 @@
             class="btn btn-warning ml-auto"
             data-toggle="modal"
             data-target="#changeOrderInfo"
-            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+            *ngIf="hoaDon.loaiHoaDon != 'TAI_QUAY'"
           >
             Đổi địa chỉ
           </button>
@@ -84,7 +84,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        [(ngModel)]="hoaDon.tenNguoiNhan"
+                        [(ngModel)]="orderNameTemp"
                       />
                       <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
@@ -93,7 +93,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        [(ngModel)]="hoaDon.sdtNguoiNhan"
+                        [(ngModel)]="orderPhoneNumberTemp"
                       />
                       <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
@@ -102,7 +102,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        [(ngModel)]="hoaDon.ghiChu"
+                        [(ngModel)]="orderNoteTemp"
                       />
                       <!-- <small class="form-text text-danger">Help text</small> -->
                     </div>
@@ -194,4 +194,5 @@
   [(tongTien)]="hoaDon.tongTien"
   [(tienGiam)]="hoaDon.tienGiam"
   [(phiVanChuyen)]="hoaDon.phiVanChuyen"
+  [phieuGiamGia]="hoaDon.phieuGiamGia"
 ></app-order-product>

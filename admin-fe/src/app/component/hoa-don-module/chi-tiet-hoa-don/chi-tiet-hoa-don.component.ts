@@ -15,6 +15,9 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   id: number = -1;
   hoaDon: HoaDon = new HoaDon();
   diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+  orderNameTemp: string;
+  orderPhoneNumberTemp: string;
+  orderNoteTemp: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private hoaDonService: HoaDonService,
@@ -46,6 +49,9 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
       next: (resp) => {
         this.hoaDon = resp;
         // console.log(resp);
+        this.orderNameTemp = this.hoaDon.tenNguoiNhan;
+        this.orderPhoneNumberTemp = this.hoaDon.sdtNguoiNhan;
+        this.orderNoteTemp = this.hoaDon.ghiChu;
       },
       error: (err) => console.log(err),
     });
@@ -56,21 +62,30 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   }
 
   changeDiaChi() {
-    if (
-      this.diaChiVaPhiVanChuyen.tinh &&
-      this.diaChiVaPhiVanChuyen.huyen &&
-      this.diaChiVaPhiVanChuyen.xa
-    ) {
-      this.hoaDon.diaChiNguoiNhan = `${
-        this.diaChiVaPhiVanChuyen.cuThe == undefined
-          ? ""
-          : this.diaChiVaPhiVanChuyen.cuThe
-      },${this.diaChiVaPhiVanChuyen.xa},${this.diaChiVaPhiVanChuyen.huyen},${
-        this.diaChiVaPhiVanChuyen.tinh
-      }`;
-      this.hoaDon.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
+    const orderPhoneNumberRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b/;
+    if (!orderPhoneNumberRegex.test(this.orderPhoneNumberTemp)) {
+      this.toastr.error("Số điện thoại không hợp lệ");
+      return;
     } else {
-      this.toastr.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
+      if (
+        this.diaChiVaPhiVanChuyen.tinh &&
+        this.diaChiVaPhiVanChuyen.huyen &&
+        this.diaChiVaPhiVanChuyen.xa
+      ) {
+        this.hoaDon.diaChiNguoiNhan = `${
+          this.diaChiVaPhiVanChuyen.cuThe == undefined
+            ? ""
+            : this.diaChiVaPhiVanChuyen.cuThe
+        },${this.diaChiVaPhiVanChuyen.xa},${this.diaChiVaPhiVanChuyen.huyen},${
+          this.diaChiVaPhiVanChuyen.tinh
+        }`;
+        this.hoaDon.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
+        this.hoaDon.tenNguoiNhan = this.orderNameTemp;
+        this.hoaDon.sdtNguoiNhan = this.orderPhoneNumberTemp;
+        this.hoaDon.ghiChu = this.orderNoteTemp;
+      } else {
+        this.toastr.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
+      }
     }
   }
 }

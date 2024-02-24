@@ -3,7 +3,6 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.repository.SanPhamRepository;
 import com.datn.backend.service.SanPhamService;
@@ -30,9 +29,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public PagedResponse<SanPham> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> sanPhamPage = sanPhamRepo.getAll(pageable, search);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPage(pageable, search);
 
         PagedResponse<SanPham> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);

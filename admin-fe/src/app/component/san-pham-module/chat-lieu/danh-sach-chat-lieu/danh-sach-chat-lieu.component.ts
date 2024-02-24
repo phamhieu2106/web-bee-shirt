@@ -69,7 +69,7 @@ export class DanhSachChatLieuComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.chatLieuService.getAll(page, pageSize, keyword).subscribe({
+    this.chatLieuService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },
@@ -159,7 +159,7 @@ export class DanhSachChatLieuComponent {
 
   // private function
   private getChatLieuList(): void {
-    this.chatLieuService.getAll().subscribe({
+    this.chatLieuService.getByPage().subscribe({
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },

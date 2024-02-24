@@ -5,7 +5,12 @@
         <h3 class="mb-2">Thêm Sản Phẩm Chi Tiết</h3>
       </div>
       <div class="card-body">
-        <form class="form border border-secondary p-2 rounded">
+        <h4 class="text-center mt-2">Thông tin sản phẩm</h4>
+        <form
+          class="form border border-secondary p-2 rounded mb-5"
+          [formGroup]="addForm"
+        >
+          <input type="hidden" formControlName="sanPhamId" />
           <!-- tên sản phẩm -->
           <div class="mb-3">
             <label class="form-label">Sản phẩm:</label>
@@ -26,6 +31,8 @@
               placeholder="Giá nhập"
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
+              formControlName="giaNhap"
+              (input)="formatNumber($event, 'giaNhap')"
             />
             <span class="input-group-text" id="basic-addon2">VNĐ</span>
           </div>
@@ -38,87 +45,472 @@
               placeholder="Giá bán"
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
+              formControlName="giaBan"
+              (input)="formatNumber($event, 'giaBan')"
             />
             <span class="input-group-text" id="basic-addon2">VNĐ</span>
           </div>
 
           <div class="row">
-            <!-- màu sắc, kích cỡ -->
-            <div class="col-6 mb-3">
-              <label class="form-label">Màu sắc:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-
-            <div class="col-6 mb-3">
-              <label class="form-label">Kích cỡ:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-
             <!-- kiểu dáng, thiết kế -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu dáng:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" formControlName="kieuDangId">
+                <option value="0">Chọn kiểu dáng</option>
+                <option *ngFor="let kd of kieuDangList" [value]="kd.id">
+                  {{ kd.ten }}
+                </option>
               </select>
             </div>
 
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu thiết kế:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" formControlName="thietKeId">
+                <option value="0">Chọn kiểu thiết kế</option>
+                <option *ngFor="let tk of kieuThietKeList" [value]="tk.id">
+                  {{ tk.ten }}
+                </option>
               </select>
             </div>
 
             <!-- tay áo, cổ áo -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu tay áo:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" formControlName="tayAoId">
+                <option value="0">Chọn kiểu tay áo</option>
+                <option *ngFor="let ta of tayAoList" [value]="ta.id">
+                  {{ ta.ten }}
+                </option>
               </select>
             </div>
 
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu cổ áo:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" formControlName="coAoId">
+                <option value="0">Chọn kiểu cổ áo</option>
+                <option *ngFor="let ca of coAoList" [value]="ca.id">
+                  {{ ca.ten }}
+                </option>
               </select>
             </div>
 
             <!-- chất liệu -->
             <div class="col-12 mb-3">
               <label class="form-label">Chất liệu:</label>
-              <select class="form-select">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" formControlName="chatLieuId">
+                <option value="0">Chọn chất liệu</option>
+                <option *ngFor="let cl of chatLieuList" [value]="cl.id">
+                  {{ cl.ten }}
+                </option>
               </select>
             </div>
           </div>
         </form>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="text-center mt-2">Màu sắc & Kích cỡ</h4>
+        <form class="form p-2 mb-5">
+          <!-- mau sac -->
+          <div>
+            <label class="me-3">Màu sắc:</label>
+            <div
+              style="display: inline-block"
+              *ngFor="let sc of selectedMauSacList"
+            >
+              <div class="img-container me-5">
+                <img class="selected-color-img" [src]="sc.image.imageUrl" />
+                <div class="close-icon" (click)="removeSelectedColor(sc.id)">
+                  &#10006;
+                </div>
+              </div>
+            </div>
+            <button
+              type="button btn-primary"
+              class="btn btn-primary ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#mauSacBoard"
+              (click)="getMauSacList()"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+
+          <!-- kich co -->
+          <div class="mt-3">
+            <label class="me-3">Kích cỡ:</label>
+            <div
+              style="display: inline-block"
+              *ngFor="let ss of selectedKichCoList"
+            >
+              <div class="frame-container me-5">
+                <div class="content">{{ ss.ten.split(" ")[0] }}</div>
+                <div class="close-icon" (click)="removeSelectedSize(ss.id)">
+                  &#10006;
+                </div>
+              </div>
+            </div>
+            <button
+              type="button btn-primary"
+              class="btn btn-primary ms-3 mb-3"
+              data-bs-toggle="modal"
+              data-bs-target="#kichCoBoard"
+              (click)="getKichCoList()"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div *ngIf="selectedKichCoList.length > 0">
+      <div
+        class="card"
+        *ngFor="let sc of selectedMauSacList; let colorIndex = index"
+      >
+        <div class="card-header">
+          <div class="row my-3">
+            <h4 class="col-10">Danh sách sản phẩm màu {{ sc.ten }}</h4>
+            <div class="col-2">
+              <button
+                [id]="'chinhSuaBtn' + colorIndex"
+                class="btn btn-primary rounded"
+                *ngIf="toggleUpdateFieldBtn(sc.id)"
+                data-bs-toggle="modal"
+                data-bs-target="#updateModal"
+                (click)="assignChinhSuaBtnId(sc.id)"
+              >
+                <i class="fa-regular fa-pen-to-square me-2"></i>Chỉnh sửa
+              </button>
+            </div>
+          </div>
+          <!--  -->
+          <div class="row">
+            <table class="table col-8">
+              <thead>
+                <tr>
+                  <th width="5%">
+                    <input
+                      [id]="'ckBoxAll' + sc.id"
+                      [class]="'ckBoxColor' + sc.id"
+                      type="checkbox"
+                      (click)="selectAllRows1Color(sc.id)"
+                    />
+                  </th>
+                  <th width="30%">Sản phẩm</th>
+                  <th width="10%">Kích cỡ</th>
+                  <th width="15%">Số lượng</th>
+                  <th width="5%">Xóa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let ss of selectedKichCoList"
+                  [id]="'row' + sc.id + ss.id"
+                >
+                  <input
+                    [id]="'mauSacId' + sc.id"
+                    [class]="'mauSacId' + sc.id"
+                    [value]="sc.id"
+                    type="hidden"
+                  />
+                  <input
+                    [id]="'kichCoId' + ss.id"
+                    [class]="'kichCoId' + sc.id"
+                    [value]="ss.id"
+                    type="hidden"
+                  />
+                  <td>
+                    <input
+                      [id]="'ckBoxColor' + sc.id + ss.id"
+                      [class]="'ckBoxColor' + sc.id"
+                      type="checkbox"
+                      (change)="toggleUpdateFieldBtn(sc.id)"
+                    />
+                  </td>
+                  <td>
+                    <span>{{ sanPham.ten }}</span>
+                  </td>
+                  <td>{{ ss.ten.split(" ")[0] }}</td>
+                  <td>
+                    <input
+                      [id]="'soLuong' + sc.id + ss.id"
+                      [class]="'soLuong' + sc.id"
+                      type="text"
+                      style="width: 100px"
+                      value="0"
+                      (input)="formatNumber2($event, 'soLuong' + sc.id + ss.id)"
+                    />
+                  </td>
+                  <td>
+                    <i
+                      class="fa-solid fa-trash pointer"
+                      style="color: red"
+                      (click)="deleteRow('row' + sc.id + ss.id)"
+                    ></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-center col-4">
+              <!-- ẢNH -->
+              <h5>Ảnh</h5>
+              <img
+                class="default-img mb-3 pointer"
+                title="Chọn ảnh"
+                src="assets/img/default-image.jpg"
+                (click)="
+                  openHinhAnhModal(sc.ten, sc.id, sanPham?.id, colorIndex)
+                "
+              />
+              <button
+                id="anhSpModalBtn"
+                type="button btn-primary"
+                class="btn btn-primary ms-3 mb-3"
+                data-bs-toggle="modal"
+                data-bs-target="#anhSpModal"
+                hidden
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <div>
+                <input
+                  [id]="'fileImage' + colorIndex"
+                  type="file"
+                  multiple
+                  hidden
+                  (change)="changeInput($event)"
+                />
+              </div>
+
+              <div class="container">
+                <div class="image-container-2">
+                  <img
+                    *ngFor="
+                      let f of selectedImgFileList[colorIndex];
+                      let sizeIndex = index
+                    "
+                    [id]="'selectedImg1' + imgIndex + sizeIndex"
+                    [class]="'selectedImg1' + colorIndex + sizeIndex"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="text-center">
+  <button class="btn btn-success rounded" (click)="add()">Thêm</button>
+</div>
+
+<!-- image modal -->
+<div
+  class="modal fade"
+  id="anhSpModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <h5>
+            Sản phẩm '{{ selectedTenMauSac }}' của sản phẩm '{{ sanPham?.ten }}'
+          </h5>
+        </div>
+        <!-- các ảnh đã chọn -->
+        <h6>Danh sách ảnh đã chọn:</h6>
+        <div class="text-center">
+          <i *ngIf="curSelectedImgFileList.length === 0">Chưa có ảnh nảo</i>
+        </div>
+        <div
+          style="display: inline-block"
+          *ngFor="let f of curSelectedImgFileList; let i = index"
+        >
+          <div>
+            <img class="thumbnail me-5" [id]="'selectedImg2' + imgIndex + i" />
+          </div>
+        </div>
+
+        <!-- các ảnh đã chọn cùng màu -->
+        <hr />
+        <h6>Danh sách ảnh đã có màu:</h6>
+        <div class="text-center">
+          <i *ngIf="existingImgList.length === 0">Chưa có ảnh nảo</i>
+        </div>
+        <div
+          class="image-container"
+          *ngFor="let ei of existingImgList; let i = index"
+        >
+          <img class="exist-img" [id]="'existingImg' + i" src="" />
+          <input type="checkbox" class="checkbox" />
+        </div>
+
+        <!-- Danh sách ảnh tải lên -->
+        <hr />
+        <h6>Danh sách ảnh tải lên:</h6>
+        <div class="text-center">
+          <i *ngIf="curUploadImgFileList.length === 0">Chưa có ảnh nảo</i>
+        </div>
+        <div
+          class="image-container"
+          *ngFor="let file of curUploadImgFileList; let i = index"
+        >
+          <img
+            class="exist-img"
+            [id]="'uploadImg' + selectedIdMauSac + i"
+            src=""
+          />
+          <input
+            [id]="'chkBoxUploadImg' + i"
+            [checked]="isUploadImgChecked(file.name)"
+            type="checkbox"
+            class="checkbox"
+            (change)="toggleUploadImage(i, file, $event)"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-primary col-2 rounded"
+          (click)="openFileInput(imgIndex)"
+        >
+          Tải ảnh lên
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- bang mau sac -->
+<div
+  class="modal fade"
+  id="mauSacBoard"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Chọn màu sắc</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 pointer" *ngFor="let ms of mauSacList">
+            <img
+              class="color-img"
+              [src]="ms.image.imageUrl"
+              (click)="selectColor(ms)"
+            />
+            <p>{{ ms.ten + " - " + ms.ma }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- bang kich co -->
+<div
+  class="modal fade"
+  id="kichCoBoard"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Chọn kích cỡ</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-2 pointer" *ngFor="let kc of kichCoList">
+            <div class="border border-secondary p-3" (click)="selectKichCo(kc)">
+              {{ kc.ten.split(" ")[0] }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div
+  class="modal fade"
+  id="updateModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Chỉnh sửa</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label"
+            >Số lượng</label
+          >
+          <input id="soLuongInput" class="form-control" type="number" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveSoLuongForm()"
+        >
+          Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

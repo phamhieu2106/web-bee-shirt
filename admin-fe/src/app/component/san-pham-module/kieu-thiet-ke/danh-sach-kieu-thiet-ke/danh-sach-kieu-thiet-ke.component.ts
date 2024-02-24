@@ -67,7 +67,7 @@ export class DanhSachKieuThietKeComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.thietKeService.getAll(page, pageSize, keyword).subscribe({
+    this.thietKeService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<KieuThietKe>) => {
         this.pagedResponse = response;
       },
@@ -159,7 +159,7 @@ export class DanhSachKieuThietKeComponent {
 
   // private function
   private getCoAoList(): void {
-    this.thietKeService.getAll().subscribe({
+    this.thietKeService.getByPage().subscribe({
       next: (response: PagedResponse<KieuThietKe>) => {
         this.pagedResponse = response;
       },

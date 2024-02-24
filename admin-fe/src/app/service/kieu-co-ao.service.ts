@@ -15,33 +15,40 @@ export class KieuCoAoService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<CoAo>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
-    return this.http.get<PagedResponse<CoAo>>(`${this.apiUrl}/get-all${param}`);
+    return this.http.get<PagedResponse<CoAo>>(
+      `${this.apiUrl}/get-by-page${param}`
+    );
   }
 
   // 2
+  public getAll(): Observable<CoAo[]> {
+    return this.http.get<CoAo[]>(`${this.apiUrl}/get-all`);
+  }
+
+  // 3
   public add(coAo: CoAo): Observable<CoAo> {
     return this.http.post<CoAo>(`${this.apiUrl}/add`, coAo);
   }
 
-  // 3
+  // 4
   public getById(id: number): Observable<CoAo> {
     return this.http.get<CoAo>(`${this.apiUrl}/get-by-id/${id}`);
   }
 
-  // 4
+  // 5
   public changeStatus(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
   }
 
-  // 5
+  // 6
   public update(chatLieu: CoAo): Observable<CoAo> {
     return this.http.put<CoAo>(`${this.apiUrl}/update`, chatLieu);
   }

@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class TayAoServiceImpl implements TayAoService {
     }
 
     @Override
-    public PagedResponse<TayAo> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<TayAo> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<TayAo> tayAoPage = tayAoRepo.getAll(pageable, search);
 
@@ -42,6 +45,12 @@ public class TayAoServiceImpl implements TayAoService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public List<TayAo> getAll() {
+        Sort sort = Sort.by("ten");
+        return tayAoRepo.findAll(sort);
     }
 
     @Override

@@ -15,15 +15,19 @@ export class KieuDangService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<KieuDang>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<KieuDang>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
+  }
+
+  public getAll(): Observable<KieuDang[]> {
+    return this.http.get<KieuDang[]>(`${this.apiUrl}/get-all`);
   }
 
   // 2

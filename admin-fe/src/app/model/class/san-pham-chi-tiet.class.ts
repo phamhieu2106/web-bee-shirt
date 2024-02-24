@@ -1,5 +1,6 @@
 import { ChatLieu } from "./chat-lieu.class";
 import { CoAo } from "./co-ao.class";
+import { HinhAnh } from "./hinh-anh.class";
 import { KichCo } from "./kich-co.class";
 import { KieuDang } from "./kieu-dang.class";
 import { KieuThietKe } from "./kieu-thiet-ke.class";
@@ -22,4 +23,10 @@ export class SanPhamChiTiet {
   tayAo: TayAo;
   coAo: CoAo;
   chatLieu: ChatLieu;
+  hinhAnhs: HinhAnh[];
+
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  lastUpdatedBy: string;
 }

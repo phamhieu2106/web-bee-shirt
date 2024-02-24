@@ -1,0 +1,264 @@
+<app-main-heading
+  [icon]="'fa-solid fa-shirt'"
+  [mainHeading]="'Sản phẩm chi tiết'"
+  [title]="'Sản phẩm chi tiết'"
+></app-main-heading>
+
+<div class="row gutters pt-2">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="mb-4">Danh Sách Sản Phẩm '{{ sanPham?.ten }}'</h3>
+        <!-- HEADER  -->
+        <div>
+          <div class="col col-md-12 d-flex">
+            <div class="input-group form-group search-block">
+              <input
+                type="search"
+                class="form-control"
+                placeholder="Tìm sản phẩm..."
+              />
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">Tìm kiếm</button>
+              </span>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4 text-right"></div>
+          </div>
+
+          <div class="row mb-3 mx-5">
+            <div class="col-3">
+              <label class="form-label">Màu sắc</label>
+              <select class="form-select" (change)="onSelectMauSac($event)">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let ms of mauSacs" [value]="ms.id">
+                  {{ ms.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Kích cỡ</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let kc of kichCos" [value]="kc.id">
+                  {{ kc.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Kiểu dáng</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let kd of kieuDangs" [value]="kd.id">
+                  {{ kd.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Thiết kế</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let tk of thietKes" [value]="tk.id">
+                  {{ tk.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Kiểu tay áo</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let ta of tayAos" [value]="ta.id">
+                  {{ ta.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Kiểu cổ áo</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let ca of coAos" [value]="ca.id">
+                  {{ ca.ten }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <label class="form-label">Chất liệu</label>
+              <select class="form-select">
+                <option value="0" selected>Tất cả</option>
+                <option *ngFor="let cl of chatLieus" [value]="cl.id">
+                  {{ cl.ten }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
+          <!-- TABLE -->
+          <table class="table">
+            <thead class="thead-default">
+              <tr>
+                <th>STT</th>
+                <th>Ảnh</th>
+                <th width="10%">Màu Sắc</th>
+                <th width="5%">Kích Cỡ</th>
+                <th>Kiểu Dáng</th>
+                <th>Thiết Kế</th>
+                <th>Tay Áo</th>
+                <th>Cổ Áo</th>
+                <th>Chất Liệu</th>
+                <th>Giá Nhập</th>
+                <th>Giá Bán</th>
+                <th>Trạng Thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of pagedResponse?.data; let i = index">
+                <th scope="row">
+                  {{
+                    i +
+                      1 +
+                      (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                  }}
+                </th>
+                <td>
+                  <div
+                    id="carouselExampleSlidesOnly"
+                    class="carousel slide"
+                    data-bs-ride="carousel"
+                    style="width: 60px"
+                    data-bs-interval="3000"
+                  >
+                    <div class="carousel-inner">
+                      <div
+                        class="carousel-item"
+                        [class]="i === 1 ? 'active' : ''"
+                        *ngFor="let img of s.hinhAnhs; let i = index"
+                      >
+                        <img [src]="img.imageUrl" class="d-block w-100" />
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>{{ s.mauSac.ten }}</div>
+                  <img [src]="s.mauSac.image.imageUrl" style="width: 60px" />
+                </td>
+                <td>{{ s.kichCo.ten.split(" ")[0] }}</td>
+                <td>{{ s.kieuDang.ten }}</td>
+                <td>{{ s.thietKe.ten }}</td>
+                <td>{{ s.tayAo.ten }}</td>
+                <td>{{ s.coAo.ten }}</td>
+                <td>{{ s.chatLieu.ten }}</td>
+                <td>{{ formatCurrency(s.giaNhap) }}</td>
+                <td>{{ formatCurrency(s.giaBan) }}</td>
+                <td>
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      [id]="'trangThai' + s.id"
+                      [checked]="s.trangThai"
+                    />
+                    <label
+                      class="custom-control-label"
+                      [for]="'trangThai' + s.id"
+                      >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</label
+                    >
+                  </div>
+                </td>
+                <td>
+                  <button
+                    class="btn btn-outline-light btn-rounded me-2"
+                    title="Xem chi tiết"
+                    data-bs-toggle="modal"
+                    data-bs-target="#sanPhamDetailsForm"
+                  >
+                    <i
+                      class="fa-solid fa-circle-info fa-xl"
+                      style="color: #74c0fc"
+                    ></i>
+                  </button>
+
+                  <button
+                    class="btn btn-outline-warning btn-rounded me-2"
+                    title="Cập nhật"
+                    data-bs-toggle="modal"
+                    data-bs-target="#sanPhamUpdateForm"
+                  >
+                    <i
+                      class="fa-solid fa-pen-to-square"
+                      style="color: #ffd43b"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
+          <div class="col col-md-12 d-flex justify-content-between">
+            <div class="col-md-3">
+              <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+                >Số lượng:
+              </label>
+              <select
+                class="custom-select my-1 mr-sm-2 col-md-5"
+                id="inlineFormCustomSelectPref"
+              >
+                >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+            <div class="">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li
+                    class="page-item"
+                    [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                  >
+                    <a class="page-link pointer">Previous</a>
+                  </li>
+                  <li
+                    class="page-item"
+                    *ngFor="let page of pagedResponse?.pageNumberArr"
+                  >
+                    <a
+                      class="page-link pointer"
+                      [ngClass]="
+                        pagedResponse?.pageNumber == page ? 'active' : ''
+                      "
+                      >{{ page }}</a
+                    >
+                  </li>
+                  <li
+                    class="page-item"
+                    [ngClass]="
+                      pagedResponse?.pageNumber == pagedResponse?.totalPages
+                        ? 'disabled'
+                        : ''
+                    "
+                  >
+                    <a class="page-link pointer">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
+          <h3>Chưa có sản phẩm nào của '{{ sanPham.ten }}'</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

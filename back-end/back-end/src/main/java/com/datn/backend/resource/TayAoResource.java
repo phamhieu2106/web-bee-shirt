@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tay-ao")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class TayAoResource {
 
     private final TayAoService tayAoService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<TayAo>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                          @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                          @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(tayAoService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<TayAo>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(tayAoService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<TayAo>> getAll() {
+        return ResponseEntity.ok(tayAoService.getAll());
     }
 
     @PostMapping("/add")
@@ -35,7 +42,7 @@ public class TayAoResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<TayAo> add(@PathVariable("id") int id) {
+    public ResponseEntity<TayAo> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(tayAoService.getById(id));
     }
 

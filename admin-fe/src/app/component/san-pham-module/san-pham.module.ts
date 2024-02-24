@@ -1,6 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+
+import { AngularEditorModule } from "@kolkov/angular-editor";
 
 import { SanPhamRoutingModule } from "./san-pham-routing.module";
 import { DanhSachMauSacComponent } from "./mau-sac/danh-sach-mau-sac/danh-sach-mau-sac.component";
@@ -12,7 +15,8 @@ import { DanhSachKieuDangComponent } from "./kieu-dang/danh-sach-kieu-dang/danh-
 import { DanhSachKieuTayAoComponent } from "./kieu-tay-ao/danh-sach-kieu-tay-ao/danh-sach-kieu-tay-ao.component";
 import { DanhSachKieuThietKeComponent } from "./kieu-thiet-ke/danh-sach-kieu-thiet-ke/danh-sach-kieu-thiet-ke.component";
 import { LayoutModule } from "../layout-module/layout.module";
-import { ThemSanPhamChiTietComponent } from './san-pham/them-san-pham-chi-tiet/them-san-pham-chi-tiet.component';
+import { ThemSanPhamChiTietComponent } from "./san-pham/them-san-pham-chi-tiet/them-san-pham-chi-tiet.component";
+import { DsSanPhamChiTietComponent } from "./san-pham/ds-san-pham-chi-tiet/ds-san-pham-chi-tiet.component";
 
 @NgModule({
   declarations: [
@@ -25,10 +29,14 @@ import { ThemSanPhamChiTietComponent } from './san-pham/them-san-pham-chi-tiet/t
     DanhSachKieuTayAoComponent,
     DanhSachKieuThietKeComponent,
     ThemSanPhamChiTietComponent,
+    DsSanPhamChiTietComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
+    FormsModule,
+    AngularEditorModule,
     FormsModule,
     LayoutModule,
     SanPhamRoutingModule,

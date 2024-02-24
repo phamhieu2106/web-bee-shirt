@@ -1,5 +1,6 @@
 package com.datn.backend.dto.response;
 
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,9 +35,9 @@ public class HoaDonResponse extends BaseResponse {
     private String trangThai;
     private String ghiChu;
 
-//    private NhanVien nhanVien;
-//    private KhachHang khachHang;
-//    private PhieuGiamGia phieuGiamGia;
+    private NhanVienHoaDonRespone nhanVien;
+    private KhachHangHoaDonResponse khachHang;
+    private PhieuGiamGiaHoaDonResponse phieuGiamGia;
     private List<HoaDonChiTietResponse> hoaDonChiTiets;
     private List<LichSuHoaDonResponse> lichSuHoaDons;
     private List<ThanhToanResponse> thanhToans;

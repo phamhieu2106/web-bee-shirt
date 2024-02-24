@@ -92,7 +92,7 @@
               </table>
               <div class="row gutters">
                 <div class="col-md-6 col-sm-12">
-                  <table class="table plain">
+                  <table class="table plain" *ngIf="phieuGiamGia != null">
                     <tbody>
                       <tr>
                         <td>
@@ -100,8 +100,12 @@
                           <p class="text-left">Giá trị:</p>
                         </td>
                         <td>
-                          <p class="text-left">MA_PHIEU</p>
-                          <p class="text-left">0 đ</p>
+                          <p class="text-left">
+                            {{ phieuGiamGia.maPhieuGiamGia }}
+                          </p>
+                          <p class="text-left">
+                            {{ phieuGiamGia.giaTri | currency : "đ " }}
+                          </p>
                         </td>
                       </tr>
                     </tbody>

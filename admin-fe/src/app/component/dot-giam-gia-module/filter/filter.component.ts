@@ -10,7 +10,7 @@ export class FilterComponent {
   status: number = 3;
   startDate: string;
   endDate: string;
-
+  search: string;
   @Output() filterFromChild = new EventEmitter<any>();
   @Output() filterReload = new EventEmitter<any>();
   @Output() onPageChangeSearch = new EventEmitter<any>();
@@ -30,10 +30,11 @@ export class FilterComponent {
     this.filterFromChild.emit(dataEmit);
   }
 
-  handleReset(): void {
+  public handleReset(): void {
     this.status = 3;
     this.startDate = undefined;
     this.endDate = undefined;
+    this.search = "";
     this.filterReload.emit();
   }
 
@@ -45,7 +46,6 @@ export class FilterComponent {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
-
     this.timeout = setTimeout(() => {
       this.onChangeSearch(event.target.value);
     }, 900); // Thời gian debounce là 900 milliseconds ~ 1s

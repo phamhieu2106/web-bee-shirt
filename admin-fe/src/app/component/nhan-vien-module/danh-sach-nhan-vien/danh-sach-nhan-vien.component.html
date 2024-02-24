@@ -4,84 +4,98 @@
   [title]="title"
 ></app-main-heading>
 
-<div class="row gutters mt-3">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="float-md-left">Danh sách nhân viên</h4>
-
-        <button
-          type="button"
-          class="btn btn-primary btn-lg float-md-right rounded"
-          routerLink="/nhan-vien/them-nhan-vien"
-        >
-          <span class="icon-user-plus"></span>
-          Thêm nhân viên
-        </button>
-      </div>
-      <div class="card-body">
-        <!-- Filter start -->
-        <div class="row gutters justify-content-md-center">
-          <div class="col-md-3 col-12">
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control"
-                id="inputName"
-                placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-                (keyup)="timKiem($event)"
-              />
-            </div>
-          </div>
-          <div class="col-sm-3 col-12">
-            <div class="input-group d-flex align-items-center">
-              <div class="input-group-prepend">
-                <label class="me-3"> Giới tính: </label>
+<div class="row gutters">
+  <div class="row gutters mt-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="float-md-left">Bộ lọc</h4>
+        </div>
+        <div class="card-body pt-4">
+          <!-- Filter start -->
+          <div class="row gutters">
+            <div class="col-md-5 col-12 pe-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <label class="me-3"> Tìm kiếm: </label>
+                </div>
+                <input
+                  #inputName
+                  type="text"
+                  class="form-control"
+                  placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+                  (keyup)="timKiem($event)"
+                />
               </div>
-              <select
-                [(ngModel)]="gioiTinhFilter"
-                class="custom-select"
-                (change)="onChangeFilter()"
-              >
-                <!-- <option value="" disabled selected hidden>
+            </div>
+            <div class="col-sm-3 col-12">
+              <div class="input-group d-flex align-items-center">
+                <div class="input-group-prepend">
+                  <label class="me-3"> Giới tính: </label>
+                </div>
+                <select
+                  [(ngModel)]="gioiTinhFilter"
+                  class="custom-select"
+                  (change)="onChangeFilter()"
+                >
+                  <!-- <option value="" disabled selected hidden>
                     Tất cả giới tính
                   </option> -->
-                <option [ngValue]="[0, 1]">Tất cả giới tính</option>
-                <option [ngValue]="[1]">Nam</option>
-                <option [ngValue]="[0]">Nữ</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-3 col-12">
-            <div class="input-group d-flex align-items-center">
-              <div class="input-group-prepend">
-                <label class="me-3"> Trạng thái: </label>
+                  <option [ngValue]="[0, 1]">Tất cả giới tính</option>
+                  <option [ngValue]="[1]">Nam</option>
+                  <option [ngValue]="[0]">Nữ</option>
+                </select>
               </div>
-              <select
-                class="custom-select"
-                [(ngModel)]="trangThaiFilter"
-                (change)="onChangeFilter()"
+            </div>
+            <div class="col-sm-3 col-12">
+              <div class="input-group d-flex align-items-center">
+                <div class="input-group-prepend">
+                  <label class="me-3"> Trạng thái: </label>
+                </div>
+                <select
+                  class="custom-select"
+                  [(ngModel)]="trangThaiFilter"
+                  (change)="onChangeFilter()"
+                >
+                  <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
+                  <option [ngValue]="[1]">Đang làm việc</option>
+                  <option [ngValue]="[0]">Đã nghỉ việc</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-1 ps-3">
+              <button
+                class="btn btn-primary btn-rounded btn-reload-filter"
+                (click)="reloadFilter()"
               >
-                <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
-                <option [ngValue]="[1]">Đang làm việc</option>
-                <option [ngValue]="[0]">Đã nghỉ việc</option>
-              </select>
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
             </div>
           </div>
-
-          <div class="col-1">
-            <button
-              class="btn btn-primary btn-rounded btn-reload-filter"
-              (click)="reloadFilter()"
-            >
-              <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-          </div>
+          <!-- Filter End -->
         </div>
-        <!-- Filter End -->
+      </div>
+    </div>
+  </div>
 
-        <!-- Table Start -->
+  <div class="row gutters mt-3">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="float-md-left">Danh sách nhân viên</h4>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-lg float-md-right rounded"
+            routerLink="/nhan-vien/them-nhan-vien"
+          >
+            <span class="icon-user-plus"></span>
+            Thêm nhân viên
+          </button>
+        </div>
         <div class="card-body">
+          <!-- Table Start -->
           <table id="rowSelection" class="table table-striped table-bordered">
             <thead>
               <tr>
@@ -106,23 +120,21 @@
                 <td>{{ nv.gioiTinh ? "Nam" : "Nữ" }}</td>
                 <td>{{ nv.email }}</td>
                 <td>
-                  <div class="custom-control custom-switch">
-                    <div id="custom-switch-control ">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        [id]="'trangThai' + nv.id"
-                        [checked]="nv.trangThai"
-                        (click)="deleteNV(nv.id)"
-                      />
-                    </div>
+                  <div class="">
+                    <!-- <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      [id]="'trangThai' + nv.id"
+                      [checked]="nv.trangThai"
+                      (click)="deleteNV(nv.id)"
+                    /> -->
                     <label
-                      [for]="'trangThai' + nv.id"
                       [class]="
                         nv.trangThai
-                          ? 'btn btn-success btn-rounded custom-control-label'
-                          : 'btn btn-secondary btn-rounded custom-control-label'
+                          ? 'btn btn-success btn-rounded'
+                          : 'btn btn-secondary btn-rounded'
                       "
+                      (click)="deleteNV(nv.id)"
                     >
                       {{ nv.trangThai ? "Đang làm việc" : "Đã Nghỉ việc" }}
                     </label>
@@ -131,7 +143,7 @@
 
                 <td>
                   <button
-                    class="btn btn-outline-light btn-rounded"
+                    class="btn btn-outline-info btn-rounded"
                     id="button"
                     data-toggle="modal"
                     data-target="#formDetailButton"
@@ -145,13 +157,17 @@
                   </button>
 
                   <button
-                    class="btn btn-outline-warning btn-rounded"
+                    class="btn btn-outline-warning btn-rounded mx-1"
                     routerLink="/nhan-vien/sua-nhan-vien/{{ nv.id }}"
                   >
-                    <i
-                      class="fa-solid fa-pen-to-square"
-                      id="icon-button-update"
-                    ></i>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+
+                  <button
+                    class="btn btn-outline-danger btn-rounded"
+                    (click)="deleteNV(nv.id)"
+                  >
+                    <i class="fa-solid fa-trash fa-xl"></i>
                   </button>
                 </td>
               </tr>
@@ -217,55 +233,55 @@
               </nav>
             </div>
           </div>
+
+          <!-- Table End -->
         </div>
-        <!-- Table End -->
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal Form Detail start -->
-<div
-  class="modal fade"
-  id="formDetailButton"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="formDetail"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formDetail">Thông tin nhân viên</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-chi-tiet-nhan-vien
-          [nhanVienDetails]="nhanVienDetails"
-        ></app-chi-tiet-nhan-vien>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary btn-rounded"
-          data-dismiss="modal"
-        >
-          Close
-        </button>
+  <!-- Modal Form Detail start -->
+  <div
+    class="modal fade"
+    id="formDetailButton"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="formDetail"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="formDetail">Thông tin nhân viên</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-chi-tiet-nhan-vien
+            [nhanVienDetails]="nhanVienDetails"
+          ></app-chi-tiet-nhan-vien>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-rounded"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Modal Form Detail ends -->
+  <!-- Modal Form Detail ends -->
 
-<!-- 
+  <!-- 
   <select class="form-control mx-sm-4">
                 <option
                   value=""
@@ -283,3 +299,4 @@
                 </option>
               </select>
  -->
+</div>

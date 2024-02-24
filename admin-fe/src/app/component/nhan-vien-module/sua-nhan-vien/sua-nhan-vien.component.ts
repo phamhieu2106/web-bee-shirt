@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef, OnChanges, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { NhanVienService } from "src/app/service/nhan-vien.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-sua-nhan-vien",
@@ -16,6 +17,7 @@ export class SuaNhanVienComponent {
   icon: string = "fa-solid fa-users";
   title: string = "Nhân Viên";
   mainHeading: string = "Nhân Viên";
+  errorMessage: string = "";
 
   nhanVienUpdated: NhanVienResponse;
 
@@ -24,6 +26,9 @@ export class SuaNhanVienComponent {
   public idUpdated: number;
   public updateForm: any;
   private sdtRegex: string = "0[0-9]{9}";
+  private cccdRegex: string = "0[0-9]{11}";
+  private emailRegex: string = "^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$";
+
   public pagedResponse: PagedResponse<NhanVienResponse>;
   public imageNew: string;
   private selectFile: File;
@@ -52,8 +57,14 @@ export class SuaNhanVienComponent {
   public initUpdateForm(nhanVienUpdated?: NhanVienResponse): void {
     console.log(nhanVienUpdated);
     this.updateForm = new FormGroup({
-      cccd: new FormControl(nhanVienUpdated?.cccd, [Validators.required]),
-      hoTen: new FormControl(nhanVienUpdated?.hoTen, [Validators.required]),
+      cccd: new FormControl(nhanVienUpdated?.cccd, [
+        Validators.required,
+        Validators.pattern(this.cccdRegex),
+      ]),
+      hoTen: new FormControl(nhanVienUpdated?.hoTen, [
+        Validators.required,
+        Validators.pattern(/^[\p{L}\s]+$/u),
+      ]),
       ngaySinh: new FormControl(nhanVienUpdated?.ngaySinh, [
         Validators.required,
       ]),
@@ -66,7 +77,7 @@ export class SuaNhanVienComponent {
       ]),
       email: new FormControl(nhanVienUpdated?.email, [
         Validators.required,
-        Validators.email,
+        Validators.pattern(this.emailRegex),
       ]),
       diaChi: new FormControl(nhanVienUpdated?.diaChi, [Validators.required]),
       // tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
@@ -77,19 +88,74 @@ export class SuaNhanVienComponent {
   }
 
   updateNhanVien(): void {
-    this.nhanVienService
-      .update(this.updateForm.value, this.idUpdated, this.selectFile)
-      .subscribe({
-        next: () => {
-          // this.initUpdateForm();
-          this.toastr.success("Sửa nhân viên thành công", "Thành công");
-          this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
-        },
-        error: (erros: HttpErrorResponse) => {
-          this.toastr.error("Sửa nhân viên thất bại", "Thất bại");
-          console.log(erros.message);
-        },
-      });
+    if (
+      new Date(this.updateForm.value.ngaySinh) > new Date() ||
+      new Date(this.updateForm.value.ngaySinh).toDateString() ===
+        new Date().toDateString()
+    ) {
+      this.toastr.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+      return;
+    }
+
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý sửa không?",
+      // text: "Bạn có chắc chắn sửa không",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+      // cancelButtonColor: "#d33",
+      // confirmButtonText: "Sửa",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.nhanVienService
+          .update(this.updateForm.value, this.idUpdated, this.selectFile)
+          .subscribe({
+            next: () => {
+              // this.initUpdateForm();
+              Swal.fire({
+                toast: true,
+                icon: "success",
+                position: "top-end",
+                title: "Sửa nhân viên thành công",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              this.router.navigate(["/nhan-vien/ds-nhan-vien"]);
+            },
+            error: (error: HttpErrorResponse) => {
+              if (error.status === 400) {
+                // Trích xuất thông điệp lỗi từ response
+                this.errorMessage = error.error.message;
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: this.errorMessage,
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              } else {
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: "Sửa nhân viên thất bại",
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+                console.log(error.message);
+              }
+            },
+          });
+      }
+    });
   }
 
   openFileInput() {

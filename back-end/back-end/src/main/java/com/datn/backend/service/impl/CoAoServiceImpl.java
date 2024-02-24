@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class CoAoServiceImpl implements CoAoService {
     }
 
     @Override
-    public PagedResponse<CoAo> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<CoAo> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<CoAo> chatLieuPage = coAoRepo.getAll(pageable, search);
 
@@ -42,6 +45,12 @@ public class CoAoServiceImpl implements CoAoService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public List<CoAo> getAll() {
+        Sort sort = Sort.by("ten");
+        return coAoRepo.findAll(sort);
     }
 
     @Override

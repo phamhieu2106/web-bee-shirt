@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/kieu-dang")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class KieuDangResource {
 
     private final KieuDangService kieuDangService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<KieuDang>> getKieuDangListByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                         @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                         @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(kieuDangService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<KieuDang>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                   @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                   @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(kieuDangService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<KieuDang>> getAll() {
+        return ResponseEntity.ok(kieuDangService.getAll());
     }
 
     @PostMapping("/add")

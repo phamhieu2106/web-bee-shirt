@@ -1,3 +1,8 @@
 .pointer {
   cursor: pointer;
 }
+
+.link-hover:hover {
+  text-decoration: underline;
+  color: rgb(70, 70, 244);
+}

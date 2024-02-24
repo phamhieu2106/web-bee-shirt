@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 
@@ -30,6 +31,7 @@ public class HoaDonRequest {
 
     private String tenNguoiNhan;
 
+//    @Length( max =10, message = "Số điện thoại không hợp lệ")
     private String sdtNguoiNhan;
 
     private String emailNguoiNhan;

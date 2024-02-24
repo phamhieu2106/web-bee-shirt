@@ -23,10 +23,10 @@ public class SanPhamResource {
     private final SanPhamService sanPhamService;
 
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<SanPham>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(sanPhamService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<PagedResponse<SanPham>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(sanPhamService.getByPage(pageNumber, pageSize, search));
     }
 
     @PostMapping("/add")

@@ -8,9 +8,7 @@ import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
-import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.service.NhanVienService;
@@ -27,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,9 +40,14 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public NhanVien add(AddNhanVienRequest request, MultipartFile multipartFile) throws IOException {
-        // check exist
+        // check exist email
         if (nhanVienRepo.existsByEmail(request.getEmail().trim().toLowerCase())) {
             throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
+        }
+
+        // check exist sdt
+        if (nhanVienRepo.existsBySdt(request.getSdt().trim())) {
+            throw new ResourceExistsException("Số điện thoại: " + request.getSdt()+ " đã tồn tại.");
         }
 
         // khach_hang_image
@@ -150,20 +152,20 @@ public class NhanVienServiceImpl implements NhanVienService {
     @Override
     public NhanVien update(AddNhanVienRequest request, Integer id, MultipartFile multipartFile) {
 
-        // nếu như nv tồn tại => nếu tên đăng nhập đã tồn tại => tên đăng nhập như cũ => update
-        //                                                    => tên còn lại => throw đã tồn tại
-        //                    => tên đăng nhập mới => update
+        // nếu như nv tồn tại => nếu sdt đã tồn tại => throw đã tồn tại
+        //                                          => sdt không đổi / sdt mới => else
+        //                    => nếu email đã tồn tại => throw đã tồn tại
+        //                                          => email không đổi / sdt mới => else
+        //                    => update
         // không tồn tại thì throw không tìm thấy
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
         if (optionalNhanVien.isPresent()) {
 
-            if (nhanVienRepo.existsByEmail(request.getEmail().trim().toLowerCase())) {
-                if (optionalNhanVien.get().getEmail().equalsIgnoreCase(request.getEmail().trim())) {
-                    return updateForm(optionalNhanVien, request, multipartFile);
-                } else {
-                    throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
-                }
+            if(nhanVienRepo.existsBySdtExcluding(request.getSdt().trim(), optionalNhanVien.get().getSdt().trim())) {
+                throw new ResourceExistsException("Số điện thoại: " + request.getSdt()+ " đã tồn tại.");
+            } else if (nhanVienRepo.existsByEmailExcluding(request.getEmail().trim().toLowerCase(), optionalNhanVien.get().getEmail().trim().toLowerCase())) {
+                throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
             } else {
                 return updateForm(optionalNhanVien, request, multipartFile);
             }

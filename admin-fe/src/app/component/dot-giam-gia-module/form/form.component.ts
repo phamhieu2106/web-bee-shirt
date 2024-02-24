@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-form",
@@ -11,6 +12,8 @@ import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
   styleUrls: ["./form.component.css"],
 })
 export class FormComponent implements OnInit {
+  public overlayText: string = "";
+  public isLoadding = false;
   @Input() modalTitle: string;
   @Input() modalMessage: string;
   @Input() modalAction: string;
@@ -43,6 +46,7 @@ export class FormComponent implements OnInit {
       tenDotGiamGia: new FormControl(null, [
         Validators.required,
         Validators.pattern(/^[\p{L}0-9\s]+$/u),
+        Validators.pattern(/^[\p{L}0-9]+(?:[\s]?[\p{L}0-9]+)*$/u),
       ]),
       giaTriPhanTram: new FormControl(null, [
         Validators.required,
@@ -102,6 +106,16 @@ export class FormComponent implements OnInit {
   }
 
   private validateForm(): boolean {
+    const thoiGianBatDau: Date = new Date(
+      this.dotGiamGiaRequest.thoiGianBatDau
+    );
+    const thoiGianKetThuc: Date = new Date(
+      this.dotGiamGiaRequest.thoiGianKetThuc
+    );
+    const thoiGianKetThuc30PhutTruoc: Date = new Date(
+      thoiGianBatDau.getTime() + 30 * 60000
+    );
+
     // Kiểm tra giá trị của các trường và trả về true nếu hợp lệ, false nếu không hợp lệ
     if (this.dotGiamGiaRequest.tenDotGiamGia === null) {
       this.toast.error("Tên Đợt Giảm Giá Đang Bị Trống");
@@ -126,6 +140,11 @@ export class FormComponent implements OnInit {
         "Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá"
       );
       return false;
+    } else if (thoiGianKetThuc30PhutTruoc >= thoiGianKetThuc) {
+      this.toast.error(
+        "Thời Gian Kết Thúc Phải Nhiều Hơn 30 Phút Sau Thời Gian Bắt Đầu"
+      );
+      return false;
     }
     return true;
   }
@@ -134,20 +153,45 @@ export class FormComponent implements OnInit {
     if (this.typeForm === "add") {
       this.setDotGiamGiaRequest();
       if (this.validateForm()) {
+        Swal.fire({
+          icon: "success",
+          title: `Thêm mới thành công!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.turnOffOverlay("");
+
         this.service.addDotGiamGiaRequest(this.dotGiamGiaRequest).subscribe();
         setTimeout(() => {
           this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
         }, 300);
         this.toast.success("Thêm Đợt Giảm Giá Thành Công!");
       } else {
+        Swal.fire({
+          icon: "error",
+          title: `Thêm mới thất bại!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.turnOffOverlay("");
         this.toast.error("Thêm đợt giảm giá không thành công");
       }
-      console.log(this.dotGiamGiaRequest);
     } else if (this.typeForm === "update") {
       this.setDotGiamGiaRequest();
+      if (this.dotGiamGiaRequest.listIdSanPhamChiTiet.length < 1) {
+        console.log("Bạn Muốn Xoá À?");
+      }
       if (this.validateForm()) {
         // Set DotGiamGiaRequest
         this.setDotGiamGiaRequest();
+        // Notify the user
+        Swal.fire({
+          icon: "success",
+          title: `Cập nhật thành công ${this.dotGiamGiaRequest.id}''!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.turnOffOverlay("");
         // Call Service
         this.service
           .updateDotGiamGiaRequest(this.dotGiamGiaRequest)
@@ -159,11 +203,22 @@ export class FormComponent implements OnInit {
         // Noti
         this.toast.success("Cập Nhật Đợt Giảm Giá Thành Công!");
       } else {
+        Swal.fire({
+          icon: "error",
+          title: `Cập nhật thất bại!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.turnOffOverlay("");
         this.toast.error("Cập nhật giảm giá không thành công");
       }
-      console.log(this.dotGiamGiaRequest);
     }
   };
+
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
+  }
 
   // Get FormControl
   public get TenDotGiamGia() {

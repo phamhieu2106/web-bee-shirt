@@ -69,8 +69,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
           });
 
         this.getListIdSanPham();
-
-        console.log(this.dotGiamGiaUpdateRequest);
       },
       error(err) {
         console.log(err);
@@ -82,7 +80,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
   listIdSanPham: number[] = [];
   public getListIdSanPham() {
     setTimeout(() => {
-      console.log(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet);
       this.service
         .getIdSanPhamBySanPhamChiTietId(
           this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet

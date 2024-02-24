@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/co-ao")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class CoAoResource {
 
     private final CoAoService coAoService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<CoAo>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                         @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                         @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(coAoService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<CoAo>> getCoAoList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(coAoService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<CoAo>> getAll() {
+        return ResponseEntity.ok(coAoService.getAll());
     }
 
     @PostMapping("/add")

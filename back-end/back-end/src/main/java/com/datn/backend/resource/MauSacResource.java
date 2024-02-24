@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mau-sac")
@@ -33,11 +34,16 @@ public class MauSacResource {
         return ResponseEntity.ok(mauSacService.add(mauSac, multipartFile));
     }
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<MauSac>> getMauSacList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                               @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(mauSacService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<MauSac>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                   @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                   @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(mauSacService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<MauSac>> getAllMauSac() {
+        return ResponseEntity.ok(mauSacService.getAll());
     }
 
     @GetMapping("/get-by-id/{id}")

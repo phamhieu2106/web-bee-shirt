@@ -78,7 +78,7 @@ export class DanhSachMauSacComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.mauSacService.getAll(page, pageSize, keyword).subscribe({
+    this.mauSacService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<MauSac>) => {
         this.pagedResponse = response;
       },
@@ -181,7 +181,7 @@ export class DanhSachMauSacComponent {
   // private function
   private getMauSacList(): void {
     this.isLoadding = true;
-    this.mauSacService.getAll().subscribe({
+    this.mauSacService.getByPage().subscribe({
       next: (response: PagedResponse<MauSac>) => {
         this.pagedResponse = response;
         this.isLoadding = false;

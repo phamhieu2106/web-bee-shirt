@@ -1,12 +1,9 @@
 #add-button,
 #pagination,
 .search-block,
-.btn-reload-filter {
-  float: right;
-}
+/* .btn-reload-filter {
+  float: left;
+} */
 #icon-button-detail {
   color: #74c0fc;
-}
-#icon-button-update {
-  color: #ffd43b;
 }

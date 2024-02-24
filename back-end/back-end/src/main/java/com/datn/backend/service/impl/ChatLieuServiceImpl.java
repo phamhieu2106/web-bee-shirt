@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     }
 
     @Override
-    public PagedResponse<ChatLieu> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<ChatLieu> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<ChatLieu> chatLieuPage = chatLieuRepo.getAll(pageable, search);
 
@@ -44,6 +45,12 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public List<ChatLieu> getAll() {
+        Sort sort = Sort.by("ten");
+        return chatLieuRepo.findAll(sort);
     }
 
     @Override

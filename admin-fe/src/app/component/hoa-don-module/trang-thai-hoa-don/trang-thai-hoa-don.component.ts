@@ -6,5 +6,7 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./trang-thai-hoa-don.component.css"],
 })
 export class TrangThaiHoaDonComponent {
-  @Input() trangThai: any;
+
+  @Input() trangThai: string;
+
 }

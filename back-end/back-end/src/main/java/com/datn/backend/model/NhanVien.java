@@ -1,5 +1,6 @@
 package com.datn.backend.model;
 
+import com.datn.backend.model.khach_hang.KhachHangImage;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,24 +31,25 @@ public class NhanVien extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Họ tên không được trống")
+    private String cccd;
+
     private String hoTen;
 
-    @NotNull(message = "Ngày sinh không được trống")
     private LocalDate ngaySinh;
 
-    @NotBlank(message = "Sdt không được trống")
     private String sdt;
 
     private boolean gioiTinh;
 
-    @NotBlank(message = "Email không được trống")
     private String email;
 
-    @NotBlank(message = "Địa chỉ không được trống")
     private String diaChi;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private KhachHangImage image;
 }

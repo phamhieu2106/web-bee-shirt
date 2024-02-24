@@ -1,6 +1,148 @@
-<p>detail </p>
-<div *ngIf="kh">
-    <h2>{{ kh.ho_ten }}</h2>
-    <p>Email: {{ kh.email }}</p>
-    <!-- Các thông tin khác của khách hàng -->
+<div class="row gutters">
+  <div class="col-sm-12">
+    <form class="card">
+      <div class="card-body">
+        <form>
+          <div class="row">
+            <img
+              src="assets/img/default-image.jpg"
+              alt="" style="width: 150px; height: 100px;"
+            />
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Họ tên
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Họ tên"
+                  [value]="khChiTiet?.hoTen"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                Ngày sinh
+                <input
+                  type="date"
+                  class="form-control"
+                  placeholder="Ngày sinh"
+                  [value]="khChiTiet?.ngaySinh"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Số điện thoại
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Số điện thoại"
+                  [value]="khChiTiet?.sdt"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Giới tính </label> <br />
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gt"
+                    [checked]="khChiTiet?.gioiTinh"
+                    [disabled]="true"
+                  />
+                  <label class="form-check-label"> Nam </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gt"
+                    [checked]="!khChiTiet?.gioiTinh"
+                    [disabled]="true"
+                  />
+                  <label class="form-check-label"> Nữ </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Email
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Email"
+                  [value]="khChiTiet?.email"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Trạng thái </label> <br />
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="tt"
+                    [checked]="khChiTiet?.trangThai"
+                    [disabled]="true"
+                  />
+                  <label class="form-check-label"> Đang hoạt động </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="tt"
+                    [checked]="!khChiTiet?.trangThai"
+                    [disabled]="true"
+                  />
+                  <label class="form-check-label"> Ngừng hoạt động </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                Tài khoản
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Tên đăng nhập"
+                  [value]="khChiTiet?.tenDangNhap"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                Địa chỉ
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Địa chỉ giao hàng"
+                  value="{{ khChiTiet?.tinh }}, {{ khChiTiet?.huyen }}, {{
+                    khChiTiet?.xa
+                  }}, {{ khChiTiet?.duong }} "
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </form>
   </div>
+</div>

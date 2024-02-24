@@ -1,157 +1,260 @@
 <!-- Row start -->
 <div class="row gutters">
   <div class="col-sm-12">
-
-
     <div class="card">
       <div class="card-header">
         <p>Thêm Phiếu</p>
       </div>
 
-
       <div class="card-body">
-
         <div class="row">
           <div class="col-md-4">
-            <form>
+            <form [formGroup]="addForm">
               <div class="mb-3">
-
-                <input type="email" class="form-control" placeholder="Mã phiếu giảm giá">
-                <div  class="form-text text-danger">Không để trống trường này</div>
-              </div>
-              <div class="mb-3">
-
-                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá">
-                <div  class="form-text text-danger">Không để trống trường này</div>
-              </div>
-              <div class="mb-3">
-                <label class="pr-3">
-                  <input type="radio" name="loai" value="percentage" checked="true"> Giảm theo %
-                </label>
-
-                <label>
-                  <input type="radio" name="loai" value="amount"> Giảm theo số tiền
-                </label>
+                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="
+                    addForm.get('maPhieuGiamGia').invalid &&
+                    addForm.get('maPhieuGiamGia').touched
+                      ? 'is-invalid'
+                      : ''
+                  " formControlName="maPhieuGiamGia" />
+                <div class="invalid-feedback">
+                  Mã phiếu giảm giá không được để trống
+                </div>
               </div>
 
+              <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="
+                    addForm.get('tenPhieuGiamGia').invalid &&
+                    addForm.get('tenPhieuGiamGia').touched
+                      ? 'is-invalid'
+                      : ''
+                  " formControlName="tenPhieuGiamGia" />
+                <div class="invalid-feedback">
+                  Tên phiếu giảm giá không được để trống
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
+                    checked="true" (change)="onKieuChange()" />
+                  <label class="form-check-label" for="tienMat">
+                    Tiền Mặt
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
+                    (change)="onKieuChange()" />
+                  <label class="form-check-label" for="%"> % </label>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
+                    formControlName="loai" checked="true" (change)="onLoaiChange()" />
+                  <label class="form-check-label" for="congKhai">
+                    Công Khai
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0" formControlName="loai"
+                    (change)="onLoaiChange()" />
+                  <label class="form-check-label" for="caNhan"> Cá Nhân </label>
+                </div>
+              </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá Trị">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" class="form-control" placeholder="Giá trị" [ngClass]="
+                        addForm.get('giaTri').invalid &&
+                        addForm.get('giaTri').touched
+                          ? 'is-invalid'
+                          : ''
+                      " formControlName="giaTri" aria-label="Recipient's username" aria-describedby="basic-addon2" value="" />
+                    <span class="input-group-text" id="basic-addon2"
+                      *ngIf="addForm.get('kieu').value === '1'">VNĐ</span>
+                    <span class="input-group-text" id="basic-addon2" *ngIf="addForm.get('kieu').value === '0'">%</span>
+
+                    <div *ngIf="
+                      addForm.get('giaTri').hasError('giaTri') &&
+                      addForm.get('giaTri').touched
+                    " class="invalid-feedback">
+                      {{ addForm.get("giaTri").getError("giaTri") }}
+                    </div>
+                  </div>
+
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Giá trị tối đa">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="
+                        addForm.get('giaTriMax').invalid &&
+                        addForm.get('giaTriMax').touched
+                          ? 'is-invalid'
+                          : ''
+                      " formControlName="giaTriMax" aria-label="Recipient's username"
+                      aria-describedby="basic-addon2" />
+                    <span class="input-group-text" id="basic-addon2">VNĐ</span>
+                    <div *ngIf="
+                    addForm.get('giaTriMax').hasError('required') &&
+                    addForm.get('giaTriMax').touched
+                  " class="invalid-feedback">
+                      Giá trị tối đa không được để trống
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Số lượng">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="
+                      addForm.get('soLuong').invalid &&
+                      addForm.get('soLuong').touched
+                        ? 'is-invalid'
+                        : ''
+                    " formControlName="soLuong" />
+                  <div class="invalid-feedback">
+                    Số lượng không được để trống
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <input type="email" class="form-control" placeholder="Điều kiện">
-                  <div  class="form-text text-danger">Không để trống trường này</div>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="
+                        addForm.get('dieuKienGiam').invalid &&
+                        addForm.get('dieuKienGiam').touched
+                          ? 'is-invalid'
+                          : ''
+                      " formControlName="dieuKienGiam" aria-label="Recipient's username"
+                      aria-describedby="basic-addon2" />
+                    <span class="input-group-text" id="basic-addon2">VNĐ</span>
+
+                    <div *ngIf="
+                      addForm.get('dieuKienGiam').hasError('required') &&
+                      addForm.get('dieuKienGiam').touched
+                    " class="invalid-feedback">
+                      Điều kiện không được để trống
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
-
               <div class="mb-3">
-                <label>Từ ngày</label>
-                <input type="date" class="form-control">
-                <div  class="form-text text-danger">Không để trống trường này</div>
-              </div>
-              <div class="mb-3">
-                <label>Đến ngày</label>
-                <input type="date" class="form-control">
-                <div  class="form-text text-danger">Không để trống trường này</div>
-              </div>
-
-              <div class="mb-3">
-                <label class="pr-3">
-                  <input type="radio" name="kieu" value="percentage" checked="true"> Công Khai
-                </label>
-
-                <label>
-                  <input type="radio" name="kieu" value="amount"> Cá Nhân
-                </label>
+                <label>Ngày bắt đầu</label>
+                <input type="datetime-local" class="form-control" [ngClass]="
+                    addForm.get('thoiGianBatDau').invalid &&
+                    addForm.get('thoiGianBatDau').touched
+                      ? 'is-invalid'
+                      : ''
+                  " formControlName="thoiGianBatDau" (blur)="checkThoiGian()"/>
+               <div *ngIf="
+               addForm.get('thoiGianBatDau').hasError('ngayBatDau') &&
+               addForm.get('thoiGianBatDau').touched
+           " class="invalid-feedback">
+                 {{ addForm.get("thoiGianBatDau").getError("ngayBatDau") }}
+               </div>
               </div>
 
-              <button type="submit" class="btn btn-primary">Tạo mới</button>
+              <div class="mb-3">
+                <label>Ngày kết thúc</label>
+                <input type="datetime-local" class="form-control" [ngClass]="
+                    addForm.get('thoiGianKetThuc').invalid &&
+                    addForm.get('thoiGianKetThuc').touched
+                      ? 'is-invalid'
+                      : ''
+                  " formControlName="thoiGianKetThuc" (blur)="checkThoiGian()" />
+                <div *ngIf="
+                addForm.get('thoiGianKetThuc').hasError('ngayKetThuc') &&
+                addForm.get('thoiGianKetThuc').touched
+            " class="invalid-feedback">
+                  {{ addForm.get("thoiGianKetThuc").getError("ngayKetThuc") }}
+                </div>
+
+              </div>
+
+              <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="confirmCreation()">
+                Tạo mới
+              </button>
             </form>
           </div>
 
           <div class="col-md-8">
-            <input type="text" class="form-control" placeholder="Tìm Kiếm Khách Hàng" style="margin-bottom: 10px">
-            <table id="rowSelection_wrapper" class="table dataTables_wrapper dt-bootstrap4 no-footer rounded">
-              <div class="row">
-                <div class="col-sm-12">
-                  <table id="rowSelection" class="table table-striped table-bordered dataTable no-footer" role="grid"
-                         aria-describedby="rowSelection_info">
-                    <thead>
-                    <tr role="row">
-                      <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-sort="ascending" aria-label="Name: activate to sort column descending"
-                          style="width: 10.088px;"><input type="checkbox" name="" id="">
-                      </th>
-                      <th class="sorting_asc" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-sort="ascending" aria-label="Name: activate to sort column descending"
-                          style="width: 80.088px;">Tên
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-label="Position: activate to sort column ascending" style="width: 100.625px;">Số điện thoại
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-label="Office: activate to sort column ascending" style="width: 60.475px;">Email
-                      </th>
-                      <th class="sorting" tabindex="0" aria-controls="rowSelection" rowspan="1" colspan="1"
-                          aria-label="Age: activate to sort column ascending" style="width: 29.8625px;">Ngày sinh
-                      </th>
+            <input type="text" class="form-control" placeholder="Tìm Kiếm Khách Hàng" style="margin-bottom: 10px" />
+            <table class="table">
+              <thead class="thead-default">
+                <tr>
+                  <th>Chọn</th>
+                  <th>Id</th>
+                  <th>Họ Tên</th>
+                  <th>Số điện thoại</th>
+                  <th>Giới tính</th>
+                  <th>Email</th>
+                  <th>Địa chỉ</th>
+                  <th>Ngày sinh</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let kh of pagedResponse?.data; let i = index">
+                  <td>
+                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled" />
+                  </td>
+                  <th scope="row">{{ kh.id }}</th>
+                  <td>{{ kh.hoTen }}</td>
+                  <td>{{ kh.sdt }}</td>
+                  <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>
+                  <td>{{ kh.email }}</td>
+                  <td>{{ kh.xa }}</td>
+                  <td>
+                    {{ kh.ngaySinh  | date:"dd-MM-yyyy" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--  -->
 
-                    </tr>
-                    </thead>
-                    <tbody>
+            <!--End table-->
 
-                    <tr role="row" class="odd">
-
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
-                    <tr role="row" class="odd">
-
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
-                    <tr role="row" class="odd">
-
-                      <td> <input type="checkbox" name="" ></td>
-                      <td>Airi Satou</td>
-                      <td>0345262229</td>
-                      <td>16binhpvph29510@fpt.edu.vn</td>
-                      <td>16/02/2003</td>
-                    </tr>
-                    </tbody>
-                  </table>
+            <div class="row">
+              <div class="col col-md-12 d-flex justify-content-between">
+                <div class="col-md-3">
+                  <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
+                  </label>
+                  <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
+                    (change)="onChangePageSize($event)">
+                    >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                  </select>
+                </div>
+                <div class="">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item" [ngClass]="
+                          pagedResponse?.pageNumber == 1 ? 'disabled' : ''
+                        ">
+                        <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber - 1)">Previous</a>
+                      </li>
+                      <li class="page-item" *ngFor="let page of pagedResponse?.pageNumberArr">
+                        <a class="page-link pointer" [ngClass]="
+                            pagedResponse?.pageNumber == page ? 'active' : ''
+                          " (click)="goToPage(page)">{{ page }}</a>
+                      </li>
+                      <li class="page-item" [ngClass]="
+                          pagedResponse?.pageNumber == pagedResponse?.totalPages
+                            ? 'disabled'
+                            : ''
+                        ">
+                        <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber + 1)">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
                 </div>
               </div>
-            </table>
-            <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-              </ul>
-            </nav>
+            </div>
           </div>
         </div>
       </div>

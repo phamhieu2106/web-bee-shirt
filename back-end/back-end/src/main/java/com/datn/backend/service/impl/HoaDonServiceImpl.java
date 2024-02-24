@@ -1,9 +1,12 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
+import com.datn.backend.dto.request.HoaDonRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SoLuongDonHangResponse;
+import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.exception.custom_exception.OrderStatusException;
@@ -42,8 +45,8 @@ public class HoaDonServiceImpl implements HoaDonService {
      * @return
      */
     @Override
-    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao);
+    public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao,String trangThai) {
+        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao,trangThai);
 
         return PagedResponse.
                 <HoaDonResponse>builder()
@@ -138,6 +141,37 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .build();
 
         return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
+    }
+
+    @Override
+    public HoaDonResponse updateHoaDon(HoaDonRequest hoaDonRequest) {
+        Optional<HoaDon> hoaDon = hoaDonRepository.findById(hoaDonRequest.getId());
+        LoaiHoaDon loaiHoaDon ;
+        if (hoaDon.isEmpty()){
+            throw new IdNotFoundException("Id hóa đơn không hợp lệ id: " +hoaDonRequest.getId());
+        }
+        try {
+            loaiHoaDon = LoaiHoaDon.valueOf(hoaDonRequest.getLoaiHoaDon());
+        }catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Loại hóa đơn không hợp lệ: " + hoaDonRequest.getLoaiHoaDon() );
+        }
+        HoaDon hoaDonUpdate = hoaDon.get();
+        hoaDonUpdate.setTenNguoiNhan(hoaDonRequest.getTenNguoiNhan());
+        hoaDonUpdate.setSdtNguoiNhan(hoaDonRequest.getSdtNguoiNhan());
+        hoaDonUpdate.setEmailNguoiNhan(hoaDonRequest.getEmailNguoiNhan());
+        hoaDonUpdate.setDiaChiNguoiNhan(hoaDonRequest.getDiaChiNguoiNhan());
+        hoaDonUpdate.setTongTien(hoaDonRequest.getTongTien());
+        hoaDonUpdate.setTienGiam(hoaDonRequest.getTienGiam());
+        hoaDonUpdate.setPhiVanChuyen(hoaDonRequest.getPhiVanChuyen());
+        hoaDonUpdate.setLoaiHoaDon(loaiHoaDon);
+        hoaDonUpdate.setGhiChu(hoaDonRequest.getGhiChu());
+
+        return modelMapper.map(hoaDonRepository.save(hoaDonUpdate),HoaDonResponse.class);
+    }
+
+    @Override
+    public SoLuongDonHangResponse getSoLuongDonHang() {
+        return hoaDonRepository.getSoLuongDonHang();
     }
 
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {

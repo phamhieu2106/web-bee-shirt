@@ -17,7 +17,10 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia remove(Integer id);
 
-    void changeStatus(int id);
+    PhieuGiamGia changeStatus(Integer id);
 
-    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search);
+    List<PhieuGiamGia> getAll();
+
+
+    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,String kieu);
 }

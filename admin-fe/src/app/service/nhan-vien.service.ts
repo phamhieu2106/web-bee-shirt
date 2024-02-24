@@ -29,4 +29,45 @@ export class NhanVienService {
       `${this.apiUrl}/get-one-by-id/${id}`
     );
   }
+
+  public add(
+    nhanVien: NhanVienResponse,
+    file: File
+  ): Observable<NhanVienResponse> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(nhanVien));
+    formData.append("khachHangImage", file);
+    return this.http.post<NhanVienResponse>(`${this.apiUrl}/add`, formData);
+  }
+
+  public delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  }
+
+  public update(
+    nhanVien: NhanVienResponse,
+    id: number,
+    file: File
+  ): Observable<NhanVienResponse> {
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(nhanVien));
+    formData.append("khachHangImage", file);
+    return this.http.put<NhanVienResponse>(
+      `${this.apiUrl}/update/${id}`,
+      formData
+    );
+  }
+
+  public filter(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    search: string = "",
+    gioiTinhFilter: number[] = [0, 1],
+    trangThaiFilter: number[] = [0, 1]
+  ): Observable<PagedResponse<NhanVienResponse>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&gioiTinhFilter=${gioiTinhFilter}&trangThaiFilter=${trangThaiFilter}`;
+    return this.http.get<PagedResponse<NhanVienResponse>>(
+      `${this.apiUrl}/filter${param}`
+    );
+  }
 }

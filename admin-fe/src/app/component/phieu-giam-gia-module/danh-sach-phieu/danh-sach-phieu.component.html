@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-md-6">
             <input type="text" name="" class="form-control rounded"
-              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên">
+              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
           </div>
           <div class="col-md-6 d-flex justify-content-end">
             <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
@@ -30,24 +30,24 @@
             <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày">
           </div>
 
-          <div class="col-md-1 ">
+          <div class="col-md-2 ">
             <div>
 
-              <select class="form-control">
-                <option value="">-Kiểu-</option>
-                <option value="">Công Khai</option>
-                <option value="">Cá Nhân</option>
+              <select class="form-control" >
+                <option value="">- Chọn kiểu -</option>
+                <option value="1">Công Khai</option>
+                <option value="0">Cá Nhân</option>
               </select>
             </div>
           </div>
 
-          <div class="col-md-1 ">
+          <div class="col-md-2 ">
             <div>
 
-              <select class="form-control">
-                <option value="">-Loại-</option>
-                <option value="">%</option>
-                <option value="">Tiền</option>
+              <select class="form-control " (change)="filterPhieuGiamGia($event)">
+                <option value="2">-Kiểu-</option>
+                <option value="0">%</option>
+                <option value="1">Tiền Mặt</option>
               </select>
             </div>
           </div>
@@ -57,15 +57,14 @@
 
               <select class="form-control">
                 <option value="">-Trạng Thái-</option>
+                <option value="">Sắp diễn ra</option>
                 <option value="">Đang diễn ra</option>
                 <option value="">Đã kết thúc</option>
               </select>
             </div>
           </div>
 
-          <div class="col-md-2 d-flex justify-content-end">
-            <button class="btn btn-success rounded">Xuất Exel</button>
-          </div>
+
         </div>
 
         <!-- table -->
@@ -79,7 +78,10 @@
               <th>Tên</th>
               <th>Kiểu</th>
               <th>Loại</th>
+              <th>Giá Trị </th>
+              <th>Giá Trị Tối Đa </th>
               <th>Số Lượng</th>
+              <th>Điều Kiện </th>
               <th>Ngày Bắt Đầu</th>
               <th>Ngày Kết Thúc</th>
               <th>Trạng Thái</th>
@@ -91,26 +93,31 @@
               <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
-              <td>{{ pgg.kieu == 1?"%":"Tiền Mặt" }}</td>
-              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân"}}</td>
+              <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
+              <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân" }}</td>
+              <td>{{ pgg.giaTri }}</td>
+              <td>{{ pgg.giaTriMax | number}}VND</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.thoiGianBatDau }}</td>
-              <td>{{ pgg.thoiGianKetThuc  }}</td>
+              <td>{{ pgg.dieuKienGiam | number}}VND</td>
+              <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
+              <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" [id]="'trangThai' + pgg.id"
-                    [checked]="pgg.trangThai" (click)="changeStatus(pgg.id)"/>
-                  <label class="custom-control-label" [for]="'trangThai' + pgg.id">{{ pgg.trangThai ? "Hoạt Động" :
-                    "Ngừng Hoạt Động" }}</label>
+                <div [ngStyle]="{
+                    'padding': '10px',
+                    'border-radius': '30px',
+                    'color': 'white',
+                    'background-color': getColorByStatus(pgg.trangThai)
+                }">
+                  {{ pgg.trangThai }}
                 </div>
               </td>
               <td>
-                <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"
-                  data-target="#chatLieuDetailsForm">
-                  <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
+                <button class="btn btn-outline-light btn-rounded" id="button" data-toggle="modal"
+                  data-target="#formDetailButton" data-whatever="@mdo" (click)="openDetailsForm(pgg.id)">
+                  <i class="fa-solid fa-circle-info fa-xl" id="icon-button-detail"></i>
                 </button>
-                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật" data-toggle="modal"
-                  data-target="#chatLieuUpdateForm">
+                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật"
+                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}">
                   <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
               </td>
@@ -163,3 +170,28 @@
   </div>
 </div>
 <!-- Row ends -->
+
+
+<!-- Modal Form Detail start -->
+<div class="modal fade" id="formDetailButton" tabindex="-1" role="dialog" aria-labelledby="formDetail"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formDetail">Thông tin phiếu giảm giá</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-chi-tiet-phieu [phieuDetails]="phieuDetails"></app-chi-tiet-phieu>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Form Detail ends -->

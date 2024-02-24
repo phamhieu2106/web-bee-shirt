@@ -1,5 +1,7 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.dto.response.HoaDonResponse;
+import com.datn.backend.dto.response.SoLuongDonHangResponse;
 import com.datn.backend.model.hoa_don.HoaDon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,21 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
             kh.hoTen like %:keys% or
             kh.sdt like %:keys% ) and
             concat( hd.loaiHoaDon,'') like %:loaiHoaDon%  and 
+            concat( hd.trangThai,'') like %:trangThai%  and 
             concat( hd.createdAt,'') like %:ngayTao%  
             """)
-    Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao);
+    Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao,String trangThai);
+
+    @Query(value = """
+            SELECT new com.datn.backend.dto.response.SoLuongDonHangResponse(
+             COUNT(CASE WHEN hd.trangThai = 'CHO_XAC_NHAN' THEN 1 END),
+              COUNT(CASE WHEN hd.trangThai = 'DA_XAC_NHAN' THEN 1 END),
+              COUNT(CASE WHEN hd.trangThai = 'CHO_GIAO' THEN 1 END),
+               COUNT(CASE WHEN hd.trangThai = 'DANG_GIAO' THEN 1 END),
+              COUNT(CASE WHEN hd.trangThai = 'HOAN_THANH' THEN 1 END),
+               COUNT(CASE WHEN hd.trangThai = 'HUY' THEN 1 END))
+            FROM
+              HoaDon hd
+            """)
+    SoLuongDonHangResponse getSoLuongDonHang();
 }

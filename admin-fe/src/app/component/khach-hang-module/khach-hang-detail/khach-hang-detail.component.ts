@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { KhachHang } from "src/app/model/class/khach-hang.class";
 import { KhachHangService } from "src/app/service/khach-hang.service";
+import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 
 @Component({
   selector: "app-khach-hang-detail",
@@ -23,5 +24,9 @@ export class KhachHangDetailComponent implements OnInit {
         (error) => console.error(error)
       );
     });
+    // export class KhachHangDetailComponent implements OnInit{
+    //   @Input() khChiTiet: KhachHangResponse;
+
+    //   ngOnInit(): void {
   }
 }

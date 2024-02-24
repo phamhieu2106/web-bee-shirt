@@ -30,8 +30,10 @@ public class ApplicationConfiguration {
         return new ModelMapper();
     }
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
+
+//    @Bean("objectMapper1")
+//    public ObjectMapper objectMapper1() {
+
 //        ObjectMapper mapper = new ObjectMapper();
 //        mapper.registerModule(new JavaTimeModule());
 //        return mapper;

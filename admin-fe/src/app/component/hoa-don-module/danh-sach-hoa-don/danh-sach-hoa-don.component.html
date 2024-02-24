@@ -97,7 +97,8 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Tất cả <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('')"
+              >Tất cả</a
             >
           </li>
           <li class="nav-item">
@@ -109,7 +110,13 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Chờ xác nhận <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('CHO_XAC_NHAN')"
+              >Chờ xác nhận
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.choXacNhanQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.choXacNhanQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -121,7 +128,13 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Đã xác nhận <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('DA_XAC_NHAN')"
+              >Đã xác nhận
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.daXacNhanQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.daXacNhanQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -133,7 +146,13 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Chờ giao <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('CHO_GIAO')"
+              >Chờ giao
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.choGiaoQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.choGiaoQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -145,7 +164,13 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Đang giao <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('DANG_GIAO')"
+              >Đang giao
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.dangGiaoQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.dangGiaoQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -157,7 +182,13 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
-              >Hoàn thành <span class="badge-number text-danger">3</span></a
+              (click)="changeStatus('HOAN_THANH')"
+              >Hoàn thành
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.hoanThanhQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.hoanThanhQuantity
+              }}</span></a
             >
           </li>
           <li class="nav-item">
@@ -169,9 +200,14 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('HUY')"
             >
               Hủy
-              <span class="badge-number text-danger">3</span>
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.huyQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.huyQuantity
+              }}</span>
               <!-- Số thông báo -->
             </a>
           </li>
@@ -200,12 +236,13 @@
                       <tr role="row">
                         <th>STT</th>
                         <th>Mã HD</th>
+                        <th>Mã NV</th>
                         <th>Khách Hàng</th>
-                        <th>Nhân viên</th>
+                        <th>Số điện thoại</th>
                         <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
-                        <th>Loại HD</th>
                         <th>Tổng tiền</th>
+                        <th>Loại HD</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
@@ -213,22 +250,31 @@
                       <tr *ngFor="let hd of hoaDons?.data; index as i">
                         <td>{{ i + 1 }}</td>
                         <td>{{ hd.ma }}</td>
-                        <td>Khách Hàng</td>
-                        <td>Nhân viên</td>
+                        <td>{{ hd.nhanVien == null ? "" : hd.nhanVien.id }}</td>
+                        <td>
+                          {{
+                            hd.khachHang == null
+                              ? "Khách lẻ"
+                              : hd.khachHang.hoTen
+                          }}
+                        </td>
+                        <td>
+                          {{ hd.khachHang == null ? "" : hd.khachHang.sdt }}
+                        </td>
                         <td>
                           {{ hd.createdAt }}
+                        </td>
+                        <td>{{ hd.tongTien | currency : "đ " }}</td>
+                        <td>
+                          <app-loai-hoa-don
+                            [loaiHoaDon]="hd.loaiHoaDon"
+                          ></app-loai-hoa-don>
                         </td>
                         <td>
                           <app-trang-thai-hoa-don
                             [trangThai]="hd.trangThai"
                           ></app-trang-thai-hoa-don>
                         </td>
-                        <td>
-                          <app-loai-hoa-don
-                            [loaiHoaDon]="hd.loaiHoaDon"
-                          ></app-loai-hoa-don>
-                        </td>
-                        <td>{{ hd.tongTien | currency : "đ " }}</td>
                         <td>
                           <a
                             class="btn btn-outline-light btn-rounded"

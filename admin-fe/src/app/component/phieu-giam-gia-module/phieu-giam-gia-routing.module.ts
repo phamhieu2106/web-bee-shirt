@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { DanhSachPhieuComponent } from "./danh-sach-phieu/danh-sach-phieu.component";
 import { ThemPhieuComponent } from "./them-phieu/them-phieu.component";
+import { SuaPhieuComponent } from "./sua-phieu/sua-phieu.component";
 
 const phieuGiamGiaRoutes: Routes = [
   {
@@ -9,10 +10,11 @@ const phieuGiamGiaRoutes: Routes = [
     component: DanhSachPhieuComponent,
   },
   { path: "phieu-giam-gia/them-phieu", component: ThemPhieuComponent },
+  { path: "phieu-giam-gia/sua-phieu/:id", component: SuaPhieuComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(phieuGiamGiaRoutes)],
   exports: [RouterModule],
 })
-export class PhieuGiamGiaRoutingModule {}
+export class PhieuGiamGiaRoutingModule { }

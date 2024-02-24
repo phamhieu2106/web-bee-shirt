@@ -6,7 +6,7 @@ export class SanPham {
   ma: string;
   moTa: string;
   trangThai: boolean;
-  sanPhamChiTiets: SanPhamChiTiet[];
+  sanPhamChiTiets?: SanPhamChiTiet[];
 
   createdAt: string;
   createdBy: string;

@@ -21,6 +21,10 @@
             placeholder="Tên Đợt Giảm Giá"
             formControlName="tenDotGiamGia"
           />
+          <div class="invalid-feedback">Tên không thể có kí tự đặc biệt</div>
+          <div class="invalid-feedback">
+            Tên không thể có nhiều khoảng trắng
+          </div>
           <div class="invalid-feedback">Tên không hợp lệ</div>
         </div>
       </div>
@@ -39,6 +43,9 @@
             placeholder="Giá Trị Giảm"
             formControlName="giaTriPhanTram"
           />
+          <div class="invalid-feedback">
+            Giá Trị Giảm không thể nhỏ hơn 5 và lớn hơn 100
+          </div>
           <div class="invalid-feedback">Giá Trị Giảm không hợp lệ</div>
         </div>
       </div>
@@ -54,7 +61,7 @@
                 ? 'form-control form-control-sm is-invalid'
                 : 'form-control form-control-sm'
             "
-            formControlName="ngayBatDau"
+            formControlName="thoiGianBatDau"
           />
           <div class="invalid-feedback">Ngày Bắt Đầu không hợp lệ</div>
         </div>
@@ -71,7 +78,7 @@
                 ? 'form-control form-control-sm is-invalid'
                 : 'form-control form-control-sm'
             "
-            formControlName="ngayKetThuc"
+            formControlName="thoiGianKetThuc"
           />
           <div class="invalid-feedback">Ngày Kết Thúc không hợp lệ</div>
         </div>

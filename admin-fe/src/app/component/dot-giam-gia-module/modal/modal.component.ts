@@ -11,12 +11,11 @@ export class ModalComponent {
   @Input() message: string;
   @Input() nameAction: string;
 
-  @Input() handleSubmit: Function;
+  @Input() handleSubmit: any;
 
-  constructor(private toast: ToastrService) {}
+  constructor() {}
 
   public callParentFuntion() {
-    this.toast.success("Thêm mới thành công", "");
     this.handleSubmit();
   }
 }

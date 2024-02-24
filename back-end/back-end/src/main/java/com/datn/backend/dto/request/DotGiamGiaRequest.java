@@ -1,14 +1,12 @@
 package com.datn.backend.dto.request;
 
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class DotGiamGiaRequest {
@@ -21,12 +19,12 @@ public class DotGiamGiaRequest {
     @NotBlank(message = "Code can't be blank")
     private String tenDotGiamGia;
 
-    @NotEmpty(message = "Start Date can't be empty")
     @NotNull(message = "Start Date can't be null")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S")
     private LocalDateTime thoiGianBatDau;
 
-    @NotEmpty(message = "End Date can't be empty")
     @NotNull(message = "End Date can't be null")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S")
     private LocalDateTime thoiGianKetThuc;
 
     @Min(value = 5, message = "Discount percent must gather than 5")
@@ -35,6 +33,9 @@ public class DotGiamGiaRequest {
 
     private Integer trangThai;
 
+    @NotEmpty(message = "List ID can't be empty")
+    @NotNull(message = "List ID can't be null")
+    private List<Integer> listIdSanPhamChiTiet;
 
     public DotGiamGia map(DotGiamGia object) {
 
@@ -44,7 +45,6 @@ public class DotGiamGiaRequest {
         object.setTenDotGiamGia(this.tenDotGiamGia);
         object.setGiaTriPhanTram(this.giaTriPhanTram);
         object.setTrangThai(this.trangThai);
-
 //      return object after map
         return object;
 

@@ -5,7 +5,11 @@
       <div class="card-header d-flex">
         <h4 class="mr-auto">Thông tin sản phẩm</h4>
         <div class="ml-auto">
-          <button type="button" class="btn btn-primary">
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="loaiHoaDon == 'TAI_QUAY'"
+          >
             <i class="fa-solid fa-plus"></i>
             Thêm sản phẩm
           </button>
@@ -43,23 +47,114 @@
                     <td>size</td>
                     <td>{{ hdct.giaBan | currency : "đ " }}</td>
                     <td>
-                      <input
-                        type="number"
-                        class="disabled"
-                        value="{{ hdct.soLuong }}"
-                      />
+                      <div class="input-group row">
+                        <span class="input-group-prepend col-2">
+                          <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-number"
+                            (click)="minus(hdct)"
+                          >
+                            <span class="fa fa-minus"></span>
+                          </button>
+                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          class="form-control input-number col-3"
+                          [(ngModel)]="hdct.soLuong"
+                          (change)="quantityChange(hdct)"
+                        />
+                        <span class="input-group-append col-2">
+                          <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-number"
+                            (click)="plus(hdct)"
+                          >
+                            <span class="fa fa-plus"></span>
+                          </button>
+                        </span>
+                      </div>
                     </td>
                     <td>
                       {{ hdct.soLuong * hdct.giaBan | currency : "đ " }}
                     </td>
                     <td>
-                      <button class="btn btn-outline-light btn-rounded">
+                      <button
+                        class="btn btn-outline-light btn-rounded"
+                        [disabled]="loaiHoaDon == 'TAI_QUAY'"
+                        (click)="delete(hdct.id)"
+                      >
                         <i class="fa-solid fa-trash text-danger"></i>
                       </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <div class="row gutters">
+                <div class="col-md-6 col-sm-12">
+                  <table class="table plain" *ngIf="phieuGiamGia != null">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p class="text-left">Phiếu giảm giá:</p>
+                          <p class="text-left">Giá trị:</p>
+                        </td>
+                        <td>
+                          <p class="text-left">
+                            {{ phieuGiamGia.maPhieuGiamGia }}
+                          </p>
+                          <p class="text-left">
+                            {{ phieuGiamGia.giaTri | currency : "đ " }}
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                  <table class="table plain">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p class="text-right">Tổng tiền hàng</p>
+                          <p class="text-right">Giảm giá</p>
+                          <p class="text-right">Phí vận chuyển</p>
+                          <p class="text-right">Tổng tiền</p>
+                        </td>
+                        <td>
+                          <p class="text-right">
+                            <strong>{{ tongTien | currency : "đ " }}</strong>
+                          </p>
+
+                          <p class="text-right">
+                            <strong>{{ tienGiam | currency : "đ " }}</strong>
+                          </p>
+                          <p class="text-right">
+                            <input
+                              type="number"
+                              [(ngModel)]="phiVanChuyen"
+                              (change)="onPhiVanChuyenChange()"
+                            />
+                          </p>
+                          <hr
+                            style="
+                              border: 0;
+                              height: 2px;
+                              background-color: #000;
+                            "
+                          />
+                          <p class="text-right text-danger">
+                            <strong>{{
+                              tongTien - tienGiam + phiVanChuyen
+                                | currency : "đ "
+                            }}</strong>
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </table>

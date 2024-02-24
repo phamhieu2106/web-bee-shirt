@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { NhanVien } from "src/app/model/class/nhan-vien.class";
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
 import { NhanVienResponse } from "src/app/model/interface/nhan-vien-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { NhanVienService } from "src/app/service/nhan-vien.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-danh-sach-nhan-vien",
@@ -19,11 +19,48 @@ export class DanhSachNhanVienComponent {
   public pagedResponse: PagedResponse<NhanVienResponse>;
   public search = "";
   public nhanVienDetails: NhanVienResponse;
+  private timeout: any;
 
-  constructor(private nhanVienService: NhanVienService) {}
+  // FILTER
+  public trangThaiFilter: number[] = [0, 1];
+  public gioiTinhFilter: number[] = [0, 1];
+
+  @ViewChild("inputName") inputNameRef: ElementRef;
+
+  constructor(
+    private nhanVienService: NhanVienService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.getAllNhanVien();
+  }
+
+  onChangeFilter() {
+    this.nhanVienService
+      .filter(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        this.search,
+        this.gioiTinhFilter,
+        this.trangThaiFilter
+      )
+      .subscribe({
+        next: (response: PagedResponse<NhanVienResponse>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+      });
+  }
+
+  reloadFilter(): void {
+    this.search = "";
+    this.trangThaiFilter = [0, 1];
+    this.gioiTinhFilter = [0, 1];
+    this.inputNameRef.nativeElement.value = "";
+    this.onChangeFilter();
   }
 
   // private function
@@ -31,7 +68,6 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getAll().subscribe({
       next: (response: PagedResponse<NhanVienResponse>) => {
         this.pagedResponse = response;
-        console.log(this.pagedResponse);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -62,6 +98,7 @@ export class DanhSachNhanVienComponent {
     this.nhanVienService.getOneById(id).subscribe({
       next: (response) => {
         this.nhanVienDetails = response;
+        console.log(this.nhanVienDetails);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -70,7 +107,59 @@ export class DanhSachNhanVienComponent {
   }
 
   public timKiem(e: any): void {
-    console.log(e.target.value);
-    this.goToPage(1, this.pagedResponse.pageSize, e.target.value);
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
+  }
+
+  public deleteNV(id: number): void {
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý đổi trạng thái không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.nhanVienService.delete(id).subscribe({
+          next: () => {
+            Swal.fire({
+              toast: true,
+              icon: "success",
+              position: "top-end",
+              title: "Cập nhật trạng thái thành công",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+          },
+          error: (error: HttpErrorResponse) => {
+            Swal.fire({
+              toast: true,
+              icon: "error",
+              position: "top-end",
+              title: "Cập nhật trạng thái thất bại",
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            console.log(error);
+          },
+        });
+      }
+    });
   }
 }

@@ -16,35 +16,56 @@ import { ToastrService } from "ngx-toastr";
 })
 export class DanhSachPhieuComponent {
   public pagedResponseBinh: PagedResponse<PhieuGiamGia>;
-  public addForm: FormGroup;
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: PhieuGiamGia;
+  public phieuDetails: PhieuGiamGia;
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
     private toastr: ToastrService
-    ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
     this.initAddForm();
     this.initUpdateForm();
+    this.startPolling();
   }
 
   //public function
-  public add(): void {}
+  public add(): void { }
 
-  public initAddForm(): void {}
+  public initAddForm(): void { }
+
+  kieu:string ="";
+  keyword: string
+  
+
+  searchPhieuGiamGia(event: any): void {
+    this.keyword = event.target.value;
+    this.goToPage(1, 5,  this.keyword,this.kieu);
+}
+
+filterPhieuGiamGia(event: any): void {
+  this.kieu = event.target.value;
+  if (this.kieu !== "") {
+      this.goToPage(1, 5, this.keyword, this.kieu);
+  } else {
+      this.goToPage(1, 5, '', '');
+  }
+}
 
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = ""
+    keyword: string = "",
+    kieu: string = ""
   ): void {
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword,kieu).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
         this.pagedResponseBinh = response;
+       
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -52,19 +73,14 @@ export class DanhSachPhieuComponent {
     });
   }
 
+  
+
   public changeStatus(id: number): void {
     this.phieuGiamGiaService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.goToPage(
-          this.pagedResponseBinh.pageNumber,
-          this.pagedResponseBinh.pageSize,
-          this.pagedResponseBinh.search
-        );
+      next: (response: PhieuGiamGia) => {
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      }
     });
   }
 
@@ -78,7 +94,7 @@ export class DanhSachPhieuComponent {
     this.phieuGiamGiaService.getAll().subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
         this.pagedResponseBinh = response;
-        console.log(this.pagedResponseBinh)
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -88,8 +104,42 @@ export class DanhSachPhieuComponent {
 
   private initUpdateForm(): void {
     this.updateForm = new FormGroup({
-      ten:new FormControl("",[Validators.required])
+      ten: new FormControl("", [Validators.required])
 
     })
+  }
+  // change trạng thái
+  startPolling(): void {
+    this.phieuGiamGiaService.startPolling().subscribe((danhSachPhieuGiamGia: PhieuGiamGia[]) => {
+      danhSachPhieuGiamGia.forEach((phieu: PhieuGiamGia) => {
+        this.changeStatus(phieu.id);
+      });
+    });
+  }
+
+
+  // Đổi màu
+  getColorByStatus(status: string): string {
+    switch (status) {
+      case 'Đã kết thúc':
+        return '#FF0000'; // Đỏ
+      case 'Sắp diễn ra':
+        return '#FFD700'; // Vàng
+      case 'Đang Diễn Ra':
+        return '#4CAF50'; // Xanh lá cây
+      default:
+        return '#74c0fc'; // Mặc định là xanh dương
+    }
+  }
+
+  public openDetailsForm(id: number): void {
+    this.phieuGiamGiaService.getOne(id).subscribe({
+      next: (response) => {
+        this.phieuDetails = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
   }
 }

@@ -9,15 +9,6 @@
           id="rowSelection_wrapper"
           class="table dataTables_wrapper dt-bootstrap5"
         >
-          <div class="form-group d-flex p-2 justify-content-end">
-            <label class="col-form-label">Tìm Kiếm:</label>
-            <input
-              type="text"
-              class="form-control col-md-2 ml-1"
-              [placeholder]="placeHolder"
-              (keyup)="onInputSearch($event)"
-            />
-          </div>
           <div class="row">
             <div class="col-sm-12">
               <table
@@ -27,21 +18,50 @@
                 aria-describedby="rowSelection_info"
               >
                 <thead>
-                  <tr class="table-info" role="row">
+                  <tr class="table" role="row">
                     <th *ngFor="let object of tHead">{{ object }}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <ng-container
-                    *ngIf="
-                      listObject && listObject.length > 0;
-                      else noDataTemplate
-                    "
-                  >
+                  <ng-container *ngIf="template === 'dotGiamGiaTable'">
                     <ng-container
-                      *ngIf="template === 'dotGiamGiaTable'; then dotGiamGia"
-                    ></ng-container
-                  ></ng-container>
+                      *ngIf="
+                        listObject && listObject.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="template === 'dotGiamGiaTable'; then dotGiamGia"
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="template === 'SanPhamTable'">
+                    <ng-container
+                      *ngIf="
+                        listSanPham && listSanPham.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="template === 'SanPhamTable'; then sanPham"
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="template === 'SanPhamChiTietTable'">
+                    <ng-container
+                      *ngIf="
+                        listSanPhamChiTiet && listSanPhamChiTiet.length > 0;
+                        else noDataTemplate
+                      "
+                    >
+                      <ng-container
+                        *ngIf="
+                          template === 'SanPhamChiTietTable';
+                          then sanPhamChiTiet
+                        "
+                      ></ng-container>
+                    </ng-container>
+                  </ng-container>
                 </tbody>
               </table>
             </div>
@@ -81,12 +101,17 @@
 
 <!-- Body DotGiamGia Table -->
 <ng-template #dotGiamGia>
-  <tr role="row" class="odd" *ngFor="let object of listObject">
-    <td class="sorting_1">{{ object.maDotGiamGia }}</td>
+  <tr
+    role="row"
+    class="odd"
+    *ngFor="let object of listObject; let index = index"
+  >
+    <td class="sorting_1">{{ index + 1 }}</td>
+    <td>{{ object.maDotGiamGia }}</td>
     <td>{{ object.tenDotGiamGia }}</td>
     <td>{{ object.giaTriPhanTram }}%</td>
-    <td>{{ object.ngayBatDau }}</td>
-    <td>{{ object.ngayKetThuc }}</td>
+    <td>{{ object.thoiGianBatDau }}</td>
+    <td>{{ object.thoiGianKetThuc }}</td>
     <td>{{ object.soLuongSanPham }}</td>
     <td>
       <button
@@ -108,18 +133,84 @@
       </button>
     </td>
     <td>
-      <button
-        class="btn btn-outline-light btn-rounded"
-        (click)="detail(object)"
-      >
-        <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
+      <button class="btn btn-outline-info btn-rounded m-1" id="button">
+        <i class="fa-solid fa-circle-info fa-xl" id="icon-button-detail"></i>
       </button>
       <button
         class="btn btn-outline-warning btn-rounded"
-        [routerLink]="'/dot-giam-gia/cap-nhat-dot-giam-gia'"
-        (click)="update(object)"
+        [routerLink]="['/dot-giam-gia/cap-nhat-dot-giam-gia/', object.id]"
       >
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
+      </button>
+      <button
+        class="btn btn-outline btn-rounded"
+        data-toggle="modal"
+        data-target="#exampleModal"
+        (click)="onSelectRemove(object.id)"
+      >
+        <i class="fa-solid fa-trash fa-xl" style="color: #f20101"></i>
+      </button>
+    </td>
+  </tr>
+</ng-template>
+
+<!-- Body SanPham Table -->
+<ng-template #sanPham>
+  <tr role="row" class="odd" *ngFor="let object of listSanPham">
+    <td class="sorting_1">
+      <input
+        [disabled]="object.trangThai === false ? true : false"
+        type="checkbox"
+        (change)="addIdSanPham(object.id)"
+      />
+    </td>
+    <td>{{ object.ma }}</td>
+    <td>{{ object.ten }}</td>
+    <td>
+      <button
+        class="{{
+          object.trangThai === true
+            ? 'btn btn-success btn-rounded'
+            : 'btn btn-danger btn-rounded'
+        }}"
+      >
+        {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
+      </button>
+    </td>
+  </tr>
+</ng-template>
+
+<!-- Body SanPhamChiTiet Table -->
+<ng-template #sanPhamChiTiet>
+  <tr role="row" class="odd p-3" *ngFor="let object of listSanPhamChiTiet">
+    <td class="sorting_1">
+      <input
+        [checked]="
+          listIdSanPhamChiTiet && listIdSanPhamChiTiet.includes(+object.id)
+        "
+        [disabled]="object.trangThai === false ? true : false"
+        type="checkbox"
+        (change)="addIdSanPhamChiTiet(object.id)"
+      />
+    </td>
+    <td>NULL</td>
+    <td>{{ object.maSanPham }}</td>
+    <td>{{ object.tenSanPham }}</td>
+    <td>{{ object.tenMauSac }}</td>
+    <td>
+      <button
+        class="{{
+          object.trangThai === true
+            ? 'btn btn-success btn-rounded'
+            : 'btn btn-danger btn-rounded'
+        }}"
+      >
+        {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
+      </button>
+    </td>
+    <td>
+      <button class="btn btn-outline-light btn-rounded">
+        <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
       </button>
     </td>
   </tr>
@@ -133,3 +224,44 @@
     </td>
   </tr>
 </ng-template>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Xác Nhận Xoá Đợt Giảm Giá
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Bạn có chắc chắn muốn xoá đợt giảm giá</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Đóng
+        </button>
+        <button
+          (click)="onRemove(idRemove)"
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+        >
+          Xoá
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

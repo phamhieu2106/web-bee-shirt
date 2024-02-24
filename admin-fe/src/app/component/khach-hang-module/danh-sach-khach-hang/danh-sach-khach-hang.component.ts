@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/khach-hang.class";
+import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import Swal from "sweetalert2";
@@ -18,12 +19,20 @@ export class DanhSachKhachHangComponent {
   title: string = "khách hàng";
   mainHeading: string = "khách hàng";
 
-  public pagedResponse: PagedResponse<KhachHang>;
-  public addForm: FormGroup;
-  public updateForm: FormGroup;
-  public search = "";
-  public selectedDetails: KhachHang;
+  // public pagedResponse: PagedResponse<KhachHang>;
+  // public addForm: FormGroup;
+  // public updateForm: FormGroup;
+  // public search = "";
+  // public selectedDetails: KhachHang;
 
+  public pagedResponse: PagedResponse<KhachHangResponse>;
+  public search = "";
+  public khachHangDetail: KhachHangResponse;
+  public khDetail: KhachHangResponse;
+  public formUpdateKH: FormGroup;
+ private timeout: any;
+ public trangThaiFilter: number[] = [0, 1];
+  public gioiTinhFilter: number[] = [0, 1];
   constructor(
     private khachHangService: KhachHangService,
     private toastr: ToastrService,
@@ -32,38 +41,6 @@ export class DanhSachKhachHangComponent {
 
   ngOnInit(): void {
     this.getKhachHangList();
-    this.initAddForm();
-    this.initUpdateForm();
-  }
-
-  // public function
-  public add(): void {
-    this.khachHangService.add(this.addForm.value).subscribe({
-      next: (response: KhachHang) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ho_ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        document.getElementById("closeBtn").click();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
-      },
-    });
-  }
-
-  public initAddForm(): void {
-    this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
-    });
   }
 
   public goToPage(
@@ -72,24 +49,56 @@ export class DanhSachKhachHangComponent {
     keyword: string = ""
   ): void {
     this.khachHangService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<KhachHang>) => {
+      next: (response: PagedResponse<KhachHangResponse>) => {
         this.pagedResponse = response;
-        console.log(response);
-        console.log("get dc");
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
       },
     });
   }
+  onChangeFilter() {
+    this.khachHangService
+      .filter(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        this.search,
+        this.gioiTinhFilter,
+        this.trangThaiFilter
+      )
+      .subscribe({
+        next: (response: PagedResponse<KhachHangResponse>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+      });
+  }
 
+  reloadFilter(): void {
+    // this.trangThaiFilter = [0, 1];
+    // this.gioiTinhFilter = [0, 1];
+    // this.onChangeFilter();
+    location.reload();
+  }
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
-
-  public timKiem(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+ 
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
   }
+<<<<<<< HEAD
 
   public onClearSearchInput(): void {
     this.goToPage();
@@ -154,10 +163,12 @@ export class DanhSachKhachHangComponent {
     });
   }
 
+=======
+>>>>>>> f9b214e9f47619ee96ae88e3a00dd7b989417ace
   // private function
   private getKhachHangList(): void {
     this.khachHangService.getAll().subscribe({
-      next: (response: PagedResponse<KhachHang>) => {
+      next: (response: PagedResponse<KhachHangResponse>) => {
         this.pagedResponse = response;
       },
       error: (error: HttpErrorResponse) => {
@@ -166,11 +177,14 @@ export class DanhSachKhachHangComponent {
     });
   }
 
-  public initUpdateForm(): void {
-    this.updateForm = new FormGroup({
-      id: new FormControl(0),
-      ten: new FormControl("", [Validators.required]),
-      trangThai: new FormControl(false),
+  public openDetailsForm(id: number): void {
+    this.khachHangService.getById(id).subscribe({
+      next: (response) => {
+        this.khachHangDetail = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
     });
   }
 }

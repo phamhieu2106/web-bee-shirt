@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +36,27 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public PhieuGiamGia add(PhieuGiamGiaRequest phieu) {
-        PhieuGiamGia pgg = phieu.giamGia(new PhieuGiamGia());
+    public PhieuGiamGia add(PhieuGiamGiaRequest phieuGiamGia) {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đã kết thúc");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+            phieuGiamGia.setTrangThai("Sắp diễn ra");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
+                currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đang diễn ra");
+        } else {
+            phieuGiamGia.setTrangThai("Trạng thái không xác định");
+        }
+
+        PhieuGiamGia pgg = phieuGiamGia.giamGia(new PhieuGiamGia());
         return repository.save(pgg);
     }
 
     @Override
     public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest object) {
+
         Optional<PhieuGiamGia> optional = repository.findById(id);
         return optional.map(phieuGiamGia -> repository.save(object.giamGia(phieuGiamGia))).orElse(null);
     }
@@ -49,25 +64,39 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     @Override
     public PhieuGiamGia remove(Integer id) {
 
-        Optional<PhieuGiamGia> optional = repository.findById(id);
-        return optional.map(phieuGiamGia -> {
-            phieuGiamGia.setTrangThai(false);
-            return repository.save(phieuGiamGia);
-        }).orElse(null);
+        return null;
     }
 
     @Override
-    public void changeStatus(int id) {
-        PhieuGiamGia pgg = repository.findById(id).get();
-        pgg.setTrangThai(!pgg.isTrangThai());
-        repository.save(pgg);
+    public PhieuGiamGia changeStatus(Integer id) {
+
+        PhieuGiamGia phieuGiamGia = repository.findById(id).get();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đã kết thúc");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+            phieuGiamGia.setTrangThai("Sắp diễn ra");
+        } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
+                currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
+            phieuGiamGia.setTrangThai("Đang diễn ra");
+        } else {
+            phieuGiamGia.setTrangThai("Đã hủy");
+        }
+
+        return repository.save(phieuGiamGia);
     }
 
     @Override
-    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {
+    public List<PhieuGiamGia> getAll() {
+        return repository.findAll();
+    }
+
+
+    @Override
+    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,String kieu) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search);
-
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search,kieu);
         PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);

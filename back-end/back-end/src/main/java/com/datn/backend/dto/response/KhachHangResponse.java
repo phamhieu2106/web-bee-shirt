@@ -7,17 +7,18 @@ import java.time.LocalDate;
 public interface KhachHangResponse {
 
     Integer getId();
-    String getHo_ten();
+    String getHoTen();
     String getSdt();
-    LocalDate getNgay_sinh();
-    boolean getGioi_tinh();
+    LocalDate getNgaySinh();
+    boolean getGioiTinh();
     String getEmail();
-    String getTen_dang_nhap();
-    String getMat_khau();
+    String getTenDangNhap();
+    String getMatKhau();
     String getTinh();
     String getHuyen();
     String getXa();
     String getDuong();
-    int getTrang_thai();
+    int getTrangThai();
+    String getAnhUrl();
 
 }

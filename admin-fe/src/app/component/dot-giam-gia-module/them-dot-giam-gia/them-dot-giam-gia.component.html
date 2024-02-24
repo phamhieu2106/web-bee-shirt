@@ -6,7 +6,7 @@
 
 <div class="row gutters pt-3">
   <!-- Form -->
-  <div class="col col-sm-5 col-md-4">
+  <div class="col-sm-5 col-md-4">
     <app-form
       [formButton]="formButton"
       [formHeader]="formHeader"
@@ -14,19 +14,197 @@
       [modalMessage]="'Bạn chắc chắn muốn thêm đợt khuyến mại mới?'"
       [modalAction]="'Thêm mới'"
       [typeForm]="'add'"
-      [listProduct]="listIdSanPham"
+      [dotGiamGiaRequest]="dotGiamGiaRequest"
     ></app-form>
   </div>
 
-  <!-- Tables -->
-  <div class="col col-md-7 col-md-8">
-    <app-table
-      [titleTable]="titleTableProduct"
-      [tHead]="tHeadProduct"
-    ></app-table>
-    <app-table
-      [titleTable]="titleTableProducts"
-      [tHead]="tHeadProduct"
-    ></app-table>
+  <!-- Table San Pham-->
+  <div class="col col-md-8">
+    <div class="row gutters">
+      <div class="col-sm-12">
+        <div class="card">
+          <div>
+            <h2 class="card-header">Danh Sách Sản Phẩm</h2>
+          </div>
+          <div class="card-body">
+            <table
+              id="rowSelection_wrapper"
+              class="table dataTables_wrapper dt-bootstrap5"
+            >
+              <div class="row">
+                <div class="col-sm-12">
+                  <table
+                    id="rowSelection"
+                    class="table table-striped table-bordered dataTable no-footer table-hover"
+                    role="grid"
+                    aria-describedby="rowSelection_info"
+                  >
+                    <thead>
+                      <tr class="table" role="row">
+                        <th *ngFor="let object of tHeadProduct">
+                          {{ object }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container
+                        *ngIf="
+                          dataSanPham && dataSanPham.length > 0;
+                          else noDataTemplate1
+                        "
+                      >
+                        <tr
+                          role="row"
+                          class="odd"
+                          *ngFor="let object of dataSanPham"
+                        >
+                          <td class="sorting_1">
+                            <input
+                              [checked]="
+                                this.listIdSanPham?.includes(+object.id)
+                              "
+                              [disabled]="
+                                object.trangThai === false ? true : false
+                              "
+                              type="checkbox"
+                              (change)="setListIdSanPham(object.id)"
+                            />
+                          </td>
+                          <td>{{ object.ma }}</td>
+                          <td>{{ object.ten }}</td>
+                          <td>
+                            <button
+                              class="{{
+                                object.trangThai === true
+                                  ? 'btn btn-success btn-rounded'
+                                  : 'btn btn-danger btn-rounded'
+                              }}"
+                            >
+                              {{
+                                object.trangThai === true
+                                  ? "Đang Bán"
+                                  : "Ngừng Bán"
+                              }}
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Table San Pham Chi Tiet -->
+  <div class="row">
+    <div class="row gutters">
+      <div class="col-sm-12">
+        <div class="card">
+          <div>
+            <h2 class="card-header">Danh Sách Chi Tiết Sản Phẩm</h2>
+          </div>
+          <div class="card-body">
+            <table
+              id="rowSelection_wrapper"
+              class="table dataTables_wrapper dt-bootstrap5"
+            >
+              <div class="row">
+                <div class="col-sm-12">
+                  <table
+                    id="rowSelection"
+                    class="table table-striped table-bordered dataTable no-footer table-hover"
+                    role="grid"
+                    aria-describedby="rowSelection_info"
+                  >
+                    <thead>
+                      <tr class="table" role="row">
+                        <th *ngFor="let object of tHeadProducts">
+                          {{ object }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container
+                        *ngIf="
+                          dataSanPhamChiTiet && dataSanPhamChiTiet.length > 0;
+                          else noDataTemplate
+                        "
+                      >
+                        <tr
+                          role="row"
+                          class="odd p-3"
+                          *ngFor="let object of dataSanPhamChiTiet"
+                        >
+                          <td class="sorting_1">
+                            <input
+                              [checked]="
+                                this.listIdSanPhamChiTiet?.includes(+object.id)
+                              "
+                              [disabled]="
+                                object.trangThai === false ? true : false
+                              "
+                              type="checkbox"
+                              (click)="setListIdSanPhamChiTiet(object.id)"
+                            />
+                            {{ object.id }}
+                          </td>
+                          <td>NULL</td>
+                          <td>{{ object.maSanPham }}</td>
+                          <td>{{ object.tenSanPham }}</td>
+                          <td>{{ object.tenMauSac }}</td>
+                          <td>
+                            <button
+                              class="{{
+                                object.trangThai === true
+                                  ? 'btn btn-success btn-rounded'
+                                  : 'btn btn-danger btn-rounded'
+                              }}"
+                            >
+                              {{
+                                object.trangThai === true
+                                  ? "Đang Bán"
+                                  : "Ngừng Bán"
+                              }}
+                            </button>
+                          </td>
+                          <td>
+                            <button class="btn btn-outline-light btn-rounded">
+                              <i
+                                class="fa-solid fa-circle-info fa-xl"
+                                style="color: #74c0fc"
+                              ></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<ng-template #noDataTemplate>
+  <tr>
+    <td [colSpan]="tHeadProducts.length" class="text-center">
+      Úi Bạn Ơi Không Có Dữ Liệu!!!
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #noDataTemplate1>
+  <tr>
+    <td [colSpan]="dataSanPham.length" class="text-center">
+      Úi Bạn Ơi Không Có Dữ Liệu!!!
+    </td>
+  </tr>
+</ng-template>

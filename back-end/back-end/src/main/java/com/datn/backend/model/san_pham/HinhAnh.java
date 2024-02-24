@@ -21,5 +21,13 @@ public class HinhAnh {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String url;
+    private String imageName;
+    private String imageUrl;
+    private String imageId;
+
+    public HinhAnh(String imageName, String imageUrl, String imageId) {
+        this.imageName = imageName;
+        this.imageUrl = imageUrl;
+        this.imageId = imageId;
+    }
 }

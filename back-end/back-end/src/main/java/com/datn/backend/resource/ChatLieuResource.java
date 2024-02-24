@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/chat-lieu")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class ChatLieuResource {
 
     private final ChatLieuService chatLieuService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<ChatLieu>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                             @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                             @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(chatLieuService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<ChatLieu>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                   @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                   @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(chatLieuService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<ChatLieu>> getAll() {
+        return ResponseEntity.ok(chatLieuService.getAll());
     }
 
     @PostMapping("/add")
@@ -35,7 +42,7 @@ public class ChatLieuResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<ChatLieu> add(@PathVariable("id") int id) {
+    public ResponseEntity<ChatLieu> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(chatLieuService.getById(id));
     }
 

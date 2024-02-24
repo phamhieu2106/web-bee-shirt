@@ -15,7 +15,7 @@ export class KichCoService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
@@ -24,6 +24,10 @@ export class KichCoService {
     return this.http.get<PagedResponse<KichCo>>(
       `${this.apiUrl}/get-all${param}`
     );
+  }
+
+  public getAll(): Observable<KichCo[]> {
+    return this.http.get<KichCo[]>(`${this.apiUrl}/get-all`);
   }
 
   // 2

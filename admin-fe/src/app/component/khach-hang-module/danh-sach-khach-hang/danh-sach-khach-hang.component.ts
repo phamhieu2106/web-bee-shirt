@@ -1,23 +1,23 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { KhachHang } from 'src/app/model/class/KhachHang.class';
-import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
-import { KhachHangService } from 'src/app/service/khach-hang.service';
-import Swal from 'sweetalert2';
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import { KhachHang } from "src/app/model/class/khach-hang.class";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { KhachHangService } from "src/app/service/khach-hang.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-danh-sach-khach-hang',
-  templateUrl: './danh-sach-khach-hang.component.html',
-  styleUrls: ['./danh-sach-khach-hang.component.css']
+  selector: "app-danh-sach-khach-hang",
+  templateUrl: "./danh-sach-khach-hang.component.html",
+  styleUrls: ["./danh-sach-khach-hang.component.css"],
 })
 export class DanhSachKhachHangComponent {
   icon: string = "fa-solid fa-users";
   title: string = "khách hàng";
-  mainHeading: string = "khách hàng"; 
-  
+  mainHeading: string = "khách hàng";
+
   public pagedResponse: PagedResponse<KhachHang>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
@@ -96,7 +96,7 @@ export class DanhSachKhachHangComponent {
   }
 
   public khDetail(id: number) {
-    this.router.navigate(['/khach-hang/detail',id]);
+    this.router.navigate(["/khach-hang/detail", id]);
   }
 
   public openUpdateForm(id: number): void {

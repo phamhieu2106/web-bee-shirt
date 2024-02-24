@@ -15,15 +15,19 @@ export class ChatLieuService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<ChatLieu>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<ChatLieu>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
+  }
+
+  public getAll(): Observable<ChatLieu[]> {
+    return this.http.get<ChatLieu[]>(`${this.apiUrl}/get-all`);
   }
 
   // 2

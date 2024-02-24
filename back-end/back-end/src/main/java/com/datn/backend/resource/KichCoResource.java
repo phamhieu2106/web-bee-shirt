@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/kich-co")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class KichCoResource {
 
     private final KichCoService kichCoService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<KichCo>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(kichCoService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<KichCo>> getKichCoList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                               @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(kichCoService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<KichCo>> getAll() {
+        return ResponseEntity.ok(kichCoService.getAll());
     }
 
     @PostMapping("/add")
@@ -35,7 +42,7 @@ public class KichCoResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<KichCo> add(@PathVariable("id") int id) {
+    public ResponseEntity<KichCo> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(kichCoService.getById(id));
     }
 

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
-import { KhachHang } from "../model/class/KhachHang.class";
+import { KhachHang } from "../model/class/khach-hang.class";
 
 @Injectable({
   providedIn: "root",

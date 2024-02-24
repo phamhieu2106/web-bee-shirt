@@ -16,6 +16,7 @@ import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam
 import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.module";
 import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
+import { CurrencyPipe } from "@angular/common";
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +43,7 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
       useClass: AuthenticationInterceptor,
       multi: true,
     },
+    CurrencyPipe,
   ],
   bootstrap: [AppComponent],
 })

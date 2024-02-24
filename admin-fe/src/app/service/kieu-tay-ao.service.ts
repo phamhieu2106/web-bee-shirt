@@ -15,15 +15,19 @@ export class KieuTayAoService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<TayAo>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<TayAo>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
+  }
+
+  public getAll(): Observable<TayAo[]> {
+    return this.http.get<TayAo[]>(`${this.apiUrl}/get-all`);
   }
 
   // 2

@@ -2,3 +2,109 @@
   width: 700px;
   margin: 0 auto;
 }
+
+.color-img {
+  height: 30px;
+  width: 60px;
+  object-fit: cover;
+}
+
+.selected-color-img {
+  height: 30px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.img-container {
+  position: relative;
+  display: inline-block;
+}
+
+.close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+}
+
+/* frame */
+.frame-container {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.default-img {
+  height: 60px;
+  width: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.thumbnail {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  position: relative;
+}
+
+/*  */
+.image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  border: 1px dashed black;
+  display: inline-block;
+}
+.checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.exist-img {
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}
+
+.container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container-2 {
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa ảnh */
+}
+
+.image-container-2 img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}

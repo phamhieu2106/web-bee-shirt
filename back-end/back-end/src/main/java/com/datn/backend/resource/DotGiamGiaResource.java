@@ -24,7 +24,6 @@ public class DotGiamGiaResource {
         this.service = service;
     }
 
-
     @GetMapping
     public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber", defaultValue = "1", required = false)
                                            int pageNumber,

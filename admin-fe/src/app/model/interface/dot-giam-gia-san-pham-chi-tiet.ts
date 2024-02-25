@@ -12,4 +12,8 @@ export interface DotGiamGiaSanPhamChiTiet {
   tenMauSac?: string;
   tenTayAo?: string;
   tenThietKe?: string;
+  nguoiTao?: string;
+  ngayTao?: string;
+  ngayCapNhat?: string;
+  nguoiCapNhatGanNhat?: string;
 }

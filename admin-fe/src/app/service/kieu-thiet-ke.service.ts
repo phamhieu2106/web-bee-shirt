@@ -15,15 +15,19 @@ export class KieuThietKeService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<KieuThietKe>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<KieuThietKe>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
+  }
+
+  public getAll(): Observable<KieuThietKe[]> {
+    return this.http.get<KieuThietKe[]>(`${this.apiUrl}/get-all`);
   }
 
   // 2

@@ -8,6 +8,7 @@ import { ToastrService } from "ngx-toastr";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
+import { AngularEditorConfig } from "@kolkov/angular-editor";
 
 @Component({
   selector: "app-danh-sach-san-pham",
@@ -15,6 +16,49 @@ import { SanPhamService } from "src/app/service/san-pham.service";
   styleUrls: ["./danh-sach-san-pham.component.css"],
 })
 export class DanhSachSanPhamComponent {
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: "auto",
+    minHeight: "200px",
+    maxHeight: "auto",
+    width: "auto",
+    minWidth: "0",
+    translate: "yes",
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: "Enter text here...",
+    defaultParagraphSeparator: "",
+    defaultFontName: "",
+    defaultFontSize: "",
+    fonts: [
+      { class: "arial", name: "Arial" },
+      { class: "times-new-roman", name: "Times New Roman" },
+      { class: "calibri", name: "Calibri" },
+      { class: "comic-sans-ms", name: "Comic Sans MS" },
+    ],
+    customClasses: [
+      {
+        name: "quote",
+        class: "quote",
+      },
+      {
+        name: "redText",
+        class: "redText",
+      },
+      {
+        name: "titleText",
+        class: "titleText",
+        tag: "h1",
+      },
+    ],
+    uploadUrl: "v1/image",
+    uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: "top",
+    toolbarHiddenButtons: [["bold", "italic"], ["fontSize"]],
+  };
+
   public pagedResponse: PagedResponse<SanPham>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
@@ -34,8 +78,6 @@ export class DanhSachSanPhamComponent {
 
   // public function
   public add(): void {
-    console.log(this.addForm.value);
-
     this.sanPhamService.add(this.addForm.value).subscribe({
       next: (response: SanPham) => {
         this.goToPage(

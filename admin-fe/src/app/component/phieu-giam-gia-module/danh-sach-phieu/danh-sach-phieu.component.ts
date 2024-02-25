@@ -6,7 +6,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
-import { ToastrService } from "ngx-toastr";
+
 
 
 @Component({
@@ -23,49 +23,38 @@ export class DanhSachPhieuComponent {
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
-    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
-    this.initAddForm();
     this.initUpdateForm();
     this.startPolling();
   }
 
-  //public function
-  public add(): void { }
 
-  public initAddForm(): void { }
-
-  kieu:string ="";
+  public kieu: number[] = [0, 1];
   keyword: string
-  
+
 
   searchPhieuGiamGia(event: any): void {
     this.keyword = event.target.value;
-    this.goToPage(1, 5,  this.keyword,this.kieu);
-}
-
-filterPhieuGiamGia(event: any): void {
-  this.kieu = event.target.value;
-  if (this.kieu !== "") {
-      this.goToPage(1, 5, this.keyword, this.kieu);
-  } else {
-      this.goToPage(1, 5, '', '');
+    this.goToPage(1, 5, this.keyword, this.kieu);
   }
-}
+
+
+
 
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
     keyword: string = "",
-    kieu: string = ""
+    kieuFilter: number[]= this.kieu
   ): void {
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword,kieu).subscribe({
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword, kieuFilter).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
+      
         this.pagedResponseBinh = response;
-       
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -73,7 +62,7 @@ filterPhieuGiamGia(event: any): void {
     });
   }
 
-  
+
 
   public changeStatus(id: number): void {
     this.phieuGiamGiaService.changeStatus(id).subscribe({

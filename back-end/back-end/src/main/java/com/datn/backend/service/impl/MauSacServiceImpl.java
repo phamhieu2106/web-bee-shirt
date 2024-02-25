@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -26,9 +28,9 @@ import java.util.Map;
 public class MauSacServiceImpl implements MauSacService {
 
     private final MauSacRepository mauSacRepo;
-    private final MauSacImageRepository mauSacImageRepo;
     private final CloudinaryService cloudinaryService;
 
+    @Override
     @Transactional
     public MauSac add(MauSac mauSac, MultipartFile multipartFile) throws IOException {
         // save image to cloud
@@ -50,7 +52,7 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
-    public PagedResponse<MauSac> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<MauSac> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<MauSac> mauSacPage = mauSacRepo.getAll(pageable, search);
 
@@ -64,6 +66,12 @@ public class MauSacServiceImpl implements MauSacService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public List<MauSac> getAll() {
+        Sort sort = Sort.by("ten");
+        return mauSacRepo.findAll(sort);
     }
 
     @Override

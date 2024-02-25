@@ -11,8 +11,14 @@ import { DanhSachKieuTayAoComponent } from "./kieu-tay-ao/danh-sach-kieu-tay-ao/
 import { DanhSachKieuCoAoComponent } from "./kieu-co-ao/danh-sach-kieu-co-ao/danh-sach-kieu-co-ao.component";
 import { authenticationGuard } from "src/app/guard/authentication.guard";
 import { ThemSanPhamChiTietComponent } from "./san-pham/them-san-pham-chi-tiet/them-san-pham-chi-tiet.component";
+import { DsSanPhamChiTietComponent } from "./san-pham/ds-san-pham-chi-tiet/ds-san-pham-chi-tiet.component";
 
 const sanPhamRoutes: Routes = [
+  {
+    path: "sp/ds-sp-chi-tiet/:sanPhamId",
+    component: DsSanPhamChiTietComponent,
+    canActivate: [authenticationGuard],
+  },
   {
     path: "sp/them-sp-chi-tiet/:sanPhamId",
     component: ThemSanPhamChiTietComponent,

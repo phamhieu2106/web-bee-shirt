@@ -22,7 +22,7 @@ export class PhieuGiamGiaService {
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = "",
-    kieu: string = ""
+    kieu: number[] = [0, 1]
   ): Observable<PagedResponse<PhieuGiamGia>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&kieu=${kieu}`;
     return this.http.get<PagedResponse<PhieuGiamGia>>(

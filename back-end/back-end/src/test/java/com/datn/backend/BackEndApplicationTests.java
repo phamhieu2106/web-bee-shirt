@@ -3,6 +3,8 @@ package com.datn.backend;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.san_pham.HinhAnh;
+import com.datn.backend.repository.HinhAnhRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -21,6 +24,9 @@ class BackEndApplicationTests {
 
     @Autowired
     private NhanVienRepository nhanVienRepo;
+
+    @Autowired
+    private HinhAnhRepository hinhAnhRepo;
 
     @Test
     void contextLoads() {
@@ -46,4 +52,9 @@ class BackEndApplicationTests {
         System.err.println("saved employee id: " + nv.getId());
     }
 
+    @Test
+    void getHinhAnh() {
+//        List<HinhAnh> hinhAnhs = hinhAnhRepo.getByMauSac("Xanh dương (Blue)");
+//        System.err.println(hinhAnhs.size());
+    }
 }

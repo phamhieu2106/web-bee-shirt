@@ -65,7 +65,7 @@ export class DanhSachKichCoComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.kichCoService.getAll(page, pageSize, keyword).subscribe({
+    this.kichCoService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<KichCo>) => {
         this.pagedResponse = response;
       },
@@ -157,7 +157,7 @@ export class DanhSachKichCoComponent {
 
   // private function
   private getKieuDangList(): void {
-    this.kichCoService.getAll().subscribe({
+    this.kichCoService.getByPage().subscribe({
       next: (response: PagedResponse<KichCo>) => {
         this.pagedResponse = response;
       },

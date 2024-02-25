@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
+// import { KhachHang } from "../model/class/khach-hang.class";
 import { KhachHang } from "../model/class/KhachHang.class";
 import { KhachHangResponse } from "../model/interface/khach-hang-response.interface";
 
@@ -15,7 +16,7 @@ export class KhachHangService {
   constructor(private http: HttpClient) {}
 
   public getAll(
-    pageNumber: number = 1, 
+    pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<KhachHangResponse>> {
@@ -25,7 +26,10 @@ export class KhachHangService {
     );
   }
 
-  public add(khachHang: KhachHangResponse,file: File): Observable<KhachHangResponse> {
+  public add(
+    khachHang: KhachHangResponse,
+    file: File
+  ): Observable<KhachHangResponse> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(khachHang));
     formData.append("khachHangImage", file);
@@ -36,7 +40,11 @@ export class KhachHangService {
     return this.http.get<KhachHangResponse>(`${this.apiUrl}/getById/${id}`);
   }
 
-  public update(id:number,khachHang: KhachHang,file: File): Observable<KhachHang> {
+  public update(
+    id: number,
+    khachHang: KhachHang,
+    file: File
+  ): Observable<KhachHang> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(khachHang));
     formData.append("khachHangImage", file);

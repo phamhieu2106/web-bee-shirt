@@ -67,7 +67,7 @@ export class DanhSachKieuCoAoComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.coAoService.getAll(page, pageSize, keyword).subscribe({
+    this.coAoService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<CoAo>) => {
         this.pagedResponse = response;
       },
@@ -156,7 +156,7 @@ export class DanhSachKieuCoAoComponent {
 
   // private function
   private getCoAoList(): void {
-    this.coAoService.getAll().subscribe({
+    this.coAoService.getByPage().subscribe({
       next: (response: PagedResponse<CoAo>) => {
         this.pagedResponse = response;
       },

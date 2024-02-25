@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class KichCoServiceImpl implements KichCoService {
     }
 
     @Override
-    public PagedResponse<KichCo> getAll(int pageNumber, int pageSize, String search) {
+    public PagedResponse<KichCo> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<KichCo> kichCoPage = kichCoRepo.getAll(pageable, search);
 
@@ -42,6 +45,12 @@ public class KichCoServiceImpl implements KichCoService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public List<KichCo> getAll() {
+        Sort sort = Sort.by("ten");
+        return kichCoRepo.findAll(sort);
     }
 
     @Override

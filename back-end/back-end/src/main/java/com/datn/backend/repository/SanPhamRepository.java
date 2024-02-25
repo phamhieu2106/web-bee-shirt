@@ -17,8 +17,9 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             SELECT *
             FROM san_pham s
             WHERE s.ten LIKE %:search%
+            OR s.ma LIKE %:search%
             ORDER BY s.created_at DESC
             """, nativeQuery = true)
-    Page<SanPham> getAll(Pageable pageable,
-                          @Param("search") String search);
+    Page<SanPham> getByPage(Pageable pageable,
+                            @Param("search") String search);
 }

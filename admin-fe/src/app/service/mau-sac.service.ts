@@ -22,30 +22,35 @@ export class MauSacService {
   }
 
   // 2
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
   ): Observable<PagedResponse<MauSac>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<MauSac>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
   }
 
   // 3
+  public getAll(): Observable<MauSac[]> {
+    return this.http.get<MauSac[]>(`${this.apiUrl}/get-all`);
+  }
+
+  // 4
   public getById(id: number): Observable<MauSac> {
     return this.http.get<MauSac>(`${this.apiUrl}/get-by-id/${id}`);
   }
 
-  // 4
+  // 5
   public changeStatus(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
   }
 
-  // 5
+  // 6
   public update(mauSac: MauSac, file: File): Observable<MauSac> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(mauSac));

@@ -7,7 +7,7 @@ public interface SanPhamService {
 
     SanPham add(SanPham sanPham);
 
-    PagedResponse<SanPham> getAll(int pageNumber, int pageSize, String search);
+    PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search);
 
     SanPham getById(int id);
 

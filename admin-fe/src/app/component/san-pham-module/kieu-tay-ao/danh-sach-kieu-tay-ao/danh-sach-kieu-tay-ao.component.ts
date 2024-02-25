@@ -67,7 +67,7 @@ export class DanhSachKieuTayAoComponent {
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.tayAoService.getAll(page, pageSize, keyword).subscribe({
+    this.tayAoService.getByPage(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<TayAo>) => {
         this.pagedResponse = response;
       },
@@ -159,7 +159,7 @@ export class DanhSachKieuTayAoComponent {
 
   // private function
   private getCoAoList(): void {
-    this.tayAoService.getAll().subscribe({
+    this.tayAoService.getByPage().subscribe({
       next: (response: PagedResponse<TayAo>) => {
         this.pagedResponse = response;
       },

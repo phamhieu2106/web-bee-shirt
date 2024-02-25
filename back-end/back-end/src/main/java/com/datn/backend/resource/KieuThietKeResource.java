@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/thiet-ke")
 @RequiredArgsConstructor
@@ -22,11 +24,16 @@ public class KieuThietKeResource {
 
     private final KieuThietKeService thietKeService;
 
+    @GetMapping("/get-by-page")
+    public ResponseEntity<PagedResponse<KieuThietKe>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(thietKeService.getByPage(pageNumber, pageSize, search));
+    }
+
     @GetMapping("/get-all")
-    public ResponseEntity<PagedResponse<KieuThietKe>> getChatLieuList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                      @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                      @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(thietKeService.getAll(pageNumber, pageSize, search));
+    public ResponseEntity<List<KieuThietKe>> getAll() {
+        return ResponseEntity.ok(thietKeService.getAll());
     }
 
     @PostMapping("/add")
@@ -35,7 +42,7 @@ public class KieuThietKeResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<KieuThietKe> add(@PathVariable("id") int id) {
+    public ResponseEntity<KieuThietKe> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(thietKeService.getById(id));
     }
 

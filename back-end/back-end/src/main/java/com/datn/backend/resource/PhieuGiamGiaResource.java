@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/phieu-giam-gia")
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class PhieuGiamGiaResource {
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search,
-                                                 @RequestParam(value = "kieu", defaultValue = "", required = false) String kieu) {
+                                                 @RequestParam(value = "kieu", defaultValue = "", required = false)List<Integer> kieu) {
 
         return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search,kieu));
     }

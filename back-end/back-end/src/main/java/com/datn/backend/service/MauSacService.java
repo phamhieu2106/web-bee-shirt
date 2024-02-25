@@ -5,12 +5,15 @@ import com.datn.backend.model.san_pham.MauSac;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface MauSacService {
 
     MauSac add(MauSac mauSac, MultipartFile multipartFile) throws IOException;
 
-    PagedResponse<MauSac> getAll(int pageNumber, int pageSize, String search);
+    PagedResponse<MauSac> getByPage(int pageNumber, int pageSize, String search);
+
+    List<MauSac> getAll();
 
     MauSac getById(int id);
 

@@ -33,12 +33,26 @@ export class DanhSachPhieuComponent {
 
 
   public kieu: number[] = [0, 1];
+  public loai: number[] = [0, 1];
+  public trangThai: string[] = ["Đang diễn ra","Sắp diễn ra","Đã kết thúc"];
+  public thoiGianBatDau: string =""
+  public thoiGianKetThuc: string=""
   keyword: string
 
 
   searchPhieuGiamGia(event: any): void {
     this.keyword = event.target.value;
-    this.goToPage(1, 5, this.keyword, this.kieu);
+    this.filterPrivate(1, 5, this.keyword, this.kieu,this.loai,this.trangThai);
+  }
+
+  clearFilters(): void {
+    this.thoiGianBatDau = '';
+    this.thoiGianKetThuc = '';
+    this.kieu = [0, 1];
+    this.loai = [0, 1];
+    this.trangThai = ['Đang diễn ra', 'Sắp diễn ra', 'Đã kết thúc'];
+
+    this.goToPage(); // Gọi lại hàm lọc để cập nhật dữ liệu
   }
 
 
@@ -47,10 +61,35 @@ export class DanhSachPhieuComponent {
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = "",
-    kieuFilter: number[]= this.kieu
+    keyword: string = ""
+   
   ): void {
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword, kieuFilter).subscribe({
+    console.log(this.thoiGianBatDau)
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
+      next: (response: PagedResponse<PhieuGiamGia>) => {
+      
+        this.pagedResponseBinh = response;
+
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+
+  public filterPrivate(
+    page: number = 1,
+    pageSize: number = 5,
+    keyword: string = "",
+    kieuFilter: number[]= this.kieu,
+    loaiFilter:number[] = this.loai,
+    trangThaiFilter:string[] = this.trangThai,
+    thoiGianBatDauFilter: string =this.thoiGianBatDau,
+    thoiGianKetThucFilter: string =this.thoiGianKetThuc
+  ): void {
+    console.log(this.thoiGianBatDau)
+    this.phieuGiamGiaService.filter(page, pageSize, keyword, kieuFilter,loaiFilter,trangThaiFilter,thoiGianBatDauFilter,thoiGianKetThucFilter).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
       
         this.pagedResponseBinh = response;

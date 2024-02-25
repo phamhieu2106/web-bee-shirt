@@ -94,9 +94,25 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
     @Override
-    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,List<Integer> kieu) {
+    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search,kieu);
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search);
+        PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
+        paged.setPageNumber(pageNumber);
+        paged.setPageSize(pageSize);
+        paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
+        paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
+        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
+        paged.setData(phieuGiamGiaPage.getContent());
+        paged.setSearch(search);
+
+        return paged;
+    }
+
+    @Override
+    public PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai,String thoiGianBatDau,String thoiGianKetThuc) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getFilter(pageable, search,kieu,loai,trangThai,thoiGianBatDau,thoiGianKetThuc);
         PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);

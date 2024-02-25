@@ -22,11 +22,27 @@ export class PhieuGiamGiaService {
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = "",
-    kieu: number[] = [0, 1]
+    
   ): Observable<PagedResponse<PhieuGiamGia>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&kieu=${kieu}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<PhieuGiamGia>>(
       `${this.apiUrl}/ds-phieu-giam-gia${param}`
+    );
+  }
+
+  public filter(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    search: string = "",
+    kieu: number[] = [0, 1],
+    loai: number[] = [0, 1],
+    trangThai: string[] = ["Đang diễn ra","Sắp diễn ra","Đã kết thúc"],
+    thoiGianBatDau: string = "",
+    thoiGianKetThuc: string = ""
+  ): Observable<PagedResponse<PhieuGiamGia>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&kieu=${kieu}&loai=${loai}&trangThai=${trangThai}&thoiGianBatDau=${thoiGianBatDau}&thoiGianKetThuc=${thoiGianKetThuc}`;
+    return this.http.get<PagedResponse<PhieuGiamGia>>(
+      `${this.apiUrl}/filter${param}`
     );
   }
 

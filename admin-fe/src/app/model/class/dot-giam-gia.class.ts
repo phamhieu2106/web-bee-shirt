@@ -8,4 +8,8 @@ export class DotGiamGia {
   soLuongSanPham?: number;
   trangThai?: number;
   listIdSanPhamChiTiet?: Array<number>;
+  nguoiTao?: string;
+  ngayTao?: string;
+  ngayCapNhat?: string;
+  nguoiCapNhatGanNhat?: string;
 }

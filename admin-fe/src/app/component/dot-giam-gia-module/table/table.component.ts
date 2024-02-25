@@ -6,10 +6,10 @@ import {
   Output,
   SimpleChanges,
 } from "@angular/core";
-import { Router } from "@angular/router";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-san-pham-chi-tiet";
+import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
 
 @Component({
   selector: "app-table",
@@ -17,6 +17,7 @@ import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-s
   styleUrls: ["./table.component.css"],
 })
 export class TableComponent implements OnInit {
+  object: DotGiamGia;
   idRemove: number;
   @Input() template: string;
   @Input() titleTable: string;
@@ -41,7 +42,7 @@ export class TableComponent implements OnInit {
   @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
   @Output() clickSanPhamChiTiet = new EventEmitter<any>();
 
-  constructor(private router: Router) {}
+  constructor(private service: DotGiamGiaService) {}
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes["listSanPhamChiTiet"] &&
@@ -68,8 +69,13 @@ export class TableComponent implements OnInit {
     console.log(id);
     this.onRemoveDotGiamGia.emit(id);
   }
-
-  // Debounce make sure that the search not request server many times for DotGiamGia
+  public onSelected(id: number) {
+    this.service.getDotGiamGiaById(id).subscribe({
+      next: (value) => {
+        this.object = value;
+      },
+    });
+  }
   // For SanPham
   public addIdSanPham(value: any) {
     this.clickSanPham.emit(value);

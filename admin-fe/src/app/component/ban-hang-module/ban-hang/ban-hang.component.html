@@ -1,0 +1,358 @@
+<div class="row gutters">
+  <div class="card">
+    <div class="row bg-primary">
+      <div class="p-1 col-6">
+        <div class="dropdown">
+          <input
+            type="text"
+            class="form-control dropdown-toggle"
+            id="dropdownProduct"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            placeholder="Thêm sản phẩm"
+          />
+          <div class="dropdown-menu" aria-labelledby="dropdownProduct">
+            <div class="suggestion-item row">
+              <img class="col-1" src="/src/assets/img/default-image.jpg" />
+              <div class="col-9">
+                <div class="fw-bold">Áo sơ mi Gucci Hames - Màu - Size</div>
+                <div class="text-mute">SP01</div>
+              </div>
+              <div class="col-2">
+                <div class="">100,000</div>
+                <div class="text-mute">Còn lại: 1</div>
+              </div>
+            </div>
+            <hr />
+          </div>
+        </div>
+      </div>
+      <div class="col-6 row">
+        <div class="bg-light col-2 order-number h-100 mr-1">
+          <span class="fs-5">Đơn 1</span>
+          <button class="btn btn-light p-1">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="bg-light col-2 order-number h-100 mr-1">
+          <span class="fs-5">Đơn 2</span>
+          <button class="btn btn-light p-1">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="bg-light col-2 order-number h-100 mr-1">
+          <span class="fs-5">Đơn 3</span>
+          <button class="btn btn-light p-1">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="bg-light col-2 order-number h-100 mr-1">
+          <span class="fs-5">Đơn 4</span>
+          <button class="btn btn-light p-1">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="bg-light col-2 order-number h-100 mr-1">
+          <span class="fs-5">Đơn 5</span>
+          <button class="btn btn-light p-1">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+
+        <div class="col-1 h-100 p-0">
+          <button class="btn btn-primary">
+            <i class="fa-solid fa-plus text-light"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <div class="card col-9">
+    <!-- Items -->
+    <table class="table table-hover">
+      <thead>
+        <th>STT</th>
+        <th>Mã</th>
+        <th>Tên Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Đơn Giá</th>
+        <th>Giá bán</th>
+        <th>Tổng tiền</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>
+            <button type="button" class="btn btn-outline-danger p-1 m-1">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <span>SP01</span>
+          </td>
+          <td>
+            <div class="fw-bold">Áo sơ mi Gucci Hames - Màu - Size</div>
+            <div class="text-muted">Size: XL</div>
+          </td>
+          <td>
+            <!-- <input
+              class="form-control border-0 border-bottom"
+              type="number"
+              min="1"
+            /> -->
+            <div class="qty">
+              <span class="minus bg-dark">-</span>
+              <input type="number" class="count" name="qty" value="1" />
+              <span class="plus bg-dark">+</span>
+            </div>
+          </td>
+          <td>100,000</td>
+          <td><input type="number" /></td>
+          <td>100,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--  -->
+  <div class="card col-3">
+    <!-- Sidebar -->
+    <div class="">
+      <div class="user-choose">
+        <div
+          class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+        >
+          <i class="fa-solid fa-user m-1 me-md-2"></i>
+          <div class="flex-grow-1">
+            <p class="d-none d-md-block mb-0" id="userFullName">
+              Dương Việt Hùng
+            </p>
+            <p
+              class="d-none d-md-block mb-0 text-mute"
+              style="font-size: 12px"
+              id="userPhoneNumber"
+            >
+              0377777777
+            </p>
+          </div>
+          <button type="button" class="btn">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <input
+          type="text"
+          class="form-control dropdown-toggle"
+          id="dropdownKhachHang"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          placeholder="Thêm khách hàng vào đơn"
+        />
+        <div class="dropdown-menu" aria-labelledby="dropdownKhachHang">
+          <div class="suggestion-item text-center">
+            <i class="fa-solid fa-plus"></i>
+            Thêm mới khách hàng
+          </div>
+          <hr />
+          <div class="suggestion-item">Dương Việt Hùng - 0377777777</div>
+          <hr />
+          <div class="suggestion-item">Dương Việt Hùng - 0377777777</div>
+        </div>
+      </div>
+    </div>
+    <hr class="fw-bold" />
+    <!-- Tiền nong -->
+    <div class="">
+      <div class="d-flex justify-content-between m-1">
+        <span class="ml-auto fw-bold"
+          >Giao hàng:
+          <input type="checkbox" />
+        </span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Số lượng sản phẩm:</span>
+        <span class="ml-auto">1</span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Tổng tiền:</span>
+        <span class="ml-auto">100,000</span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Phí vận chuyển:</span>
+        <span class="ml-auto"><input type="number" /></span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Giảm giá:</span>
+        <span class="ml-auto">10,000</span>
+      </div>
+      <div class="d-flex justify-content-between m-1 h5">
+        <span class="mr-auto fw-bold">Khách phải trả:</span>
+        <span class="ml-auto">90,000</span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold"
+          >Khách thanh toán:
+          <button
+            type="button"
+            class="btn btn-outline-info p-1"
+            data-toggle="modal"
+            data-target="#lichSuThanhToan"
+          >
+            <i class="fa-solid fa-credit-card"></i>
+          </button>
+        </span>
+        <span class="ml-auto">50,000</span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Khách còn thiếu:</span>
+        <span class="ml-auto">40,000</span>
+      </div>
+      <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold"
+          >Ghi chú:<textarea rows="2" cols="45"></textarea>
+        </span>
+      </div>
+      <div style="height: 100px"></div>
+      <!-- Giao hàng  -->
+      <div>
+        <div class="d-flex justify-content-between m-1">
+          <span class="mr-auto fw-bold"
+            >Tên người nhận: <input type="text"
+          /></span>
+        </div>
+        <div class="d-flex justify-content-between m-1">
+          <span class="mr-auto fw-bold"
+            >Số điện thoại: <input type="text"
+          /></span>
+        </div>
+        <app-get-dia-chi-va-phi-van-chuyen
+          [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
+        ></app-get-dia-chi-va-phi-van-chuyen>
+      </div>
+      <div class="mb-3">
+        <input type="hidden" id="orderId" />
+        <button class="btn btn-success btn-lg w-100 h-100">Thanh toán</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="lichSuThanhToan"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thanh Toán</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <div class="modal-body">
+          <!-- Form -->
+          <form class="row">
+            <!-- Tổng tiền -->
+            <div class="d-flex justify-content-between m-1">
+              <span class="mr-auto fw-bold">Tổng tiền:</span>
+              <span class="ml-auto fw-bold text-danger">90,000</span>
+            </div>
+            <!-- Tiền khách đưa -->
+            <div class="d-flex justify-content-between m-1">
+              <span class="mr-auto fw-bold">Tiền khách đưa:</span>
+              <span class="ml-auto"><input type="number" /></span>
+            </div>
+            <!-- Tiền thiếu -->
+            <div class="d-flex justify-content-between m-1">
+              <span class="mr-auto fw-bold">Tiền thiếu:</span>
+              <span class="ml-auto fw-bold text-danger">0</span>
+            </div>
+            <!-- Hình thức thanh toán -->
+            <div class="d-flex justify-content-between m-1">
+              <span class="mr-auto">
+                <label class="form-label fw-bold">Hình thức: </label>
+                <label class="form-check form-check-inline ml-4">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="hinhThucThanhToan"
+                    value="TIEN_MAT"
+                  />
+                  <label class="form-check-label">Tiền mặt</label>
+                </label>
+                <label class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="hinhThucThanhToan"
+                    value="CHUYEN_KHOAN"
+                  />
+                  <label class="form-check-label">Chuyển khoản</label>
+                </label></span
+              >
+            </div>
+            <!-- Mã giao dịch -->
+            <div class="m-1">
+              <span class="mr-auto fw-bold">Mã giao dịch:</span>
+              <span
+                ><input type="text" class="form-control" />
+                <small class="form-text text-danger"
+                  >Mã giao dịch không được trống</small
+                ></span
+              >
+            </div>
+          </form>
+          <!-- Table thanh toán -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr role="row">
+                  <th>Mã GD</th>
+                  <th>Số tiền</th>
+                  <th>Phương thức</th>
+                  <th>Ghi chú</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>90,000</td>
+                  <td>
+                    <!-- <app-phuong-thuc-thanh-toan
+                      [phuongThucThanhToan]="lstt.hinhThucThanhToan"
+                    ></app-phuong-thuc-thanh-toan> -->
+                  </td>
+                  <td>ghi_chu</td>
+                  <td>x</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Xác nhận
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

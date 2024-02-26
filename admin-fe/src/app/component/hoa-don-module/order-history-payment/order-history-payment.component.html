@@ -18,51 +18,40 @@
       </div>
 
       <div class="card-body">
-        <table
-          id="rowSelection_wrapper"
-          class="table dataTables_wrapper dt-bootstrap4 no-footer rounded"
-        >
-          <div class="row">
-            <div class="col-sm-12">
-              <table
-                id="rowSelection"
-                class="table table-striped table-bordered dataTable no-footer table-hover"
-                role="grid"
-              >
-                <thead>
-                  <tr role="row">
-                    <th>STT</th>
-                    <th>Mã GD</th>
-                    <th>Số tiền</th>
-                    <th>Trạng thái</th>
-                    <th>Thời gian</th>
-                    <th>Phương thức thanh toán</th>
-                    <th>Người xác nhận</th>
-                    <th>Ghi chú</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let lstt of thanhToans; index as i">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ lstt.maGiaoDich }}</td>
-                    <td>{{ lstt.soTien | currency : "đ " }}</td>
-                    <td>
-                      {{ lstt.trangThai == true ? "Thành công" : "Thất bại" }}
-                    </td>
-                    <td>{{ lstt.createdAt }}</td>
-                    <td>
-                      <app-phuong-thuc-thanh-toan
-                        [phuongThucThanhToan]="lstt.hinhThucThanhToan"
-                      ></app-phuong-thuc-thanh-toan>
-                    </td>
-                    <td>{{ lstt.createdBy }}</td>
-                    <td>{{ lstt.moTa }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr role="row">
+                <th>STT</th>
+                <th>Mã GD</th>
+                <th>Số tiền</th>
+                <th>Trạng thái</th>
+                <th>Thời gian</th>
+                <th>Phương thức thanh toán</th>
+                <th>Người xác nhận</th>
+                <th>Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lstt of thanhToans; index as i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ lstt.maGiaoDich }}</td>
+                <td>{{ lstt.soTien | currency : "đ " }}</td>
+                <td>
+                  {{ lstt.trangThai == true ? "Thành công" : "Thất bại" }}
+                </td>
+                <td>{{ lstt.createdAt }}</td>
+                <td>
+                  <app-phuong-thuc-thanh-toan
+                    [phuongThucThanhToan]="lstt.hinhThucThanhToan"
+                  ></app-phuong-thuc-thanh-toan>
+                </td>
+                <td>{{ lstt.createdBy }}</td>
+                <td>{{ lstt.moTa }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

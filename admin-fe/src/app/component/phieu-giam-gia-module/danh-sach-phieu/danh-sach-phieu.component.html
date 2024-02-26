@@ -23,49 +23,49 @@
         </div>
 
         <div class="row pt-3 pb-3">
-          <div class="col-md-3">
-            <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày">
+          <div class="col-md-2">
+            <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày" [(ngModel)]="thoiGianBatDau"  (change)="filterPrivate()">
           </div>
-          <div class="col-md-3 ">
-            <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày">
+          <div class="col-md-2">
+            <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày" [(ngModel)]="thoiGianKetThuc"  (change)="filterPrivate()">
           </div>
-
-          <div class="col-md-2 ">
+        
+          <div class="col-md-2">
             <div>
-
-              <select class="form-control" >
-                <option value="">- Chọn kiểu -</option>
-                <option value="1">Công Khai</option>
-                <option value="0">Cá Nhân</option>
+              <select class="form-control"  [(ngModel)]="loai" (change)="filterPrivate()">
+                <option [ngValue]="[0,1]">Tất Cả</option>
+                <option [ngValue]="[1]">Công Khai</option>
+                <option [ngValue]="[0]">Cá Nhân</option>
               </select>
             </div>
           </div>
-
-          <div class="col-md-2 ">
+        
+          <div class="col-md-2">
             <div>
-
-              <select class="form-control "  [(ngModel)]="kieu"
-              (change)="goToPage()" >
+              <select class="form-control"  [(ngModel)]="kieu" (change)="filterPrivate()">
                 <option [ngValue]="[0,1]">Tất Cả</option>
                 <option [ngValue]="[0]">%</option>
                 <option [ngValue]="[1]">Tiền Mặt</option>
               </select>
             </div>
           </div>
-
-          <div class="col-md-2 ">
+        
+          <div class="col-md-2">
             <div>
-
-              <select class="form-control">
-                <option value="">-Trạng Thái-</option>
-                <option value="">Sắp diễn ra</option>
-                <option value="">Đang diễn ra</option>
-                <option value="">Đã kết thúc</option>
+              <select class="form-control" [(ngModel)]="trangThai" (change)="filterPrivate()">
+                <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
+                <option value="Sắp diễn ra">Sắp diễn ra</option>
+                <option value="Đang diễn ra">Đang diễn ra</option>
+                <option value="Đã kết thúc">Đã kết thúc</option>
               </select>
             </div>
           </div>
-
-
+        
+          <!-- Thêm nút xóa bộ lọc -->
+          <div class="col-md-2">
+            <button class="btn btn-primary" (click)="clearFilters()">Xóa bộ lọc</button>
+          </div>
+        
         </div>
 
         <!-- table -->

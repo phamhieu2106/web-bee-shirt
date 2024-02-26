@@ -17,6 +17,7 @@ import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.m
 import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { CurrencyPipe } from "@angular/common";
+import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { CurrencyPipe } from "@angular/common";
     DotGiamGiaModule,
     LayoutModule,
     AppRoutingModule,
+    BanHangModule,
   ],
   providers: [
     {

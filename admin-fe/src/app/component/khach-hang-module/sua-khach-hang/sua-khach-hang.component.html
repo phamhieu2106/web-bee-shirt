@@ -544,7 +544,7 @@
               formControlName="tinh"
             />
             <div class="invalid-feedback">Không được bỏ trống</div>
-            <select
+            <!-- <select
               class="form-select form-select-sm mb-3 input"
               style="padding: 5px 10px 5px 10px"
               id="city"
@@ -556,14 +556,14 @@
               <option *ngFor="let dc of dstinh" [value]="dc.province_name">
                 {{ dc.province_name }}
               </option>
-            </select>
+            </select> -->
           </div>
 
           <div class="form-row mt-3">
             <label class="input_label"
               ><b style="color: red">*</b>Quận/Huyện</label
             >
-            <select
+            <!-- <select
               class="form-select form-select-sm mb-3 input"
               style="padding: 5px 10px 5px 10px"
               id="district"
@@ -575,14 +575,19 @@
               <option *ngFor="let dc of dshuyen" [value]="dc.district_name">
                 {{ dc.district_name }}
               </option>
-            </select>
+            </select> -->
+            <input
+              type="text"
+              class="form-control input"
+              formControlName="huyen"
+            />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
           <div class="form-row mt-3">
             <label class="input_label"
               ><b style="color: red">*</b>Xã/Phường</label
             >
-            <select
+            <!-- <select
               class="form-select input"
               style="padding: 5px 10px 5px 10px"
               id="ward"
@@ -593,7 +598,12 @@
               <option *ngFor="let dc of dsxa" [value]="dc.ward_name">
                 {{ dc.ward_name }}
               </option>
-            </select>
+            </select> -->
+            <input
+              type="text"
+              class="form-control input"
+              formControlName="xa"
+            />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
           <div class="form-row mt-3">

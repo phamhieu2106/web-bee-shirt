@@ -22,7 +22,7 @@ export class KichCoService {
   ): Observable<PagedResponse<KichCo>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<KichCo>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
   }
 

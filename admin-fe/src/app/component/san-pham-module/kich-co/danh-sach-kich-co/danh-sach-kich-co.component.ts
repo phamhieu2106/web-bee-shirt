@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+
 import { ToastrService } from "ngx-toastr";
+import Swal from "sweetalert2";
+
 import { KichCo } from "src/app/model/class/kich-co.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KichCoService } from "src/app/service/kick-co.service";
-import Swal from "sweetalert2";
 
 @Component({
   selector: "app-danh-sach-kich-co",
@@ -19,19 +21,23 @@ export class DanhSachKichCoComponent {
   public search = "";
   public selectedDetails: KichCo;
 
+  // constructor, ngOn
   constructor(
     private kichCoService: KichCoService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.getKieuDangList();
+    this.getKichCoList();
     this.initAddForm();
     this.initUpdateForm();
   }
 
   // public function
   public add(): void {
+    let trimmed = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmed);
+
     this.kichCoService.add(this.addForm.value).subscribe({
       next: (response: KichCo) => {
         this.goToPage(
@@ -48,8 +54,8 @@ export class DanhSachKichCoComponent {
         });
         document.getElementById("closeBtn").click();
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
       },
     });
   }
@@ -90,8 +96,6 @@ export class DanhSachKichCoComponent {
   public openDetailsForm(id: number): void {
     this.kichCoService.getById(id).subscribe({
       next: (response: KichCo) => {
-        console.log("tay ao:", response);
-
         this.selectedDetails = response;
       },
       error: (error: HttpErrorResponse) => {
@@ -156,7 +160,7 @@ export class DanhSachKichCoComponent {
   }
 
   // private function
-  private getKieuDangList(): void {
+  private getKichCoList(): void {
     this.kichCoService.getByPage().subscribe({
       next: (response: PagedResponse<KichCo>) => {
         this.pagedResponse = response;

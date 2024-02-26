@@ -55,9 +55,6 @@ export class DanhSachPhieuComponent {
     this.goToPage(); // Gọi lại hàm lọc để cập nhật dữ liệu
   }
 
-
-
-
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -82,24 +79,56 @@ export class DanhSachPhieuComponent {
     page: number = 1,
     pageSize: number = 5,
     keyword: string = "",
-    kieuFilter: number[]= this.kieu,
-    loaiFilter:number[] = this.loai,
-    trangThaiFilter:string[] = this.trangThai,
-    thoiGianBatDauFilter: string =this.thoiGianBatDau,
-    thoiGianKetThucFilter: string =this.thoiGianKetThuc
+    kieuFilter: number[] = this.kieu,
+    loaiFilter: number[] = this.loai,
+    trangThaiFilter: string[] = this.trangThai,
+    thoiGianBatDauFilter: string = this.thoiGianBatDau,
+    thoiGianKetThucFilter: string = this.thoiGianKetThuc
   ): void {
-    console.log(this.thoiGianBatDau)
-    this.phieuGiamGiaService.filter(page, pageSize, keyword, kieuFilter,loaiFilter,trangThaiFilter,thoiGianBatDauFilter,thoiGianKetThucFilter).subscribe({
-      next: (response: PagedResponse<PhieuGiamGia>) => {
-      
-        this.pagedResponseBinh = response;
+    // Kiểm tra xem thoiGianBatDauFilter và thoiGianKetThucFilter có giá trị rỗng không
+    if (!thoiGianBatDauFilter || !thoiGianKetThucFilter) {
+       
+        console.error("Giá trị thời gian bắt đầu hoặc kết thúc không được để trống.");
 
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+        this.phieuGiamGiaService.getAll(
+          page,
+          pageSize,
+          keyword,
+          kieuFilter,
+          loaiFilter,
+          trangThaiFilter,
+        
+      ).subscribe({
+          next: (response: PagedResponse<PhieuGiamGia>) => {
+              this.pagedResponseBinh = response;
+          },
+          error: (error: HttpErrorResponse) => {
+              console.log(error);
+          },
+      });
+        
+        return; // Dừng hàm và không thực hiện truy vấn
+    }
+
+    // Tiếp tục thực hiện truy vấn nếu không có giá trị rỗng
+    this.phieuGiamGiaService.filter(
+        page,
+        pageSize,
+        keyword,
+        kieuFilter,
+        loaiFilter,
+        trangThaiFilter,
+        thoiGianBatDauFilter,
+        thoiGianKetThucFilter
+    ).subscribe({
+        next: (response: PagedResponse<PhieuGiamGia>) => {
+            this.pagedResponseBinh = response;
+        },
+        error: (error: HttpErrorResponse) => {
+            console.log(error);
+        },
     });
-  }
+}
 
 
 

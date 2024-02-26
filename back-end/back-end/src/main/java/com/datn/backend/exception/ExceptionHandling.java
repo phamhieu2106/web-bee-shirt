@@ -66,6 +66,22 @@ public class ExceptionHandling {
             ErrorResponse response = new ErrorResponse(ex.getMessage());
             return new ResponseEntity<>(response, BAD_REQUEST);
         } else if (ex instanceof MethodArgumentNotValidException) {
+            Map<String, String> errorMap = new HashMap<>();
+            ((MethodArgumentNotValidException) ex).getBindingResult().getFieldErrors().forEach(error -> {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            });
+            return new ResponseEntity<>(errorMap, BAD_REQUEST);
+        } else if (ex instanceof ResourceNotFoundException) {
+            ErrorResponse response = new ErrorResponse(ex.getMessage());
+            return new ResponseEntity<>(response, BAD_REQUEST);
+        } else if (ex instanceof AccessDeniedException) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>("Server occurs an error!", INTERNAL_SERVER_ERROR);
+        }
+    }
+}
+
 //            List<FieldErrorResponse> errors = new ArrayList<>();
 //            ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors().forEach(err -> {
 //                String fieldName = ((FieldError) err).getField();
@@ -76,23 +92,4 @@ public class ExceptionHandling {
 //            return new ResponseEntity<>(errors, BAD_REQUEST);
 //        } else if (ex instanceof ResourceNotFoundException || ex instanceof NoSuchElementException) {
 //            ErrorResponse error = new ErrorResponse(ex.getMessage());
-
 //            return new ResponseEntity<>("error", BAD_REQUEST);
-
-            Map<String, String> errorMap = new HashMap<>();
-            ((MethodArgumentNotValidException) ex).getBindingResult().getFieldErrors().forEach(error -> {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            });
-            return new ResponseEntity<>(errorMap, BAD_REQUEST);
-
-        } else if (ex instanceof ResourceNotFoundException) {
-            ErrorResponse response = new ErrorResponse(ex.getMessage());
-            return new ResponseEntity<>(response, BAD_REQUEST);
-        } else if (ex instanceof AccessDeniedException) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-        } else {
-            System.out.println(ex);
-            return new ResponseEntity<>("Server occurs an error!", INTERNAL_SERVER_ERROR);
-        }
-    }
-}

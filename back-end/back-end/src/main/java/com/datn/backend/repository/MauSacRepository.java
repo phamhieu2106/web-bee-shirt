@@ -11,6 +11,8 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
 
     boolean existsByTen(String ten);
 
+    boolean existsByMa(String ma);
+
     @Query(value =
             """
             SELECT *

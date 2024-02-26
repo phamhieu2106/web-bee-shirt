@@ -32,6 +32,9 @@ export class DanhSachKieuDangComponent {
 
   // public function
   public add(): void {
+    let trimmed = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmed);
+
     this.kieuDangService.add(this.addForm.value).subscribe({
       next: (response: KieuDang) => {
         this.goToPage(
@@ -48,8 +51,8 @@ export class DanhSachKieuDangComponent {
         });
         document.getElementById("closeBtn").click();
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
       },
     });
   }

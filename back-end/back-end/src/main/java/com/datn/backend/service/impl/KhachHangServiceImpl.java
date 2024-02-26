@@ -5,6 +5,7 @@ import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
+import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
@@ -44,6 +45,14 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
+        if (khachHangRepository.existsByEmail(kh.getEmail().trim().toLowerCase())) {
+            throw new ResourceExistsException("Email: " + kh.getEmail() + " đã tồn tại.");
+        }
+
+        // check exist sdt
+        if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
+            throw new ResourceExistsException("Số điện thoại: " + kh.getSdt()+ " đã tồn tại.");
+        }
         BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
         if (bi == null) {
             throw new RuntimeException("Ảnh không hợp lệ");

@@ -37,8 +37,8 @@ public class KichCoResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<KichCo> add(@RequestBody KichCo chatLieu) {
-        return ResponseEntity.ok(kichCoService.add(chatLieu));
+    public ResponseEntity<KichCo> add(@RequestBody KichCo kichCo) {
+        return ResponseEntity.ok(kichCoService.add(kichCo));
     }
 
     @GetMapping("/get-by-id/{id}")

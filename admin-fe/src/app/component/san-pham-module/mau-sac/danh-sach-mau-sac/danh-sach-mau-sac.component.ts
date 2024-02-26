@@ -56,8 +56,8 @@ export class DanhSachMauSacComponent {
         document.getElementById("closeBtn").click();
         this.turnOffOverlay("");
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
         this.turnOffOverlay("");
       },
     });

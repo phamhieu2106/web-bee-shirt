@@ -163,7 +163,15 @@
                           <td>{{ object.tenKieuDang }}</td>
                           <td>{{ object.tenTayAo }}</td>
                           <td>{{ object.tenThietKe }}</td>
-                          <td>{{ object.tenMauSac }}</td>
+                          <td>
+                            <button
+                              *ngIf="object.maMauSac != null"
+                              [ngClass]="'btn'"
+                              [ngStyle]="{
+                                'background-color': object.maMauSac
+                              }"
+                            ></button>
+                          </td>
                           <td>
                             <button
                               class="{{
@@ -177,14 +185,6 @@
                                   ? "Đang Bán"
                                   : "Ngừng Bán"
                               }}
-                            </button>
-                          </td>
-                          <td>
-                            <button class="btn btn-outline-light btn-rounded">
-                              <i
-                                class="fa-solid fa-circle-info fa-xl"
-                                style="color: #74c0fc"
-                              ></i>
                             </button>
                           </td>
                         </tr>

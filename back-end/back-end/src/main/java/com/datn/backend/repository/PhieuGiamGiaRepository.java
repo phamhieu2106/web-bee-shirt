@@ -29,18 +29,24 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
     PhieuGiamGiaResponse getOneById(@Param("id") Integer id);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
-            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%) " +
+            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  " +
+            "AND pgg.kieu IN (:kieu) " +
+            "AND pgg.loai IN (:loai) " +
+            "AND pgg.trang_thai IN (:trangThai) " +
             "ORDER BY pgg.created_at DESC",
             nativeQuery = true)
-    Page<PhieuGiamGia> getPagination(Pageable pageable, @Param("search") String search);
+    Page<PhieuGiamGia> getPagination(Pageable pageable, @Param("search") String search,
+                                     @Param("kieu")List<Integer> kieu,
+                                     @Param("loai")List<Integer> loai,
+                                     @Param("trangThai")List<String> trangThai);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
             "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  " +
             "AND pgg.kieu IN (:kieu) " +
             "AND pgg.loai IN (:loai) " +
             "AND pgg.trang_thai IN (:trangThai) " +
-            "AND (:thoiGianBatDau IS NULL OR pgg.thoi_gian_bat_dau >= :thoiGianBatDau) " +
-            "AND (:thoiGianKetThuc IS NULL OR pgg.thoi_gian_ket_thuc <= :thoiGianKetThuc) " +
+            "AND ( pgg.thoi_gian_bat_dau >= :thoiGianBatDau) " +
+            "AND ( pgg.thoi_gian_ket_thuc <= :thoiGianKetThuc) " +
             "ORDER BY pgg.created_at DESC",
             nativeQuery = true)
     Page<PhieuGiamGia> getFilter(Pageable pageable, @Param("search") String search,

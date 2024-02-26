@@ -1,6 +1,7 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.model.san_pham.MauSacImage;
 import com.datn.backend.repository.MauSacImageRepository;
@@ -33,6 +34,7 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     @Transactional
     public MauSac add(MauSac mauSac, MultipartFile multipartFile) throws IOException {
+        checkExistForAdd(mauSac);
         // save image to cloud
         BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
         if (bi == null) {
@@ -49,6 +51,20 @@ public class MauSacServiceImpl implements MauSacService {
         mauSac.setTrangThai(true);
 
         return mauSacRepo.save(mauSac);
+    }
+
+    private void checkExistForAdd(MauSac mauSac) {
+        if (mauSacRepo.existsByTen(mauSac.getTen()) && !mauSacRepo.existsByMa(mauSac.getMa())) {
+            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' đã tồn tại.");
+        }
+
+        if (!mauSacRepo.existsByTen(mauSac.getTen()) && mauSacRepo.existsByMa(mauSac.getMa())) {
+            throw new ResourceExistsException("Mã màu sắc '" + mauSac.getMa() + "' đã tồn tại.");
+        }
+
+        if (mauSacRepo.existsByTen(mauSac.getTen()) && mauSacRepo.existsByMa(mauSac.getMa())) {
+            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' và mã màu sắc '" + mauSac.getMa() + "' đã tồn tại");
+        }
     }
 
     @Override

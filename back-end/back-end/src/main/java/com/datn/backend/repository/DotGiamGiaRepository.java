@@ -97,7 +97,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
     @Query(value = """
                 SELECT spct.id as Id, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
-                cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.Ten as TenMauSac, ta.Ten as TenTayAo,
+                cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.ma as MaMauSac, ta.Ten as TenTayAo,
                 tk.ten as TenThietKe,
                 spct.created_at as NgayTao,
                 spct.updated_at as NgayCapNhat,

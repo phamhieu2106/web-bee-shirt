@@ -11,7 +11,7 @@ public interface SanPhamChiTietResponse {
     String getTenCoAo();
     String getTenKichCo();
     String getTenKieuDang();
-    String getTenMauSac();
+    String getMaMauSac();
     String getTenTayAo();
     String getTenThietKe();
 }

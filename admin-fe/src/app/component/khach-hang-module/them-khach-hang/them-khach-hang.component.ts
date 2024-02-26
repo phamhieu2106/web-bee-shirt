@@ -16,7 +16,8 @@ import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.i
 import { DiaChiService } from "src/app/service/dia-chi.service";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import Swal from "sweetalert2";
-
+import emailjs from "@emailjs/browser";
+import { AuthenticationService } from "src/app/service/authentication.service";
 @Component({
   selector: "app-them-khach-hang",
   templateUrl: "./them-khach-hang.component.html",
@@ -35,6 +36,9 @@ export class ThemKhachHangComponent {
   public idTinh: number;
   public idHuyen: number;
   private selectFile: File;
+  errorMessage: string = "";
+  public isLoadding = false;
+  public overlayText: string = "";
   imageUrl: string;
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("action") action!: NgxScannerQrcodeComponent;
@@ -42,7 +46,8 @@ export class ThemKhachHangComponent {
     private router: Router,
     private khachHangService: KhachHangService,
     private toas: ToastrService,
-    private diaChi: DiaChiService
+    private diaChi: DiaChiService,
+    private authService: AuthenticationService
   ) {}
   ngOnInit(): void {
     this.initFormAddKh();
@@ -100,14 +105,6 @@ export class ThemKhachHangComponent {
         ]),
         xa: new FormControl("", [Validators.required]),
       });
-      // this.initAddForm(
-      //   arrayQR[2],
-      //   formattedDate,
-      //   arrayQR[4],
-
-      // );
-
-      // 023686002531|134220866|Hoàng Thùy Dương|22102000|Nữ|Khu 1, Minh Khương, Hàm Yên, Tuyên Quang|25052020
     }
   }
 
@@ -126,23 +123,133 @@ export class ThemKhachHangComponent {
     this.selectFile = event.target["files"][0];
   }
   public addKH(): void {
-    this.khachHangService.add(this.formAddKh.value, this.selectFile).subscribe({
-      next: (kh: KhachHangResponse) => {
-        this.initFormAddKh();
+        // this.khachHangService.add(this.formAddKh.value, this.selectFile).subscribe({
+    //   next: (kh: KhachHangResponse) => {
+    //     this.initFormAddKh();
+    //     if (
+    //       new Date(this.formAddKh.value.ngaySinh) > new Date() ||
+    //       new Date(this.formAddKh.value.ngaySinh).toDateString() ===
+    //         new Date().toDateString()
+    //     ) {
+    //       this.toas.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+    //       return;
+    //     }
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: `Thêm khách hàng mới thành công!`,
+    //       showConfirmButton: false,
+    //       timer: 1000,
+    //     });
 
-        Swal.fire({
-          icon: "success",
-          title: `Thêm khách hàng mới thành công!`,
-          showConfirmButton: false,
-          timer: 1000,
+    //     this.router.navigate(["/khach-hang/ds-khach-hang"]);
+    //   },
+    //   error: (erros: HttpErrorResponse) => {},
+    // });
+    if (this.selectFile == null) {
+      this.toas.error("Chưa thêm ảnh", "Thất bại");
+      return;
+    } else if (
+      new Date(this.formAddKh.value.ngaySinh) > new Date() ||
+      new Date(this.formAddKh.value.ngaySinh).toDateString() ===
+        new Date().toDateString()
+    ) {
+      this.toas.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+      return;
+    }
+
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý thêm không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) => {
+      this.turnOnOverlay("Đang thêm khách hàng mới....");
+      if (result.isConfirmed) {
+        const randomPassword = this.generateRandomPassword();
+
+        // Cập nhật giá trị của trường matKhau
+        this.formAddKh.patchValue({
+          matKhau: randomPassword,
         });
 
-        this.router.navigate(["/khach-hang/ds-khach-hang"]);
-      },
-      error: (erros: HttpErrorResponse) => {},
+        this.khachHangService
+          .add(this.formAddKh.value, this.selectFile)
+          .subscribe({
+            next: () => {
+              // this.goToPage(1, 5, "");
+              this.initFormAddKh();
+              Swal.fire({
+                toast: true,
+                icon: "success",
+                position: "top-end",
+                title: "Thêm khách hàng thành công",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              // this.turnOffOverlay("");
+              this.router.navigate(["/khach-hang/ds-khach-hang"]);
+            },
+            error: (error: HttpErrorResponse) => {
+              // this.turnOffOverlay("");
+              
+              if (error.status === 400) {
+                this.errorMessage = error.error.message;
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: this.errorMessage,
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              } else {
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: "Thêm khách hàng thất bại",
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+                console.log(error.message);
+              }
+            },
+          });
+
+        this.send(
+          this.formAddKh.value.hoTen,
+          this.formAddKh.value.matKhau,
+          this.formAddKh.value.email
+        );
+      }
     });
   }
-
+  private send(hoTen: string, matKhau: string, email: string) {
+    emailjs.init("XlFoYJLd1vcoTgaEY");
+    emailjs.send("service_uxvm75s", "template_k18lsvj", {
+      from_name: this.authService.getUserFromStorage().hoTen,
+      to_name: hoTen,
+      message: matKhau,
+      to_email: email,
+      // from_email: this.authService.getUserFromStorage().email,
+    });
+  }
+  private generateRandomPassword(): string {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let password = "";
+    for (let i = 0; i < 5; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters.charAt(randomIndex);
+    }
+    return password;
+  }
   public initFormAddKh(): void {
     this.formAddKh = new FormGroup({
       hoTen: new FormControl("", [Validators.required]),
@@ -187,5 +294,14 @@ export class ThemKhachHangComponent {
         this.xa = data.results;
       });
     }
+  }
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

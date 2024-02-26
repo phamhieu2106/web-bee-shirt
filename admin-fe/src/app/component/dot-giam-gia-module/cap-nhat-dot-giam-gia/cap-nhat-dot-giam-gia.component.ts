@@ -43,7 +43,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     "Thiết Kế",
     "Màu",
     "Trạng Thái",
-    "Hành Động",
   ];
   typeForm: string = "update";
   formHeader: string = "Cập Nhật Đợt Giảm Giá";

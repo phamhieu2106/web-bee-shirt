@@ -9,7 +9,7 @@ export interface DotGiamGiaSanPhamChiTiet {
   tenCoAo?: string;
   tenKichCo?: string;
   tenKieuDang?: string;
-  tenMauSac?: string;
+  maMauSac?: string;
   tenTayAo?: string;
   tenThietKe?: string;
   nguoiTao?: string;

@@ -115,6 +115,7 @@ export class FormComponent implements OnInit {
     const thoiGianKetThuc30PhutTruoc: Date = new Date(
       thoiGianBatDau.getTime() + 30 * 60000
     );
+    const ngayHienTai: Date = new Date();
 
     // Kiểm tra giá trị của các trường và trả về true nếu hợp lệ, false nếu không hợp lệ
     if (this.dotGiamGiaRequest.tenDotGiamGia === null) {
@@ -132,12 +133,20 @@ export class FormComponent implements OnInit {
     } else if (this.dotGiamGiaRequest.listIdSanPhamChiTiet === null) {
       this.toast.error("Sản Phẩm Của Đợt Giảm Giá Đang Bị Trống");
       return false;
+    } else if (this.dotGiamGiaRequest.listIdSanPhamChiTiet.length < 1) {
+      this.toast.error("Sản Phẩm Của Đợt Giảm Giá Đang Bị Trống");
+      return false;
     } else if (
       this.dotGiamGiaRequest.thoiGianBatDau >
       this.dotGiamGiaRequest.thoiGianKetThuc
     ) {
       this.toast.error(
         "Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá"
+      );
+      return false;
+    } else if (thoiGianBatDau <= ngayHienTai) {
+      this.toast.error(
+        "Thời Gian Bắt Đầu Không Thể Là Ngày Hiện Tại Hoặc Trước Ngày Hiện Tại"
       );
       return false;
     } else if (thoiGianKetThuc30PhutTruoc >= thoiGianKetThuc) {

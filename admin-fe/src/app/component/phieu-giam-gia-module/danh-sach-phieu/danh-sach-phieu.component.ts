@@ -6,7 +6,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
-import { ToastrService } from "ngx-toastr";
+
 
 
 @Component({
@@ -23,49 +23,53 @@ export class DanhSachPhieuComponent {
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
-    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
-    this.initAddForm();
     this.initUpdateForm();
     this.startPolling();
   }
 
-  //public function
-  public add(): void { }
 
-  public initAddForm(): void { }
-
-  kieu:string ="";
+  public kieu: number[] = [0, 1];
+  public loai: number[] = [0, 1];
+  public trangThai: string[] = ["Đang diễn ra","Sắp diễn ra","Đã kết thúc"];
+  public thoiGianBatDau: string =""
+  public thoiGianKetThuc: string=""
   keyword: string
-  
+
 
   searchPhieuGiamGia(event: any): void {
     this.keyword = event.target.value;
-    this.goToPage(1, 5,  this.keyword,this.kieu);
-}
-
-filterPhieuGiamGia(event: any): void {
-  this.kieu = event.target.value;
-  if (this.kieu !== "") {
-      this.goToPage(1, 5, this.keyword, this.kieu);
-  } else {
-      this.goToPage(1, 5, '', '');
+    this.filterPrivate(1, 5, this.keyword, this.kieu,this.loai,this.trangThai);
   }
-}
+
+  clearFilters(): void {
+    this.thoiGianBatDau = '';
+    this.thoiGianKetThuc = '';
+    this.kieu = [0, 1];
+    this.loai = [0, 1];
+    this.trangThai = ['Đang diễn ra', 'Sắp diễn ra', 'Đã kết thúc'];
+
+    this.goToPage(); // Gọi lại hàm lọc để cập nhật dữ liệu
+  }
+
+
+
 
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = "",
-    kieu: string = ""
+    keyword: string = ""
+   
   ): void {
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword,kieu).subscribe({
+    console.log(this.thoiGianBatDau)
+    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
+      
         this.pagedResponseBinh = response;
-       
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -73,7 +77,31 @@ filterPhieuGiamGia(event: any): void {
     });
   }
 
-  
+
+  public filterPrivate(
+    page: number = 1,
+    pageSize: number = 5,
+    keyword: string = "",
+    kieuFilter: number[]= this.kieu,
+    loaiFilter:number[] = this.loai,
+    trangThaiFilter:string[] = this.trangThai,
+    thoiGianBatDauFilter: string =this.thoiGianBatDau,
+    thoiGianKetThucFilter: string =this.thoiGianKetThuc
+  ): void {
+    console.log(this.thoiGianBatDau)
+    this.phieuGiamGiaService.filter(page, pageSize, keyword, kieuFilter,loaiFilter,trangThaiFilter,thoiGianBatDauFilter,thoiGianKetThucFilter).subscribe({
+      next: (response: PagedResponse<PhieuGiamGia>) => {
+      
+        this.pagedResponseBinh = response;
+
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+
 
   public changeStatus(id: number): void {
     this.phieuGiamGiaService.changeStatus(id).subscribe({

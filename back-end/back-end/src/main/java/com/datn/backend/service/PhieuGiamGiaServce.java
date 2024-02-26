@@ -22,5 +22,7 @@ public interface PhieuGiamGiaServce {
     List<PhieuGiamGia> getAll();
 
 
-    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,String kieu);
+    PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search);
+
+    PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai,String thoiGianBatDau,String thoiGianKetThuc);
 }

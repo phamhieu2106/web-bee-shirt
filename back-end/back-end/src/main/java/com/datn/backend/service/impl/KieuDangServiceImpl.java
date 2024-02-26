@@ -24,7 +24,7 @@ public class KieuDangServiceImpl implements KieuDangService {
     @Override
     public KieuDang add(KieuDang kieuDang) {
         if (kieuDangRepo.existsByTen(kieuDang.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên chất liệu: " + kieuDang.getTen() + " đã tồn tại.");
+            throw new ResourceExistsException("Tên kiểu dáng '" + kieuDang.getTen() + "' đã tồn tại.");
         }
         kieuDang.setTrangThai(true);
         return kieuDangRepo.save(kieuDang);

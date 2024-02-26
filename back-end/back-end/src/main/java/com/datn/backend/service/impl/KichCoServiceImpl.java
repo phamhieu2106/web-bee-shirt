@@ -24,7 +24,7 @@ public class KichCoServiceImpl implements KichCoService {
     @Override
     public KichCo add(KichCo kichCo) {
         if (kichCoRepo.existsByTen(kichCo.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên kích cỡ: " + kichCo.getTen() + " đã tồn tại.");
+            throw new ResourceExistsException("Tên kích cỡ '" + kichCo.getTen() + "' đã tồn tại.");
         }
         kichCo.setTrangThai(true);
         return kichCoRepo.save(kichCo);

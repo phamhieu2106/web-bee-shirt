@@ -24,7 +24,7 @@ public class KieuThietKeServiceImpl implements KieuThietKeService {
     @Override
     public KieuThietKe add(KieuThietKe thietKe) {
         if (kieuThietKeRepo.existsByTen(thietKe.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên thiết kế: " + thietKe.getTen() + " đã tồn tại.");
+            throw new ResourceExistsException("Tên thiết kế '" + thietKe.getTen() + "' đã tồn tại.");
         }
         thietKe.setTrangThai(true);
         return kieuThietKeRepo.save(thietKe);

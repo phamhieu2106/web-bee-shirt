@@ -24,7 +24,7 @@ public class TayAoServiceImpl implements TayAoService {
     @Override
     public TayAo add(TayAo tayAo) {
         if (tayAoRepo.existsByTen(tayAo.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên tay áo: " + tayAo.getTen() + " đã tồn tại.");
+            throw new ResourceExistsException("Tên tay áo '" + tayAo.getTen() + "' đã tồn tại.");
         }
         tayAo.setTrangThai(true);
         return tayAoRepo.save(tayAo);

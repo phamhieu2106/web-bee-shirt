@@ -37,8 +37,8 @@ public class KieuDangResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<KieuDang> add(@RequestBody KieuDang chatLieu) {
-        return ResponseEntity.ok(kieuDangService.add(chatLieu));
+    public ResponseEntity<KieuDang> add(@RequestBody KieuDang kieuDang) {
+        return ResponseEntity.ok(kieuDangService.add(kieuDang));
     }
 
     @GetMapping("/get-by-id/{id}")

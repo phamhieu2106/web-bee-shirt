@@ -190,6 +190,7 @@ import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KhachHangService } from "src/app/service/khach-hang.service";
@@ -278,7 +279,6 @@ export class DanhSachKhachHangComponent {
       );
     }, 500);
   }
-<<<<<<< HEAD
 
   public onClearSearchInput(): void {
     this.goToPage();
@@ -288,63 +288,61 @@ export class DanhSachKhachHangComponent {
     this.router.navigate(["/khach-hang/detail", id]);
   }
 
-  public openUpdateForm(id: number): void {
-    this.khachHangService.getById(id).subscribe({
-      next: (response: KhachHang) => {
-        this.updateForm = new FormGroup({
-          id: new FormControl(response.id),
-          ten: new FormControl(response.ho_ten, [Validators.required]),
-          trangThai: new FormControl(response.trang_thai),
-        });
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
+  // public openUpdateForm(id: number): void {
+  //   this.khachHangService.getById(id).subscribe({
+  //     next: (response: KhachHang) => {
+  //       this.updateForm = new FormGroup({
+  //         id: new FormControl(response.id),
+  //         ten: new FormControl(response.ho_ten, [Validators.required]),
+  //         trangThai: new FormControl(response.trang_thai),
+  //       });
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.log(error);
+  //     },
+  //   });
+  // }
 
-  public changeStatus(id: number): void {
-    this.khachHangService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
+  // public changeStatus(id: number): void {
+  //   this.khachHangService.changeStatus(id).subscribe({
+  //     next: (response: string) => {
+  //       this.toastr.success(response, "");
+  //       this.goToPage(
+  //         this.pagedResponse.pageNumber,
+  //         this.pagedResponse.pageSize,
+  //         this.pagedResponse.search
+  //       );
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.log(error);
+  //     },
+  //   });
+  // }
 
-  public update(): void {
-    console.log(this.updateForm.value);
-    this.khachHangService.update(this.updateForm.value).subscribe({
-      next: (response: KhachHang) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ho_ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        document.getElementById("closeBtn").click();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
-      },
-    });
-  }
+  // public update(): void {
+  //   console.log(this.updateForm.value);
+  //   this.khachHangService.update(this.updateForm.value).subscribe({
+  //     next: (response: KhachHang) => {
+  //       this.goToPage(
+  //         this.pagedResponse.pageNumber,
+  //         this.pagedResponse.pageSize,
+  //         this.pagedResponse.search
+  //       );
+  //       this.initUpdateForm();
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: `Cập nhật thành công '${response.ho_ten}'!`,
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       });
+  //       document.getElementById("closeBtn").click();
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.log(error.message);
+  //     },
+  //   });
+  // }
 
-=======
->>>>>>> 8a772724956695d2bf12a24b94a887045a229b43
   // private function
   private getKhachHangList(): void {
     this.khachHangService.getAll().subscribe({

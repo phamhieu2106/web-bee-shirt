@@ -37,6 +37,7 @@ export class SuaKhachHangComponent {
   public idTinh: number;
   public idHuyen: number;
   public idDC: number;
+  errorMessage: string = "";
   public idTinhDetail: number;
   public idHuyenDetail: number;
   public idDCDetail: number;
@@ -101,6 +102,74 @@ export class SuaKhachHangComponent {
     }
   }
   public updateKH(): void { 
+    if (
+      new Date(this.formUpdateKH.value.ngaySinh) > new Date() ||
+      new Date(this.formUpdateKH.value.ngaySinh).toDateString() ===
+        new Date().toDateString()
+    ) {
+      this.toas.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+      return;
+    }
+
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý thêm không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) => {
+ 
+     
+
+        this.khachHangService
+          .add(this.formUpdateKH.value, this.selectFile)
+          .subscribe({
+            next: () => {
+              // this.goToPage(1, 5, "");
+              this.initFormUpdateKh();
+              Swal.fire({
+                toast: true,
+                icon: "success",
+                position: "top-end",
+                title: "Sửa khách hàng thành công",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              // this.turnOffOverlay("");
+            },
+            error: (error: HttpErrorResponse) => {
+              // this.turnOffOverlay("");
+              
+              if (error.status === 400) {
+                this.errorMessage = error.error.message;
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: this.errorMessage,
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              } else {
+                Swal.fire({
+                  toast: true,
+                  icon: "error",
+                  position: "top-end",
+                  title: "Thêm khách hàng thất bại",
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+                console.log(error.message);
+              }
+            },
+          });       
+    });
     this.khachHangService.update(this.id, this.formUpdateKH.value,this.selectFile).subscribe({
       
       next: (kh: KhachHang) => {

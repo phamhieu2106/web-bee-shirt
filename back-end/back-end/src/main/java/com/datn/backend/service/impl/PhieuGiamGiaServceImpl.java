@@ -94,9 +94,9 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
     @Override
-    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search) {
+    public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search);
+        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search,kieu,loai,trangThai);
         PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
@@ -124,5 +124,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         return paged;
     }
+
+
 
 }

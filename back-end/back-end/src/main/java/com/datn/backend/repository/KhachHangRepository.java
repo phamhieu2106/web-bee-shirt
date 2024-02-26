@@ -12,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
+    boolean existsByEmail(String email);
 
+    boolean existsBySdt(String sdt);
     @Query(value =
             """         
             select kh.id, kh.ho_ten as hoTen, kh.sdt,kh.ngay_sinh ngaySinh,kh.gioi_tinh as gioiTinh,
@@ -25,6 +27,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
             join dia_chi dc       
             on kh.id=dc.khach_hang_id
             where  kh.ho_ten LIKE %:search%
+            or kh.sdt LIKE %:search%
+            or kh.email LIKE %:search%
             and dc.mac_dinh= 1
             ORDER BY kh.created_at DESC
                     """

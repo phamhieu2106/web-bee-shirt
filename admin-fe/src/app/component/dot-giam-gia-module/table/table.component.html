@@ -54,12 +54,6 @@
                         else noDataTemplate
                       "
                     >
-                      <ng-container
-                        *ngIf="
-                          template === 'SanPhamChiTietTable';
-                          then sanPhamChiTiet
-                        "
-                      ></ng-container>
                     </ng-container>
                   </ng-container>
                 </tbody>
@@ -181,42 +175,6 @@
         }}"
       >
         {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
-      </button>
-    </td>
-  </tr>
-</ng-template>
-
-<!-- Body SanPhamChiTiet Table -->
-<ng-template #sanPhamChiTiet>
-  <tr role="row" class="odd p-3" *ngFor="let object of listSanPhamChiTiet">
-    <td class="sorting_1">
-      <input
-        [checked]="
-          listIdSanPhamChiTiet && listIdSanPhamChiTiet.includes(+object.id)
-        "
-        [disabled]="object.trangThai === false ? true : false"
-        type="checkbox"
-        (change)="addIdSanPhamChiTiet(object.id)"
-      />
-    </td>
-    <td>NULL</td>
-    <td>{{ object.maSanPham }}</td>
-    <td>{{ object.tenSanPham }}</td>
-    <td>{{ object.tenMauSac }}</td>
-    <td>
-      <button
-        class="{{
-          object.trangThai === true
-            ? 'btn btn-success btn-rounded'
-            : 'btn btn-danger btn-rounded'
-        }}"
-      >
-        {{ object.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-outline-light btn-rounded">
-        <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
       </button>
     </td>
   </tr>

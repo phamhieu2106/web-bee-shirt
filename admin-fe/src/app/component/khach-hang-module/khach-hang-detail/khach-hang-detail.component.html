@@ -154,9 +154,16 @@
         <form>
           <div class="row">
             <img
-              src="assets/img/default-image.jpg"
-              alt="" style="width: 150px; height: 100px;"
-            />
+                    *ngIf="khChiTiet?.anhUrl; else defaultImage"
+                    [src]="khChiTiet?.anhUrl"
+                    alt="" class="imgCT"
+                  />
+                  <ng-template #defaultImage>
+                    <img
+                      src="assets/img/default-image.jpg"
+                      alt="Default Image"
+                    />
+                  </ng-template>
           </div>
           <div class="row">
             <div class="col-md-6">

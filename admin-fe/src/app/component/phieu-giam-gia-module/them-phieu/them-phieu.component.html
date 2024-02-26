@@ -11,6 +11,7 @@
           <div class="col-md-4">
             <form [formGroup]="addForm">
               <div class="mb-3">
+                <label for="" class="labelChinh">Mã Phiếu:</label>
                 <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="
                     addForm.get('maPhieuGiamGia').invalid &&
                     addForm.get('maPhieuGiamGia').touched
@@ -23,7 +24,8 @@
               </div>
 
               <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="
+                <label for="" class="labelChinh">Tên Phiếu:</label>
+                <input type="text" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="
                     addForm.get('tenPhieuGiamGia').invalid &&
                     addForm.get('tenPhieuGiamGia').touched
                       ? 'is-invalid'
@@ -35,6 +37,7 @@
               </div>
 
               <div class="mb-3">
+                <label for="" class="labelChinh">Kiểu:</label> <br>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
                     checked="true" (change)="onKieuChange()" />
@@ -50,7 +53,9 @@
               </div>
 
               <div class="mb-3">
+                <label for="" class="labelChinh">Loại:</label> <br>
                 <div class="form-check form-check-inline">
+                  
                   <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
                     formControlName="loai" checked="true" (change)="onLoaiChange()" />
                   <label class="form-check-label" for="congKhai">
@@ -66,7 +71,9 @@
 
               <div class="mb-3 row">
                 <div class="col-md-6">
+                  <label for="" class="labelChinh">Giá Trị:</label>
                   <div class="input-group mb-3">
+                   
                     <input type="number" class="form-control" class="form-control" placeholder="Giá trị" [ngClass]="
                         addForm.get('giaTri').invalid &&
                         addForm.get('giaTri').touched
@@ -87,6 +94,7 @@
 
                 </div>
                 <div class="col-md-6">
+                  <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
                     <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="
                         addForm.get('giaTriMax').invalid &&
@@ -110,6 +118,7 @@
 
               <div class="mb-3 row">
                 <div class="col-md-6">
+                  <label for="" class="labelChinh">Số Lượng:</label>
                   <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="
                       addForm.get('soLuong').invalid &&
                       addForm.get('soLuong').touched
@@ -121,6 +130,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
+                  <label for="" class="labelChinh">Điều Kiện:</label>
                   <div class="input-group mb-3">
                     <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="
                         addForm.get('dieuKienGiam').invalid &&

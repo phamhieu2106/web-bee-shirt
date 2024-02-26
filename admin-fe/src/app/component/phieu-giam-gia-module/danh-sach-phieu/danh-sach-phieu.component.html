@@ -23,14 +23,18 @@
         </div>
 
         <div class="row pt-3 pb-3">
+          
           <div class="col-md-2">
+            <label for="">Từ Ngày</label>
             <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày" [(ngModel)]="thoiGianBatDau"  (change)="filterPrivate()">
           </div>
           <div class="col-md-2">
+            <label for="">Tới Ngày</label>
             <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày" [(ngModel)]="thoiGianKetThuc"  (change)="filterPrivate()">
           </div>
         
           <div class="col-md-2">
+            <label for="">Loại</label>
             <div>
               <select class="form-control"  [(ngModel)]="loai" (change)="filterPrivate()">
                 <option [ngValue]="[0,1]">Tất Cả</option>
@@ -41,6 +45,7 @@
           </div>
         
           <div class="col-md-2">
+            <label for="">Kiểu</label>
             <div>
               <select class="form-control"  [(ngModel)]="kieu" (change)="filterPrivate()">
                 <option [ngValue]="[0,1]">Tất Cả</option>
@@ -51,6 +56,7 @@
           </div>
         
           <div class="col-md-2">
+            <label for="">Trạng Thái</label>
             <div>
               <select class="form-control" [(ngModel)]="trangThai" (change)="filterPrivate()">
                 <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
@@ -63,7 +69,10 @@
         
           <!-- Thêm nút xóa bộ lọc -->
           <div class="col-md-2">
-            <button class="btn btn-primary" (click)="clearFilters()">Xóa bộ lọc</button>
+            <label for="">Hành Động</label>
+            <div>
+              <button class="btn btn-primary" (click)="clearFilters()">Xóa bộ lọc</button>
+            </div>
           </div>
         
         </div>

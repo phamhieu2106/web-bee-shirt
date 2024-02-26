@@ -93,6 +93,26 @@ export class SuaPhieuComponent implements OnInit {
       giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
     });
 
+    const kieuValue = this.updateForm.get("kieu").value;
+    const giaTriMaxControl = this.updateForm.get("giaTriMax");
+    if (kieuValue === "0") {
+      giaTriMaxControl.enable();
+    } else {
+      giaTriMaxControl.disable();
+      giaTriMaxControl.setValue("0");
+    }
+
+    this.updateForm.get("kieu").valueChanges.subscribe((value:any) => {
+      const giaTriMaxControl = this.updateForm.get("giaTriMax");
+      if (value === "0") {
+        giaTriMaxControl.enable();
+      } else {
+        giaTriMaxControl.disable();
+        giaTriMaxControl.setValue("0"); // Set giá trị của giaTriMax thành 0
+      }
+      giaTriMaxControl.updateValueAndValidity();
+    });
+
 
   }
 

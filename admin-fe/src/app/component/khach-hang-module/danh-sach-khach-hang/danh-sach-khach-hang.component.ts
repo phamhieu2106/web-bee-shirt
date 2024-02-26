@@ -30,8 +30,8 @@ export class DanhSachKhachHangComponent {
   public khachHangDetail: KhachHangResponse;
   public khDetail: KhachHangResponse;
   public formUpdateKH: FormGroup;
- private timeout: any;
- public trangThaiFilter: number[] = [0, 1];
+  private timeout: any;
+  public trangThaiFilter: number[] = [0, 1];
   public gioiTinhFilter: number[] = [0, 1];
   constructor(
     private khachHangService: KhachHangService,
@@ -89,7 +89,7 @@ export class DanhSachKhachHangComponent {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
- 
+
     this.timeout = setTimeout(() => {
       this.goToPage(
         this.pagedResponse.pageNumber,
@@ -98,13 +98,12 @@ export class DanhSachKhachHangComponent {
       );
     }, 500);
   }
-<<<<<<< HEAD
 
   public onClearSearchInput(): void {
     this.goToPage();
   }
 
-  public khDetail(id: number) {
+  public khDetail1(id: number) {
     this.router.navigate(["/khach-hang/detail", id]);
   }
 
@@ -163,8 +162,6 @@ export class DanhSachKhachHangComponent {
     });
   }
 
-=======
->>>>>>> f9b214e9f47619ee96ae88e3a00dd7b989417ace
   // private function
   private getKhachHangList(): void {
     this.khachHangService.getAll().subscribe({

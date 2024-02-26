@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
 import com.datn.backend.model.san_pham.HinhAnh;
@@ -26,6 +27,7 @@ import com.datn.backend.service.SanPhamChiTietService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +55,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     private final MauSacRepository mauSacRepo;
     private final HinhAnhRepository hinhAnhRepo;
     private final CloudinaryService cloudinaryService;
+    private final ModelMapper modelMapper;
 
     /**
      * Thêm List<SPCT> cùng lúc nhưng chúng cùng một màu sắc, kèm thêm một loạt ảnh kèm theo
@@ -133,5 +136,25 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+    @Override
+    public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
+        PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
+        Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
+        List<SpctResponse> data = spcts.getContent().stream().map(spct -> modelMapper.map(spct, SpctResponse.class)).toList();
+
+        return PagedResponse
+                .<SpctResponse>builder()
+                .pageNumber(spcts.getNumber())
+                .pageSize(spcts.getSize())
+                .totalPages(spcts.getTotalPages())
+                .totalElements(spcts.getTotalElements())
+                .pageNumberArr(UtilityFunction.getPageNumberArr(spcts.getTotalPages()))
+                .search(search)
+                .data(
+                        data
+                )
+                .build();
     }
 }

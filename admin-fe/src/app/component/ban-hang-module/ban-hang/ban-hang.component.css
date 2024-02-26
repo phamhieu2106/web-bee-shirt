@@ -1,67 +1,53 @@
 .dropdown-menu {
-    width: 100%;
+    /* width: 120%; */
     /* Đặt độ rộng là 100% */
-    max-width: none;
+    /* max-width: none; */
     /* Không giới hạn độ rộng tối đa */
-    background-color: rgb(246, 246, 246);
+    /* background-color: rgb(246, 246, 246); */
+    background-color: rgba(255, 255, 255);
+}
+
+.product-suggestions {
+    width: 120%;
+    max-height: 300px;
+    overflow-y: auto
+}
+
+.customer-suggerstions {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto
 }
 
 .suggestion-item {
     cursor: pointer;
 }
 
-.qty .count {
-    color: #000;
-    display: inline-block;
-    vertical-align: top;
-    /* font-size: 25px; */
-    font-weight: 700;
-    /* line-height: 30px; */
-    padding: 0 2px;
-    min-width: 30px;
-    text-align: center;
+.suggestion-item:hover {
+    background-color: rgb(227, 226, 226) !important;
 }
 
-.qty .plus {
+.order-number {
     cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 20px;
-    height: 20px;
-    /* font: 30px/1 Arial, sans-serif; */
-    text-align: center;
-    border-radius: 50%;
-}
-
-.qty .minus {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 20px;
-    height: 20px;
-    /* font: 30px/1 Arial, sans-serif; */
-    text-align: center;
-    border-radius: 50%;
-    background-clip: padding-box;
-}
-
-
-.minus:hover {
-    background-color: #717fe0 !important;
-}
-
-.plus:hover {
-    background-color: #717fe0 !important;
 }
 
 .count {
     border: 0;
-    width: 2%;
+    max-width: 30%;
 }
 
 
 input:disabled {
     background-color: white;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

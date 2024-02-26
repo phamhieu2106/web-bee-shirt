@@ -1,6 +1,8 @@
 <div class="row gutters">
   <div class="card">
+    <!-- Taskbar -->
     <div class="row bg-primary">
+      <!-- Search Product taskbar -->
       <div class="p-1 col-6">
         <div class="dropdown">
           <input
@@ -11,62 +13,62 @@
             aria-haspopup="true"
             aria-expanded="false"
             placeholder="Thêm sản phẩm"
+            (input)="getAllSpct()"
+            [(ngModel)]="search"
           />
-          <div class="dropdown-menu" aria-labelledby="dropdownProduct">
-            <div class="suggestion-item row">
-              <img class="col-1" src="/src/assets/img/default-image.jpg" />
-              <div class="col-9">
-                <div class="fw-bold">Áo sơ mi Gucci Hames - Màu - Size</div>
-                <div class="text-mute">SP01</div>
+          <div
+            class="dropdown-menu product-suggestions"
+            aria-labelledby="dropdownProduct"
+          >
+            <div class="suggestion-item row d-flex" *ngFor="let spct of spcts">
+              <img
+                class="col-2"
+                [src]="spct.hinhAnhs[0].imageUrl"
+                width="40px"
+                height="40px"
+              />
+              <div class="col-7">
+                <div class="fw-bold">
+                  {{
+                    spct.sanPham.ten +
+                      " - " +
+                      spct.mauSac.ten +
+                      " - " +
+                      spct.kichCo.ten
+                  }}
+                </div>
+                <div class="text-mute">{{ spct.sanPham.ma }}</div>
               </div>
-              <div class="col-2">
-                <div class="">100,000</div>
-                <div class="text-mute">Còn lại: 1</div>
+              <div class="col-3 mr-auto">
+                <div class="">{{ spct.giaBan | currency : "đ " }}</div>
+                <div class="text-mute">Còn lại: {{ spct.soLuongTon }}</div>
               </div>
             </div>
-            <hr />
           </div>
         </div>
       </div>
+      <!-- End search product taskbar -->
+      <!-- Order taskbar -->
       <div class="col-6 row">
-        <div class="bg-light col-2 order-number h-100 mr-1">
-          <span class="fs-5">Đơn 1</span>
-          <button class="btn btn-light p-1">
+        <div
+          class="bg-light col-2 order-number h-100 mr-1"
+          (click)="changeHoaDon(i)"
+          *ngFor="let order of orders; index as i"
+        >
+          <span class="fs-5">{{ order.orderNameTemp }}</span>
+          <button class="btn btn-light p-1" (click)="deleteOrder(i)">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
-        <div class="bg-light col-2 order-number h-100 mr-1">
-          <span class="fs-5">Đơn 2</span>
-          <button class="btn btn-light p-1">
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
-        </div>
-        <div class="bg-light col-2 order-number h-100 mr-1">
-          <span class="fs-5">Đơn 3</span>
-          <button class="btn btn-light p-1">
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
-        </div>
-        <div class="bg-light col-2 order-number h-100 mr-1">
-          <span class="fs-5">Đơn 4</span>
-          <button class="btn btn-light p-1">
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
-        </div>
-        <div class="bg-light col-2 order-number h-100 mr-1">
-          <span class="fs-5">Đơn 5</span>
-          <button class="btn btn-light p-1">
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
-        </div>
-
         <div class="col-1 h-100 p-0">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" (click)="newHoaDon()">
             <i class="fa-solid fa-plus text-light"></i>
           </button>
         </div>
       </div>
+      <!-- End order taskbar -->
     </div>
+    <!-- End taskbar -->
   </div>
 </div>
 
@@ -97,15 +99,14 @@
             <div class="text-muted">Size: XL</div>
           </td>
           <td>
-            <!-- <input
-              class="form-control border-0 border-bottom"
-              type="number"
-              min="1"
-            /> -->
             <div class="qty">
-              <span class="minus bg-dark">-</span>
-              <input type="number" class="count" name="qty" value="1" />
-              <span class="plus bg-dark">+</span>
+              <button class="rounded-5 btn-outline-dark">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input type="number" class="count" value="1" />
+              <button class="rounded-5 btn-outline-dark">
+                <i class="fa-solid fa-plus"></i>
+              </button>
             </div>
           </td>
           <td>100,000</td>
@@ -119,7 +120,7 @@
   <div class="card col-3">
     <!-- Sidebar -->
     <div class="">
-      <div class="user-choose">
+      <div class="user-choose" *ngIf="order.khachHang != null">
         <div
           class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
         >
@@ -136,13 +137,13 @@
               0377777777
             </p>
           </div>
-          <button type="button" class="btn">
+          <button type="button" class="btn" (click)="removeKhachHangInOrder()">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
       </div>
 
-      <div class="dropdown">
+      <div class="dropdown" *ngIf="order.khachHang == null">
         <input
           type="text"
           class="form-control dropdown-toggle"
@@ -152,15 +153,17 @@
           aria-expanded="false"
           placeholder="Thêm khách hàng vào đơn"
         />
-        <div class="dropdown-menu" aria-labelledby="dropdownKhachHang">
-          <div class="suggestion-item text-center">
+        <div
+          class="dropdown-menu customer-suggerstions"
+          aria-labelledby="dropdownKhachHang"
+        >
+          <div class="suggestion-item text-center p-2">
             <i class="fa-solid fa-plus"></i>
             Thêm mới khách hàng
           </div>
-          <hr />
-          <div class="suggestion-item">Dương Việt Hùng - 0377777777</div>
-          <hr />
-          <div class="suggestion-item">Dương Việt Hùng - 0377777777</div>
+          <div class="suggestion-item p-2" (click)="chooseKhachHang(null)">
+            Dương Việt Hùng - 0377777777
+          </div>
         </div>
       </div>
     </div>
@@ -170,7 +173,11 @@
       <div class="d-flex justify-content-between m-1">
         <span class="ml-auto fw-bold"
           >Giao hàng:
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [checked]="order.loaiHoaDon == 'GIAO_HANG'"
+            (change)="changeLoaiHoaDon($event)"
+          />
         </span>
       </div>
       <div class="d-flex justify-content-between m-1">
@@ -216,9 +223,9 @@
           >Ghi chú:<textarea rows="2" cols="45"></textarea>
         </span>
       </div>
-      <div style="height: 100px"></div>
+      <div style="height: 100px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
       <!-- Giao hàng  -->
-      <div>
+      <div *ngIf="order.loaiHoaDon == 'GIAO_HANG'">
         <div class="d-flex justify-content-between m-1">
           <span class="mr-auto fw-bold"
             >Tên người nhận: <input type="text"

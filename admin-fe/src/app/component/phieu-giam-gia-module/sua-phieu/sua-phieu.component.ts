@@ -231,13 +231,10 @@ export class SuaPhieuComponent implements OnInit {
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
      
     }
-
-   
-   
-
     this.updateForm.get('giaTri').updateValueAndValidity();
   }
 
+  
   isTableDisabled: boolean = false;
 
   onLoaiChange() {

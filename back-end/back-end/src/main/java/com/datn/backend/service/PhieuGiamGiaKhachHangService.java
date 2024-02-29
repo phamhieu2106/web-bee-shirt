@@ -2,7 +2,10 @@ package com.datn.backend.service;
 
 
 import com.datn.backend.dto.request.PhieuKhachHangRequest;
+import com.datn.backend.dto.response.KhachHangResponse;
+import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 
 import java.util.List;
@@ -13,5 +16,6 @@ public interface PhieuGiamGiaKhachHangService {
     void addPhieu(PhieuKhachHangRequest request);
 
 
+    PagedResponse<KhachHangResponse> getPagination(int pageNumber, int pageSize, String id );
 
 }

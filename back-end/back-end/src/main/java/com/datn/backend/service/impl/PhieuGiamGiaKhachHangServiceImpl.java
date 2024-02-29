@@ -45,11 +45,5 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
         }
     }
 
-    @Override
-    public List<PhieuGiamGiaKhachHang> getKhachHangTang(Integer id,Integer check) {
-        if(check == 1){
-            return repository.getAllPhieu(id);
-        }
-        return repository.getAllPhieuKhongCo(id);
-    }
+
 }

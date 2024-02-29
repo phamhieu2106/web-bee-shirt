@@ -9,6 +9,7 @@ import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { ActivatedRoute } from "@angular/router";
 import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
 import { ToastrService } from "ngx-toastr";
+import { KhachHang } from "src/app/model/class/KhachHang.class";
 
 @Component({
   selector: "app-sua-phieu",
@@ -45,7 +46,7 @@ export class SuaPhieuComponent implements OnInit {
         this.initUpdateForm(this.phieu);
 
         this.phieuGiamGia.getKhachHangTang(this.idPhieu).subscribe({
-          next: (response: PhieuGiamGiaKhachHang[]) => {
+          next: (response: KhachHang[]) => {
 
             this.khachHangList = response
           },
@@ -54,16 +55,16 @@ export class SuaPhieuComponent implements OnInit {
           }
         });
 
-        this.phieuGiamGia.getKhachHangTangKhongCo(this.idPhieu).subscribe({
-          next: (response: PhieuGiamGiaKhachHang[]) => {
+        // this.phieuGiamGia.getKhachHangTangKhongCo(this.idPhieu).subscribe({
+        //   next: (response: PhieuGiamGiaKhachHang[]) => {
 
-            this.khachHangListKhongCo = response
-            console.log(this.khachHangListKhongCo)
-          },
-          error: (error) => {
-            console.error('Error fetching data:', error);
-          }
-        });
+        //     this.khachHangListKhongCo = response
+        //     console.log(this.khachHangListKhongCo)
+        //   },
+        //   error: (error) => {
+        //     console.error('Error fetching data:', error);
+        //   }
+        // });
       },
       error: (error) => {
         console.error("Khong lấy được phiếu:", error);

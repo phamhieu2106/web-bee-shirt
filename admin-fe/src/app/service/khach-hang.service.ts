@@ -63,4 +63,17 @@ export class KhachHangService {
       `${this.apiUrl}/filter${param}`
     );
   }
+
+  public mapToKhachHang(khResp: KhachHangResponse): KhachHang {
+    let khachHang = new KhachHang();
+
+    khachHang.id = khResp.id;
+    khachHang.hoTen = khResp.hoTen;
+    khachHang.ngaySinh = khResp.ngaySinh;
+    khachHang.sdt = khResp.sdt;
+    khachHang.gioiTinh = khResp.gioiTinh;
+    khachHang.email = khResp.email;
+    khachHang.anh = khResp.anhUrl;
+    return khachHang;
+  }
 }

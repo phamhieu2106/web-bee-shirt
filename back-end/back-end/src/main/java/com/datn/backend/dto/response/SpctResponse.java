@@ -46,5 +46,7 @@ public class SpctResponse {
 
     private ChatLieuResponse chatLieu;
 
+    private List<DotGiamGiaSanPhamResponse> dotGiamGiaSanPhams;
+
     private List<HinhAnh> hinhAnhs = new ArrayList<>();
 }

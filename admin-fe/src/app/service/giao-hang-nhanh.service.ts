@@ -78,18 +78,39 @@ export class GiaoHangNhanhService {
     return this.http.post(url, rawData, { headers });
   }
   // get phí vận chuyển
-  getFee(diaChiVaPhivanChuyen: DiaChiVaPhiVanChuyen): Observable<any> {
+  getFee(
+    diaChiVaPhivanChuyen: DiaChiVaPhiVanChuyen,
+    service_id: number
+  ): Observable<any> {
+    let shopId = 190872;
     let url =
       "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
     const headers = new HttpHeaders()
       .set("Token", this.client_token)
-      .set("ShopId", "190872");
+      .set("ShopId", shopId + "");
+
     let rawData = {
       to_district_id: Number(diaChiVaPhivanChuyen.huyenId),
       to_ward_code: diaChiVaPhivanChuyen.xaCode,
       weight: 400,
-      service_id: 53320,
-      service_type_id: 2,
+      service_id,
+    };
+    return this.http.post(url, rawData, { headers });
+  }
+
+  // get service
+  getService(
+    shop_id: number,
+    from_district: number,
+    to_district: number
+  ): Observable<any> {
+    let url =
+      "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services";
+    const headers = new HttpHeaders().set("Token", this.client_token);
+    let rawData = {
+      shop_id: Number(shop_id),
+      from_district: Number(from_district),
+      to_district: Number(to_district),
     };
     return this.http.post(url, rawData, { headers });
   }

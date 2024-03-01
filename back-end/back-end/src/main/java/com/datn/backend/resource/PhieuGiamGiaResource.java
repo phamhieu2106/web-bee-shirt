@@ -98,17 +98,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
     }
 
-    @GetMapping("/get-phieu-khach-hang/{id}")
-    public ResponseEntity<?> getKhachHangTang(@PathVariable("id") Integer id) {
 
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,1));
-    }
-
-    @GetMapping("/get-phieu-Khong-co/{id}")
-    public ResponseEntity<?> getKhachHangTangKhongCo(@PathVariable("id") Integer id) {
-
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,0));
-    }
 
 
 }

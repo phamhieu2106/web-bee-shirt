@@ -3,6 +3,7 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
+import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.repository.PhieuGiamGiaRepository;
 import com.datn.backend.service.PhieuGiamGiaServce;
@@ -37,6 +38,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGia add(PhieuGiamGiaRequest phieuGiamGia) {
+
+        if (repository.existsByMaPhieuGiamGia(phieuGiamGia.getMaPhieuGiamGia().trim().toLowerCase())) {
+            throw new ResourceExistsException("Mã Phiếu: " + phieuGiamGia.getMaPhieuGiamGia() + " đã tồn tại.");
+        }
+
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {

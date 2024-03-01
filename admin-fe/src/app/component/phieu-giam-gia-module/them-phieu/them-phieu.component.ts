@@ -28,8 +28,12 @@ export class ThemPhieuComponent implements OnInit {
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
 
+  errorMessage: string = "";
+
   selectedIds: number[] = [];
   phieuGiamGiaId: number;
+
+  public giaTriToiDa:number
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
@@ -50,11 +54,7 @@ export class ThemPhieuComponent implements OnInit {
 
         this.phieuGiamGia
           .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
-          .subscribe({
-            next: (phieuGiamGia: PhieuGiamGia) => {
-              console.log(`Tặng thành công phiếu giảm giácho khách hàng!`);
-            },
-          });
+          .subscribe();
 
         Swal.fire({
           icon: "success",
@@ -64,7 +64,28 @@ export class ThemPhieuComponent implements OnInit {
         });
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+        if (error.status === 400) {
+          // Trích xuất thông điệp lỗi từ response
+          this.errorMessage = error.error.message;
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: this.errorMessage,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        } else {
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: "Thêm phiếu giảm giá thất bại",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          console.log(error.message);
+        }
       },
     });
   }
@@ -73,7 +94,7 @@ export class ThemPhieuComponent implements OnInit {
     this.addForm = this.formBuilder.group({
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
-      kieu: new FormControl("1", [Validators.required]),
+      kieu: new FormControl("0", [Validators.required]),
       loai: new FormControl("1", [Validators.required]),
       soLuong: new FormControl(this.soLuongCheck, [Validators.required]),
       thoiGianBatDau: new FormControl("", [Validators.required,this.validateNgayBatDau()]),
@@ -83,30 +104,8 @@ export class ThemPhieuComponent implements OnInit {
       ]),
       dieuKienGiam: new FormControl("", [Validators.required]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl("", [Validators.required]),
+      giaTriMax: new FormControl(this.giaTriToiDa, [Validators.required]),
     });
-
-    const kieuValue = this.addForm.get("kieu").value;
-    const giaTriMaxControl = this.addForm.get("giaTriMax");
-    if (kieuValue === "0") {
-      giaTriMaxControl.enable();
-    } else {
-      giaTriMaxControl.disable();
-      giaTriMaxControl.setValue("0");
-    }
-
-    this.addForm.get("kieu").valueChanges.subscribe((value) => {
-      const giaTriMaxControl = this.addForm.get("giaTriMax");
-      if (value === "0") {
-        giaTriMaxControl.enable();
-      } else {
-        giaTriMaxControl.disable();
-        giaTriMaxControl.setValue("0"); // Set giá trị của giaTriMax thành 0
-      }
-      giaTriMaxControl.updateValueAndValidity();
-    });
-
-   
 
   }
 
@@ -216,28 +215,33 @@ export class ThemPhieuComponent implements OnInit {
     this.addForm.get("thoiGianKetThuc").updateValueAndValidity();
   }
 
-
+public checkGiaTri:boolean =false
   onKieuChange() {
     const kieuValue = this.addForm.get("kieu").value;
     const giaTriMaxControl = this.addForm.get("giaTriMax");
     if (kieuValue == 0) {
-      giaTriMaxControl.enable();
+      this.checkGiaTri = false
+     
     } else {
-      giaTriMaxControl.disable();
+     this.checkGiaTri = true
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
     }
     this.addForm.get("giaTri").updateValueAndValidity();
   }
 
   isTableDisabled: boolean = false;
+  public checkSoLuong:boolean =false
+
 
   onLoaiChange() {
     const loaiValue = this.addForm.get("loai").value;
-    const soluongControl = this.addForm.get("soLuong");
+   
     if (loaiValue === "1") {
-      soluongControl.enable();
+      this.checkSoLuong = true
+
     } else {
-      soluongControl.disable();
+      this.checkSoLuong = true
+     
     }
     this.isTableDisabled = !this.isTableDisabled;
   }
@@ -301,15 +305,33 @@ export class ThemPhieuComponent implements OnInit {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  confirmCreation() {
-    console.log("Giá trị của addForm:", this.addForm.value);
-    const isConfirmed = window.confirm(
-      "Bạn có chắc chăn thêm phiếu giảm giá này không"
-    );
 
-    if (isConfirmed) {
-      // Perform the actual creation logic here
-      this.add();
+  private timeout: any;
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
     }
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
+  }
+
+  confirmCreation() {
+  
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý thêm không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) =>{
+      this.add();
+    });
   }
 }

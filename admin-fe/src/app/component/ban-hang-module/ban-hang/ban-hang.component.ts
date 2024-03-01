@@ -1,10 +1,15 @@
+import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
+import { KhachHangService } from "src/app/service/khach-hang.service";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
+import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 
 @Component({
   selector: "app-ban-hang",
@@ -13,21 +18,27 @@ import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 })
 export class BanHangComponent implements OnInit {
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+  phiVanChuyenTemp: number;
   orders = new Array<HoaDon>();
   khachHangs: KhachHang[];
   order: HoaDon;
   spcts: SanPhamChiTiet[];
-  search = "";
+  searchProduct = "";
+  searchKhachHang = "";
 
   constructor(
     private toast: ToastrService,
-    private spctService: SanPhamChiTietService
+    private spctService: SanPhamChiTietService,
+    private khachHangService: KhachHangService,
+    private banHangService: BanHangService
   ) {}
+
   ngOnInit(): void {
     if (this.orders.length == 0) {
       this.newHoaDon();
     }
     this.getAllSpct();
+    this.getAllKhachHang();
   }
 
   changeHoaDon(index: number) {
@@ -47,6 +58,8 @@ export class BanHangComponent implements OnInit {
     hoaDon.tienGiam = 0;
     hoaDon.phiVanChuyen = 0;
     hoaDon.loaiHoaDon = "TAI_QUAY"; // TAI_QUAY or GIAO_HANG
+    hoaDon.hoaDonChiTiets = [];
+    hoaDon.phiVanChuyen = 0;
 
     this.orders.push(hoaDon);
     this.order = hoaDon;
@@ -76,13 +89,15 @@ export class BanHangComponent implements OnInit {
   changeLoaiHoaDon(event: any) {
     if (event.target.checked) {
       this.order.loaiHoaDon = "GIAO_HANG";
+      // this.order.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
     } else {
       this.order.loaiHoaDon = "TAI_QUAY";
+      this.order.phiVanChuyen = 0;
     }
   }
 
   chooseKhachHang(khachHang: KhachHang) {
-    this.order.khachHang = new KhachHang();
+    this.order.khachHang = khachHang;
   }
 
   removeKhachHangInOrder() {
@@ -90,15 +105,85 @@ export class BanHangComponent implements OnInit {
   }
 
   getAllSpct() {
-    console.log(this.search);
-
-    this.spctService.getAll(1, 10, this.search).subscribe({
+    this.spctService.getAll(1, 15, this.searchProduct).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
+        console.log(resp);
       },
       error: (err) => {
         console.log(err);
       },
     });
+  }
+  getAllKhachHang() {
+    this.khachHangService.getAll(1, 10, this.searchKhachHang).subscribe({
+      next: (resp: PagedResponse<KhachHangResponse>) => {
+        this.khachHangs = resp.data.map((khResponse) =>
+          this.khachHangService.mapToKhachHang(khResponse)
+        );
+      },
+      error: (err) => console.log(err),
+    });
+  }
+
+  chooseProduct(spct: SanPhamChiTiet) {
+    let newHdct = null;
+    // check spct đã tồn tại trong DS HDCT của đơn hàng => +1 số lượng => ngắt vòng lặp
+    for (let i = 0; i < this.order.hoaDonChiTiets.length; i++) {
+      if (spct.id === this.order.hoaDonChiTiets[i].sanPhamChiTiet.id) {
+        newHdct = this.order.hoaDonChiTiets[i];
+        break;
+      }
+    }
+
+    // xử lý
+    if (newHdct == null) {
+      //Không tồn tại => tạo mới hdct
+      newHdct = new HoaDonChiTiet();
+      newHdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
+      newHdct.soLuong = 1;
+      newHdct.giaBan = spct.giaBan;
+
+      // add hoaDon current
+      this.order.hoaDonChiTiets.push(newHdct);
+    } else {
+      // đã tồn tại => +1 số lượng trong hdct
+      newHdct.soLuong = newHdct.soLuong + 1;
+    }
+  }
+
+  deleteHDCT(hdctIndex: number) {
+    this.order.hoaDonChiTiets.splice(hdctIndex, 1);
+  }
+  minusQuantity(hdct: HoaDonChiTiet) {
+    if (hdct.soLuong > 1) {
+      hdct.soLuong = hdct.soLuong - 1;
+    }
+  }
+  plusQuantity(hdct: HoaDonChiTiet) {
+    hdct.soLuong = hdct.soLuong + 1;
+  }
+
+  getTongTien(): number {
+    return this.banHangService.getTongTien(this.order.hoaDonChiTiets);
+  }
+
+  getSoLuongSanPham(): number {
+    return this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets);
+  }
+  getMustPay(): number {
+    return this.banHangService.getMustPay(this.order);
+  }
+
+  thanhToan() {
+    console.log(this.order);
+  }
+
+  phiVanChuyenChange($event: any) {
+    this.order.phiVanChuyen = $event.target.value;
+  }
+
+  updatePhiVanChuyen($event: number) {
+    this.order.phiVanChuyen = $event;
   }
 }

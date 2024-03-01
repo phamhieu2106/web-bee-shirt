@@ -7,5 +7,5 @@ export class DiaChiVaPhiVanChuyen {
   xaCode: string;
   cuThe: string;
   duKien: Date;
-  phiVanChuyen: number;
+  phiVanChuyen: number = 0;
 }

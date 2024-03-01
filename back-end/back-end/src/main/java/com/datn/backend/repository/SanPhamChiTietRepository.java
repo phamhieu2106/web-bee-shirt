@@ -23,7 +23,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             select spct from SanPhamChiTiet spct
             where spct.sanPham.ma like %:search% or 
             spct.sanPham.ten like %:search% or 
-            spct.kichCo.ten like %:search% or 
             spct.kieuDang.ten like %:search% or 
             spct.thietKe.ten like %:search% or 
             spct.tayAo.ten like %:search% or 

@@ -35,4 +35,12 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
              WHERE dgg.trang_thai > 0;
              """, nativeQuery = true)
     void updateDotGiamGiaSanPham();
+
+    @Query("""
+            select dggsp from  DotGiamGiaSanPham  dggsp
+            left join SanPhamChiTiet spct on dggsp.sanPhamChiTiet.id = spct.id
+            where spct.id = :spctId and
+            (current_timestamp() between dggsp.thoiGianBatDau and dggsp.thoiGianKetThuc)
+            """)
+    List<DotGiamGiaSanPham> findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer spctId);
 }

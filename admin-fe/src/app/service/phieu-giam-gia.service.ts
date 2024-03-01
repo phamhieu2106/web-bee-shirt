@@ -126,6 +126,9 @@ export class PhieuGiamGiaService {
     return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate);
   }
 
+
+
+
   private calculateStatus(thoiGianBatDau: Date, thoiGianKetThuc: Date): string {
     const currentTime = new Date();
 
@@ -139,6 +142,19 @@ export class PhieuGiamGiaService {
     } else {
       return 'Đã hủy';
     }
+  }
+
+
+  public getPhieuKhach(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    id: number,
+  
+  ): Observable<PagedResponse<KhachHang>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}`;
+    return this.http.get<PagedResponse<KhachHang>>(
+      `${this.apiUrl}/ds-khach-tang${param}`
+    );
   }
 
 }

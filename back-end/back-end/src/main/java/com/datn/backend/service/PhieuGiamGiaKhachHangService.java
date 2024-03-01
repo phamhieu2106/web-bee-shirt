@@ -16,6 +16,6 @@ public interface PhieuGiamGiaKhachHangService {
     void addPhieu(PhieuKhachHangRequest request);
 
 
-    PagedResponse<KhachHangResponse> getPagination(int pageNumber, int pageSize, String id );
+    PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id );
 
 }

@@ -5,6 +5,7 @@ import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
+import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.repository.PhieuGiamGiaRepository;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import com.datn.backend.utility.UtilityFunction;
@@ -23,6 +24,8 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
     private PhieuGiamGiaRepository repository;
+
+    private KhachHangRepository khachHangRepository;
 
     @Autowired
     public PhieuGiamGiaServceImpl(PhieuGiamGiaRepository repository) {

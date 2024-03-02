@@ -35,4 +35,6 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
              WHERE dgg.trang_thai > 0;
              """, nativeQuery = true)
     void updateDotGiamGiaSanPham();
+
+    List<DotGiamGiaSanPham> findBySanPhamChiTietId(Integer id);
 }

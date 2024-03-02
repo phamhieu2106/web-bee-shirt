@@ -159,7 +159,10 @@
           class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
         >
           <i class="fa-solid fa-user m-1 me-md-2"></i>
-          <div class="flex-grow-1">
+          <a
+            [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id"
+            class="flex-grow-1"
+          >
             <p class="d-none d-md-block mb-0" id="userFullName">
               {{ order.khachHang.hoTen }}
             </p>
@@ -170,7 +173,7 @@
             >
               {{ order.khachHang.sdt }}
             </p>
-          </div>
+          </a>
           <button type="button" class="btn" (click)="removeKhachHangInOrder()">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>

@@ -1,4 +1,5 @@
 import { Account } from "./account.class";
+import { DiaChi } from "./dia-chi.class";
 import { KhachHangImage } from "./khach-hang-image.class";
 
 export class KhachHang {
@@ -12,4 +13,5 @@ export class KhachHang {
   trangThai: number;
   account: Account;
   image: KhachHangImage;
+  diaChis: DiaChi[];
 }

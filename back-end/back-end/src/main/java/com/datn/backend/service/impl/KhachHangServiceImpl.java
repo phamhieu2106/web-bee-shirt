@@ -51,7 +51,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         // check exist sdt
         if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
-            throw new ResourceExistsException("Số điện thoại: " + kh.getSdt()+ " đã tồn tại.");
+            throw new ResourceExistsException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
         }
         BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
         if (bi == null) {
@@ -105,6 +105,14 @@ public class KhachHangServiceImpl implements KhachHangService {
         pagedResponse.setData(page.getContent());
         pagedResponse.setSearch(search);
         return pagedResponse;
+    }
+
+    @Override
+    public PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<KhachHang> page = khachHangRepository.getAllActive(pageable, search);
+
+        return UtilityFunction.mapToPagedResponse(page, KhachHang.class, search);
     }
 
     @Override

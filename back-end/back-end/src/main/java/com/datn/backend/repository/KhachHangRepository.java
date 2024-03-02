@@ -36,6 +36,34 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
     Page<KhachHangResponse> getAll(Pageable pageable,
                                    @Param("search") String search);
 
+/*    @Query(value =
+            """
+            select kh.id, kh.ho_ten as hoTen, kh.sdt,kh.ngay_sinh ngaySinh,kh.gioi_tinh as gioiTinh,
+             kh.email,kh.trang_thai as trangThai,
+             dc.tinh,dc.huyen,dc.xa,dc.duong,
+            acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau
+            from khach_hang kh
+            join account acc
+            on kh.account_id=acc.id
+            join dia_chi dc
+            on kh.id=dc.khach_hang_id
+            where  (kh.ho_ten LIKE %:search%
+            or kh.sdt LIKE %:search%
+            or kh.email LIKE %:search%)
+            and kh.trang_thai=1
+            ORDER BY kh.created_at DESC
+                    """)
+ */
+    @Query("""
+            select kh from KhachHang  kh
+            where (kh.hoTen LIKE %:search%
+            or kh.sdt LIKE %:search%
+            or kh.email LIKE %:search%)
+            and kh.trangThai=1
+            """)
+    Page<KhachHang> getAllActive(Pageable pageable,
+                                   @Param("search") String search);
+
     @Query(value =
             """         
 

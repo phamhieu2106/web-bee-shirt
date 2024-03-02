@@ -25,6 +25,7 @@ public class DiaChi extends BaseEntity {
     private String duong;
     private boolean macDinh;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "khach_hang_id")
     private KhachHang khachHang;

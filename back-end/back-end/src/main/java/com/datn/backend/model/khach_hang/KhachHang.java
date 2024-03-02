@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "khach_hang")
@@ -34,4 +35,7 @@ public class KhachHang extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private KhachHangImage image;
+
+    @OneToMany(mappedBy = "khachHang")
+    private List<DiaChi> diaChis;
 }

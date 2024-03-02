@@ -15,17 +15,85 @@ import {
   templateUrl: "./get-dia-chi-va-phi-van-chuyen.component.html",
   styleUrls: ["./get-dia-chi-va-phi-van-chuyen.component.css"],
 })
-export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
+export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   @Input({ required: true }) diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
   @Output() diaChiVaPhiVanChuyenChange =
     new EventEmitter<DiaChiVaPhiVanChuyen>();
   @Output() phiVanChuyen = new EventEmitter<number>();
-  tinhs: Array<any>;
-  huyens: Array<any>;
-  xas: Array<any>;
+  tinhs: any[];
+  huyens: any[];
+  xas: any[];
   constructor(private ghnService: GiaoHangNhanhService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes["diaChiVaPhiVanChuyen"] &&
+      !this.diaChiVaPhiVanChuyenIsEmpty()
+    ) {
+      // Fill data khi có dữ liệu
+      this.fillData();
+    }
+  }
   ngOnInit(): void {
+    if (this.diaChiVaPhiVanChuyenIsEmpty()) {
+      this.getAllTinh();
+    }
+  }
+  fillData() {
+    // get all tỉnh => lọc ds tìm tinhId
     this.getAllTinh();
+    setTimeout(() => this.findTinhId(), 100);
+
+    // get all huyện => lọc danh sách tìm xaId
+    setTimeout(() => this.getAllHuyenByTinh(), 200);
+    setTimeout(() => this.findHuyenId(), 400);
+
+    // get all xã
+    setTimeout(() => this.getAllXaByHuyen(), 600);
+    setTimeout(() => this.findXaId(), 800);
+
+    // Get phi van chuyen va thoi gian du kien giao
+    setTimeout(() => this.onFinishChooseDiaChi(), 1000);
+  }
+  findXaId() {
+    for (let i = 0; i < this.xas.length; i++) {
+      const element = this.xas[i];
+      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.xa)) {
+        this.diaChiVaPhiVanChuyen.xaCode = element.WardCode;
+        console.log(element);
+        break;
+      }
+    }
+  }
+  findHuyenId() {
+    console.log("find huyen");
+
+    for (let i = 0; i < this.huyens.length; i++) {
+      const element = this.huyens[i];
+      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.huyen)) {
+        this.diaChiVaPhiVanChuyen.huyenId = element.DistrictID;
+        console.log(element);
+
+        break;
+      }
+    }
+  }
+  findTinhId() {
+    console.log("find tinh");
+    for (let i = 0; i < this.tinhs.length; i++) {
+      const element = this.tinhs[i];
+      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.tinh)) {
+        this.diaChiVaPhiVanChuyen.tinhId = element.ProvinceID;
+        break;
+      }
+    }
+  }
+
+  diaChiVaPhiVanChuyenIsEmpty(): boolean {
+    return (
+      this.diaChiVaPhiVanChuyen.tinh == null &&
+      this.diaChiVaPhiVanChuyen.huyen == null &&
+      this.diaChiVaPhiVanChuyen.xa == null
+    );
   }
   onFinishChooseDiaChi() {
     this.diaChiVaPhiVanChuyen.xa = this.getTenXa();
@@ -35,6 +103,8 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
   }
 
   getAllTinh() {
+    console.log("get tinh");
+
     this.huyens = [];
     this.xas = [];
     this.ghnService.getAllProvince().subscribe({
@@ -55,6 +125,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
         next: (resp) => {
           this.huyens = resp.data;
           this.diaChiVaPhiVanChuyen.tinh = this.getTenTinh();
+          console.log("get huyen");
         },
         error: (err) => {
           console.log(err);
@@ -63,6 +134,8 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
   }
 
   getAllXaByHuyen() {
+    console.log("get xa");
+
     this.ghnService
       .getAllWardByDistrictID(this.diaChiVaPhiVanChuyen.huyenId)
       .subscribe({
@@ -77,12 +150,14 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
   }
 
   getTenTinh(): string {
-    let provinceName = "";
-    this.tinhs.forEach((t) => {
-      if (t.ProvinceID == this.diaChiVaPhiVanChuyen.tinhId) {
-        provinceName = t.ProvinceName;
-      }
-    });
+    let provinceName = this.diaChiVaPhiVanChuyen.tinh;
+    if (provinceName == null || provinceName == "") {
+      this.tinhs.forEach((t) => {
+        if (t.ProvinceID == this.diaChiVaPhiVanChuyen.tinhId) {
+          provinceName = t.ProvinceName;
+        }
+      });
+    }
     return provinceName;
   }
   getTenHuyen(): string {
@@ -146,5 +221,10 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
       });
   }
 
-  clear() {}
+  clear() {
+    this.tinhs = [];
+    this.xas = [];
+    this.huyens = [];
+    this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+  }
 }

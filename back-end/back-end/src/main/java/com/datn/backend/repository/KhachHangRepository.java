@@ -74,4 +74,16 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
                     """
             , nativeQuery = true)
     Page<KhachHangResponse> filter(Pageable pageable, @Param("gioiTinhFilter") List<Integer> gioiTinhFilter, @Param("trangThaiFilter")List<Integer> trangThaiFilter);
+
+
+     @Query(value = "SELECT * \n" +
+             "FROM khach_hang kh \n" +
+             "WHERE kh.id  IN(SELECT kh.id FROM phieu_giam_gia_kh pgg JOIN khach_hang kh ON pgg.khach_hang_id = kh.id where pgg.phieu_giam_gia_id =:id1)" ,nativeQuery = true)
+     Page<KhachHang> getKHCoPhieu(Pageable pageable, @Param("id1") String id1);
+
+        @Query(value = "SELECT * \n" +
+                "FROM khach_hang kh \n" +
+                "WHERE kh.id NOT IN(SELECT kh.id FROM phieu_giam_gia_kh pgg JOIN khach_hang kh ON pgg.khach_hang_id = kh.id where pgg.phieu_giam_gia_id=:id)" ,nativeQuery = true)
+        Page<KhachHang> getKHkhongPhieu(Pageable pageable, @Param("id") String id);
+
 }

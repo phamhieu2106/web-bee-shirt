@@ -9,6 +9,7 @@ import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { ActivatedRoute } from "@angular/router";
 import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
 import { ToastrService } from "ngx-toastr";
+import { KhachHang } from "src/app/model/class/KhachHang.class";
 
 @Component({
   selector: "app-sua-phieu",
@@ -17,8 +18,8 @@ import { ToastrService } from "ngx-toastr";
 })
 export class SuaPhieuComponent implements OnInit {
   phieuGiamGiaForm: FormGroup;
-  public pagedResponse: PagedResponse<KhachHangResponse>;
-  public search = "";
+  public pagedResponse: PagedResponse<KhachHang>;
+
 
   public idPhieu: number
 
@@ -28,6 +29,9 @@ export class SuaPhieuComponent implements OnInit {
 
   public khachHangList: any
   public khachHangListKhongCo: any
+
+ 
+  idKhach:number
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
@@ -39,40 +43,31 @@ export class SuaPhieuComponent implements OnInit {
   ngOnInit(): void {
     this.initUpdateForm();
     this.idPhieu = this.route.snapshot.params["id"];
+    this.idKhach = this.idPhieu
     this.phieuGiamGia.getOne(this.idPhieu).subscribe({
       next: (response) => {
         this.phieu = response;
+        
         this.initUpdateForm(this.phieu);
-
-        this.phieuGiamGia.getKhachHangTang(this.idPhieu).subscribe({
-          next: (response: PhieuGiamGiaKhachHang[]) => {
-
-            this.khachHangList = response
+    
+        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu).subscribe({
+          next: (response: PagedResponse<KhachHang>) => {
+          
+            this.khachHangList = response.data;
+            console.log(this.khachHangList)
           },
           error: (error) => {
-            console.error('Error fetching data:', error);
-          }
-        });
-
-        this.phieuGiamGia.getKhachHangTangKhongCo(this.idPhieu).subscribe({
-          next: (response: PhieuGiamGiaKhachHang[]) => {
-
-            this.khachHangListKhongCo = response
-            console.log(this.khachHangListKhongCo)
-          },
-          error: (error) => {
-            console.error('Error fetching data:', error);
+            console.error('Lỗi khi truy xuất dữ liệu:', error);
           }
         });
       },
       error: (error) => {
-        console.error("Khong lấy được phiếu:", error);
-        // Handle errors here
+        console.error("Không lấy được phiếu:", error);
+        // Xử lý lỗi ở đây
       },
     });
 
-    this.getKhachHangList();
-    this.getPhieuKhachHang();
+   
   }
 
   // Phiếu giảm giá
@@ -231,13 +226,10 @@ export class SuaPhieuComponent implements OnInit {
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
      
     }
-
-   
-   
-
     this.updateForm.get('giaTri').updateValueAndValidity();
   }
 
+  
   isTableDisabled: boolean = false;
 
   onLoaiChange() {
@@ -258,13 +250,12 @@ export class SuaPhieuComponent implements OnInit {
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = ""
+    id:number = this.idKhach
   ): void {
-    this.khachHangService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
-        this.pagedResponse = response;
-        console.log(response);
-        console.log("get dc");
+    this.phieuGiamGia.getPhieuKhach(page, pageSize,id).subscribe({
+      next: (response: PagedResponse<KhachHang>) => {
+        this.khachHangList = response;
+      
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -272,23 +263,12 @@ export class SuaPhieuComponent implements OnInit {
     });
   }
 
-  private getKhachHangList(): void {
-    this.khachHangService.getAll().subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
+  
 
-  private getPhieuKhachHang(): void {
 
-  }
 
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.goToPage(1, e.target.value, this.idKhach);
   }
 
   selectedIds: number[] = [];

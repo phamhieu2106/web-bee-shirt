@@ -8,8 +8,8 @@
 }
 
 .product-suggestions {
-    width: 120%;
-    max-height: 300px;
+    width: 125%;
+    max-height: 350px;
     overflow-y: auto
 }
 

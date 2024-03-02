@@ -15,21 +15,21 @@ import {
   templateUrl: "./get-dia-chi-va-phi-van-chuyen.component.html",
   styleUrls: ["./get-dia-chi-va-phi-van-chuyen.component.css"],
 })
-export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
+export class GetDiaChiVaPhiVanChuyenComponent implements OnInit {
   @Input({ required: true }) diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
   @Output() diaChiVaPhiVanChuyenChange =
     new EventEmitter<DiaChiVaPhiVanChuyen>();
+  @Output() phiVanChuyen = new EventEmitter<number>();
   tinhs: Array<any>;
   huyens: Array<any>;
   xas: Array<any>;
   constructor(private ghnService: GiaoHangNhanhService) {}
-  ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
     this.getAllTinh();
   }
   onFinishChooseDiaChi() {
     this.diaChiVaPhiVanChuyen.xa = this.getTenXa();
-    console.log(this.diaChiVaPhiVanChuyen);
+    // console.log(this.diaChiVaPhiVanChuyen);
     this.getPhiVanChuyen();
     this.getThoiGianDuKien();
   }
@@ -109,7 +109,6 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
       .getExpectedDeliveryTime(this.diaChiVaPhiVanChuyen)
       .subscribe({
         next: (resp) => {
-          console.log(resp);
           this.diaChiVaPhiVanChuyen.duKien = new Date(
             resp.data.leadtime * 1000
           );
@@ -120,14 +119,32 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
       });
   }
   getPhiVanChuyen() {
-    this.ghnService.getFee(this.diaChiVaPhiVanChuyen).subscribe({
-      next: (resp) => {
-        // console.log(resp);
-        this.diaChiVaPhiVanChuyen.phiVanChuyen = resp.data.total;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    let service_id = null;
+    let shopId = 190872;
+    let from_district = 3440; // Xuân Phương - Nam từ liêm
+    this.ghnService
+      .getService(shopId, from_district, this.diaChiVaPhiVanChuyen.huyenId)
+      .subscribe({
+        next: (resp: any) => {
+          service_id = Number(resp.data[0].service_id);
+          this.ghnService
+            .getFee(this.diaChiVaPhiVanChuyen, service_id)
+            .subscribe({
+              next: (resp) => {
+                this.diaChiVaPhiVanChuyen.phiVanChuyen = resp.data.total;
+                this.phiVanChuyen.emit(resp.data.total);
+              },
+              error: (err) => {
+                console.log(err);
+              },
+            });
+        },
+        error: (err) => {
+          console.log("Lỗi lấy service từ bên giao hàng");
+          console.log(err);
+        },
+      });
   }
+
+  clear() {}
 }

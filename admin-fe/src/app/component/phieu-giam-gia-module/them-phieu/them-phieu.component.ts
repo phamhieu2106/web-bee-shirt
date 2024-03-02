@@ -43,7 +43,7 @@ export class ThemPhieuComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddForm();
-    this.getKhachHangList();
+
   }
 
   public add(): void {
@@ -290,16 +290,7 @@ public checkGiaTri:boolean =false
     });
   }
 
-  private getKhachHangList(): void {
-    this.khachHangService.getAll().subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
+
 
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);

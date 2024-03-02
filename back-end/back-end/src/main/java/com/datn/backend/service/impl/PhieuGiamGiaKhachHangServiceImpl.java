@@ -52,10 +52,10 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     }
 
     @Override
-    public PagedResponse<KhachHangResponse> getPagination(int pageNumber, int pageSize, String id) {
+    public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<KhachHangResponse> khachHangPhieu = khachHangRepository.getKHCoPhieu(pageable, id);
-        PagedResponse<KhachHangResponse> paged = new PagedResponse<>();
+        Page<KhachHang> khachHangPhieu = khachHangRepository.getKHCoPhieu(pageable, id);
+        PagedResponse<KhachHang> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
         paged.setTotalElements((int) khachHangPhieu.getTotalElements());

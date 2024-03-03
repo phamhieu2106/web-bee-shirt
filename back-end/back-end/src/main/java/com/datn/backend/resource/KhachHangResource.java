@@ -62,4 +62,11 @@ public class KhachHangResource {
                                                                   @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter) {
         return ResponseEntity.ok(khachHangService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter));
     }
+
+    @GetMapping("/get-all-avtive")
+    public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                             @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                             @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(khachHangService.getAllActive(pageNumber, pageSize, search));
+    }
 }

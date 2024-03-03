@@ -1,6 +1,6 @@
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
@@ -98,6 +98,10 @@ export class BanHangComponent implements OnInit {
 
   chooseKhachHang(khachHang: KhachHang) {
     this.order.khachHang = khachHang;
+    this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+    this.diaChiVaPhiVanChuyen.tinh = khachHang.diaChis[0].tinh;
+    this.diaChiVaPhiVanChuyen.huyen = khachHang.diaChis[0].huyen;
+    this.diaChiVaPhiVanChuyen.xa = khachHang.diaChis[0].xa;
   }
 
   removeKhachHangInOrder() {
@@ -108,7 +112,7 @@ export class BanHangComponent implements OnInit {
     this.spctService.getAll(1, 15, this.searchProduct).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
-        console.log(resp);
+        // console.log(resp);
       },
       error: (err) => {
         console.log(err);
@@ -116,11 +120,9 @@ export class BanHangComponent implements OnInit {
     });
   }
   getAllKhachHang() {
-    this.khachHangService.getAll(1, 10, this.searchKhachHang).subscribe({
-      next: (resp: PagedResponse<KhachHangResponse>) => {
-        this.khachHangs = resp.data.map((khResponse) =>
-          this.khachHangService.mapToKhachHang(khResponse)
-        );
+    this.khachHangService.getAllActive(1, 10, this.searchKhachHang).subscribe({
+      next: (resp: PagedResponse<KhachHang>) => {
+        this.khachHangs = resp.data;
       },
       error: (err) => console.log(err),
     });

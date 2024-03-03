@@ -39,4 +39,5 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
     List<DotGiamGiaSanPham> findBySanPhamChiTietId(Integer id);
 
     List<DotGiamGiaSanPham> findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
+
 }

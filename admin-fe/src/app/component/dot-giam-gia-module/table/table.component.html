@@ -139,6 +139,7 @@
       <button
         class="btn btn-outline-warning btn-rounded"
         [routerLink]="['/dot-giam-gia/cap-nhat-dot-giam-gia/', object.id]"
+        [hidden]="object.trangThai == 0"
       >
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
       </button>
@@ -146,6 +147,7 @@
         class="btn btn-outline btn-rounded"
         data-toggle="modal"
         data-target="#exampleModal"
+        [hidden]="object.trangThai == 0"
         (click)="onSelectRemove(object.id)"
       >
         <i class="fa-solid fa-trash fa-xl" style="color: #f20101"></i>

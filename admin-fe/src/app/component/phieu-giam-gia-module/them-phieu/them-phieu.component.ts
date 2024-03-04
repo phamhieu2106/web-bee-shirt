@@ -52,6 +52,7 @@ export class ThemPhieuComponent implements OnInit {
     this.initAddForm();
     this.getKhachHangList();
 
+
   }
 
   public add(): void {
@@ -91,6 +92,10 @@ export class ThemPhieuComponent implements OnInit {
           showConfirmButton: false,
           timer: 1500,
         });
+          // Delay 3-4 giây trước khi chuyển đến trang danh sách
+     setTimeout(() => {
+      this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
+    }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 400) {
@@ -118,10 +123,7 @@ export class ThemPhieuComponent implements OnInit {
       },
     });
 
-     // Delay 3-4 giây trước khi chuyển đến trang danh sách
-     setTimeout(() => {
-      this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
-    }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
+   
   }
 
   private send( vocher: string, email: string,ngayHetHan:string) {
@@ -288,14 +290,20 @@ public checkGiaTri:boolean =false
   onLoaiChange() {
     const loaiValue = this.addForm.get("loai").value;
    
-    if (loaiValue === "1") {
+    if (loaiValue ==0) {
       this.checkSoLuong = true
+      this.isTableDisabled =true
+      this.addForm.get("soLuong").setValue(0);
 
     } else {
-      this.checkSoLuong = true
+      this.checkSoLuong = false
+      this.isTableDisabled =false
+      this.addForm.get("soLuong").setValue(0);
+   
      
     }
-    this.isTableDisabled = !this.isTableDisabled;
+    
+  
   }
 
   // onchange check box
@@ -320,7 +328,20 @@ public checkGiaTri:boolean =false
         soLuongControl.setValue(this.soLuongCheck);
       }
     }
-    console.log(this.soLuongCheck);
+    
+  }
+
+  isCustomerSelected(id: number): boolean {
+   if(this.selectedIds.length>0){
+    for (const selectedId of this.selectedIds) {
+      if (selectedId == id) {
+       
+        return true; // ID được tìm thấy trong danh sách
+      }
+    }
+   }
+    
+    return false; // ID không được tìm thấy trong danh sách
   }
 
 

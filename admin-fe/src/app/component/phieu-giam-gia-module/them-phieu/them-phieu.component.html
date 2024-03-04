@@ -224,7 +224,7 @@
               <tbody>
                 <tr *ngFor="let kh of pagedResponse?.data; let i = index">
                   <td>
-                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled" />
+                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled"  [checked]="selectedIds.length > 0 && isCustomerSelected(kh.id)"/>
                   </td>
                   <td>{{ kh.hoTen }}</td>
                   <td>{{ kh.sdt }}</td>

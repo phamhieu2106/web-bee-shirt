@@ -31,6 +31,9 @@ export class SuaPhieuComponent implements OnInit {
   public khachHangList: any
   public khachHangListKhongCo: any
   errorMessage: string = "";
+  selectedIds: number[] = [];
+  phieuGiamGiaId: number;
+  soLuongCheck: number = 0;
 
  
   idKhach:number
@@ -58,6 +61,10 @@ export class SuaPhieuComponent implements OnInit {
           next: (response: PagedResponse<KhachHang>) => {
               if (response) {
                   this.pagedResponse = response;
+                  response.data.forEach(khach => {
+                    this.selectedIds.push(khach.id);
+                    this.soLuongCheck++;
+                });
                  
               } else {
                   console.error('Dữ liệu phản hồi không hợp lệ:', response);
@@ -68,6 +75,7 @@ export class SuaPhieuComponent implements OnInit {
           }
       });
 
+      console.log(this.selectedIds)
       this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu,false).subscribe({
         next: (response: PagedResponse<KhachHang>) => {
             if (response) {
@@ -313,19 +321,29 @@ export class SuaPhieuComponent implements OnInit {
     this.goToPage(1, e.target.value, this.idKhach);
   }
 
-  selectedIds: number[] = [];
-  phieuGiamGiaId: number;
+
+
 
   onCheckboxChange(id: number): void {
     const index = this.selectedIds.indexOf(id);
 
+    const soLuongControl = this.updateForm.get("soLuong");
     if (index === -1) {
       // Nếu ID không tồn tại trong danh sách, thêm vào
       this.selectedIds.push(id);
+      // Tăng số lượng
+      this.soLuongCheck++;
+      soLuongControl.setValue(this.soLuongCheck);
     } else {
       // Nếu ID đã tồn tại trong danh sách, loại bỏ nó
       this.selectedIds.splice(index, 1);
+      // Giảm số lượng
+      if (this.soLuongCheck > 0) {
+        this.soLuongCheck--;
+        soLuongControl.setValue(this.soLuongCheck);
+      }
     }
+    
   }
 
   isCustomerSelected(id: number): boolean {
@@ -342,6 +360,11 @@ export class SuaPhieuComponent implements OnInit {
   updatePhieu(): void {
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
       next: () => {
+        console.log(this.idPhieu)
+
+        this.phieuGiamGia
+        .addPhieuKhachHang(this.idPhieu, this.selectedIds)
+        .subscribe();
        
         Swal.fire({
           icon: "success",

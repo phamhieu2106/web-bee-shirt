@@ -452,4 +452,18 @@ export class SuaPhieuComponent implements OnInit {
 
   }
 
+  confirmCreation() {
+  
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý sửa không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) =>{
+      this.updatePhieu();
+    });
+  }
+
 }

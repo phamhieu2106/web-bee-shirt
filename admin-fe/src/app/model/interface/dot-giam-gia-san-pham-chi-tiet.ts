@@ -1,5 +1,6 @@
 export interface DotGiamGiaSanPhamChiTiet {
   id?: number;
+  hinhAnhSanPham?: string;
   maSanPham?: string;
   tenSanPham?: string;
   giaBan?: number;

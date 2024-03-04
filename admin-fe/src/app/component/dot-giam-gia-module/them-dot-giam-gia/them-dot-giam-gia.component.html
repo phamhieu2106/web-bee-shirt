@@ -144,15 +144,27 @@
                               [checked]="
                                 this.listIdSanPhamChiTiet?.includes(+object.id)
                               "
-                              [disabled]="
-                                object.trangThai === false ? true : false
-                              "
+                              [disabled]="!object.trangThai ? true : false"
                               type="checkbox"
                               (click)="setListIdSanPhamChiTiet(object.id)"
                             />
                             {{ object.id }}
                           </td>
-                          <td>NULL</td>
+                          <td>
+                            <!-- image -->
+                            <img
+                              *ngIf="object?.hinhAnhSanPham; else defaultImage"
+                              [src]="object?.hinhAnhSanPham"
+                              alt=""
+                              width="60px"
+                            />
+                            <ng-template #defaultImage>
+                              <img
+                                src="assets/img/default-image.jpg"
+                                alt="Default Image"
+                              />
+                            </ng-template>
+                          </td>
                           <td>{{ object.maSanPham }}</td>
                           <td>{{ object.tenSanPham }}</td>
                           <td>{{ object.soLuongTon }}</td>
@@ -175,16 +187,12 @@
                           <td>
                             <button
                               class="{{
-                                object.trangThai === true
+                                object.trangThai
                                   ? 'btn btn-success btn-rounded'
                                   : 'btn btn-danger btn-rounded'
                               }}"
                             >
-                              {{
-                                object.trangThai === true
-                                  ? "Đang Bán"
-                                  : "Ngừng Bán"
-                              }}
+                              {{ object.trangThai ? "Đang Bán" : "Ngừng Bán" }}
                             </button>
                           </td>
                         </tr>

@@ -97,7 +97,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
 
     @Query(value = """
-                SELECT spct.id as Id, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
+                SELECT spct.id as Id, ha.image_url as HinhAnhSanPham, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
                 cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.ma as MaMauSac, ta.Ten as TenTayAo,
                 tk.ten as TenThietKe,
                 spct.created_at as NgayTao,
@@ -114,6 +114,8 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 LEFT JOIN san_pham sp ON sp.id = spct.san_pham_id 
                 LEFT JOIN tay_ao ta ON ta.id = spct.tay_ao_id
                 LEFT JOIN kieu_thiet_ke tk ON tk.id = spct.thiet_ke_id
+                LEFT JOIN spct_hinh_anh spctha ON spctha.id = spct.id
+                LEFT JOIN hinh_anh ha ON ha.id = spctha.hinh_anh_id
                 WHERE sp.id IN ( :id );
             """, nativeQuery = true)
     Page<SanPhamChiTietResponse> getAllSanPhamChiTietBySanPhamId(Pageable pageable, @Param("id") List<Integer> id);

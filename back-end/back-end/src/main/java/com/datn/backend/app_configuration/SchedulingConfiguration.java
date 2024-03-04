@@ -9,17 +9,16 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class SchedulingConfiguration {
 
-    private DotGiamGiaSanPhamRepository repository;
+    private final DotGiamGiaSanPhamRepository repository;
 
     public SchedulingConfiguration(DotGiamGiaSanPhamRepository repository) {
         super();
         this.repository = repository;
     }
 
-    //    Cap nhat trang thai dot giam gia moi 5 phut
+    //    Cap nhat trang thai dot giam gia moi 1 phut
     @Scheduled(fixedRate = 60000) // 60000 milliseconds = 1 minutes
     private void executeDGGStatus() {
         repository.updateDotGiamGiaSanPham();
-        System.out.println("Update Trang Thai DOTGIAMGIASANPHAM with Schedule");
     }
 }

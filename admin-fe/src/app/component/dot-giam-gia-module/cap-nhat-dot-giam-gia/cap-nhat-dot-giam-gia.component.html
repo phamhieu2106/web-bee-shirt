@@ -150,7 +150,19 @@
                             />
                             {{ object.id }}
                           </td>
-                          <td>NULL</td>
+                          <!-- image -->
+                          <img
+                            *ngIf="object?.hinhAnhSanPham; else defaultImage"
+                            [src]="object?.hinhAnhSanPham"
+                            alt=""
+                            width="100px"
+                          />
+                          <ng-template #defaultImage>
+                            <img
+                              src="assets/img/default-image.jpg"
+                              alt="Default Image"
+                            />
+                          </ng-template>
                           <td>{{ object.maSanPham }}</td>
                           <td>{{ object.tenSanPham }}</td>
                           <td>{{ object.soLuongTon }}</td>
@@ -173,16 +185,12 @@
                           <td>
                             <button
                               class="{{
-                                object.trangThai === true
+                                object.trangThai
                                   ? 'btn btn-success btn-rounded'
                                   : 'btn btn-danger btn-rounded'
                               }}"
                             >
-                              {{
-                                object.trangThai === true
-                                  ? "Đang Bán"
-                                  : "Ngừng Bán"
-                              }}
+                              {{ object.trangThai ? "Đang Bán" : "Ngừng Bán" }}
                             </button>
                           </td>
                         </tr>

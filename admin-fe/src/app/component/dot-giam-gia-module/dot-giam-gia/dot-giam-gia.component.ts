@@ -129,19 +129,12 @@ export class DotGiamGiaComponent implements OnInit {
         this.getAllDotGiamGia();
       },
       error: (err) => {
-        this.toastSrc.error(
-          "Có lỗi khi cố gắng xoá Đợt Giảm Giá ",
-          err.message
-        );
+        this.toastSrc.error(`Xoá Thất Bại Do ${err.error.message}!`);
         console.log(err.message);
       },
     });
   }
   // END DOT GIAM GIA TABLE HANDLING
-  private turnOnOverlay(text: string): void {
-    this.overlayText = text;
-    this.isLoadding = true;
-  }
 
   private turnOffOverlay(text: string): void {
     this.overlayText = text;

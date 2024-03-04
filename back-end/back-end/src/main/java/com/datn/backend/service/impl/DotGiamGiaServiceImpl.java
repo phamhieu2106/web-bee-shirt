@@ -140,23 +140,23 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         boolean check = true;
         //        Check Exit by Ten
         if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
-            throw new ResourceExistsException("Object Request Name is Exits!");
+            throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
         }
 
         //        Check Number
         try {
             //        Check Min Max
             if (object.getGiaTriPhanTram() > 99 || object.getGiaTriPhanTram() < 5) {
-                throw new ResourceOutOfRangeException("Discount Percent of Object Request is not between 5 and 99");
+                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99");
             }
         } catch (Exception e) {
-            throw new ResourceInvalidException("Discount Percent of Object Request is not a number");
+            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số");
         }
         if (object.getListIdSanPhamChiTiet().isEmpty()) {
-            throw new ResourceExistsException("Object Products Is Empty!");
+            throw new ResourceExistsException("Sản Phẩm Đang Bị Trống");
         }
         if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
-            throw new ResourceExistsException("Object Start Date Is Invalid!");
+            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu");
         }
         if (!repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
                 object.getThoiGianBatDau(), object.getThoiGianKetThuc()).isEmpty()) {
@@ -170,23 +170,23 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         //        Check Exit by Ten
         if (!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())) {
             if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
-                throw new ResourceExistsException("Object Request Name is Exits!");
+                throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
             }
         }
         //        Check Number
         try {
             //        Check Min Max
             if (object.getGiaTriPhanTram() > 99 || object.getGiaTriPhanTram() < 5) {
-                throw new ResourceOutOfRangeException("Discount Percent of Object Request is not between 5 and 99");
+                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99");
             }
         } catch (Exception e) {
-            throw new ResourceInvalidException("Discount Percent of Object Request is not a number");
+            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số");
         }
         if (object.getListIdSanPhamChiTiet().isEmpty()) {
-            throw new ResourceExistsException("Object Products Is Empty!");
+            throw new ResourceExistsException("Sản Phẩm Đang Bị Trống");
         }
         if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
-            throw new ResourceExistsException("Object Start Date Is Invalid!");
+            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu");
         }
 
         List<DotGiamGiaResponse> dotGiamGiaResponseList = repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
@@ -355,7 +355,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 repository.save(dotGiamGia);
                 return true;
             } catch (Exception ex) {
-                throw new ResourceInvalidException("Id invalid!!");
+                throw new ResourceInvalidException("Lỗi Do Không Xác Định Được ID Đợt Giảm Giá!!");
             }
         }
         return false;

@@ -52,9 +52,14 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     }
 
     @Override
-    public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id) {
+    public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id,Boolean check) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<KhachHang> khachHangPhieu = khachHangRepository.getKHCoPhieu(pageable, id);
+        Page<KhachHang> khachHangPhieu;
+       if(check == true){
+           khachHangPhieu = khachHangRepository.getKHCoPhieu(pageable, id);
+       }else{
+           khachHangPhieu = khachHangRepository.getKHkhongPhieu(pageable, id);
+       }
         PagedResponse<KhachHang> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
@@ -66,6 +71,8 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
 
         return paged;
     }
+
+
 
 
 }

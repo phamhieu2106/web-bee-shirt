@@ -149,9 +149,10 @@ export class PhieuGiamGiaService {
     pageNumber: number = 1,
     pageSize: number = 5,
     id: number,
+    check:boolean
   
   ): Observable<PagedResponse<KhachHang>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}&check=${check}`;
     return this.http.get<PagedResponse<KhachHang>>(
       `${this.apiUrl}/ds-khach-tang${param}`
     );

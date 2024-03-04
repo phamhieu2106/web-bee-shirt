@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
+import { Router } from '@angular/router';
 import {
   FormGroup,
   Validators,
@@ -15,6 +16,8 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import Swal from "sweetalert2";
+import emailjs from "@emailjs/browser";
+
 
 @Component({
   selector: "app-them-phieu",
@@ -27,6 +30,7 @@ export class ThemPhieuComponent implements OnInit {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
+  
 
   errorMessage: string = "";
 
@@ -34,15 +38,19 @@ export class ThemPhieuComponent implements OnInit {
   phieuGiamGiaId: number;
 
   public giaTriToiDa:number
+  public sendMailChecked:boolean = false
+
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.initAddForm();
+    this.getKhachHangList();
 
   }
 
@@ -52,9 +60,30 @@ export class ThemPhieuComponent implements OnInit {
         this.initAddForm();
         this.phieuGiamGiaId = response.id;
 
+        
+
         this.phieuGiamGia
           .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
           .subscribe();
+
+         if(this.sendMailChecked){
+          this.selectedIds.forEach(id => {
+            // Gọi service để lấy thông tin của khách hàng dựa trên id
+            this.khachHangService.getById(id).subscribe({
+              next: (khachHang: any) => {
+                // Gửi email cho khách hàng
+                console.log(response.maPhieuGiamGia)
+                this.send(response.maPhieuGiamGia,khachHang.email, response.thoiGianKetThuc);
+              },
+              error: (error: any) => {
+                console.error('Error getting customer information:', error);
+              }
+            });
+          });
+         }
+
+            // Kiểm tra nếu checkbox "Gửi Mail Cho Khách Hàng" được chọn
+     
 
         Swal.fire({
           icon: "success",
@@ -88,7 +117,30 @@ export class ThemPhieuComponent implements OnInit {
         }
       },
     });
+
+     // Delay 3-4 giây trước khi chuyển đến trang danh sách
+     setTimeout(() => {
+      this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
+    }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
   }
+
+  private send( vocher: string, email: string,ngayHetHan:string) {
+    emailjs.init("XlFoYJLd1vcoTgaEY");
+    emailjs.send("service_uxvm75s", "template_c1qot7h", {
+      // from_name: this.authService.getUserFromStorage().hoTen,
+      voucher_code: vocher,
+      to_email: email,
+      expiry_date:ngayHetHan
+      
+    });
+   
+  }
+
+  onSendMailChange(event: any): void {
+    // Lấy giá trị mới của checkbox "Gửi Mail Cho Khách Hàng"
+    this.sendMailChecked = event.target.checked;
+  }
+
 
   public initAddForm(): void {
     this.addForm = this.formBuilder.group({
@@ -281,6 +333,17 @@ public checkGiaTri:boolean =false
     keyword: string = ""
   ): void {
     this.khachHangService.getAll(page, pageSize, keyword).subscribe({
+      next: (response: PagedResponse<KhachHangResponse>) => {
+        this.pagedResponse = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+  private getKhachHangList(): void {
+    this.khachHangService.getAll().subscribe({
       next: (response: PagedResponse<KhachHangResponse>) => {
         this.pagedResponse = response;
       },

@@ -67,7 +67,35 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest object) {
 
         Optional<PhieuGiamGia> optional = repository.findById(id);
-        return optional.map(phieuGiamGia -> repository.save(object.giamGia(phieuGiamGia))).orElse(null);
+        if (optional.isPresent()) {
+            PhieuGiamGia existingPhieuGiamGia = optional.get();
+
+            // Kiểm tra xem mã phiếu đã tồn tại hay chưa (trùng mã)
+            if (!existingPhieuGiamGia.getMaPhieuGiamGia().equalsIgnoreCase(object.getMaPhieuGiamGia()) &&
+                    repository.existsByMaPhieuGiamGia(object.getMaPhieuGiamGia().trim().toLowerCase())) {
+                throw new ResourceExistsException("Mã Phiếu: " + object.getMaPhieuGiamGia() + " đã tồn tại.");
+            }
+
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            // Kiểm tra trạng thái của phiếu dựa trên thời gian
+            if (object.getThoiGianKetThuc() != null && currentTime.isAfter(object.getThoiGianKetThuc())) {
+                object.setTrangThai("Đã kết thúc");
+            } else if (object.getThoiGianBatDau() != null && currentTime.isBefore(object.getThoiGianBatDau())) {
+                object.setTrangThai("Sắp diễn ra");
+            } else if (object.getThoiGianBatDau() != null && object.getThoiGianKetThuc() != null &&
+                    currentTime.isAfter(object.getThoiGianBatDau()) && currentTime.isBefore(object.getThoiGianKetThuc())) {
+                object.setTrangThai("Đang diễn ra");
+            } else {
+                object.setTrangThai("Trạng thái không xác định");
+            }
+
+            // Cập nhật thông tin của phiếu và lưu vào cơ sở dữ liệu
+            return repository.save(object.giamGia(existingPhieuGiamGia));
+        } else {
+            // Trả về null nếu không tìm thấy phiếu
+            return null;
+        }
     }
 
     @Override

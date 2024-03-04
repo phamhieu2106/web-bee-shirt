@@ -2,14 +2,14 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
-import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { ActivatedRoute } from "@angular/router";
-import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
+import { Router } from '@angular/router';
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-sua-phieu",
@@ -30,6 +30,7 @@ export class SuaPhieuComponent implements OnInit {
 
   public khachHangList: any
   public khachHangListKhongCo: any
+  errorMessage: string = "";
 
  
   idKhach:number
@@ -38,7 +39,8 @@ export class SuaPhieuComponent implements OnInit {
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -340,16 +342,45 @@ export class SuaPhieuComponent implements OnInit {
   updatePhieu(): void {
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
       next: () => {
-        this.toastr.success("Sửa nhân viên thành công", "Thành Công");
+       
+        Swal.fire({
+          icon: "success",
+          title: `Sửa nhân viên thành công!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+           // Delay 3-4 giây trước khi chuyển đến trang danh sách
+        setTimeout(() => {
+          this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
+        }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
 
       },
-      error: (erros: HttpErrorResponse) => {
-        console.log(this.updateForm.value)
-        this.toastr.error("Sửa nhân viên thất bại", "Thất bại");
-        console.log(erros.message);
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          // Trích xuất thông điệp lỗi từ response
+          this.errorMessage = error.error.message;
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: this.errorMessage,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        } else {
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: "Sửa phiếu giảm giá thất bại",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          console.log(error.message);
+        }
       },
-    })
-  }
+    });
+}
 
 
 

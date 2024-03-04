@@ -123,7 +123,13 @@ export class PhieuGiamGiaService {
     };
 
     // Gửi đối tượng đã chuyển đổi lên server
-    return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate);
+    return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate).pipe(
+      catchError((error: any) => {
+          // Xử lý lỗi ở đây
+          console.error('Error updating PhieuGiamGia:', error);
+          return throwError(error); // Chuyển tiếp lỗi để subscriber xử lý
+      })
+  );
   }
 
 

@@ -1,13 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, interval } from "rxjs";
-import { switchMap } from 'rxjs/operators';
+import { Observable, interval, throwError } from "rxjs";
+import { catchError, switchMap } from 'rxjs/operators';
 import { format } from 'date-fns';
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
 import { PhieuGiamGiaKhachHang } from "../model/class/phieu-giam-gia-khach-hang.class";
 import { PhieuGiamGiaUpdate } from "../model/interface/phieu-update.interface";
+import { KhachHang } from "../model/class/KhachHang.class";
 
 @Injectable({
   providedIn: "root",
@@ -61,8 +62,14 @@ export class PhieuGiamGiaService {
   }
 
   public add(phieuGiamGia: PhieuGiamGia): Observable<PhieuGiamGia> {
-    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia);
-  }
+    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia).pipe(
+        catchError((error: any) => {
+            // Xử lý lỗi ở đây
+            console.error('Error adding PhieuGiamGia:', error);
+            return throwError(error); // Chuyển tiếp lỗi để subscriber xử lý
+        })
+    );
+ }
 
   public addPhieuKhachHang(phieuGiamGiaId: number, selectedIds: number[]): Observable<PhieuGiamGia> {
     const request = {
@@ -75,13 +82,11 @@ export class PhieuGiamGiaService {
   public getAllPhieuKhachHang(): Observable<PhieuGiamGiaKhachHang[]> {
     return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang`);
   }
-  public getKhachHangTang(id: number): Observable<PhieuGiamGiaKhachHang[]> {
-    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang/${id}`);
+  public getKhachHangTang(id: number): Observable<KhachHang[]> {
+    return this.http.get<KhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang/${id}`);
   }
 
-  public getKhachHangTangKhongCo(id: number): Observable<PhieuGiamGiaKhachHang[]> {
-    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-Khong-co/${id}`);
-  }
+
 
 
 
@@ -121,6 +126,9 @@ export class PhieuGiamGiaService {
     return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate);
   }
 
+
+
+
   private calculateStatus(thoiGianBatDau: Date, thoiGianKetThuc: Date): string {
     const currentTime = new Date();
 
@@ -134,6 +142,20 @@ export class PhieuGiamGiaService {
     } else {
       return 'Đã hủy';
     }
+  }
+
+
+  public getPhieuKhach(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    id: number,
+    check:boolean
+  
+  ): Observable<PagedResponse<KhachHang>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}&check=${check}`;
+    return this.http.get<PagedResponse<KhachHang>>(
+      `${this.apiUrl}/ds-khach-tang${param}`
+    );
   }
 
 }

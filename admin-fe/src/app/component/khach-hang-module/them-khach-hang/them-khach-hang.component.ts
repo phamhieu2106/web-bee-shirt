@@ -238,7 +238,6 @@ export class ThemKhachHangComponent {
       to_name: hoTen,
       message: matKhau,
       to_email: email,
-      // from_email: this.authService.getUserFromStorage().email,
     });
   }
   private generateRandomPassword(): string {

@@ -29,5 +29,5 @@ export class HoaDon {
   lichSuHoaDons: LichSuHoaDon[];
   thanhToans: ThanhToan[];
 
-  orderNameTemp: string; // để lưu hóa đơn chờ
+  orderNameTemp: string; // để lưu STT hóa đơn chờ
 }

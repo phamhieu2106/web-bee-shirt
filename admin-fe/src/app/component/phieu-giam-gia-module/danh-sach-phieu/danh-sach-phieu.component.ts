@@ -6,6 +6,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
+import { Subscription } from "rxjs";
 
 
 
@@ -20,6 +21,7 @@ export class DanhSachPhieuComponent {
   public search = "";
   public selectedDetails: PhieuGiamGia;
   public phieuDetails: PhieuGiamGia;
+  private pollingSubscription: Subscription; // Biến lưu trữ subscription
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
@@ -132,14 +134,9 @@ export class DanhSachPhieuComponent {
 
 
 
-  public changeStatus(id: number): void {
-    this.phieuGiamGiaService.changeStatus(id).subscribe({
-      next: (response: PhieuGiamGia) => {
-      },
-      error: (error: HttpErrorResponse) => {
-      }
-    });
-  }
+public changeStatus(id: number): void {
+  this.phieuGiamGiaService.changeStatus(id).subscribe();
+}
 
 
   public onChangePageSize(e: any): void {
@@ -165,9 +162,17 @@ export class DanhSachPhieuComponent {
 
     })
   }
+
+
+  ngOnDestroy(): void {
+    // Huỷ subscription khi component được hủy bỏ
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
   // change trạng thái
   startPolling(): void {
-    this.phieuGiamGiaService.startPolling().subscribe((danhSachPhieuGiamGia: PhieuGiamGia[]) => {
+    this.pollingSubscription = this.phieuGiamGiaService.startPolling().subscribe((danhSachPhieuGiamGia: PhieuGiamGia[]) => {
       danhSachPhieuGiamGia.forEach((phieu: PhieuGiamGia) => {
         this.changeStatus(phieu.id);
       });

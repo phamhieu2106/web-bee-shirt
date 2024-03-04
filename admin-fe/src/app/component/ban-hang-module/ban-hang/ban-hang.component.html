@@ -14,13 +14,18 @@
             aria-expanded="false"
             placeholder="Thêm sản phẩm"
             (input)="getAllSpct()"
-            [(ngModel)]="search"
+            [(ngModel)]="searchProduct"
           />
           <div
             class="dropdown-menu product-suggestions"
             aria-labelledby="dropdownProduct"
           >
-            <div class="suggestion-item row d-flex" *ngFor="let spct of spcts">
+            <!-- Sản phẩm tìm kiếm -->
+            <div
+              class="suggestion-item row d-flex"
+              *ngFor="let spct of spcts"
+              (click)="chooseProduct(spct)"
+            >
               <img
                 class="col-2"
                 [src]="spct.hinhAnhs[0].imageUrl"
@@ -40,11 +45,14 @@
                 <div class="text-mute">{{ spct.sanPham.ma }}</div>
               </div>
               <div class="col-3 mr-auto">
-                <div class="">{{ spct.giaBan | currency : "đ " }}</div>
+                <div class="">
+                  {{ spct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
+                </div>
                 <div class="text-mute">Còn lại: {{ spct.soLuongTon }}</div>
               </div>
             </div>
           </div>
+          <!-- Sản phẩm tìm kiếm -->
         </div>
       </div>
       <!-- End search product taskbar -->
@@ -76,42 +84,68 @@
   <div class="card col-9">
     <!-- Items -->
     <table class="table table-hover">
-      <thead>
-        <th>STT</th>
-        <th>Mã</th>
-        <th>Tên Sản phẩm</th>
-        <th>Số lượng</th>
-        <th>Đơn Giá</th>
-        <th>Giá bán</th>
-        <th>Tổng tiền</th>
+      <thead class="">
+        <th class="">Mã</th>
+        <th class="">Tên Sản phẩm</th>
+        <th class="">Số lượng</th>
+        <th class="">Đơn Giá</th>
+        <th class="">Giá bán</th>
+        <th class="">Tổng tiền</th>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>
-            <button type="button" class="btn btn-outline-danger p-1 m-1">
+        <tr class="" *ngFor="let hdct of order?.hoaDonChiTiets; index as i">
+          <td class="">
+            <button
+              type="button"
+              class="btn btn-outline-danger p-1 m-1"
+              (click)="deleteHDCT(i)"
+            >
               <i class="fa-solid fa-trash"></i>
             </button>
-            <span>SP01</span>
+            <span>{{ hdct.sanPhamChiTiet.sanPham.ma }}</span>
           </td>
-          <td>
-            <div class="fw-bold">Áo sơ mi Gucci Hames - Màu - Size</div>
-            <div class="text-muted">Size: XL</div>
+          <td class="">
+            <div class="fw-bold">
+              {{
+                hdct.sanPhamChiTiet.sanPham.ten +
+                  " - " +
+                  hdct.sanPhamChiTiet.mauSac.ten
+              }}
+            </div>
+            <div class="text-muted">
+              Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}
+            </div>
           </td>
-          <td>
+          <td class="">
             <div class="qty">
-              <button class="rounded-5 btn-outline-dark">
+              <button
+                class="rounded-5 btn-outline-dark p-0"
+                (click)="minusQuantity(hdct)"
+              >
                 <i class="fa-solid fa-minus"></i>
               </button>
-              <input type="number" class="count" value="1" />
-              <button class="rounded-5 btn-outline-dark">
+              <input type="number" class="count" [(ngModel)]="hdct.soLuong" />
+              <button
+                class="rounded-5 btn-outline-dark p-0"
+                (click)="plusQuantity(hdct)"
+              >
                 <i class="fa-solid fa-plus"></i>
               </button>
             </div>
           </td>
-          <td>100,000</td>
-          <td><input type="number" /></td>
-          <td>100,000</td>
+          <td class="">
+            {{
+              hdct.sanPhamChiTiet.giaBan | currency : " " : "symbol" : "1.0-0"
+            }}
+          </td>
+          <td class="">
+            <input type="number" [(ngModel)]="hdct.giaBan" />
+          </td>
+          <td class="">
+            {{
+              hdct.soLuong * hdct.giaBan | currency : " " : "symbol" : "1.0-0"
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -125,18 +159,21 @@
           class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
         >
           <i class="fa-solid fa-user m-1 me-md-2"></i>
-          <div class="flex-grow-1">
+          <a
+            [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id"
+            class="flex-grow-1"
+          >
             <p class="d-none d-md-block mb-0" id="userFullName">
-              Dương Việt Hùng
+              {{ order.khachHang.hoTen }}
             </p>
             <p
               class="d-none d-md-block mb-0 text-mute"
               style="font-size: 12px"
               id="userPhoneNumber"
             >
-              0377777777
+              {{ order.khachHang.sdt }}
             </p>
-          </div>
+          </a>
           <button type="button" class="btn" (click)="removeKhachHangInOrder()">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
@@ -152,6 +189,8 @@
           aria-haspopup="true"
           aria-expanded="false"
           placeholder="Thêm khách hàng vào đơn"
+          (input)="getAllKhachHang()"
+          [(ngModel)]="searchKhachHang"
         />
         <div
           class="dropdown-menu customer-suggerstions"
@@ -161,8 +200,12 @@
             <i class="fa-solid fa-plus"></i>
             Thêm mới khách hàng
           </div>
-          <div class="suggestion-item p-2" (click)="chooseKhachHang(null)">
-            Dương Việt Hùng - 0377777777
+          <div
+            class="suggestion-item p-2"
+            (click)="chooseKhachHang(kh)"
+            *ngFor="let kh of khachHangs"
+          >
+            {{ kh.hoTen + " - " + kh.sdt }}
           </div>
         </div>
       </div>
@@ -182,23 +225,33 @@
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Số lượng sản phẩm:</span>
-        <span class="ml-auto">1</span>
+        <span class="ml-auto">{{ getSoLuongSanPham() }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Tổng tiền:</span>
-        <span class="ml-auto">100,000</span>
+        <span class="ml-auto">{{
+          getTongTien() | currency : "đ " : "symbol" : "1.0-0"
+        }}</span>
       </div>
-      <div class="d-flex justify-content-between m-1">
+      <!-- Show on selected Giao hàng -->
+      <div
+        class="d-flex justify-content-between m-1"
+        *ngIf="order.loaiHoaDon == 'GIAO_HANG'"
+      >
         <span class="mr-auto fw-bold">Phí vận chuyển:</span>
-        <span class="ml-auto"><input type="number" /></span>
+        <span class="ml-auto"
+          ><input type="number" [(ngModel)]="order.phiVanChuyen"
+        /></span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Giảm giá:</span>
-        <span class="ml-auto">10,000</span>
+        <span class="ml-auto">{{
+          order.tienGiam | currency : "đ " : "symbol" : "1.0-0"
+        }}</span>
       </div>
       <div class="d-flex justify-content-between m-1 h5">
         <span class="mr-auto fw-bold">Khách phải trả:</span>
-        <span class="ml-auto">90,000</span>
+        <span class="ml-auto">{{ getMustPay() | currency : "đ " }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold"
@@ -223,7 +276,7 @@
           >Ghi chú:<textarea rows="2" cols="45"></textarea>
         </span>
       </div>
-      <div style="height: 100px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
+      <div style="height: 150px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
       <!-- Giao hàng  -->
       <div *ngIf="order.loaiHoaDon == 'GIAO_HANG'">
         <div class="d-flex justify-content-between m-1">
@@ -238,11 +291,16 @@
         </div>
         <app-get-dia-chi-va-phi-van-chuyen
           [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
+          (phiVanChuyen)="updatePhiVanChuyen($event)"
         ></app-get-dia-chi-va-phi-van-chuyen>
       </div>
       <div class="mb-3">
-        <input type="hidden" id="orderId" />
-        <button class="btn btn-success btn-lg w-100 h-100">Thanh toán</button>
+        <button
+          class="btn btn-success btn-lg w-100 h-100"
+          (click)="thanhToan()"
+        >
+          Thanh toán
+        </button>
       </div>
     </div>
   </div>

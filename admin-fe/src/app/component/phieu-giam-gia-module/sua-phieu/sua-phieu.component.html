@@ -169,6 +169,10 @@
                                 </div>
                 
                               </div>
+                              <div class="mb-3">
+                                <input type="checkbox" name="sendMail" id="sendMail" class="form-check-inline" (change)="onSendMailChange($event)">
+                                <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
+                            </div>
 
                             <button type="button" class="btn btn-primary" (click)="updatePhieu()">Sửa Phiếu</button>
                         </form>

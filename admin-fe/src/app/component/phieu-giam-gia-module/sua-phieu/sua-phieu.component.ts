@@ -10,6 +10,7 @@ import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { Router } from '@angular/router';
 import Swal from "sweetalert2";
+import emailjs from "@emailjs/browser";
 
 @Component({
   selector: "app-sua-phieu",
@@ -34,9 +35,10 @@ export class SuaPhieuComponent implements OnInit {
   selectedIds: number[] = [];
   phieuGiamGiaId: number;
   soLuongCheck: number = 0;
+  sendMailChecked: boolean = false
 
- 
-  idKhach:number
+
+  idKhach: number
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
@@ -53,42 +55,42 @@ export class SuaPhieuComponent implements OnInit {
     this.phieuGiamGia.getOne(this.idPhieu).subscribe({
       next: (response) => {
         this.phieu = response;
-        
+
         this.initUpdateForm(this.phieu);
-       
-    
-        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu,true).subscribe({
+
+
+        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, true).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
-              if (response) {
-                  this.pagedResponse = response;
-                  response.data.forEach(khach => {
-                    this.selectedIds.push(khach.id);
-                    this.soLuongCheck++;
-                });
-                 
-              } else {
-                  console.error('Dữ liệu phản hồi không hợp lệ:', response);
-              }
+            if (response) {
+              this.pagedResponse = response;
+              response.data.forEach(khach => {
+                this.selectedIds.push(khach.id);
+                this.soLuongCheck++;
+              });
+
+            } else {
+              console.error('Dữ liệu phản hồi không hợp lệ:', response);
+            }
           },
           error: (error) => {
-              console.error('Lỗi khi truy xuất dữ liệu:', error);
-          }
-      });
-
-      console.log(this.selectedIds)
-      this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu,false).subscribe({
-        next: (response: PagedResponse<KhachHang>) => {
-            if (response) {
-                this.pagedResponse2 = response;
-               
-            } else {
-                console.error('Dữ liệu phản hồi không hợp lệ:', response);
-            }
-        },
-        error: (error) => {
             console.error('Lỗi khi truy xuất dữ liệu:', error);
-        }
-    });
+          }
+        });
+
+        console.log(this.selectedIds)
+        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, false).subscribe({
+          next: (response: PagedResponse<KhachHang>) => {
+            if (response) {
+              this.pagedResponse2 = response;
+
+            } else {
+              console.error('Dữ liệu phản hồi không hợp lệ:', response);
+            }
+          },
+          error: (error) => {
+            console.error('Lỗi khi truy xuất dữ liệu:', error);
+          }
+        });
       },
       error: (error) => {
         console.error("Không lấy được phiếu:", error);
@@ -96,7 +98,7 @@ export class SuaPhieuComponent implements OnInit {
       },
     });
 
-   
+
   }
 
   // Phiếu giảm giá
@@ -110,8 +112,8 @@ export class SuaPhieuComponent implements OnInit {
       kieu: new FormControl(phieu?.kieu, [Validators.required]),
       loai: new FormControl(phieu?.loai, [Validators.required]),
       soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
-      thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required,this.validateNgayBatDau()]),
-      thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required,this.validateNgay()]),
+      thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required, this.validateNgayBatDau()]),
+      thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required, this.validateNgay()]),
       dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [Validators.required]),
       giaTri: new FormControl(phieu?.giaTri, [Validators.required, this.validateVip()]),
       giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
@@ -126,7 +128,7 @@ export class SuaPhieuComponent implements OnInit {
       giaTriMaxControl.setValue("0");
     }
 
-    this.updateForm.get("kieu").valueChanges.subscribe((value:any) => {
+    this.updateForm.get("kieu").valueChanges.subscribe((value: any) => {
       const giaTriMaxControl = this.updateForm.get("giaTriMax");
       if (value === "0") {
         giaTriMaxControl.enable();
@@ -190,10 +192,10 @@ export class SuaPhieuComponent implements OnInit {
 
       const thoiGianBatDau = this.updateForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.updateForm.get("thoiGianKetThuc");
-    
+
       // Kiểm tra nếu cả hai ngày đều được nhập
       if (thoiGianBatDau && thoiGianKetThuc) {
-        
+
         const startDate = new Date(thoiGianBatDau.value);
         const endDate = new Date(thoiGianKetThuc.value);
         // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày bắt đầu
@@ -214,32 +216,32 @@ export class SuaPhieuComponent implements OnInit {
         return null;
       }
       const ngayBatDau = control.value;
-  
+
       // Kiểm tra nếu ô giá trị trống
       if (!ngayBatDau) {
         return { ngayBatDau: "Không để trống ngày bắt đầu" };
       }
-  
+
       const thoiGianBatDau = this.updateForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.updateForm.get("thoiGianKetThuc");
-      
+
       // Kiểm tra nếu cả hai ngày đều được nhập
       if (thoiGianBatDau && thoiGianKetThuc) {
         const startDate = new Date(thoiGianBatDau.value);
         const endDate = new Date(thoiGianKetThuc.value);
-  
+
         // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
         if (startDate > endDate) {
           return { ngayBatDau: "Ngày bắt đầu không lớn hơn ngày kết thúc" };
         }
       }
-  
+
       return null; // Trả về null nếu không có lỗi
     };
   }
 
 
-  checkThoiGian(){
+  checkThoiGian() {
     this.updateForm.get("thoiGianBatDau").updateValueAndValidity();
     this.updateForm.get("thoiGianKetThuc").updateValueAndValidity();
   }
@@ -248,29 +250,38 @@ export class SuaPhieuComponent implements OnInit {
   onKieuChange() {
     const kieuValue = this.updateForm.get('kieu').value;
     const giaTriMaxControl = this.updateForm.get('giaTriMax');
-    if (kieuValue==0) {
+    if (kieuValue == 0) {
       giaTriMaxControl.enable();
     } else {
       giaTriMaxControl.disable();
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
-     
+
     }
     this.updateForm.get('giaTri').updateValueAndValidity();
   }
 
-  
+
   isTableDisabled: boolean = false;
+  public checkSoLuong:boolean =false
+
 
   onLoaiChange() {
-    const loaiValue = this.updateForm.get('loai').value;
-    const soluongControl = this.updateForm.get('soLuong');
-    if (loaiValue === '1') {
-      soluongControl.enable();
-    } else {
-      soluongControl.disable();
+    const loaiValue = this.updateForm.get("loai").value;
    
+    if (loaiValue ==0) {
+      this.checkSoLuong = true
+      this.isTableDisabled =true
+      this.updateForm.get("soLuong").setValue(0);
+
+    } else {
+      this.checkSoLuong = false
+      this.isTableDisabled =false
+      this.updateForm.get("soLuong").setValue(0);
+   
+     
     }
-    this.isTableDisabled = !this.isTableDisabled;
+    
+  
   }
 
 
@@ -279,13 +290,13 @@ export class SuaPhieuComponent implements OnInit {
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    id:number = this.idKhach 
+    id: number = this.idKhach
   ): void {
-    this.phieuGiamGia.getPhieuKhach(page, pageSize,id,true).subscribe({
+    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, true).subscribe({
       next: (response: PagedResponse<KhachHang>) => {
         this.pagedResponse = response;
-     
-      
+
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -293,26 +304,26 @@ export class SuaPhieuComponent implements OnInit {
     });
   }
 
-    // Khách Hàng kho co
+  // Khách Hàng kho co
 
-    public goToPage2(
-      page: number = 1,
-      pageSize: number = 5,
-      id:number = this.idKhach 
-    ): void {
-      this.phieuGiamGia.getPhieuKhach(page, pageSize,id,false).subscribe({
-        next: (response: PagedResponse<KhachHang>) => {
-          this.pagedResponse = response;
-       
-        
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        },
-      });
-    }
+  public goToPage2(
+    page: number = 1,
+    pageSize: number = 5,
+    id: number = this.idKhach
+  ): void {
+    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, false).subscribe({
+      next: (response: PagedResponse<KhachHang>) => {
+        this.pagedResponse = response;
 
-  
+
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
+
+
 
 
 
@@ -343,7 +354,7 @@ export class SuaPhieuComponent implements OnInit {
         soLuongControl.setValue(this.soLuongCheck);
       }
     }
-    
+
   }
 
   isCustomerSelected(id: number): boolean {
@@ -359,20 +370,36 @@ export class SuaPhieuComponent implements OnInit {
 
   updatePhieu(): void {
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
-      next: () => {
-        console.log(this.idPhieu)
+      next: (response: PhieuGiamGia) => {
+        console.log(response)
 
         this.phieuGiamGia
-        .addPhieuKhachHang(this.idPhieu, this.selectedIds)
-        .subscribe();
-       
+          .addPhieuKhachHang(this.idPhieu, this.selectedIds)
+          .subscribe();
+
+        if (this.sendMailChecked) {
+          this.selectedIds.forEach(id => {
+            // Gọi service để lấy thông tin của khách hàng dựa trên id
+            this.khachHangService.getById(id).subscribe({
+              next: (khachHang: any) => {
+                // Gửi email cho khách hàng
+                console.log(response.maPhieuGiamGia)
+                this.send(response.maPhieuGiamGia, khachHang.email, response.thoiGianKetThuc);
+              },
+              error: (error: any) => {
+                console.error('Error getting customer information:', error);
+              }
+            });
+          });
+        }
+
         Swal.fire({
           icon: "success",
           title: `Sửa nhân viên thành công!`,
           showConfirmButton: false,
           timer: 1500,
         });
-           // Delay 3-4 giây trước khi chuyển đến trang danh sách
+        // Delay 3-4 giây trước khi chuyển đến trang danh sách
         setTimeout(() => {
           this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
         }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
@@ -403,8 +430,26 @@ export class SuaPhieuComponent implements OnInit {
         }
       },
     });
-}
 
 
+
+  }
+
+
+  onSendMailChange(event: any): void {
+    // Lấy giá trị mới của checkbox "Gửi Mail Cho Khách Hàng"
+    this.sendMailChecked = event.target.checked;
+  }
+  private send(vocher: string, email: string, ngayHetHan: string) {
+    emailjs.init("XlFoYJLd1vcoTgaEY");
+    emailjs.send("service_uxvm75s", "template_c1qot7h", {
+      // from_name: this.authService.getUserFromStorage().hoTen,
+      voucher_code: vocher,
+      to_email: email,
+      expiry_date: ngayHetHan
+
+    });
+
+  }
 
 }

@@ -8,7 +8,11 @@
           [(ngModel)]="diaChiVaPhiVanChuyen.tinhId"
           (change)="getAllHuyenByTinh()"
         >
-          <option *ngFor="let t of tinhs" value="{{ t.ProvinceID }}">
+          <option
+            *ngFor="let t of tinhs"
+            [value]="t.ProvinceID"
+            [selected]="diaChiVaPhiVanChuyen.tinhId == t.ProvinceID"
+          >
             {{ t.ProvinceName }}
           </option>
         </select>
@@ -24,7 +28,11 @@
           [(ngModel)]="diaChiVaPhiVanChuyen.huyenId"
           (change)="getAllXaByHuyen()"
         >
-          <option *ngFor="let h of huyens" value="{{ h.DistrictID }}">
+          <option
+            *ngFor="let h of huyens"
+            value="{{ h.DistrictID }}"
+            [selected]="diaChiVaPhiVanChuyen.huyenId == h.DistrictID"
+          >
             {{ h.DistrictName }}
           </option>
         </select>
@@ -40,7 +48,11 @@
           (change)="onFinishChooseDiaChi()"
           [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
         >
-          <option *ngFor="let x of xas" value="{{ x.WardCode }}">
+          <option
+            *ngFor="let x of xas"
+            [value]="x.WardCode"
+            [selected]="diaChiVaPhiVanChuyen.xaCode == x.WardCode"
+          >
             {{ x.WardName }}
           </option>
         </select>

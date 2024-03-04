@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -151,18 +152,23 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         } catch (Exception e) {
             throw new ResourceInvalidException("Discount Percent of Object Request is not a number");
         }
-        if(object.getListIdSanPhamChiTiet().isEmpty()){
+        if (object.getListIdSanPhamChiTiet().isEmpty()) {
             throw new ResourceExistsException("Object Products Is Empty!");
         }
-        if(object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())){
+        if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
             throw new ResourceExistsException("Object Start Date Is Invalid!");
+        }
+        if (!repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
+                object.getThoiGianBatDau(), object.getThoiGianKetThuc()).isEmpty()) {
+            throw new ResourceInvalidException("Thời gian diễn ra đợt giảm giá bị trùng thời điểm với đợt giảm giá khác");
         }
         return check;
     }
-    private boolean validationCheckUpdate(Integer id,DotGiamGiaRequest object) {
+
+    private boolean validationCheckUpdate(Integer id, DotGiamGiaRequest object) {
         boolean check = true;
         //        Check Exit by Ten
-        if(!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())){
+        if (!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())) {
             if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
                 throw new ResourceExistsException("Object Request Name is Exits!");
             }
@@ -176,17 +182,29 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         } catch (Exception e) {
             throw new ResourceInvalidException("Discount Percent of Object Request is not a number");
         }
-        if(object.getListIdSanPhamChiTiet().isEmpty()){
+        if (object.getListIdSanPhamChiTiet().isEmpty()) {
             throw new ResourceExistsException("Object Products Is Empty!");
         }
-        if(object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())){
+        if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
             throw new ResourceExistsException("Object Start Date Is Invalid!");
         }
+
+        List<DotGiamGiaResponse> dotGiamGiaResponseList = repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
+                object.getThoiGianBatDau(), object.getThoiGianKetThuc());
+
+        for (DotGiamGiaResponse response : dotGiamGiaResponseList) {
+            if (!(Integer.parseInt(response.getId()) == id)) {
+                throw new ResourceInvalidException("Thời gian diễn ra đợt giảm giá bị trùng thời điểm với đợt giảm giá khác");
+            }
+        }
+
         return check;
     }
+
     @Override
+    @Transactional
     public DotGiamGia add(DotGiamGiaRequest object) {
-        if(validationCheck(object)){
+        if (validationCheck(object)) {
             //      Tự Động Tạo Mã Đợt Giảm Giá
             UUID uuid = UUID.randomUUID();
             //        Set Code
@@ -248,8 +266,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     }
 
     @Override
+    @Transactional
     public DotGiamGia update(Integer id, DotGiamGiaRequest object) {
-        if(validationCheckUpdate(id,object)){
+        if (validationCheckUpdate(id, object)) {
             //        Find Object from Database
             Optional<DotGiamGia> optional = repository.findById(id);
 

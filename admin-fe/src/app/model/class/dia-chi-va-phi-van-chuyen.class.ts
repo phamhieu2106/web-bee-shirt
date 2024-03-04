@@ -1,9 +1,9 @@
 export class DiaChiVaPhiVanChuyen {
-  tinh: string;
+  tinh: string = null;
   tinhId: number;
-  huyen: string;
+  huyen: string = null;
   huyenId: number;
-  xa: string;
+  xa: string = null;
   xaCode: string;
   cuThe: string;
   duKien: Date;

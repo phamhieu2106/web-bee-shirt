@@ -19,6 +19,7 @@ import { KhachHang } from "src/app/model/class/KhachHang.class";
 export class SuaPhieuComponent implements OnInit {
   phieuGiamGiaForm: FormGroup;
   public pagedResponse: PagedResponse<KhachHang>;
+  public pagedResponse2: PagedResponse<KhachHang>;
 
 
   public idPhieu: number
@@ -49,17 +50,35 @@ export class SuaPhieuComponent implements OnInit {
         this.phieu = response;
         
         this.initUpdateForm(this.phieu);
+       
     
-        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu).subscribe({
+        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu,true).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
-          
-            this.khachHangList = response.data;
-            console.log(this.khachHangList)
+              if (response) {
+                  this.pagedResponse = response;
+                 
+              } else {
+                  console.error('Dữ liệu phản hồi không hợp lệ:', response);
+              }
           },
           error: (error) => {
-            console.error('Lỗi khi truy xuất dữ liệu:', error);
+              console.error('Lỗi khi truy xuất dữ liệu:', error);
           }
-        });
+      });
+
+      this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu,false).subscribe({
+        next: (response: PagedResponse<KhachHang>) => {
+            if (response) {
+                this.pagedResponse2 = response;
+               
+            } else {
+                console.error('Dữ liệu phản hồi không hợp lệ:', response);
+            }
+        },
+        error: (error) => {
+            console.error('Lỗi khi truy xuất dữ liệu:', error);
+        }
+    });
       },
       error: (error) => {
         console.error("Không lấy được phiếu:", error);
@@ -245,16 +264,17 @@ export class SuaPhieuComponent implements OnInit {
   }
 
 
-  // Khách Hàng
+  // Khách Hàng co
 
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    id:number = this.idKhach
+    id:number = this.idKhach 
   ): void {
-    this.phieuGiamGia.getPhieuKhach(page, pageSize,id).subscribe({
+    this.phieuGiamGia.getPhieuKhach(page, pageSize,id,true).subscribe({
       next: (response: PagedResponse<KhachHang>) => {
-        this.khachHangList = response;
+        this.pagedResponse = response;
+     
       
       },
       error: (error: HttpErrorResponse) => {
@@ -263,11 +283,31 @@ export class SuaPhieuComponent implements OnInit {
     });
   }
 
+    // Khách Hàng kho co
+
+    public goToPage2(
+      page: number = 1,
+      pageSize: number = 5,
+      id:number = this.idKhach 
+    ): void {
+      this.phieuGiamGia.getPhieuKhach(page, pageSize,id,false).subscribe({
+        next: (response: PagedResponse<KhachHang>) => {
+          this.pagedResponse = response;
+       
+        
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+      });
+    }
+
   
 
 
 
   public onChangePageSize(e: any): void {
+    console.log(this.idKhach)
     this.goToPage(1, e.target.value, this.idKhach);
   }
 

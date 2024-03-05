@@ -140,9 +140,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
                 }
               },
             },
@@ -188,9 +188,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
                 }
               },
             },

@@ -167,7 +167,7 @@ export class LineChartComponent implements OnInit {
           },
           {
             label: "Tháng Hiện Tại",
-            data: [542, 542, 536, 327],
+            data: [],
             backgroundColor: [
               "limegreen",
               "limegreen",

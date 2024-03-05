@@ -5,6 +5,7 @@
 ></app-main-heading>
 
 <!-- MAIN -->
+<!-- Số Lượng -->
 <div class="row gutters mt-2">
   <div class="col-md-12 col-sm-12">
     <!-- Graps -->
@@ -64,10 +65,11 @@
 </div>
 
 <div class="row gutters">
+  <!-- Biểu Đồ Đơn Hàng -->
   <div class="col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
-        <strong>Biểu Đồ Đơn Hàng</strong>
+        <strong>Biểu Đồ Đơn Hàng Hoàn Thành</strong>
         <div>
           <button (click)="setChart('week')" class="btn btn-primary m-1">
             Tuần
@@ -87,6 +89,8 @@
       </div>
     </div>
   </div>
+
+  <!-- Biểu Đồ Khách Hàng -->
   <div class="col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
@@ -123,6 +127,7 @@
   </div>
 </div>
 
+<!-- Biểu Đồ Doanh Thu -->
 <div class="row gutters">
   <div class="col col-md-12 col-sm-12">
     <div class="card">
@@ -142,6 +147,57 @@
       </div>
       <div class="card-body">
         <app-line-chart-sale [tenChart]="tenChartSale"></app-line-chart-sale>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Phiếu Giảm Giá -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Phiếu Giảm Giá Được Sử Dụng</strong>
+      </div>
+      <div class="card-body">
+        <app-pie-chart></app-pie-chart>
+      </div>
+    </div>
+  </div>
+  <!-- Biểu Đồ Đợt Giảm Giá -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Số Lượng Sản Phẩm Được Mua Từ Các Đợt Giảm Giá</strong>
+      </div>
+      <div class="card-body">
+        <app-pie-discount-chart></app-pie-discount-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Sản Phẩm -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Loại Sản Phẩm Bán Chạy</strong>
+      </div>
+      <div class="card-body">
+        <app-polar-product-chart></app-polar-product-chart>
+      </div>
+    </div>
+  </div>
+
+  <!-- Biểu Đồ Việt Nam Map -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Loại Sản Phẩm Bán Chạy</strong>
+      </div>
+      <div class="card-body">
+        <app-vietnam-map-chart></app-vietnam-map-chart>
       </div>
     </div>
   </div>

@@ -217,7 +217,10 @@ export class LineChartSaleComponent {
           },
           {
             label: "Năm Hiện Tại",
-            data: [542, 542, 536, 327, 17, 0.0, 538, 541, 541, 541, 541, 541],
+            data: [
+              230000000, 10000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+              400000, 22200000, 1000000, 1000000, 100000000,
+            ],
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -241,16 +244,27 @@ export class LineChartSaleComponent {
         scales: {
           y: {
             ticks: {
-              // Đơn vị của trục y
               callback: function (value, index, values) {
-                // Nếu giá trị hiện tại là giá trị cuối cùng
-                if (index === values.length - 1) {
-                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
+                if (typeof value === "number") {
+                  if (index === values.length - 1) {
+                    return "1+ Tỉ VNĐ";
+                  } else {
+                    let formattedValue =
+                      value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,") +
+                      " Triệu VNĐ";
+                    if (value % 1 === 0) {
+                      // Kiểm tra xem giá trị có phải là số nguyên không
+                      formattedValue = value.toLocaleString() + " VNĐ"; // Sử dụng toLocaleString để loại bỏ số thập phân .00
+                    }
+                    return formattedValue;
+                  }
                 } else {
-                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
+                  return value; // Trả về giá trị nguyên nếu không phải là số
                 }
               },
             },
+            min: 0,
+            max: 1000000000,
           },
         },
       },

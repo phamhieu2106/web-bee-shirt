@@ -7,6 +7,10 @@ import { LineChartComponent } from "./line-chart/line-chart.component";
 import { LayoutModule } from "../layout-module/layout.module";
 import { LineChartCustomerComponent } from "./line-chart-customer/line-chart-customer.component";
 import { LineChartSaleComponent } from './line-chart-sale/line-chart-sale.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { PieDiscountChartComponent } from './pie-discount-chart/pie-discount-chart.component';
+import { PolarProductChartComponent } from './polar-product-chart/polar-product-chart.component';
+import { VietnamMapChartComponent } from './vietnam-map-chart/vietnam-map-chart.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +18,10 @@ import { LineChartSaleComponent } from './line-chart-sale/line-chart-sale.compon
     LineChartComponent,
     LineChartCustomerComponent,
     LineChartSaleComponent,
+    PieChartComponent,
+    PieDiscountChartComponent,
+    PolarProductChartComponent,
+    VietnamMapChartComponent,
   ],
   imports: [CommonModule, ThongKeModuleRoutingModule, LayoutModule],
 })

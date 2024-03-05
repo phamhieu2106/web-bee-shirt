@@ -18,6 +18,7 @@ import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { CurrencyPipe } from "@angular/common";
 import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
+import { ThongKeModuleModule } from "./component/thong-ke-module/thong-ke-module.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
     ToastrModule.forRoot(),
 
     AuthModule,
+    ThongKeModuleModule,
     HoaDonModule,
     KhachHangModule,
     NhanVienModule,

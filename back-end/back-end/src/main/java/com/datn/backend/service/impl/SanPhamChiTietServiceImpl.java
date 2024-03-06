@@ -98,8 +98,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         CoAo coAo = coAoRepo.findById(request.getCoAoId()).get();
         ChatLieu chatLieu = chatLieuRepo.findById(request.getChatLieuId()).get();
 
-        spct.setGiaNhap(request.getGiaNhap());
-        spct.setGiaBan(request.getGiaBan());
+//        spct.setGiaNhap(request.getGiaNhap());
+//        spct.setGiaBan(request.getGiaBan());
         spct.setSanPham(sanPham);
         spct.setKieuDang(kieuDang);
         spct.setThietKe(kieuThietKe);

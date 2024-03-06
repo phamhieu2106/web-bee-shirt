@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -31,7 +32,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             							OR dgg.ten_dot_giam_gia LIKE %:search%
                                         OR dgg.gia_tri_phan_tram LIKE %:search%)
                                     GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-                                    ORDER BY dgg.id DESC
+                                    ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getPagination(Pageable pageable,
@@ -46,7 +47,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             WHERE dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate
             AND dgg.trang_thai > 0
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusAll(Pageable pageable,
@@ -63,7 +64,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             WHERE dgg.trang_thai = :status 
              AND (dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate )
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
                         """,
             nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusWithDate(Pageable pageable,
@@ -96,7 +97,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
 
     @Query(value = """
-                SELECT spct.id as Id, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
+                SELECT spct.id as Id, ha.image_url as HinhAnhSanPham, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
                 cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.ma as MaMauSac, ta.Ten as TenTayAo,
                 tk.ten as TenThietKe,
                 spct.created_at as NgayTao,
@@ -113,6 +114,8 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                 LEFT JOIN san_pham sp ON sp.id = spct.san_pham_id 
                 LEFT JOIN tay_ao ta ON ta.id = spct.tay_ao_id
                 LEFT JOIN kieu_thiet_ke tk ON tk.id = spct.thiet_ke_id
+                LEFT JOIN spct_hinh_anh spctha ON spctha.id = spct.id
+                LEFT JOIN hinh_anh ha ON ha.id = spctha.hinh_anh_id
                 WHERE sp.id IN ( :id );
             """, nativeQuery = true)
     Page<SanPhamChiTietResponse> getAllSanPhamChiTietBySanPhamId(Pageable pageable, @Param("id") List<Integer> id);
@@ -141,4 +144,37 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
 
+    @Query(value = """
+                    SELECT\s
+                        dgg.id as Id,
+                        dgg.ma_dot_giam_gia as MaDotGiamGia,
+                        dgg.ten_dot_giam_gia as TenDotGiamGia,
+                        dgg.gia_tri_phan_tram as GiaTriPhanTram,
+                        dggsp.thoi_gian_bat_dau as ThoiGianBatDau,
+                        dggsp.thoi_gian_ket_thuc as ThoiGianKetThuc,
+                        COUNT(dggsp.id) as SoLuongSanPham,
+                        dgg.trang_thai as TrangThai,
+                        dgg.created_at as NgayTao,
+                        dgg.updated_at as NgayCapNhat,
+                        dgg.created_by as NguoiTao,
+                        dgg.last_updated_by as NguoiCapNhatGanNhat
+                    FROM\s
+                        dot_giam_gia dgg
+                    JOIN\s
+                        dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
+                    WHERE\s
+                        dggsp.trang_thai = 1
+                        AND dgg.trang_thai > 0
+                        AND (
+                            ( :thoiGianBatDau BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc)
+                            OR ( :thoiGianKetThuc BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc)
+                            OR ( :thoiGianBatDau <= dggsp.thoi_gian_bat_dau AND :thoiGianKetThuc >= dggsp.thoi_gian_ket_thuc)
+                        )
+                    GROUP BY\s
+                        dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
+                    ORDER BY\s
+                        dgg.id DESC
+            """, nativeQuery = true)
+    List<DotGiamGiaResponse> getAllDotGiamGiaByThoiGianBatDauVaKetThuc(@Param("thoiGianBatDau") LocalDateTime thoiGianBatDau,
+                                                                       @Param("thoiGianKetThuc") LocalDateTime thoiGianKetThuc);
 }

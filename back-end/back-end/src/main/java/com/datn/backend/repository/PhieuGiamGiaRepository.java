@@ -14,6 +14,9 @@ import java.util.List;
 @Repository
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
 
+    boolean existsByMaPhieuGiamGia(String maPhieu);
+
+
     @Query(value = "select pgg.id  as id,  pgg.ma_phieu_giam_gia as MaPhieuGiamGia," +
             " pgg.ten_phieu_giam_gia  as TenPhieuGiamGia ," +
             "pgg.kieu as Kieu," +

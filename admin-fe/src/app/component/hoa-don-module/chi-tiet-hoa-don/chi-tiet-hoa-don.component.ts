@@ -12,7 +12,7 @@ import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chu
   styleUrls: ["./chi-tiet-hoa-don.component.css"],
 })
 export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
-  id: number = -1;
+  // id: number = -1;
   hoaDon: HoaDon = new HoaDon();
   diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   orderNameTemp: string;
@@ -24,7 +24,8 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private pdfService: PdfService,
     private toastr: ToastrService
   ) {
-    this.id = this.activatedRoute.snapshot.params["id"];
+    let id = this.activatedRoute.snapshot.params["id"];
+    this.getHoaDonById(id);
   }
   ngOnDestroy(): void {
     // console.log(this.hoaDon);
@@ -40,12 +41,10 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.getHoaDonById();
-  }
+  ngOnInit() {}
 
-  getHoaDonById() {
-    this.hoaDonService.getById(this.id).subscribe({
+  getHoaDonById(id: number) {
+    this.hoaDonService.getById(id).subscribe({
       next: (resp) => {
         this.hoaDon = resp;
         // console.log(resp);
@@ -88,4 +87,20 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  // private mapToDiaChiVaPhiVanChuyen(diaChi: string): DiaChiVaPhiVanChuyen {
+  //   let dcvpvn = new DiaChiVaPhiVanChuyen();
+  //   if (diaChi != null && diaChi != undefined) {
+  //     const diaChis: string[] = diaChi.split(",");
+  //     dcvpvn.cuThe = diaChis[0];
+  //     dcvpvn.xa = diaChis[1];
+  //     dcvpvn.huyen = diaChis[2];
+  //     dcvpvn.tinh = diaChis[3];
+  //   }
+
+  //   return dcvpvn;
+  // }
+  // doiDiaChi() {
+  //   this.mapToDiaChiVaPhiVanChuyen(this.hoaDon.diaChiNguoiNhan);
+  // }
 }

@@ -142,6 +142,14 @@ export class ThemNhanVienComponent {
           .add(this.addForm.value, this.selectFile)
           .subscribe({
             next: () => {
+              const addFormValue = JSON.parse(
+                JSON.stringify(this.addForm.value)
+              );
+              this.send(
+                addFormValue.hoTen,
+                addFormValue.matKhau,
+                addFormValue.email
+              );
               // this.goToPage(1, 5, "");
               this.initAddForm();
               Swal.fire({
@@ -184,12 +192,6 @@ export class ThemNhanVienComponent {
               }
             },
           });
-
-        this.send(
-          this.addForm.value.hoTen,
-          this.addForm.value.matKhau,
-          this.addForm.value.email
-        );
       }
     });
   }

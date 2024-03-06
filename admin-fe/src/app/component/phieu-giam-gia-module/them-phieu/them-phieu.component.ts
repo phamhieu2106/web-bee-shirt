@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
+import { Router } from '@angular/router';
 import {
   FormGroup,
   Validators,
@@ -15,6 +16,8 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import Swal from "sweetalert2";
+import emailjs from "@emailjs/browser";
+
 
 @Component({
   selector: "app-them-phieu",
@@ -27,19 +30,29 @@ export class ThemPhieuComponent implements OnInit {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
+  
+
+  errorMessage: string = "";
 
   selectedIds: number[] = [];
   phieuGiamGiaId: number;
 
+  public giaTriToiDa:number
+  public sendMailChecked:boolean = false
+
+
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.initAddForm();
     this.getKhachHangList();
+
+
   }
 
   public add(): void {
@@ -48,13 +61,30 @@ export class ThemPhieuComponent implements OnInit {
         this.initAddForm();
         this.phieuGiamGiaId = response.id;
 
+        
+
         this.phieuGiamGia
           .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
-          .subscribe({
-            next: (phieuGiamGia: PhieuGiamGia) => {
-              console.log(`Tặng thành công phiếu giảm giácho khách hàng!`);
-            },
+          .subscribe();
+
+         if(this.sendMailChecked){
+          this.selectedIds.forEach(id => {
+            // Gọi service để lấy thông tin của khách hàng dựa trên id
+            this.khachHangService.getById(id).subscribe({
+              next: (khachHang: any) => {
+                // Gửi email cho khách hàng
+                console.log(response.maPhieuGiamGia)
+                this.send(response.maPhieuGiamGia,khachHang.email, response.thoiGianKetThuc);
+              },
+              error: (error: any) => {
+                console.error('Error getting customer information:', error);
+              }
+            });
           });
+         }
+
+            // Kiểm tra nếu checkbox "Gửi Mail Cho Khách Hàng" được chọn
+     
 
         Swal.fire({
           icon: "success",
@@ -62,18 +92,63 @@ export class ThemPhieuComponent implements OnInit {
           showConfirmButton: false,
           timer: 1500,
         });
+          // Delay 3-4 giây trước khi chuyển đến trang danh sách
+     setTimeout(() => {
+      this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
+    }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+        if (error.status === 400) {
+          // Trích xuất thông điệp lỗi từ response
+          this.errorMessage = error.error.message;
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: this.errorMessage,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        } else {
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            position: "top-end",
+            title: "Thêm phiếu giảm giá thất bại",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          console.log(error.message);
+        }
       },
     });
+
+   
   }
+
+  private send( vocher: string, email: string,ngayHetHan:string) {
+    emailjs.init("XlFoYJLd1vcoTgaEY");
+    emailjs.send("service_uxvm75s", "template_c1qot7h", {
+      // from_name: this.authService.getUserFromStorage().hoTen,
+      voucher_code: vocher,
+      to_email: email,
+      expiry_date:ngayHetHan
+      
+    });
+   
+  }
+
+  onSendMailChange(event: any): void {
+    // Lấy giá trị mới của checkbox "Gửi Mail Cho Khách Hàng"
+    this.sendMailChecked = event.target.checked;
+  }
+
 
   public initAddForm(): void {
     this.addForm = this.formBuilder.group({
       maPhieuGiamGia: new FormControl("", [Validators.required]),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
-      kieu: new FormControl("1", [Validators.required]),
+      kieu: new FormControl("0", [Validators.required]),
       loai: new FormControl("1", [Validators.required]),
       soLuong: new FormControl(this.soLuongCheck, [Validators.required]),
       thoiGianBatDau: new FormControl("", [Validators.required,this.validateNgayBatDau()]),
@@ -83,30 +158,8 @@ export class ThemPhieuComponent implements OnInit {
       ]),
       dieuKienGiam: new FormControl("", [Validators.required]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl("", [Validators.required]),
+      giaTriMax: new FormControl(this.giaTriToiDa, [Validators.required]),
     });
-
-    const kieuValue = this.addForm.get("kieu").value;
-    const giaTriMaxControl = this.addForm.get("giaTriMax");
-    if (kieuValue === "0") {
-      giaTriMaxControl.enable();
-    } else {
-      giaTriMaxControl.disable();
-      giaTriMaxControl.setValue("0");
-    }
-
-    this.addForm.get("kieu").valueChanges.subscribe((value) => {
-      const giaTriMaxControl = this.addForm.get("giaTriMax");
-      if (value === "0") {
-        giaTriMaxControl.enable();
-      } else {
-        giaTriMaxControl.disable();
-        giaTriMaxControl.setValue("0"); // Set giá trị của giaTriMax thành 0
-      }
-      giaTriMaxControl.updateValueAndValidity();
-    });
-
-   
 
   }
 
@@ -216,30 +269,41 @@ export class ThemPhieuComponent implements OnInit {
     this.addForm.get("thoiGianKetThuc").updateValueAndValidity();
   }
 
-
+public checkGiaTri:boolean =false
   onKieuChange() {
     const kieuValue = this.addForm.get("kieu").value;
     const giaTriMaxControl = this.addForm.get("giaTriMax");
     if (kieuValue == 0) {
-      giaTriMaxControl.enable();
+      this.checkGiaTri = false
+     
     } else {
-      giaTriMaxControl.disable();
+     this.checkGiaTri = true
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
     }
     this.addForm.get("giaTri").updateValueAndValidity();
   }
 
   isTableDisabled: boolean = false;
+  public checkSoLuong:boolean =false
+
 
   onLoaiChange() {
     const loaiValue = this.addForm.get("loai").value;
-    const soluongControl = this.addForm.get("soLuong");
-    if (loaiValue === "1") {
-      soluongControl.enable();
+   
+    if (loaiValue ==0) {
+      this.checkSoLuong = true
+      this.isTableDisabled =true
+      this.addForm.get("soLuong").setValue(0);
+
     } else {
-      soluongControl.disable();
+      this.checkSoLuong = false
+      this.isTableDisabled =false
+      this.addForm.get("soLuong").setValue(0);
+   
+     
     }
-    this.isTableDisabled = !this.isTableDisabled;
+    
+  
   }
 
   // onchange check box
@@ -264,7 +328,20 @@ export class ThemPhieuComponent implements OnInit {
         soLuongControl.setValue(this.soLuongCheck);
       }
     }
-    console.log(this.soLuongCheck);
+    
+  }
+
+  isCustomerSelected(id: number): boolean {
+   if(this.selectedIds.length>0){
+    for (const selectedId of this.selectedIds) {
+      if (selectedId == id) {
+       
+        return true; // ID được tìm thấy trong danh sách
+      }
+    }
+   }
+    
+    return false; // ID không được tìm thấy trong danh sách
   }
 
 
@@ -297,19 +374,39 @@ export class ThemPhieuComponent implements OnInit {
     });
   }
 
+
+
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  confirmCreation() {
-    console.log("Giá trị của addForm:", this.addForm.value);
-    const isConfirmed = window.confirm(
-      "Bạn có chắc chăn thêm phiếu giảm giá này không"
-    );
 
-    if (isConfirmed) {
-      // Perform the actual creation logic here
-      this.add();
+  private timeout: any;
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
     }
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        e.target.value
+      );
+    }, 500);
+  }
+
+  confirmCreation() {
+  
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý thêm không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) =>{
+      this.add();
+    });
   }
 }

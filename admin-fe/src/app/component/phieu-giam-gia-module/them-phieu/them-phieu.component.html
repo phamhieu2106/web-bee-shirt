@@ -39,17 +39,19 @@
               <div class="mb-3">
                 <label for="" class="labelChinh">Kiểu:</label> <br>
                 <div class="form-check form-check-inline">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
+                      (change)="onKieuChange()" />
+                    <label class="form-check-label" for="%"> % </label>
+                  </div>
+
                   <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
                     checked="true" (change)="onKieuChange()" />
                   <label class="form-check-label" for="tienMat">
                     Tiền Mặt
                   </label>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
-                    (change)="onKieuChange()" />
-                  <label class="form-check-label" for="%"> % </label>
-                </div>
+                
               </div>
 
               <div class="mb-3">
@@ -96,13 +98,14 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
-                    <input type="number" class="form-control" placeholder="Giá trị tối đa" [ngClass]="
-                        addForm.get('giaTriMax').invalid &&
-                        addForm.get('giaTriMax').touched
-                          ? 'is-invalid'
-                          : ''
-                      " formControlName="giaTriMax" aria-label="Recipient's username"
-                      aria-describedby="basic-addon2" />
+                    <input type="number" class="form-control" placeholder="Giá trị tối đa" 
+                    [ngClass]="{
+                        'form-control': true,
+                        'is-invalid': addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
+                    }"
+                    formControlName="giaTriMax" aria-label="Recipient's username"
+                    aria-describedby="basic-addon2" 
+                    [readonly]="checkGiaTri" />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
                     <div *ngIf="
                     addForm.get('giaTriMax').hasError('required') &&
@@ -124,7 +127,7 @@
                       addForm.get('soLuong').touched
                         ? 'is-invalid'
                         : ''
-                    " formControlName="soLuong" />
+                    " formControlName="soLuong" [readonly]="checkSoLuong" />
                   <div class="invalid-feedback">
                     Số lượng không được để trống
                   </div>
@@ -185,6 +188,15 @@
 
               </div>
 
+              <div class="mb-3">
+                <input type="checkbox" name="sendMail" id="sendMail" class="form-check-inline" (change)="onSendMailChange($event)">
+                <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
+            </div>
+
+            
+
+
+
               <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="confirmCreation()">
                 Tạo mới
               </button>
@@ -192,12 +204,15 @@
           </div>
 
           <div class="col-md-8">
-            <input type="text" class="form-control" placeholder="Tìm Kiếm Khách Hàng" style="margin-bottom: 10px" />
+            <input  #inputName
+            type="text"
+            class="form-control"
+            placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+            (keyup)="timKiem($event)" style="margin-bottom: 10px" />
             <table class="table">
               <thead class="thead-default">
                 <tr>
                   <th>Chọn</th>
-                  <th>Id</th>
                   <th>Họ Tên</th>
                   <th>Số điện thoại</th>
                   <th>Giới tính</th>
@@ -209,9 +224,8 @@
               <tbody>
                 <tr *ngFor="let kh of pagedResponse?.data; let i = index">
                   <td>
-                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled" />
+                    <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled"  [checked]="selectedIds.length > 0 && isCustomerSelected(kh.id)"/>
                   </td>
-                  <th scope="row">{{ kh.id }}</th>
                   <td>{{ kh.hoTen }}</td>
                   <td>{{ kh.sdt }}</td>
                   <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>

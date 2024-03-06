@@ -195,7 +195,6 @@ export class FormComponent implements OnInit {
           timer: 1500,
         });
         this.turnOffOverlay("");
-        this.toast.error("Thêm đợt giảm giá không thành công");
       }
     } else if (this.typeForm === "update") {
       this.setDotGiamGiaRequest();
@@ -243,7 +242,6 @@ export class FormComponent implements OnInit {
           timer: 1500,
         });
         this.turnOffOverlay("");
-        this.toast.error("Cập nhật giảm giá không thành công");
       }
     }
   };

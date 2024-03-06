@@ -26,6 +26,17 @@ export class KhachHangService {
     );
   }
 
+  public getAllActive(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    search: string = ""
+  ): Observable<PagedResponse<KhachHang>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
+    return this.http.get<PagedResponse<KhachHang>>(
+      `${this.apiUrl}/get-all-avtive${param}`
+    );
+  }
+
   public add(
     khachHang: KhachHangResponse,
     file: File
@@ -62,5 +73,18 @@ export class KhachHangService {
     return this.http.get<PagedResponse<KhachHangResponse>>(
       `${this.apiUrl}/filter${param}`
     );
+  }
+
+  public mapToKhachHang(khResp: KhachHangResponse): KhachHang {
+    let khachHang = new KhachHang();
+
+    khachHang.id = khResp.id;
+    khachHang.hoTen = khResp.hoTen;
+    khachHang.ngaySinh = khResp.ngaySinh;
+    khachHang.sdt = khResp.sdt;
+    khachHang.gioiTinh = khResp.gioiTinh;
+    khachHang.email = khResp.email;
+    khachHang.anh = khResp.anhUrl;
+    return khachHang;
   }
 }

@@ -98,17 +98,18 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
     }
 
-    @GetMapping("/get-phieu-khach-hang/{id}")
-    public ResponseEntity<?> getKhachHangTang(@PathVariable("id") Integer id) {
 
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,1));
+    @GetMapping("/ds-khach-tang")
+    public ResponseEntity<?> getPhieuTangKhach(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                 @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                 @RequestParam(value = "id", defaultValue = "", required = false) String id,
+                                               @RequestParam(value = "check", defaultValue = "", required = false) Boolean check
+                                                ) {
+
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id,check));
     }
 
-    @GetMapping("/get-phieu-Khong-co/{id}")
-    public ResponseEntity<?> getKhachHangTangKhongCo(@PathVariable("id") Integer id) {
 
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getKhachHangTang(id,0));
-    }
 
 
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThongKeResource {
 
-
     private ChartService chartService;
 
     @Autowired
@@ -37,5 +36,25 @@ public class ThongKeResource {
     @GetMapping("/hoa-don-hoan-thanh-trong-nam-truoc")
     public ResponseEntity<List<Long>> countInvoiceCompleteLastYear() {
         return ResponseEntity.ok(chartService.countInvoiceInLastYear());
+    }
+
+    @GetMapping("/hoa-don-hoan-thanh-4-tuan-trong-thang")
+    public ResponseEntity<List<Long>> countInvoiceComplete4WeekThisMonth() {
+        return ResponseEntity.ok(chartService.countInvoice4WeekInThisMonth());
+    }
+
+    @GetMapping("/hoa-don-hoan-thanh-4-tuan-trong-thang-truoc")
+    public ResponseEntity<List<Long>> countInvoiceComplete4WeekLastMonth() {
+        return ResponseEntity.ok(chartService.countInvoice4WeekInLastMonth());
+    }
+
+    @GetMapping("/hoa-don-hoan-thanh-7-ngay-trong-tuan")
+    public ResponseEntity<List<Long>> countInvoiceComplete7DayThisWeek() {
+        return ResponseEntity.ok(chartService.countInvoice7DayThisWeek());
+    }
+
+    @GetMapping("/hoa-don-hoan-thanh-7-ngay-trong-tuan-truoc")
+    public ResponseEntity<List<Long>> countInvoiceComplete7DayLastWeek() {
+        return ResponseEntity.ok(chartService.countInvoice7DayLastWeek());
     }
 }

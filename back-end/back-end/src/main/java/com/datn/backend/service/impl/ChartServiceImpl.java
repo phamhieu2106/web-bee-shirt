@@ -32,4 +32,33 @@ public class ChartServiceImpl implements ChartService {
     public List<Long> countInvoiceInLastYear() {
         return chartRepository.countInvoiceInLastYear();
     }
+
+    @Override
+    public List<Long> countInvoice4WeekInThisMonth() {
+        return chartRepository.countInvoice4WeekInThisMonth();
+    }
+
+    @Override
+    public List<Long> countInvoice4WeekInLastMonth() {
+        return chartRepository.countInvoice4WeekInLastMonth();
+    }
+
+    @Override
+    public List<Long> countInvoice7DayThisWeek() {
+        chartRepository.createVarrible1();
+        chartRepository.createVarrible2();
+        return chartRepository.countInvoice7DayThisWeek();
+    }
+
+    @Override
+    public List<Long> countInvoice7DayLastWeek() {
+//        chartRepository.createVarrible1();
+//        chartRepository.createVarrible2();
+//        chartRepository.createVarrible3();
+//        System.out.println(chartRepository.countInvoice7DayThisWeek());
+//        return chartRepository.countInvoice7DayLastWeek();
+        return null;
+
+//        HÀM NÀY ĐANG BỊ LỖI
+    }
 }

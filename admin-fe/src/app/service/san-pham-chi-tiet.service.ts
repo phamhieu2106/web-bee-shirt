@@ -1,9 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+
 import { AddSPCTRequest } from "../model/interface/add-spct-request.interface";
 import { SanPhamChiTiet } from "../model/class/san-pham-chi-tiet.class";
 import { PagedResponse } from "../model/interface/paged-response.interface";
+import { UpdateNhanhSPCT } from "../model/interface/update-nhanh-spct.interface";
 
 @Injectable({
   providedIn: "root",
@@ -46,5 +48,11 @@ export class SanPhamChiTietService {
     } else {
       return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
     }
+  }
+
+  public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
+    return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
+      responseType: "text",
+    });
   }
 }

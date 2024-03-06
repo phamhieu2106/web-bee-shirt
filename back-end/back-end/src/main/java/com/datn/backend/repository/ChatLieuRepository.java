@@ -11,6 +11,8 @@ public interface ChatLieuRepository extends JpaRepository<ChatLieu, Integer> {
 
     boolean existsByTen(String ten);
 
+    ChatLieu getChatLieuByTen(String ten);
+
     @Query(value =
            """
            SELECT *

@@ -33,14 +33,6 @@ public class DotGiamGiaSanPham extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "gia_cu")
-    private BigDecimal giaCu;
-
-    @Column(name = "gia_moi")
-    private BigDecimal giaMoi;
-
-    @Column(name = "giam_gia")
-    private Integer giamGia;
 
     @Column(name = "thoi_gian_bat_dau")
     private LocalDateTime thoiGianBatDau;

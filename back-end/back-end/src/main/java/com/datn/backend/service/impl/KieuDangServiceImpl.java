@@ -67,6 +67,16 @@ public class KieuDangServiceImpl implements KieuDangService {
 
     @Override
     public KieuDang update(KieuDang kieuDang) {
+        checkExistForUpdate(kieuDang);
         return kieuDangRepo.save(kieuDang);
+    }
+
+    private void checkExistForUpdate(KieuDang kieuDang) {
+        KieuDang kieuDangInDB = kieuDangRepo.findById(kieuDang.getId()).get();
+        KieuDang kieuDangByTen = kieuDangRepo.getKieuDangByTen(kieuDang.getTen());
+
+        if (kieuDangByTen != null && kieuDangByTen.getId() != kieuDangInDB.getId()) {
+            throw new ResourceExistsException("Tên kiểu dáng '" + kieuDang.getTen() + "' đã tồn tại.");
+        }
     }
 }

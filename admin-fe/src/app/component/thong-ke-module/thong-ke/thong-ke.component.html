@@ -1,1 +1,219 @@
-<p>thong-ke works!</p>
+<app-main-heading
+  [icon]="'fa-solid icon-chart-area-outline'"
+  [mainHeading]="'Chủ'"
+  [title]="'Trang Chủ'"
+></app-main-heading>
+
+<!-- MAIN -->
+<!-- Số Lượng -->
+<div class="row gutters mt-2">
+  <div class="col-md-12 col-sm-12">
+    <!-- Graps -->
+    <div class="row gutters">
+      <div class="col-md-3 col-sm-6">
+        <div class="info-stats4">
+          <div class="icon-type pull-left">
+            <i
+              class="fa-solid fa-circle-exclamation fa-2xl"
+              style="color: #74c0fc"
+            ></i>
+          </div>
+          <div class="sale-num">
+            <h4>450 Đơn Mới</h4>
+            <p>Đang chờ được xác nhận</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="info-stats4">
+          <div class="icon-type pull-left">
+            <i class="fa-solid fa-truck fa-2xl" style="color: #74c0fc"></i>
+          </div>
+          <div class="sale-num">
+            <h4>890 Đợi Giao</h4>
+            <p>Đang đợi được giao</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="info-stats4">
+          <div class="icon-type pull-left">
+            <i
+              class="fa-solid fa-circle-check fa-2xl"
+              style="color: #74c0fc"
+            ></i>
+          </div>
+          <div class="sale-num">
+            <h4>185 Hoàn Thành</h4>
+            <p>Đã hoàn thành</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="info-stats4">
+          <div class="icon-type pull-left">
+            <i class="icon-assignment_turned_in"></i>
+          </div>
+          <div class="sale-num">
+            <h4>570 Đánh Giá</h4>
+            <p>Lượt đánh giá sản phẩm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Đơn Hàng -->
+  <div class="col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Đơn Hàng Hoàn Thành</strong>
+        <div>
+          <button (click)="setChart('week')" class="btn btn-primary m-1">
+            Tuần
+          </button>
+          <button (click)="setChart('month')" class="btn btn-primary m-1">
+            Tháng
+          </button>
+          <button (click)="setChart('year')" class="btn btn-primary m-1">
+            Năm
+          </button>
+        </div>
+      </div>
+      <div class="card-body graph-container">
+        <div class="card-body">
+          <app-line-chart [tenChart]="tenChart"></app-line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Biểu Đồ Khách Hàng -->
+  <div class="col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Khách Hàng Mới</strong>
+        <div>
+          <button
+            (click)="setCustomerChart('week')"
+            class="btn btn-primary m-1"
+          >
+            Tuần
+          </button>
+          <button
+            (click)="setCustomerChart('month')"
+            class="btn btn-primary m-1"
+          >
+            Tháng
+          </button>
+          <button
+            (click)="setCustomerChart('year')"
+            class="btn btn-primary m-1"
+          >
+            Năm
+          </button>
+        </div>
+      </div>
+      <div class="card-body graph-container">
+        <div class="card-body">
+          <app-line-chart-customer
+            [tenChart]="tenChartCustomer"
+          ></app-line-chart-customer>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Biểu Đồ Doanh Thu -->
+<div class="row gutters">
+  <div class="col col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Doanh Thu</strong>
+        <div>
+          <button (click)="setSaleChart('week')" class="btn btn-primary m-1">
+            Tuần
+          </button>
+          <button (click)="setSaleChart('month')" class="btn btn-primary m-1">
+            Tháng
+          </button>
+          <button (click)="setSaleChart('year')" class="btn btn-primary m-1">
+            Năm
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <app-line-chart-sale [tenChart]="tenChartSale"></app-line-chart-sale>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Phiếu Giảm Giá -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Phiếu Giảm Giá Được Sử Dụng</strong>
+      </div>
+      <div class="card-body">
+        <app-pie-chart></app-pie-chart>
+      </div>
+    </div>
+  </div>
+  <!-- Biểu Đồ Đợt Giảm Giá -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Số Lượng Sản Phẩm Được Mua Từ Các Đợt Giảm Giá</strong>
+      </div>
+      <div class="card-body">
+        <app-pie-discount-chart></app-pie-discount-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Việt Nam Map -->
+  <div class="col col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Khu Vực Mua Tại Việt Nam</strong>
+      </div>
+      <div class="card-body">
+        <app-vietnam-map-chart></app-vietnam-map-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row gutters">
+  <!-- Biểu Đồ Sản Phẩm -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Loại Sản Phẩm Bán Chạy</strong>
+      </div>
+      <div class="card-body">
+        <app-polar-product-chart></app-polar-product-chart>
+      </div>
+    </div>
+  </div>
+  <!-- Biểu Đồ Đánh Giá Sản Phẩm -->
+  <div class="col col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Biểu Đồ Đánh Giá Sản Phẩm Của Khách Hàng Đã Mua</strong>
+      </div>
+      <div class="card-body">
+        <app-bar-review-chart></app-bar-review-chart>
+      </div>
+    </div>
+  </div>
+  <!-- Bảng  -->
+</div>
+<!-- END MAIN -->

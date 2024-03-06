@@ -44,7 +44,7 @@ export class SanPhamService {
   }
 
   // 5
-  public update(chatLieu: SanPham): Observable<SanPham> {
-    return this.http.put<SanPham>(`${this.apiUrl}/update`, chatLieu);
+  public update(sanPham: SanPham): Observable<SanPham> {
+    return this.http.put<SanPham>(`${this.apiUrl}/update`, sanPham);
   }
 }

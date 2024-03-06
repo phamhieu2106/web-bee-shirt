@@ -39,4 +39,12 @@ export class SanPhamChiTietService {
       `${this.apiUrl}/get-by-page/${spId}`
     );
   }
+
+  getGiaBan(spct: SanPhamChiTiet): number {
+    if (spct.dotGiamGiaSanPham == null) {
+      return spct.giaBan;
+    } else {
+      return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
+    }
+  }
 }

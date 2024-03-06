@@ -146,7 +146,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
+//        Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
+//        find doi giam gia theo spct
         List<SpctResponse> data = mapToSpctResponse(spcts);
 
         return PagedResponse
@@ -170,15 +172,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SpctResponse spctResp = modelMapper.map(spct, SpctResponse.class);
 
             // lấy danh sách các đợt giảm giá đang hiệu lực voi spct nay
-            List<DotGiamGiaSanPham> dotGiamGiaSanPhams =
+            DotGiamGiaSanPham dotGiamGiaSanPham =
                     dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
 
             //gán gia tri
-            spctResp.setDotGiamGiaSanPhams(
-                    dotGiamGiaSanPhams.stream()
-                            .map(dggsp -> modelMapper.map(dggsp, DotGiamGiaSanPhamResponse.class)
-                            ).toList()
-            );
+            if (dotGiamGiaSanPham != null){
+                spctResp.setDotGiamGiaSanPham(
+                        modelMapper.map(dotGiamGiaSanPham,DotGiamGiaSanPhamResponse.class)
+                );
+            }
+
             return spctResp;
         }).toList();
         return spctResponses;

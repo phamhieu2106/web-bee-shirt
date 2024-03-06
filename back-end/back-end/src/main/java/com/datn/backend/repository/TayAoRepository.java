@@ -11,6 +11,8 @@ public interface TayAoRepository extends JpaRepository<TayAo, Integer> {
 
     boolean existsByTen(String ten);
 
+    TayAo getTayAoByTen(String ten);
+
     @Query(value =
             """
             SELECT *

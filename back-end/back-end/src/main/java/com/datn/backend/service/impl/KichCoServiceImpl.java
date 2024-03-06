@@ -67,6 +67,16 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public KichCo update(KichCo kichCo) {
+        checkExistForUpdate(kichCo);
         return kichCoRepo.save(kichCo);
+    }
+
+    private void checkExistForUpdate(KichCo kichCo) {
+        KichCo kichCoInDB = kichCoRepo.findById(kichCo.getId()).get();
+        KichCo kichCoByTen = kichCoRepo.getKichCoByTen(kichCo.getTen());
+
+        if (kichCoByTen != null && kichCoByTen.getId() != kichCoInDB.getId()) {
+            throw new ResourceExistsException("Tên kiểu dáng '" + kichCo.getTen() + "' đã tồn tại.");
+        }
     }
 }

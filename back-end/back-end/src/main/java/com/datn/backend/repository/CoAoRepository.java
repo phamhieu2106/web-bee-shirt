@@ -11,6 +11,8 @@ public interface CoAoRepository extends JpaRepository<CoAo, Integer> {
 
     boolean existsByTen(String ten);
 
+    CoAo getCoAoByTen(String ten);
+
     @Query(value =
             """
             SELECT *

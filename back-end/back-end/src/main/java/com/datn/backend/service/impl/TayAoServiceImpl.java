@@ -67,6 +67,16 @@ public class TayAoServiceImpl implements TayAoService {
 
     @Override
     public TayAo update(TayAo tayAo) {
+        checkExistForUpdate(tayAo);
         return tayAoRepo.save(tayAo);
+    }
+
+    private void checkExistForUpdate(TayAo tayAo) {
+        TayAo tayAoInDB = tayAoRepo.findById(tayAo.getId()).get();
+        TayAo tayAoByTen = tayAoRepo.getTayAoByTen(tayAo.getTen());
+
+        if (tayAoByTen != null && tayAoByTen.getId() != tayAoInDB.getId()) {
+            throw new ResourceExistsException("Tên tay áo '" + tayAo.getTen() + "' đã tồn tại.");
+        }
     }
 }

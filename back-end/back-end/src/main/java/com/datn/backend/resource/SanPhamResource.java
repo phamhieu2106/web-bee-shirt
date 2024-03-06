@@ -24,7 +24,7 @@ public class SanPhamResource {
 
     @GetMapping("/get-all")
     public ResponseEntity<PagedResponse<SanPham>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                             @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(sanPhamService.getByPage(pageNumber, pageSize, search));
     }
@@ -48,5 +48,12 @@ public class SanPhamResource {
     @PutMapping("/update")
     public ResponseEntity<SanPham> update(@RequestBody SanPham sanPham) {
         return ResponseEntity.ok(sanPhamService.update(sanPham));
+    }
+
+    //  client
+    @GetMapping("/client/get-by-page")
+    public ResponseEntity<PagedResponse<SanPham>> getByPageClient(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                  @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize) {
+        return ResponseEntity.ok(sanPhamService.getByPageClient(pageNumber, pageSize));
     }
 }

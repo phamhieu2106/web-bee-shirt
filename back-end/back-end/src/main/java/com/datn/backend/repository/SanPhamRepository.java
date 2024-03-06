@@ -22,4 +22,11 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             """, nativeQuery = true)
     Page<SanPham> getByPage(Pageable pageable,
                             @Param("search") String search);
+
+    @Query(value = """
+                   SELECT DISTINCT sp.id, sp.ma, sp.ten, sp.trang_thai, sp.mo_ta, sp.created_at, sp.created_by, sp.updated_at, sp.last_updated_by
+                   FROM san_pham sp
+                   JOIN san_pham_chi_tiet ct ON sp.id = ct.san_pham_id
+                   """, nativeQuery = true)
+    Page<SanPham> getByPageClient(Pageable pageable);
 }

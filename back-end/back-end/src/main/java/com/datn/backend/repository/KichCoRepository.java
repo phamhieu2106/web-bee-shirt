@@ -11,6 +11,8 @@ public interface KichCoRepository extends JpaRepository<KichCo, Integer> {
 
     boolean existsByTen(String ten);
 
+    KichCo getKichCoByTen(String ten);
+
     @Query(value =
             """
             SELECT *

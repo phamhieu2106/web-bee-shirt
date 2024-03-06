@@ -42,6 +42,14 @@ export class SanPhamChiTietService {
     );
   }
 
+  getGiaBan(spct: SanPhamChiTiet): number {
+    if (spct.dotGiamGiaSanPham == null) {
+      return spct.giaBan;
+    } else {
+      return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
+    }
+  }
+
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
     return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
       responseType: "text",

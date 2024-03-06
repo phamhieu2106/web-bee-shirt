@@ -19,6 +19,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     private final SanPhamRepository sanPhamRepo;
 
+    // admin
     @Override
     public SanPham add(SanPham sanPham) {
         if (sanPhamRepo.existsByTen(sanPham.getTen().toLowerCase())) {
@@ -60,5 +61,24 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public SanPham update(SanPham sanPham) {
         return sanPhamRepo.save(sanPham);
+    }
+
+    // client
+
+    @Override
+    public PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPageClient(pageable);
+
+        PagedResponse<SanPham> paged = new PagedResponse<>();
+        paged.setPageNumber(pageNumber);
+        paged.setPageSize(pageSize);
+        paged.setTotalElements((int) sanPhamPage.getTotalElements());
+        paged.setTotalPages(sanPhamPage.getTotalPages());
+        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamPage.getTotalPages()));
+        paged.setData(sanPhamPage.getContent());
+        paged.setSearch(null);
+
+        return paged;
     }
 }

@@ -11,6 +11,8 @@ public interface KieuDangRepository extends JpaRepository<KieuDang, Integer> {
 
     boolean existsByTen(String ten);
 
+    KieuDang getKieuDangByTen(String ten);
+
     @Query(value =
             """
             SELECT *

@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.model.san_pham.MauSacImage;
 import com.datn.backend.repository.MauSacImageRepository;
@@ -108,6 +109,9 @@ public class MauSacServiceImpl implements MauSacService {
      **/
     @Override
     public MauSac update(MauSac mauSac, MultipartFile multipartFile) throws IOException {
+        // check existence
+        checkExistForUpdate(mauSac);
+
         // save image to cloud
         BufferedImage bi = null;
         if (multipartFile != null) {
@@ -133,5 +137,21 @@ public class MauSacServiceImpl implements MauSacService {
         mauSacInDB.setMa(mauSac.getMa());
 
         return mauSacRepo.save(mauSacInDB);
+    }
+
+    private void checkExistForUpdate(MauSac mauSac) {
+        MauSac mauSacInDB = mauSacRepo.findById(mauSac.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Màu sắc không tồn tại với ID: " + mauSac.getId()));
+
+        MauSac mauSacByTen = mauSacRepo.getMauSacByTen(mauSac.getTen());
+        MauSac mauSacByMa = mauSacRepo.getMauSacByMa(mauSac.getMa());
+
+        if (mauSacByTen != null && mauSacByTen.getId() != mauSacInDB.getId()) {
+            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' đã tồn tại.");
+        }
+
+        if (mauSacByMa != null && mauSacByMa.getId() != mauSacInDB.getId()) {
+            throw new ResourceExistsException("Mã màu sắc '" + mauSac.getMa() + "' đã tồn tại.");
+        }
     }
 }

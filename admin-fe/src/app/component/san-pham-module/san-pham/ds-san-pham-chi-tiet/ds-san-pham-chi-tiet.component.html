@@ -12,43 +12,18 @@
         <!-- HEADER  -->
         <div>
           <div class="col col-md-12 d-flex">
-            <div class="input-group form-group search-block">
-              <!-- <input
-                type="search"
-                class="form-control"
-                placeholder="Tìm sản phẩm..."
-                (search)="onClearSearchInput()"
-                [(ngModel)]="search"
-              /> -->
-              <input
-                type="search"
-                class="form-control"
-                placeholder="Tìm sản phẩm..."
-                (search)="onClearSearchInput()"
-              />
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button">Tìm kiếm</button>
-                <!-- <button
-                  class="btn btn-primary"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button> -->
-              </span>
-            </div>
             <div class="col-md-4"></div>
-            <div class="col-md-4 text-right">
-              <label for="customRange1" class="form-label">Example range</label>
-              <div>
-                100
+            <div class="col-md-4 text-left">
+              <b class="form-label">Lọc theo giá</b>
+              <div class="row mt-3">
+                <span class="col-2">100</span>
                 <input
                   type="range"
-                  class="form-range"
+                  class="form-range col-8"
                   id="customRange1"
                   style="display: inline-block"
                 />
-                300
+                <span class="col-2">300</span>
               </div>
             </div>
           </div>
@@ -132,6 +107,13 @@
         <table class="table">
           <thead class="thead-default">
             <tr>
+              <th>
+                <input
+                  id="ckBoxAll"
+                  type="checkbox"
+                  (click)="selectAllRows()"
+                />
+              </th>
               <th>STT</th>
               <th>Ảnh</th>
               <th width="10%">Màu Sắc</th>
@@ -143,12 +125,28 @@
               <th>Chất Liệu</th>
               <th>Giá Nhập</th>
               <th>Giá Bán</th>
+              <th>Số Lượng</th>
               <th>Trạng Thái</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let s of pagedResponse?.data; let i = index">
+            <tr
+              [id]="'row' + i"
+              [ngClass]="
+                checkSelectedRow('ckBoxForUpdate' + i) ? 'table-active' : ''
+              "
+              *ngFor="let s of pagedResponse?.data; let i = index"
+            >
+              <input [id]="'id' + i" type="hidden" [value]="s.id" />
+              <td>
+                <input
+                  [id]="'ckBoxForUpdate' + i"
+                  class="ckBoxForUpdate"
+                  type="checkbox"
+                  (change)="onCheckboxChange(i)"
+                />
+              </td>
               <th scope="row">
                 {{
                   i +
@@ -170,14 +168,18 @@
                       [class]="i === 1 ? 'active' : ''"
                       *ngFor="let img of s.hinhAnhs; let i = index"
                     >
-                      <img [src]="img.imageUrl" class="d-block w-100" />
+                      <img [src]="img.imageUrl" class="d-block w-100 rounded" />
                     </div>
                   </div>
                 </div>
               </td>
               <td>
                 <div>{{ s.mauSac.ten }}</div>
-                <img [src]="s.mauSac.image.imageUrl" style="width: 60px" />
+                <img
+                  class="rounded"
+                  [src]="s.mauSac.image.imageUrl"
+                  style="width: 60px"
+                />
               </td>
               <td>{{ s.kichCo.ten.split(" ")[0] }}</td>
               <td>{{ s.kieuDang.ten }}</td>
@@ -185,8 +187,54 @@
               <td>{{ s.tayAo.ten }}</td>
               <td>{{ s.coAo.ten }}</td>
               <td>{{ s.chatLieu.ten }}</td>
-              <td>{{ formatCurrency(s.giaNhap) }}</td>
-              <td>{{ formatCurrency(s.giaBan) }}</td>
+              <td>
+                <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
+                  formatCurrency(s.giaNhap)
+                }}</span>
+                <div class="row" *ngIf="checkSelectedRow('ckBoxForUpdate' + i)">
+                  <input
+                    [id]="'giaNhap' + i"
+                    class="col rounded"
+                    type="text"
+                    size="15"
+                    [value]="s.giaNhap"
+                    (input)="formatNumber2($event, 'giaNhap' + i)"
+                  />
+                  <span class="col">đ</span>
+                </div>
+              </td>
+
+              <td>
+                <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
+                  formatCurrency(s.giaBan)
+                }}</span>
+                <div class="row" *ngIf="checkSelectedRow('ckBoxForUpdate' + i)">
+                  <input
+                    [id]="'giaBan' + i"
+                    class="col rounded"
+                    type="text"
+                    size="15"
+                    [value]="s.giaBan"
+                    (input)="formatNumber2($event, 'giaBan' + i)"
+                  />
+                  <span class="col">đ</span>
+                </div>
+              </td>
+
+              <td>
+                <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
+                  s.soLuongTon
+                }}</span
+                ><input
+                  [id]="'soLuong' + i"
+                  class="rounded"
+                  *ngIf="checkSelectedRow('ckBoxForUpdate' + i)"
+                  type="text"
+                  size="5"
+                  [value]="s.soLuongTon"
+                  (input)="formatNumber2($event, 'soLuong' + i)"
+                />
+              </td>
               <td>
                 <div class="custom-control custom-switch">
                   <input
@@ -203,7 +251,7 @@
                 </div>
               </td>
               <td>
-                <button
+                <!-- <button
                   class="btn btn-outline-light btn-rounded me-2"
                   title="Xem chi tiết"
                   data-bs-toggle="modal"
@@ -213,7 +261,7 @@
                     class="fa-solid fa-circle-info fa-xl"
                     style="color: #74c0fc"
                   ></i>
-                </button>
+                </button> -->
 
                 <button
                   class="btn btn-outline-warning btn-rounded me-2"
@@ -230,6 +278,15 @@
             </tr>
           </tbody>
         </table>
+        <button
+          class="btn btn-primary rounded my-3"
+          *ngIf="isUpdateBtnHidden()"
+          (click)="chinhSuaNhanh(pagedResponse.pageSize)"
+          data-bs-toggle="modal"
+          data-bs-target="#updateModal"
+        >
+          <i class="fa-regular fa-pen-to-square me-2"></i>Chỉnh sửa nhanh
+        </button>
       </div>
       <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
@@ -308,3 +365,29 @@
     </div>
   </div>
 </div>
+
+<!-- <div class="input-group form-group search-block">
+  <input
+    type="search"
+    class="form-control"
+    placeholder="Tìm sản phẩm..."
+    (search)="onClearSearchInput()"
+    [(ngModel)]="search"
+  />
+  <input
+    type="search"
+    class="form-control"
+    placeholder="Tìm sản phẩm..."
+    (search)="onClearSearchInput()"
+  />
+  <span class="input-group-btn">
+    <button class="btn btn-primary" type="button">Tìm kiếm</button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="timKiem()"
+    >
+      Tìm kiếm
+    </button>
+  </span>
+</div> -->

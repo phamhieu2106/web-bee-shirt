@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
 import com.datn.backend.repository.CoAoRepository;
 import com.datn.backend.service.CoAoService;
@@ -67,6 +68,16 @@ public class CoAoServiceImpl implements CoAoService {
 
     @Override
     public CoAo update(CoAo coAo) {
+        checkExistForUpdate(coAo);
         return coAoRepo.save(coAo);
+    }
+
+    private void checkExistForUpdate(CoAo coAo) {
+        CoAo coAoInDB = coAoRepo.findById(coAo.getId()).get();
+        CoAo coAoByTen = coAoRepo.getCoAoByTen(coAo.getTen());
+
+        if (coAoByTen != null && coAoByTen.getId() != coAoInDB.getId()) {
+            throw new ResourceExistsException("Tên cổ áo '" + coAo.getTen() + "' đã tồn tại.");
+        }
     }
 }

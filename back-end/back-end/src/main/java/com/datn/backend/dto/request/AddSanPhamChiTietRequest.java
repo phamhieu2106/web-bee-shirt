@@ -2,14 +2,10 @@ package com.datn.backend.dto.request;
 
 import lombok.Getter;
 
-import java.math.BigDecimal;
-
 @Getter
 public class AddSanPhamChiTietRequest {
 
     private Integer id;
-    private BigDecimal giaNhap;
-    private BigDecimal giaBan;
     private int sanPhamId;
     private int kieuDangId;
     private int thietKeId;
@@ -22,8 +18,6 @@ public class AddSanPhamChiTietRequest {
     public String toString() {
         return "AddSanPhamChiTietRequest{" +
                 "id=" + id +
-                ", giaNhap=" + giaNhap +
-                ", giaBan=" + giaBan +
                 ", sanPhamId=" + sanPhamId +
                 ", kieuDangId=" + kieuDangId +
                 ", thietKeId=" + thietKeId +

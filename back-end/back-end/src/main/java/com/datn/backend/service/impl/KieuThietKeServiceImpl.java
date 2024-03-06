@@ -67,6 +67,16 @@ public class KieuThietKeServiceImpl implements KieuThietKeService {
 
     @Override
     public KieuThietKe update(KieuThietKe thietKe) {
+        checkExistForUpdate(thietKe);
         return kieuThietKeRepo.save(thietKe);
+    }
+
+    private void checkExistForUpdate(KieuThietKe thietKe) {
+        KieuThietKe thietKeInDB = kieuThietKeRepo.findById(thietKe.getId()).get();
+        KieuThietKe kieuThietKeByTen = kieuThietKeRepo.getKieuThietKeByTen(thietKe.getTen());
+
+        if (kieuThietKeByTen != null && kieuThietKeByTen.getId() != thietKeInDB.getId()) {
+            throw new ResourceExistsException("Tên kiểu thiết kế '" + thietKe.getTen() + "' đã tồn tại.");
+        }
     }
 }

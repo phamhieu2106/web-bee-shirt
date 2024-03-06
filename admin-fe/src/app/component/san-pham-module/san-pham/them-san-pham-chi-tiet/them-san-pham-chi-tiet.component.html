@@ -23,86 +23,121 @@
             />
           </div>
 
-          <!-- Giá nhập -->
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Giá nhập"
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
-              formControlName="giaNhap"
-              (input)="formatNumber($event, 'giaNhap')"
-            />
-            <span class="input-group-text" id="basic-addon2">VNĐ</span>
-          </div>
-
-          <!-- Giá bán -->
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Giá bán"
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
-              formControlName="giaBan"
-              (input)="formatNumber($event, 'giaBan')"
-            />
-            <span class="input-group-text" id="basic-addon2">VNĐ</span>
-          </div>
-
           <div class="row">
             <!-- kiểu dáng, thiết kế -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu dáng:</label>
-              <select class="form-select" formControlName="kieuDangId">
-                <option value="0">Chọn kiểu dáng</option>
-                <option *ngFor="let kd of kieuDangList" [value]="kd.id">
-                  {{ kd.ten }}
-                </option>
-              </select>
+              <div class="row">
+                <input
+                  class="form-control rounded col-8 ms-3 me-2"
+                  list="kieuDangList"
+                  type="text"
+                  (input)="selectThuocTinh($event, kieuDangList, 'kieuDangId')"
+                />
+                <datalist id="kieuDangList">
+                  <option
+                    *ngFor="let kd of kieuDangList"
+                    [value]="kd.ten"
+                  ></option>
+                </datalist>
+                <button
+                  class="btn btn-primary rounded col-2"
+                  (click)="themNhanhThuocTinh('Dáng áo', 'kieuDangService')"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addNhanhForm"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
 
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu thiết kế:</label>
-              <select class="form-select" formControlName="thietKeId">
-                <option value="0">Chọn kiểu thiết kế</option>
-                <option *ngFor="let tk of kieuThietKeList" [value]="tk.id">
-                  {{ tk.ten }}
-                </option>
-              </select>
+              <div class="row">
+                <input
+                  class="form-control rounded col-8 ms-3 me-2"
+                  list="thietKeList"
+                  type="text"
+                  (input)="
+                    selectThuocTinh($event, kieuThietKeList, 'thietKeId')
+                  "
+                />
+                <datalist id="thietKeList">
+                  <option
+                    *ngFor="let tk of kieuThietKeList"
+                    [value]="tk.ten"
+                  ></option>
+                </datalist>
+                <button
+                  class="btn btn-primary rounded col-2"
+                  (click)="
+                    themNhanhThuocTinh('Kiểu thiết kế', 'kieuThietKeService')
+                  "
+                  data-bs-toggle="modal"
+                  data-bs-target="#addNhanhForm"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
 
             <!-- tay áo, cổ áo -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu tay áo:</label>
-              <select class="form-select" formControlName="tayAoId">
-                <option value="0">Chọn kiểu tay áo</option>
-                <option *ngFor="let ta of tayAoList" [value]="ta.id">
-                  {{ ta.ten }}
-                </option>
-              </select>
+              <div class="row">
+                <input
+                  class="form-control rounded col-8 ms-3 me-2"
+                  list="tayAoList"
+                  type="text"
+                  (input)="selectThuocTinh($event, tayAoList, 'tayAoId')"
+                />
+                <datalist id="tayAoList">
+                  <option
+                    *ngFor="let ta of tayAoList"
+                    [value]="ta.ten"
+                  ></option>
+                </datalist>
+                <button
+                  class="btn btn-primary rounded col-2"
+                  (click)="
+                    themNhanhThuocTinh('Kiểu tay áo', 'kieuTayAoService')
+                  "
+                  data-bs-toggle="modal"
+                  data-bs-target="#addNhanhForm"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
 
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu cổ áo:</label>
-              <select class="form-select" formControlName="coAoId">
-                <option value="0">Chọn kiểu cổ áo</option>
-                <option *ngFor="let ca of coAoList" [value]="ca.id">
-                  {{ ca.ten }}
-                </option>
-              </select>
+              <input
+                class="form-control rounded"
+                list="coAoList"
+                type="text"
+                (input)="selectThuocTinh($event, coAoList, 'coAoId')"
+              />
+              <datalist id="coAoList">
+                <option *ngFor="let ca of coAoList" [value]="ca.ten"></option>
+              </datalist>
             </div>
 
             <!-- chất liệu -->
             <div class="col-12 mb-3">
               <label class="form-label">Chất liệu:</label>
-              <select class="form-select" formControlName="chatLieuId">
-                <option value="0">Chọn chất liệu</option>
-                <option *ngFor="let cl of chatLieuList" [value]="cl.id">
-                  {{ cl.ten }}
-                </option>
-              </select>
+              <input
+                class="form-control rounded"
+                list="chatLieuList"
+                type="text"
+                (input)="selectThuocTinh($event, chatLieuList, 'chatLieuId')"
+              />
+              <datalist id="chatLieuList">
+                <option
+                  *ngFor="let cl of chatLieuList"
+                  [value]="cl.ten"
+                ></option>
+              </datalist>
             </div>
           </div>
         </form>
@@ -111,7 +146,7 @@
 
     <div class="card">
       <div class="card-header">
-        <h4 class="text-center mt-2">Màu sắc & Kích cỡ</h4>
+        <h4 class="text-center mt-2">Chọn Màu sắc & Kích cỡ</h4>
         <form class="form p-2 mb-5">
           <!-- mau sac -->
           <div>
@@ -129,7 +164,7 @@
             </div>
             <button
               type="button btn-primary"
-              class="btn btn-primary ms-3"
+              class="btn btn-primary ms-3 rounded"
               data-bs-toggle="modal"
               data-bs-target="#mauSacBoard"
               (click)="getMauSacList()"
@@ -154,7 +189,7 @@
             </div>
             <button
               type="button btn-primary"
-              class="btn btn-primary ms-3 mb-3"
+              class="btn btn-primary ms-3 mb-3 rounded"
               data-bs-toggle="modal"
               data-bs-target="#kichCoBoard"
               (click)="getKichCoList()"
@@ -202,6 +237,8 @@
                   </th>
                   <th width="30%">Sản phẩm</th>
                   <th width="10%">Kích cỡ</th>
+                  <th width="15%">Giá nhập</th>
+                  <th width="15%">Giá bán</th>
                   <th width="15%">Số lượng</th>
                   <th width="5%">Xóa</th>
                 </tr>
@@ -235,6 +272,26 @@
                     <span>{{ sanPham.ten }}</span>
                   </td>
                   <td>{{ ss.ten.split(" ")[0] }}</td>
+                  <td>
+                    <input
+                      [id]="'giaNhap' + sc.id + ss.id"
+                      [class]="'giaNhap' + sc.id"
+                      type="text"
+                      style="width: 100px"
+                      value="0"
+                      (input)="formatNumber2($event, 'giaNhap' + sc.id + ss.id)"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      [id]="'giaBan' + sc.id + ss.id"
+                      [class]="'giaBan' + sc.id"
+                      type="text"
+                      style="width: 100px"
+                      value="0"
+                      (input)="formatNumber2($event, 'giaBan' + sc.id + ss.id)"
+                    />
+                  </td>
                   <td>
                     <input
                       [id]="'soLuong' + sc.id + ss.id"
@@ -416,7 +473,7 @@
         <div class="row">
           <div class="col-6 pointer" *ngFor="let ms of mauSacList">
             <img
-              class="color-img"
+              class="color-img rounded"
               [src]="ms.image.imageUrl"
               (click)="selectColor(ms)"
             />
@@ -425,7 +482,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+        >
           Đóng
         </button>
       </div>
@@ -455,14 +516,21 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-2 pointer" *ngFor="let kc of kichCoList">
-            <div class="border border-secondary p-3" (click)="selectKichCo(kc)">
+            <div
+              class="border border-secondary p-3 rounded"
+              (click)="selectKichCo(kc)"
+            >
               {{ kc.ten.split(" ")[0] }}
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+        >
           Đóng
         </button>
       </div>
@@ -491,19 +559,50 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label"
-            >Số lượng</label
-          >
-          <input id="soLuongInput" class="form-control" type="number" />
+          <label class="form-label">Giá nhập</label>
+          <input
+            id="giaNhapInput"
+            class="form-control"
+            type="text"
+            value="0"
+            (input)="formatNumber2($event, 'giaNhapInput')"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Giá bán</label>
+          <input
+            id="giaBanInput"
+            class="form-control"
+            type="text"
+            value="0"
+            (input)="formatNumber2($event, 'giaBanInput')"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Số lượng</label>
+          <input
+            id="soLuongInput"
+            class="form-control"
+            type="text"
+            value="0"
+            (input)="formatNumber2($event, 'soLuongInput')"
+          />
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          id="chinhSuaNhanhBtn"
+          class="btn btn-secondary rounded"
+          type="button"
+          data-bs-dismiss="modal"
+        >
           Đóng
         </button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-primary rounded"
           (click)="saveSoLuongForm()"
         >
           Lưu
@@ -514,3 +613,59 @@
 </div>
 
 <app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
+
+<!-- add thuoc tinh nhanh -->
+<div
+  class="modal fade"
+  id="addNhanhForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Thêm mới {{ thuocTinhNhanh.ten }}</h1>
+      </div>
+      <form [formGroup]="addNhanhForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <label>Tên {{ thuocTinhNhanh.ten }}:</label>
+            <input
+              type="text"
+              class="form-control rounded"
+              [ngClass]="
+                addNhanhForm.get('ten').invalid &&
+                addNhanhForm.get('ten').touched
+                  ? 'is-invalid'
+                  : ''
+              "
+              formControlName="ten"
+            />
+            <div class="invalid-feedback">Không được bỏ trống</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            id="closeBtn"
+            type="button"
+            class="btn btn-secondary rounded"
+            (click)="initAddForm()"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary rounded"
+            [disabled]="addForm.invalid"
+            (click)="addNhanh(commonService)"
+          >
+            Thêm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

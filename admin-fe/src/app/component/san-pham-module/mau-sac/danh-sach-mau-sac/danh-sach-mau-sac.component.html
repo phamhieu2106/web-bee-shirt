@@ -34,7 +34,7 @@
             <div class="col-md-4 text-right">
               <button
                 type="button"
-                class="btn btn-primary btn-lg"
+                class="btn btn-primary btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
                 data-bs-target="#mauSacAddForm"
@@ -70,7 +70,7 @@
                 }}
               </th>
               <td>
-                <img class="color-img" [src]="m.image.imageUrl" />
+                <img class="color-img rounded" [src]="m.image.imageUrl" />
               </td>
               <td>{{ m.ten }}</td>
               <td>{{ m.ma }}</td>
@@ -272,7 +272,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -280,7 +280,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >
@@ -440,14 +440,14 @@
           <button
             id="closeUpdateBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             data-bs-dismiss="modal"
           >
             Đóng
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="updateForm.invalid"
             (click)="update()"
           >

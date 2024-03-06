@@ -38,6 +38,18 @@ export class DanhSachMauSacComponent {
 
   // public function
   public add(): void {
+    if (!this.selectFile) {
+      this.toastr.warning("Vui lòng chọn ảnh cho màu sắc", "Màu sắc");
+      return;
+    }
+
+    // trim fields
+    let trimmedTen = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmedTen);
+
+    let trimmedMa = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmedMa);
+
     this.turnOnOverlay("Đang thêm...");
     this.mauSacService.add(this.addForm.value, this.selectFile).subscribe({
       next: (response: MauSac) => {
@@ -146,6 +158,13 @@ export class DanhSachMauSacComponent {
   }
 
   public update(): void {
+    // trim fields
+    let trimmedTen = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmedTen);
+
+    let trimmedMa = this.addForm.get("ten").value.trim();
+    this.addForm.get("ten")?.setValue(trimmedMa);
+
     this.turnOnOverlay("Đang cập nhật...");
     this.mauSacService
       .update(this.updateForm.value, this.selectFile)
@@ -166,8 +185,8 @@ export class DanhSachMauSacComponent {
           document.getElementById("closeUpdateBtn").click();
           this.turnOffOverlay("");
         },
-        error: (error: HttpErrorResponse) => {
-          console.log(error.message);
+        error: (errorResponse: HttpErrorResponse) => {
+          this.toastr.error(errorResponse.error.message, "Hệ thống");
           this.turnOffOverlay("");
         },
       });

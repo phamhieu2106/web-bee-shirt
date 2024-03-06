@@ -137,7 +137,9 @@ export class DanhSachChatLieuComponent {
   }
 
   public update(): void {
-    console.log(this.updateForm.value);
+    let trimmed = this.updateForm.get("ten").value.trim();
+    this.updateForm.get("ten")?.setValue(trimmed);
+
     this.chatLieuService.update(this.updateForm.value).subscribe({
       next: (response: ChatLieu) => {
         this.goToPage(
@@ -152,10 +154,10 @@ export class DanhSachChatLieuComponent {
           showConfirmButton: false,
           timer: 1500,
         });
-        document.getElementById("closeBtn").click();
+        document.getElementById("updateCloseBtn").click();
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
       },
     });
   }

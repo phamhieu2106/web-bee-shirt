@@ -11,6 +11,8 @@ public interface KieuThietKeRepository extends JpaRepository<KieuThietKe, Intege
 
     boolean existsByTen(String ten);
 
+    KieuThietKe getKieuThietKeByTen(String ten);
+
     @Query(value =
             """
             SELECT *

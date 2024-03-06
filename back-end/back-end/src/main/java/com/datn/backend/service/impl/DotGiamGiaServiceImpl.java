@@ -242,15 +242,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 //                Create DotGiamGiaSanPham and set
                     DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
 
-                    dotGiamGiaSanPham.setGiaCu(sanPhamChiTiet.getGiaBan());
-
 //                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
-                    dotGiamGiaSanPham.setGiaMoi(sanPhamChiTiet.getGiaBan()
-                            .subtract(sanPhamChiTiet.getGiaBan()
-                                    .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
-                                            .divide(new BigDecimal(100)))));
-
-                    dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
                     dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                     dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
                     dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
@@ -287,15 +279,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                         found = true;
                         SanPhamChiTiet spct = sanPhamChiTietRepository
                                 .findById(sanPhamChiTietID).get();
-
-                        dotGiamGiaSanPham.setGiaCu(spct.getGiaBan());
 //                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
-                        dotGiamGiaSanPham.setGiaMoi(spct.getGiaBan()
-                                .subtract(spct.getGiaBan()
-                                        .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
-                                                .divide(new BigDecimal(100)))));
-
-                        dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
                         dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                         dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
                         dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());
@@ -310,14 +294,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                             .findById(sanPhamChiTietID).get();
                     DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
 
-                    dotGiamGiaSanPham.setGiaCu(spct.getGiaBan());
 //                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
-                    dotGiamGiaSanPham.setGiaMoi(spct.getGiaBan()
-                            .subtract(spct.getGiaBan()
-                                    .multiply(BigDecimal.valueOf(object.getGiaTriPhanTram())
-                                            .divide(new BigDecimal(100)))));
-
-                    dotGiamGiaSanPham.setGiamGia(object.getGiaTriPhanTram());
                     dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                     dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
                     dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());

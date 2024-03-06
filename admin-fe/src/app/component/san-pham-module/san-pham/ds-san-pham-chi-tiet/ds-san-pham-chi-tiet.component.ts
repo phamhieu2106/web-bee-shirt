@@ -56,6 +56,7 @@ export class DsSanPhamChiTietComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private currencyPipe: CurrencyPipe,
+    private toastr: ToastrService,
     private sanPhamChiTietService: SanPhamChiTietService,
     private sanPhamService: SanPhamService,
     private mauSacService: MauSacService,
@@ -78,12 +79,11 @@ export class DsSanPhamChiTietComponent {
     this.getAllChatLieu();
   }
 
-  // public functions
+  // I. public functions
   public formatCurrency(amount: number): string {
     return this.currencyPipe.transform(amount, "VND", "symbol", "1.0-0");
   }
 
-  // on select field
   public onSelectMauSac(event: any): void {
     this.selectedMauSacId = event.target.value;
   }
@@ -107,7 +107,114 @@ export class DsSanPhamChiTietComponent {
     this.goToPage();
   }
 
-  // private functions
+  public selectAllRows(): void {
+    const ckBoxAll = document.getElementById(`ckBoxAll`) as HTMLInputElement;
+    const selectedCkBoxs = document.querySelectorAll(`.ckBoxForUpdate`);
+
+    for (let i = 0; i < selectedCkBoxs.length; i++) {
+      const ckBox = selectedCkBoxs[i] as HTMLInputElement;
+      ckBox.checked = ckBoxAll.checked;
+    }
+  }
+
+  public isUpdateBtnHidden(): boolean {
+    const selectedCkBoxs = document.querySelectorAll(`.ckBoxForUpdate`);
+
+    for (let i = 0; i < selectedCkBoxs.length; i++) {
+      const ckBox = selectedCkBoxs[i] as HTMLInputElement;
+      if (ckBox.checked) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public checkSelectedRow(rowId: string): boolean {
+    const selectedCkBox = document.getElementById(`${rowId}`);
+    if (!selectedCkBox) {
+      return false;
+    }
+
+    const ckBox = selectedCkBox as HTMLInputElement;
+    return ckBox.checked ? true : false;
+  }
+
+  public onCheckboxChange(index: number): void {
+    const row = document.getElementById(`row${index}`);
+    const ckBox = document.getElementById(`ckBoxForUpdate${index}`);
+
+    if (row) {
+      const hasTableActiveClass = row.classList.contains("table-active");
+
+      if (!(ckBox as HTMLInputElement).checked) {
+        row.classList.remove("table-active");
+      } else {
+        row.classList.add("table-active");
+      }
+    }
+  }
+
+  public formatNumber2(event: any, inputNameId: string): void {
+    let value = event.target.value;
+    if (value === "") {
+      (document.getElementById(inputNameId) as HTMLInputElement).value = "0";
+      return;
+    }
+    value = value.replace(/,/g, "");
+    value = parseFloat(value).toLocaleString("en-US");
+    (document.getElementById(inputNameId) as HTMLInputElement).value = value;
+  }
+
+  public chinhSuaNhanh(pageSize: number): void {
+    let xacNhan = confirm("Bạn có chắc muốn cập nhật nhanh?");
+    if (xacNhan) {
+      const ids: number[] = [];
+      const giaNhaps: number[] = [];
+      const giaBans: number[] = [];
+      const soLuongs: number[] = [];
+
+      for (let i = 0; i < pageSize; i++) {
+        const ckBox = document.getElementById(`ckBoxForUpdate${i}`);
+        if ((ckBox as HTMLInputElement).checked) {
+          const idValue = (
+            document.getElementById(`id${i}`) as HTMLInputElement
+          ).value;
+          const giaNhapValue = (
+            document.getElementById(`giaNhap${i}`) as HTMLInputElement
+          ).value.replace(",", "");
+          const giaBanValue = (
+            document.getElementById(`giaBan${i}`) as HTMLInputElement
+          ).value.replace(",", "");
+          const soLuongValue = (
+            document.getElementById(`soLuong${i}`) as HTMLInputElement
+          ).value.replace(",", "");
+
+          ids.push(parseInt(idValue));
+          giaNhaps.push(parseInt(giaNhapValue));
+          giaBans.push(parseInt(giaBanValue));
+          soLuongs.push(parseInt(soLuongValue));
+
+          const updateNhanhReq = {
+            ids: ids,
+            giaNhaps: giaNhaps,
+            giaBans: giaBans,
+            soLuongs: soLuongs,
+          };
+
+          this.sanPhamChiTietService.updateNhanh(updateNhanhReq).subscribe({
+            next: (response: string) => {
+              this.toastr.success(response);
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              this.toastr.error(errorResponse.error.message);
+            },
+          });
+        }
+      }
+    }
+  }
+
+  // II. private functions
   private getSpChiTietBySpId(): void {
     this.activatedRoute.params.subscribe((params) => {
       let spId = params["sanPhamId"];

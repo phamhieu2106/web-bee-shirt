@@ -67,6 +67,16 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ChatLieu update(ChatLieu chatLieu) {
+        checkExistForUpdate(chatLieu);
         return chatLieuRepo.save(chatLieu);
+    }
+
+    private void checkExistForUpdate(ChatLieu chatLieu) {
+        ChatLieu chatLieuInDB = chatLieuRepo.findById(chatLieu.getId()).get();
+        ChatLieu chatLieuByTen = chatLieuRepo.getChatLieuByTen(chatLieu.getTen());
+
+        if (chatLieuByTen != null && chatLieuByTen.getId() != chatLieuInDB.getId()) {
+            throw new ResourceExistsException("Tên chất liệu '" + chatLieu.getTen() + "' đã tồn tại.");
+        }
     }
 }

@@ -6,11 +6,12 @@ import { ThongKeComponent } from "./thong-ke/thong-ke.component";
 import { LineChartComponent } from "./line-chart/line-chart.component";
 import { LayoutModule } from "../layout-module/layout.module";
 import { LineChartCustomerComponent } from "./line-chart-customer/line-chart-customer.component";
-import { LineChartSaleComponent } from './line-chart-sale/line-chart-sale.component';
-import { PieChartComponent } from './pie-chart/pie-chart.component';
-import { PieDiscountChartComponent } from './pie-discount-chart/pie-discount-chart.component';
-import { PolarProductChartComponent } from './polar-product-chart/polar-product-chart.component';
-import { VietnamMapChartComponent } from './vietnam-map-chart/vietnam-map-chart.component';
+import { LineChartSaleComponent } from "./line-chart-sale/line-chart-sale.component";
+import { PieChartComponent } from "./pie-chart/pie-chart.component";
+import { PieDiscountChartComponent } from "./pie-discount-chart/pie-discount-chart.component";
+import { PolarProductChartComponent } from "./polar-product-chart/polar-product-chart.component";
+import { VietnamMapChartComponent } from "./vietnam-map-chart/vietnam-map-chart.component";
+import { BarReviewChartComponent } from "./bar-review-chart/bar-review-chart.component";
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { VietnamMapChartComponent } from './vietnam-map-chart/vietnam-map-chart.
     PieDiscountChartComponent,
     PolarProductChartComponent,
     VietnamMapChartComponent,
+    BarReviewChartComponent,
   ],
   imports: [CommonModule, ThongKeModuleRoutingModule, LayoutModule],
 })

@@ -8,8 +8,8 @@ import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
-import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-ban-hang",
@@ -17,7 +17,6 @@ import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
   styleUrls: ["./ban-hang.component.css"],
 })
 export class BanHangComponent implements OnInit {
-  public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   phiVanChuyenTemp: number;
   orders = new Array<HoaDon>();
   khachHangs: KhachHang[];
@@ -98,10 +97,10 @@ export class BanHangComponent implements OnInit {
 
   chooseKhachHang(khachHang: KhachHang) {
     this.order.khachHang = khachHang;
-    this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-    this.diaChiVaPhiVanChuyen.tinh = khachHang.diaChis[0].tinh;
-    this.diaChiVaPhiVanChuyen.huyen = khachHang.diaChis[0].huyen;
-    this.diaChiVaPhiVanChuyen.xa = khachHang.diaChis[0].xa;
+    // this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+    // this.diaChiVaPhiVanChuyen.tinh = khachHang.diaChis[0].tinh;
+    // this.diaChiVaPhiVanChuyen.huyen = khachHang.diaChis[0].huyen;
+    // this.diaChiVaPhiVanChuyen.xa = khachHang.diaChis[0].xa;
   }
 
   removeKhachHangInOrder() {
@@ -141,17 +140,33 @@ export class BanHangComponent implements OnInit {
     // xử lý
     if (newHdct == null) {
       //Không tồn tại => tạo mới hdct
-      newHdct = new HoaDonChiTiet();
-      newHdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
-      newHdct.soLuong = 1;
-      newHdct.giaBan = spct.giaBan;
+      newHdct = this.newHDCT(spct);
 
       // add hoaDon current
       this.order.hoaDonChiTiets.push(newHdct);
     } else {
       // đã tồn tại => +1 số lượng trong hdct
+      // check gia hien tai va gia trong hdct
+      if (newHdct.giaBan != this.getGiaBan(spct)) {
+        Swal.fire(
+          "Giá bán đã được cập nhật do giá một số sản phẩm đã bị thay đổi."
+        );
+        newHdct.giaBan = this.getGiaBan(spct);
+      }
       newHdct.soLuong = newHdct.soLuong + 1;
     }
+  }
+
+  newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
+    let hdct = new HoaDonChiTiet();
+    hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
+    hdct.soLuong = 1;
+    hdct.giaBan = this.getGiaBan(spct);
+
+    return hdct;
+  }
+  getGiaBan(spct: SanPhamChiTiet): number {
+    return this.spctService.getGiaBan(spct);
   }
 
   deleteHDCT(hdctIndex: number) {
@@ -185,7 +200,7 @@ export class BanHangComponent implements OnInit {
     this.order.phiVanChuyen = $event.target.value;
   }
 
-  updatePhiVanChuyen($event: number) {
-    this.order.phiVanChuyen = $event;
+  caculatePhiVanChuyen(soTien: number) {
+    this.order.phiVanChuyen = soTien;
   }
 }

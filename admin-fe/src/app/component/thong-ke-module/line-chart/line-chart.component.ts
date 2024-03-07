@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
 import { Chart, registerables } from "chart.js";
+import { ToastrService } from "ngx-toastr";
+import { ChartService } from "src/app/service/chart.service";
 
 @Component({
   selector: "app-line-chart",
@@ -22,57 +24,30 @@ export class LineChartComponent implements OnInit {
     "Thứ 7",
     "Chủ Nhật",
   ];
-  constructor() {}
 
-  ngOnInit(): void {
-    this.getMonths();
-    this.createChartYear();
-    let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-    this.flashInterval = setInterval(() => {
-      const dataset = this.chart.data.datasets[1];
-      dataset.backgroundColor[flashIndex] =
-        dataset.backgroundColor[flashIndex] === "limegreen"
-          ? "red"
-          : "limegreen";
-      this.chart.update();
-    }, 1000);
+  // Biến
+  listTongSoDonHoanThanhTheoNam: number[];
+  listTongSoDonHoanThanhTheoNamTruoc: number[];
+
+  listTongSoDonHoanThanhTheoThang: number[];
+  listTongSoDonHoanThanhTheoThangTruoc: number[];
+
+  listTongSoDonHoanThanhTrongTuan: number[];
+  listTongSoDonHoanThanhTrongTuanTruoc: number[];
+  //
+  constructor(private service: ChartService, private toastSrc: ToastrService) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.getMonths();
+
+    setTimeout(async () => {
+      this.loadChartDonHangHoanThanh();
+    }, 500);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tenChart"] && !changes["tenChart"].firstChange) {
       // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
       this.switchChart(this.tenChart);
-      clearInterval(this.flashInterval);
-      if (this.tenChart == "year") {
-        let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "month") {
-        let flashIndex = 3; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "week") {
-        let flashIndex = 6; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      }
     }
   }
   ngOnDestroy(): void {
@@ -88,7 +63,6 @@ export class LineChartComponent implements OnInit {
       );
     }
   }
-
   public switchChart(chart: string) {
     if (chart == "week") {
       this.createChartDay();
@@ -111,12 +85,12 @@ export class LineChartComponent implements OnInit {
         datasets: [
           {
             label: "Tuần Trước",
-            data: [467, 576, 572, 79, 95, 23, 23],
+            data: this.listTongSoDonHoanThanhTrongTuan,
             backgroundColor: "blue",
           },
           {
             label: "Tuần Hiện Tại",
-            data: [542, 542, 536, 327, 333, 444, 222],
+            data: this.listTongSoDonHoanThanhTrongTuanTruoc,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -162,12 +136,12 @@ export class LineChartComponent implements OnInit {
         datasets: [
           {
             label: "Tháng Trước",
-            data: [467, 576, 572, 79],
+            data: this.listTongSoDonHoanThanhTheoThangTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tháng Hiện Tại",
-            data: [],
+            data: this.listTongSoDonHoanThanhTheoThang,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -210,12 +184,12 @@ export class LineChartComponent implements OnInit {
         datasets: [
           {
             label: "Năm Trước",
-            data: [467, 576, 572, 79, 92, 574, 573, 576, 576, 576, 576, 576],
+            data: this.listTongSoDonHoanThanhTheoNamTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Năm Hiện Tại",
-            data: [542, 542, 536, 327, 17, 0.0, 538, 541, 541, 541, 541, 541],
+            data: this.listTongSoDonHoanThanhTheoNam,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -252,6 +226,90 @@ export class LineChartComponent implements OnInit {
           },
         },
       },
+    });
+  }
+
+  public loadChartDonHangHoanThanh(): void {
+    let requestsCompleted = 0;
+
+    const handleCompletion = () => {
+      requestsCompleted++;
+      if (requestsCompleted === 6) {
+        this.createChartYear();
+        this.createChartDay();
+        this.createChartDay();
+      }
+    };
+
+    this.service.getSoDonHoanThanhTrongNamTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTheoNamTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo năm trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoDonHoanThanhTrongNam().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTheoNam = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo năm do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoDonHoanThanhTrongTuan().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTrongTuan = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tuần do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoDonHoanThanhTrongTuanTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTrongTuanTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tuần trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoDonHoanThanhTrongThang().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTheoThang = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tháng do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+    this.service.getSoDonHoanThanhTrongThangTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoDonHoanThanhTheoThangTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tháng trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
     });
   }
 }

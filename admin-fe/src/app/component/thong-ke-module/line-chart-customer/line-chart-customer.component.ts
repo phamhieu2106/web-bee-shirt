@@ -28,15 +28,6 @@ export class LineChartCustomerComponent implements OnInit {
   ngOnInit(): void {
     this.getMonths();
     this.createChartYear();
-    let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-    this.flashInterval = setInterval(() => {
-      const dataset = this.chart.data.datasets[1];
-      dataset.backgroundColor[flashIndex] =
-        dataset.backgroundColor[flashIndex] === "limegreen"
-          ? "red"
-          : "limegreen";
-      this.chart.update();
-    }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

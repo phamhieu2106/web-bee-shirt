@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import * as Highcharts from "highcharts";
 import HighchartsMaps from "highcharts/modules/map";
-import * as mapData from "@highcharts/map-collection/countries/vn/vn-all.geo.json";
+import * as mapData from "../../../../assets/map/vietnam.json";
 
 @Component({
   selector: "app-vietnam-map-chart",

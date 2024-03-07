@@ -19,7 +19,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   @Input({ required: true }) diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
   @Output() diaChiVaPhiVanChuyenChange =
     new EventEmitter<DiaChiVaPhiVanChuyen>();
-  @Output() phiVanChuyen = new EventEmitter<number>();
+  @Output() changePhiVanChuyen = new EventEmitter<number>();
   tinhs: any[];
   huyens: any[];
   xas: any[];
@@ -207,7 +207,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
             .subscribe({
               next: (resp) => {
                 this.diaChiVaPhiVanChuyen.phiVanChuyen = resp.data.total;
-                this.phiVanChuyen.emit(resp.data.total);
+                this.changePhiVanChuyen.emit(resp.data.total);
               },
               error: (err) => {
                 console.log(err);

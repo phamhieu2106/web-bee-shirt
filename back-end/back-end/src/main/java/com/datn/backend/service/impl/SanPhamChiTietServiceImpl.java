@@ -1,17 +1,14 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
-<<<<<<< HEAD
 import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-=======
 import com.datn.backend.dto.response.DotGiamGiaSanPhamResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SanPhamResponse;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
->>>>>>> 7775ecdd1e387780538a72deaba7a279a74e3d4a
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
 import com.datn.backend.model.san_pham.HinhAnh;
@@ -149,7 +146,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return paged;
     }
 
-<<<<<<< HEAD
     @Transactional
     @Override
     public void updateSpctNhanh(CapNhatNhanhSanPhamChiTietReq req) {
@@ -164,7 +160,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
             spctRepo.save(spct);
         }
-=======
+    }
+
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
@@ -204,6 +201,5 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             return spctResp;
         }).toList();
         return spctResponses;
->>>>>>> 7775ecdd1e387780538a72deaba7a279a74e3d4a
     }
 }

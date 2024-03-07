@@ -360,7 +360,10 @@
         </div>
         <!-- Main modal -->
         <div class="modal-body">
-          <app-thanh-toan></app-thanh-toan>
+          <app-thanh-toan
+            [(thanhToans)]="order.thanhToans"
+            [tongTien]="order.tongTien"
+          ></app-thanh-toan>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal">
@@ -394,7 +397,8 @@
         <div class="modal-body">
           <app-giao-hang
             [khachHang]="order.khachHang"
-            (changePhiVanChuyen)="caculatePhiVanChuyen($event)"
+            (phiVanChuyen)="caculatePhiVanChuyen($event)"
+            (diaChi)="getDiaChiNguoiNhan($event)"
           ></app-giao-hang>
         </div>
         <div class="modal-footer">

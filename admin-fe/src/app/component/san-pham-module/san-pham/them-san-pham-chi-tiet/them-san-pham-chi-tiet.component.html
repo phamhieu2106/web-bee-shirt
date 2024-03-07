@@ -24,7 +24,7 @@
           </div>
 
           <div class="row">
-            <!-- kiểu dáng, thiết kế -->
+            <!-- kiểu dáng -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu dáng:</label>
               <div class="row">
@@ -42,7 +42,12 @@
                 </datalist>
                 <button
                   class="btn btn-primary rounded col-2"
-                  (click)="themNhanhThuocTinh('Dáng áo', 'kieuDangService')"
+                  (click)="
+                    changeNameAndServiceForThuocTinh(
+                      'dáng áo',
+                      'kieuDangService'
+                    )
+                  "
                   data-bs-toggle="modal"
                   data-bs-target="#addNhanhForm"
                 >
@@ -51,6 +56,7 @@
               </div>
             </div>
 
+            <!-- kiểu thiết kế -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu thiết kế:</label>
               <div class="row">
@@ -71,7 +77,10 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    themNhanhThuocTinh('Kiểu thiết kế', 'kieuThietKeService')
+                    changeNameAndServiceForThuocTinh(
+                      'kiểu thiết kế',
+                      'kieuThietKeService'
+                    )
                   "
                   data-bs-toggle="modal"
                   data-bs-target="#addNhanhForm"
@@ -81,7 +90,7 @@
               </div>
             </div>
 
-            <!-- tay áo, cổ áo -->
+            <!-- tay áo -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu tay áo:</label>
               <div class="row">
@@ -100,7 +109,10 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    themNhanhThuocTinh('Kiểu tay áo', 'kieuTayAoService')
+                    changeNameAndServiceForThuocTinh(
+                      'kiểu tay áo',
+                      'kieuTayAoService'
+                    )
                   "
                   data-bs-toggle="modal"
                   data-bs-target="#addNhanhForm"
@@ -110,34 +122,65 @@
               </div>
             </div>
 
+            <!-- cổ áo -->
             <div class="col-6 mb-3">
               <label class="form-label">Kiểu cổ áo:</label>
-              <input
-                class="form-control rounded"
-                list="coAoList"
-                type="text"
-                (input)="selectThuocTinh($event, coAoList, 'coAoId')"
-              />
-              <datalist id="coAoList">
-                <option *ngFor="let ca of coAoList" [value]="ca.ten"></option>
-              </datalist>
+              <div class="row">
+                <input
+                  class="form-control rounded col-8 ms-3 me-2"
+                  list="coAoList"
+                  type="text"
+                  (input)="selectThuocTinh($event, coAoList, 'coAoId')"
+                />
+                <datalist id="coAoList">
+                  <option *ngFor="let ca of coAoList" [value]="ca.ten"></option>
+                </datalist>
+                <button
+                  class="btn btn-primary rounded col-2"
+                  (click)="
+                    changeNameAndServiceForThuocTinh(
+                      'kiểu cổ áo',
+                      'kieuCoAoService'
+                    )
+                  "
+                  data-bs-toggle="modal"
+                  data-bs-target="#addNhanhForm"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
 
             <!-- chất liệu -->
             <div class="col-12 mb-3">
               <label class="form-label">Chất liệu:</label>
-              <input
-                class="form-control rounded"
-                list="chatLieuList"
-                type="text"
-                (input)="selectThuocTinh($event, chatLieuList, 'chatLieuId')"
-              />
-              <datalist id="chatLieuList">
-                <option
-                  *ngFor="let cl of chatLieuList"
-                  [value]="cl.ten"
-                ></option>
-              </datalist>
+              <div class="row">
+                <input
+                  class="form-control rounded col-9 ms-3 me-2"
+                  list="chatLieuList"
+                  type="text"
+                  (input)="selectThuocTinh($event, chatLieuList, 'chatLieuId')"
+                />
+                <datalist id="chatLieuList">
+                  <option
+                    *ngFor="let cl of chatLieuList"
+                    [value]="cl.ten"
+                  ></option>
+                </datalist>
+                <button
+                  class="btn btn-primary rounded col-2"
+                  (click)="
+                    changeNameAndServiceForThuocTinh(
+                      'chất liệu',
+                      'chatLieuService'
+                    )
+                  "
+                  data-bs-toggle="modal"
+                  data-bs-target="#addNhanhForm"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -367,7 +410,7 @@
   <button class="btn btn-success rounded" (click)="add()">Thêm</button>
 </div>
 
-<!-- image modal -->
+<!-- modal: ảnh -->
 <div
   class="modal fade"
   id="anhSpModal"
@@ -450,7 +493,7 @@
   </div>
 </div>
 
-<!-- bang mau sac -->
+<!-- modal: màu sắc -->
 <div
   class="modal fade"
   id="mauSacBoard"
@@ -494,7 +537,7 @@
   </div>
 </div>
 
-<!-- bang kich co -->
+<!-- modal: kích cỡ -->
 <div
   class="modal fade"
   id="kichCoBoard"
@@ -538,7 +581,7 @@
   </div>
 </div>
 
-<!-- update modal -->
+<!-- modal:chỉnh sửa giá nhập, giá bán, số lượng hàng loạt -->
 <div
   class="modal fade"
   id="updateModal"
@@ -612,9 +655,7 @@
   </div>
 </div>
 
-<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
-
-<!-- add thuoc tinh nhanh -->
+<!-- modal: thêm nhanh thuộc tính -->
 <div
   class="modal fade"
   id="addNhanhForm"
@@ -625,7 +666,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Thêm mới {{ thuocTinhNhanh.ten }}</h1>
+        <h1 class="modal-title fs-5">
+          Thêm mới nhanh '{{ thuocTinhNhanh.ten }}'
+        </h1>
       </div>
       <form [formGroup]="addNhanhForm">
         <div class="modal-body">
@@ -648,10 +691,10 @@
 
         <div class="modal-footer">
           <button
-            id="closeBtn"
+            id="closeAddNhanhBtn"
             type="button"
             class="btn btn-secondary rounded"
-            (click)="initAddForm()"
+            (click)="initAddNhanhForm()"
             data-bs-dismiss="modal"
           >
             Đóng
@@ -660,7 +703,7 @@
             type="button"
             class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
-            (click)="addNhanh(commonService)"
+            (click)="addNhanhThuocTinh()"
           >
             Thêm
           </button>
@@ -669,3 +712,5 @@
     </div>
   </div>
 </div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

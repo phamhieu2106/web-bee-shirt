@@ -16,6 +16,6 @@ public interface SanPhamChiTietService {
     PagedResponse<SanPhamChiTiet> getByPage(int pageNumber, int pageSize, String search, int spId);
 
     void updateSpctNhanh(CapNhatNhanhSanPhamChiTietReq req);
-
+    
     PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search);
 }

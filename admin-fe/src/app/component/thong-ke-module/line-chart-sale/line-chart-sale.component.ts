@@ -28,53 +28,12 @@ export class LineChartSaleComponent {
   ngOnInit(): void {
     this.getMonths();
     this.createChartYear();
-    let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-    this.flashInterval = setInterval(() => {
-      const dataset = this.chart.data.datasets[1];
-      dataset.backgroundColor[flashIndex] =
-        dataset.backgroundColor[flashIndex] === "limegreen"
-          ? "red"
-          : "limegreen";
-      this.chart.update();
-    }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tenChart"] && !changes["tenChart"].firstChange) {
       // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
       this.switchChart(this.tenChart);
-      clearInterval(this.flashInterval);
-      if (this.tenChart == "year") {
-        let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "month") {
-        let flashIndex = 3; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "week") {
-        let flashIndex = 6; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      }
     }
   }
   ngOnDestroy(): void {

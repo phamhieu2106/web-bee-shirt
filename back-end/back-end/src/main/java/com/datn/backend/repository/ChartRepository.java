@@ -2,11 +2,12 @@ package com.datn.backend.repository;
 
 import com.datn.backend.model.hoa_don.HoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -50,43 +51,42 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
 
 
     @Query(value = """
-                        SELECT COUNT(hd.trang_thai) as SoDon
-                        FROM hoa_don hd
-                        WHERE hd.trang_thai = 'HOAN_THANH'
-                        AND MONTH(hd.created_at) = MONTH(CURDATE())
+                     SELECT COUNT(*) AS total_orders
+                     FROM hoa_don
+                     WHERE trang_thai = 'HOAN_THANH'
+                         AND created_at >= :startDate
+                         AND created_at <= DATE_ADD( :startDate , INTERVAL CEIL( :totalDays / 4) DAY)
+                     UNION ALL
+                     SELECT  COUNT(*) AS total_orders
+                     FROM hoa_don
+                     WHERE trang_thai = 'HOAN_THANH'
+                         AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 4) DAY)\s
+                         AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)
+                     UNION ALL
+                     SELECT COUNT(*) AS total_orders
+                     FROM hoa_don
+                     WHERE trang_thai = 'HOAN_THANH'
+                     	AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)\s
+                         AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)
+                     UNION ALL
+                     SELECT COUNT(*) AS total_orders
+                     FROM hoa_don
+                     WHERE trang_thai = 'HOAN_THANH'
+                         AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)\s
+                         AND created_at <= :endDate ;
             """,
             nativeQuery = true)
-    List<Long> countInvoice4WeekInThisMonth();
+    List<Long> countInvoice4WeekInMonth(@Param("startDate") LocalDate startDate
+            , @Param("endDate") LocalDate endDate, @Param("totalDays") int totalDays);
+
 
     @Query(value = """
-            SELECT COUNT(hd.trang_thai) as SoDon
-                        FROM hoa_don hd
-                        WHERE hd.trang_thai = 'HOAN_THANH'
-                        AND MONTH(hd.created_at) = MONTH(CURDATE()) - 1
-                   """, nativeQuery = true)
-    List<Long> countInvoice4WeekInLastMonth();
 
-
-    @Modifying
-    @Query(value = """
-            SET @today = CURDATE();
-                """, nativeQuery = true)
-    @Transactional
-    void createVarrible1();
-
-    @Modifying
-    @Query(value = """
-            SET @start_of_week = DATE_SUB(@today, INTERVAL (DAYOFWEEK(@today) - 2) DAY);
-                """, nativeQuery = true)
-    @Transactional
-    void createVarrible2();
-
-    @Modifying
-    @Query(value = """
-            SET @start_of_week = DATE_SUB(@today, INTERVAL (DAYOFWEEK(@today) - 2) DAY);
-                """, nativeQuery = true)
-    @Transactional
-    void createVarrible3();
+                        SELECT IFNULL(COUNT(*), 0) as SoDon
+            FROM hoa_don
+            WHERE DAY(created_at) = DAY(LAST_DAY( :today ));
+            """, nativeQuery = true)
+    Long countInvoiceLastDayOfMonth(@Param("today") LocalDate today);
 
     @Query(value = """
             SELECT COALESCE(COUNT(hd.trang_thai), 0) AS SoDonHang
@@ -95,24 +95,24 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                 SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
                 SELECT 5 UNION ALL SELECT 6
             ) AS numbers
-            LEFT JOIN hoa_don hd ON DATE(hd.created_at) = DATE_ADD(@start_of_week, INTERVAL num DAY)
+            LEFT JOIN hoa_don hd ON DATE(hd.created_at) = DATE_ADD( :startOfWeek , INTERVAL num DAY)
                                   AND hd.trang_thai = 'HOAN_THANH'
-            GROUP BY DATE_ADD(@start_of_week, INTERVAL num DAY)
-            ORDER BY DATE_ADD(@start_of_week, INTERVAL num DAY);
+            GROUP BY DATE_ADD( :startOfWeek , INTERVAL num DAY)
+            ORDER BY DATE_ADD( :startOfWeek , INTERVAL num DAY);
                         """, nativeQuery = true)
-    List<Long> countInvoice7DayThisWeek();
+    List<Long> countInvoice7DayThisWeek(@Param("startOfWeek") Date startOfWeek);
 
     @Query(value = """             
             SELECT COALESCE(COUNT(hd.trang_thai), 0) AS SoDonHang
-            FROM (
-                SELECT 0 AS num UNION ALL
-                SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
-                SELECT 5 UNION ALL SELECT 6
-            ) AS numbers
-            LEFT JOIN hoa_don hd ON DATE(hd.created_at) = DATE_ADD(@start_of_last_week, INTERVAL num DAY)
-                                  AND hd.trang_thai = 'HOAN_THANH'
-            GROUP BY DATE_ADD(@start_of_last_week, INTERVAL num DAY)
-            ORDER BY DATE_ADD(@start_of_last_week, INTERVAL num DAY);
+                        FROM (
+                            SELECT 0 AS num UNION ALL
+                            SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                            SELECT 5 UNION ALL SELECT 6
+                        ) AS numbers
+                        LEFT JOIN hoa_don hd ON DATE(hd.created_at) = DATE_ADD( :startOfLastWeek , INTERVAL num DAY)
+                                              AND hd.trang_thai = 'HOAN_THANH'
+                        GROUP BY DATE_ADD( :startOfLastWeek, INTERVAL num DAY)
+                        ORDER BY DATE_ADD( :startOfLastWeek , INTERVAL num DAY);
                              """, nativeQuery = true)
-    List<Long> countInvoice7DayLastWeek();
+    List<Long> countInvoice7DayLastWeek(@Param("startOfLastWeek") Date startOfLastWeek);
 }

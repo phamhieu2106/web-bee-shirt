@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface ChartService {
     Long countInvoiceComplete();
+    Long countInvoiceWFC();
+    Long countInvoiceWFD();
 
     List<Long> countInvoiceInThisYear();
 
@@ -16,4 +18,10 @@ public interface ChartService {
     List<Long> countInvoice7DayThisWeek();
 
     List<Long> countInvoice7DayLastWeek();
+    List<Long> countCustomerInThisYear();
+    List<Long> countCustomerInLastYear();
+    List<Long> countCustomer4WeekInMonth();
+    List<Long> countCustomer4WeekInLastMonth();
+    List<Long> countCustomer7DayThisWeek();
+    List<Long> countCustomer7DayLastWeek();
 }

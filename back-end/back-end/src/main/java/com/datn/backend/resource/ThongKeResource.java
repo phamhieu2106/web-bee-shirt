@@ -22,12 +22,47 @@ public class ThongKeResource {
         super();
         this.chartService = chartService;
     }
-
     @GetMapping("/hoa-don-hoan-thanh")
     public ResponseEntity<Long> countInvoiceComplete() {
         return ResponseEntity.ok(chartService.countInvoiceComplete());
     }
+    @GetMapping("/hoa-don-moi")
+    public ResponseEntity<Long> countInvoiceWFC() {
+        return ResponseEntity.ok(chartService.countInvoiceWFC());
+    }
+    @GetMapping("/hoa-don-cho-giao")
+    public ResponseEntity<Long> countInvoiceWFD() {
+        return ResponseEntity.ok(chartService.countInvoiceWFD());
+    }
+    @GetMapping("/khach-hang-trong-nam")
+    public ResponseEntity<List<Long>> countCustomerCompleteThisYear() {
+        return ResponseEntity.ok(chartService.countCustomerInThisYear());
+    }
 
+    @GetMapping("/khach-hang-trong-nam-truoc")
+    public ResponseEntity<List<Long>> countCustomerCompleteLastYear() {
+        return ResponseEntity.ok(chartService.countCustomerInLastYear());
+    }
+
+    @GetMapping("/khach-hang-4-tuan-trong-thang")
+    public ResponseEntity<List<Long>> countCustomerComplete4WeekThisMonth() {
+        return ResponseEntity.ok(chartService.countCustomer4WeekInMonth());
+    }
+
+    @GetMapping("/khach-hang-4-tuan-trong-thang-truoc")
+    public ResponseEntity<List<Long>> countCustomerComplete4WeekLastMonth() {
+        return ResponseEntity.ok(chartService.countCustomer4WeekInLastMonth());
+    }
+
+    @GetMapping("/khach-hang-7-ngay-trong-tuan")
+    public ResponseEntity<List<Long>> countCustomerComplete7DayThisWeek() {
+        return ResponseEntity.ok(chartService.countCustomer7DayThisWeek());
+    }
+
+    @GetMapping("/khach-hang-7-ngay-trong-tuan-truoc")
+    public ResponseEntity<List<Long>> countCustomerComplete7DayLastWeek() {
+        return ResponseEntity.ok(chartService.countCustomer7DayLastWeek());
+    }
     @GetMapping("/hoa-don-hoan-thanh-trong-nam")
     public ResponseEntity<List<Long>> countInvoiceCompleteThisYear() {
         return ResponseEntity.ok(chartService.countInvoiceInThisYear());

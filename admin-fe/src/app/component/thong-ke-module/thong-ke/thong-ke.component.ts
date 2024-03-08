@@ -13,6 +13,8 @@ export class ThongKeComponent implements OnInit {
   public tenChartSale: string = "year";
   // Các Biến
   tongSoDonHoanThanh: number;
+  tongSoDonMoi: number;
+  tongSoDonChoGiao: number;
   //
 
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
@@ -28,6 +30,26 @@ export class ThongKeComponent implements OnInit {
       error: (err) => {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành do ${err.message.message}`
+        );
+      },
+    });
+    this.service.getSoDonMoi().subscribe({
+      next: (data) => {
+        this.tongSoDonMoi = data;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn mới do ${err.message.message}`
+        );
+      },
+    });
+    this.service.getSoDonChoGiao().subscribe({
+      next: (data) => {
+        this.tongSoDonChoGiao = data;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn đợi giao do ${err.message.message}`
         );
       },
     });

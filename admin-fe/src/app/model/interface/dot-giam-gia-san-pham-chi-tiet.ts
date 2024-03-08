@@ -17,4 +17,5 @@ export interface DotGiamGiaSanPhamChiTiet {
   ngayTao?: string;
   ngayCapNhat?: string;
   nguoiCapNhatGanNhat?: string;
+  giamGia?: number;
 }

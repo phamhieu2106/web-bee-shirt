@@ -38,6 +38,11 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
 
     List<DotGiamGiaSanPham> findBySanPhamChiTietId(Integer id);
 
-    List<DotGiamGiaSanPham> findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
+    @Query("""
+select dggsp from DotGiamGiaSanPham dggsp
+where dggsp.sanPhamChiTiet.id = :id
+and dggsp.dotGiamGia.trangThai = 1
+""")
+    DotGiamGiaSanPham findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
 
 }

@@ -14,6 +14,7 @@ import { TrangThaiHoaDonComponent } from "./trang-thai-hoa-don/trang-thai-hoa-do
 import { LoaiHoaDonComponent } from "./loai-hoa-don/loai-hoa-don.component";
 import { PhuongThucThanhToanComponent } from "./phuong-thuc-thanh-toan/phuong-thuc-thanh-toan.component";
 import { CommonComponentModule } from "../common-component/common-component.module";
+import { HinhThucThanhToan } from "src/app/model/class/hinh-thuc-thanh-toan";
 
 @NgModule({
   declarations: [
@@ -35,5 +36,6 @@ import { CommonComponentModule } from "../common-component/common-component.modu
     ReactiveFormsModule,
     CommonComponentModule,
   ],
+  exports: [PhuongThucThanhToanComponent],
 })
 export class HoaDonModule {}

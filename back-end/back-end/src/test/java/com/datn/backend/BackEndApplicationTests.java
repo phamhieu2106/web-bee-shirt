@@ -4,12 +4,17 @@ import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
 import com.datn.backend.model.san_pham.HinhAnh;
+import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.repository.HinhAnhRepository;
 import com.datn.backend.repository.NhanVienRepository;
+import com.datn.backend.repository.SanPhamRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
@@ -23,38 +28,15 @@ import java.util.List;
 class BackEndApplicationTests {
 
     @Autowired
-    private NhanVienRepository nhanVienRepo;
-
-    @Autowired
-    private HinhAnhRepository hinhAnhRepo;
+    private SanPhamRepository sanPhamRepo;
 
     @Test
-    void contextLoads() {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        // account
-        Account account = new Account();
-        account.setTenDangNhap("admin0203");
-        account.setMatKhau(passwordEncoder.encode("12345678"));
-        account.setTrangThai(true);
-        account.setRole(Role.ROLE_ADMIN.name());
-
-        // nhan vien
-        NhanVien nhanVien = new NhanVien();
-        nhanVien.setHoTen("Nguyễn Lăng Cọc");
-        nhanVien.setNgaySinh(LocalDate.of(2002, 2, 2));
-        nhanVien.setSdt("0123456789");
-        nhanVien.setGioiTinh(true);
-        nhanVien.setEmail("langcoc@gmail.com");
-        nhanVien.setDiaChi("Người Miền Núi");
-        nhanVien.setAccount(account);
-
-        NhanVien nv = nhanVienRepo.save(nhanVien);
-        System.err.println("saved employee id: " + nv.getId());
-    }
-
-    @Test
-    void getHinhAnh() {
-//        List<HinhAnh> hinhAnhs = hinhAnhRepo.getByMauSac("Xanh dương (Blue)");
-//        System.err.println(hinhAnhs.size());
+    void getSanPham() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPageClient(pageable);
+        for (SanPham s: sanPhamPage.getContent()) {
+            System.err.println(s.getTen() + " - " + s.getId());
+            System.out.println("spct length: " + s.getSanPhamChiTiets().size());
+        }
     }
 }

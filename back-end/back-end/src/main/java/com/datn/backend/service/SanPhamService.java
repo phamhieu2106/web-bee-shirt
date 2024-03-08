@@ -5,6 +5,7 @@ import com.datn.backend.model.san_pham.SanPham;
 
 public interface SanPhamService {
 
+    // admin
     SanPham add(SanPham sanPham);
 
     PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search);
@@ -14,4 +15,7 @@ public interface SanPhamService {
     void changeStatus(int id);
 
     SanPham update(SanPham sanPham);
+
+    // client
+    PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize);
 }

@@ -1,0 +1,112 @@
+<!-- Form -->
+<form class="row" [formGroup]="thanhToanForm">
+  <!-- Tổng tiền -->
+  <div class="d-flex justify-content-between m-1">
+    <span class="mr-auto fw-bold">Tổng tiền:</span>
+    <span class="ml-auto fw-bold text-danger">{{
+      tongTien | currency : "đ " : "symbol" : "1.0-0"
+    }}</span>
+  </div>
+  <!-- Tiền khách đưa -->
+  <div class="d-flex justify-content-between m-1">
+    <span class="mr-auto fw-bold">Tiền khách đưa:</span>
+    <span class="ml-auto"
+      ><input type="number" formControlName="tienKhachDua"
+    /></span>
+  </div>
+  <!-- Tiền thiếu -->
+  <div class="d-flex justify-content-between m-1">
+    <span class="mr-auto fw-bold">Tiền thiếu:</span>
+    <span class="ml-auto fw-bold text-danger">{{
+      getTienConThieu() | currency : "đ " : "symbol" : "1.0-0"
+    }}</span>
+  </div>
+  <!-- Hình thức thanh toán -->
+  <div class="d-flex justify-content-between m-1">
+    <span class="mr-auto">
+      <label class="form-label fw-bold">Hình thức: </label>
+      <label class="form-check form-check-inline ml-4">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="phuongThucThanhToan"
+          value="TIEN_MAT"
+          formControlName="phuongThucThanhToan"
+          checked
+        />
+        <label class="form-check-label">Tiền mặt</label>
+      </label>
+      <label class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="phuongThucThanhToan"
+          value="CHUYEN_KHOAN"
+          formControlName="phuongThucThanhToan"
+        />
+        <label class="form-check-label">Chuyển khoản</label>
+      </label></span
+    >
+  </div>
+  <!-- Mã giao dịch -->
+  <div class="m-1">
+    <span class="mr-auto fw-bold">Mã giao dịch:</span>
+    <span
+      ><input type="text" class="form-control" formControlName="maGiaoDich" />
+      <small
+        class="form-text text-danger"
+        *ngIf="thanhToanForm.controls['maGiaoDich'].invalid"
+        >Mã giao dịch không được trống</small
+      ></span
+    >
+  </div>
+  <!-- Ghi chú -->
+  <div class="m-1">
+    <span class="mr-auto fw-bold">Ghi chú:</span>
+    <span>
+      <input type="text" class="form-control" formControlName="moTa" />
+    </span>
+  </div>
+</form>
+<!-- Controll -->
+<div>
+  <button
+    type="button"
+    class="btn btn-primary mt-2 mb-2"
+    [disabled]="thanhToanForm.invalid"
+  >
+    Xác nhận
+  </button>
+</div>
+
+<!-- Table thanh toán -->
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr role="row">
+        <th>Mã GD</th>
+        <th>Số tiền</th>
+        <th>Phương thức</th>
+        <th>Ghi chú</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tt of thanhToans">
+        <td>{{ tt.maGiaoDich }}</td>
+        <td>{{ tt.soTien | currency : "đ " : "symbol" : "1.0-0" }}</td>
+        <td>
+          <app-phuong-thuc-thanh-toan
+            [phuongThucThanhToan]="tt.hinhThucThanhToan"
+          ></app-phuong-thuc-thanh-toan>
+        </td>
+        <td>{{ tt.moTa }}</td>
+        <td>
+          <button type="button" class="btn btn-danger">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -137,7 +137,9 @@ export class DanhSachKieuTayAoComponent {
   }
 
   public update(): void {
-    console.log(this.updateForm.value);
+    let trimmed = this.updateForm.get("ten").value.trim();
+    this.updateForm.get("ten")?.setValue(trimmed);
+
     this.tayAoService.update(this.updateForm.value).subscribe({
       next: (response: TayAo) => {
         this.goToPage(
@@ -154,8 +156,8 @@ export class DanhSachKieuTayAoComponent {
         });
         document.getElementById("closeUpdateBtn").click();
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
       },
     });
   }

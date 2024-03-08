@@ -20,6 +20,19 @@
             class="dropdown-menu product-suggestions"
             aria-labelledby="dropdownProduct"
           >
+            <div class="suggestion-item row d-flex">
+              <div
+                class="row p-auto text-center"
+                data-toggle="modal"
+                data-target="#searchProductModal"
+                style="height: 50px"
+              >
+                <div class="col-10 h5">
+                  <i class="fa-solid fa-plus h5"></i>
+                  Tìm kiếm nâng cao
+                </div>
+              </div>
+            </div>
             <!-- Sản phẩm tìm kiếm -->
             <div
               class="suggestion-item row d-flex"
@@ -46,7 +59,12 @@
               </div>
               <div class="col-3 mr-auto">
                 <div class="">
-                  {{ spct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
+                  {{
+                    (spct.dotGiamGiaSanPham == null
+                      ? spct.giaBan
+                      : getGiaBan(spct)
+                    ) | currency : "đ " : "symbol" : "1.0-0"
+                  }}
                 </div>
                 <div class="text-mute">Còn lại: {{ spct.soLuongTon }}</div>
               </div>
@@ -233,11 +251,12 @@
           getTongTien() | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
       </div>
-      <!-- Show on selected Giao hàng -->
+
       <div
         class="d-flex justify-content-between m-1"
         *ngIf="order.loaiHoaDon == 'GIAO_HANG'"
       >
+        <!-- Show on selected Giao hàng -->
         <span class="mr-auto fw-bold">Phí vận chuyển:</span>
         <span class="ml-auto"
           ><input type="number" [(ngModel)]="order.phiVanChuyen"
@@ -260,7 +279,7 @@
             type="button"
             class="btn btn-outline-info p-1"
             data-toggle="modal"
-            data-target="#lichSuThanhToan"
+            data-target="#thanhToanModal"
           >
             <i class="fa-solid fa-credit-card"></i>
           </button>
@@ -272,28 +291,41 @@
         <span class="ml-auto">40,000</span>
       </div>
       <div class="d-flex justify-content-between m-1">
+        <span class="mr-auto fw-bold">Phiếu giảm giá:</span>
+        <!-- <span class="ml-auto"><input type="text" /></span> -->
+        <!-- Tự fill PGG -->
+      </div>
+      <!-- Giao hàng  -->
+      <div *ngIf="order.loaiHoaDon == 'GIAO_HANG'">
+        <div class="d-flex justify-content-between m-1">
+          <span class="mr-auto fw-bold">Tên người nhận: </span>
+          <span class="ml-auto"><input type="text" /></span>
+        </div>
+        <div class="d-flex justify-content-between m-1">
+          <span class="mr-auto fw-bold">Số điện thoại:</span>
+          <span class="ml-auto"><input type="text" /></span>
+        </div>
+        <div class="d-flex justify-content-between m-1">
+          <span class="mr-auto fw-bold">Địa chỉ:</span>
+          <span class="ml-auto"
+            ><button
+              type="button"
+              class="btn btn-outline-info p-1"
+              data-toggle="modal"
+              data-target="#diaChiModal"
+            >
+              <i class="fa-solid fa-location-dot"></i> Chọn địa chỉ
+            </button></span
+          >
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold"
           >Ghi chú:<textarea rows="2" cols="45"></textarea>
         </span>
       </div>
-      <div style="height: 150px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
-      <!-- Giao hàng  -->
-      <div *ngIf="order.loaiHoaDon == 'GIAO_HANG'">
-        <div class="d-flex justify-content-between m-1">
-          <span class="mr-auto fw-bold"
-            >Tên người nhận: <input type="text"
-          /></span>
-        </div>
-        <div class="d-flex justify-content-between m-1">
-          <span class="mr-auto fw-bold"
-            >Số điện thoại: <input type="text"
-          /></span>
-        </div>
-        <app-get-dia-chi-va-phi-van-chuyen
-          [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
-          (phiVanChuyen)="updatePhiVanChuyen($event)"
-        ></app-get-dia-chi-va-phi-van-chuyen>
-      </div>
+      <div style="height: 180px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
       <div class="mb-3">
         <button
           class="btn btn-success btn-lg w-100 h-100"
@@ -305,12 +337,11 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal Thanh Toán-->
   <div
     class="modal fade"
-    id="lichSuThanhToan"
+    id="thanhToanModal"
     tabindex="-1"
-    aria-labelledby="exampleModalLabel"
     style="display: none"
     aria-hidden="true"
   >
@@ -329,94 +360,77 @@
         </div>
         <!-- Main modal -->
         <div class="modal-body">
-          <!-- Form -->
-          <form class="row">
-            <!-- Tổng tiền -->
-            <div class="d-flex justify-content-between m-1">
-              <span class="mr-auto fw-bold">Tổng tiền:</span>
-              <span class="ml-auto fw-bold text-danger">90,000</span>
-            </div>
-            <!-- Tiền khách đưa -->
-            <div class="d-flex justify-content-between m-1">
-              <span class="mr-auto fw-bold">Tiền khách đưa:</span>
-              <span class="ml-auto"><input type="number" /></span>
-            </div>
-            <!-- Tiền thiếu -->
-            <div class="d-flex justify-content-between m-1">
-              <span class="mr-auto fw-bold">Tiền thiếu:</span>
-              <span class="ml-auto fw-bold text-danger">0</span>
-            </div>
-            <!-- Hình thức thanh toán -->
-            <div class="d-flex justify-content-between m-1">
-              <span class="mr-auto">
-                <label class="form-label fw-bold">Hình thức: </label>
-                <label class="form-check form-check-inline ml-4">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="hinhThucThanhToan"
-                    value="TIEN_MAT"
-                  />
-                  <label class="form-check-label">Tiền mặt</label>
-                </label>
-                <label class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="hinhThucThanhToan"
-                    value="CHUYEN_KHOAN"
-                  />
-                  <label class="form-check-label">Chuyển khoản</label>
-                </label></span
-              >
-            </div>
-            <!-- Mã giao dịch -->
-            <div class="m-1">
-              <span class="mr-auto fw-bold">Mã giao dịch:</span>
-              <span
-                ><input type="text" class="form-control" />
-                <small class="form-text text-danger"
-                  >Mã giao dịch không được trống</small
-                ></span
-              >
-            </div>
-          </form>
-          <!-- Table thanh toán -->
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr role="row">
-                  <th>Mã GD</th>
-                  <th>Số tiền</th>
-                  <th>Phương thức</th>
-                  <th>Ghi chú</th>
-                  <th>&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td>90,000</td>
-                  <td>
-                    <!-- <app-phuong-thuc-thanh-toan
-                      [phuongThucThanhToan]="lstt.hinhThucThanhToan"
-                    ></app-phuong-thuc-thanh-toan> -->
-                  </td>
-                  <td>ghi_chu</td>
-                  <td>x</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <app-thanh-toan
+            [(thanhToans)]="order.thanhToans"
+            [tongTien]="order.tongTien"
+          ></app-thanh-toan>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">
-            Xác nhận
-          </button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Hủy
+          <button type="button" class="btn btn-success" data-dismiss="modal">
+            Ok
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal địa chỉ -->
+  <div
+    class="modal fade"
+    id="diaChiModal"
+    tabindex="-1"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <div class="modal-body">
+          <app-giao-hang
+            [khachHang]="order.khachHang"
+            (phiVanChuyen)="caculatePhiVanChuyen($event)"
+            (diaChi)="getDiaChiNguoiNhan($event)"
+          ></app-giao-hang>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Search Product Modal -->
+  <div
+    class="modal fade"
+    id="searchProductModal"
+    tabindex="-1"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <div class="modal-body">Modal</div>
       </div>
     </div>
   </div>

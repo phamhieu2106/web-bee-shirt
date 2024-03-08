@@ -12,12 +12,6 @@ public class DotGiamGiaSanPhamRequest {
 
     private Integer id;
 
-    private BigDecimal giaCu;
-
-    private BigDecimal giaMoi;
-
-    private Integer giamGia;
-
     private LocalDateTime thoiGianBatDau;
 
     private LocalDateTime thoiGianKetThuc;
@@ -29,9 +23,6 @@ public class DotGiamGiaSanPhamRequest {
     public DotGiamGiaSanPham map(DotGiamGiaSanPham object){
 //        Map Request to entity
         object.setId(this.id);
-        object.setGiaCu(this.giaCu);
-        object.setGiaMoi(this.giaMoi);
-        object.setGiamGia(this.giamGia);
         object.setThoiGianBatDau(this.thoiGianBatDau);
         object.setThoiGianKetThuc(this.thoiGianKetThuc);
         object.setTrangThai(this.trangThai);

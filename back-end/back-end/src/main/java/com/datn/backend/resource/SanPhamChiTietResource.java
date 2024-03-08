@@ -1,7 +1,7 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.service.SanPhamChiTietService;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +37,15 @@ public class SanPhamChiTietResource {
 
     @GetMapping("/get-by-page/{spId}")
     public ResponseEntity<PagedResponse<SanPhamChiTiet>> getBySanPham(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                      @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                      @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                       @RequestParam(value = "search", defaultValue = "", required = false) String search,
                                                                       @PathVariable("spId") int spId) {
         return ResponseEntity.ok(spctService.getByPage(pageNumber, pageSize, search, spId));
+    }
+
+    @PostMapping("/quick-update")
+    public ResponseEntity<?> updateSpctNhanh(@RequestBody CapNhatNhanhSanPhamChiTietReq req) {
+        spctService.updateSpctNhanh(req);
+        return ResponseEntity.ok("Cập nhật nhanh thành công!");
     }
 }

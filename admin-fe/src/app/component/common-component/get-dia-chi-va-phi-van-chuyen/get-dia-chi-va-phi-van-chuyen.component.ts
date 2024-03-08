@@ -19,7 +19,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   @Input({ required: true }) diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
   @Output() diaChiVaPhiVanChuyenChange =
     new EventEmitter<DiaChiVaPhiVanChuyen>();
-  @Output() phiVanChuyen = new EventEmitter<number>();
+  @Output() changePhiVanChuyen = new EventEmitter<number>();
   tinhs: any[];
   huyens: any[];
   xas: any[];
@@ -59,26 +59,20 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
       const element = this.xas[i];
       if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.xa)) {
         this.diaChiVaPhiVanChuyen.xaCode = element.WardCode;
-        console.log(element);
         break;
       }
     }
   }
   findHuyenId() {
-    console.log("find huyen");
-
     for (let i = 0; i < this.huyens.length; i++) {
       const element = this.huyens[i];
       if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.huyen)) {
         this.diaChiVaPhiVanChuyen.huyenId = element.DistrictID;
-        console.log(element);
-
         break;
       }
     }
   }
   findTinhId() {
-    console.log("find tinh");
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
       if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.tinh)) {
@@ -103,8 +97,6 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   }
 
   getAllTinh() {
-    console.log("get tinh");
-
     this.huyens = [];
     this.xas = [];
     this.ghnService.getAllProvince().subscribe({
@@ -125,7 +117,6 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
         next: (resp) => {
           this.huyens = resp.data;
           this.diaChiVaPhiVanChuyen.tinh = this.getTenTinh();
-          console.log("get huyen");
         },
         error: (err) => {
           console.log(err);
@@ -134,8 +125,6 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   }
 
   getAllXaByHuyen() {
-    console.log("get xa");
-
     this.ghnService
       .getAllWardByDistrictID(this.diaChiVaPhiVanChuyen.huyenId)
       .subscribe({
@@ -207,7 +196,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
             .subscribe({
               next: (resp) => {
                 this.diaChiVaPhiVanChuyen.phiVanChuyen = resp.data.total;
-                this.phiVanChuyen.emit(resp.data.total);
+                this.changePhiVanChuyen.emit(resp.data.total);
               },
               error: (err) => {
                 console.log(err);

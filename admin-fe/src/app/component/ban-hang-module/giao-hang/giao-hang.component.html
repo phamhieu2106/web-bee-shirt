@@ -1,0 +1,26 @@
+<!-- Danh sách địa chỉ -->
+<div class="row d-flex mt-2 mb-5">
+  <div
+    class="col-6"
+    *ngFor="let dc of khachHang?.diaChis; index as i"
+    (click)="changeDiaChi(dc)"
+  >
+    <label class="form-check">
+      <input
+        type="radio"
+        value="TIEN_MAT"
+        class="form-check-input"
+        name="khachHangDiaChi"
+      />
+      <div>Địa chỉ {{ i + 1 }}</div>
+      <div class="text-muted">
+        {{ dc.duong + "," + dc.xa + "," + dc.huyen + "," + dc.tinh }}
+      </div>
+    </label>
+  </div>
+</div>
+<!-- Component -->
+<app-get-dia-chi-va-phi-van-chuyen
+  [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
+  (changePhiVanChuyen)="updatePhiVanChuyen($event)"
+></app-get-dia-chi-va-phi-van-chuyen>

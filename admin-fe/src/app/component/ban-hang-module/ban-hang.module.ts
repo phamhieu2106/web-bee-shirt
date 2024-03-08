@@ -6,9 +6,18 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { LayoutModule } from "../layout-module/layout.module";
 import { CommonComponentModule } from "../common-component/common-component.module";
+import { ThanhToanComponent } from "./thanh-toan/thanh-toan.component";
+import { GiaoHangComponent } from "./giao-hang/giao-hang.component";
+import { GiamGiaComponent } from "./giam-gia/giam-gia.component";
+import { HoaDonModule } from "../hoa-don-module/hoa-don.module";
 
 @NgModule({
-  declarations: [BanHangComponent],
+  declarations: [
+    BanHangComponent,
+    ThanhToanComponent,
+    GiaoHangComponent,
+    GiamGiaComponent,
+  ],
   imports: [
     CommonModule,
     BanHangRoutingModule,
@@ -17,6 +26,7 @@ import { CommonComponentModule } from "../common-component/common-component.modu
     RouterModule,
     CommonComponentModule,
     ReactiveFormsModule,
+    HoaDonModule,
   ],
 })
 export class BanHangModule {}

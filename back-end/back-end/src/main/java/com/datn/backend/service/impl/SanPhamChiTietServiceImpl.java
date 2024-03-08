@@ -1,10 +1,13 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
+import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.dto.response.DotGiamGiaSanPhamResponse;
 import com.datn.backend.dto.response.PagedResponse;
-import com.datn.backend.dto.response.SanPhamResponse;
 import com.datn.backend.dto.response.SpctResponse;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
@@ -27,6 +30,8 @@ import com.datn.backend.repository.MauSacRepository;
 import com.datn.backend.repository.SanPhamChiTietRepository;
 import com.datn.backend.repository.SanPhamRepository;
 import com.datn.backend.repository.TayAoRepository;
+import com.datn.backend.model.san_pham.*;
+import com.datn.backend.repository.*;
 import com.datn.backend.service.SanPhamChiTietService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
@@ -74,6 +79,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         for (int i = 0; i < request.getRequests().getKichCoIdList().size(); ++i) {
             SanPhamChiTiet spct = new SanPhamChiTiet();
             spct = setCommonField(spct, request);
+            spct.setGiaNhap(request.getRequests().getGiaNhapList().get(i));
+            spct.setGiaBan(request.getRequests().getGiaBanList().get(i));
             spct.setSoLuongTon(request.getRequests().getSoLuongTonList().get(i));
 
             KichCo kichCo = kichCoRepo.findById(request.getRequests().getKichCoIdList().get(i)).get();
@@ -114,8 +121,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         CoAo coAo = coAoRepo.findById(request.getCoAoId()).get();
         ChatLieu chatLieu = chatLieuRepo.findById(request.getChatLieuId()).get();
 
-        spct.setGiaNhap(request.getGiaNhap());
-        spct.setGiaBan(request.getGiaBan());
+//        spct.setGiaNhap(request.getGiaNhap());
+//        spct.setGiaBan(request.getGiaBan());
         spct.setSanPham(sanPham);
         spct.setKieuDang(kieuDang);
         spct.setThietKe(kieuThietKe);
@@ -143,10 +150,28 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return paged;
     }
 
+    @Transactional
+    @Override
+    public void updateSpctNhanh(CapNhatNhanhSanPhamChiTietReq req) {
+        for (int i = 0; i < req.getIds().size(); ++i) {
+            int id = req.getIds().get(i);
+            SanPhamChiTiet spct = spctRepo.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy SPCT ID: " + id));
+
+            spct.setGiaNhap(req.getGiaNhaps().get(i));
+            spct.setGiaBan(req.getGiaBans().get(i));
+            spct.setSoLuongTon(req.getSoLuongs().get(i));
+
+            spctRepo.save(spct);
+        }
+    }
+
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
+//        Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
+//        find doi giam gia theo spct
         List<SpctResponse> data = mapToSpctResponse(spcts);
 
         return PagedResponse
@@ -170,15 +195,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SpctResponse spctResp = modelMapper.map(spct, SpctResponse.class);
 
             // lấy danh sách các đợt giảm giá đang hiệu lực voi spct nay
-            List<DotGiamGiaSanPham> dotGiamGiaSanPhams =
+            DotGiamGiaSanPham dotGiamGiaSanPham =
                     dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
 
             //gán gia tri
-            spctResp.setDotGiamGiaSanPhams(
-                    dotGiamGiaSanPhams.stream()
-                            .map(dggsp -> modelMapper.map(dggsp, DotGiamGiaSanPhamResponse.class)
-                            ).toList()
-            );
+            if (dotGiamGiaSanPham != null){
+                spctResp.setDotGiamGiaSanPham(
+                        modelMapper.map(dotGiamGiaSanPham,DotGiamGiaSanPhamResponse.class)
+                );
+            }
+
             return spctResp;
         }).toList();
         return spctResponses;

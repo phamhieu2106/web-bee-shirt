@@ -36,19 +36,18 @@ export class LineChartCustomerComponent implements OnInit {
 
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.getMonths();
-
-    setTimeout(async () => {
-      this.loadChartKhachHangHoanThanh();
-    }, 500);
+  ngOnInit(): void {
+    this.getMonths();
+    this.loadChartKhachHangHoanThanh();
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tenChart"] && !changes["tenChart"].firstChange) {
       // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
       this.switchChart(this.tenChart);
     }
   }
+
   ngOnDestroy(): void {
     // Hủy bỏ biểu đồ khi component bị hủy
     if (this.chart) {
@@ -248,6 +247,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo năm trước do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });
@@ -260,6 +260,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo năm do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });
@@ -272,6 +273,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tuần do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });
@@ -284,6 +286,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tuần trước do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });
@@ -296,6 +299,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tháng do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });
@@ -307,6 +311,7 @@ export class LineChartCustomerComponent implements OnInit {
         this.toastSrc.error(
           `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tháng trước do ${err.message.message}`
         );
+        console.log(err);
       },
       complete: handleCompletion,
     });

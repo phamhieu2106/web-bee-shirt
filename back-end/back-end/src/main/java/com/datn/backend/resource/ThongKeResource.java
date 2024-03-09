@@ -1,5 +1,7 @@
 package com.datn.backend.resource;
 
+import com.datn.backend.dto.response.DiscountSummaryResponse;
+import com.datn.backend.dto.response.ProductsSummaryResponse;
 import com.datn.backend.service.ChartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +24,22 @@ public class ThongKeResource {
         super();
         this.chartService = chartService;
     }
+
     @GetMapping("/hoa-don-hoan-thanh")
     public ResponseEntity<Long> countInvoiceComplete() {
         return ResponseEntity.ok(chartService.countInvoiceComplete());
     }
+
     @GetMapping("/hoa-don-moi")
     public ResponseEntity<Long> countInvoiceWFC() {
         return ResponseEntity.ok(chartService.countInvoiceWFC());
     }
+
     @GetMapping("/hoa-don-cho-giao")
     public ResponseEntity<Long> countInvoiceWFD() {
         return ResponseEntity.ok(chartService.countInvoiceWFD());
     }
+
     @GetMapping("/khach-hang-trong-nam")
     public ResponseEntity<List<Long>> countCustomerCompleteThisYear() {
         return ResponseEntity.ok(chartService.countCustomerInThisYear());
@@ -63,6 +69,7 @@ public class ThongKeResource {
     public ResponseEntity<List<Long>> countCustomerComplete7DayLastWeek() {
         return ResponseEntity.ok(chartService.countCustomer7DayLastWeek());
     }
+
     @GetMapping("/hoa-don-hoan-thanh-trong-nam")
     public ResponseEntity<List<Long>> countInvoiceCompleteThisYear() {
         return ResponseEntity.ok(chartService.countInvoiceInThisYear());
@@ -91,5 +98,23 @@ public class ThongKeResource {
     @GetMapping("/hoa-don-hoan-thanh-7-ngay-trong-tuan-truoc")
     public ResponseEntity<List<Long>> countInvoiceComplete7DayLastWeek() {
         return ResponseEntity.ok(chartService.countInvoice7DayLastWeek());
+    }
+
+    @GetMapping("/san-pham-chi-tiet-dot-giam-gia-trong-nam-hien-tai")
+    public ResponseEntity<List<DiscountSummaryResponse>> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear() {
+        return ResponseEntity.ok(chartService.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear());
+    }
+
+//    @GetMapping("/san-pham-chi-tiet-dot-giam-gia-trong-nam-bat-ki")
+//    public ResponseEntity<List<DiscountSummaryResponse>> getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(
+//            @RequestParam("year") LocalDate year
+//    ) {
+//        return ResponseEntity.ok(chartService.getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(year));
+//    }
+
+    @GetMapping("/san-pham-chitrong-nam-hien-tai")
+    public ResponseEntity<List<ProductsSummaryResponse>> getListProductPurchasedInCurrentYear(
+    ) {
+        return ResponseEntity.ok(chartService.getListProductPurchasedInCurrentYear());
     }
 }

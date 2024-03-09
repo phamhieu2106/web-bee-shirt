@@ -9,20 +9,21 @@ import * as mapData from "../../../../assets/map/vietnam.json";
   styleUrls: ["./vietnam-map-chart.component.css"],
 })
 export class VietnamMapChartComponent implements OnInit {
-  ngOnInit() {
+  chart: any;
+  // Prepare demo data
+  data = [
+    ["vn-3655", 10],
+    ["vn-qn", 11],
+    ["vn-kh", 12],
+    ["vn-tg", 13],
+    // Your data here
+  ];
+
+  handleCreateChart() {
     HighchartsMaps(Highcharts);
 
-    // Prepare demo data
-    const data = [
-      ["vn-3655", 10],
-      ["vn-qn", 11],
-      ["vn-kh", 12],
-      ["vn-tg", 13],
-      // Your data here
-    ];
-
     // Create the chart
-    Highcharts.mapChart("vietnam-map-container", {
+    this.chart = Highcharts.mapChart("vietnam-map-container", {
       chart: {
         map: mapData,
       },
@@ -31,6 +32,9 @@ export class VietnamMapChartComponent implements OnInit {
       },
       mapNavigation: {
         enabled: true,
+      },
+      accessibility: {
+        description: "Thường được dùng để với màn hình desktop",
       },
       series: [
         {
@@ -56,4 +60,9 @@ export class VietnamMapChartComponent implements OnInit {
       ],
     });
   }
+  ngOnInit() {
+    this.handleCreateChart();
+  }
+
+  ngOnDestroy(): void {}
 }

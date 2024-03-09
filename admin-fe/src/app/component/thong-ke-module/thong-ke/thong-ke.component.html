@@ -4,11 +4,9 @@
   [title]="'Trang Chủ'"
 ></app-main-heading>
 
-<!-- MAIN -->
-<!-- Số Lượng -->
+<!-- Thông Tin Đơn Hàng -->
 <div class="row gutters mt-2">
   <div class="col-md-12 col-sm-12">
-    <!-- Graps -->
     <div class="row gutters">
       <div class="col-md-3 col-sm-6">
         <div class="info-stats4">
@@ -19,7 +17,7 @@
             ></i>
           </div>
           <div class="sale-num">
-            <h4>450 Đơn Mới</h4>
+            <h4>{{ tongSoDonMoi }} Đơn Đang Xử Lý</h4>
             <p>Đang chờ được xác nhận</p>
           </div>
         </div>
@@ -30,8 +28,8 @@
             <i class="fa-solid fa-truck fa-2xl" style="color: #74c0fc"></i>
           </div>
           <div class="sale-num">
-            <h4>890 Đơn Đợi Giao</h4>
-            <p>Đang đợi được giao</p>
+            <h4>{{ tongSoDonChoGiao }} Đơn Đang Giao</h4>
+            <p>Đang được giao hàng</p>
           </div>
         </div>
       </div>
@@ -55,8 +53,8 @@
             <i class="icon-assignment_turned_in"></i>
           </div>
           <div class="sale-num">
-            <h4>570 Đánh Giá</h4>
-            <p>Lượt đánh giá sản phẩm</p>
+            <h4>570 Đơn Đã Huỷ</h4>
+            <p>Đã bị huỷ</p>
           </div>
         </div>
       </div>
@@ -64,20 +62,34 @@
   </div>
 </div>
 
+<!-- Biểu Đồ Đơn Hoàn Thành -->
+<!-- Biểu Đồ Khách Hàng Mới -->
 <div class="row gutters">
-  <!-- Biểu Đồ Đơn Hàng -->
   <div class="col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Đơn Hàng Hoàn Thành</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
         <div>
-          <button (click)="setChart('week')" class="btn btn-primary m-1">
+          <button
+            (click)="setChart('week')"
+            class="btn btn-primary rounded m-1"
+          >
             Tuần
           </button>
-          <button (click)="setChart('month')" class="btn btn-primary m-1">
+          <button
+            (click)="setChart('month')"
+            class="btn btn-primary rounded m-1"
+          >
             Tháng
           </button>
-          <button (click)="setChart('year')" class="btn btn-primary m-1">
+          <button
+            (click)="setChart('year')"
+            class="btn btn-primary rounded m-1"
+          >
             Năm
           </button>
         </div>
@@ -90,27 +102,30 @@
     </div>
   </div>
 
-  <!-- Biểu Đồ Khách Hàng -->
   <div class="col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Khách Hàng Mới</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
         <div>
           <button
             (click)="setCustomerChart('week')"
-            class="btn btn-primary m-1"
+            class="btn btn-primary rounded m-1"
           >
             Tuần
           </button>
           <button
             (click)="setCustomerChart('month')"
-            class="btn btn-primary m-1"
+            class="btn btn-primary rounded m-1"
           >
             Tháng
           </button>
           <button
             (click)="setCustomerChart('year')"
-            class="btn btn-primary m-1"
+            class="btn btn-primary rounded m-1"
           >
             Năm
           </button>
@@ -133,6 +148,10 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Doanh Thu</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
         <div>
           <button (click)="setSaleChart('week')" class="btn btn-primary m-1">
             Tuần
@@ -152,23 +171,31 @@
   </div>
 </div>
 
+<!-- Biểu Đồ Phiếu Giảm Giá -->
+<!-- Biểu Đồ Đợt Giảm Giá -->
 <div class="row gutters">
-  <!-- Biểu Đồ Phiếu Giảm Giá -->
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Phiếu Giảm Giá Được Sử Dụng</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
       </div>
       <div class="card-body">
         <app-pie-chart></app-pie-chart>
       </div>
     </div>
   </div>
-  <!-- Biểu Đồ Đợt Giảm Giá -->
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Số Lượng Sản Phẩm Được Mua Từ Các Đợt Giảm Giá</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
       </div>
       <div class="card-body">
         <app-pie-discount-chart></app-pie-discount-chart>
@@ -177,8 +204,8 @@
   </div>
 </div>
 
+<!-- Biểu Đồ Việt Nam Map -->
 <div class="row gutters">
-  <!-- Biểu Đồ Việt Nam Map -->
   <div class="col col-md-12 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
@@ -192,28 +219,29 @@
 </div>
 
 <div class="row gutters">
-  <!-- Biểu Đồ Sản Phẩm -->
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Loại Sản Phẩm Bán Chạy</strong>
+        <select class="col-auto p-1 bg-primary text-white rounded">
+          <option selected>2023</option>
+          <option>2022</option>
+        </select>
       </div>
       <div class="card-body">
         <app-polar-product-chart></app-polar-product-chart>
       </div>
     </div>
   </div>
-  <!-- Biểu Đồ Đánh Giá Sản Phẩm -->
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Đánh Giá Sản Phẩm Của Khách Hàng Đã Mua</strong>
       </div>
       <div class="card-body">
-        <app-bar-review-chart></app-bar-review-chart>
+        <!-- <app-bar-review-chart></app-bar-review-chart> -->
+        <h4 class="text-center">TÍNH NĂNG NÀY ĐANG ĐƯỢC PHÁT TRIỂN THÊM</h4>
       </div>
     </div>
   </div>
-  <!-- Bảng  -->
 </div>
-<!-- END MAIN -->

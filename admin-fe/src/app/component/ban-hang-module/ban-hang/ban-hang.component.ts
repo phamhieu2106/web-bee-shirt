@@ -24,6 +24,7 @@ export class BanHangComponent implements OnInit {
   spcts: SanPhamChiTiet[];
   searchProduct = "";
   searchKhachHang = "";
+  diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
 
   constructor(
     private toast: ToastrService,
@@ -97,10 +98,6 @@ export class BanHangComponent implements OnInit {
 
   chooseKhachHang(khachHang: KhachHang) {
     this.order.khachHang = khachHang;
-    // this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-    // this.diaChiVaPhiVanChuyen.tinh = khachHang.diaChis[0].tinh;
-    // this.diaChiVaPhiVanChuyen.huyen = khachHang.diaChis[0].huyen;
-    // this.diaChiVaPhiVanChuyen.xa = khachHang.diaChis[0].xa;
   }
 
   removeKhachHangInOrder() {
@@ -182,17 +179,23 @@ export class BanHangComponent implements OnInit {
   }
 
   getTongTien(): number {
-    return this.banHangService.getTongTien(this.order.hoaDonChiTiets);
+    let tongTien = this.banHangService.getTongTien(this.order.hoaDonChiTiets);
+    this.order.tongTien = tongTien;
+    return tongTien;
   }
 
   getSoLuongSanPham(): number {
     return this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets);
   }
   getMustPay(): number {
+    // let total = this.banHangService.getMustPay(this.order);
     return this.banHangService.getMustPay(this.order);
   }
 
   thanhToan() {
+    if (this.order.loaiHoaDon == "TAI_QUAY") {
+      this.order.diaChiNguoiNhan = null;
+    }
     console.log(this.order);
   }
 
@@ -202,5 +205,8 @@ export class BanHangComponent implements OnInit {
 
   caculatePhiVanChuyen(soTien: number) {
     this.order.phiVanChuyen = soTien;
+  }
+  getDiaChiNguoiNhan(diaChi: string) {
+    this.order.diaChiNguoiNhan = diaChi;
   }
 }

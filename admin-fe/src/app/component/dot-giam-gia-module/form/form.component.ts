@@ -54,7 +54,10 @@ export class FormComponent implements OnInit {
         Validators.min(5),
         Validators.max(100),
       ]),
-      thoiGianBatDau: new FormControl(null, [Validators.required]),
+      thoiGianBatDau: new FormControl(
+        { value: null, disabled: this.dotGiamGiaRequest?.trangThai == 1 },
+        [Validators.required]
+      ),
       thoiGianKetThuc: new FormControl(null, [Validators.required]),
     });
   }
@@ -65,6 +68,11 @@ export class FormComponent implements OnInit {
       thoiGianBatDau: this.dotGiamGiaRequest.thoiGianBatDau,
       thoiGianKetThuc: this.dotGiamGiaRequest.thoiGianKetThuc,
     });
+    if (this.dotGiamGiaRequest?.trangThai == 1) {
+      this.form.get("thoiGianBatDau").disable();
+    } else {
+      this.form.get("thoiGianBatDau").enable();
+    }
   }
   public setDotGiamGiaRequest() {
     this.dotGiamGiaRequest.tenDotGiamGia = this.TenDotGiamGia._pendingValue;
@@ -144,7 +152,7 @@ export class FormComponent implements OnInit {
         "Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá"
       );
       return false;
-    } else if (thoiGianBatDau <= ngayHienTai) {
+    } else if (thoiGianBatDau <= ngayHienTai && this.typeForm == "add") {
       this.toast.error(
         "Thời Gian Bắt Đầu Không Thể Là Ngày Hiện Tại Hoặc Trước Ngày Hiện Tại"
       );

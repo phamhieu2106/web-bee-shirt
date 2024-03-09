@@ -137,7 +137,10 @@
                         <tr
                           role="row"
                           class="odd p-3"
-                          *ngFor="let object of dataSanPhamChiTiet"
+                          *ngFor="
+                            let object of dataSanPhamChiTiet;
+                            let index = index
+                          "
                         >
                           <td class="sorting_1">
                             <input
@@ -148,7 +151,7 @@
                               type="checkbox"
                               (click)="setListIdSanPhamChiTiet(object.id)"
                             />
-                            {{ object.id }}
+                            {{ index + 1 }}
                           </td>
                           <td>
                             <!-- image -->

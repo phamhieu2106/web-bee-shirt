@@ -39,4 +39,7 @@ export class PieDiscountChartComponent {
   ngOnInit(): void {
     this.createChartCoupon();
   }
+  ngOnDestroy(): void {
+    this.chart.destroy();
+  }
 }

@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -139,7 +138,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     private boolean validationCheck(DotGiamGiaRequest object) {
         boolean check = true;
         //        Check Exit by Ten
-        if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
+        if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
             throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
         }
 
@@ -169,7 +168,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         boolean check = true;
         //        Check Exit by Ten
         if (!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())) {
-            if (repository.existsByTenDotGiamGia(object.getTenDotGiamGia())) {
+            if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
                 throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
             }
         }
@@ -208,7 +207,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             //      Tự Động Tạo Mã Đợt Giảm Giá
             UUID uuid = UUID.randomUUID();
             //        Set Code
-            String code = "DGG" + uuid.toString().substring(0, 5).toUpperCase();
+            String code = "DGG" + uuid.toString().substring(0, 7).toUpperCase();
             object.setMaDotGiamGia(code);
 
 //          Set Name

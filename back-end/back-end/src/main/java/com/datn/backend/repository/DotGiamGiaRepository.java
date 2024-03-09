@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer> {
 
-    boolean existsByTenDotGiamGia(String tenDotGiamGia);
+    boolean existsByTenDotGiamGiaAndTrangThai(String tenDotGiamGia, Integer trangThai);
 
     DotGiamGia getDotGiamGiaByMaDotGiamGia(String maDotGiamGia);
 
@@ -27,12 +27,12 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                                     FROM dot_giam_gia dgg
                                     JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
                                     WHERE dggsp.trang_thai = 1
-                                    AND dgg.trang_thai > 0
+                                    AND dgg.trang_thai < 3
                                     AND (dgg.ma_dot_giam_gia LIKE %:search%
             							OR dgg.ten_dot_giam_gia LIKE %:search%
                                         OR dgg.gia_tri_phan_tram LIKE %:search%)
                                     GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-                                    ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+                                    ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getPagination(Pageable pageable,
@@ -45,9 +45,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             WHERE dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate
-            AND dgg.trang_thai > 0
+            AND dgg.trang_thai < 3
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusAll(Pageable pageable,
@@ -64,7 +64,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             WHERE dgg.trang_thai = :status 
              AND (dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate )
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """,
             nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusWithDate(Pageable pageable,
@@ -98,25 +98,25 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
 
     @Query(value = """
                 SELECT spct.id as Id, ha.image_url as HinhAnhSanPham, sp.ma as MaSanPham ,sp.ten as TenSanPham, spct.gia_ban as GiaBan, spct.so_luong_ton as SoLuongTon, spct.trang_thai as TrangThai,
-                cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.ma as MaMauSac, ta.Ten as TenTayAo,
-                tk.ten as TenThietKe,
-                spct.created_at as NgayTao,
-                spct.updated_at as NgayCapNhat,
-                spct.created_by as NguoiTao,
-                spct.last_updated_by as NguoiCapNhatGanNhat,
-                spct.trang_thai AS TrangThai
-                FROM san_pham_chi_tiet spct
-                LEFT JOIN chat_lieu cl ON cl.id = spct.chat_lieu_id
-                LEFT JOIN co_ao ca ON ca.id = spct.co_ao_id
-                LEFT JOIN kich_co kc ON kc.id = spct.kich_co_id
-                LEFT JOIN kieu_dang kd ON kd.id = spct.kieu_dang_id
-                LEFT JOIN mau_sac ms ON ms.id = spct.mau_sac_id
-                LEFT JOIN san_pham sp ON sp.id = spct.san_pham_id 
-                LEFT JOIN tay_ao ta ON ta.id = spct.tay_ao_id
-                LEFT JOIN kieu_thiet_ke tk ON tk.id = spct.thiet_ke_id
-                LEFT JOIN spct_hinh_anh spctha ON spctha.id = spct.id
-                LEFT JOIN hinh_anh ha ON ha.id = spctha.hinh_anh_id
-                WHERE sp.id IN ( :id );
+                                cl.ten as TenChatLieu, ca.ten as TenCoAo, kc.ten as TenKichCo, kd.ten as TenKieuDang , ms.ma as MaMauSac, ta.Ten as TenTayAo,
+                                tk.ten as TenThietKe,
+                                spct.created_at as NgayTao,
+                                spct.updated_at as NgayCapNhat,
+                                spct.created_by as NguoiTao,
+                                spct.last_updated_by as NguoiCapNhatGanNhat,
+                                spct.trang_thai AS TrangThai
+                                FROM san_pham_chi_tiet spct
+                                LEFT JOIN chat_lieu cl ON cl.id = spct.chat_lieu_id
+                                LEFT JOIN co_ao ca ON ca.id = spct.co_ao_id
+                                LEFT JOIN kich_co kc ON kc.id = spct.kich_co_id
+                                LEFT JOIN kieu_dang kd ON kd.id = spct.kieu_dang_id
+                                LEFT JOIN mau_sac ms ON ms.id = spct.mau_sac_id
+                                LEFT JOIN san_pham sp ON sp.id = spct.san_pham_id\s
+                                LEFT JOIN tay_ao ta ON ta.id = spct.tay_ao_id
+                                LEFT JOIN kieu_thiet_ke tk ON tk.id = spct.thiet_ke_id
+                                LEFT JOIN spct_hinhanh spctha ON spctha.spct_id = spct.id
+                                LEFT JOIN hinh_anh ha ON ha.id = spctha.hinhanh_id
+                                WHERE sp.id IN ( :id );
             """, nativeQuery = true)
     Page<SanPhamChiTietResponse> getAllSanPhamChiTietBySanPhamId(Pageable pageable, @Param("id") List<Integer> id);
 

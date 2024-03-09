@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
 import { Chart, registerables } from "chart.js";
 import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
 import { ChartService } from "src/app/service/chart.service";
 
 @Component({
@@ -9,7 +10,6 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./line-chart.component.css"],
 })
 export class LineChartComponent implements OnInit {
-  flashInterval: any;
   chart: any;
   @Input() tenChart: string;
   private currentYear: number = new Date().getFullYear();
@@ -37,20 +37,31 @@ export class LineChartComponent implements OnInit {
   //
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
 
-  ngOnInit() {
-    // async ngOnInit(): Promise<void> {
-    //   await this.getMonths();
-    //   setTimeout(async () => {
-    //     this.loadChartDonHangHoanThanh();
-    //   }, 500);
-    // }
-    // ngOnChanges(changes: SimpleChanges): void {
-    //   if (changes["tenChart"] && !changes["tenChart"].firstChange) {
-    //     // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
-    //     this.switchChart(this.tenChart);
-    //   }
+  // ngOnInit() {
+  // async ngOnInit(): Promise<void> {
+  //   await this.getMonths();
+  //   setTimeout(async () => {
+  //     this.loadChartDonHangHoanThanh();
+  //   }, 500);
+  // }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes["tenChart"] && !changes["tenChart"].firstChange) {
+  //     // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
+  //     this.switchChart(this.tenChart);
+  //   }
+  // }
+
+  ngOnInit(): void {
+    this.getMonths();
+    this.loadChartDonHangHoanThanh();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["tenChart"] && !changes["tenChart"].firstChange) {
+      // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
+      this.switchChart(this.tenChart);
+    }
+  }
   ngOnDestroy(): void {
     // Hủy bỏ biểu đồ khi component bị hủy
     if (this.chart) {
@@ -89,12 +100,12 @@ export class LineChartComponent implements OnInit {
         datasets: [
           {
             label: "Tuần Trước",
-            data: this.listTongSoDonHoanThanhTrongTuan,
+            data: this.listTongSoDonHoanThanhTrongTuanTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tuần Hiện Tại",
-            data: this.listTongSoDonHoanThanhTrongTuanTruoc,
+            data: this.listTongSoDonHoanThanhTrongTuan,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -236,86 +247,33 @@ export class LineChartComponent implements OnInit {
   }
 
   public loadChartDonHangHoanThanh(): void {
-    let requestsCompleted = 0;
+    forkJoin({
+      soDonHoanThanhTrongNamTruoc:
+        this.service.getSoDonHoanThanhTrongNamTruoc(),
+      soDonHoanThanhTrongNam: this.service.getSoDonHoanThanhTrongNam(),
+      soDonHoanThanhTrongTuan: this.service.getSoDonHoanThanhTrongTuan(),
+      soDonHoanThanhTrongTuanTruoc:
+        this.service.getSoDonHoanThanhTrongTuanTruoc(),
+      soDonHoanThanhTrongThang: this.service.getSoDonHoanThanhTrongThang(),
+      soDonHoanThanhTrongThangTruoc:
+        this.service.getSoDonHoanThanhTrongThangTruoc(),
+    }).subscribe({
+      next: (results) => {
+        this.listTongSoDonHoanThanhTheoNam = results.soDonHoanThanhTrongNam;
+        this.listTongSoDonHoanThanhTheoNamTruoc =
+          results.soDonHoanThanhTrongNamTruoc;
+        this.listTongSoDonHoanThanhTrongTuan = results.soDonHoanThanhTrongTuan;
+        this.listTongSoDonHoanThanhTrongTuanTruoc =
+          results.soDonHoanThanhTrongTuanTruoc;
+        this.listTongSoDonHoanThanhTheoThang = results.soDonHoanThanhTrongThang;
+        this.listTongSoDonHoanThanhTheoThangTruoc =
+          results.soDonHoanThanhTrongThangTruoc;
 
-    const handleCompletion = () => {
-      requestsCompleted++;
-      if (requestsCompleted === 6) {
         this.createChartYear();
-        this.createChartDay();
-        this.createChartDay();
-      }
-    };
-
-    this.service.getSoDonHoanThanhTrongNamTruoc().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTheoNamTruoc = res;
       },
       error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo năm trước do ${err.message.message}`
-        );
+        this.toastSrc.error(`Có lỗi xảy ra: ${err.message.message}`);
       },
-      complete: handleCompletion,
-    });
-
-    this.service.getSoDonHoanThanhTrongNam().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTheoNam = res;
-      },
-      error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo năm do ${err.message.message}`
-        );
-      },
-      complete: handleCompletion,
-    });
-
-    this.service.getSoDonHoanThanhTrongTuan().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTrongTuan = res;
-      },
-      error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tuần do ${err.message.message}`
-        );
-      },
-      complete: handleCompletion,
-    });
-
-    this.service.getSoDonHoanThanhTrongTuanTruoc().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTrongTuanTruoc = res;
-      },
-      error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tuần trước do ${err.message.message}`
-        );
-      },
-      complete: handleCompletion,
-    });
-
-    this.service.getSoDonHoanThanhTrongThang().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTheoThang = res;
-      },
-      error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tháng do ${err.message.message}`
-        );
-      },
-      complete: handleCompletion,
-    });
-    this.service.getSoDonHoanThanhTrongThangTruoc().subscribe({
-      next: (res: any) => {
-        this.listTongSoDonHoanThanhTheoThangTruoc = res;
-      },
-      error: (err) => {
-        this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành theo tháng trước do ${err.message.message}`
-        );
-      },
-      complete: handleCompletion,
     });
   }
 }

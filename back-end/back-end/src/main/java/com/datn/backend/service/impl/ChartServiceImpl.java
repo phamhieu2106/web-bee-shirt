@@ -1,5 +1,7 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.dto.response.DiscountSummaryResponse;
+import com.datn.backend.dto.response.ProductsSummaryResponse;
 import com.datn.backend.repository.ChartRepository;
 import com.datn.backend.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +21,35 @@ public class ChartServiceImpl implements ChartService {
 
     @Autowired
     public ChartServiceImpl(ChartRepository chartRepository) {
+
         this.chartRepository = chartRepository;
     }
 
     @Override
     public Long countInvoiceComplete() {
+
         return chartRepository.countInvoiceComplete();
     }
 
     @Override
+    public Long countInvoiceWFC() {
+        return chartRepository.countInvoiceWFC();
+    }
+
+    @Override
+    public Long countInvoiceWFD() {
+        return chartRepository.countInvoiceWFD();
+    }
+
+    @Override
     public List<Long> countInvoiceInThisYear() {
+
         return chartRepository.countInvoiceInThisYear();
     }
 
     @Override
     public List<Long> countInvoiceInLastYear() {
+
         return chartRepository.countInvoiceInLastYear();
     }
 
@@ -56,7 +72,6 @@ public class ChartServiceImpl implements ChartService {
         return list;
     }
 
-
     @Override
     public List<Long> countInvoice7DayThisWeek() {
 //        Trả số hoá đơn của 7 ngày trong tuần này
@@ -71,9 +86,72 @@ public class ChartServiceImpl implements ChartService {
         return chartRepository.countInvoice7DayLastWeek(startOfLastWeek);
     }
 
+    @Override
+    public List<Long> countCustomerInThisYear() {
+        return chartRepository.countCustomerInThisYear();
+    }
+
+    @Override
+    public List<Long> countCustomerInLastYear() {
+        return chartRepository.countCustomerInLastYear();
+    }
+
+    @Override
+    public List<Long> countCustomer4WeekInMonth() {
+        List<Long> list = chartRepository.countCustomer4WeekInMonth(
+                getStartDate(), getEndDate(getStartDate()), getTotalDay(getEndDate(getStartDate())));
+        list.set(list.size() - 1, list.get(list.size() - 1) + counCustomertLastDayOfMonth(getStartDate()));
+        return list;
+    }
+
+    @Override
+    public List<Long> countCustomer4WeekInLastMonth() {
+        List<Long> list = chartRepository.countCustomer4WeekInMonth(
+                getStartDateLastMonth(), getEndDate(getStartDateLastMonth()), getTotalDay(getEndDate(getStartDateLastMonth())));
+        list.set(list.size() - 1, list.get(list.size() - 1) + counCustomertLastDayOfMonth(getStartDateLastMonth()));
+        return list;
+    }
+
+    @Override
+    public List<Long> countCustomer7DayThisWeek() {
+        Date startOfWeek = getStartOfWeek();
+        return chartRepository.countCustomer7DayThisWeek(startOfWeek);
+    }
+
+    @Override
+    public List<Long> countCustomer7DayLastWeek() {
+        Date startOfLastWeek = getStartOfLastWeek();
+        return chartRepository.countCustomer7DayThisWeek(startOfLastWeek);
+    }
+
+    @Override
+    public List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear() {
+        return chartRepository.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear();
+    }
+
+    @Override
+    public List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(LocalDate year) {
+        return chartRepository.getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(year);
+    }
+
+    @Override
+    public List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear() {
+        return chartRepository.getListProductPurchasedInCurrentYear();
+    }
+
+    @Override
+    public List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(LocalDate year) {
+        return chartRepository.getListProductPurchasedInAnyYear(year);
+    }
+
     public Long countLastDayOfMonth(LocalDate today) {
 //      Đếm số hoá đơn của ngày cuối cùng trong tháng
         return chartRepository.countInvoiceLastDayOfMonth(today);
+    }
+
+    public Long counCustomertLastDayOfMonth(LocalDate today) {
+//      Đếm số hoá đơn của ngày cuối cùng trong tháng
+        return chartRepository.countCustomerLastDayOfMonth(today);
     }
 
     private static Date getStartOfWeek() {

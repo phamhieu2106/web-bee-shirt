@@ -17,7 +17,7 @@ public class SchedulingConfiguration {
     }
 
     //    Cap nhat trang thai dot giam gia moi 1 phut
-    @Scheduled(fixedRate = 60000) // 60000 milliseconds = 1 minutes
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Ho_Chi_Minh") // Chay vao giay thu 0 cua moi phut theo mui gio VietNam
     private void executeDGGStatus() {
         repository.updateDotGiamGiaSanPham();
     }

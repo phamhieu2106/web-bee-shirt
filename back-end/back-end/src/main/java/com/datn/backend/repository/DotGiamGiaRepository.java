@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer> {
 
-    boolean existsByTenDotGiamGia(String tenDotGiamGia);
+    boolean existsByTenDotGiamGiaAndTrangThai(String tenDotGiamGia, Integer trangThai);
 
     DotGiamGia getDotGiamGiaByMaDotGiamGia(String maDotGiamGia);
 
@@ -27,12 +27,12 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                                     FROM dot_giam_gia dgg
                                     JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
                                     WHERE dggsp.trang_thai = 1
-                                    AND dgg.trang_thai > 0
+                                    AND dgg.trang_thai < 3
                                     AND (dgg.ma_dot_giam_gia LIKE %:search%
             							OR dgg.ten_dot_giam_gia LIKE %:search%
                                         OR dgg.gia_tri_phan_tram LIKE %:search%)
                                     GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-                                    ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+                                    ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getPagination(Pageable pageable,
@@ -45,9 +45,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             WHERE dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate
-            AND dgg.trang_thai > 0
+            AND dgg.trang_thai < 3
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusAll(Pageable pageable,
@@ -64,7 +64,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             WHERE dgg.trang_thai = :status 
              AND (dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate )
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
-            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 ELSE 1 END, dgg.id DESC
+            ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """,
             nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusWithDate(Pageable pageable,

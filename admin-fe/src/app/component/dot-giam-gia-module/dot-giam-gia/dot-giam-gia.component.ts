@@ -37,7 +37,7 @@ export class DotGiamGiaComponent implements OnInit {
 
   constructor(
     private service: DotGiamGiaService,
-    private toastSrc: ToastrService
+    private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -58,8 +58,9 @@ export class DotGiamGiaComponent implements OnInit {
       next: (value) => {
         this.setDataTable(value);
       },
-      error(err) {
+      error: (err) => {
         console.log(err);
+        this.toast.error("Lỗi khi tải danh sách đợt giảm giá");
       },
     });
   }
@@ -72,8 +73,11 @@ export class DotGiamGiaComponent implements OnInit {
         next: (value) => {
           this.setDataTable(value);
         },
-        error(err) {
+        error: (err) => {
           console.log(err);
+          this.toast.error(
+            "Lỗi khi tải danh sách đợt giảm giá khi sử dụng lọc"
+          );
         },
       });
   }
@@ -89,8 +93,11 @@ export class DotGiamGiaComponent implements OnInit {
       next: (value) => {
         this.setDataTable(value);
       },
-      error(err) {
+      error: (err) => {
         console.log(err);
+        this.toast.error(
+          "Lỗi khi tải danh sách đợt giảm giá khi chọn số phần tử hiển thị"
+        );
       },
     });
   }
@@ -99,8 +106,11 @@ export class DotGiamGiaComponent implements OnInit {
       next: (value) => {
         this.setDataTable(value);
       },
-      error(err) {
+      error: (err) => {
         console.log(err);
+        this.toast.error(
+          "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
+        );
       },
     });
   }
@@ -109,8 +119,11 @@ export class DotGiamGiaComponent implements OnInit {
       next: (value) => {
         this.setDataTable(value);
       },
-      error(err) {
+      error: (err) => {
         console.log(err);
+        this.toast.error(
+          "Lỗi khi tải danh sách đợt giảm giá khi tìm kiếm đợt giảm giá"
+        );
       },
     });
   }
@@ -125,11 +138,11 @@ export class DotGiamGiaComponent implements OnInit {
           timer: 1500,
         });
         this.turnOffOverlay("");
-        this.toastSrc.success("Xoá đợt giảm giá thành công");
+        this.toast.success("Xoá đợt giảm giá thành công");
         this.getAllDotGiamGia();
       },
       error: (err) => {
-        this.toastSrc.error(`Xoá Thất Bại Do ${err.error.message}!`);
+        this.toast.error(`Xoá Thất Bại Do ${err.error.message}!`);
         console.log(err.message);
       },
     });

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import { ToastrService } from "ngx-toastr";
 
@@ -63,6 +63,7 @@ export class ThemSanPhamChiTietComponent {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private toastr: ToastrService,
     private sanPhamService: SanPhamService,
     private kichCoService: KichCoService,
@@ -83,7 +84,7 @@ export class ThemSanPhamChiTietComponent {
     this.getDataForSelector();
   }
 
-  // public functions
+  // I. Public functions
   // 1
   public getMauSacList(): void {
     this.getAllMauSac();
@@ -133,7 +134,7 @@ export class ThemSanPhamChiTietComponent {
     );
   }
 
-  // Start: functions xử lý sự kiện chọn ảnh
+  // I.1. functions xử lý sự kiện chọn ảnh
   // 7
   public openHinhAnhModal(
     tenMau: string,
@@ -237,6 +238,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
+  //
   public isUploadImgChecked(fileName: string): boolean {
     for (let i = 0; i < this.curSelectedImgFileList.length; i++) {
       if (this.curSelectedImgFileList[i].name === fileName) {
@@ -247,7 +249,7 @@ export class ThemSanPhamChiTietComponent {
   }
   // end: functions xử lý sự kiện chọn ảnh
 
-  // 11
+  //
   public formatNumber(event: any, inputName: string): void {
     let value = event.target.value;
     if (value === "") {
@@ -259,7 +261,7 @@ export class ThemSanPhamChiTietComponent {
     this.addForm.get(inputName).setValue(value);
   }
 
-  // 12
+  //
   public formatNumber2(event: any, inputNameId: string): void {
     let value = event.target.value;
     if (value === "") {
@@ -271,139 +273,83 @@ export class ThemSanPhamChiTietComponent {
     (document.getElementById(inputNameId) as HTMLInputElement).value = value;
   }
 
-  public selectThuocTinh(
-    event: any,
-    thuocTinhList: any[],
-    formControl: string
-  ): void {
-    const tenThuocTinh = event.target.value;
-    const thuocTinh = thuocTinhList.find((tt) => tt.ten === tenThuocTinh);
-
-    if (thuocTinh) {
-      this.addForm.get(`${formControl}`).setValue(thuocTinh.id);
-    }
-  }
-
-  public thuocTinhNhanh = {
-    ten: "",
-  };
-  public addNhanhForm: FormGroup;
-
-  public themNhanhThuocTinh(ten: string, serviceName: string): void {
-    this.commonService = serviceName;
-    this.thuocTinhNhanh.ten = ten;
-  }
-
-  // 13
+  //
   public add(): void {
-    console.log(this.addForm.value);
+    this.turnOnOverlay("Đang thêm...");
+    for (let i = 0; i < this.selectedMauSacList.length; i++) {
+      let mauSacEles = document.querySelectorAll(
+        `.mauSacId${this.selectedMauSacList[i].id}`
+      );
+      let kichCoEles = document.querySelectorAll(
+        `.kichCoId${this.selectedMauSacList[i].id}`
+      );
+      let giaNhapInputs = document.querySelectorAll(
+        `.giaNhap${this.selectedMauSacList[i].id}`
+      );
+      let giaBanInputs = document.querySelectorAll(
+        `.giaBan${this.selectedMauSacList[i].id}`
+      );
+      let soLuongInputs = document.querySelectorAll(
+        `.soLuong${this.selectedMauSacList[i].id}`
+      );
 
-    // this.turnOnOverlay("Đang thêm...");
-    // for (let i = 0; i < this.selectedMauSacList.length; i++) {
-    //   let mauSacEles = document.querySelectorAll(
-    //     `.mauSacId${this.selectedMauSacList[i].id}`
-    //   );
-    //   let kichCoEles = document.querySelectorAll(
-    //     `.kichCoId${this.selectedMauSacList[i].id}`
-    //   );
-    //   let giaNhapInputs = document.querySelectorAll(
-    //     `.giaNhap${this.selectedMauSacList[i].id}`
-    //   );
-    //   let giaBanInputs = document.querySelectorAll(
-    //     `.giaBan${this.selectedMauSacList[i].id}`
-    //   );
-    //   let soLuongInputs = document.querySelectorAll(
-    //     `.soLuong${this.selectedMauSacList[i].id}`
-    //   );
-    //   let addSPCTSubRequest: AddSPCTSubRequest;
-    //   for (let j = 0; j < mauSacEles.length; j++) {
-    //     let kichCoIdList: number[] = [];
-    //     let giaNhapList: number[] = [];
-    //     let giaBanList: number[] = [];
-    //     let soLuongTonList: number[] = [];
-    //     for (let k = 0; k < kichCoEles.length; k++) {
-    //       let kichCoId = parseInt((kichCoEles[k] as HTMLInputElement).value);
-    //       let giaNhap = parseInt(
-    //         (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-    //       );
-    //       let giaBan = parseInt(
-    //         (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-    //       );
-    //       let soLuongTon = parseInt(
-    //         (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-    //       );
-    //       kichCoIdList.push(kichCoId);
-    //       giaNhapList.push(giaNhap);
-    //       giaBanList.push(giaBan);
-    //       soLuongTonList.push(soLuongTon);
-    //     }
-    //     addSPCTSubRequest = {
-    //       mauSacId: this.selectedMauSacList[i].id,
-    //       kichCoIdList: kichCoIdList,
-    //       giaNhapList: giaNhapList,
-    //       giaBanList: giaBanList,
-    //       soLuongTonList: soLuongTonList,
-    //     };
-    //   }
-    //   this.formatAddFormData(this.addForm);
-    //   const addSpctReq: AddSPCTRequest = {
-    //     id: this.addForm.get("id").value,
-    //     sanPhamId: this.addForm.get("sanPhamId").value,
-    //     kieuDangId: this.addForm.get("kieuDangId").value,
-    //     thietKeId: this.addForm.get("thietKeId").value,
-    //     tayAoId: this.addForm.get("tayAoId").value,
-    //     coAoId: this.addForm.get("coAoId").value,
-    //     chatLieuId: this.addForm.get("chatLieuId").value,
-    //     requests: addSPCTSubRequest,
-    //   };
-    //   this.sanPhamChiTietService
-    //     .add(addSpctReq, this.selectedImgFileList[i])
-    //     .subscribe({
-    //       next: (response: string) => {
-    //         this.toastr.success(response, "");
-    //         this.turnOffOverlay("");
-    //       },
-    //       error: (err: HttpErrorResponse) => {
-    //         console.log(err);
-    //         this.turnOffOverlay("");
-    //       },
-    //     });
-    // }
-  }
-
-  private services = [
-    { ten: "kieuDangService", service: this.kieuDangService },
-    { ten: "kieuThietKeService", service: this.kieuThietKeService },
-    { ten: "kieuTayAoService", service: this.kieuTayAoService },
-    { ten: "kieuCoAoService", service: this.kieuCoAoService },
-    { ten: "chatLieuService", service: this.chatLieuService },
-  ];
-  public commonService: string;
-  public addNhanh(serviceType: string): void {
-    console.log(serviceType);
-
-    let trimmed = this.addNhanhForm.get("ten").value.trim();
-    this.addNhanhForm.get("ten")?.setValue(trimmed);
-
-    let useService: any;
-    for (let i = 0; i < this.services.length; ++i) {
-      if (this.services[i].ten == serviceType) {
-        useService = this.services[i].service;
+      let addSPCTSubRequest: AddSPCTSubRequest;
+      for (let j = 0; j < mauSacEles.length; j++) {
+        let kichCoIdList: number[] = [];
+        let giaNhapList: number[] = [];
+        let giaBanList: number[] = [];
+        let soLuongTonList: number[] = [];
+        for (let k = 0; k < kichCoEles.length; k++) {
+          let kichCoId = parseInt((kichCoEles[k] as HTMLInputElement).value);
+          let giaNhap = parseInt(
+            (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+          );
+          let giaBan = parseInt(
+            (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+          );
+          let soLuongTon = parseInt(
+            (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+          );
+          kichCoIdList.push(kichCoId);
+          giaNhapList.push(giaNhap);
+          giaBanList.push(giaBan);
+          soLuongTonList.push(soLuongTon);
+        }
+        addSPCTSubRequest = {
+          mauSacId: this.selectedMauSacList[i].id,
+          kichCoIdList: kichCoIdList,
+          giaNhapList: giaNhapList,
+          giaBanList: giaBanList,
+          soLuongTonList: soLuongTonList,
+        };
       }
+      const addSpctReq: AddSPCTRequest = {
+        id: this.addForm.get("id").value,
+        sanPhamId: this.addForm.get("sanPhamId").value,
+        kieuDangId: this.addForm.get("kieuDangId").value,
+        thietKeId: this.addForm.get("thietKeId").value,
+        tayAoId: this.addForm.get("tayAoId").value,
+        coAoId: this.addForm.get("coAoId").value,
+        chatLieuId: this.addForm.get("chatLieuId").value,
+        requests: addSPCTSubRequest,
+      };
+      this.sanPhamChiTietService
+        .add(addSpctReq, this.selectedImgFileList[i])
+        .subscribe({
+          next: (response: string) => {
+            this.toastr.success(response, "Hệ thống");
+            this.turnOffOverlay("");
+            this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.toastr.success(errorResponse.error.message, "Hệ thống");
+            this.turnOffOverlay("");
+          },
+        });
     }
-
-    useService.add(this.addForm.value).subscribe({
-      next: (response: KieuDang) => {
-        this.initAddNhanhForm();
-        this.toastr.success(`Thêm thành công '${response.ten}'!`, "Hệ thống");
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
-    });
   }
 
+  //
   public deleteRow(rowId: string): void {
     const selectedRow = document.getElementById(rowId);
     console.log(selectedRow);
@@ -413,6 +359,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
+  //
   public selectAllRows1Color(selectedColorId: number): void {
     const ckBoxAll = document.getElementById(
       `ckBoxAll${selectedColorId}`
@@ -430,6 +377,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
+  //
   public toggleUpdateFieldBtn(selectedColorId: number): boolean {
     const selectedCkBoxs = document.querySelectorAll(
       `.ckBoxColor${selectedColorId}`
@@ -444,6 +392,7 @@ export class ThemSanPhamChiTietComponent {
     return false;
   }
 
+  //
   public saveSoLuongForm(): void {
     let soLuongValue = (
       document.getElementById("soLuongInput") as HTMLInputElement
@@ -480,28 +429,17 @@ export class ThemSanPhamChiTietComponent {
       }
     }
 
-    //
     const chinhSuaNhanhBtn = document.getElementById("chinhSuaNhanhBtn");
     chinhSuaNhanhBtn.click();
   }
 
   private chinhSuaBtnId: number;
+  //
   public assignChinhSuaBtnId(id: number): void {
     this.chinhSuaBtnId = id;
   }
 
-  // private functions
-  private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
-    return curUploadImgFileList.some((file: File) => file.name === fileName);
-  }
-
-  private formatAddFormData(form: FormGroup): void {
-    const giaNhap = form.get("giaNhap").value;
-    const giaBan = form.get("giaBan").value;
-    this.addForm.get("giaNhap").setValue(giaNhap.replaceAll(",", ""));
-    this.addForm.get("giaBan").setValue(giaBan.replaceAll(",", ""));
-  }
-
+  //
   public initAddForm(): void {
     this.addForm = new FormGroup({
       id: new FormControl(0),
@@ -514,6 +452,82 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
+  public initAddNhanhForm(): void {
+    this.addNhanhForm = new FormGroup({
+      ten: new FormControl("", [Validators.required]),
+    });
+  }
+
+  // I.2: các functions cho sự kiện chọn, thêm nhanh thuộc tính
+  //
+  // lấy ID của thuộc tính đã chọn và gán vào addForm
+  public selectThuocTinh(
+    event: any,
+    thuocTinhList: any[],
+    formControl: string
+  ): void {
+    const tenThuocTinh = event.target.value;
+    const thuocTinh = thuocTinhList.find((tt) => tt.ten === tenThuocTinh);
+
+    if (thuocTinh) {
+      this.addForm.get(`${formControl}`).setValue(thuocTinh.id);
+    }
+  }
+
+  //
+  // mỗi khi ấn một nút thêm nhanh, lấy tên thuộc tính và tên service từ đó
+  public changeNameAndServiceForThuocTinh(
+    ten: string,
+    serviceName: string
+  ): void {
+    this.commonService = serviceName;
+    for (let i = 0; i < this.services.length; ++i) {
+      if (this.services[i].ten === serviceName) {
+        this.commonService = this.services[i].service;
+      }
+    }
+    this.thuocTinhNhanh.ten = ten;
+  }
+
+  //
+  public addNhanhThuocTinh(): void {
+    let trimmed = this.addNhanhForm.get("ten").value.trim();
+    this.addNhanhForm.get("ten")?.setValue(trimmed);
+
+    this.commonService.add(this.addNhanhForm.value).subscribe({
+      next: (response: any) => {
+        this.initAddNhanhForm();
+        this.toastr.success(`Thêm thành công '${response.ten}'!`, "Hệ thống");
+        document.getElementById("closeAddNhanhBtn").click();
+        this.getDataForSelector();
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
+      },
+    });
+  }
+
+  private services = [
+    { ten: "kieuDangService", service: this.kieuDangService },
+    { ten: "kieuThietKeService", service: this.kieuThietKeService },
+    { ten: "kieuTayAoService", service: this.kieuTayAoService },
+    { ten: "kieuCoAoService", service: this.kieuCoAoService },
+    { ten: "chatLieuService", service: this.chatLieuService },
+  ];
+  public commonService: any;
+  public thuocTinhNhanh = {
+    ten: "",
+  };
+  public addNhanhForm: FormGroup;
+
+  // II. private functions
+  //
+  private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
+    return curUploadImgFileList.some((file: File) => file.name === fileName);
+  }
+
+  //
   private getHinhAnhByMauSac(tenMau: string, sanPhamID: number): void {
     this.hinhAnhSanPhamService.getAll(tenMau, sanPhamID).subscribe({
       next: (response: HinhAnh[]) => {
@@ -525,7 +539,8 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  public showImageThumbnail(file: File, thumnailId: string): void {
+  //
+  private showImageThumbnail(file: File, thumnailId: string): void {
     let reader = new FileReader();
     reader.onload = (e) => {
       (document.getElementById(thumnailId) as HTMLImageElement)["src"] = e
@@ -534,6 +549,7 @@ export class ThemSanPhamChiTietComponent {
     reader.readAsDataURL(file);
   }
 
+  //
   private showImageThumbnail2(file: File, thumnailClass: string): void {
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -543,6 +559,7 @@ export class ThemSanPhamChiTietComponent {
     reader.readAsDataURL(file);
   }
 
+  //
   private getSanPhamById(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.sanPhamService.getById(params["sanPhamId"]).subscribe({
@@ -557,6 +574,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getDataForSelector(): void {
     this.getAllKieuDang();
     this.getAllKieuThietKe();
@@ -565,6 +583,7 @@ export class ThemSanPhamChiTietComponent {
     this.getAllChatLieu();
   }
 
+  //
   private getAllMauSac(): void {
     this.mauSacService.getAll().subscribe({
       next: (response: MauSac[]) => {
@@ -576,6 +595,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllKichCo(): void {
     this.kichCoService.getAll().subscribe({
       next: (response: KichCo[]) => {
@@ -587,6 +607,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllKieuDang(): void {
     this.kieuDangService.getAll().subscribe({
       next: (response: KieuDang[]) => {
@@ -598,6 +619,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllKieuThietKe(): void {
     this.kieuThietKeService.getAll().subscribe({
       next: (response: KieuThietKe[]) => {
@@ -609,6 +631,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllKieuTayAo(): void {
     this.kieuTayAoService.getAll().subscribe({
       next: (response: TayAo[]) => {
@@ -620,6 +643,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllKieuCoAo(): void {
     this.kieuCoAoService.getAll().subscribe({
       next: (response: CoAo[]) => {
@@ -631,6 +655,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private getAllChatLieu(): void {
     this.chatLieuService.getAll().subscribe({
       next: (response: ChatLieu[]) => {
@@ -642,19 +667,15 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  //
   private turnOnOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = true;
   }
 
+  //
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;
-  }
-
-  public initAddNhanhForm(): void {
-    this.addNhanhForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
-    });
   }
 }

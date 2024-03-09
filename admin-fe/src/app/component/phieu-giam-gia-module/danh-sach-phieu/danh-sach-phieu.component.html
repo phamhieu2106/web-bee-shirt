@@ -3,6 +3,86 @@
 <!-- Row start -->
 
 <div class="row gutters">
+
+  <div class="row gutters mt-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="float-md-left">Bộ lọc</h4>
+        </div>
+        <div class="card-body pt-4">
+          <!-- Filter start -->
+          <div class="row gutters">
+            <div class="row">
+              <div class="col-md-6">
+                <input type="text" name="" class="form-control rounded"
+                  placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
+              </div>
+              <div class="col-md-6 d-flex justify-content-end">
+                <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
+              </div>
+            </div>
+
+            <div class="row pt-3 pb-3">
+          
+              <div class="col-md-2">
+                <label for="">Từ Ngày</label>
+                <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày" [(ngModel)]="thoiGianBatDau"  (change)="filterPrivate()">
+              </div>
+              <div class="col-md-2">
+                <label for="">Tới Ngày</label>
+                <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày" [(ngModel)]="thoiGianKetThuc"  (change)="filterPrivate()">
+              </div>
+            
+              <div class="col-md-2">
+                <label for="">Loại</label>
+                <div>
+                  <select class="form-control"  [(ngModel)]="loai" (change)="filterPrivate()">
+                    <option [ngValue]="[0,1]">Tất Cả</option>
+                    <option [ngValue]="[1]">Công Khai</option>
+                    <option [ngValue]="[0]">Cá Nhân</option>
+                  </select>
+                </div>
+              </div>
+            
+              <div class="col-md-2">
+                <label for="">Kiểu</label>
+                <div>
+                  <select class="form-control"  [(ngModel)]="kieu" (change)="filterPrivate()">
+                    <option [ngValue]="[0,1]">Tất Cả</option>
+                    <option [ngValue]="[0]">%</option>
+                    <option [ngValue]="[1]">Tiền Mặt</option>
+                  </select>
+                </div>
+              </div>
+            
+              <div class="col-md-2">
+                <label for="">Trạng Thái</label>
+                <div>
+                  <select class="form-control" [(ngModel)]="trangThai" (change)="filterPrivate()">
+                    <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
+                    <option value="Sắp diễn ra">Sắp diễn ra</option>
+                    <option value="Đang diễn ra">Đang diễn ra</option>
+                    <option value="Đã kết thúc">Đã kết thúc</option>
+                  </select>
+                </div>
+              </div>
+            
+              <!-- Thêm nút xóa bộ lọc -->
+              <div class="col-md-2">
+                <label for="">Hành Động</label>
+                <div>
+                  <button class="btn btn-primary btn-rounded btn-reload-filter" (click)="clearFilters()"> <i class="fa-solid fa-arrows-rotate"></i></button>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+          <!-- Filter End -->
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="col-sm-12">
 
 
@@ -12,70 +92,9 @@
 
       <div class="card-body">
 
-        <div class="row">
-          <div class="col-md-6">
-            <input type="text" name="" class="form-control rounded"
-              placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
-          </div>
-          <div class="col-md-6 d-flex justify-content-end">
-            <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
-          </div>
-        </div>
+       
 
-        <div class="row pt-3 pb-3">
-          
-          <div class="col-md-2">
-            <label for="">Từ Ngày</label>
-            <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày" [(ngModel)]="thoiGianBatDau"  (change)="filterPrivate()">
-          </div>
-          <div class="col-md-2">
-            <label for="">Tới Ngày</label>
-            <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày" [(ngModel)]="thoiGianKetThuc"  (change)="filterPrivate()">
-          </div>
-        
-          <div class="col-md-2">
-            <label for="">Loại</label>
-            <div>
-              <select class="form-control"  [(ngModel)]="loai" (change)="filterPrivate()">
-                <option [ngValue]="[0,1]">Tất Cả</option>
-                <option [ngValue]="[1]">Công Khai</option>
-                <option [ngValue]="[0]">Cá Nhân</option>
-              </select>
-            </div>
-          </div>
-        
-          <div class="col-md-2">
-            <label for="">Kiểu</label>
-            <div>
-              <select class="form-control"  [(ngModel)]="kieu" (change)="filterPrivate()">
-                <option [ngValue]="[0,1]">Tất Cả</option>
-                <option [ngValue]="[0]">%</option>
-                <option [ngValue]="[1]">Tiền Mặt</option>
-              </select>
-            </div>
-          </div>
-        
-          <div class="col-md-2">
-            <label for="">Trạng Thái</label>
-            <div>
-              <select class="form-control" [(ngModel)]="trangThai" (change)="filterPrivate()">
-                <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
-                <option value="Sắp diễn ra">Sắp diễn ra</option>
-                <option value="Đang diễn ra">Đang diễn ra</option>
-                <option value="Đã kết thúc">Đã kết thúc</option>
-              </select>
-            </div>
-          </div>
-        
-          <!-- Thêm nút xóa bộ lọc -->
-          <div class="col-md-2">
-            <label for="">Hành Động</label>
-            <div>
-              <button class="btn btn-primary" (click)="clearFilters()">Xóa bộ lọc</button>
-            </div>
-          </div>
-        
-        </div>
+       
 
         <!-- table -->
 

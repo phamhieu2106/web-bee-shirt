@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
 import { Chart, registerables } from "chart.js";
+import { ToastrService } from "ngx-toastr";
+import { ChartService } from "src/app/service/chart.service";
 
 @Component({
   selector: "app-line-chart-customer",
@@ -23,49 +25,28 @@ export class LineChartCustomerComponent implements OnInit {
     "Chủ Nhật",
   ];
 
-  constructor() {}
+  listTongSoKhachHangTheoNam: number[];
+  listTongSoKhachHangTheoNamTruoc: number[];
 
-  ngOnInit(): void {
-    this.getMonths();
-    this.createChartYear();
+  listTongSoKhachHangTheoThang: number[];
+  listTongSoKhachHangTheoThangTruoc: number[];
+
+  listTongSoKhachHangTrongTuan: number[];
+  listTongSoKhachHangTrongTuanTruoc: number[];
+
+  constructor(private service: ChartService, private toastSrc: ToastrService) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.getMonths();
+
+    setTimeout(async () => {
+      this.loadChartKhachHangHoanThanh();
+    }, 500);
   }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tenChart"] && !changes["tenChart"].firstChange) {
       // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
       this.switchChart(this.tenChart);
-      clearInterval(this.flashInterval);
-      if (this.tenChart == "year") {
-        let flashIndex = 11; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "month") {
-        let flashIndex = 3; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      } else if (this.tenChart == "week") {
-        let flashIndex = 6; // về sau sẽ chỉnh flashIndex = với thời điểm  hiện tại
-        this.flashInterval = setInterval(() => {
-          const dataset = this.chart.data.datasets[1];
-          dataset.backgroundColor[flashIndex] =
-            dataset.backgroundColor[flashIndex] === "limegreen"
-              ? "red"
-              : "limegreen";
-          this.chart.update();
-        }, 1000);
-      }
     }
   }
   ngOnDestroy(): void {
@@ -81,7 +62,6 @@ export class LineChartCustomerComponent implements OnInit {
       );
     }
   }
-
   public switchChart(chart: string) {
     if (chart == "week") {
       this.createChartDay();
@@ -104,12 +84,12 @@ export class LineChartCustomerComponent implements OnInit {
         datasets: [
           {
             label: "Tuần Trước",
-            data: [467, 576, 572, 79, 95, 23, 23],
+            data: this.listTongSoKhachHangTrongTuan,
             backgroundColor: "blue",
           },
           {
             label: "Tuần Hiện Tại",
-            data: [542, 542, 536, 327, 333, 444, 222],
+            data: this.listTongSoKhachHangTrongTuanTruoc,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -131,9 +111,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
+                  return value + " Đơn"; // Giữ nguyên các giá trị khác
                 }
               },
             },
@@ -155,12 +135,12 @@ export class LineChartCustomerComponent implements OnInit {
         datasets: [
           {
             label: "Tháng Trước",
-            data: [467, 576, 572, 79],
+            data: this.listTongSoKhachHangTheoThangTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tháng Hiện Tại",
-            data: [542, 542, 536, 327],
+            data: this.listTongSoKhachHangTheoThang,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -179,9 +159,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
+                  return value + " Đơn"; // Giữ nguyên các giá trị khác
                 }
               },
             },
@@ -203,12 +183,12 @@ export class LineChartCustomerComponent implements OnInit {
         datasets: [
           {
             label: "Năm Trước",
-            data: [467, 576, 572, 79, 92, 574, 573, 576, 576, 576, 576, 576],
+            data: this.listTongSoKhachHangTheoNamTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Năm Hiện Tại",
-            data: [542, 542, 536, 327, 17, 0.0, 538, 541, 541, 541, 541, 541],
+            data: this.listTongSoKhachHangTheoNam,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -236,15 +216,99 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Khách hàng"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Khách hàng"; // Giữ nguyên các giá trị khác
+                  return value + " Đơn"; // Giữ nguyên các giá trị khác
                 }
               },
             },
           },
         },
       },
+    });
+  }
+
+  public loadChartKhachHangHoanThanh(): void {
+    let requestsCompleted = 0;
+
+    const handleCompletion = () => {
+      requestsCompleted++;
+      if (requestsCompleted === 6) {
+        this.createChartYear();
+        this.createChartDay();
+        this.createChartDay();
+      }
+    };
+
+    this.service.getSoKhachHangTrongNamTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTheoNamTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo năm trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoKhachHangTrongNam().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTheoNam = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo năm do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoKhachHangTrongTuan().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTrongTuan = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tuần do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoKhachHangTrongTuanTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTrongTuanTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tuần trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+
+    this.service.getSoKhachHangTrongThang().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTheoThang = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tháng do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
+    });
+    this.service.getSoKhachHangTrongThangTruoc().subscribe({
+      next: (res: any) => {
+        this.listTongSoKhachHangTheoThangTruoc = res;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số khách hàng theo tháng trước do ${err.message.message}`
+        );
+      },
+      complete: handleCompletion,
     });
   }
 }

@@ -26,7 +26,7 @@ public class TayAoResource {
 
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<TayAo>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                          @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                          @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(tayAoService.getByPage(pageNumber, pageSize, search));
     }
@@ -34,6 +34,11 @@ public class TayAoResource {
     @GetMapping("/get-all")
     public ResponseEntity<List<TayAo>> getAll() {
         return ResponseEntity.ok(tayAoService.getAll());
+    }
+
+    @GetMapping("/all-active")
+    public ResponseEntity<List<TayAo>> getAllActive() {
+        return ResponseEntity.ok(tayAoService.getAll().stream().filter(TayAo::isTrangThai).toList());
     }
 
     @PostMapping("/add")

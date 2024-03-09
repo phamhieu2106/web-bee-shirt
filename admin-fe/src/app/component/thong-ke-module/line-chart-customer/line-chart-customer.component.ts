@@ -26,8 +26,8 @@ export class LineChartCustomerComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.getMonths();
-    this.createChartYear();
+    // this.getMonths();
+    // this.createChartYear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

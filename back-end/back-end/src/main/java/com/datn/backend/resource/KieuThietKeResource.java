@@ -36,6 +36,11 @@ public class KieuThietKeResource {
         return ResponseEntity.ok(thietKeService.getAll());
     }
 
+    @GetMapping("/all-active")
+    public ResponseEntity<List<KieuThietKe>> getAllActive() {
+        return ResponseEntity.ok(thietKeService.getAll().stream().filter(KieuThietKe::isTrangThai).toList());
+    }
+
     @PostMapping("/add")
     public ResponseEntity<KieuThietKe> add(@RequestBody KieuThietKe chatLieu) {
         return ResponseEntity.ok(thietKeService.add(chatLieu));

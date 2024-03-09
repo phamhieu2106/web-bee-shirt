@@ -37,25 +37,27 @@ export class LineChartComponent implements OnInit {
   //
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.getMonths();
+  ngOnInit() {
+    // async ngOnInit(): Promise<void> {
+    //   await this.getMonths();
+    //   setTimeout(async () => {
+    //     this.loadChartDonHangHoanThanh();
+    //   }, 500);
+    // }
+    // ngOnChanges(changes: SimpleChanges): void {
+    //   if (changes["tenChart"] && !changes["tenChart"].firstChange) {
+    //     // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
+    //     this.switchChart(this.tenChart);
+    //   }
+  }
 
-    setTimeout(async () => {
-      this.loadChartDonHangHoanThanh();
-    }, 500);
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["tenChart"] && !changes["tenChart"].firstChange) {
-      // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
-      this.switchChart(this.tenChart);
-    }
-  }
   ngOnDestroy(): void {
     // Hủy bỏ biểu đồ khi component bị hủy
     if (this.chart) {
       this.chart.destroy();
     }
   }
+
   public getMonths() {
     for (let i = 0; i < 12; i++) {
       this.currentMonth.push(
@@ -63,6 +65,7 @@ export class LineChartComponent implements OnInit {
       );
     }
   }
+
   public switchChart(chart: string) {
     if (chart == "week") {
       this.createChartDay();
@@ -72,6 +75,7 @@ export class LineChartComponent implements OnInit {
       this.createChartYear();
     }
   }
+
   public createChartDay() {
     Chart.register(...registerables);
     if (this.chart) {
@@ -123,6 +127,7 @@ export class LineChartComponent implements OnInit {
       },
     });
   }
+
   public createChartWeek() {
     Chart.register(...registerables);
     if (this.chart) {
@@ -171,6 +176,7 @@ export class LineChartComponent implements OnInit {
       },
     });
   }
+
   public createChartYear() {
     Chart.register(...registerables);
     if (this.chart) {

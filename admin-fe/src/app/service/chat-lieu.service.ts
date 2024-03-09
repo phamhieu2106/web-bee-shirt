@@ -30,6 +30,10 @@ export class ChatLieuService {
     return this.http.get<ChatLieu[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActive(): Observable<ChatLieu[]> {
+    return this.http.get<ChatLieu[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 2
   public add(chatLieu: ChatLieu): Observable<ChatLieu> {
     return this.http.post<ChatLieu>(`${this.apiUrl}/add`, chatLieu);

@@ -87,8 +87,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
     @Query(value =
             """         
             select kh.id, kh.ho_ten as hoTen, kh.sdt,kh.ngay_sinh ngaySinh,kh.gioi_tinh as gioiTinh,
-             kh.email,kh.trang_thai as trangThai,
-             dc.tinh,dc.huyen,dc.xa,dc.duong,
+            kh.email,kh.trang_thai as trangThai,
+            dc.tinh,dc.huyen,dc.xa,dc.duong,
             acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau
             from khach_hang kh
             join account acc
@@ -99,9 +99,11 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
             AND kh.trang_thai IN ( :trangThaiFilter )
             and dc.mac_dinh= 1
             ORDER BY kh.created_at DESC
-                    """
+            """
             , nativeQuery = true)
-    Page<KhachHangResponse> filter(Pageable pageable, @Param("gioiTinhFilter") List<Integer> gioiTinhFilter, @Param("trangThaiFilter")List<Integer> trangThaiFilter);
+    Page<KhachHangResponse> filter(Pageable pageable,
+                                   @Param("gioiTinhFilter") List<Integer> gioiTinhFilter,
+                                   @Param("trangThaiFilter") List<Integer> trangThaiFilter);
 
 
      @Query(value = "SELECT * \n" +

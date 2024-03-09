@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
+
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Integer> {
 
     @Query(value =
@@ -19,6 +21,11 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     Page<SanPhamChiTiet> getByPage(Pageable pageable,
                                    @Param("spId") int spId);
 
+    @Query(value = """
+                   :sql
+                   """, nativeQuery = true)
+    Page<SanPhamChiTiet> filterByPage(Pageable pageable, @Param("sql") String sql);
+
     @Query("""
             select spct from SanPhamChiTiet spct
             where spct.sanPham.ma like %:search% or 
@@ -29,5 +36,19 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             spct.coAo.ten like %:search% or 
             spct.chatLieu.ten like %:search%
             """)
-    Page<SanPhamChiTiet> getAllBySearch(String search,Pageable pageable);
+    Page<SanPhamChiTiet> getAllBySearch(String search, Pageable pageable);
+
+    @Query(value = """
+                   SELECT MIN(ct.gia_ban)
+                   FROM san_pham_chi_tiet ct
+                   WHERE ct.san_pham_id = :productId
+                   """, nativeQuery = true)
+    BigDecimal getMinPrice(@Param("productId") int productId);
+
+    @Query(value = """
+                   SELECT MAX(ct.gia_ban)
+                   FROM san_pham_chi_tiet ct
+                   WHERE ct.san_pham_id = :productId
+                   """, nativeQuery = true)
+    BigDecimal getMaxPrice(@Param("productId") int productId);
 }

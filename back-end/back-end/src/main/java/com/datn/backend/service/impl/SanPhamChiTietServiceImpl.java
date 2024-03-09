@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
+import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.dto.response.DotGiamGiaSanPhamResponse;
@@ -32,6 +33,7 @@ import com.datn.backend.repository.SanPhamRepository;
 import com.datn.backend.repository.TayAoRepository;
 import com.datn.backend.model.san_pham.*;
 import com.datn.backend.repository.*;
+import com.datn.backend.repository.custom_repository.CustomSpctRepository;
 import com.datn.backend.service.SanPhamChiTietService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
@@ -45,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
+    private final CustomSpctRepository customSpctRepo;
     private final SanPhamChiTietRepository spctRepo;
     private final SanPhamRepository sanPhamRepo;
     private final KieuDangRepository kieuDangRepo;
@@ -121,8 +125,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         CoAo coAo = coAoRepo.findById(request.getCoAoId()).get();
         ChatLieu chatLieu = chatLieuRepo.findById(request.getChatLieuId()).get();
 
-//        spct.setGiaNhap(request.getGiaNhap());
-//        spct.setGiaBan(request.getGiaBan());
         spct.setSanPham(sanPham);
         spct.setKieuDang(kieuDang);
         spct.setThietKe(kieuThietKe);
@@ -148,6 +150,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         paged.setSearch(search);
 
         return paged;
+    }
+
+
+
+    @Override
+    public PagedResponse<SanPhamChiTiet> filterByPage(FilterSPCTParams params) {
+        return customSpctRepo.filterByPage(params);
     }
 
     @Transactional
@@ -208,5 +217,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             return spctResp;
         }).toList();
         return spctResponses;
+    }
+
+    @Override
+    public BigDecimal[] getMinAndMaxPrice(int productId) {
+        BigDecimal[] result = new BigDecimal[2];
+        result[0] = spctRepo.getMinPrice(productId);
+        result[1] = spctRepo.getMaxPrice(productId);
+        return result;
+    }
+
+    @Override
+    public void changeStatus(int id) {
+        SanPhamChiTiet spct = spctRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm được sản phẩm chi tiết ID: " + id));
+        spct.setTrangThai(!spct.isTrangThai());
+        spctRepo.save(spct);
     }
 }

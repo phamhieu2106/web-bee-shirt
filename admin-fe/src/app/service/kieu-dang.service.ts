@@ -30,6 +30,10 @@ export class KieuDangService {
     return this.http.get<KieuDang[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActive(): Observable<KieuDang[]> {
+    return this.http.get<KieuDang[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 2
   public add(coAo: KieuDang): Observable<KieuDang> {
     return this.http.post<KieuDang>(`${this.apiUrl}/add`, coAo);

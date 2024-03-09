@@ -338,8 +338,14 @@ export class ThemSanPhamChiTietComponent {
         .subscribe({
           next: (response: string) => {
             this.toastr.success(response, "Hệ thống");
-            this.turnOffOverlay("");
-            this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
+
+            // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
+            if (i === this.selectedMauSacList.length - 1) {
+              console.log("giò mói chuyển tr: ", i);
+
+              this.turnOffOverlay("");
+              this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
+            }
           },
           error: (errorResponse: HttpErrorResponse) => {
             this.toastr.success(errorResponse.error.message, "Hệ thống");
@@ -576,11 +582,12 @@ export class ThemSanPhamChiTietComponent {
 
   //
   private getDataForSelector(): void {
-    this.getAllKieuDang();
-    this.getAllKieuThietKe();
-    this.getAllKieuTayAo();
-    this.getAllKieuCoAo();
-    this.getAllChatLieu();
+    // get all list of each field and all elements must be active
+    this.getAllForms();
+    this.getAllDesigns();
+    this.getAllSleeves();
+    this.getAllActiveCollars();
+    this.getAllActiveMaterials();
   }
 
   //
@@ -601,68 +608,68 @@ export class ThemSanPhamChiTietComponent {
       next: (response: KichCo[]) => {
         this.kichCoList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message);
       },
     });
   }
 
   //
-  private getAllKieuDang(): void {
-    this.kieuDangService.getAll().subscribe({
+  private getAllForms(): void {
+    this.kieuDangService.getAllActive().subscribe({
       next: (response: KieuDang[]) => {
         this.kieuDangList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error("Không thể tải danh sách kiểu dáng!");
       },
     });
   }
 
   //
-  private getAllKieuThietKe(): void {
-    this.kieuThietKeService.getAll().subscribe({
+  private getAllDesigns(): void {
+    this.kieuThietKeService.getAllActive().subscribe({
       next: (response: KieuThietKe[]) => {
         this.kieuThietKeList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error("Không thể tải danh sách kiểu thiết kế!");
       },
     });
   }
 
   //
-  private getAllKieuTayAo(): void {
-    this.kieuTayAoService.getAll().subscribe({
+  private getAllSleeves(): void {
+    this.kieuTayAoService.getAllActive().subscribe({
       next: (response: TayAo[]) => {
         this.tayAoList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error("Không thể tải danh sách tay áo!");
       },
     });
   }
 
   //
-  private getAllKieuCoAo(): void {
-    this.kieuCoAoService.getAll().subscribe({
+  private getAllActiveCollars(): void {
+    this.kieuCoAoService.getAllActive().subscribe({
       next: (response: CoAo[]) => {
         this.coAoList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message);
       },
     });
   }
 
   //
-  private getAllChatLieu(): void {
-    this.chatLieuService.getAll().subscribe({
+  private getAllActiveMaterials(): void {
+    this.chatLieuService.getAllActive().subscribe({
       next: (response: ChatLieu[]) => {
         this.chatLieuList = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message);
       },
     });
   }

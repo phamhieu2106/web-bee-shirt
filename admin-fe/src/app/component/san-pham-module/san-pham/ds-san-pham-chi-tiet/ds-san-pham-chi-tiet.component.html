@@ -14,25 +14,74 @@
           <div class="col col-md-12 d-flex">
             <div class="col-md-4"></div>
             <div class="col-md-4 text-left">
-              <b class="form-label">Lọc theo giá</b>
+              <b class="form-label">Lọc theo giá bán</b>
               <div class="row mt-3">
-                <span class="col-2">100</span>
+                <!--  -->
+                <span class="col-3"
+                  >Giá thấp nhất:
+                  <i
+                    ><b>{{ formatCurrency(minPrice) }}</b></i
+                  ></span
+                >
+                <span class="col-2">
+                  {{ formatCurrency(minAndMaxPrice[0]) }}</span
+                >
                 <input
                   type="range"
-                  class="form-range col-8"
+                  class="form-range col-5"
                   id="customRange1"
                   style="display: inline-block"
+                  [min]="minAndMaxPrice[0]"
+                  [max]="changeableMaxPrice"
+                  [value]="minPrice"
+                  (input)="onMinPriceChange($event)"
+                  [title]="'Min price: ' + formatCurrency(minPrice)"
+                  step="1000"
                 />
-                <span class="col-2">300</span>
+                <span class="col-2">{{
+                  formatCurrency(changeableMaxPrice)
+                }}</span>
+              </div>
+
+              <!--  -->
+              <div class="row mt-3">
+                <span class="col-3"
+                  >Giá cao nhất:
+                  <i
+                    ><b>{{ formatCurrency(maxPrice) }}</b></i
+                  ></span
+                >
+                <span class="col-2">
+                  {{ formatCurrency(changeableMinPrice) }}</span
+                >
+                <input
+                  type="range"
+                  class="form-range col-5"
+                  id="customRange1"
+                  style="display: inline-block"
+                  [min]="changeableMinPrice"
+                  [max]="minAndMaxPrice[1]"
+                  [value]="maxPrice"
+                  (input)="onMaxPriceChange($event)"
+                  [title]="'Max price: ' + formatCurrency(maxPrice)"
+                  step="1000"
+                />
+                <span class="col-2">{{
+                  formatCurrency(minAndMaxPrice[1])
+                }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="row mb-3 mx-5">
+          <b class="form-label">Lọc theo thuộc tính</b>
           <div class="col-3">
             <label class="form-label">Màu sắc</label>
-            <select class="form-select" (change)="onSelectMauSac($event)">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'colorId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ms of mauSacs" [value]="ms.id">
                 {{ ms.ten }}
@@ -42,7 +91,10 @@
 
           <div class="col-3">
             <label class="form-label">Kích cỡ</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'sizeId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let kc of kichCos" [value]="kc.id">
                 {{ kc.ten }}
@@ -52,7 +104,10 @@
 
           <div class="col-3">
             <label class="form-label">Kiểu dáng</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'formId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let kd of kieuDangs" [value]="kd.id">
                 {{ kd.ten }}
@@ -62,7 +117,10 @@
 
           <div class="col-3">
             <label class="form-label">Thiết kế</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'designId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let tk of thietKes" [value]="tk.id">
                 {{ tk.ten }}
@@ -72,7 +130,10 @@
 
           <div class="col-3">
             <label class="form-label">Kiểu tay áo</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'sleeveId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ta of tayAos" [value]="ta.id">
                 {{ ta.ten }}
@@ -82,7 +143,10 @@
 
           <div class="col-3">
             <label class="form-label">Kiểu cổ áo</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'collarId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ca of coAos" [value]="ca.id">
                 {{ ca.ten }}
@@ -92,7 +156,10 @@
 
           <div class="col-3">
             <label class="form-label">Chất liệu</label>
-            <select class="form-select">
+            <select
+              class="form-select"
+              (change)="onSelectField($event, 'materialId')"
+            >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let cl of chatLieus" [value]="cl.id">
                 {{ cl.ten }}
@@ -242,6 +309,7 @@
                     class="custom-control-input"
                     [id]="'trangThai' + s.id"
                     [checked]="s.trangThai"
+                    (click)="changeStatus(s.id)"
                   />
                   <label
                     class="custom-control-label"
@@ -281,11 +349,11 @@
         <button
           class="btn btn-primary rounded my-3"
           *ngIf="isUpdateBtnHidden()"
-          (click)="chinhSuaNhanh(pagedResponse.pageSize)"
+          (click)="chinhSuaNhanh(pagedResponse?.pageSize)"
           data-bs-toggle="modal"
           data-bs-target="#updateModal"
         >
-          <i class="fa-regular fa-pen-to-square me-2"></i>Chỉnh sửa nhanh
+          <i class="fa-regular fa-pen-to-square me-2"></i>Cập nhật nhanh
         </button>
       </div>
       <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
@@ -294,19 +362,10 @@
             <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
               >Số lượng:
             </label>
-            <!-- <select
-              class="custom-select my-1 mr-sm-2 col-md-5"
-              id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
-            >
-              >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select> -->
             <select
               class="custom-select my-1 mr-sm-2 col-md-5"
               id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize($event)"
             >
               >
               <option value="5">5</option>
@@ -365,6 +424,8 @@
     </div>
   </div>
 </div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
 
 <!-- <div class="input-group form-group search-block">
   <input

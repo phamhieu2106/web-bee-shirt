@@ -30,6 +30,10 @@ export class KieuTayAoService {
     return this.http.get<TayAo[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActive(): Observable<TayAo[]> {
+    return this.http.get<TayAo[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 2
   public add(coAo: TayAo): Observable<TayAo> {
     return this.http.post<TayAo>(`${this.apiUrl}/add`, coAo);

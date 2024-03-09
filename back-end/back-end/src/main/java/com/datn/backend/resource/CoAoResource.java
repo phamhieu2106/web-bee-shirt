@@ -36,6 +36,11 @@ public class CoAoResource {
         return ResponseEntity.ok(coAoService.getAll());
     }
 
+    @GetMapping("/all-active")
+    public ResponseEntity<List<CoAo>> getAllActive() {
+        return ResponseEntity.ok(coAoService.getAll().stream().filter(CoAo::isTrangThai).toList());
+    }
+
     @PostMapping("/add")
     public ResponseEntity<CoAo> add(@RequestBody CoAo coAo) {
         return ResponseEntity.ok(coAoService.add(coAo));

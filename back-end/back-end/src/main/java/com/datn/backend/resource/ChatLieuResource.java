@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/chat-lieu")
@@ -34,6 +35,13 @@ public class ChatLieuResource {
     @GetMapping("/get-all")
     public ResponseEntity<List<ChatLieu>> getAll() {
         return ResponseEntity.ok(chatLieuService.getAll());
+    }
+
+    @GetMapping("/all-active")
+    public ResponseEntity<List<ChatLieu>> getAllActive() {
+        List<ChatLieu> all = chatLieuService.getAll();
+        List<ChatLieu> allActive = all.stream().filter(ChatLieu::isTrangThai).toList();
+        return ResponseEntity.ok(allActive);
     }
 
     @PostMapping("/add")

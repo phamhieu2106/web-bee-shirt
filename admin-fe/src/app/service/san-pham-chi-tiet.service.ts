@@ -6,6 +6,7 @@ import { AddSPCTRequest } from "../model/interface/add-spct-request.interface";
 import { SanPhamChiTiet } from "../model/class/san-pham-chi-tiet.class";
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { UpdateNhanhSPCT } from "../model/interface/update-nhanh-spct.interface";
+import { FilterSPCTParams } from "../model/interface/filter-spct-params.interface";
 
 @Injectable({
   providedIn: "root",
@@ -36,6 +37,15 @@ export class SanPhamChiTietService {
     );
   }
 
+  public filterSPCTByPage(
+    params: FilterSPCTParams
+  ): Observable<PagedResponse<SanPhamChiTiet>> {
+    return this.http.post<PagedResponse<SanPhamChiTiet>>(
+      `${this.apiUrl}/filter-by-page`,
+      params
+    );
+  }
+
   public getByPage(spId: number): Observable<PagedResponse<SanPhamChiTiet>> {
     return this.http.get<PagedResponse<SanPhamChiTiet>>(
       `${this.apiUrl}/get-by-page/${spId}`
@@ -52,6 +62,16 @@ export class SanPhamChiTietService {
 
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
     return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
+      responseType: "text",
+    });
+  }
+
+  public getMinAndMaxPrice(productId: number): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/min-max-price/${productId}`);
+  }
+
+  public changeStatus(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
   }

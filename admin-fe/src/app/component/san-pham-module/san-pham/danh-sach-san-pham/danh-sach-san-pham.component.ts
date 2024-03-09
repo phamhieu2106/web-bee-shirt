@@ -77,6 +77,7 @@ export class DanhSachSanPhamComponent {
   }
 
   // public function
+  //
   public add(): void {
     this.sanPhamService.add(this.addForm.value).subscribe({
       next: (response: SanPham) => {
@@ -100,6 +101,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
@@ -108,6 +110,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -123,18 +126,22 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
+  //
   public timKiem(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
+  //
   public onClearSearchInput(): void {
     this.goToPage();
   }
 
+  //
   public openDetailsForm(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
@@ -146,6 +153,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
@@ -163,6 +171,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.sanPhamService.changeStatus(id).subscribe({
       next: (response: string) => {
@@ -173,12 +182,13 @@ export class DanhSachSanPhamComponent {
           this.pagedResponse.search
         );
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public update(): void {
     this.sanPhamService.update(this.updateForm.value).subscribe({
       next: (response: SanPham) => {
@@ -203,6 +213,7 @@ export class DanhSachSanPhamComponent {
   }
 
   // private function
+  //
   private getSanPhamList(): void {
     this.sanPhamService.getAll().subscribe({
       next: (response: PagedResponse<SanPham>) => {
@@ -214,6 +225,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

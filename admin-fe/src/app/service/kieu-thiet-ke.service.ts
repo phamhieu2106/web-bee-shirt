@@ -30,6 +30,10 @@ export class KieuThietKeService {
     return this.http.get<KieuThietKe[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActive(): Observable<KieuThietKe[]> {
+    return this.http.get<KieuThietKe[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 2
   public add(chatLieu: KieuThietKe): Observable<KieuThietKe> {
     return this.http.post<KieuThietKe>(`${this.apiUrl}/add`, chatLieu);

@@ -31,6 +31,10 @@ export class KieuCoAoService {
     return this.http.get<CoAo[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActive(): Observable<CoAo[]> {
+    return this.http.get<CoAo[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 3
   public add(coAo: CoAo): Observable<CoAo> {
     return this.http.post<CoAo>(`${this.apiUrl}/add`, coAo);

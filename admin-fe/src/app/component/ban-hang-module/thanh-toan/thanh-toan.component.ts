@@ -7,7 +7,9 @@ import {
   SimpleChanges,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ToastrService } from "ngx-toastr";
 import { ThanhToan } from "src/app/model/class/thanh-toan";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-thanh-toan",
@@ -19,25 +21,27 @@ export class ThanhToanComponent implements OnChanges {
   @Input({ required: true }) thanhToans: ThanhToan[];
   @Output() thanhToansChange = new EventEmitter<ThanhToan[]>();
   thanhToanForm: FormGroup;
-  constructor(private fb: FormBuilder) {}
+
+  constructor(private fb: FormBuilder, private toast: ToastrService) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     this.createThanhToanForm();
   }
 
   getTienConThieu() {
-    return this.thanhToans
-      ? this.thanhToans
-          .map((tt) => tt.soTien)
-          .reduce((pre, cur) => pre + cur, 0)
-      : 0;
+    return (
+      this.tongTien -
+      (this.thanhToans
+        ? this.thanhToans
+            .map((tt) => tt.soTien)
+            .reduce((pre, cur) => pre + cur, 0)
+        : 0)
+    );
   }
   // tạo form
   createThanhToanForm(): void {
     this.thanhToanForm = this.fb.group({
-      tienKhachDua: [
-        0,
-        [Validators.required, Validators.min(1), Validators.max(this.tongTien)],
-      ],
+      tienKhachDua: [0, [Validators.required, Validators.max(this.tongTien)]],
       moTa: [""],
       phuongThucThanhToan: ["TIEN_MAT"],
       maGiaoDich: [""],
@@ -59,5 +63,58 @@ export class ThanhToanComponent implements OnChanges {
         // Cập nhật lại validation state
         this.thanhToanForm.get("maGiaoDich").updateValueAndValidity();
       });
+  }
+  creatThanhToan() {
+    // nếu
+    if (
+      this.thanhToanForm.value.tienKhachDua <= 0 ||
+      this.thanhToanForm.value.tienKhachDua > this.getTienConThieu()
+    ) {
+      this.toast.warning("Tiền khách đưa không hợp lệ");
+      return;
+    }
+    // xử lý thêm hóa đơn
+    let newThanhToan = new ThanhToan();
+    newThanhToan.tenHinhThucThanhToan =
+      this.thanhToanForm.value.phuongThucThanhToan;
+
+    newThanhToan.soTien = this.thanhToanForm.value.tienKhachDua;
+    newThanhToan.moTa = this.thanhToanForm.value.moTa;
+    newThanhToan.maGiaoDich = this.thanhToanForm.value.maGiaoDich;
+    if (this.thanhToans == null || this.thanhToans == undefined) {
+      this.thanhToans = [];
+    }
+    this.thanhToans.push(newThanhToan);
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.thanhToanForm.patchValue({ ["moTa"]: "" });
+    this.thanhToanForm.patchValue({ ["maGiaoDich"]: "" });
+    this.thanhToanForm.patchValue({ ["tienKhachDua"]: 0 });
+    this.thanhToanForm.patchValue({ ["phuongThucThanhToan"]: "TIEN_MAT" });
+  }
+
+  deleteThanhToan(index: number) {
+    Swal.fire({
+      title: "Xác nhận",
+      text: "Bạn có chắc muốn xóa Thanh toán này chứ ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Đã xóa!",
+          icon: "success",
+        });
+
+        // handle here
+        this.thanhToans.splice(index, 1);
+      }
+    });
   }
 }

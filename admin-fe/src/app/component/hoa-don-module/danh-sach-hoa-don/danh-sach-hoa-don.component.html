@@ -268,7 +268,11 @@
                         <td>
                           {{ hd.createdAt }}
                         </td>
-                        <td>{{ hd.tongTien | currency : "đ " }}</td>
+                        <td>
+                          {{
+                            hd.tongTien | currency : "đ " : "symbol" : "1.0-0"
+                          }}
+                        </td>
                         <td>
                           <app-loai-hoa-don
                             [loaiHoaDon]="hd.loaiHoaDon"

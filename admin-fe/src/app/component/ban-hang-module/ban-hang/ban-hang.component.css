@@ -29,6 +29,13 @@
 
 .order-number {
     cursor: pointer;
+    background-color: rgb(233, 233, 233);
+}
+
+.order-number-active {
+    cursor: pointer;
+    background-color: rgb(247, 247, 247) !important;
+    color: blue;
 }
 
 .count {
@@ -51,3 +58,37 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.gia-chua-giam {
+    font-size: 13px;
+    text-decoration: line-through;
+}
+
+.gia-da-giam {
+    font-weight: bold;
+    font-size: 15px;
+    color: rgba(251, 23, 23, 0.962);
+}
+
+.thumbnail-san-pham {
+    width: 50px;
+    height: 50px;
+}
+
+.san-pham-mau-sac {
+    font-size: 13px;
+}
+
+.san-pham-kich-co {
+    font-size: 15px;
+}
+
+.san-pham-ma {
+    font-size: 13px;
+}
+
+.san-pham-ten {
+    font-size: 13px;
+}
+
+.hoa-don-active {}

@@ -1,49 +1,40 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container px-4 px-lg-5">
-    <a class="navbar-brand">Bee Shirt</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="'/trang-chu'"
-            [routerLinkActive]="'active'"
-            >Trang chủ</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="'/cua-hang'"
-            [routerLinkActive]="'active'"
-            >Cửa hàng</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/gioi-thieu'">Giới thiệu</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/lien-he'">Liên hệ</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <button class="btn btn-outline-dark" type="submit">
-          <i class="bi-cart-fill me-1"></i>
-          Cart
-          <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-        </button>
-      </form>
+<div id="site-header-center" class="header-top" style="background-color: rgb(0, 0, 0); padding: 10px;">
+  <div class="container navigation ">
+    <div class="col-md-2">
+      <a class="navbar-brand" href="#!">
+        <img src="https://i.imgur.com/XlMdwHa.png" alt="alo" style="width: 130px" />
+        <!-- Thiết lập chiều rộng của hình ảnh là 10% chiều rộng của viewport -->
+      </a>
     </div>
+
+    <div class="search col-md-6">
+      <input type="text" name="" class="formSearch" placeholder="Bạn đang tìm gì..." />
+    </div>
+
+    
+      <div class="col-md-1">
+        <span class="box-icon">
+          <img width="24" height="24" src="//theme.hstatic.net/1000253775/1001179812/14/user-account.svg?v=314"
+            alt="Tài khoản">
+        </span>
+        <span class="box-text hidden-xs">
+          <span class="small-text">
+            Đăng nhập
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </span>
+         
+        </span>
+      </div>
+
+
+      <div  class="col-md-1">
+        <span class="box-icon">
+          <img width="24" height="24" src="//theme.hstatic.net/1000253775/1001179812/14/shopping-cart.svg?v=314"
+            alt="Hệ thống cửa hàng" />
+          <span class="js-number-cart number-cart">0</span>
+        </span>
+        <span class="box-text hidden-xs"> Giỏ hàng </span>
+      </div>
+  
   </div>
-</nav>
+</div>

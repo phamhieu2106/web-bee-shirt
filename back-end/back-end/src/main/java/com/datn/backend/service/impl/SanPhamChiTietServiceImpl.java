@@ -7,8 +7,9 @@ import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-import com.datn.backend.dto.response.DotGiamGiaSanPhamResponse;
+import com.datn.backend.dto.response.DotGiamGiaResponse2;
 import com.datn.backend.dto.response.SpctResponse;
+import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
@@ -202,13 +203,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SpctResponse spctResp = modelMapper.map(spct, SpctResponse.class);
 
             // lấy danh sách các đợt giảm giá đang hiệu lực voi spct nay
-            DotGiamGiaSanPham dotGiamGiaSanPham =
+            DotGiamGia dotGiamGia =
                     dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
 
             //gán gia tri
-            if (dotGiamGiaSanPham != null){
-                spctResp.setDotGiamGiaSanPham(
-                        modelMapper.map(dotGiamGiaSanPham,DotGiamGiaSanPhamResponse.class)
+            if (dotGiamGia != null){
+                spctResp.setDotGiamGia(
+                        modelMapper.map(dotGiamGia, DotGiamGiaResponse2.class)
                 );
             }
 

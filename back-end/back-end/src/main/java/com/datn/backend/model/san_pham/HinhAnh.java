@@ -30,4 +30,14 @@ public class HinhAnh {
         this.imageUrl = imageUrl;
         this.imageId = imageId;
     }
+
+    @Override
+    public String toString() {
+        return "HinhAnh{" +
+                "id=" + id +
+                ", imageName='" + imageName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageId='" + imageId + '\'' +
+                '}';
+    }
 }

@@ -15,14 +15,14 @@
             <div class="input-group form-group search-block">
               <input
                 type="search"
-                class="form-control"
+                class="form-control rounded"
                 placeholder="Tìm sản phẩm..."
                 (search)="onClearSearchInput()"
                 [(ngModel)]="search"
               />
               <span class="input-group-btn">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-primary rounded"
                   type="button"
                   (click)="timKiem()"
                 >
@@ -79,20 +79,16 @@
               <td>{{ s.ma }}</td>
               <td>{{ s.sanPhamChiTiets.length }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + s.id"
-                    [checked]="s.trangThai"
-                    (click)="changeStatus(s.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + s.id"
-                    >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</label
-                  >
-                </div>
+                <span
+                  class="pointer"
+                  [ngClass]="
+                    s.trangThai
+                      ? 'badge rounded-pill text-bg-success'
+                      : 'badge rounded-pill text-bg-danger'
+                  "
+                  (click)="changeStatus(s.id)"
+                  >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</span
+                >
               </td>
               <td>{{ s.createdAt }}</td>
               <td>
@@ -159,7 +155,7 @@
                   [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber - 1)"
                     >Previous</a
                   >
@@ -169,7 +165,7 @@
                   *ngFor="let page of pagedResponse?.pageNumberArr"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
                     "
@@ -186,7 +182,7 @@
                   "
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber + 1)"
                     >Next</a
                   >
@@ -255,18 +251,6 @@
           <!-- mo ta -->
           <div class="form-row mt-3">
             <label for="inputEmail4">Mô tả sản phẩm:</label>
-            <!-- <textarea
-              type="text"
-              class="form-control"
-              rows="10"
-              [ngClass]="
-                addForm.get('moTa').invalid && addForm.get('moTa').touched
-                  ? 'is-invalid'
-                  : ''
-              "
-              formControlName="moTa"
-            ></textarea> -->
-
             <angular-editor
               formControlName="moTa"
               [config]="editorConfig"

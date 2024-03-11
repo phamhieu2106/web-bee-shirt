@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CapNhatNhanhSanPhamChiTietReq {
+public class CapNhatNhanhSpctReq {
 
     private List<Integer> ids;
     private List<BigDecimal> giaNhaps;

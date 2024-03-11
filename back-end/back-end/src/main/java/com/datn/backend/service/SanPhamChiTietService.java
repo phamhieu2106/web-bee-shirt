@@ -1,7 +1,8 @@
 package com.datn.backend.service;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
-import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
+import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
+import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SpctResponse;
@@ -10,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface SanPhamChiTietService {
 
@@ -20,7 +20,11 @@ public interface SanPhamChiTietService {
 
     PagedResponse<SanPhamChiTiet> filterByPage(FilterSPCTParams params);
 
-    void updateSpctNhanh(CapNhatNhanhSanPhamChiTietReq req);
+    SanPhamChiTiet getOneById(int spctId);
+
+    void updateSpctNhanh(CapNhatNhanhSpctReq req);
+
+    SanPhamChiTiet update(CapNhatSpctRequest req);
     
     PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search);
 

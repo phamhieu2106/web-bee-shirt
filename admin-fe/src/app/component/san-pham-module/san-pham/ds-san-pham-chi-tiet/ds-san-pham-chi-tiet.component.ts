@@ -1,7 +1,7 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { ToastrService } from "ngx-toastr";
@@ -59,6 +59,8 @@ export class DsSanPhamChiTietComponent {
   public minPrice: number;
   public maxPrice: number;
 
+  public updateForm: FormGroup;
+
   filterParams: FilterSPCTParams = {
     pageNumber: 1,
     pageSize: 5,
@@ -100,6 +102,7 @@ export class DsSanPhamChiTietComponent {
     this.getAllTayAo();
     this.getAllCoAo();
     this.getAllChatLieu();
+    this.initUpdateForm();
 
     setTimeout(() => {
       this.turnOffOverlay("");
@@ -251,6 +254,70 @@ export class DsSanPhamChiTietComponent {
     }
   }
 
+  //
+  public initUpdateForm(): void {
+    this.updateForm = new FormGroup({
+      id: new FormControl(0),
+      sanPhamId: new FormControl(this.sanPham?.id),
+      mauSacId: new FormControl(0, [Validators.required]),
+      kichCoId: new FormControl(0, [Validators.required]),
+      kieuDangId: new FormControl(0, [Validators.required]),
+      thietKeId: new FormControl(0, [Validators.required]),
+      tayAoId: new FormControl(0, [Validators.required]),
+      coAoId: new FormControl(0, [Validators.required]),
+      chatLieuId: new FormControl(0, [Validators.required]),
+      giaNhap: new FormControl(0, [Validators.required]),
+      giaBan: new FormControl(0, [Validators.required]),
+      soLuong: new FormControl(0, [Validators.required]),
+    });
+  }
+
+  //
+  public selectUpdateSPCT(spctId: number): void {
+    this.sanPhamChiTietService.getOneById(spctId).subscribe({
+      next: (response: SanPhamChiTiet) => {
+        this.updateForm = new FormGroup({
+          id: new FormControl(response.id),
+          sanPhamId: new FormControl(this.sanPham?.id),
+          mauSacId: new FormControl(response.mauSac.id, [Validators.required]),
+          kichCoId: new FormControl(response.kichCo.id, [Validators.required]),
+          kieuDangId: new FormControl(response.kieuDang.id, [
+            Validators.required,
+          ]),
+          thietKeId: new FormControl(response.thietKe.id, [
+            Validators.required,
+          ]),
+          tayAoId: new FormControl(response.tayAo.id, [Validators.required]),
+          coAoId: new FormControl(response.coAo.id, [Validators.required]),
+          chatLieuId: new FormControl(response.chatLieu.id, [
+            Validators.required,
+          ]),
+          giaNhap: new FormControl(response.giaNhap, [Validators.required]),
+          giaBan: new FormControl(response.giaBan, [Validators.required]),
+          soLuong: new FormControl(response.soLuongTon, [Validators.required]),
+        });
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message);
+      },
+    });
+  }
+
+  public capNhatSpct(): void {
+    console.log(this.updateForm.value);
+
+    this.sanPhamChiTietService.update(this.updateForm.value).subscribe({
+      next: (response: any) => {
+        this.toastr.success(response);
+        this.getSanPhamAndMinMaxPrice();
+        document.getElementById("closeUpdateBtn").click();
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error, "Hệ thống");
+      },
+    });
+  }
+
   // II. private functions
   //
   public changeableMinPrice: number;
@@ -279,6 +346,7 @@ export class DsSanPhamChiTietComponent {
       this.sanPhamService.getById(productId).subscribe({
         next: (response: SanPham) => {
           this.sanPham = response;
+          this.updateForm.get("sanPhamId").setValue(response.id);
         },
         error: (errorResponse: HttpErrorResponse) => {
           console.log(errorResponse);

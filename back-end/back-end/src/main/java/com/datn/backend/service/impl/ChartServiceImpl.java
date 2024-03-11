@@ -1,5 +1,6 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.dto.response.CouponsSumarryResponse;
 import com.datn.backend.dto.response.DiscountSummaryResponse;
 import com.datn.backend.dto.response.ProductsSummaryResponse;
 import com.datn.backend.repository.ChartRepository;
@@ -125,8 +126,11 @@ public class ChartServiceImpl implements ChartService {
     }
 
     @Override
-    public List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear() {
-        return chartRepository.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear();
+    public List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        return chartRepository.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(year);
     }
 
     @Override
@@ -135,13 +139,27 @@ public class ChartServiceImpl implements ChartService {
     }
 
     @Override
-    public List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear() {
-        return chartRepository.getListProductPurchasedInCurrentYear();
+    public List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear(Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        return chartRepository.getListProductPurchasedInCurrentYear(year);
     }
 
     @Override
-    public List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(LocalDate year) {
+    public List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
         return chartRepository.getListProductPurchasedInAnyYear(year);
+    }
+
+    @Override
+    public List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        return chartRepository.getListCouponsUsedInAnyYear(year);
     }
 
     public Long countLastDayOfMonth(LocalDate today) {

@@ -1,7 +1,8 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
-import com.datn.backend.dto.request.CapNhatNhanhSanPhamChiTietReq;
+import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
+import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/spct")
@@ -46,15 +46,27 @@ public class SanPhamChiTietResource {
         return ResponseEntity.ok(spctService.getByPage(pageNumber, pageSize, search, spId));
     }
 
+    @GetMapping("/get-one/{spctId}")
+    public ResponseEntity<SanPhamChiTiet> getById(@PathVariable("spctId") int spctId) {
+        return ResponseEntity.ok(spctService.getOneById(spctId));
+    }
+
     @PostMapping("/filter-by-page")
     public ResponseEntity<PagedResponse<SanPhamChiTiet>> filterSPCTByPage(@RequestBody FilterSPCTParams params) {
         return ResponseEntity.ok(spctService.filterByPage(params));
     }
 
     @PostMapping("/quick-update")
-    public ResponseEntity<?> updateSpctNhanh(@RequestBody CapNhatNhanhSanPhamChiTietReq req) {
+    public ResponseEntity<?> updateSpctNhanh(@RequestBody CapNhatNhanhSpctReq req) {
         spctService.updateSpctNhanh(req);
         return ResponseEntity.ok("Cập nhật nhanh thành công!");
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@RequestBody CapNhatSpctRequest req) {
+        System.out.println(req);
+        spctService.update(req);
+        return ResponseEntity.ok("Cập nhật sản phẩm chi tiết thành công!");
     }
 
     @GetMapping("/min-max-price/{productId}")

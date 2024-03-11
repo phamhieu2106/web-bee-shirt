@@ -7,6 +7,7 @@
 <div class="row gutters pt-2">
   <div class="col-sm-12">
     <div class="card">
+      <!-- header: filter -->
       <div class="card-header">
         <h3 class="mb-4">Danh Sách Sản Phẩm '{{ sanPham?.ten }}'</h3>
         <!-- HEADER  -->
@@ -167,8 +168,9 @@
             </select>
           </div>
         </div>
-        <!--  -->
       </div>
+
+      <!-- body: table -->
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
         <!-- TABLE -->
         <table class="table">
@@ -303,39 +305,24 @@
                 />
               </td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + s.id"
-                    [checked]="s.trangThai"
-                    (click)="changeStatus(s.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + s.id"
-                    >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</label
-                  >
-                </div>
+                <span
+                  class="pointer"
+                  [ngClass]="
+                    s.trangThai
+                      ? 'badge rounded-pill text-bg-success'
+                      : 'badge rounded-pill text-bg-danger'
+                  "
+                  (click)="changeStatus(s.id)"
+                  >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</span
+                >
               </td>
               <td>
-                <!-- <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-bs-toggle="modal"
-                  data-bs-target="#sanPhamDetailsForm"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
-                </button> -->
-
                 <button
                   class="btn btn-outline-warning btn-rounded me-2"
                   title="Cập nhật"
                   data-bs-toggle="modal"
-                  data-bs-target="#sanPhamUpdateForm"
+                  data-bs-target="#spctUpdateForm"
+                  (click)="selectUpdateSPCT(s.id)"
                 >
                   <i
                     class="fa-solid fa-pen-to-square"
@@ -356,6 +343,8 @@
           <i class="fa-regular fa-pen-to-square me-2"></i>Cập nhật nhanh
         </button>
       </div>
+
+      <!-- footer: pagination -->
       <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
@@ -381,7 +370,7 @@
                   [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber - 1)"
                     >Previous</a
                   >
@@ -391,7 +380,7 @@
                   *ngFor="let page of pagedResponse?.pageNumberArr"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
                     "
@@ -408,7 +397,7 @@
                   "
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber + 1)"
                     >Next</a
                   >
@@ -418,6 +407,8 @@
           </div>
         </div>
       </div>
+
+      <!--  -->
       <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
         <h3>Không có dữ liệu!</h3>
       </div>
@@ -425,30 +416,142 @@
   </div>
 </div>
 
-<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
+<!-- modal: update spct -->
+<div
+  class="modal fade"
+  id="spctUpdateForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Cập nhật sản phẩm chi tiết
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <i class="text-danger"
+          >* Cập nhật 1 sản phẩm chi tiết có thể thay đổi đến các sản phẩm chi
+          tiết khác</i
+        >
+        <form class="row" [formGroup]="updateForm">
+          <!-- Màu sắc -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Màu sắc:</label>
+            <select class="form-select" formControlName="mauSacId">
+              <option *ngFor="let ms of mauSacs" [value]="ms.id">
+                {{ ms.ten }}
+              </option>
+            </select>
+          </div>
 
-<!-- <div class="input-group form-group search-block">
-  <input
-    type="search"
-    class="form-control"
-    placeholder="Tìm sản phẩm..."
-    (search)="onClearSearchInput()"
-    [(ngModel)]="search"
-  />
-  <input
-    type="search"
-    class="form-control"
-    placeholder="Tìm sản phẩm..."
-    (search)="onClearSearchInput()"
-  />
-  <span class="input-group-btn">
-    <button class="btn btn-primary" type="button">Tìm kiếm</button>
-    <button
-      class="btn btn-primary"
-      type="button"
-      (click)="timKiem()"
-    >
-      Tìm kiếm
-    </button>
-  </span>
-</div> -->
+          <!-- Kích cỡ -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Kích cỡ:</label>
+            <select class="form-select" formControlName="kichCoId">
+              <option *ngFor="let kc of kichCos" [value]="kc.id">
+                {{ kc.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Kiểu dáng -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Kiểu dáng:</label>
+            <select class="form-select" formControlName="kieuDangId">
+              <option *ngFor="let kd of kieuDangs" [value]="kd.id">
+                {{ kd.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Thiết kế -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Thiết kế:</label>
+            <select class="form-select" formControlName="thietKeId">
+              <option *ngFor="let tk of thietKes" [value]="tk.id">
+                {{ tk.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Tay áo -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Tay áo:</label>
+            <select class="form-select" formControlName="tayAoId">
+              <option *ngFor="let ta of tayAos" [value]="ta.id">
+                {{ ta.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Cổ áo -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Cổ áo:</label>
+            <select class="form-select" formControlName="coAoId">
+              <option *ngFor="let ca of coAos" [value]="ca.id">
+                {{ ca.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Chất liệu -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Chất liệu:</label>
+            <select class="form-select" formControlName="chatLieuId">
+              <option *ngFor="let cl of chatLieus" [value]="cl.id">
+                {{ cl.ten }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Số lượng -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Số lượng:</label>
+            <input class="form-control rounded" formControlName="soLuong" />
+          </div>
+
+          <!-- Giá nhập -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Giá nhập:</label>
+            <input class="form-control rounded" formControlName="giaNhap" />
+          </div>
+
+          <!-- Giá bán -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Giá bán:</label>
+            <input class="form-control rounded" formControlName="giaBan" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="closeUpdateBtn"
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+          (click)="initUpdateForm()"
+        >
+          Hủy
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary rounded"
+          (click)="capNhatSpct()"
+        >
+          Cập Nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

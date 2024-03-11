@@ -53,6 +53,8 @@ export class DanhSachChatLieuComponent {
         document.getElementById("closeBtn").click();
       },
       error: (errorResponse: HttpErrorResponse) => {
+        console.log(errorResponse);
+
         this.toastr.error(errorResponse.error.message, "Hệ thống");
       },
     });

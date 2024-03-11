@@ -24,7 +24,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     @Override
     public ChatLieu add(ChatLieu chatLieu) {
         if (chatLieuRepo.existsByTen(chatLieu.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên chất liệu '" + chatLieu.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("'" + chatLieu.getTen() + "' đã tồn tại.");
         }
         chatLieu.setTrangThai(true);
         return chatLieuRepo.save(chatLieu);

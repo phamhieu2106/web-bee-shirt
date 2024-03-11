@@ -21,6 +21,7 @@ class BackEndApplicationTests {
 
     @Autowired
     private SanPhamChiTietRepository repository;
+
     @Test
     void getSanPham() {
         SanPhamChiTiet spct = repository.findFirstBySanPhamIdAndMauSacId(3, 22);

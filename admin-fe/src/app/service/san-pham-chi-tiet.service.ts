@@ -7,6 +7,7 @@ import { SanPhamChiTiet } from "../model/class/san-pham-chi-tiet.class";
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { UpdateNhanhSPCT } from "../model/interface/update-nhanh-spct.interface";
 import { FilterSPCTParams } from "../model/interface/filter-spct-params.interface";
+import { UpdateSpctReq } from "../model/interface/update-spct-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -59,9 +60,17 @@ export class SanPhamChiTietService {
       return (spct.giaBan * (100 - spct.dotGiamGia.giaTriPhanTram)) / 100;
     }
   }
-
+  public getOneById(spctId: number): Observable<SanPhamChiTiet> {
+    return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
+  }
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
     return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
+      responseType: "text",
+    });
+  }
+
+  public update(updateSpctReq: UpdateSpctReq): Observable<string> {
+    return this.http.post(`${this.apiUrl}/update`, updateSpctReq, {
       responseType: "text",
     });
   }

@@ -94,4 +94,10 @@ public class SanPhamChiTiet extends BaseEntity {
                 ", chatLieu=" + chatLieu.getTen() +
                 '}';
     }
+
+    public void setHinhAnh(HinhAnh hinhAnh) {
+        if (hinhAnh != null) {
+            this.hinhAnhs.add(hinhAnh);
+        }
+    }
 }

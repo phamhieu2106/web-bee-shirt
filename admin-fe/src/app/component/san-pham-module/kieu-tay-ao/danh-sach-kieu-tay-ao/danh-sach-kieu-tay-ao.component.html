@@ -22,7 +22,7 @@
               />
               <span class="input-group-btn">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-primary rounded"
                   type="button"
                   (click)="timKiem()"
                 >
@@ -34,7 +34,7 @@
             <div class="col-md-4 text-right">
               <button
                 type="button"
-                class="btn btn-primary btn-lg"
+                class="btn btn-primary btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
                 data-bs-target="#tayAoAddForm"
@@ -51,38 +51,34 @@
         <table class="table">
           <thead class="thead-default">
             <tr>
-              <th>STT</th>
-              <th>Tên</th>
-              <th>Trạng Thái</th>
-              <th>Ngày Thêm</th>
-              <th>Hành động</th>
+              <th class="text-center" width="10%">STT</th>
+              <th class="text-center" width="20%">Tên</th>
+              <th width="15%">Trạng Thái</th>
+              <th width="15%">Ngày Thêm</th>
+              <th width="15%">Hành động</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let ta of pagedResponse?.data; let i = index">
-              <th scope="row">
+              <th scope="row" class="text-center">
                 {{
                   i +
                     1 +
                     (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
-              <td>{{ ta.ten }}</td>
+              <td class="text-center">{{ ta.ten }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + ta.id"
-                    [checked]="ta.trangThai"
-                    (click)="changeStatus(ta.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + ta.id"
-                    >{{ ta.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
-                  >
-                </div>
+                <span
+                  class="pointer"
+                  [ngClass]="
+                    ta.trangThai
+                      ? 'badge rounded-pill text-bg-success'
+                      : 'badge rounded-pill text-bg-danger'
+                  "
+                  (click)="changeStatus(ta.id)"
+                  >{{ ta.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                >
               </td>
               <td>{{ ta.createdAt }}</td>
               <td>
@@ -141,7 +137,7 @@
                   [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber - 1)"
                     >Previous</a
                   >
@@ -151,7 +147,7 @@
                   *ngFor="let page of pagedResponse?.pageNumberArr"
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
                     "
@@ -168,7 +164,7 @@
                   "
                 >
                   <a
-                    class="page-link pointer"
+                    class="page-link pointer rounded"
                     (click)="goToPage(pagedResponse?.pageNumber + 1)"
                     >Next</a
                   >
@@ -217,7 +213,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -225,7 +221,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >
@@ -340,14 +336,14 @@
           <button
             id="closeUpdateBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             data-bs-dismiss="modal"
           >
             Đóng
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="updateForm.invalid"
             (click)="update()"
           >

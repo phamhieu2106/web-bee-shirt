@@ -7,6 +7,8 @@ import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
+import {Swiper} from "swiper";
+
 
 @Component({
   selector: "app-home-page",
@@ -16,6 +18,8 @@ import { SanPhamService } from "src/app/service/san-pham.service";
 export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
 
+  
+
   constructor(
     private currencyPipe: CurrencyPipe,
     private sanPhamService: SanPhamService
@@ -23,7 +27,10 @@ export class HomePageComponent {
 
   ngOnInit(): void {
     this.getSanPhamList();
+   
+   
   }
+  
 
   // public functions
   public displayPrice(sanPham: SanPham): any {

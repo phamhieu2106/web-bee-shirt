@@ -1,5 +1,6 @@
 package com.datn.backend.service;
 
+import com.datn.backend.dto.response.CouponsSumarryResponse;
 import com.datn.backend.dto.response.DiscountSummaryResponse;
 import com.datn.backend.dto.response.ProductsSummaryResponse;
 
@@ -37,12 +38,13 @@ public interface ChartService {
 
     List<Long> countCustomer7DayLastWeek();
 
-    List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear();
+    List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(Integer year);
 
     List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(LocalDate year);
 
-    List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear();
+    List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear(Integer year);
 
-    List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(LocalDate year);
+    List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(Integer year);
 
+    List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(Integer year);
 }

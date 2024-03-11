@@ -75,20 +75,16 @@
               <td>{{ m.ten }}</td>
               <td>{{ m.ma }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + m.id"
-                    [checked]="m.trangThai"
-                    (click)="changeStatus(m.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + m.id"
-                    >{{ m.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
-                  >
-                </div>
+                <span
+                  class="pointer"
+                  [ngClass]="
+                    m.trangThai
+                      ? 'badge rounded-pill text-bg-success'
+                      : 'badge rounded-pill text-bg-danger'
+                  "
+                  (click)="changeStatus(m.id)"
+                  >{{ m.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                >
               </td>
               <td>{{ m.createdAt }}</td>
               <td>

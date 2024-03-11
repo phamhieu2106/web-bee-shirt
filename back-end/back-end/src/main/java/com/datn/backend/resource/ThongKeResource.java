@@ -1,5 +1,6 @@
 package com.datn.backend.resource;
 
+import com.datn.backend.dto.response.CouponsSumarryResponse;
 import com.datn.backend.dto.response.DiscountSummaryResponse;
 import com.datn.backend.dto.response.ProductsSummaryResponse;
 import com.datn.backend.service.ChartService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -100,21 +102,24 @@ public class ThongKeResource {
         return ResponseEntity.ok(chartService.countInvoice7DayLastWeek());
     }
 
-    @GetMapping("/san-pham-chi-tiet-dot-giam-gia-trong-nam-hien-tai")
-    public ResponseEntity<List<DiscountSummaryResponse>> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear() {
-        return ResponseEntity.ok(chartService.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear());
+    @GetMapping("/san-pham-chi-tiet-dot-giam-gia-trong-nam-bat-ki")
+    public ResponseEntity<List<DiscountSummaryResponse>> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(
+            @RequestParam(name = "year", required = false) Integer year
+    ) {
+        return ResponseEntity.ok(chartService.getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(year));
     }
 
-//    @GetMapping("/san-pham-chi-tiet-dot-giam-gia-trong-nam-bat-ki")
-//    public ResponseEntity<List<DiscountSummaryResponse>> getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(
-//            @RequestParam("year") LocalDate year
-//    ) {
-//        return ResponseEntity.ok(chartService.getMaDotGiamGiaAndNumberOfProductPurchasedAnyYear(year));
-//    }
-
-    @GetMapping("/san-pham-chitrong-nam-hien-tai")
+    @GetMapping("/san-pham-ban-chay-nam-bat-ki")
     public ResponseEntity<List<ProductsSummaryResponse>> getListProductPurchasedInCurrentYear(
+            @RequestParam(name = "year", required = false) Integer year
     ) {
-        return ResponseEntity.ok(chartService.getListProductPurchasedInCurrentYear());
+        return ResponseEntity.ok(chartService.getListProductPurchasedInCurrentYear(year));
+    }
+
+    @GetMapping("/phieu-giam-gia-su-dung-trong-nam-bat-ki")
+    public ResponseEntity<List<CouponsSumarryResponse>> getListCouponsUsedInAnyYear(
+            @RequestParam(name = "year", required = false) Integer year
+    ) {
+        return ResponseEntity.ok(chartService.getListCouponsUsedInAnyYear(year));
     }
 }

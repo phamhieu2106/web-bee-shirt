@@ -51,47 +51,43 @@
         <table class="table">
           <thead class="thead-default">
             <tr>
-              <th>STT</th>
-              <th>Tên</th>
-              <th>Trạng Thái</th>
-              <th>Ngày Thêm</th>
-              <th>Hành động</th>
+              <th class="text-center" width="10%">STT</th>
+              <th class="text-center" width="20%">Tên</th>
+              <th width="15%">Trạng Thái</th>
+              <th width="15%">Ngày Thêm</th>
+              <th width="15%">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let ta of pagedResponse?.data; let i = index">
-              <th scope="row">
+            <tr *ngFor="let kd of pagedResponse?.data; let i = index">
+              <th scope="row" class="text-center">
                 {{
                   i +
                     1 +
                     (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
-              <td>{{ ta.ten }}</td>
+              <td class="text-center">{{ kd.ten }}</td>
               <td>
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    [id]="'trangThai' + ta.id"
-                    [checked]="ta.trangThai"
-                    (click)="changeStatus(ta.id)"
-                  />
-                  <label
-                    class="custom-control-label"
-                    [for]="'trangThai' + ta.id"
-                    >{{ ta.trangThai ? "Khả dụng" : "Không khả dụng" }}</label
-                  >
-                </div>
+                <span
+                  class="pointer"
+                  [ngClass]="
+                    kd.trangThai
+                      ? 'badge rounded-pill text-bg-success'
+                      : 'badge rounded-pill text-bg-danger'
+                  "
+                  (click)="changeStatus(kd.id)"
+                  >{{ kd.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                >
               </td>
-              <td>{{ ta.createdAt }}</td>
+              <td>{{ kd.createdAt }}</td>
               <td>
                 <button
                   class="btn btn-outline-light btn-rounded me-2"
                   title="Xem chi tiết"
                   data-bs-toggle="modal"
                   data-bs-target="#dangAoDetailsForm"
-                  (click)="openDetailsForm(ta.id)"
+                  (click)="openDetailsForm(kd.id)"
                 >
                   <i
                     class="fa-solid fa-circle-info fa-xl"
@@ -103,7 +99,7 @@
                   title="Cập nhật"
                   data-bs-toggle="modal"
                   data-bs-target="#dangAoUpdateForm"
-                  (click)="openUpdateForm(ta.id)"
+                  (click)="openUpdateForm(kd.id)"
                 >
                   <i
                     class="fa-solid fa-pen-to-square"

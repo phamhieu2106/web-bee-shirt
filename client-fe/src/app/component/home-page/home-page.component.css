@@ -1,0 +1,72 @@
+*{
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.slide-container{
+   
+    width: 100%;
+   
+    padding: 40px 0;
+} 
+
+.card{
+   
+    border-radius: 25px;
+    background: #FFF;
+
+}
+
+.card-image{
+    position: relative;
+   
+    width: 180px;
+    border-radius: 50%;
+    background: #FFF;
+    padding: 3px;
+}
+
+.image-content, 
+.card-content{
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 10px 14px ;
+}
+
+.image-content{
+    position: relative;
+    row-gap: 5px;
+}
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #4070F4;
+    border-radius: 25px 25px 0 0;
+}
+
+
+.name{
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+.button{
+    border: none;
+    font-size: 16px;
+    color: #FFF;
+    padding: 8px 16px ;
+    background-color: #4070F4;
+    border-radius: 6px;
+    margin: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease ;
+}
+.button:hover{
+    background: #265df2;
+}

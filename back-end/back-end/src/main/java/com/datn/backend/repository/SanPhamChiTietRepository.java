@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Integer> {
 
@@ -51,4 +52,22 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                    WHERE ct.san_pham_id = :productId
                    """, nativeQuery = true)
     BigDecimal getMaxPrice(@Param("productId") int productId);
+
+    SanPhamChiTiet findBySanPhamIdAndMauSacIdAndKichCoId(int sanPhamId, int mauSacId, int kichCoId);
+
+    boolean existsByKieuDangIdAndSanPhamId(int kieuDangId, int sanPhamId);
+
+    boolean existsByThietKeIdAndSanPhamId(int thietKeId, int sanPhamId);
+
+    boolean existsByTayAoIdAndSanPhamId(int tayAoId, int sanPhamId);
+
+    boolean existsByCoAoIdAndSanPhamId(int coAoId, int sanPhamId);
+
+    boolean existsByChatLieuIdAndSanPhamId(int chatLieuId, int sanPhamId);
+
+    int countBySanPhamId(int sanPhamId);
+
+    List<SanPhamChiTiet> findBySanPhamId(int sanPhamId);
+
+    SanPhamChiTiet findFirstBySanPhamIdAndMauSacId(int sanPhamId, int mauSacId);
 }

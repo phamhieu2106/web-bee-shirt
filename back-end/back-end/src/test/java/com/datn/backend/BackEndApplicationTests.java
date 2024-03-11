@@ -20,14 +20,10 @@ import java.util.List;
 class BackEndApplicationTests {
 
     @Autowired
-    private CustomSpctRepository repository;
-
+    private SanPhamChiTietRepository repository;
     @Test
     void getSanPham() {
-        List<SanPhamChiTiet> list = repository.getAll();
-
-        for (SanPhamChiTiet ct : list) {
-            System.err.println(ct.getId());
-        }
+        SanPhamChiTiet spct = repository.findFirstBySanPhamIdAndMauSacId(3, 22);
+        System.err.println(spct.getId());
     }
 }

@@ -1,6 +1,7 @@
 import { DotGiamGiaSanPhamChiTiet } from "./../interface/dot-giam-gia-san-pham-chi-tiet";
 import { ChatLieu } from "./chat-lieu.class";
 import { CoAo } from "./co-ao.class";
+import { DotGiamGia } from "./dot-giam-gia.class";
 import { HinhAnh } from "./hinh-anh.class";
 import { KichCo } from "./kich-co.class";
 import { KieuDang } from "./kieu-dang.class";
@@ -25,7 +26,7 @@ export class SanPhamChiTiet {
   coAo: CoAo;
   chatLieu: ChatLieu;
   hinhAnhs: HinhAnh[];
-  dotGiamGiaSanPham: DotGiamGiaSanPhamChiTiet;
+  dotGiamGia: DotGiamGia;
 
   createdAt: string;
   createdBy: string;

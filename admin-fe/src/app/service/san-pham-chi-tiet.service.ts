@@ -53,10 +53,10 @@ export class SanPhamChiTietService {
   }
 
   getGiaBan(spct: SanPhamChiTiet): number {
-    if (spct.dotGiamGiaSanPham == null) {
+    if (spct.dotGiamGia == null) {
       return spct.giaBan;
     } else {
-      return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
+      return (spct.giaBan * (100 - spct.dotGiamGia.giaTriPhanTram)) / 100;
     }
   }
 

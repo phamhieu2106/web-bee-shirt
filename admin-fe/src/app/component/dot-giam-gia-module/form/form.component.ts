@@ -152,7 +152,7 @@ export class FormComponent implements OnInit {
         "Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá"
       );
       return false;
-    } else if (thoiGianBatDau <= ngayHienTai && this.typeForm == "add") {
+    } else if (thoiGianBatDau < ngayHienTai && this.typeForm == "add") {
       this.toast.error(
         "Thời Gian Bắt Đầu Không Thể Là Ngày Hiện Tại Hoặc Trước Ngày Hiện Tại"
       );

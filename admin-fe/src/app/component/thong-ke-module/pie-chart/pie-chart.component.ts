@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Chart, registerables } from "chart.js";
+import { ToastrService } from "ngx-toastr";
+import { CouponsSummary } from "src/app/model/interface/coupons-summary";
+import { ChartService } from "src/app/service/chart.service";
 
 @Component({
   selector: "app-pie-chart",
@@ -8,9 +11,27 @@ import { Chart, registerables } from "chart.js";
 })
 export class PieChartComponent implements OnInit {
   chart: any;
-
+  data: CouponsSummary[] = [];
+  backgroundColors: string[] = [];
   ngOnInit(): void {
-    this.createChartCoupon();
+    this.getData();
+  }
+  constructor(private service: ChartService, private toast: ToastrService) {}
+  private getData(): void {
+    this.service.getPhieGiamGiaDuocSuDungTrongNam(2024).subscribe({
+      next: (data) => {
+        this.data = data;
+      },
+      error: (error) => {
+        this.toast.error(error.message.message);
+      },
+      complete: () => {
+        this.backgroundColors = this.data.map(() => {
+          return this.generateRandomColor();
+        });
+        this.createChartCoupon();
+      },
+    });
   }
 
   public createChartCoupon() {
@@ -21,16 +42,22 @@ export class PieChartComponent implements OnInit {
     this.chart = new Chart("CouponChart", {
       type: "pie",
       data: {
-        labels: ["Red", "Blue", "Yellow"],
+        labels: [
+          this.data.map((data) => {
+            return `${String(data.maPhieuGiamGia)} - ${String(
+              data.tenPhieuGiamGia
+            )}`;
+          }),
+        ],
         datasets: [
           {
-            label: "My First Dataset",
-            data: [3000, 50, 100],
-            backgroundColor: [
-              "rgb(255, 99, 132)",
-              "rgb(54, 162, 235)",
-              "rgb(255, 205, 86)",
+            label: "Số Lượt Sử Dụng",
+            data: [
+              this.data.map((data) => {
+                return Number(data.soLuotSuDung);
+              }),
             ],
+            backgroundColor: this.backgroundColors,
             hoverOffset: 4,
           },
         ],
@@ -40,7 +67,13 @@ export class PieChartComponent implements OnInit {
       },
     });
   }
+  public generateRandomColor(): string {
+    var r = Math.floor(Math.random() * 256); // Sinh số ngẫu nhiên cho red (0-255)
+    var g = Math.floor(Math.random() * 256); // Sinh số ngẫu nhiên cho green (0-255)
+    var b = Math.floor(Math.random() * 256); // Sinh số ngẫu nhiên cho blue (0-255)
 
+    return `rgb(${r}, ${g}, ${b})`; // Trả về chuỗi màu RGB
+  }
   ngOnDestroy(): void {
     this.chart.destroy();
   }

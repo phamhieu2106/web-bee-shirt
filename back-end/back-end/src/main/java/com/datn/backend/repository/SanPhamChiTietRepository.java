@@ -55,6 +55,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     SanPhamChiTiet findBySanPhamIdAndMauSacIdAndKichCoId(int sanPhamId, int mauSacId, int kichCoId);
 
+
     boolean existsByKieuDangIdAndSanPhamId(int kieuDangId, int sanPhamId);
 
     boolean existsByThietKeIdAndSanPhamId(int thietKeId, int sanPhamId);
@@ -70,4 +71,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     List<SanPhamChiTiet> findBySanPhamId(int sanPhamId);
 
     SanPhamChiTiet findFirstBySanPhamIdAndMauSacId(int sanPhamId, int mauSacId);
+
+    SanPhamChiTiet findFirstBySanPhamId(int spId);
 }

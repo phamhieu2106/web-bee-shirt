@@ -12,6 +12,7 @@ import { KichCo } from "src/app/model/class/kich-co.class";
 import { KieuDang } from "src/app/model/class/kieu-dang.class";
 import { KieuThietKe } from "src/app/model/class/kieu-thiet-ke.class";
 import { MauSac } from "src/app/model/class/mau-sac.class";
+import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { AddSPCTRequest } from "src/app/model/interface/add-spct-request.interface";
@@ -61,6 +62,23 @@ export class ThemSanPhamChiTietComponent {
   public uploadImgFileList: File[][] = [];
   public curUploadImgFileList: File[] = [];
 
+  public commonService: any;
+  public addNhanhForm: FormGroup;
+  public thuocTinhNhanh = {
+    ten: "",
+  };
+
+  private chinhSuaBtnId: number;
+  private services = [
+    { ten: "kieuDangService", service: this.kieuDangService },
+    { ten: "kieuThietKeService", service: this.kieuThietKeService },
+    { ten: "kieuTayAoService", service: this.kieuTayAoService },
+    { ten: "kieuCoAoService", service: this.kieuCoAoService },
+    { ten: "chatLieuService", service: this.chatLieuService },
+  ];
+  public existSpct: SanPhamChiTiet;
+
+  // constructor, ngOn
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -74,7 +92,7 @@ export class ThemSanPhamChiTietComponent {
     private kieuCoAoService: KieuCoAoService,
     private chatLieuService: ChatLieuService,
     private hinhAnhSanPhamService: HinhAnhSanPhamService,
-    private sanPhamChiTietService: SanPhamChiTietService
+    private spctService: SanPhamChiTietService
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +100,7 @@ export class ThemSanPhamChiTietComponent {
     this.initAddNhanhForm();
     this.getSanPhamById();
     this.getDataForSelector();
+    // this.checkSpctExist();
   }
 
   // I. Public functions
@@ -139,7 +158,6 @@ export class ThemSanPhamChiTietComponent {
   public openHinhAnhModal(
     tenMau: string,
     idMau: number,
-    sanPhamId: number,
     colorIndex: number
   ): void {
     this.imgIndex = colorIndex;
@@ -275,83 +293,86 @@ export class ThemSanPhamChiTietComponent {
 
   //
   public add(): void {
-    this.turnOnOverlay("Đang thêm...");
-    for (let i = 0; i < this.selectedMauSacList.length; i++) {
-      let mauSacEles = document.querySelectorAll(
-        `.mauSacId${this.selectedMauSacList[i].id}`
-      );
-      let kichCoEles = document.querySelectorAll(
-        `.kichCoId${this.selectedMauSacList[i].id}`
-      );
-      let giaNhapInputs = document.querySelectorAll(
-        `.giaNhap${this.selectedMauSacList[i].id}`
-      );
-      let giaBanInputs = document.querySelectorAll(
-        `.giaBan${this.selectedMauSacList[i].id}`
-      );
-      let soLuongInputs = document.querySelectorAll(
-        `.soLuong${this.selectedMauSacList[i].id}`
-      );
+    let xacNhan = confirm("Bạn có chắc muốn thêm các SPCT này?");
+    if (xacNhan) {
+      this.turnOnOverlay("Đang thêm...");
+      for (let i = 0; i < this.selectedMauSacList.length; i++) {
+        let mauSacEles = document.querySelectorAll(
+          `.mauSacId${this.selectedMauSacList[i].id}`
+        );
+        let kichCoEles = document.querySelectorAll(
+          `.kichCoId${this.selectedMauSacList[i].id}`
+        );
+        let giaNhapInputs = document.querySelectorAll(
+          `.giaNhap${this.selectedMauSacList[i].id}`
+        );
+        let giaBanInputs = document.querySelectorAll(
+          `.giaBan${this.selectedMauSacList[i].id}`
+        );
+        let soLuongInputs = document.querySelectorAll(
+          `.soLuong${this.selectedMauSacList[i].id}`
+        );
 
-      let addSPCTSubRequest: AddSPCTSubRequest;
-      for (let j = 0; j < mauSacEles.length; j++) {
-        let kichCoIdList: number[] = [];
-        let giaNhapList: number[] = [];
-        let giaBanList: number[] = [];
-        let soLuongTonList: number[] = [];
-        for (let k = 0; k < kichCoEles.length; k++) {
-          let kichCoId = parseInt((kichCoEles[k] as HTMLInputElement).value);
-          let giaNhap = parseInt(
-            (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-          );
-          let giaBan = parseInt(
-            (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-          );
-          let soLuongTon = parseInt(
-            (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-          );
-          kichCoIdList.push(kichCoId);
-          giaNhapList.push(giaNhap);
-          giaBanList.push(giaBan);
-          soLuongTonList.push(soLuongTon);
+        let addSPCTSubRequest: AddSPCTSubRequest;
+        for (let j = 0; j < mauSacEles.length; j++) {
+          let kichCoIdList: number[] = [];
+          let giaNhapList: number[] = [];
+          let giaBanList: number[] = [];
+          let soLuongTonList: number[] = [];
+          for (let k = 0; k < kichCoEles.length; k++) {
+            let kichCoId = parseInt((kichCoEles[k] as HTMLInputElement).value);
+            let giaNhap = parseInt(
+              (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+            );
+            let giaBan = parseInt(
+              (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+            );
+            let soLuongTon = parseInt(
+              (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+            );
+            kichCoIdList.push(kichCoId);
+            giaNhapList.push(giaNhap);
+            giaBanList.push(giaBan);
+            soLuongTonList.push(soLuongTon);
+          }
+          addSPCTSubRequest = {
+            mauSacId: this.selectedMauSacList[i].id,
+            kichCoIdList: kichCoIdList,
+            giaNhapList: giaNhapList,
+            giaBanList: giaBanList,
+            soLuongTonList: soLuongTonList,
+          };
         }
-        addSPCTSubRequest = {
-          mauSacId: this.selectedMauSacList[i].id,
-          kichCoIdList: kichCoIdList,
-          giaNhapList: giaNhapList,
-          giaBanList: giaBanList,
-          soLuongTonList: soLuongTonList,
+        const addSpctReq: AddSPCTRequest = {
+          id: this.addForm.get("id").value,
+          sanPhamId: this.addForm.get("sanPhamId").value,
+          kieuDangId: this.addForm.get("kieuDangId").value,
+          thietKeId: this.addForm.get("thietKeId").value,
+          tayAoId: this.addForm.get("tayAoId").value,
+          coAoId: this.addForm.get("coAoId").value,
+          chatLieuId: this.addForm.get("chatLieuId").value,
+          requests: addSPCTSubRequest,
         };
-      }
-      const addSpctReq: AddSPCTRequest = {
-        id: this.addForm.get("id").value,
-        sanPhamId: this.addForm.get("sanPhamId").value,
-        kieuDangId: this.addForm.get("kieuDangId").value,
-        thietKeId: this.addForm.get("thietKeId").value,
-        tayAoId: this.addForm.get("tayAoId").value,
-        coAoId: this.addForm.get("coAoId").value,
-        chatLieuId: this.addForm.get("chatLieuId").value,
-        requests: addSPCTSubRequest,
-      };
-      this.sanPhamChiTietService
-        .add(addSpctReq, this.selectedImgFileList[i])
-        .subscribe({
-          next: (response: string) => {
-            this.toastr.success(response, "Hệ thống");
+        this.spctService
+          .add(addSpctReq, this.selectedImgFileList[i])
+          .subscribe({
+            next: (response: string) => {
+              this.toastr.success(response, "Hệ thống");
 
-            // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
-            if (i === this.selectedMauSacList.length - 1) {
-              console.log("giò mói chuyển tr: ", i);
+              // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
+              if (i === this.selectedMauSacList.length - 1) {
+                console.log("giò mói chuyển tr: ", i);
 
+                this.turnOffOverlay("");
+                this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
+              }
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              this.toastr.success(errorResponse.error.message, "Hệ thống");
               this.turnOffOverlay("");
-              this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
-            }
-          },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.toastr.success(errorResponse.error.message, "Hệ thống");
-            this.turnOffOverlay("");
-          },
-        });
+            },
+          });
+      }
     }
   }
 
@@ -439,7 +460,6 @@ export class ThemSanPhamChiTietComponent {
     chinhSuaNhanhBtn.click();
   }
 
-  private chinhSuaBtnId: number;
   //
   public assignChinhSuaBtnId(id: number): void {
     this.chinhSuaBtnId = id;
@@ -463,6 +483,22 @@ export class ThemSanPhamChiTietComponent {
     this.addNhanhForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
+  }
+
+  public checkSpctExist(
+    spId: number,
+    mauSacId: number,
+    sizeId: number
+  ): boolean {
+    this.spctService.checkSpctExists(spId, mauSacId, sizeId).subscribe({
+      next: (response: boolean) => {
+        return response;
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.toastr.error(errorResponse.error.message, "Hệ thống");
+      },
+    });
+    return false;
   }
 
   // I.2: các functions cho sự kiện chọn, thêm nhanh thuộc tính
@@ -514,26 +550,13 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  private services = [
-    { ten: "kieuDangService", service: this.kieuDangService },
-    { ten: "kieuThietKeService", service: this.kieuThietKeService },
-    { ten: "kieuTayAoService", service: this.kieuTayAoService },
-    { ten: "kieuCoAoService", service: this.kieuCoAoService },
-    { ten: "chatLieuService", service: this.chatLieuService },
-  ];
-  public commonService: any;
-  public thuocTinhNhanh = {
-    ten: "",
-  };
-  public addNhanhForm: FormGroup;
-
   // II. private functions
-  //
+  // 1
   private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
     return curUploadImgFileList.some((file: File) => file.name === fileName);
   }
 
-  //
+  // 2
   private getHinhAnhByMauSac(tenMau: string, sanPhamID: number): void {
     this.hinhAnhSanPhamService.getAll(tenMau, sanPhamID).subscribe({
       next: (response: HinhAnh[]) => {
@@ -545,7 +568,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 3
   private showImageThumbnail(file: File, thumnailId: string): void {
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -555,7 +578,7 @@ export class ThemSanPhamChiTietComponent {
     reader.readAsDataURL(file);
   }
 
-  //
+  // 4
   private showImageThumbnail2(file: File, thumnailClass: string): void {
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -565,22 +588,48 @@ export class ThemSanPhamChiTietComponent {
     reader.readAsDataURL(file);
   }
 
-  //
+  // 5
   private getSanPhamById(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.sanPhamService.getById(params["sanPhamId"]).subscribe({
         next: (response: SanPham) => {
           this.sanPham = response;
           this.addForm.get("sanPhamId").setValue(response.id);
+
+          this.spctService.getAnySpctBySanPhamId(response.id).subscribe({
+            next: (ctspResponse: SanPhamChiTiet) => {
+              if (response != null) {
+                this.existSpct = ctspResponse;
+
+                this.addForm = new FormGroup({
+                  id: new FormControl(ctspResponse.id),
+                  sanPhamId: new FormControl(response.id),
+                  chatLieuId: new FormControl(ctspResponse.chatLieu.id),
+                  coAoId: new FormControl(ctspResponse.coAo.id),
+                  kieuDangId: new FormControl(ctspResponse.kieuDang.id),
+                  tayAoId: new FormControl(ctspResponse.tayAo.id),
+                  thietKeId: new FormControl(ctspResponse.thietKe.id),
+                });
+
+                console.log("not null");
+                console.log(response);
+              } else {
+                console.log("null");
+              }
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              console.log(errorResponse.error.message);
+            },
+          });
         },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
+        error: (errorResponse: HttpErrorResponse) => {
+          console.log(errorResponse.error.message);
         },
       });
     });
   }
 
-  //
+  // 6
   private getDataForSelector(): void {
     // get all list of each field and all elements must be active
     this.getAllForms();
@@ -590,7 +639,7 @@ export class ThemSanPhamChiTietComponent {
     this.getAllActiveMaterials();
   }
 
-  //
+  // 7
   private getAllMauSac(): void {
     this.mauSacService.getAll().subscribe({
       next: (response: MauSac[]) => {
@@ -602,7 +651,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 8
   private getAllKichCo(): void {
     this.kichCoService.getAll().subscribe({
       next: (response: KichCo[]) => {
@@ -614,7 +663,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 9
   private getAllForms(): void {
     this.kieuDangService.getAllActive().subscribe({
       next: (response: KieuDang[]) => {
@@ -626,7 +675,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 10
   private getAllDesigns(): void {
     this.kieuThietKeService.getAllActive().subscribe({
       next: (response: KieuThietKe[]) => {
@@ -638,7 +687,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 11
   private getAllSleeves(): void {
     this.kieuTayAoService.getAllActive().subscribe({
       next: (response: TayAo[]) => {
@@ -650,7 +699,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 12
   private getAllActiveCollars(): void {
     this.kieuCoAoService.getAllActive().subscribe({
       next: (response: CoAo[]) => {
@@ -662,7 +711,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 13
   private getAllActiveMaterials(): void {
     this.chatLieuService.getAllActive().subscribe({
       next: (response: ChatLieu[]) => {
@@ -674,13 +723,13 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 14
   private turnOnOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = true;
   }
 
-  //
+  // 15
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;

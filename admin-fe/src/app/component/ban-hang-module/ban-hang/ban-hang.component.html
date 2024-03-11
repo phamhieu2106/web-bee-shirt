@@ -35,36 +35,42 @@
             </div>
             <!-- Sản phẩm tìm kiếm -->
             <div
-              class="suggestion-item row d-flex"
+              class="suggestion-item row d-flex p-1"
               *ngFor="let spct of spcts"
               (click)="chooseProduct(spct)"
             >
-              <img
-                class="col-2"
-                [src]="spct.hinhAnhs[0].imageUrl"
-                width="40px"
-                height="40px"
-              />
-              <div class="col-7">
+              <div class="col-1 p-2">
+                <img
+                  class="thumbnail-san-pham"
+                  [src]="spct.hinhAnhs[0].imageUrl"
+                />
+              </div>
+              <div class="col-6 p-2">
                 <div class="fw-bold">
-                  {{
-                    spct.sanPham.ten +
-                      " - " +
-                      spct.mauSac.ten +
-                      " - " +
-                      spct.kichCo.ten
-                  }}
+                  {{ spct.sanPham.ten }}
                 </div>
-                <div class="text-mute">{{ spct.sanPham.ma }}</div>
+                <div class="san-pham-ma">
+                  {{ spct.sanPham.ma }}
+                </div>
+              </div>
+
+              <div class="col-1">
+                <span class="san-pham-mau-sac">{{ spct.mauSac.ten }}</span>
+              </div>
+              <div class="col-1">
+                <span class="san-pham-kich-co">{{ spct.kichCo.ten }}</span>
               </div>
               <div class="col-3 mr-auto">
                 <div class="">
-                  {{
+                  <span class="gia-chua-giam pr-1">{{
+                    spct.giaBan | currency : "đ " : "symbol" : "1.0-0"
+                  }}</span>
+                  <span class="gia-da-giam pl-1">{{
                     (spct.dotGiamGiaSanPham == null
                       ? spct.giaBan
                       : getGiaBan(spct)
                     ) | currency : "đ " : "symbol" : "1.0-0"
-                  }}
+                  }}</span>
                 </div>
                 <div class="text-mute">Còn lại: {{ spct.soLuongTon }}</div>
               </div>
@@ -77,12 +83,13 @@
       <!-- Order taskbar -->
       <div class="col-6 row">
         <div
-          class="bg-light col-2 order-number h-100 mr-1"
+          class="col-2 order-number h-100 mr-1"
+          [class.order-number-active]="order.orderNameTemp === o.orderNameTemp"
           (click)="changeHoaDon(i)"
-          *ngFor="let order of orders; index as i"
+          *ngFor="let o of orders; index as i"
         >
-          <span class="fs-5">{{ order.orderNameTemp }}</span>
-          <button class="btn btn-light p-1" (click)="deleteOrder(i)">
+          <span class="fs-5">{{ o.orderNameTemp }}</span>
+          <button class="btn p-1" (click)="deleteOrder(i)">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
@@ -124,14 +131,13 @@
           </td>
           <td class="">
             <div class="fw-bold">
-              {{
-                hdct.sanPhamChiTiet.sanPham.ten +
-                  " - " +
-                  hdct.sanPhamChiTiet.mauSac.ten
-              }}
+              {{ hdct.sanPhamChiTiet.sanPham.ten }}
             </div>
             <div class="text-muted">
-              Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}
+              <span class="mr-3"
+                >Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}</span
+              >
+              <span>Màu: {{ hdct.sanPhamChiTiet.mauSac.ten }}</span>
             </div>
           </td>
           <td class="">
@@ -270,7 +276,9 @@
       </div>
       <div class="d-flex justify-content-between m-1 h5">
         <span class="mr-auto fw-bold">Khách phải trả:</span>
-        <span class="ml-auto">{{ getMustPay() | currency : "đ " }}</span>
+        <span class="ml-auto">{{
+          getMustPay() | currency : "đ " : "symbol" : "1.0-0"
+        }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold"
@@ -284,11 +292,15 @@
             <i class="fa-solid fa-credit-card"></i>
           </button>
         </span>
-        <span class="ml-auto">50,000</span>
+        <span class="ml-auto">{{
+          getTienKhachThanhToan() | currency : "đ " : "symbol" : "1.0-0"
+        }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Khách còn thiếu:</span>
-        <span class="ml-auto">40,000</span>
+        <span class="ml-auto">{{
+          getTienKhachConThieu() | currency : "đ " : "symbol" : "1.0-0"
+        }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Phiếu giảm giá:</span>
@@ -326,7 +338,7 @@
         </span>
       </div>
       <div style="height: 180px" *ngIf="order.loaiHoaDon == 'TAI_QUAY'"></div>
-      <div class="mb-3">
+      <div class="mb-3 h4">
         <button
           class="btn btn-success btn-lg w-100 h-100"
           (click)="thanhToan()"

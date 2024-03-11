@@ -1,5 +1,6 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.dto.response.CouponsSumarryResponse;
 import com.datn.backend.dto.response.DiscountSummaryResponse;
 import com.datn.backend.dto.response.ProductsSummaryResponse;
 import com.datn.backend.model.hoa_don.HoaDon;
@@ -225,12 +226,12 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                         JOIN hoa_don hd ON hd.id = hdct.id_hoa_don
                         WHERE hd.created_at BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc
                         AND hd.trang_thai = 'HOAN_THANH'
-                        AND YEAR(hd.created_at) = YEAR(CURDATE())\s
-                        	AND YEAR(dggsp.thoi_gian_bat_dau) = YEAR(CURDATE())
-                            AND YEAR(dggsp.thoi_gian_ket_thuc) = YEAR(CURDATE())
+                        AND YEAR(hd.created_at) = :year
+                        	AND YEAR(dggsp.thoi_gian_bat_dau) = :year
+                            AND YEAR(dggsp.thoi_gian_ket_thuc) = :year
                         GROUP BY MaDotGiamGia;
             """, nativeQuery = true)
-    List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear();
+    List<DiscountSummaryResponse> getMaDotGiamGiaAndNumberOfProductPurchasedCurrentYear(@Param("year") Integer year);
 
     @Query(value = """
                         SELECT dgg.ma_dot_giam_gia as MaDotGiamGia, SUM(hdct.so_luong) as TongSanPhamDuocBan
@@ -254,10 +255,10 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
             JOIN san_pham_chi_tiet spct ON spct.san_pham_id = sp.id
             JOIN hoa_don_chi_tiet hdct ON hdct.id_spct = spct.id
             JOIN hoa_don hd ON hd.id = hdct.id_hoa_don
-            WHERE YEAR(hd.created_at) = YEAR(CURDATE())
+            WHERE YEAR(hd.created_at) = :year
             GROUP BY MaSanPham,TenSanPham
                         """, nativeQuery = true)
-    List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear();
+    List<ProductsSummaryResponse> getListProductPurchasedInCurrentYear(@Param("year") Integer year);
 
     @Query(value = """
                         SELECT sp.ma as MaSanPham, sp.ten as TenSanPham, SUM(hdct.so_luong) as SoLuongMua
@@ -265,8 +266,19 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
             JOIN san_pham_chi_tiet spct ON spct.san_pham_id = sp.id
             JOIN hoa_don_chi_tiet hdct ON hdct.id_spct = spct.id
             JOIN hoa_don hd ON hd.id = hdct.id_hoa_don
-            WHERE YEAR(hd.created_at) = YEAR( :year )
+            WHERE YEAR(hd.created_at) = :year
             GROUP BY MaSanPham,TenSanPham
                         """, nativeQuery = true)
-    List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(@Param("year") LocalDate year);
+    List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(@Param("year") Integer year);
+
+
+    @Query(value = """
+
+            SELECT pgg.ten_phieu_giam_gia as TenPhieuGiamGia, pgg.ma_phieu_giam_gia as MaPhieuGiamGia, count(*) as SoLuotSuDung
+            FROM hoa_don hd
+            join phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia\s
+            WHERE hd.trang_thai = 'HOAN_THANH' AND YEAR(hd.created_at) = :year\s
+            group by pgg.ten_phieu_giam_gia, pgg.ma_phieu_giam_gia ;
+                        """, nativeQuery = true)
+    List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(@Param("year") Integer year);
 }

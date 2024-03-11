@@ -1,6 +1,7 @@
+import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
@@ -16,9 +17,10 @@ import Swal from "sweetalert2";
   templateUrl: "./ban-hang.component.html",
   styleUrls: ["./ban-hang.component.css"],
 })
-export class BanHangComponent implements OnInit {
+export class BanHangComponent implements OnInit, OnDestroy {
+  private readonly key = "orders";
   phiVanChuyenTemp: number;
-  orders = new Array<HoaDon>();
+  orders: HoaDon[] = [];
   khachHangs: KhachHang[];
   order: HoaDon;
   spcts: SanPhamChiTiet[];
@@ -30,15 +32,24 @@ export class BanHangComponent implements OnInit {
     private toast: ToastrService,
     private spctService: SanPhamChiTietService,
     private khachHangService: KhachHangService,
-    private banHangService: BanHangService
+    private banHangService: BanHangService,
+    private localStorageService: LocalStorageServiceService
   ) {}
+  ngOnDestroy(): void {
+    this.localStorageService.saveData(this.key, this.orders);
+  }
 
   ngOnInit(): void {
-    if (this.orders.length == 0) {
-      this.newHoaDon();
-    }
-    this.getAllSpct();
-    this.getAllKhachHang();
+    this.orders = this.localStorageService.getData(this.key);
+    setTimeout(() => {
+      if (this.orders.length == 0) {
+        this.newHoaDon();
+      } else {
+        this.order = this.orders[0];
+      }
+      this.getAllSpct();
+      this.getAllKhachHang();
+    }, 100);
   }
 
   changeHoaDon(index: number) {
@@ -60,6 +71,9 @@ export class BanHangComponent implements OnInit {
     hoaDon.loaiHoaDon = "TAI_QUAY"; // TAI_QUAY or GIAO_HANG
     hoaDon.hoaDonChiTiets = [];
     hoaDon.phiVanChuyen = 0;
+    hoaDon.nhanVien = null;
+    hoaDon.khachHang = null;
+    hoaDon.phieuGiamGia = null;
 
     this.orders.push(hoaDon);
     this.order = hoaDon;
@@ -208,5 +222,19 @@ export class BanHangComponent implements OnInit {
   }
   getDiaChiNguoiNhan(diaChi: string) {
     this.order.diaChiNguoiNhan = diaChi;
+  }
+
+  getTienKhachThanhToan(): number {
+    if (this.order.thanhToans) {
+      return this.order.thanhToans
+        .map((thanhToan) => thanhToan.soTien)
+        .reduce((pre, curr) => pre + curr, 0);
+    } else {
+      return 0;
+    }
+  }
+
+  getTienKhachConThieu(): number {
+    return this.order.tongTien - this.getTienKhachThanhToan();
   }
 }

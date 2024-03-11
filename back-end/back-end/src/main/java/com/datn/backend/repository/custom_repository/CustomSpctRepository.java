@@ -19,10 +19,10 @@ public class CustomSpctRepository {
     public PagedResponse<SanPhamChiTiet> filterByPage(FilterSPCTParams params) {
         // prepare query
         String query = """
-                     SELECT *
-                     FROM san_pham_chi_tiet AS ct
-                     WHERE ct.san_pham_id = :sanPhamId
-                     """;
+                SELECT *
+                FROM san_pham_chi_tiet AS ct
+                WHERE ct.san_pham_id = :sanPhamId
+                """;
         if (params.getColorId() != null) {
             query = query + "\nAND ct.mau_sac_id = :mauSacId";
             query = query.replace(":mauSacId", params.getColorId());
@@ -104,5 +104,9 @@ public class CustomSpctRepository {
         int remainder = result[0] % params.getPageSize();
         result[1] = (remainder == 0) ? (result[0] / params.getPageSize()) : (result[0] / params.getPageSize() + 1);
         return result;
+    }
+
+    public List<SanPhamChiTiet> getAll() {
+        return null;
     }
 }

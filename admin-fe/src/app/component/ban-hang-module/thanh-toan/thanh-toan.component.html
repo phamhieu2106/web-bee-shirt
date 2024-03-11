@@ -7,13 +7,6 @@
       tongTien | currency : "đ " : "symbol" : "1.0-0"
     }}</span>
   </div>
-  <!-- Tiền khách đưa -->
-  <div class="d-flex justify-content-between m-1">
-    <span class="mr-auto fw-bold">Tiền khách đưa:</span>
-    <span class="ml-auto"
-      ><input type="number" formControlName="tienKhachDua"
-    /></span>
-  </div>
   <!-- Tiền thiếu -->
   <div class="d-flex justify-content-between m-1">
     <span class="mr-auto fw-bold">Tiền thiếu:</span>
@@ -21,6 +14,14 @@
       getTienConThieu() | currency : "đ " : "symbol" : "1.0-0"
     }}</span>
   </div>
+  <!-- Tiền khách đưa -->
+  <div class="d-flex justify-content-between m-1">
+    <span class="mr-auto fw-bold">Tiền khách đưa:</span>
+    <span class="ml-auto"
+      ><input type="number" formControlName="tienKhachDua"
+    /></span>
+  </div>
+
   <!-- Hình thức thanh toán -->
   <div class="d-flex justify-content-between m-1">
     <span class="mr-auto">
@@ -73,9 +74,10 @@
   <button
     type="button"
     class="btn btn-primary mt-2 mb-2"
-    [disabled]="thanhToanForm.invalid"
+    [disabled]="thanhToanForm.invalid || getTienConThieu() <= 0"
+    (click)="creatThanhToan()"
   >
-    Xác nhận
+    Tạo thanh toán
   </button>
 </div>
 
@@ -92,17 +94,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let tt of thanhToans">
+      <tr *ngFor="let tt of thanhToans; index as i">
         <td>{{ tt.maGiaoDich }}</td>
         <td>{{ tt.soTien | currency : "đ " : "symbol" : "1.0-0" }}</td>
         <td>
           <app-phuong-thuc-thanh-toan
-            [phuongThucThanhToan]="tt.hinhThucThanhToan"
+            [phuongThucThanhToan]="tt.tenHinhThucThanhToan"
           ></app-phuong-thuc-thanh-toan>
         </td>
         <td>{{ tt.moTa }}</td>
         <td>
-          <button type="button" class="btn btn-danger">
+          <button
+            type="button"
+            class="btn btn-danger p-1"
+            (click)="deleteThanhToan(i)"
+          >
             <i class="fa-solid fa-trash"></i>
           </button>
         </td>

@@ -45,7 +45,9 @@
                     <td>file_name</td>
                     <td>tenSanPham</td>
                     <td>size</td>
-                    <td>{{ hdct.giaBan | currency : "đ " }}</td>
+                    <td>
+                      {{ hdct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
+                    </td>
                     <td>
                       <div class="input-group row">
                         <span class="input-group-prepend col-2">
@@ -76,7 +78,10 @@
                       </div>
                     </td>
                     <td>
-                      {{ hdct.soLuong * hdct.giaBan | currency : "đ " }}
+                      {{
+                        hdct.soLuong * hdct.giaBan
+                          | currency : "đ " : "symbol" : "1.0-0"
+                      }}
                     </td>
                     <td>
                       <button
@@ -104,7 +109,10 @@
                             {{ phieuGiamGia.maPhieuGiamGia }}
                           </p>
                           <p class="text-left">
-                            {{ phieuGiamGia.giaTri | currency : "đ " }}
+                            {{
+                              phieuGiamGia.giaTri
+                                | currency : "đ " : "symbol" : "1.0-0"
+                            }}
                           </p>
                         </td>
                       </tr>
@@ -123,11 +131,15 @@
                         </td>
                         <td>
                           <p class="text-right">
-                            <strong>{{ tongTien | currency : "đ " }}</strong>
+                            <strong>{{
+                              tongTien | currency : "đ " : "symbol" : "1.0-0"
+                            }}</strong>
                           </p>
 
                           <p class="text-right">
-                            <strong>{{ tienGiam | currency : "đ " }}</strong>
+                            <strong>{{
+                              tienGiam | currency : "đ " : "symbol" : "1.0-0"
+                            }}</strong>
                           </p>
                           <p class="text-right">
                             <input
@@ -146,7 +158,7 @@
                           <p class="text-right text-danger">
                             <strong>{{
                               tongTien - tienGiam + phiVanChuyen
-                                | currency : "đ "
+                                | currency : "đ " : "symbol" : "1.0-0"
                             }}</strong>
                           </p>
                         </td>

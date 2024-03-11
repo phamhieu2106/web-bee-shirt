@@ -1,21 +1,19 @@
-import { CurrencyPipe } from "@angular/common";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { CurrencyPipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { MauSac } from "src/app/model/class/mau-sac.class";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
-import {Swiper} from "swiper";
-
 
 @Component({
-  selector: "app-home-page",
-  templateUrl: "./home-page.component.html",
-  styleUrls: ["./home-page.component.css"],
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.css']
 })
-export class HomePageComponent {
+export class ProductComponent {
   public pagedResponse: PagedResponse<SanPham>;
 
   
@@ -27,12 +25,14 @@ export class HomePageComponent {
 
   ngOnInit(): void {
     this.getSanPhamList();
-   
-   
-  }
-  
 
-  // public functions
+
+  }
+
+
+
+
+   // public functions
   public displayPrice(sanPham: SanPham): any {
     const priceArr = [];
     for (let spct of sanPham.sanPhamChiTiets) {
@@ -79,4 +79,5 @@ export class HomePageComponent {
       },
     });
   }
+
 }

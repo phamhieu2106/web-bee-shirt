@@ -1,0 +1,78 @@
+footer {
+    background-color: black;
+    padding: 25px 0 10px 0;
+}
+
+footer * {
+    color: white;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+ul.unstyled,
+ol.unstyled {
+    margin: 0;
+    list-style: none outside none;
+}
+
+ul.unstyled>li,
+ol.unstyled>li {
+    list-style: none;
+}
+
+li>a {
+    text-decoration: none;
+}
+
+
+footer .top-ft-wanda .title-footer h4,
+footer .top-ft-wanda .title-footer .h4 {
+    font-size: 17px;
+    font-weight: 600;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.footer-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.footer-flex h4 {
+    margin-bottom: 0;
+    font-size: 14px !important;
+}
+
+.infomation-wanda ul li a {
+    font-size: 14px !important; }
+
+
+    .form-mail{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .title-regis{
+        text-transform: uppercase;
+    }
+
+    .dangKy{
+        border: 1px solid white;
+        background: black;
+        border-radius: 5px;
+        padding: 3px;
+    }
+
+    #contact_email{
+        padding: 5px 70px 0px 5px;
+       padding-right: 70px;
+       margin-right: 10px;
+       border-radius: 5px;
+       color: black;
+    }

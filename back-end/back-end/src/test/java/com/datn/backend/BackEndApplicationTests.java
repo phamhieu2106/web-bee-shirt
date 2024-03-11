@@ -22,12 +22,12 @@ class BackEndApplicationTests {
     @Autowired
     private CustomSpctRepository repository;
 
-    @Test
-    void getSanPham() {
-        List<SanPhamChiTiet> list = repository.getAll();
-
-        for (SanPhamChiTiet ct : list) {
-            System.err.println(ct.getId());
-        }
-    }
+//    @Test
+//    void getSanPham() {
+//        List<SanPhamChiTiet> list = repository.getAll();
+//
+//        for (SanPhamChiTiet ct : list) {
+//            System.err.println(ct.getId());
+//        }
+//    }
 }

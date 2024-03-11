@@ -1,0 +1,39 @@
+.navigation{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .listAction{
+    display: flex;
+    justify-content: space-between;
+  
+  }
+  
+  .formSearch{
+    width: 100%;
+    padding: 5px;
+    border-radius: 15px;
+    outline: none;
+  }
+  
+  
+  .box-icon {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .js-number-cart {
+    position: absolute;
+    top: -8px; /* Điều chỉnh vị trí số lên trên */
+    right: -8px; /* Điều chỉnh vị trí số sang phải */
+    background-color: red; /* Màu nền của số */
+    color: white; /* Màu chữ của số */
+    border-radius: 50%; /* Bo tròn viền cho số */
+    padding: 4px 6px; /* Điều chỉnh kích thước của số */
+    font-size: 12px; /* Điều chỉnh kích thước chữ của số */
+  }
+  
+  span{
+    color: white;
+  }
+  

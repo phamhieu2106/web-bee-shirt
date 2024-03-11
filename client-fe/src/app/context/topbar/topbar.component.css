@@ -1,0 +1,57 @@
+#topbar {
+    background: #FFFFFF;
+    font-size: 12px;
+    color: #000000;
+    overflow: hidden;
+}
+
+#topbar p {
+    padding: 4px;
+    margin-bottom: 0;
+    text-align: center;
+    color: #000000;
+}
+
+.marquee-topbar {
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    position: relative;
+    animation: marquee 30s linear infinite;
+}
+
+.item {
+    font-size: 12px;
+    padding-right: 60px;
+    /* Khoảng cách giữa các item */
+
+}
+
+@keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .marquee-topbar {
+        animation: marquee 15s linear infinite;
+    }
+}
+
+.marquee-topbar .item {
+    flex: 0 0 calc(100% / 4);
+    -ms-flexbox: 0 0 calc(100% / 4);
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .marquee-topbar .item {
+        flex: 0 0 calc(100% / 4);
+        -ms-flexbox: 0 0 calc(100% / 4);
+    }
+}

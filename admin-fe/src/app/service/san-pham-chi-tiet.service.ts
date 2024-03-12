@@ -59,18 +59,18 @@ export class SanPhamChiTietService {
   }
 
   //
-  public getOneById(spctId: number): Observable<SanPhamChiTiet> {
-    return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
-  }
+  // public getOneById(spctId: number): Observable<SanPhamChiTiet> {
+  //   return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
+  // }
 
   //
-  public getGiaBan(spct: SanPhamChiTiet): number {
-    if (spct.dotGiamGiaSanPham == null) {
-      return spct.giaBan;
-    } else {
-      return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
-    }
-  }
+  // public getGiaBan(spct: SanPhamChiTiet): number {
+  //   if (spct.dotGiamGiaSanPham == null) {
+  //     return spct.giaBan;
+  //   } else {
+  //     return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
+  //   }
+  // }
 
   //
   getGiaBan(spct: SanPhamChiTiet): number {

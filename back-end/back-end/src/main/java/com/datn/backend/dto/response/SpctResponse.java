@@ -46,7 +46,7 @@ public class SpctResponse {
 
     private ChatLieuResponse chatLieu;
 
-    private DotGiamGiaSanPhamResponse dotGiamGiaSanPham;
+    private DotGiamGiaResponse2 dotGiamGia;
 
     private List<HinhAnh> hinhAnhs = new ArrayList<>();
 }

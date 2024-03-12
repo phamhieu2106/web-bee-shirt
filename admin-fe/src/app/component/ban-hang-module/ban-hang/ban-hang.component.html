@@ -14,6 +14,7 @@
             aria-expanded="false"
             placeholder="Thêm sản phẩm"
             (input)="getAllSpct()"
+            (focus)="getAllSpct()"
             [(ngModel)]="searchProduct"
           />
           <div
@@ -66,10 +67,8 @@
                     spct.giaBan | currency : "đ " : "symbol" : "1.0-0"
                   }}</span>
                   <span class="gia-da-giam pl-1">{{
-                    (spct.dotGiamGiaSanPham == null
-                      ? spct.giaBan
-                      : getGiaBan(spct)
-                    ) | currency : "đ " : "symbol" : "1.0-0"
+                    (spct.dotGiamGia == null ? spct.giaBan : getGiaBan(spct))
+                      | currency : "đ " : "symbol" : "1.0-0"
                   }}</span>
                 </div>
                 <div class="text-mute">Còn lại: {{ spct.soLuongTon }}</div>
@@ -442,7 +441,7 @@
           </button>
         </div>
         <!-- Main modal -->
-        <div class="modal-body">Modal</div>
+        <app-search-product-detail></app-search-product-detail>
       </div>
     </div>
   </div>

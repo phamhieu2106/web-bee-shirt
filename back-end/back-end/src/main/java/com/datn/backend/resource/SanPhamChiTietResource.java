@@ -51,6 +51,11 @@ public class SanPhamChiTietResource {
         return ResponseEntity.ok(spctService.getOneById(spctId));
     }
 
+    @GetMapping("/get-any-by-spid/{spId}")
+    public ResponseEntity<SanPhamChiTiet> getAnyBySanPhamId(@PathVariable("spId") int spId) {
+        return ResponseEntity.ok(spctService.getAnyBySanPhamId(spId));
+    }
+
     @PostMapping("/filter-by-page")
     public ResponseEntity<PagedResponse<SanPhamChiTiet>> filterSPCTByPage(@RequestBody FilterSPCTParams params) {
         return ResponseEntity.ok(spctService.filterByPage(params));
@@ -78,5 +83,12 @@ public class SanPhamChiTietResource {
     public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
         spctService.changeStatus(id);
         return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+    }
+
+    @GetMapping("/check-exist")
+    public ResponseEntity<Boolean> changeStatus(@RequestParam("spId") int spId,
+                                               @RequestParam("mauSacId") int mauSacId,
+                                               @RequestParam("sizeId") int sizeId) {
+        return ResponseEntity.ok(spctService.checkExist(spId, mauSacId, sizeId));
     }
 }

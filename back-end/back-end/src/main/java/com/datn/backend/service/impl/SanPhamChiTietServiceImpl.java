@@ -311,7 +311,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     private SanPhamChiTiet changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
         SanPhamChiTiet spct = spctRepo.findFirstBySanPhamIdAndMauSacId(sanPhamId, newMauSacId);
 
-
         if (spct != null) {
             updateSpct.setHinhAnhs(new ArrayList<>());
             for (HinhAnh img : spct.getHinhAnhs()) {
@@ -341,5 +340,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 //        updateSpct.setHinhAnhs(spct.getHinhAnhs());
 //        spctRepo.save(updateSpct);
 //        System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!");
+    }
+
+    @Override
+    public SanPhamChiTiet getAnyBySanPhamId(int spId) {
+        return spctRepo.findFirstBySanPhamId(spId);
+    }
+
+    @Override
+    public boolean checkExist(int spId, int mauSacId, int sizeId) {
+        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) == null;
     }
 }

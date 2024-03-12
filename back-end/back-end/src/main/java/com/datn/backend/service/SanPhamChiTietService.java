@@ -7,6 +7,7 @@ import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ public interface SanPhamChiTietService {
 
     SanPhamChiTiet getOneById(int spctId);
 
+    SanPhamChiTiet getAnyBySanPhamId(int spId);
+
     void updateSpctNhanh(CapNhatNhanhSpctReq req);
 
     SanPhamChiTiet update(CapNhatSpctRequest req);
@@ -31,4 +34,6 @@ public interface SanPhamChiTietService {
     BigDecimal[] getMinAndMaxPrice(int productId);
 
     void changeStatus(int id);
+
+    boolean checkExist(int spId, int mauSacId, int sizeId);
 }

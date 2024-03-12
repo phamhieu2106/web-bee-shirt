@@ -2,19 +2,40 @@
 
 
 
-<app-phieu-giam-gia></app-phieu-giam-gia>
+<section class="container">
+  <div>
+    <h2 class="title-section bd-left">
+      <span>ƯU ĐÃI DÀNH CHO BẠN</span>
+    </h2>
+  </div>
+  <app-phieu-giam-gia></app-phieu-giam-gia>
+</section>
 
-<section class="py-5">
+<section class="container">
+
+  <div class="pb-3">
+    <h2 class="title-section bd-left">
+      <span><img width="20" height="20" src="https://file.hstatic.net/1000253775/file/flash_c1195bb7597344909c3a855990d45510.png" alt="FLASH SALE">FLASH SALE </span>
+    </h2>
+  </div>
+<app-dot-giam-gia></app-dot-giam-gia>
+</section>
+
+<section class="pb-5 container">
+
+  <!-- Sản Phẩm Mới Ra -->
+  <div class="pb-3">
+    <h2 class="title-section bd-left">
+      <span>Sản Phẩm Mới Ra</span>
+    </h2>
+  </div>
   
-
-  <div class="slide-container swiper container">
-
-    <div class="slide-content" style="overflow: hidden;">
+  <div class="slide-container swiper ">
+  
+    <div class="slide-content"  style="overflow:hidden;">
       <div class="card-wraper swiper-wrapper">
-        <div class="card swiper-slide" *ngFor="let sp of pagedResponse?.data">
+        <div class=" swiper-slide" *ngFor="let sp of pagedResponse?.data">
           <div class="image-content">
-           
-
             <div class="card-image">
               <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl"
                 alt="" class="card-img">
@@ -22,26 +43,24 @@
           </div>
 
           <div class="card-content">
-            <h2 class="name">{{ sp.ten }}</h2>
-            {{ displayPrice(sp) }}
-            <div class="mt-3">
+            <div>
               <span *ngFor="let mauSac of getMauSacList(sp)">
-                <img class="rounded me-1" [src]="mauSac.image.imageUrl" style="width: 30px; height: 30px"
+                <img class="img-color" [src]="mauSac.image.imageUrl" 
                   [title]="mauSac.ten" />
               </span>
             </div>
+            <h2 class="name">{{ sp.ten }}</h2>
+           <span class="price"> {{ displayPrice(sp) }}</span>
            
-
-            <button class="button">
-              View More
-            </button>
+          
           </div>
         </div>
       </div>
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
+    <div id="next-content" class="swiper-button-next"></div>
+    <div id="prev-content" class="swiper-button-prev"></div>
+    
+  
   </div>
 
   

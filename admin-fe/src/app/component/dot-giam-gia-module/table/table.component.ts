@@ -68,13 +68,16 @@ export class TableComponent implements OnInit {
   public onRemove(id: number) {
     Swal.fire({
       toast: true,
-      title: "Bạn có chắc chắn muốn xoá?",
+      title:
+        "Bạn có chắc chắn muốn xoá? Hành động này sẽ không thể được hoàn tác nếu bạn bấm đồng ý!",
       icon: "warning",
       position: "top",
       showCancelButton: true,
       confirmButtonColor: "#ff0000",
-    }).then(() => {
-      this.onRemoveDotGiamGia.emit(id);
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.onRemoveDotGiamGia.emit(id);
+      }
     });
   }
   public onSelected(id: number) {

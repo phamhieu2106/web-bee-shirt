@@ -146,10 +146,10 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                                                 AND sp.trang_thai = 1
                                                 AND NOT EXISTS (SELECT 1
                                     							FROM dot_giam_gia_san_pham dggsp
-                                                                LEFT JOIN dot_giam_gia dgg ON dgg.id = dggsp.dot_giam_gia_id
+                                    							LEFT JOIN dot_giam_gia dgg ON dgg.id = dggsp.dot_giam_gia_id
                                     							WHERE dggsp.san_pham_chi_tiet_id = spct.id
-                                                                AND spct.san_pham_id IN ( :id )
-                                                                AND dgg.trang_thai != 0)
+                                                                    AND spct.san_pham_id IN ( :id ) AND dgg.trang_thai != 0
+                                        )
             """, nativeQuery = true)
     Page<SanPhamChiTietResponse> getAllSanPhamChiTietBySanPhamIdForAdd(Pageable pageable, @Param("id") List<Integer> id);
 

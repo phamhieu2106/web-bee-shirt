@@ -12,6 +12,7 @@ import { TopbarComponent } from './context/topbar/topbar.component';
 import { PhieuGiamGiaComponent } from './context/phieu-giam-gia/phieu-giam-gia.component';
 import { HeaderBottomComponent } from './context/header-bottom/header-bottom.component';
 import { DotGiamGiaComponent } from './context/dot-giam-gia/dot-giam-gia.component';
+import { SanPhamChiTietComponent } from './component/san-pham-chi-tiet/san-pham-chi-tiet.component';
 
 
 
@@ -26,6 +27,7 @@ import { DotGiamGiaComponent } from './context/dot-giam-gia/dot-giam-gia.compone
     PhieuGiamGiaComponent,
     HeaderBottomComponent,
     DotGiamGiaComponent,
+    SanPhamChiTietComponent,
     
   ],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule],

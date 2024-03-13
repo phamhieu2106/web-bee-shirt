@@ -13,11 +13,6 @@
 
 <section class="container">
 
-  <div class="pb-3">
-    <h2 class="title-section bd-left">
-      <span><img width="20" height="20" src="https://file.hstatic.net/1000253775/file/flash_c1195bb7597344909c3a855990d45510.png" alt="FLASH SALE">FLASH SALE </span>
-    </h2>
-  </div>
 <app-dot-giam-gia></app-dot-giam-gia>
 </section>
 
@@ -34,8 +29,10 @@
   
     <div class="slide-content"  style="overflow:hidden;">
       <div class="card-wraper swiper-wrapper">
-        <div class=" swiper-slide" *ngFor="let sp of pagedResponse?.data">
+        <div class="card-product swiper-slide" *ngFor="let sp of pagedResponse?.data">
+         
           <div class="image-content">
+            <Button class="btn add-cart">Thêm Nhanh Vào Giỏ</Button>
             <div class="card-image">
               <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl"
                 alt="" class="card-img">

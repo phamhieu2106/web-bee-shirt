@@ -10,6 +10,7 @@ import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { DotGiamGiaSanPhamChiTiet } from "src/app/model/interface/dot-giam-gia-san-pham-chi-tiet";
 import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-table",
@@ -18,7 +19,6 @@ import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
 })
 export class TableComponent implements OnInit {
   object: DotGiamGia;
-  idRemove: number;
   @Input() template: string;
   @Input() titleTable: string;
   @Input() tHead: Array<string>;
@@ -63,11 +63,19 @@ export class TableComponent implements OnInit {
   }
 
   public onSelectRemove(id: number) {
-    this.idRemove = id;
+    this.onRemove(id);
   }
   public onRemove(id: number) {
-    console.log(id);
-    this.onRemoveDotGiamGia.emit(id);
+    Swal.fire({
+      toast: true,
+      title: "Bạn có chắc chắn muốn xoá?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#ff0000",
+    }).then(() => {
+      this.onRemoveDotGiamGia.emit(id);
+    });
   }
   public onSelected(id: number) {
     this.service.getDotGiamGiaById(id).subscribe({

@@ -135,7 +135,10 @@
                         <tr
                           role="row"
                           class="odd p-3"
-                          *ngFor="let object of dataSanPhamChiTiet"
+                          *ngFor="
+                            let object of dataSanPhamChiTiet;
+                            let index = index
+                          "
                         >
                           <td class="sorting_1">
                             <input
@@ -148,7 +151,7 @@
                               type="checkbox"
                               (click)="setListIdSanPhamChiTiet(object.id)"
                             />
-                            {{ object.id }}
+                            {{ index + 1 }}
                           </td>
                           <!-- image -->
                           <img
@@ -156,6 +159,7 @@
                             [src]="object?.hinhAnhSanPham"
                             alt=""
                             width="100px"
+                            height="80px"
                           />
                           <ng-template #defaultImage>
                             <img
@@ -182,17 +186,6 @@
                               }"
                             ></button>
                           </td>
-                          <td>
-                            <button
-                              class="{{
-                                object.trangThai
-                                  ? 'btn btn-success btn-rounded'
-                                  : 'btn btn-danger btn-rounded'
-                              }}"
-                            >
-                              {{ object.trangThai ? "Đang Bán" : "Ngừng Bán" }}
-                            </button>
-                          </td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -217,7 +210,7 @@
 
 <ng-template #noDataTemplate1>
   <tr>
-    <td [colSpan]="dataSanPham.length" class="text-center">
+    <td [colSpan]="tHeadProduct.length" class="text-center">
       Úi Bạn Ơi Không Có Dữ Liệu!!!
     </td>
   </tr>

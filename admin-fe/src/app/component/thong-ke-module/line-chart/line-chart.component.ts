@@ -63,7 +63,6 @@ export class LineChartComponent implements OnInit {
     }
   }
   ngOnDestroy(): void {
-    // Hủy bỏ biểu đồ khi component bị hủy
     if (this.chart) {
       this.chart.destroy();
     }

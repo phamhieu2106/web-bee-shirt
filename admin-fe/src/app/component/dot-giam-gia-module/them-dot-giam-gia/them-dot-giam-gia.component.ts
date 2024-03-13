@@ -45,7 +45,6 @@ export class ThemDotGiamGiaComponent implements OnInit {
     "Tay Áo",
     "Thiết Kế",
     "Màu",
-    "Trạng Thái",
   ];
   listSanPhamChiTiet: PagedResponse<DotGiamGiaSanPhamChiTiet>;
   dataSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[] = [];

@@ -112,19 +112,32 @@ export class FormComponent implements OnInit {
       this.patchForm();
     }
   }
+  public handleChangeTime(thoiGianBatDau: string, thoiGianKetThuc: string) {
+    const currentTime = new Date();
+    currentTime.setSeconds(0, 0);
+
+    if (thoiGianBatDau > thoiGianKetThuc) {
+      this.form.controls["thoiGianBatDau"].setErrors({ invalid: true });
+      this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+    } else {
+      const startTime = new Date(thoiGianBatDau);
+      const endTime = new Date(thoiGianKetThuc);
+      if (startTime < currentTime) {
+        this.form.controls["thoiGianBatDau"].setErrors({ pastDate: true });
+      } else {
+        const oneMinuteAfterStart = new Date(startTime.getTime() + 299999); // 60000 milliseconds = 1 minute
+        if (endTime <= oneMinuteAfterStart) {
+          this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+        } else {
+          // Nếu không có lỗi, xóa các lỗi hiện có
+          this.form.controls["thoiGianBatDau"].setErrors(null);
+          this.form.controls["thoiGianKetThuc"].setErrors(null);
+        }
+      }
+    }
+  }
 
   private validateForm(): boolean {
-    const thoiGianBatDau: Date = new Date(
-      this.dotGiamGiaRequest.thoiGianBatDau
-    );
-    const thoiGianKetThuc: Date = new Date(
-      this.dotGiamGiaRequest.thoiGianKetThuc
-    );
-    const thoiGianKetThuc30PhutTruoc: Date = new Date(
-      thoiGianBatDau.getTime() + 30 * 60000
-    );
-    const ngayHienTai: Date = new Date();
-
     // Kiểm tra giá trị của các trường và trả về true nếu hợp lệ, false nếu không hợp lệ
     if (this.dotGiamGiaRequest.tenDotGiamGia === null) {
       this.toast.error("Tên Đợt Giảm Giá Đang Bị Trống");
@@ -152,105 +165,121 @@ export class FormComponent implements OnInit {
         "Ngày Bắt Đầu Đợt Giảm Giá Không Được Lớn Hơn Ngày Kết Thúc Đợt Giảm Giá"
       );
       return false;
-    } else if (thoiGianBatDau < ngayHienTai && this.typeForm == "add") {
-      this.toast.error(
-        "Thời Gian Bắt Đầu Không Thể Là Ngày Hiện Tại Hoặc Trước Ngày Hiện Tại"
-      );
-      return false;
-    } else if (thoiGianKetThuc30PhutTruoc >= thoiGianKetThuc) {
-      this.toast.error(
-        "Thời Gian Kết Thúc Phải Nhiều Hơn 30 Phút Sau Thời Gian Bắt Đầu"
-      );
-      return false;
     }
+
     return true;
   }
 
   public handleSubmit = async () => {
     if (this.typeForm === "add") {
-      this.setDotGiamGiaRequest();
-      if (this.validateForm()) {
-        this.service.addDotGiamGiaRequest(this.dotGiamGiaRequest).subscribe({
-          next: () => {
+      Swal.fire({
+        toast: true,
+        title: "Bạn có chắc chắn muốn thêm Đợt Giảm Giá Mới?",
+        icon: "info",
+        position: "top",
+        showCancelButton: true,
+        confirmButtonColor: "#32ba7c",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.setDotGiamGiaRequest();
+          if (this.validateForm()) {
+            this.service
+              .addDotGiamGiaRequest(this.dotGiamGiaRequest)
+              .subscribe({
+                next: () => {
+                  Swal.fire({
+                    icon: "success",
+                    title: `Thêm mới thành công!`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  this.turnOffOverlay("");
+                  setTimeout(() => {
+                    this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
+                  }, 300);
+                  this.toast.success("Thêm Đợt Giảm Giá Thành Công!");
+                },
+                error: (err) => {
+                  console.log(err);
+                  Swal.fire({
+                    icon: "error",
+                    title: `${err.error.message}`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  this.toast.error(`Thêm mới thất bại do ${err.error.message}`);
+                },
+              });
+          } else {
             Swal.fire({
-              icon: "success",
-              title: `Thêm mới thành công!`,
+              icon: "error",
+              title: `Thêm mới thất bại!`,
               showConfirmButton: false,
               timer: 1500,
             });
             this.turnOffOverlay("");
-            setTimeout(() => {
-              this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
-            }, 300);
-            this.toast.success("Thêm Đợt Giảm Giá Thành Công!");
-          },
-          error: (err) => {
-            console.log(err);
-            Swal.fire({
-              icon: "error",
-              title: `${err.error.message}`,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            this.toast.error(`Thêm mới thất bại do ${err.error.message}`);
-          },
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: `Thêm mới thất bại!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.turnOffOverlay("");
-      }
+          }
+        }
+      });
     } else if (this.typeForm === "update") {
-      this.setDotGiamGiaRequest();
-      if (this.dotGiamGiaRequest.listIdSanPhamChiTiet.length < 1) {
-        console.log("Bạn Muốn Xoá À?");
-      }
-      if (this.validateForm()) {
-        // Set DotGiamGiaRequest
-        this.setDotGiamGiaRequest();
-        // Notify the user
-        // Call Service
-        this.service.updateDotGiamGiaRequest(this.dotGiamGiaRequest).subscribe({
-          next: () => {
-            Swal.fire({
-              icon: "success",
-              title: `Cập nhật thành công ${this.dotGiamGiaRequest.id}''!`,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            this.turnOffOverlay("");
-            // Router
-            setTimeout(() => {
-              this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
-            }, 300);
-            // Noti
-            this.toast.success("Cập Nhật Đợt Giảm Giá Thành Công!");
-          },
-          error: (err) => {
-            console.log(err);
+      Swal.fire({
+        toast: true,
+        title: "Bạn có chắc chắn muốn cập nhật Đợt Giảm Giá này?",
+        icon: "info",
+        position: "top",
+        showCancelButton: true,
+        confirmButtonColor: "#32ba7c",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.setDotGiamGiaRequest();
+          if (this.validateForm()) {
+            // Set DotGiamGiaRequest
+            this.setDotGiamGiaRequest();
+            // Notify the user
+            // Call Service
+            this.service
+              .updateDotGiamGiaRequest(this.dotGiamGiaRequest)
+              .subscribe({
+                next: () => {
+                  Swal.fire({
+                    icon: "success",
+                    title: `Cập nhật thành công ${this.dotGiamGiaRequest.id}''!`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  this.turnOffOverlay("");
+                  // Router
+                  setTimeout(() => {
+                    this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
+                  }, 300);
+                  // Noti
+                  this.toast.success("Cập Nhật Đợt Giảm Giá Thành Công!");
+                },
+                error: (err) => {
+                  console.log(err);
+                  Swal.fire({
+                    icon: "error",
+                    title: `${err.error.message}`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  this.turnOffOverlay("");
+                  this.toast.error(
+                    `Cập nhật mới thất bại do ${err.error.message}`
+                  );
+                },
+              });
+          } else {
             Swal.fire({
               icon: "error",
-              title: `${err.error.message}`,
+              title: `Cập nhật thất bại!`,
               showConfirmButton: false,
               timer: 1500,
             });
             this.turnOffOverlay("");
-            this.toast.error(`Cập nhật mới thất bại do ${err.error.message}`);
-          },
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: `Cập nhật thất bại!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.turnOffOverlay("");
-      }
+          }
+        }
+      });
     }
   };
 

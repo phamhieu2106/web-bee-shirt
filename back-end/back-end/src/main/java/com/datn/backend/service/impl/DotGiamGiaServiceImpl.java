@@ -35,7 +35,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Autowired
     public DotGiamGiaServiceImpl(DotGiamGiaRepository repository
-            , DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository, SanPhamChiTietRepository sanPhamChiTietRepository) {
+            , DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository,
+                                 SanPhamChiTietRepository sanPhamChiTietRepository) {
         super();
         this.repository = repository;
         this.dotGiamGiaSanPhamRepository = dotGiamGiaSanPhamRepository;
@@ -71,7 +72,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         Page<SanPhamChiTietResponse> sanPhamChiTietResponsePage =
-                repository.getAllSanPhamChiTietBySanPhamId(pageable, listSanPhamId);
+                repository.getAllSanPhamChiTietBySanPhamIdForAdd(pageable, listSanPhamId);
 
         PagedResponse<SanPhamChiTietResponse> sanPhamChiTietResponsePagedResponse = new PagedResponse<>();
         sanPhamChiTietResponsePagedResponse.setPageNumber(pageNumber);
@@ -82,6 +83,25 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         sanPhamChiTietResponsePagedResponse.setData(sanPhamChiTietResponsePage.getContent());
         sanPhamChiTietResponsePagedResponse.setSearch(listSanPhamId.toString());
 
+        return sanPhamChiTietResponsePagedResponse;
+    }
+
+    @Override
+    public PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTietForUpdate(int pageNumber, int pageSize, List<Integer> listSanPhamId, int idDotGiamGia) {
+        //        Page Sản Phẩm Chi Tiết
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<SanPhamChiTietResponse> sanPhamChiTietResponsePage =
+                repository.getAllSanPhamChiTietBySanPhamIdForUpdate(pageable, listSanPhamId, idDotGiamGia);
+
+        PagedResponse<SanPhamChiTietResponse> sanPhamChiTietResponsePagedResponse = new PagedResponse<>();
+        sanPhamChiTietResponsePagedResponse.setPageNumber(pageNumber);
+        sanPhamChiTietResponsePagedResponse.setPageSize(pageSize);
+        sanPhamChiTietResponsePagedResponse.setTotalElements((int) sanPhamChiTietResponsePage.getTotalElements());
+        sanPhamChiTietResponsePagedResponse.setTotalPages(sanPhamChiTietResponsePage.getTotalPages());
+        sanPhamChiTietResponsePagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamChiTietResponsePage.getTotalPages()));
+        sanPhamChiTietResponsePagedResponse.setData(sanPhamChiTietResponsePage.getContent());
+        sanPhamChiTietResponsePagedResponse.setSearch(listSanPhamId.toString());
         return sanPhamChiTietResponsePagedResponse;
     }
 
@@ -146,20 +166,16 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         try {
             //        Check Min Max
             if (object.getGiaTriPhanTram() > 99 || object.getGiaTriPhanTram() < 5) {
-                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99");
+                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99!");
             }
         } catch (Exception e) {
-            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số");
+            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số!");
         }
         if (object.getListIdSanPhamChiTiet().isEmpty()) {
-            throw new ResourceExistsException("Sản Phẩm Đang Bị Trống");
+            throw new ResourceExistsException("Danh Sách Sản Phẩm Không Được Trống!");
         }
         if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
-            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu");
-        }
-        if (!repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
-                object.getThoiGianBatDau(), object.getThoiGianKetThuc()).isEmpty()) {
-            throw new ResourceInvalidException("Thời gian diễn ra đợt giảm giá bị trùng thời điểm với đợt giảm giá khác");
+            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu!");
         }
         return check;
     }
@@ -176,25 +192,16 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         try {
             //        Check Min Max
             if (object.getGiaTriPhanTram() > 99 || object.getGiaTriPhanTram() < 5) {
-                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99");
+                throw new ResourceOutOfRangeException("Phần Trăm Giảm Phải Nằm Trong Khoảng Từ 5 Tới 99!");
             }
         } catch (Exception e) {
-            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số");
+            throw new ResourceInvalidException("Phần Trăm Giảm Phải Là 1 Số!");
         }
         if (object.getListIdSanPhamChiTiet().isEmpty()) {
-            throw new ResourceExistsException("Sản Phẩm Đang Bị Trống");
+            throw new ResourceExistsException("Danh Sách Sản Phẩm Không Được Trống!");
         }
         if (object.getThoiGianBatDau().isAfter(object.getThoiGianKetThuc())) {
-            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu");
-        }
-
-        List<DotGiamGiaResponse> dotGiamGiaResponseList = repository.getAllDotGiamGiaByThoiGianBatDauVaKetThuc(
-                object.getThoiGianBatDau(), object.getThoiGianKetThuc());
-
-        for (DotGiamGiaResponse response : dotGiamGiaResponseList) {
-            if (!(Integer.parseInt(response.getId()) == id)) {
-                throw new ResourceInvalidException("Thời gian diễn ra đợt giảm giá bị trùng thời điểm với đợt giảm giá khác");
-            }
+            throw new ResourceExistsException("Thời Gian Kết Thúc Trước Thời Gian Bắt Đầu!");
         }
 
         return check;
@@ -224,27 +231,21 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 object.setTrangThai(1);
             }
 
-            //        map requestObject to Object
+//        map requestObject to Object
             DotGiamGia dotGiamGia = object.map(new DotGiamGia());
             repository.save(dotGiamGia);
-
 //        Find DotGiamGia after save
             DotGiamGia dotGiamGiaFind = repository.getDotGiamGiaByMaDotGiamGia(code);
-
 //        Loop to create DotGiamGiaSanPham
             for (int i = 0; i < object.getListIdSanPhamChiTiet().size(); i++) {
-
                 Optional<SanPhamChiTiet> optional = sanPhamChiTietRepository.findById(object.getListIdSanPhamChiTiet().get(i));
                 if (optional.isPresent()) {
-                    //        Create sanPhamChiTiet
+//        Create sanPhamChiTiet
                     SanPhamChiTiet sanPhamChiTiet = optional.get();
 //                Create DotGiamGiaSanPham and set
                     DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
-
-//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
                     dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                     dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
-                    dotGiamGiaSanPham.setTrangThai(sanPhamChiTiet.isTrangThai());
                     dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(sanPhamChiTiet.getId()).build());
                     dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGiaFind.getId()).build());
                     //        save to database
@@ -278,10 +279,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                         found = true;
                         SanPhamChiTiet spct = sanPhamChiTietRepository
                                 .findById(sanPhamChiTietID).get();
-//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
                         dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                         dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
-                        dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());
                         dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
                         dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
                         dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
@@ -293,10 +292,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                             .findById(sanPhamChiTietID).get();
                     DotGiamGiaSanPham dotGiamGiaSanPham = new DotGiamGiaSanPham();
 
-//                Caculator Gia Moi : GiaMoi = GiaCu - (GiaCu * PhanTram / 100)
                     dotGiamGiaSanPham.setThoiGianBatDau(object.getThoiGianBatDau());
                     dotGiamGiaSanPham.setThoiGianKetThuc(object.getThoiGianKetThuc());
-                    dotGiamGiaSanPham.setTrangThai(spct.isTrangThai());
                     dotGiamGiaSanPham.setSanPhamChiTiet(SanPhamChiTiet.builder().id(spct.getId()).build());
                     dotGiamGiaSanPham.setDotGiamGia(DotGiamGia.builder().id(dotGiamGia.getId()).build());
                     dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
@@ -310,8 +307,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                     }
                 }
                 if (!found) {
-                    dotGiamGiaSanPham.setTrangThai(false);
-                    dotGiamGiaSanPhamRepository.save(dotGiamGiaSanPham);
+                    dotGiamGiaSanPhamRepository.delete(dotGiamGiaSanPham);
                 }
             }
             repository.save(dotGiamGia);

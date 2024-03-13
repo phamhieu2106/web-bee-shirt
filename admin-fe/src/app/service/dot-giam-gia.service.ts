@@ -63,6 +63,14 @@ export class DotGiamGiaService {
       `${this.apiURL}/sanphamchitiet?id=${id}`
     );
   }
+  public getAllSanPhamChiTietUpdateById(
+    id: Array<number>,
+    idDotGiamGia: number
+  ): Observable<PagedResponse<DotGiamGiaSanPhamChiTiet>> {
+    return this.http.get<PagedResponse<DotGiamGiaSanPhamChiTiet>>(
+      `${this.apiURL}/sanphamchitietupdate?id=${id}&idDotGiamGia=${idDotGiamGia}`
+    );
+  }
 
   public getIdSanPhamBySanPhamChiTietId(
     ids: number[]

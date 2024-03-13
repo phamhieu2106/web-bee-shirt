@@ -17,22 +17,28 @@ import java.util.List;
 public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
 
     @Query(value = """
-            SELECT COUNT(hd.trang_thai) FROM hoa_don hd
+            SELECT COUNT(*) FROM hoa_don hd
             WHERE hd.trang_thai = 'HOAN_THANH';
             """, nativeQuery = true)
     Long countInvoiceComplete();
 
     @Query(value = """
-            SELECT COUNT(hd.trang_thai) FROM hoa_don hd
+            SELECT COUNT(*) FROM hoa_don hd
             WHERE hd.trang_thai = 'CHO_XAC_NHAN';
             """, nativeQuery = true)
     Long countInvoiceWFC();
 
     @Query(value = """
-            SELECT COUNT(hd.trang_thai) FROM hoa_don hd
+            SELECT COUNT(*) FROM hoa_don hd
             WHERE hd.trang_thai = 'CHO_GIAO';
             """, nativeQuery = true)
     Long countInvoiceWFD();
+
+    @Query(value = """
+             SELECT COUNT(*) as DonBiHuy
+            FROM hoa_don hd WHERE hd.trang_thai = 'HUY'
+             """, nativeQuery = true)
+    Long countInvoiceEx();
 
     @Query(value = """
                 SELECT COALESCE(SUM(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN 1 ELSE 0 END), 0) AS SoLuongDonHoanThanh

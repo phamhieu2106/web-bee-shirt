@@ -42,6 +42,11 @@ public class ThongKeResource {
         return ResponseEntity.ok(chartService.countInvoiceWFD());
     }
 
+    @GetMapping("/hoa-don-huy")
+    public ResponseEntity<Long> countInvoiceEx() {
+        return ResponseEntity.ok(chartService.countInvoiceEx());
+    }
+
     @GetMapping("/khach-hang-trong-nam")
     public ResponseEntity<List<Long>> countCustomerCompleteThisYear() {
         return ResponseEntity.ok(chartService.countCustomerInThisYear());

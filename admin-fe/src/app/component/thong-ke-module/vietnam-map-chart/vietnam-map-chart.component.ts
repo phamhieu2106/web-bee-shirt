@@ -28,7 +28,7 @@ export class VietnamMapChartComponent implements OnInit {
         map: mapData,
       },
       title: {
-        text: "Vietnam Map",
+        text: "Bản Đồ Việt Nam",
       },
       mapNavigation: {
         enabled: true,

@@ -15,6 +15,7 @@ export class ThongKeComponent implements OnInit {
   tongSoDonHoanThanh: number;
   tongSoDonMoi: number;
   tongSoDonChoGiao: number;
+  tongSoDonHuy: number;
   //
 
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
@@ -49,7 +50,17 @@ export class ThongKeComponent implements OnInit {
       },
       error: (err) => {
         this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn đợi giao do ${err.message.message}`
+          `Có Lỗi khi cố gắng lấy tổng số đơn đợi giao do ${err.error.message}`
+        );
+      },
+    });
+    this.service.getSoDonHuy().subscribe({
+      next: (data) => {
+        this.tongSoDonHuy = data;
+      },
+      error: (err) => {
+        this.toastSrc.error(
+          `Có Lỗi khi cố gắng lấy tổng số đơn huỷ do ${err.error.message}`
         );
       },
     });

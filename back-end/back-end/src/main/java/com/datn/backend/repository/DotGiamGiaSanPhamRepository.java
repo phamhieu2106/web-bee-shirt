@@ -15,7 +15,7 @@ import java.util.List;
 public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSanPham, Integer> {
 
     @Query(value = """
-            SELECT id, gia_cu, gia_moi, giam_gia, san_pham_chi_tiet_id, trang_thai , dot_giam_gia_id ,
+            SELECT id, san_pham_chi_tiet_id, dot_giam_gia_id ,
             thoi_gian_bat_dau, thoi_gian_ket_thuc, created_at, updated_at, created_by, last_updated_by
             FROM dot_giam_gia_san_pham
             WHERE dot_giam_gia_id = :id ;
@@ -37,13 +37,12 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
              """, nativeQuery = true)
     void updateDotGiamGiaSanPham();
 
-    List<DotGiamGiaSanPham> findBySanPhamChiTietId(Integer id);
 
-    @Query("""
-select dgg from DotGiamGia dgg
-left join DotGiamGiaSanPham dggsp on dgg.id = dggsp.dotGiamGia.id
-where dggsp.sanPhamChiTiet.id = :id and dgg.trangThai = 1
-""")
+    @Query(value = """
+            select dgg from DotGiamGia dgg
+            left join DotGiamGiaSanPham dggsp on dgg.id = dggsp.dotGiamGia.id
+            where dggsp.sanPhamChiTiet.id = :id and dgg.trangThai = 1
+                        """)
     DotGiamGia findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
 
 }

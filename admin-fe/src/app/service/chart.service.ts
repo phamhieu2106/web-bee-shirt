@@ -22,6 +22,9 @@ export class ChartService {
   public getSoDonChoGiao(): Observable<number> {
     return this.http.get<number>(`${this.urlAPI}/hoa-don-cho-giao`);
   }
+  public getSoDonHuy(): Observable<number> {
+    return this.http.get<number>(`${this.urlAPI}/hoa-don-huy`);
+  }
   public getSoDonHoanThanhTrongNam(): Observable<number[]> {
     return this.http.get<number[]>(
       `${this.urlAPI}/hoa-don-hoan-thanh-trong-nam`

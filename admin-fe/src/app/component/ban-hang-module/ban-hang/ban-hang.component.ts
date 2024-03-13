@@ -51,6 +51,9 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.getAllKhachHang();
     }, 100);
   }
+  clearSpcts() {
+    this.spcts = [];
+  }
 
   changeHoaDon(index: number) {
     this.order = this.orders[index];
@@ -122,7 +125,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.spctService.getAll(1, 15, this.searchProduct).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
-        // console.log(resp);
+        console.log(resp);
       },
       error: (err) => {
         console.log(err);
@@ -177,6 +180,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
     return hdct;
   }
   getGiaBan(spct: SanPhamChiTiet): number {
+    console.log(this.spctService.getGiaBan(spct));
+
     return this.spctService.getGiaBan(spct);
   }
 

@@ -14,8 +14,10 @@ import { UpdateSpctReq } from "../model/interface/update-spct-req.interface";
 })
 export class SanPhamChiTietService {
   private readonly apiUrl = "http://localhost:8080/spct";
+
   constructor(private http: HttpClient) {}
 
+  //
   public add(request: AddSPCTRequest, files: File[]): Observable<string> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(request));
@@ -27,6 +29,7 @@ export class SanPhamChiTietService {
     });
   }
 
+  //
   public getAll(
     pageNumber: number = 1,
     pageSize: number = 5,
@@ -38,6 +41,7 @@ export class SanPhamChiTietService {
     );
   }
 
+  //
   public filterSPCTByPage(
     params: FilterSPCTParams
   ): Observable<PagedResponse<SanPhamChiTiet>> {
@@ -47,43 +51,75 @@ export class SanPhamChiTietService {
     );
   }
 
+  //
   public getByPage(spId: number): Observable<PagedResponse<SanPhamChiTiet>> {
     return this.http.get<PagedResponse<SanPhamChiTiet>>(
       `${this.apiUrl}/get-by-page/${spId}`
     );
   }
 
+  //
+  // public getOneById(spctId: number): Observable<SanPhamChiTiet> {
+  //   return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
+  // }
+
+  //
+  // public getGiaBan(spct: SanPhamChiTiet): number {
+  //   if (spct.dotGiamGiaSanPham == null) {
+  //     return spct.giaBan;
+  //   } else {
+  //     return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
+  //   }
+  // }
+
+  //
+  getGiaBan(spct: SanPhamChiTiet): number {
+    if (spct.dotGiamGia == null) {
+      return spct.giaBan;
+    } else {
+      return (spct.giaBan * (100 - spct.dotGiamGia.giaTriPhanTram)) / 100;
+    }
+  }
   public getOneById(spctId: number): Observable<SanPhamChiTiet> {
     return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
   }
-
-  public getGiaBan(spct: SanPhamChiTiet): number {
-    if (spct.dotGiamGiaSanPham == null) {
-      return spct.giaBan;
-    } else {
-      return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
-    }
-  }
-
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
     return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
       responseType: "text",
     });
   }
 
+  //
   public update(updateSpctReq: UpdateSpctReq): Observable<string> {
     return this.http.post(`${this.apiUrl}/update`, updateSpctReq, {
       responseType: "text",
     });
   }
 
+  //
   public getMinAndMaxPrice(productId: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/min-max-price/${productId}`);
   }
 
+  //
   public changeStatus(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
+  }
+
+  public getAnySpctBySanPhamId(sanPhamId: number): Observable<SanPhamChiTiet> {
+    return this.http.get<SanPhamChiTiet>(
+      `${this.apiUrl}/get-any-by-spid/${sanPhamId}`
+    );
+  }
+
+  public checkSpctExists(
+    spId: number,
+    mauSacId: number,
+    sizeId: number
+  ): Observable<boolean> {
+    const params = `?spId=${spId}&mauSacId=${mauSacId}&sizeId=${sizeId}`;
+    return this.http.get<boolean>(`${this.apiUrl}/check-exist/${params}`);
   }
 }

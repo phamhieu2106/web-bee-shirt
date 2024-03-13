@@ -1,5 +1,6 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,10 +40,18 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
     List<DotGiamGiaSanPham> findBySanPhamChiTietId(Integer id);
 
     @Query("""
+<<<<<<< HEAD
             select dggsp from DotGiamGiaSanPham dggsp
             where dggsp.sanPhamChiTiet.id = :id
             and dggsp.dotGiamGia.trangThai = 1
             """)
     DotGiamGiaSanPham findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
+=======
+select dgg from DotGiamGia dgg
+left join DotGiamGiaSanPham dggsp on dgg.id = dggsp.dotGiamGia.id
+where dggsp.sanPhamChiTiet.id = :id and dgg.trangThai = 1
+""")
+    DotGiamGia findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
+>>>>>>> 9e460b58bf108e7be2112656b74ebc14a771e08c
 
 }

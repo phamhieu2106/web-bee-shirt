@@ -2,18 +2,17 @@ import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MauSac } from "src/app/model/class/mau-sac.class";
-import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  selector: 'app-dot-giam-gia',
+  templateUrl: './dot-giam-gia.component.html',
+  styleUrls: ['./dot-giam-gia.component.css']
 })
-export class ProductComponent {
+export class DotGiamGiaComponent {
   public pagedResponse: PagedResponse<SanPham>;
 
   

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -17,16 +16,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class DotGiamGiaSanPhamResponse {
+public class DotGiamGiaResponse2 {
     private Integer id;
-
-    private BigDecimal giaCu;
-
-    private BigDecimal giaMoi;
-
-    private Integer giamGia;
 
     private LocalDateTime thoiGianBatDau;
 
     private LocalDateTime thoiGianKetThuc;
+
+    private Integer giaTriPhanTram;
+
+    private Boolean trangThai;
+
 }

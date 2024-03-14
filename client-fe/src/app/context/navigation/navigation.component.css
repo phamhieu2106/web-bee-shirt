@@ -1,39 +1,122 @@
-.navigation{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+img{
+  width: 100%;
+}
+.main-header{
+  background: black;
+}
+
+header{
+  
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+ 
+ 
+  color: white;
+}
+.logo img{
+  width: 120px;
+}
+
+nav .logo{
+  display: none;
+}
+
+
+
+nav ul{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+ 
+}
+
+nav ul li a{
+  color: #000000;
+  display: block;
+  margin: 0 2px ;
+  font-weight: 600;
+  padding: 8px 18px;
+  transition: 0.2s;
+  border-radius: 30px;
+  text-decoration: none;
+
+
+}
+
+nav ul li a:hover{
+  background: #f6f4ff;
+  color: #000000;
+}
+
+nav ul li a.active{
+  background: #675cff;
+  color:#fff ;
+}
+
+.hamburger{
+  display: none;
+  height: fit-content;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 5px;
+  transform: 0.2s;
+}
+
+
+.hamburger div{
+  width: 30px;
+  height: 2px;
+  margin: 6px 0;
+  background:#ffffff ;
+}
+
+@media only screen and (max-width:1100px) {
+  header{
+      width: 90%;
+     
   }
-  .listAction{
-    display: flex;
-    justify-content: space-between;
-  
+  nav{
+      position: absolute;
+      left: -300px;
+      top: 0;
+      z-index: 999;
+      width: 280px;
+      height: 100vh;
+      background-color: #000000;
+      transition: 0.2s;
+      box-shadow: 2px 0 20px 0 rgba(0,0,0,0.05);
   }
-  
-  .formSearch{
-    width: 100%;
-    padding: 5px;
-    border-radius: 15px;
-    outline: none;
+
+  #nav_check:checked ~ nav{
+left: 0;
   }
-  
-  
-  .box-icon {
-    position: relative;
-    display: inline-block;
+
+  nav .logo{
+      display: block;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      margin-left: 30px;
   }
-  
-  .js-number-cart {
-    position: absolute;
-    top: -8px; /* Điều chỉnh vị trí số lên trên */
-    right: -8px; /* Điều chỉnh vị trí số sang phải */
-    background-color: red; /* Màu nền của số */
-    color: white; /* Màu chữ của số */
-    border-radius: 50%; /* Bo tròn viền cho số */
-    padding: 4px 6px; /* Điều chỉnh kích thước của số */
-    font-size: 12px; /* Điều chỉnh kích thước chữ của số */
-  }
-  
-  span{
+  nav ul li a{
     color: white;
+      margin-bottom: 5px ;
+      padding: 10px 15px;
+      border-radius: 5px;
+  }
+  nav ul{
+      display: block;
+      padding: 0 20px;
+      margin-top: 30px;
+  }
+  .hamburger{
+      display: block;
   }
   
+}
+
+

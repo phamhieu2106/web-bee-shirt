@@ -9,15 +9,14 @@
     <div class="card">
       <!-- header: filter -->
       <div class="card-header">
-        <h3 class="mb-4">Danh Sách Sản Phẩm '{{ sanPham?.ten }}'</h3>
+        <h3 class="mb-4">Danh Sách Sản Phẩm Chi Tiết</h3>
         <!-- HEADER  -->
-        <div>
+        <!-- <div>
           <div class="col col-md-12 d-flex">
             <div class="col-md-4"></div>
             <div class="col-md-4 text-left">
               <b class="form-label">Lọc theo giá bán</b>
               <div class="row mt-3">
-                <!--  -->
                 <span class="col-3"
                   >Giá thấp nhất:
                   <i
@@ -44,7 +43,6 @@
                 }}</span>
               </div>
 
-              <!--  -->
               <div class="row mt-3">
                 <span class="col-3"
                   >Giá cao nhất:
@@ -73,7 +71,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="row mb-3 mx-5">
           <b class="form-label">Lọc theo thuộc tính</b>
@@ -169,6 +167,8 @@
           </div>
         </div>
       </div>
+
+      <h5 class="m-3">{{ sanPham.ten }}</h5>
 
       <!-- body: table -->
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">

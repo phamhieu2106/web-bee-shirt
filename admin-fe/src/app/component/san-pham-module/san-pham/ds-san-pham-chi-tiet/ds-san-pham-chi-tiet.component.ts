@@ -24,6 +24,7 @@ import { KieuDangService } from "src/app/service/kieu-dang.service";
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
 import { KieuThietKeService } from "src/app/service/kieu-thiet-ke.service";
 import { MauSacService } from "src/app/service/mau-sac.service";
+import { NotificationService } from "src/app/service/notification.service";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamService } from "src/app/service/san-pham.service";
 
@@ -88,7 +89,8 @@ export class DsSanPhamChiTietComponent {
     private kieuThietKeService: KieuThietKeService,
     private kieuTayAoService: KieuTayAoService,
     private kieuCoAoService: KieuCoAoService,
-    private chatLieuService: ChatLieuService
+    private chatLieuService: ChatLieuService,
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -134,11 +136,6 @@ export class DsSanPhamChiTietComponent {
     const ckBoxAll = document.getElementById("ckBoxAll") as HTMLInputElement;
     ckBoxAll.checked = false;
   }
-
-  //
-  // public onClearSearchInput(): void {
-  //   this.goToPage();
-  // }
 
   //
   public selectAllRows(): void {
@@ -383,7 +380,8 @@ export class DsSanPhamChiTietComponent {
         this.getSpctByFilterParams();
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        console.log(errorResponse);
+        this.notifService.error(JSON.parse(errorResponse.error).message);
       },
     });
   }

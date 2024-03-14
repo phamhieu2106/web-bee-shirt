@@ -27,6 +27,7 @@ import { KieuThietKeService } from "src/app/service/kieu-thiet-ke.service";
 import { MauSacService } from "src/app/service/mau-sac.service";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamService } from "src/app/service/san-pham.service";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-them-san-pham-chi-tiet",
@@ -293,87 +294,99 @@ export class ThemSanPhamChiTietComponent {
 
   //
   public add(): void {
-    let xacNhan = confirm("Bạn có chắc muốn thêm các SPCT này?");
-    if (xacNhan) {
-      this.turnOnOverlay("Đang thêm...");
-      for (let i = 0; i < this.selectedMauSacList.length; i++) {
-        let mauSacEles = document.querySelectorAll(
-          `.mauSacId${this.selectedMauSacList[i].id}`
-        );
-        let kichCoEles = document.querySelectorAll(
-          `.kichCoId${this.selectedMauSacList[i].id}`
-        );
-        let giaNhapInputs = document.querySelectorAll(
-          `.giaNhap${this.selectedMauSacList[i].id}`
-        );
-        let giaBanInputs = document.querySelectorAll(
-          `.giaBan${this.selectedMauSacList[i].id}`
-        );
-        let soLuongInputs = document.querySelectorAll(
-          `.soLuong${this.selectedMauSacList[i].id}`
-        );
+    Swal.fire({
+      toast: true,
+      title: "Thêm sản phẩm?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.turnOnOverlay("Đang thêm...");
+        for (let i = 0; i < this.selectedMauSacList.length; i++) {
+          let mauSacEles = document.querySelectorAll(
+            `.mauSacId${this.selectedMauSacList[i].id}`
+          );
+          let kichCoEles = document.querySelectorAll(
+            `.kichCoId${this.selectedMauSacList[i].id}`
+          );
+          let giaNhapInputs = document.querySelectorAll(
+            `.giaNhap${this.selectedMauSacList[i].id}`
+          );
+          let giaBanInputs = document.querySelectorAll(
+            `.giaBan${this.selectedMauSacList[i].id}`
+          );
+          let soLuongInputs = document.querySelectorAll(
+            `.soLuong${this.selectedMauSacList[i].id}`
+          );
 
-        let addSPCTSubRequest: AddSPCTSubRequest;
-        for (let j = 0; j < mauSacEles.length; j++) {
-          let kichCoIdList: number[] = [];
-          let giaNhapList: number[] = [];
-          let giaBanList: number[] = [];
-          let soLuongTonList: number[] = [];
-          for (let k = 0; k < kichCoEles.length; k++) {
-            let kichCoId = parseInt((kichCoEles[k] as HTMLInputElement).value);
-            let giaNhap = parseInt(
-              (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-            );
-            let giaBan = parseInt(
-              (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-            );
-            let soLuongTon = parseInt(
-              (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-            );
-            kichCoIdList.push(kichCoId);
-            giaNhapList.push(giaNhap);
-            giaBanList.push(giaBan);
-            soLuongTonList.push(soLuongTon);
+          let addSPCTSubRequest: AddSPCTSubRequest;
+          for (let j = 0; j < mauSacEles.length; j++) {
+            let kichCoIdList: number[] = [];
+            let giaNhapList: number[] = [];
+            let giaBanList: number[] = [];
+            let soLuongTonList: number[] = [];
+            for (let k = 0; k < kichCoEles.length; k++) {
+              let kichCoId = parseInt(
+                (kichCoEles[k] as HTMLInputElement).value
+              );
+              let giaNhap = parseInt(
+                (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let giaBan = parseInt(
+                (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let soLuongTon = parseInt(
+                (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              kichCoIdList.push(kichCoId);
+              giaNhapList.push(giaNhap);
+              giaBanList.push(giaBan);
+              soLuongTonList.push(soLuongTon);
+            }
+            addSPCTSubRequest = {
+              mauSacId: this.selectedMauSacList[i].id,
+              kichCoIdList: kichCoIdList,
+              giaNhapList: giaNhapList,
+              giaBanList: giaBanList,
+              soLuongTonList: soLuongTonList,
+            };
           }
-          addSPCTSubRequest = {
-            mauSacId: this.selectedMauSacList[i].id,
-            kichCoIdList: kichCoIdList,
-            giaNhapList: giaNhapList,
-            giaBanList: giaBanList,
-            soLuongTonList: soLuongTonList,
+          const addSpctReq: AddSPCTRequest = {
+            id: this.addForm.get("id").value,
+            sanPhamId: this.addForm.get("sanPhamId").value,
+            kieuDangId: this.addForm.get("kieuDangId").value,
+            thietKeId: this.addForm.get("thietKeId").value,
+            tayAoId: this.addForm.get("tayAoId").value,
+            coAoId: this.addForm.get("coAoId").value,
+            chatLieuId: this.addForm.get("chatLieuId").value,
+            requests: addSPCTSubRequest,
           };
-        }
-        const addSpctReq: AddSPCTRequest = {
-          id: this.addForm.get("id").value,
-          sanPhamId: this.addForm.get("sanPhamId").value,
-          kieuDangId: this.addForm.get("kieuDangId").value,
-          thietKeId: this.addForm.get("thietKeId").value,
-          tayAoId: this.addForm.get("tayAoId").value,
-          coAoId: this.addForm.get("coAoId").value,
-          chatLieuId: this.addForm.get("chatLieuId").value,
-          requests: addSPCTSubRequest,
-        };
-        this.spctService
-          .add(addSpctReq, this.selectedImgFileList[i])
-          .subscribe({
-            next: (response: string) => {
-              this.toastr.success(response, "Hệ thống");
+          this.spctService
+            .add(addSpctReq, this.selectedImgFileList[i])
+            .subscribe({
+              next: (response: string) => {
+                this.toastr.success(response, "Hệ thống");
 
-              // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
-              if (i === this.selectedMauSacList.length - 1) {
-                console.log("giò mói chuyển tr: ", i);
+                // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
+                if (i === this.selectedMauSacList.length - 1) {
+                  console.log("giò mói chuyển tr: ", i);
 
+                  this.turnOffOverlay("");
+                  this.router.navigate([
+                    `/sp/ds-sp-chi-tiet/${this.sanPham.id}`,
+                  ]);
+                }
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.toastr.success(errorResponse.error.message, "Hệ thống");
                 this.turnOffOverlay("");
-                this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
-              }
-            },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.toastr.success(errorResponse.error.message, "Hệ thống");
-              this.turnOffOverlay("");
-            },
-          });
+              },
+            });
+        }
       }
-    }
+    });
   }
 
   //

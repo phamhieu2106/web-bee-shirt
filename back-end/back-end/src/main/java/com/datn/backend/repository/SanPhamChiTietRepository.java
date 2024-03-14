@@ -4,6 +4,7 @@ import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -21,11 +22,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             """, nativeQuery = true)
     Page<SanPhamChiTiet> getByPage(Pageable pageable,
                                    @Param("spId") int spId);
-
-    @Query(value = """
-                   :sql
-                   """, nativeQuery = true)
-    Page<SanPhamChiTiet> filterByPage(Pageable pageable, @Param("sql") String sql);
 
     @Query("""
             select spct from SanPhamChiTiet spct
@@ -53,8 +49,16 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                    """, nativeQuery = true)
     BigDecimal getMaxPrice(@Param("productId") int productId);
 
-    SanPhamChiTiet findBySanPhamIdAndMauSacIdAndKichCoId(int sanPhamId, int mauSacId, int kichCoId);
+    @Query(value = """
+                   UPDATE san_pham_chi_tiet ct
+                   SET ct.trang_thai = :value
+                   WHERE ct.san_pham_id = :sanPhamId
+                   """, nativeQuery = true)
+    @Modifying
+    void updateStatusAllBySpId(@Param("sanPhamId") int sanPhamId,
+                               @Param("value") boolean value);
 
+    SanPhamChiTiet findBySanPhamIdAndMauSacIdAndKichCoId(int sanPhamId, int mauSacId, int kichCoId);
 
     boolean existsByKieuDangIdAndSanPhamId(int kieuDangId, int sanPhamId);
 

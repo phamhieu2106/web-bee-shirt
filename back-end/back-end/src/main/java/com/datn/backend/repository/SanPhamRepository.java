@@ -12,6 +12,12 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     boolean existsByTen(String ten);
 
+    boolean existsByMa(String ma);
+
+    SanPham getByTen(String ten);
+
+    SanPham getByMa(String ma);
+
     @Query(value =
             """
             SELECT *

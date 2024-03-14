@@ -42,7 +42,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     "Tay Áo",
     "Thiết Kế",
     "Màu",
-    "Trạng Thái",
   ];
   typeForm: string = "update";
   formHeader: string = "Cập Nhật Đợt Giảm Giá";
@@ -129,7 +128,12 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     }
   };
   public async getAllSanPhamChiTietById(id: Array<number>) {
-    this.service.getAllSanPhamChiTietById(id).subscribe({
+    let idDotGiamGia: number = null;
+    this.route.paramMap.subscribe((params) => {
+      idDotGiamGia = Number(params.get("id"));
+    });
+
+    this.service.getAllSanPhamChiTietUpdateById(id, idDotGiamGia).subscribe({
       next: (value) => {
         this.listSanPhamChiTiet = value;
         this.dataSanPhamChiTiet = this.listSanPhamChiTiet.data;

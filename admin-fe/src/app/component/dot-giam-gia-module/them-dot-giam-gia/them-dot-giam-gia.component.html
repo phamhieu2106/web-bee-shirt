@@ -116,7 +116,7 @@
                 <div class="col-sm-12">
                   <table
                     id="rowSelection"
-                    class="table table-striped table-bordered dataTable no-footer table-hover"
+                    class="table table-bordered dataTable no-footer table-hover"
                     role="grid"
                     aria-describedby="rowSelection_info"
                   >
@@ -159,7 +159,8 @@
                               *ngIf="object?.hinhAnhSanPham; else defaultImage"
                               [src]="object?.hinhAnhSanPham"
                               alt=""
-                              width="60px"
+                              width="100px"
+                              height="80px"
                             />
                             <ng-template #defaultImage>
                               <img
@@ -187,17 +188,6 @@
                               }"
                             ></button>
                           </td>
-                          <td>
-                            <button
-                              class="{{
-                                object.trangThai
-                                  ? 'btn btn-success btn-rounded'
-                                  : 'btn btn-danger btn-rounded'
-                              }}"
-                            >
-                              {{ object.trangThai ? "Đang Bán" : "Ngừng Bán" }}
-                            </button>
-                          </td>
                         </tr>
                       </ng-container>
                     </tbody>
@@ -222,7 +212,7 @@
 
 <ng-template #noDataTemplate1>
   <tr>
-    <td [colSpan]="dataSanPham.length" class="text-center">
+    <td [colSpan]="tHeadProduct.length" class="text-center">
       Úi Bạn Ơi Không Có Dữ Liệu!!!
     </td>
   </tr>

@@ -1,0 +1,174 @@
+.slide-container {
+
+    width: 100%;
+    background-color: #f7f7f7;
+    padding: 40px;
+    border-radius: 10px;
+   
+
+}
+
+
+
+
+
+
+.card-content {
+    padding: 15px 5px;
+}
+
+
+.image-content {
+    position: relative;
+    row-gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.sale {
+    position: absolute;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: red;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-cart{
+    position: absolute;
+    bottom: 10px;
+    background-color: rgb(250, 250, 250, 0.60);
+    color: #000000;
+    font-size: 15px;
+    font-weight: 500;
+    width: 80%;
+    cursor: pointer;
+    opacity: 0;
+    padding: 10px;
+
+}
+.add-cart:hover{
+    color: rgb(207, 111, 21);
+   
+
+}
+.card-product:hover .add-cart{
+    opacity: 1;
+    transition: opacity 0.3s ease
+   
+}
+
+
+.name {
+    font-size: 17px;
+    font-weight: 500;
+    color: #333f48;
+}
+
+.name:hover {
+
+    color: rgb(207, 111, 21);
+    cursor: pointer;
+}
+
+.img-color {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin: 10px 10px 10px 0px;
+    border: 2px solid rgb(44, 42, 42);
+
+}
+
+.price {
+    font-weight: 700;
+    color: #f30808;
+    line-height: 14px;
+    margin-right: 10px;
+
+}
+.priceSale {
+    font-weight: 700;
+    color: #333f48;
+    line-height: 14px;
+
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #d8d3d3;
+
+}
+
+.swiper-button-next:hover {
+    color: #202020;
+}
+
+.swiper-button-prev:hover {
+    color: #202020;
+}
+
+
+
+/* Thời Gian Sale */
+
+.sale-time {
+  
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.demo1{
+   
+    display: flex;
+    justify-content: space-between;
+}
+
+.demo1>span{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 25px;
+    color: black;
+}
+
+.sale-time div {
+    
+   
+    font-size: 20px;
+    font-weight: 500;
+   
+    background-color: #000000;
+    padding: 7px;
+    border-radius: 5px;
+    text-align: center;
+
+}
+
+.countdown-item {
+    display: inline-block;
+    margin-right: 10px;
+    /* Khoảng cách giữa các phần tử */
+}
+
+.countdown-item p {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    color: #ffffff;
+}
+
+.countdown-item span {
+    font-size: 14px;
+    font-weight: 200;
+    color: #ffffff;
+}

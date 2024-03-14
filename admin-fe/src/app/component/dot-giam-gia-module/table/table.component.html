@@ -145,8 +145,6 @@
       </button>
       <button
         class="btn btn-outline btn-rounded"
-        data-toggle="modal"
-        data-target="#exampleModal"
         [hidden]="object.trangThai == 0"
         (click)="onSelectRemove(object.id)"
       >
@@ -190,48 +188,6 @@
     </td>
   </tr>
 </ng-template>
-
-<!-- Modal Confirm Xoa -->
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Xác Nhận Xoá Đợt Giảm Giá
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">Bạn có chắc chắn muốn xoá đợt giảm giá</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Đóng
-        </button>
-        <button
-          (click)="onRemove(idRemove)"
-          type="button"
-          class="btn btn-primary"
-          data-dismiss="modal"
-        >
-          Xoá
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal Chi Tiet Dot Giam Gia -->
 <div

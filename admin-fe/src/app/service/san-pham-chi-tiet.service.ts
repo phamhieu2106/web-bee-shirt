@@ -59,9 +59,9 @@ export class SanPhamChiTietService {
   }
 
   //
-  public getOneById(spctId: number): Observable<SanPhamChiTiet> {
-    return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
-  }
+  // public getOneById(spctId: number): Observable<SanPhamChiTiet> {
+  //   return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
+  // }
 
   //
   public getGiaBan(spct: SanPhamChiTiet): number {

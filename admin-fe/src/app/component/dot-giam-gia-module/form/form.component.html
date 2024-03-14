@@ -62,8 +62,15 @@
                 : 'form-control form-control-sm'
             "
             formControlName="thoiGianBatDau"
+            (change)="handleChangeTime(NgayBatDau.value, NgayKetThuc.value)"
           />
           <div class="invalid-feedback">Ngày Bắt Đầu không hợp lệ</div>
+          <div class="invalid-feedback">
+            Ngày Bắt Đầu không thế là ngày trước ngày hiện tại
+          </div>
+          <div class="invalid-feedback">
+            Ngày Bắt Đầu không được nhỏ hơn Ngày Kết Thúc
+          </div>
         </div>
       </div>
       <div class="form-group row">
@@ -79,8 +86,12 @@
                 : 'form-control form-control-sm'
             "
             formControlName="thoiGianKetThuc"
+            (change)="handleChangeTime(NgayBatDau.value, NgayKetThuc.value)"
           />
           <div class="invalid-feedback">Ngày Kết Thúc không hợp lệ</div>
+          <div class="invalid-feedback">
+            Ngày Kết Thúc phải bằng hoặc lớn hơn 5 phút trước thời điểm diễn ra
+          </div>
         </div>
       </div>
       <div class="d-flex justify-content-end">
@@ -93,9 +104,8 @@
         <button
           type="button"
           class="btn btn-success"
-          data-toggle="modal"
-          data-target="#exampleModal"
           [disabled]="form.invalid"
+          (click)="handleSubmit()"
         >
           {{ formButton }}
         </button>
@@ -103,11 +113,3 @@
     </form>
   </div>
 </div>
-
-<!-- Modal -->
-<app-modal
-  [message]="modalMessage"
-  [nameAction]="modalAction"
-  [title]="modalTitle"
-  [handleSubmit]="handleSubmit"
-></app-modal>

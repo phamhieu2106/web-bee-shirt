@@ -84,6 +84,9 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   deleteOrder(index: number) {
     if (this.orders.length == 1) {
+      this.orders.splice(index, 1);
+      this.newHoaDon();
+
       return;
     }
     this.orders.splice(index, 1);

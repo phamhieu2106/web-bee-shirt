@@ -1,0 +1,96 @@
+<div class="row pt-2 pb-3 pl-1 pr-1">
+  <!-- Input search -->
+  <div class="col-6 p-3">
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Nhập tên hoặc mã sản phẩm"
+    />
+  </div>
+
+  <!-- Price range -->
+  <div class="col-6 row d-flex pr-2 w-75">
+    <div class="col-6 text-left">{{ minValue }}</div>
+    <div class="col-6 text-right">{{ maxValue }}</div>
+    <section class="range-slider">
+      <input
+        [(ngModel)]="minValue"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [step]="step"
+        type="range"
+        (ngModelChange)="validateSlider()"
+      />
+      <input
+        [(ngModel)]="maxValue"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [step]="step"
+        type="range"
+        (ngModelChange)="validateSlider()"
+      />
+    </section>
+  </div>
+
+  <!-- Combobox -->
+  <div
+    class="col-12 d-flex list-select justify-content-center justify-content-between align-items-center"
+  >
+    <!--Màu sắc  -->
+    <div class="d-flex">
+      Màu sắc:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kích cỡ  -->
+    <div class="d-flex">
+      Kích cỡ:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kiểu dáng  -->
+    <div class="d-flex">
+      Kiểu dáng:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kiểu thiết kế  -->
+    <div class="d-flex">
+      Thiết kế:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kiểu tay áo  -->
+    <div class="d-flex">
+      Tay áo:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kiểu cổ áo  -->
+    <div class="d-flex">
+      Cổ áo:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+
+    <!--Kiểu chất liệu  -->
+    <div class="d-flex">
+      Chất liệu:
+      <select class="form-control form-control-sm">
+        <option>Tất cả</option>
+      </select>
+    </div>
+  </div>
+</div>

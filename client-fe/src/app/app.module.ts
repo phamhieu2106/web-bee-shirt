@@ -10,8 +10,8 @@ import { HomePageComponent } from "./component/home-page/home-page.component";
 import { CurrencyPipe } from "@angular/common";
 import { TopbarComponent } from './context/topbar/topbar.component';
 import { PhieuGiamGiaComponent } from './context/phieu-giam-gia/phieu-giam-gia.component';
-import { HeaderBottomComponent } from './context/header-bottom/header-bottom.component';
-import { ProductComponent } from './context/product/product.component';
+import { DotGiamGiaComponent } from './context/dot-giam-gia/dot-giam-gia.component';
+import { SanPhamChiTietComponent } from './component/san-pham-chi-tiet/san-pham-chi-tiet.component';
 
 
 
@@ -24,8 +24,8 @@ import { ProductComponent } from './context/product/product.component';
     HomePageComponent,
     TopbarComponent,
     PhieuGiamGiaComponent,
-    HeaderBottomComponent,
-    ProductComponent,
+    DotGiamGiaComponent,
+    SanPhamChiTietComponent,
     
   ],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule],

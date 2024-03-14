@@ -14,6 +14,8 @@ public interface ChartService {
 
     Long countInvoiceWFD();
 
+    Long countInvoiceEx();
+
     List<Long> countInvoiceInThisYear();
 
     List<Long> countInvoiceInLastYear();

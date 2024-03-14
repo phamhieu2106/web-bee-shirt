@@ -1,50 +1,61 @@
- <!-- Sản Phẩm Flash -->
- 
+<!-- Sản Phẩm Flash -->
 
- <div class="slide-container swiper ">
-    <div>
-    <ul class="countdown-deal d-flex d-flex-center js-center" data-time="15">
-        <li><strong class="days">00</strong><small>Ngày</small></li>
-        <li><strong class="hours">12</strong><small>Giờ</small></li>
-        <li><strong class="minutes">44</strong><small>Phút</small></li>
-        <li><strong class="seconds">59</strong><small>Giây</small></li>
-    </ul>
- </div>
-    
+
+
+<div class="slide-container swiper ">
+    <div class="demo1">
+
+        <span><img width="20" height="20" src="https://file.hstatic.net/1000253775/file/flash_c1195bb7597344909c3a855990d45510.png" alt="FLASH SALE">FLASH SALE </span>
+
+        <div class="sale-time">
+            <div class="countdown-item hour">
+                <p>{{ hoursDisplay }}</p>
+                <span>Giờ</span>
+            </div>
+            <div class="countdown-item minute">
+                <p>{{ minutesDisplay }}</p>
+                <span>Phút</span>
+            </div>
+            <div class="countdown-item second">
+                <p>{{ secondsDisplay }}</p>
+                <span>Giây</span>
+            </div>
+        </div>
+    </div>
 
     <div class="slide-flash-sale" style="overflow: hidden;">
-      <div class="card-wraper swiper-wrapper">
-      
-       
-        <div class=" swiper-slide" *ngFor="let sp of pagedResponse?.data">
-          <div class="image-content">
-            <div class="sale">-60%</div>
-            <div class="card-image">
-              <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl"
-                alt="" class="card-img">
-            </div>
-          </div>
+        <div class="card-wraper swiper-wrapper">
 
-          <div class="card-content">
-            <div>
-              <span *ngFor="let mauSac of getMauSacList(sp)">
-                <img class="img-color" [src]="mauSac.image.imageUrl" 
-                  [title]="mauSac.ten" />
-              </span>
+
+            <div class="card-product swiper-slide" *ngFor="let sp of pagedResponse?.data">
+                <div class="image-content">
+                    <div class="sale">-60%</div>
+                    <Button class="btn add-cart">Thêm Nhanh Vào Giỏ</Button>
+                    <div class="card-image">
+                        <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" alt="" class="card-img">
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <div>
+                        <span *ngFor="let mauSac of getMauSacList(sp)">
+                            <img class="img-color" [src]="mauSac.image.imageUrl" [title]="mauSac.ten" />
+                        </span>
+                    </div>
+                    <h2 class="name">{{ sp.ten }}</h2>
+                    <div>
+                        <span class="price"> {{ displayPrice(sp) }}</span>
+                        <span class="priceSale text-decoration-line-through "> 999.000</span>
+                    </div>
+
+
+                </div>
             </div>
-            <h2 class="name">{{ sp.ten }}</h2>
-           <div>
-            <span class="price"> {{ displayPrice(sp) }}</span>
-            <span class="priceSale text-decoration-line-through "> 999.000</span>
-           </div>
-           
-          
-          </div>
         </div>
-      </div>
+        <div id="next-flash-sale" class="swiper-button-next"></div>
+        <div id="prev-flash-sale" class="swiper-button-prev"></div>
     </div>
-    <div id="next-flash-sale" class="swiper-button-next"></div>
-    <div id="prev-flash-sale" class="swiper-button-prev"></div>
-   
-  
-  </div>
+
+
+
+</div>

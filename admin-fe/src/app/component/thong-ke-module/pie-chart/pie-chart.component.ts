@@ -75,6 +75,8 @@ export class PieChartComponent implements OnInit {
     return `rgb(${r}, ${g}, ${b})`; // Trả về chuỗi màu RGB
   }
   ngOnDestroy(): void {
-    this.chart.destroy();
+    if (this.chart) {
+      this.chart.destroy();
+    }
   }
 }

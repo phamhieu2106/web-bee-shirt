@@ -18,6 +18,8 @@ public interface DotGiamGiaService {
 
     PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId);
 
+    PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTietForUpdate(int pageNumber, int pageSize, List<Integer> listSanPhamId, int idDotGiamGia);
+
     PagedResponse<DotGiamGiaResponse> getPagination(int pageNumber, int pageSize, String search);
 
     PagedResponse<DotGiamGiaResponse> getFilter(int pageNumber, int pageSize, String search

@@ -43,6 +43,12 @@ public class ChartServiceImpl implements ChartService {
     }
 
     @Override
+    public Long countInvoiceEx() {
+        return chartRepository.countInvoiceEx();
+    }
+
+
+    @Override
     public List<Long> countInvoiceInThisYear() {
 
         return chartRepository.countInvoiceInThisYear();

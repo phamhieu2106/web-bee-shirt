@@ -78,6 +78,18 @@ public class DotGiamGiaResource {
         return ResponseEntity.ok(service.getAllSanPhamChiTiet(pageNumber, pageSize, id));
     }
 
+    @GetMapping("/sanphamchitietupdate")
+    public ResponseEntity<?> getSanPhamChiTietForUpdate(@RequestParam(value = "id", defaultValue = "", required = false)
+                                                        List<Integer> id,
+                                                        @RequestParam(value = "idDotGiamGia") Integer idDotGiamGia,
+                                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
+                                                        int pageNumber,
+                                                        @RequestParam(value = "pageSize", defaultValue = "9999", required = false)
+                                                        int pageSize) {
+//        return SanPhamChiTietResponse
+        return ResponseEntity.ok(service.getAllSanPhamChiTietForUpdate(pageNumber, pageSize, id, idDotGiamGia));
+    }
+
     @GetMapping("/listidsanpham")
     public ResponseEntity<?> getListIdSanPham(@RequestParam(value = "ids", defaultValue = "", required = false)
                                               String ids) {
@@ -93,7 +105,6 @@ public class DotGiamGiaResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody DotGiamGiaRequest request) {
-//        return DotGiamGiaResponseEntity body
         return ResponseEntity.ok().body(service.update(id, request));
     }
 

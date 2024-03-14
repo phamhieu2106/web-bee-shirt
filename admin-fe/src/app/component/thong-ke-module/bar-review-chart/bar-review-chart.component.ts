@@ -43,7 +43,9 @@ export class BarReviewChartComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.chart.destroy();
+    if (this.chart) {
+      this.chart.destroy();
+    }
   }
   public createChart() {
     Chart.register(...registerables);

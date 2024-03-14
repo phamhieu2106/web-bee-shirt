@@ -7,7 +7,7 @@ import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
-import {Swiper} from "swiper";
+
 
 
 @Component({

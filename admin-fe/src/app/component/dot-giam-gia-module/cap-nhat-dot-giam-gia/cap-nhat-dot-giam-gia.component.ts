@@ -185,7 +185,7 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     }
   };
   public getAllSanPham(): void {
-    this.sanPhamService.getAll().subscribe({
+    this.sanPhamService.getByPage().subscribe({
       next: (value) => {
         this.listSanPham = value;
         this.dataSanPham = this.listSanPham.data;

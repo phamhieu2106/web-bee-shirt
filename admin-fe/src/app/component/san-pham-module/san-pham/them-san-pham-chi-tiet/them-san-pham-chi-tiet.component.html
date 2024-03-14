@@ -8,7 +8,7 @@
         <h4 class="text-center mt-2">Thông tin sản phẩm</h4>
         <form class="form border p-2 rounded mb-5" [formGroup]="addForm">
           <input type="hidden" formControlName="sanPhamId" />
-          <i class="text-danger"
+          <i class="text-danger" *ngIf="existSpct != null"
             >* Sản phẩm này đã có một số sản phẩm chi tiết</i
           >
           <!-- tên sản phẩm -->
@@ -26,7 +26,15 @@
           <div class="row">
             <!-- kiểu dáng -->
             <div class="col-6 mb-3">
-              <label class="form-label font-weight-bold">Kiểu dáng:</label>
+              <label class="form-label font-weight-bold"
+                ><a
+                  class="link-label"
+                  [routerLink]="'/kieu-dang/ds-kieu-dang'"
+                  title="Đi đến danh sách kiểu dáng"
+                  target="_blank"
+                  >Kiểu dáng:</a
+                ></label
+              >
               <div class="row" *ngIf="existSpct == null">
                 <input
                   class="form-control rounded col-8 ms-3 me-2"
@@ -65,7 +73,15 @@
 
             <!-- kiểu thiết kế -->
             <div class="col-6 mb-3">
-              <label class="form-label font-weight-bold">Kiểu thiết kế:</label>
+              <label class="form-label font-weight-bold"
+                ><a
+                  class="link-label"
+                  [routerLink]="'/kieu-thiet-ke/ds-kieu-thiet-ke'"
+                  title="Đi đến danh sách kiểu thiết kế"
+                  target="_blank"
+                  >Kiểu thiết kế:</a
+                ></label
+              >
               <div class="row" *ngIf="existSpct == null">
                 <input
                   class="form-control rounded col-8 ms-3 me-2"
@@ -106,7 +122,15 @@
 
             <!-- tay áo -->
             <div class="col-6 mb-3">
-              <label class="form-label font-weight-bold">Kiểu tay áo:</label>
+              <label class="form-label font-weight-bold"
+                ><a
+                  class="link-label"
+                  [routerLink]="'/kieu-tay-ao/ds-kieu-tay-ao'"
+                  title="Đi đến danh sách kiểu tay áo"
+                  target="_blank"
+                  >Kiểu tay áo:</a
+                ></label
+              >
               <div class="row" *ngIf="existSpct == null">
                 <input
                   class="form-control rounded col-8 ms-3 me-2"
@@ -145,7 +169,15 @@
 
             <!-- cổ áo -->
             <div class="col-6 mb-3">
-              <label class="form-label font-weight-bold">Kiểu cổ áo:</label>
+              <label class="form-label font-weight-bold"
+                ><a
+                  class="link-label"
+                  [routerLink]="'/kieu-co-ao/ds-kieu-co-ao'"
+                  title="Đi đến danh sách kiểu cổ áo"
+                  target="_blank"
+                  >Kiểu cổ áo:</a
+                ></label
+              >
               <div class="row" *ngIf="existSpct == null">
                 <input
                   class="form-control rounded col-8 ms-3 me-2"
@@ -181,7 +213,15 @@
 
             <!-- chất liệu -->
             <div class="col-12 mb-3">
-              <label class="form-label font-weight-bold">Chất liệu:</label>
+              <label class="form-label font-weight-bold"
+                ><a
+                  class="link-label"
+                  [routerLink]="'/chat-lieu/ds-chat-lieu'"
+                  title="Đi đến danh sách chất liệu"
+                  target="_blank"
+                  >Chất liệu:</a
+                ></label
+              >
               <div class="row" *ngIf="existSpct == null">
                 <input
                   class="form-control rounded col-10 ms-3 me-2"

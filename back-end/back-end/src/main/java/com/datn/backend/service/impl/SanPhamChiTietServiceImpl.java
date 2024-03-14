@@ -5,12 +5,12 @@ import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.exception.custom_exception.OperationNotAllowException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.dto.response.DotGiamGiaResponse2;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
-import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.model.san_pham.CoAo;
 import com.datn.backend.model.san_pham.HinhAnh;
@@ -151,8 +151,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return paged;
     }
 
-
-
     @Override
     public PagedResponse<SanPhamChiTiet> filterByPage(FilterSPCTParams params) {
         return customSpctRepo.filterByPage(params);
@@ -229,7 +227,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public void changeStatus(int id) {
         SanPhamChiTiet spct = spctRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm được sản phẩm chi tiết ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + id + " không tồn tại!"));
+        if (!spct.isTrangThai() && !spct.getSanPham().isTrangThai()) {
+            throw new OperationNotAllowException("Trạng thái của sản phẩm của SPCT này được bị ngừng bán!");
+        }
         spct.setTrangThai(!spct.isTrangThai());
         spctRepo.save(spct);
     }
@@ -237,7 +238,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet getOneById(int spctId) {
         return spctRepo.findById(spctId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không thể tìm thất SPCT ID: " + spctId));
+                .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + spctId + " không tồn tại!"));
     }
 
     @Override
@@ -321,25 +322,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!");
         }
         return updateSpct;
-
-//        if (spcts.size() == 0) {
-//            System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!");
-//            return;
-//        }
-//
-//        SanPhamChiTiet spct = spcts.get(0);
-//        System.out.println("ms: " + newMauSacId);
-//        System.out.println(sanPhamId);
-//        System.out.println("ha size: " + spct.getHinhAnhs().size());
-//
-//        updateSpct.setHinhAnhs(new ArrayList<>());
-//        for (HinhAnh newImg : spct.getHinhAnhs()) {
-//            System.out.println(newImg.getImageId());
-//            updateSpct.setHinhAnh(newImg);
-//        }
-//        updateSpct.setHinhAnhs(spct.getHinhAnhs());
-//        spctRepo.save(updateSpct);
-//        System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!");
     }
 
     @Override

@@ -77,7 +77,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
   public getDotGiamGiaRequest(): void {}
   // San Pham
   public getAllSanPham(): void {
-    this.sanPhamService.getAll().subscribe({
+    this.sanPhamService.getByPage().subscribe({
       next: (value) => {
         this.listSanPham = value;
         this.dataSanPham = this.listSanPham.data;

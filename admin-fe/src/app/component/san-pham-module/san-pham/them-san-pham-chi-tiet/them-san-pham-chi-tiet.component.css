@@ -108,3 +108,7 @@
   height: 70px;
   object-fit: cover;
 }
+
+.link-label:hover {
+  text-decoration: underline;
+}

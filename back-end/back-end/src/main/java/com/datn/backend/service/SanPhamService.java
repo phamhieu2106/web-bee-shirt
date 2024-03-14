@@ -12,7 +12,7 @@ public interface SanPhamService {
 
     SanPham getById(int id);
 
-    void changeStatus(int id);
+    void changeStatus(int id, boolean value);
 
     SanPham update(SanPham sanPham);
 

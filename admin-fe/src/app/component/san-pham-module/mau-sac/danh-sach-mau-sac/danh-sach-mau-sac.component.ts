@@ -48,7 +48,7 @@ export class DanhSachMauSacComponent {
     this.addForm.get("ten")?.setValue(trimmedTen);
 
     let trimmedMa = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmedMa);
+    this.addForm.get("ma")?.setValue(trimmedMa);
 
     this.turnOnOverlay("Đang thêm...");
     this.mauSacService.add(this.addForm.value, this.selectFile).subscribe({

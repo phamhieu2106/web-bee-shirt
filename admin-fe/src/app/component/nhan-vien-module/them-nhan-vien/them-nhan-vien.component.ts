@@ -136,8 +136,6 @@ export class ThemNhanVienComponent {
           matKhau: randomPassword,
         });
 
-        console.log(this.addForm.value);
-
         this.nhanVienService
           .add(this.addForm.value, this.selectFile)
           .subscribe({

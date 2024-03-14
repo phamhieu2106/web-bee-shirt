@@ -15,7 +15,7 @@ export class SanPhamService {
 
   // public functions
   // 1
-  public getAll(
+  public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
     search: string = ""
@@ -37,8 +37,8 @@ export class SanPhamService {
   }
 
   // 4
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}`, {
+  public changeStatus(id: number, value: boolean): Observable<string> {
+    return this.http.get(`${this.apiUrl}/status/${id}/${value}`, {
       responseType: "text",
     });
   }

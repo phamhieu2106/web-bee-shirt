@@ -1,6 +1,7 @@
 package com.datn.backend.exception;
 
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
+import com.datn.backend.exception.custom_exception.OperationNotAllowException;
 import com.datn.backend.exception.custom_exception.OrderStatusException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
@@ -56,6 +57,12 @@ public class ExceptionHandling {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OperationNotAllowException.class)
+    public ResponseEntity<ErrorResponse> handleOperationNotAllowException(OperationNotAllowException ex) {
         ErrorResponse response = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(response, BAD_REQUEST);
     }

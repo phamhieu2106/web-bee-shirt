@@ -44,7 +44,7 @@ public class DotGiamGiaResource {
                                         String endDate,
                                         @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
                                         int pageNumber,
-                                        @RequestParam(value = "pageSize", defaultValue = "9999", required = false)
+                                        @RequestParam(value = "pageSize", defaultValue = "5", required = false)
                                         int pageSize,
                                         @RequestParam(value = "search", defaultValue = "", required = false)
                                         String search) {

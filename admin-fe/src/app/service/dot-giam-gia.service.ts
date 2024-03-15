@@ -30,6 +30,17 @@ export class DotGiamGiaService {
       `${this.apiURL}/filter?status=${status}&startDate=${startDate}&endDate=${endDate}`
     );
   }
+  public getDotGiamGiaFilterPageNumber(
+    pageSize: number,
+    pageNumber: number,
+    status: number,
+    startDate: string,
+    endDate: string
+  ): Observable<PagedResponse<DotGiamGia>> {
+    return this.http.get<PagedResponse<DotGiamGia>>(
+      `${this.apiURL}/filter?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}&startDate=${startDate}&endDate=${endDate}`
+    );
+  }
 
   public getDotGiamGiaSearch(
     search: string
@@ -40,10 +51,11 @@ export class DotGiamGiaService {
   }
 
   public getDotGiamGiaPageSize(
-    pageSize: number
+    pageSize: number,
+    pageNumber: number
   ): Observable<PagedResponse<DotGiamGia>> {
     return this.http.get<PagedResponse<DotGiamGia>>(
-      `${this.apiURL}?pageSize=${pageSize}`
+      `${this.apiURL}?pageSize=${pageSize}&pageNumber=${pageNumber}`
     );
   }
 
@@ -55,7 +67,6 @@ export class DotGiamGiaService {
       `${this.apiURL}?pageSize=${pageSize}&pageNumber=${pageNumber}`
     );
   }
-
   public getAllSanPhamChiTietById(
     id: Array<number>
   ): Observable<PagedResponse<DotGiamGiaSanPhamChiTiet>> {

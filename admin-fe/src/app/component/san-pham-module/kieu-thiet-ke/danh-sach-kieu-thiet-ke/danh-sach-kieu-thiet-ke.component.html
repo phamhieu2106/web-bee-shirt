@@ -51,8 +51,8 @@
         <table class="table">
           <thead class="thead-default">
             <tr>
-              <th class="text-center" width="10%">STT</th>
-              <th class="text-center" width="20%">Tên</th>
+              <th width="10%">STT</th>
+              <th width="20%">Tên</th>
               <th width="15%">Trạng Thái</th>
               <th width="15%">Ngày Thêm</th>
               <th width="15%">Hành động</th>
@@ -60,14 +60,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let tk of pagedResponse?.data; let i = index">
-              <th scope="row" class="text-center">
+              <th scope="row">
                 {{
                   i +
                     1 +
                     (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
-              <td class="text-center">{{ tk.ten }}</td>
+              <td>{{ tk.ten }}</td>
               <td>
                 <span
                   class="pointer"

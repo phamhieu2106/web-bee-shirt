@@ -41,6 +41,7 @@
                   list="kieuDangList"
                   type="text"
                   (input)="selectThuocTinh($event, kieuDangList, 'kieuDangId')"
+                  [ngClass]="validation.kieuDangId ? 'is-invalid' : ''"
                 />
                 <datalist id="kieuDangList">
                   <option
@@ -62,6 +63,10 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
+              <div class="ms-2 mt-1 text-danger" *ngIf="validation.kieuDangId">
+                <i>Không được bỏ trống!</i>
+              </div>
+
               <div *ngIf="existSpct != null">
                 <input
                   class="form-control rounded"
@@ -90,6 +95,7 @@
                   (input)="
                     selectThuocTinh($event, kieuThietKeList, 'thietKeId')
                   "
+                  [ngClass]="validation.thietKeId ? 'is-invalid' : ''"
                 />
                 <datalist id="thietKeList">
                   <option
@@ -111,6 +117,10 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
+              <div class="ms-2 mt-1 text-danger" *ngIf="validation.thietKeId">
+                <i>Không được bỏ trống!</i>
+              </div>
+
               <div *ngIf="existSpct != null">
                 <input
                   class="form-control rounded"
@@ -137,6 +147,7 @@
                   list="tayAoList"
                   type="text"
                   (input)="selectThuocTinh($event, tayAoList, 'tayAoId')"
+                  [ngClass]="validation.tayAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="tayAoList">
                   <option
@@ -158,6 +169,10 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
+              <div class="ms-2 mt-1 text-danger" *ngIf="validation.tayAoId">
+                <i>Không được bỏ trống!</i>
+              </div>
+
               <div *ngIf="existSpct != null">
                 <input
                   class="form-control rounded"
@@ -184,6 +199,7 @@
                   list="coAoList"
                   type="text"
                   (input)="selectThuocTinh($event, coAoList, 'coAoId')"
+                  [ngClass]="validation.coAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="coAoList">
                   <option *ngFor="let ca of coAoList" [value]="ca.ten"></option>
@@ -202,6 +218,10 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
+              <div class="ms-2 mt-1 text-danger" *ngIf="validation.coAoId">
+                <i>Không được bỏ trống!</i>
+              </div>
+
               <div *ngIf="existSpct != null">
                 <input
                   class="form-control rounded"
@@ -228,6 +248,7 @@
                   list="chatLieuList"
                   type="text"
                   (input)="selectThuocTinh($event, chatLieuList, 'chatLieuId')"
+                  [ngClass]="validation.chatLieuId ? 'is-invalid' : ''"
                 />
                 <datalist id="chatLieuList">
                   <option
@@ -249,6 +270,10 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
+              <div class="ms-2 mt-1 text-danger" *ngIf="validation.chatLieuId">
+                <i>Không được bỏ trống!</i>
+              </div>
+
               <div *ngIf="existSpct != null">
                 <input
                   class="form-control rounded"
@@ -345,104 +370,124 @@
             </div>
           </div>
           <!--  -->
+
           <div class="row">
-            <table class="table col-8">
-              <thead>
-                <tr>
-                  <th width="5%">
+            <div class="col-8">
+              <i
+                class="text-danger mb-3"
+                *ngIf="validation.giaAndSoLuong[colorIndex]"
+                >Giá nhập không được lớn hơn giá bán, giá nhập && giá bán phải >
+                0, số lượng phải > 0</i
+              >
+              <table class="table" class="color-table">
+                <thead>
+                  <tr>
+                    <th width="5%">
+                      <input
+                        [id]="'ckBoxAll' + sc.id"
+                        [class]="'ckBoxColor' + sc.id"
+                        type="checkbox"
+                        (click)="selectAllRows1Color(sc.id)"
+                      />
+                    </th>
+                    <th width="30%">Sản phẩm</th>
+                    <th width="10%">Kích cỡ</th>
+                    <th width="15%">Giá nhập</th>
+                    <th width="15%">Giá bán</th>
+                    <th width="15%">Số lượng</th>
+                    <th width="5%">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let ss of selectedKichCoList"
+                    [id]="'row' + sc.id + ss.id"
+                  >
                     <input
-                      [id]="'ckBoxAll' + sc.id"
-                      [class]="'ckBoxColor' + sc.id"
-                      type="checkbox"
-                      (click)="selectAllRows1Color(sc.id)"
+                      [id]="'mauSacId' + sc.id"
+                      [class]="'mauSacId' + sc.id"
+                      [value]="sc.id"
+                      type="hidden"
                     />
-                  </th>
-                  <th width="30%">Sản phẩm</th>
-                  <th width="10%">Kích cỡ</th>
-                  <th width="15%">Giá nhập</th>
-                  <th width="15%">Giá bán</th>
-                  <th width="15%">Số lượng</th>
-                  <th width="5%">Xóa</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="let ss of selectedKichCoList"
-                  [id]="'row' + sc.id + ss.id"
-                >
-                  <input
-                    [id]="'mauSacId' + sc.id"
-                    [class]="'mauSacId' + sc.id"
-                    [value]="sc.id"
-                    type="hidden"
-                  />
-                  <input
-                    [id]="'kichCoId' + ss.id"
-                    [class]="'kichCoId' + sc.id"
-                    [value]="ss.id"
-                    type="hidden"
-                  />
-                  <td>
                     <input
-                      [id]="'ckBoxColor' + sc.id + ss.id"
-                      [class]="'ckBoxColor' + sc.id"
-                      type="checkbox"
-                      (change)="toggleUpdateFieldBtn(sc.id)"
+                      [id]="'kichCoId' + ss.id"
+                      [class]="'kichCoId' + sc.id"
+                      [value]="ss.id"
+                      type="hidden"
                     />
-                  </td>
-                  <td>
-                    <span>{{ sanPham.ten }}</span>
-                  </td>
-                  <td>{{ ss.ten.split(" ")[0] }}</td>
-                  <td>
-                    <input
-                      [id]="'giaNhap' + sc.id + ss.id"
-                      [class]="'giaNhap' + sc.id"
-                      type="text"
-                      style="width: 100px"
-                      value="0"
-                      (input)="formatNumber2($event, 'giaNhap' + sc.id + ss.id)"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      [id]="'giaBan' + sc.id + ss.id"
-                      [class]="'giaBan' + sc.id"
-                      type="text"
-                      style="width: 100px"
-                      value="0"
-                      (input)="formatNumber2($event, 'giaBan' + sc.id + ss.id)"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      [id]="'soLuong' + sc.id + ss.id"
-                      [class]="'soLuong' + sc.id"
-                      type="text"
-                      style="width: 100px"
-                      value="0"
-                      (input)="formatNumber2($event, 'soLuong' + sc.id + ss.id)"
-                    />
-                  </td>
-                  <td>
-                    <i
-                      class="fa-solid fa-trash pointer"
-                      style="color: red"
-                      (click)="deleteRow('row' + sc.id + ss.id)"
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td>
+                      <input
+                        [id]="'ckBoxColor' + sc.id + ss.id"
+                        [class]="'ckBoxColor' + sc.id"
+                        type="checkbox"
+                        (change)="toggleUpdateFieldBtn(sc.id)"
+                      />
+                    </td>
+                    <td>
+                      <span>{{ sanPham.ten }}</span>
+                    </td>
+                    <td>{{ ss.ten.split(" ")[0] }}</td>
+                    <td>
+                      <input
+                        [id]="'giaNhap' + sc.id + ss.id"
+                        [class]="'giaNhap' + sc.id"
+                        type="text"
+                        style="width: 100px"
+                        value="0"
+                        (input)="
+                          formatNumber2($event, 'giaNhap' + sc.id + ss.id)
+                        "
+                        s
+                      />
+                    </td>
+                    <td>
+                      <input
+                        [id]="'giaBan' + sc.id + ss.id"
+                        [class]="'giaBan' + sc.id"
+                        type="text"
+                        style="width: 100px"
+                        value="0"
+                        (input)="
+                          formatNumber2($event, 'giaBan' + sc.id + ss.id)
+                        "
+                      />
+                    </td>
+                    <td>
+                      <input
+                        [id]="'soLuong' + sc.id + ss.id"
+                        [class]="'soLuong' + sc.id"
+                        type="text"
+                        style="width: 100px"
+                        value="0"
+                        (input)="
+                          formatNumber2($event, 'soLuong' + sc.id + ss.id)
+                        "
+                      />
+                    </td>
+                    <td>
+                      <i
+                        class="fa-solid fa-trash pointer"
+                        style="color: red"
+                        (click)="deleteRow('row' + sc.id + ss.id)"
+                      ></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="text-center col-4">
               <!-- ẢNH -->
+              <i class="text-danger mb-3" *ngIf="validation.anh[colorIndex]"
+                >Vui lòng chọn ảnh cho sản phẩm!</i
+              >
               <h5>Ảnh</h5>
               <img
                 class="default-img mb-3 pointer"
                 title="Chọn ảnh"
                 src="assets/img/default-image.jpg"
-                (click)="openHinhAnhModal(sc.ten, sc.id, sanPham?.id)"
+                (click)="openHinhAnhModal(sc.ten, sc.id, colorIndex)"
               />
+              <!-- (click)="openHinhAnhModal(sc.ten, sc.id, sanPham?.id)" -->
               <button
                 id="anhSpModalBtn"
                 type="button btn-primary"
@@ -562,7 +607,11 @@
         >
           Tải ảnh lên
         </button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+        >
           Đóng
         </button>
       </div>

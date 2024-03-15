@@ -1,63 +1,128 @@
+/* Top bar */
+#topbar {
+  background: #FFFFFF;
+  font-size: 12px;
+  color: #000000;
+  overflow: hidden;
+}
 
-img{
+#topbar p {
+  padding: 4px;
+  margin-bottom: 0;
+  text-align: center;
+  color: #000000;
+}
+
+.marquee-topbar {
+  display: flex;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  position: relative;
+  animation: marquee 30s linear infinite;
+}
+
+.item {
+  font-size: 12px;
+  padding-right: 60px;
+  /* Khoảng cách giữa các item */
+
+}
+
+@keyframes marquee {
+  0% {
+    left: 100%;
+  }
+
+  100% {
+    left: -100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .marquee-topbar {
+    animation: marquee 15s linear infinite;
+  }
+}
+
+.marquee-topbar .item {
+  flex: 0 0 calc(100% / 4);
+  -ms-flexbox: 0 0 calc(100% / 4);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .marquee-topbar .item {
+    flex: 0 0 calc(100% / 4);
+    -ms-flexbox: 0 0 calc(100% / 4);
+  }
+}
+
+/* end top bar */
+
+img {
   width: 100%;
 }
-.main-header{
+
+.main-header {
+
+  position: sticky;
+  top: 0;
+  z-index: 998;
+}
+
+.navMain1{
   background: black;
 }
 
-header{
-  
+header {
+
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
- 
- 
   color: white;
+  
 }
-.logo img{
+
+.logo img {
   width: 120px;
 }
 
-nav .logo{
+nav .logo {
   display: none;
 }
 
 
 
-nav ul{
+nav ul {
   display: flex;
   align-items: center;
   justify-content: center;
   list-style: none;
- 
+  height: 50px;
 }
 
-nav ul li a{
+nav ul li a {
   color: #000000;
   display: block;
-  margin: 0 2px ;
+  margin: 0 2px;
   font-weight: 600;
   padding: 8px 18px;
   transition: 0.2s;
-  border-radius: 30px;
+
   text-decoration: none;
 
 
 }
 
-nav ul li a:hover{
-  background: #f6f4ff;
-  color: #000000;
+nav ul li a:hover {
+
+  color: #ff0404;
 }
 
-nav ul li a.active{
-  background: #675cff;
-  color:#fff ;
-}
 
-.hamburger{
+
+.hamburger {
   display: none;
   height: fit-content;
   cursor: pointer;
@@ -67,56 +132,146 @@ nav ul li a.active{
 }
 
 
-.hamburger div{
+.hamburger div {
   width: 30px;
-  height: 2px;
+  height: 3px;
   margin: 6px 0;
-  background:#ffffff ;
+  background: #ffffff;
 }
+
+
+.nav-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+}
+
+.bi-person,
+.bi-cart2 {
+  font-size: 25px;
+}
+
+
 
 @media only screen and (max-width:1100px) {
-  header{
-      width: 90%;
-     
-  }
-  nav{
-      position: absolute;
-      left: -300px;
-      top: 0;
-      z-index: 999;
-      width: 280px;
-      height: 100vh;
-      background-color: #000000;
-      transition: 0.2s;
-      box-shadow: 2px 0 20px 0 rgba(0,0,0,0.05);
+
+
+  nav {
+    position: fixed;
+    display: none;
+    top: 0;
+    bottom: 0;
+    z-index: 999;
+    width: 280px;
+    height: 100vh;
+    background-color: #000000;
+    transition: 0.2s;
+    box-shadow: 2px 0 20px 0 rgba(0, 0, 0, 0.05);
   }
 
-  #nav_check:checked ~ nav{
-left: 0;
+  #nav_check:checked~nav {
+    display: block;
+    transition: 0.2s;
+    right: 0;
   }
 
-  nav .logo{
-      display: block;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      margin-left: 30px;
+  nav .logo {
+    display: block;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
   }
-  nav ul li a{
+
+  nav ul li a {
     color: white;
-      margin-bottom: 5px ;
-      padding: 10px 15px;
-      border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
   }
-  nav ul{
-      display: block;
-      padding: 0 20px;
-      margin-top: 30px;
+
+  nav ul li a:hover {
+    background: #ffffff;
+    color: #000000;
   }
-  .hamburger{
-      display: block;
+
+  nav ul {
+    display: block;
+    padding: 0 20px;
+    margin-top: 30px;
   }
+
+  .hamburger {
+    display: block;
+  }
+
+  .taiKhoan,
+  .gioHang,
+  .site_search {
+    display: none;
+  }
+
+  .nav-account {
+    width: 60px;
   
+  }
+
+
+
+
+}
+
+nav ul li:nth-child(2) {
+  position: relative;
 }
 
 
+.header_new {
+  position: absolute;
+  top: 1px;
+  right: -3px;
+  font-size: 11px;
+  color: #F50000;
+  font-weight: 700;
+}
+
+
+header .search-desktop {
+  position: relative;
+}
+
+header .search-desktop form {
+  width: 100%;
+}
+
+.search-desktop form input {
+  width: 600px;
+  border-radius: 5px;
+  height: 40px;
+}
+
+header .search-desktop form button {
+  width: 80px;
+  height: 36px;
+  line-height: 36px;
+  position: absolute;
+  padding: 0;
+  top: 2px;
+  right: 2px;
+  transition: opacity 150ms linear;
+  border: none;
+  min-width: auto;
+  outline: none;
+  box-shadow: none;
+  background: black;
+  border-radius: 5px;
+}
+
+.taiKhoan{
+  width: 80px;
+  
+  font-size: 13px;
+  font-weight: 500;
+}

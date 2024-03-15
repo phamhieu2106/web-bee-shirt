@@ -1,5 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
@@ -54,11 +60,14 @@ export class FormComponent implements OnInit {
         Validators.min(5),
         Validators.max(100),
       ]),
-      thoiGianBatDau: new FormControl(
-        { value: null, disabled: this.dotGiamGiaRequest?.trangThai == 1 },
-        [Validators.required]
-      ),
-      thoiGianKetThuc: new FormControl(null, [Validators.required]),
+      thoiGianBatDau: new FormControl(null, [
+        Validators.required,
+        Validators.nullValidator,
+      ]),
+      thoiGianKetThuc: new FormControl(null, [
+        Validators.required,
+        Validators.nullValidator,
+      ]),
     });
   }
   public patchForm() {
@@ -112,7 +121,8 @@ export class FormComponent implements OnInit {
       this.patchForm();
     }
   }
-  public handleChangeTime(thoiGianBatDau: string, thoiGianKetThuc: string) {
+  public handleChangeTime(thoiGianBatDau: Date, thoiGianKetThuc: Date) {
+    console.log(thoiGianBatDau);
     const currentTime = new Date();
     currentTime.setSeconds(0, 0);
 
@@ -283,6 +293,19 @@ export class FormComponent implements OnInit {
     }
   };
 
+  public handleCheckNameRealTime(): void {
+    const name = this.form.get("tenDotGiamGia").value;
+    this.service.realTimeNameCheck(name).subscribe({
+      next: (value) => {
+        if (value) {
+          this.form.controls["tenDotGiamGia"].setErrors({ invalid: true });
+          document.getElementById("nameInvalid3").style.display = "block";
+        } else {
+          document.getElementById("nameInvalid3").style.display = "none";
+        }
+      },
+    });
+  }
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;

@@ -117,4 +117,11 @@ public class DotGiamGiaResource {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't Delete with ID: " + id);
         }
     }
+
+
+    @GetMapping("/namecheckrealtime")
+    public boolean check(@RequestParam("name") String name) {
+
+      return service.nameCheckRealTime(name);
+    }
 }

@@ -160,6 +160,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         //        Check Exit by Ten
         if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
             throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
+        } else if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 2)) {
+            throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
         }
 
         //        Check Number
@@ -185,6 +187,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         //        Check Exit by Ten
         if (!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())) {
             if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
+                throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
+            } else if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 2)) {
                 throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
             }
         }
@@ -331,6 +335,13 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean nameCheckRealTime(String name) {
+        if (repository.existsByTenDotGiamGiaAndTrangThai(name, 1)) {
+            return true;
+        } else return repository.existsByTenDotGiamGiaAndTrangThai(name, 2);
     }
 
 }

@@ -104,12 +104,18 @@ export class DotGiamGiaService {
   }
 
   public addDotGiamGiaRequest(object: any): Observable<DotGiamGia> {
+    console.log(object);
     return this.http.post<DotGiamGia>(this.apiURL, object);
   }
 
   public updateDotGiamGiaRequest(object: any): Observable<DotGiamGia> {
     console.log(object);
     return this.http.put<DotGiamGia>(`${this.apiURL}/${object.id}`, object);
+  }
+  public realTimeNameCheck(name: any): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.apiURL}/namecheckrealtime?name=${name}`
+    );
   }
   public deleteDotGiamGiaRequest(id: number): Observable<DotGiamGia> {
     return this.http.delete<DotGiamGia>(`${this.apiURL}/${id}`);

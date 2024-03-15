@@ -32,4 +32,6 @@ public interface DotGiamGiaService {
     DotGiamGia update(Integer id, DotGiamGiaRequest object);
 
     boolean remove(Integer id);
+
+    boolean nameCheckRealTime(String name);
 }

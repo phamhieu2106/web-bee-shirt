@@ -55,7 +55,6 @@ export class SuaNhanVienComponent {
   }
 
   public initUpdateForm(nhanVienUpdated?: NhanVienResponse): void {
-    console.log(nhanVienUpdated);
     this.updateForm = new FormGroup({
       cccd: new FormControl(nhanVienUpdated?.cccd, [
         Validators.required,
@@ -63,7 +62,8 @@ export class SuaNhanVienComponent {
       ]),
       hoTen: new FormControl(nhanVienUpdated?.hoTen, [
         Validators.required,
-        Validators.pattern(/^[\p{L}\s]+$/u),
+        // Validators.pattern(/^[\p{L}\s]+$/u),
+        Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
       ]),
       ngaySinh: new FormControl(nhanVienUpdated?.ngaySinh, [
         Validators.required,
@@ -79,7 +79,10 @@ export class SuaNhanVienComponent {
         Validators.required,
         Validators.pattern(this.emailRegex),
       ]),
-      diaChi: new FormControl(nhanVienUpdated?.diaChi, [Validators.required]),
+      diaChi: new FormControl(nhanVienUpdated?.diaChi, [
+        Validators.required,
+        Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
+      ]),
       // tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
       //   Validators.required,
       // ]),
@@ -93,7 +96,10 @@ export class SuaNhanVienComponent {
       new Date(this.updateForm.value.ngaySinh).toDateString() ===
         new Date().toDateString()
     ) {
-      this.toastr.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
+      this.toastr.error(
+        "Ngày sinh không được sau hoặc bằng ngày hiện tại",
+        "Thất bại"
+      );
       return;
     }
 

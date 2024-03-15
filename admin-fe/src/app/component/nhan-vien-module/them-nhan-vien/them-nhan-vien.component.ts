@@ -212,7 +212,7 @@ export class ThemNhanVienComponent {
       ]),
       hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR.trim(), [
         Validators.required,
-        Validators.pattern(/^[\p{L}\s]+$/u),
+        Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
       ]),
       ngaySinh: new FormControl(ngaySinhQR === undefined ? "" : ngaySinhQR, [
         Validators.required,
@@ -235,6 +235,7 @@ export class ThemNhanVienComponent {
       ]),
       diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
         Validators.required,
+        Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
       ]),
       matKhau: new FormControl(""),
     });

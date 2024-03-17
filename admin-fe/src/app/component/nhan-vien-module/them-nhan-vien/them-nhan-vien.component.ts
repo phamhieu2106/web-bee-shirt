@@ -85,8 +85,14 @@ export class ThemNhanVienComponent {
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     if (e && e.length > 0) {
       const qrCodeValue = e[0].value;
+      console.log(qrCodeValue);
       action.stop();
       document.getElementById("closeFormQRCode").click();
+
+      if ((qrCodeValue.match(/\|/g) || []).length !== 6) {
+        this.toastr.error("Mã QR không hợp lệ", "Thất bại");
+        return;
+      }
 
       var arrayQR = qrCodeValue.split("|");
 

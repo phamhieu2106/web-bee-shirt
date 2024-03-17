@@ -42,14 +42,15 @@ export class BanHangComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.orders = this.localStorageService.getData(this.key);
     setTimeout(() => {
-      if (this.orders.length == 0) {
+      if (this.orders == null || this.orders.length == 0) {
+        this.orders = new Array<HoaDon>();
         this.newHoaDon();
       } else {
         this.order = this.orders[0];
       }
       this.getAllSpct();
       this.getAllKhachHang();
-    }, 100);
+    }, 200);
   }
   clearSpcts() {
     this.spcts = [];
@@ -59,13 +60,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.order = this.orders[index];
   }
 
-  newHoaDon() {
-    if (this.orders.length >= 5) {
+  async newHoaDon() {
+    if (this.orders != null && this.orders.length >= 5) {
       this.toast.info("Bạn chỉ có thể tạo tối đa 5 đơn hàng");
       return;
     }
     let hoaDon = new HoaDon();
-    let orderNameTemp = this.newOrderNameTemp();
+    let orderNameTemp =
+      this.orders.length == 0 ? "Đơn 1" : this.newOrderNameTemp();
     // set default value
     hoaDon.orderNameTemp = orderNameTemp;
     hoaDon.tongTien = 0;

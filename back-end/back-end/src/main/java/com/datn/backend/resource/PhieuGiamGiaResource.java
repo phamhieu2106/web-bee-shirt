@@ -1,6 +1,7 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
+import com.datn.backend.dto.request.DiscountValidRequest;
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
 import com.datn.backend.dto.request.PhieuKhachHangRequest;
 import com.datn.backend.service.PhieuGiamGiaKhachHangService;
@@ -109,7 +110,11 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id,check));
     }
 
+    @PostMapping("/get-discount-valid")
+    public ResponseEntity<?> getDiscountValid(@Valid @RequestBody DiscountValidRequest discountValidRequest) {
 
+        return ResponseEntity.ok(service.getDiscountValid(discountValidRequest));
+    }
 
 
 }

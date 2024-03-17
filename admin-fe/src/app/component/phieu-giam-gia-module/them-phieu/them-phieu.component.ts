@@ -56,8 +56,19 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   public add(): void {
+
+    const giaTriMaxFormatted = parseFloat(this.addForm.value.giaTriMax.replace(/,/g, ""));
+    this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
+
+    const dieuKienGiamFormatted = parseFloat(this.addForm.value.dieuKienGiam.replace(/,/g, ""));
+    this.addForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
+
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
+
+
+
+        
         this.initAddForm();
         this.phieuGiamGiaId = response.id;
 
@@ -156,9 +167,9 @@ export class ThemPhieuComponent implements OnInit {
         Validators.required,
         this.validateNgay(),
       ]),
-      dieuKienGiam: new FormControl("", [Validators.required]),
+      dieuKienGiam: new FormControl("", [Validators.required ,Validators.pattern(/^\d+$/)]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl(this.giaTriToiDa, [Validators.required]),
+      giaTriMax: new FormControl(this.giaTriToiDa, [Validators.required, Validators.pattern(/^\d+$/)]),
     });
 
   }
@@ -397,7 +408,6 @@ public checkGiaTri:boolean =false
   }
 
   confirmCreation() {
-  
     Swal.fire({
       toast: true,
       title: "Bạn có đồng ý thêm không?",
@@ -405,8 +415,26 @@ public checkGiaTri:boolean =false
       position: "top",
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
-    }).then((result) =>{
-      this.add();
+    }).then((result) => {
+      if (result.value) {
+        this.add();
+      } 
     });
   }
+  
+
+  public formatNumber(event: any, inputName: string): void {
+    let value = event.target.value;
+    if (value === "") {
+      this.addForm.get(inputName).setValue("0");
+      return;
+    }
+    value = value.replace(/,/g, "");
+    value = parseFloat(value).toLocaleString("en-US");
+    this.addForm.get(inputName).setValue(value);
+  }
+
+
+
+
 }

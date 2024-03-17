@@ -98,14 +98,18 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
-                    <input type="number" class="form-control" placeholder="Giá trị tối đa" 
+                    <input type="text" class="form-control" placeholder="Giá trị tối đa" id="giaTriMax"
                     [ngClass]="{
                         'form-control': true,
                         'is-invalid': addForm.get('giaTriMax').invalid && addForm.get('giaTriMax').touched
                     }"
                     formControlName="giaTriMax" aria-label="Recipient's username"
                     aria-describedby="basic-addon2" 
-                    [readonly]="checkGiaTri" />
+                    [readonly]="checkGiaTri"
+                    (input)="
+                          formatNumber($event, 'giaTriMax')
+                        "
+                    />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
                     <div *ngIf="
                     addForm.get('giaTriMax').hasError('required') &&
@@ -135,13 +139,17 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Điều Kiện:</label>
                   <div class="input-group mb-3">
-                    <input type="number" class="form-control" placeholder="Điều kiện" [ngClass]="
+                    <input type="text" class="form-control" placeholder="Điều kiện" [ngClass]="
                         addForm.get('dieuKienGiam').invalid &&
                         addForm.get('dieuKienGiam').touched
                           ? 'is-invalid'
                           : ''
                       " formControlName="dieuKienGiam" aria-label="Recipient's username"
-                      aria-describedby="basic-addon2" />
+                      aria-describedby="basic-addon2"
+                      (input)="
+                          formatNumber($event, 'dieuKienGiam')
+                        "
+                      />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
 
                     <div *ngIf="

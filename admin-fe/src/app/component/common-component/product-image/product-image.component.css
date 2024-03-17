@@ -1,0 +1,17 @@
+/* Style cho khung ảnh */
+.discount-image {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style cho % giảm giá */
+.discount-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    padding: 3px 7px;
+    border-radius: 0 0 0 10px;
+    font-size: 12px;
+}

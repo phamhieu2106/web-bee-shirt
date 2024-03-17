@@ -77,6 +77,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hoaDon.nhanVien = null;
     hoaDon.khachHang = null;
     hoaDon.phieuGiamGia = null;
+    hoaDon.thanhToans = [];
 
     this.orders.push(hoaDon);
     this.order = hoaDon;
@@ -128,7 +129,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.spctService.getAll(1, 15, this.searchProduct).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
-        console.log(resp);
       },
       error: (err) => {
         console.log(err);
@@ -144,7 +144,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     });
   }
 
-  chooseProduct(spct: SanPhamChiTiet) {
+  async chooseProduct(spct: SanPhamChiTiet) {
     let newHdct = null;
     // check spct đã tồn tại trong DS HDCT của đơn hàng => +1 số lượng => ngắt vòng lặp
     for (let i = 0; i < this.order.hoaDonChiTiets.length; i++) {
@@ -183,8 +183,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
     return hdct;
   }
   getGiaBan(spct: SanPhamChiTiet): number {
-    console.log(this.spctService.getGiaBan(spct));
-
     return this.spctService.getGiaBan(spct);
   }
 
@@ -201,21 +199,37 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   getTongTien(): number {
-    let tongTien = this.banHangService.getTongTien(this.order.hoaDonChiTiets);
-    this.order.tongTien = tongTien;
-    return tongTien;
+    if (
+      this.order &&
+      this.order.hoaDonChiTiets &&
+      this.order.hoaDonChiTiets.length > 0
+    ) {
+      let tongTien = this.banHangService.getTongTien(this.order.hoaDonChiTiets);
+      this.order.tongTien = tongTien;
+      return tongTien;
+    }
+    return 0; // hoặc giá trị mặc định khác
   }
 
   getSoLuongSanPham(): number {
-    return this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets);
+    return this.order != null
+      ? this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets)
+      : 0;
   }
   getMustPay(): number {
     // let total = this.banHangService.getMustPay(this.order);
     return this.banHangService.getMustPay(this.order);
   }
 
-  thanhToan() {
+  muaHang() {
     if (this.order.loaiHoaDon == "TAI_QUAY") {
+      this.order.diaChiNguoiNhan = null;
+    }
+    console.log(this.order);
+  }
+
+  datHang() {
+    if (this.order.loaiHoaDon == "GIAO_HANG") {
       this.order.diaChiNguoiNhan = null;
     }
     console.log(this.order);
@@ -233,16 +247,21 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   getTienKhachThanhToan(): number {
-    if (this.order.thanhToans) {
+    if (
+      this.order &&
+      this.order.thanhToans != null &&
+      this.order.thanhToans.length > 0
+    ) {
       return this.order.thanhToans
         .map((thanhToan) => thanhToan.soTien)
         .reduce((pre, curr) => pre + curr, 0);
-    } else {
-      return 0;
     }
+    return 0;
   }
 
   getTienKhachConThieu(): number {
-    return this.order.tongTien - this.getTienKhachThanhToan();
+    if (this.order && this.order.tongTien != null)
+      return this.order.tongTien - this.getTienKhachThanhToan();
+    return 0;
   }
 }

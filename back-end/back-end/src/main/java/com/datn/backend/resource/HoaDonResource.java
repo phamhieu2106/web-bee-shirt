@@ -80,4 +80,6 @@ public class HoaDonResource {
         SoLuongDonHangResponse soLuongDonHangResponse = hoaDonService.getSoLuongDonHang();
         return ResponseEntity.ok(soLuongDonHangResponse);
     }
+
+
 }

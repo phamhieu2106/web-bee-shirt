@@ -23,11 +23,14 @@ export class BanHangService {
   }
 
   getMustPay(hoaDon: HoaDon): number {
-    let total = 0;
-    total =
-      this.getTongTien(hoaDon.hoaDonChiTiets) -
-      hoaDon.tienGiam +
-      hoaDon.phiVanChuyen;
-    return total;
+    if (hoaDon != null || hoaDon != undefined) {
+      let total = 0;
+      total =
+        this.getTongTien(hoaDon.hoaDonChiTiets) -
+        hoaDon.tienGiam +
+        hoaDon.phiVanChuyen;
+      return total;
+    }
+    return 0;
   }
 }

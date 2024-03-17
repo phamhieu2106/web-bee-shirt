@@ -65,12 +65,12 @@ export class SanPhamChiTietService {
 
   //
   public getGiaBan(spct: SanPhamChiTiet): number {
-    // if (spct.dotGiamGiaSanPham == null) {
-    //   return spct.giaBan;
-    // } else {
-    //   return (spct.giaBan * (100 - spct.dotGiamGiaSanPham.giamGia)) / 100;
-    // }
-    return null;
+    if (spct.dotGiamGia == null) {
+      return spct.giaBan;
+    } else {
+      return (spct.giaBan * (100 - spct.dotGiamGia.giaTriPhanTram)) / 100;
+    }
+    // return null;
   }
 
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
@@ -111,5 +111,29 @@ export class SanPhamChiTietService {
   ): Observable<boolean> {
     const params = `?spId=${spId}&mauSacId=${mauSacId}&sizeId=${sizeId}`;
     return this.http.get<boolean>(`${this.apiUrl}/check-exist/${params}`);
+  }
+
+  public getMinMaxPrice(): Observable<any> {
+    return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/min-max-price`);
+  }
+
+  public getAllDetail(
+    pageNumber: number,
+    search: string,
+    mauSac: string,
+    kichCo: string,
+    kieuDang: string,
+    thietKe: string,
+    tayAo: string,
+    coAo: string,
+    chatLieu: string,
+    giaMin: number,
+    giaMax: number
+  ): Observable<PagedResponse<SanPhamChiTiet>> {
+    let pageSize = 5;
+    const params = `?pageNumber=${pageNumber} &pageSize=${pageSize}&search=${search}&mauSac=${mauSac}&kichCo=${kichCo}&kieuDang=${kieuDang}&thietKe=${thietKe}&tayAo=${tayAo}&coAo=${coAo}&chatLieu=${chatLieu}&giaMin=${giaMin}&giaMax=${giaMax}`;
+    return this.http.get<PagedResponse<SanPhamChiTiet>>(
+      `${this.apiUrl}/get-all-detail` + params
+    );
   }
 }

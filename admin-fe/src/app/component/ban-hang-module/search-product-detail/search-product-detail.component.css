@@ -88,16 +88,29 @@ section.range-slider input[type=range]::-moz-focus-outer {
 }
 
 .list-select {
-    font-size: 12px;
+    /* font-size: 14px; */
+}
+
+.list-select select {
+    /* font-size: 12px !important; */
+    width: 60px;
+    border: 0;
+    padding: 3px;
 }
 
 .list-select div {
     align-items: center;
 }
 
-.list-select select {
-    font-size: 10px !important;
-    width: 40px;
-    border: 0;
-    padding: 0;
+
+
+.gia-chua-giam {
+    font-size: 15px;
+    text-decoration: line-through;
+}
+
+.gia-da-giam {
+    font-weight: bold;
+    font-size: 13px;
+    color: rgba(251, 23, 23, 0.962);
 }

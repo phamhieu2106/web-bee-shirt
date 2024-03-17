@@ -24,8 +24,6 @@ export class GiaoHangComponent implements OnInit, OnChanges {
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {
-      console.log("Change khachHang");
-      console.log(this.khachHang);
     }
   }
   ngOnInit(): void {}

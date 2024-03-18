@@ -121,7 +121,9 @@ export class ThemDotGiamGiaComponent implements OnInit {
     this.service.getAllSanPhamChiTietById(id).subscribe({
       next: (value) => {
         this.listSanPhamChiTiet = value;
-        this.dataSanPhamChiTiet = this.listSanPhamChiTiet.data;
+        this.dataSanPhamChiTiet = this.removeDuplicateById(
+          this.listSanPhamChiTiet.data
+        );
       },
       error: (message) => {
         this.toast.error(message);
@@ -129,6 +131,20 @@ export class ThemDotGiamGiaComponent implements OnInit {
       },
     });
   }
+  private removeDuplicateById(data: any[]): any[] {
+    const uniqueIds = new Set<number>();
+    const uniqueData = data.filter((item) => {
+      if (uniqueIds.has(item.id)) {
+        return false; // Return false if ID has already been encountered
+      } else {
+        uniqueIds.add(item.id); // Add ID to set if encountering it for the first time
+        return true; // Return true to keep this item in the filtered array
+      }
+    });
+
+    return uniqueData;
+  }
+
   public setListIdSanPhamChiTiet = (value: number) => {
     if (this.listIdSanPhamChiTiet && Array.isArray(this.listIdSanPhamChiTiet)) {
       const index = this.listIdSanPhamChiTiet.indexOf(Number(value));

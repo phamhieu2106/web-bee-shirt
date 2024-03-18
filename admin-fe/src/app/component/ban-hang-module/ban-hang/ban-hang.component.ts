@@ -11,6 +11,8 @@ import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import Swal from "sweetalert2";
+import { DiscountValid } from "src/app/model/class/discount-valid.class";
+import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 
 @Component({
   selector: "app-ban-hang",
@@ -19,6 +21,7 @@ import Swal from "sweetalert2";
 })
 export class BanHangComponent implements OnInit, OnDestroy {
   private readonly key = "orders";
+  // messagePgg = "";
   phiVanChuyenTemp: number;
   orders: HoaDon[] = [];
   khachHangs: KhachHang[];
@@ -78,7 +81,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hoaDon.phiVanChuyen = 0;
     hoaDon.nhanVien = null;
     hoaDon.khachHang = null;
-    hoaDon.phieuGiamGia = null;
+    hoaDon.phieuGiamGia = new PhieuGiamGia();
     hoaDon.thanhToans = [];
 
     this.orders.push(hoaDon);
@@ -146,17 +149,68 @@ export class BanHangComponent implements OnInit, OnDestroy {
     });
   }
 
+  getPhieuGiamGia() {
+    this.banHangService
+      .getDiscountValid(
+        this.order.tongTien,
+        this.order.khachHang == null ? null : this.order.khachHang.id,
+        this.order == null ? 0 : this.order.tienGiam
+      )
+      .subscribe({
+        next: (resp: DiscountValid) => {
+          console.log(resp);
+          if (this.order.phieuGiamGia == null) {
+            this.order.phieuGiamGia = new PhieuGiamGia();
+          }
+          this.order.phieuGiamGia = resp.phieuGiamGia;
+          // this.messagePgg = resp.message;
+        },
+      });
+  }
+
+  newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
+    let hdct = new HoaDonChiTiet();
+    hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
+    hdct.soLuong = 1;
+    hdct.giaBan = this.getGiaBan(spct);
+
+    return hdct;
+  }
+  getGiaBan(spct: SanPhamChiTiet): number {
+    return this.spctService.getGiaBan(spct);
+  }
+
+  async deleteHDCT(hdctIndex: number) {
+    this.order.hoaDonChiTiets.splice(hdctIndex, 1);
+    this.getPhieuGiamGia();
+    if (this.order.hoaDonChiTiets.length <= 0) {
+      this.order.phieuGiamGia = null;
+      this.order.thanhToans = [];
+    }
+    this.updateHoaDon();
+  }
+  async minusQuantity(hdct: HoaDonChiTiet) {
+    if (hdct.soLuong > 1) {
+      hdct.soLuong = hdct.soLuong - 1;
+      this.updateHoaDon();
+    }
+  }
+
+  async plusQuantity(hdct: HoaDonChiTiet) {
+    hdct.soLuong = hdct.soLuong + 1;
+    this.updateHoaDon();
+  }
   async chooseProduct(spct: SanPhamChiTiet) {
     let newHdct = null;
     // check spct đã tồn tại trong DS HDCT của đơn hàng => +1 số lượng => ngắt vòng lặp
     for (let i = 0; i < this.order.hoaDonChiTiets.length; i++) {
       if (spct.id === this.order.hoaDonChiTiets[i].sanPhamChiTiet.id) {
         newHdct = this.order.hoaDonChiTiets[i];
+
         break;
       }
     }
-
-    // xử lý
+    this.updateHoaDon();
     if (newHdct == null) {
       //Không tồn tại => tạo mới hdct
       newHdct = this.newHDCT(spct);
@@ -175,31 +229,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
       newHdct.soLuong = newHdct.soLuong + 1;
     }
   }
-
-  newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
-    let hdct = new HoaDonChiTiet();
-    hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
-    hdct.soLuong = 1;
-    hdct.giaBan = this.getGiaBan(spct);
-
-    return hdct;
-  }
-  getGiaBan(spct: SanPhamChiTiet): number {
-    return this.spctService.getGiaBan(spct);
-  }
-
-  deleteHDCT(hdctIndex: number) {
-    this.order.hoaDonChiTiets.splice(hdctIndex, 1);
-  }
-  minusQuantity(hdct: HoaDonChiTiet) {
-    if (hdct.soLuong > 1) {
-      hdct.soLuong = hdct.soLuong - 1;
-    }
-  }
-  plusQuantity(hdct: HoaDonChiTiet) {
-    hdct.soLuong = hdct.soLuong + 1;
-  }
-
   getTongTien(): number {
     if (
       this.order &&
@@ -265,5 +294,39 @@ export class BanHangComponent implements OnInit, OnDestroy {
     if (this.order && this.order.tongTien != null)
       return this.order.tongTien - this.getTienKhachThanhToan();
     return 0;
+  }
+
+  async getTienGiam() {
+    console.log(this.order.phieuGiamGia);
+
+    if (this.order && this.order.phieuGiamGia) {
+      if (this.order.phieuGiamGia.kieu == 0) {
+        // giảm theo %
+        let temp = this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100);
+        this.order.tienGiam =
+          temp > this.order.phieuGiamGia.giaTriMax
+            ? this.order.phieuGiamGia.giaTriMax
+            : temp;
+        console.log(temp);
+      } else if (this.order.phieuGiamGia.kieu == 1) {
+        // giảm theo giá trị
+        this.order.tienGiam = this.order.phieuGiamGia.giaTri;
+      }
+    } else {
+      this.order.tienGiam = 0;
+    }
+  }
+
+  updateHoaDon() {
+    // xử lý
+    setTimeout(() => {
+      this.getPhieuGiamGia();
+      this.getTongTien();
+      this.getTienGiam();
+    }, 30);
+  }
+
+  insertSLSP() {
+    this.updateHoaDon();
   }
 }

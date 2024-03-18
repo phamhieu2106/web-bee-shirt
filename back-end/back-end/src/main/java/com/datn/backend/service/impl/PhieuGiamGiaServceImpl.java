@@ -167,6 +167,9 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest) {
+        System.out.println(discountValidRequest.getGiaTriDonHang());
+        System.out.println(discountValidRequest.getGiaDangGiam());
+        System.out.println("---------------------------------");
         String message = null;
 
         // pgg valid
@@ -190,26 +193,30 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         PhieuGiamGia pgg = this.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
 
         // gợi y pgg mới
-        pggSuggests.sort((pgg1, pgg2) -> {
-            int compareValue = pgg1.getDieuKienGiam().compareTo(pgg2.getDieuKienGiam());
-            if (compareValue != 0) {
-                return compareValue;
-            }
-            return (int) (this.getDiscountValue(pgg1) - this.getDiscountValue(pgg2));
-        });
+//        pggSuggests.sort((pgg1, pgg2) -> {
+//            int compareValue = pgg1.getDieuKienGiam().compareTo(pgg2.getDieuKienGiam());
+//            if (compareValue != 0) {
+//                return compareValue;
+//            }
+//            return (int) (this.getDiscountValue(pgg1) - this.getDiscountValue(pgg2));
+//        });
 
-        message = this.getMessage(pggSuggests,discountValidRequest.getGiaTriDonHang());
+//        // pgg goi y
+//        PhieuGiamGia pggSuggest =  pggSuggests.get(0);
+//        if (getDiscountValue(pggSuggest) > discountValidRequest.getGiaDangGiam()){
+//            // neu gia tri giam cua phieu giam gia goi y lon hon gia tri dang giam se goji y pgg day
+//            message = this.getMessage(pggSuggests,discountValidRequest.getGiaTriDonHang());
+//        }
 
         return DiscountValidResponse
                 .builder()
-                .phieuGiamGia(pgg)
                 .message(message)
+                .phieuGiamGia(pgg)
                 .build();
     }
 
     private String getMessage(List<PhieuGiamGia> pggSuggests, BigDecimal giaTriDonHang) {
         String message = null;
-
 
         if (pggSuggests.isEmpty()){
             return message;

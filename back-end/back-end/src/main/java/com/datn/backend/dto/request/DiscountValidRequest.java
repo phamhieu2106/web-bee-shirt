@@ -16,4 +16,6 @@ public class DiscountValidRequest {
     private BigDecimal giaTriDonHang;
 
     private Integer khachHangId;
+
+    private long giaDangGiam;
 }

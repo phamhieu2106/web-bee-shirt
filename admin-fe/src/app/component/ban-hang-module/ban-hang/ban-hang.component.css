@@ -96,3 +96,7 @@ input[type=number] {
 .product-modal {
     width: 125% !important;
 }
+
+.right-align {
+    text-align: right;
+}

@@ -110,7 +110,7 @@ export class SanPhamChiTietService {
     sizeId: number
   ): Observable<boolean> {
     const params = `?spId=${spId}&mauSacId=${mauSacId}&sizeId=${sizeId}`;
-    return this.http.get<boolean>(`${this.apiUrl}/check-exist/${params}`);
+    return this.http.get<boolean>(`${this.apiUrl}/check-exist${params}`);
   }
 
   public getMinMaxPrice(): Observable<any> {

@@ -1,6 +1,6 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.AddSpctRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -33,7 +33,7 @@ public class SanPhamChiTietResource {
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestParam("request") String requestStr,
                                       @RequestParam(value = "files", required = false) MultipartFile[] files) throws IOException {
-        AddSanPhamChiTietRequest request = objectMapper.readValue(requestStr, AddSanPhamChiTietRequest.class);
+        AddSpctRequest request = objectMapper.readValue(requestStr, AddSpctRequest.class);
         spctService.addSpctList(request, files);
         return ResponseEntity.ok("Thêm các sản phẩm thành công!");
     }
@@ -86,9 +86,9 @@ public class SanPhamChiTietResource {
     }
 
     @GetMapping("/check-exist")
-    public ResponseEntity<Boolean> changeStatus(@RequestParam("spId") int spId,
-                                               @RequestParam("mauSacId") int mauSacId,
-                                               @RequestParam("sizeId") int sizeId) {
+    public ResponseEntity<Boolean> checkExist(@RequestParam("spId") int spId,
+                                              @RequestParam("mauSacId") int mauSacId,
+                                              @RequestParam("sizeId") int sizeId) {
         return ResponseEntity.ok(spctService.checkExist(spId, mauSacId, sizeId));
     }
 }

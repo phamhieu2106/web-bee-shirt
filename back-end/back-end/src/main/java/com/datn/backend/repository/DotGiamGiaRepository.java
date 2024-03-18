@@ -44,13 +44,17 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             WHERE dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate
             AND dgg.trang_thai < 3
+            AND (dgg.ma_dot_giam_gia LIKE %:search%
+            							OR dgg.ten_dot_giam_gia LIKE %:search%
+                                        OR dgg.gia_tri_phan_tram LIKE %:search%)
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
             ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
                         """
             , nativeQuery = true)
     Page<DotGiamGiaResponse> getStatusAll(Pageable pageable,
                                           @Param("startDate") String startDate,
-                                          @Param("endDate") String endDate);
+                                          @Param("endDate") String endDate,
+                                          @Param("search")String search);
 
     @Query(value = """
 
@@ -60,6 +64,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             FROM dot_giam_gia dgg
             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
             WHERE dgg.trang_thai = :status 
+            AND (dgg.ma_dot_giam_gia LIKE %:search%
+            							OR dgg.ten_dot_giam_gia LIKE %:search%
+                                        OR dgg.gia_tri_phan_tram LIKE %:search%)
              AND (dggsp.thoi_gian_bat_dau >= :startDate AND dggsp.thoi_gian_ket_thuc <= :endDate )
             GROUP BY dgg.id, dgg.ma_dot_giam_gia, dgg.ten_dot_giam_gia, dgg.gia_tri_phan_tram, dggsp.thoi_gian_bat_dau, dggsp.thoi_gian_ket_thuc, dgg.trang_thai
             ORDER BY CASE WHEN dgg.trang_thai = 1 THEN 0 WHEN dgg.trang_thai = 2 THEN 1 ELSE 2 END,dgg.id DESC
@@ -68,7 +75,8 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
     Page<DotGiamGiaResponse> getStatusWithDate(Pageable pageable,
                                                @Param("status") Integer status,
                                                @Param("startDate") String startDate,
-                                               @Param("endDate") String endDate);
+                                               @Param("endDate") String endDate,
+                                               @Param("search")String search);
 
     @Query(value = """
             SELECT\s

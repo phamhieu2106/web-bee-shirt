@@ -18,6 +18,7 @@ import { TayAo } from "src/app/model/class/tay-ao.class";
 import { AddSPCTRequest } from "src/app/model/interface/add-spct-request.interface";
 import { AddSPCTSubRequest } from "src/app/model/interface/add-spct-sub-request.interface";
 import { AddSpctValidation } from "src/app/model/interface/add-spct-validation.interface";
+import { ColorSizeValidation } from "src/app/model/interface/color-size-validation.interface";
 import { ChatLieuService } from "src/app/service/chat-lieu.service";
 import { HinhAnhSanPhamService } from "src/app/service/hinh-anh-san-pham.service";
 import { KichCoService } from "src/app/service/kick-co.service";
@@ -26,6 +27,7 @@ import { KieuDangService } from "src/app/service/kieu-dang.service";
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
 import { KieuThietKeService } from "src/app/service/kieu-thiet-ke.service";
 import { MauSacService } from "src/app/service/mau-sac.service";
+import { NotificationService } from "src/app/service/notification.service";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamService } from "src/app/service/san-pham.service";
 import Swal, { SweetAlertResult } from "sweetalert2";
@@ -90,6 +92,8 @@ export class ThemSanPhamChiTietComponent {
     anh: [],
   };
 
+  public colorSizeValidations: ColorSizeValidation[] = [];
+
   // constructor, ngOn
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -104,7 +108,8 @@ export class ThemSanPhamChiTietComponent {
     private kieuCoAoService: KieuCoAoService,
     private chatLieuService: ChatLieuService,
     private hinhAnhSanPhamService: HinhAnhSanPhamService,
-    private spctService: SanPhamChiTietService
+    private spctService: SanPhamChiTietService,
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -133,6 +138,7 @@ export class ThemSanPhamChiTietComponent {
       this.selectedImgFileList.push([]);
       this.uploadImgFileList.push([]);
       this.validation.giaAndSoLuong.push(false);
+      this.addColorSizeValidation(ms.id, undefined, "color");
     }
   }
 
@@ -140,6 +146,7 @@ export class ThemSanPhamChiTietComponent {
   public selectKichCo(kc: KichCo): void {
     if (!this.selectedKichCoList.some((item: KichCo) => item.id === kc.id)) {
       this.selectedKichCoList.push(kc);
+      this.addColorSizeValidation(undefined, kc.id, "size");
     }
   }
 
@@ -156,7 +163,7 @@ export class ThemSanPhamChiTietComponent {
     this.selectedMauSacList.splice(expectIndex, 1);
     this.selectedImgFileList.splice(expectIndex, 1);
     this.uploadImgFileList.splice(expectIndex, 1);
-    this.validation.giaAndSoLuong.splice(expectIndex, 1);
+    this.removeColorSizeValidation(colorId, undefined, "color");
   }
 
   // 6
@@ -164,6 +171,7 @@ export class ThemSanPhamChiTietComponent {
     this.selectedKichCoList = this.selectedKichCoList.filter(
       (item: KichCo) => item.id !== sizeId
     );
+    this.removeColorSizeValidation(undefined, sizeId, "size");
   }
 
   // I.1. functions xử lý sự kiện chọn ảnh
@@ -244,11 +252,13 @@ export class ThemSanPhamChiTietComponent {
     if (isChecked) {
       this.curSelectedImgFileList.push(file);
       this.selectedImgFileList[this.imgIndex] = this.curSelectedImgFileList;
+      this.checkAnhSpct();
     } else {
       this.curSelectedImgFileList = this.curSelectedImgFileList.filter(
         (item: File) => item.name !== file.name
       );
       this.selectedImgFileList[this.imgIndex] = this.curSelectedImgFileList;
+      this.checkAnhSpct();
     }
 
     // show ảnh
@@ -307,8 +317,6 @@ export class ThemSanPhamChiTietComponent {
   }
 
   //
-
-  //
   public add(): void {
     Swal.fire({
       toast: true,
@@ -322,105 +330,101 @@ export class ThemSanPhamChiTietComponent {
         this.checkPropertyValidatonForAddForm();
         this.checkGiaSoLuong();
         this.checkAnhSpct();
+        const isSpctExist = this.checkExistAndNotify();
 
-        if (this.validation.error) {
+        if (this.validation.error || isSpctExist) {
           return;
         }
 
-        // this.turnOnOverlay("Đang thêm...");
-        // for (let i = 0; i < this.selectedMauSacList.length; i++) {
-        //   let mauSacEles = document.querySelectorAll(
-        //     `.mauSacId${this.selectedMauSacList[i].id}`
-        //   );
-        //   let kichCoEles = document.querySelectorAll(
-        //     `.kichCoId${this.selectedMauSacList[i].id}`
-        //   );
-        //   let giaNhapInputs = document.querySelectorAll(
-        //     `.giaNhap${this.selectedMauSacList[i].id}`
-        //   );
-        //   let giaBanInputs = document.querySelectorAll(
-        //     `.giaBan${this.selectedMauSacList[i].id}`
-        //   );
-        //   let soLuongInputs = document.querySelectorAll(
-        //     `.soLuong${this.selectedMauSacList[i].id}`
-        //   );
-
-        //   let addSPCTSubRequest: AddSPCTSubRequest;
-        //   for (let j = 0; j < mauSacEles.length; j++) {
-        //     let kichCoIdList: number[] = [];
-        //     let giaNhapList: number[] = [];
-        //     let giaBanList: number[] = [];
-        //     let soLuongTonList: number[] = [];
-        //     for (let k = 0; k < kichCoEles.length; k++) {
-        //       let kichCoId = parseInt(
-        //         (kichCoEles[k] as HTMLInputElement).value
-        //       );
-        //       let giaNhap = parseInt(
-        //         (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-        //       let giaBan = parseInt(
-        //         (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-        //       let soLuongTon = parseInt(
-        //         (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-
-        //       kichCoIdList.push(kichCoId);
-        //       giaNhapList.push(giaNhap);
-        //       giaBanList.push(giaBan);
-        //       soLuongTonList.push(soLuongTon);
-        //     }
-
-        //     addSPCTSubRequest = {
-        //       mauSacId: this.selectedMauSacList[i].id,
-        //       kichCoIdList: kichCoIdList,
-        //       giaNhapList: giaNhapList,
-        //       giaBanList: giaBanList,
-        //       soLuongTonList: soLuongTonList,
-        //     };
-        //   }
-        //   const addSpctReq: AddSPCTRequest = {
-        //     id: this.addForm.get("id").value,
-        //     sanPhamId: this.addForm.get("sanPhamId").value,
-        //     kieuDangId: this.addForm.get("kieuDangId").value,
-        //     thietKeId: this.addForm.get("thietKeId").value,
-        //     tayAoId: this.addForm.get("tayAoId").value,
-        //     coAoId: this.addForm.get("coAoId").value,
-        //     chatLieuId: this.addForm.get("chatLieuId").value,
-        //     requests: addSPCTSubRequest,
-        //   };
-        //   this.spctService
-        //     .add(addSpctReq, this.selectedImgFileList[i])
-        //     .subscribe({
-        //       next: (response: string) => {
-        //         this.toastr.success(response, "Hệ thống");
-
-        //         // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
-        //         if (i === this.selectedMauSacList.length - 1) {
-        //           console.log("giò mói chuyển tr: ", i);
-
-        //           this.turnOffOverlay("");
-        //           this.router.navigate([
-        //             `/sp/ds-sp-chi-tiet/${this.sanPham.id}`,
-        //           ]);
-        //         }
-        //       },
-        //       error: (errorResponse: HttpErrorResponse) => {
-        //         this.toastr.success(errorResponse.error.message, "Hệ thống");
-        //         this.turnOffOverlay("");
-        //       },
-        //     });
-        // }
+        this.turnOnOverlay("Đang thêm...");
+        for (let i = 0; i < this.selectedMauSacList.length; i++) {
+          let mauSacEles = document.querySelectorAll(
+            `.mauSacId${this.selectedMauSacList[i].id}`
+          );
+          let kichCoEles = document.querySelectorAll(
+            `.kichCoId${this.selectedMauSacList[i].id}`
+          );
+          let giaNhapInputs = document.querySelectorAll(
+            `.giaNhap${this.selectedMauSacList[i].id}`
+          );
+          let giaBanInputs = document.querySelectorAll(
+            `.giaBan${this.selectedMauSacList[i].id}`
+          );
+          let soLuongInputs = document.querySelectorAll(
+            `.soLuong${this.selectedMauSacList[i].id}`
+          );
+          let addSPCTSubRequest: AddSPCTSubRequest;
+          for (let j = 0; j < mauSacEles.length; j++) {
+            let kichCoIdList: number[] = [];
+            let giaNhapList: number[] = [];
+            let giaBanList: number[] = [];
+            let soLuongTonList: number[] = [];
+            for (let k = 0; k < kichCoEles.length; k++) {
+              let kichCoId = parseInt(
+                (kichCoEles[k] as HTMLInputElement).value
+              );
+              let giaNhap = parseInt(
+                (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let giaBan = parseInt(
+                (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let soLuongTon = parseInt(
+                (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              kichCoIdList.push(kichCoId);
+              giaNhapList.push(giaNhap);
+              giaBanList.push(giaBan);
+              soLuongTonList.push(soLuongTon);
+            }
+            addSPCTSubRequest = {
+              mauSacId: this.selectedMauSacList[i].id,
+              kichCoIdList: kichCoIdList,
+              giaNhapList: giaNhapList,
+              giaBanList: giaBanList,
+              soLuongTonList: soLuongTonList,
+            };
+          }
+          const addSpctReq: AddSPCTRequest = {
+            id: this.addForm.get("id").value,
+            sanPhamId: this.addForm.get("sanPhamId").value,
+            kieuDangId: this.addForm.get("kieuDangId").value,
+            thietKeId: this.addForm.get("thietKeId").value,
+            tayAoId: this.addForm.get("tayAoId").value,
+            coAoId: this.addForm.get("coAoId").value,
+            chatLieuId: this.addForm.get("chatLieuId").value,
+            requests: addSPCTSubRequest,
+          };
+          this.spctService
+            .add(addSpctReq, this.selectedImgFileList[i])
+            .subscribe({
+              next: (response: string) => {
+                this.notifService.success(response);
+                // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
+                if (i === this.selectedMauSacList.length - 1) {
+                  this.turnOffOverlay("");
+                  this.router.navigate([
+                    `/sp/ds-sp-chi-tiet/${this.sanPham.id}`,
+                  ]);
+                }
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.notifService.success(errorResponse.error.message);
+                this.turnOffOverlay("");
+              },
+            });
+        }
       }
     });
   }
 
   //
-  public deleteRow(rowId: string): void {
+  public deleteRow(rowId: string, colorId: number, sizeId: number): void {
     const selectedRow = document.getElementById(rowId);
 
     if (selectedRow) {
       selectedRow.remove();
+      this.removeColorSizeValidation(colorId, sizeId, "other");
     }
   }
 
@@ -585,6 +589,12 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
+  public checkColorAndSize(colorId: number, sizeId: number): boolean {
+    return this.colorSizeValidations.find(
+      (v: ColorSizeValidation) => v.colorId === colorId && v.sizeId === sizeId
+    )?.isExist;
+  }
+
   // II. private functions
   // 1
   private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
@@ -645,11 +655,6 @@ export class ThemSanPhamChiTietComponent {
                   tayAoId: new FormControl(ctspResponse.tayAo.id),
                   thietKeId: new FormControl(ctspResponse.thietKe.id),
                 });
-
-                console.log("not null");
-                console.log(response);
-              } else {
-                console.log("null");
               }
             },
             error: (errorResponse: HttpErrorResponse) => {
@@ -770,6 +775,7 @@ export class ThemSanPhamChiTietComponent {
     this.isLoadding = false;
   }
 
+  // 16
   private checkPropertyValidatonForAddForm(): void {
     if (this.addForm.get("kieuDangId").value == 0) {
       this.validation.error = true;
@@ -797,6 +803,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
+  // 17
   private checkGiaSoLuong(): void {
     for (let i = 0; i < this.selectedMauSacList.length; i++) {
       const color = this.selectedMauSacList[i];
@@ -829,6 +836,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
+  // 18
   private checkAnhSpct(): void {
     for (let i = 0; i < this.selectedImgFileList.length; i++) {
       if (this.selectedImgFileList[i].length === 0) {
@@ -839,5 +847,101 @@ export class ThemSanPhamChiTietComponent {
         this.validation.anh[i] = false;
       }
     }
+  }
+
+  // 19
+  private addColorSizeValidation(
+    colorId: number | undefined,
+    sizeId: number | undefined,
+    type: string
+  ): void {
+    if (colorId && type === "color") {
+      for (let i = 0; i < this.selectedKichCoList.length; ++i) {
+        const size = this.selectedKichCoList[i];
+        this.spctService
+          .checkSpctExists(this.sanPham.id, colorId, size.id)
+          .subscribe({
+            next: (response: boolean) => {
+              const colorSizeValidation: ColorSizeValidation = {
+                colorId: colorId,
+                sizeId: size.id,
+                isExist: response,
+              };
+              this.colorSizeValidations.push(colorSizeValidation);
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              this.toastr.error(errorResponse.error.message);
+            },
+          });
+      }
+    } else if (sizeId && type === "size") {
+      for (let i = 0; i < this.selectedMauSacList.length; ++i) {
+        const color = this.selectedMauSacList[i];
+        this.spctService
+          .checkSpctExists(this.sanPham.id, color.id, sizeId)
+          .subscribe({
+            next: (response: boolean) => {
+              const colorSizeValidation: ColorSizeValidation = {
+                colorId: color.id,
+                sizeId: sizeId,
+                isExist: response,
+              };
+              this.colorSizeValidations.push(colorSizeValidation);
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              this.toastr.error(errorResponse.error.message);
+            },
+          });
+      }
+    }
+  }
+
+  //
+  private removeColorSizeValidation(
+    colorId: number | undefined,
+    sizeId: number | undefined,
+    type: string
+  ): void {
+    if (colorId && type === "color") {
+      this.colorSizeValidations = this.colorSizeValidations.filter(
+        (item: ColorSizeValidation) => item.colorId !== colorId
+      );
+    } else if (sizeId && type === "size") {
+      this.colorSizeValidations = this.colorSizeValidations.filter(
+        (item: ColorSizeValidation) => item.sizeId !== sizeId
+      );
+    } else {
+      this.colorSizeValidations = this.colorSizeValidations.filter(
+        (item: ColorSizeValidation) =>
+          !(item.colorId === colorId && item.sizeId === sizeId)
+      );
+    }
+  }
+
+  //
+  public checkExistAndNotify(): boolean {
+    if (this.colorSizeValidations.some((v: ColorSizeValidation) => v.isExist)) {
+      const duplicatedArr: ColorSizeValidation[] =
+        this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);
+      let message: string = "";
+      for (let i = 0; i < duplicatedArr.length; i++) {
+        const color = this.selectedMauSacList.find(
+          (v) => v.id === duplicatedArr[i].colorId
+        );
+        const size = this.selectedKichCoList.find(
+          (v) => v.id === duplicatedArr[i].sizeId
+        );
+        message += `${color.ten} - ${size.ten.split("-")[0]}`;
+        if (i !== duplicatedArr.length - 1) {
+          message += ", ";
+        }
+      }
+      if (message) {
+        message += " đã tồn tại!";
+        this.notifService.error(message);
+      }
+      return true;
+    }
+    return false;
   }
 }

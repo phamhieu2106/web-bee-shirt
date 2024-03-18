@@ -1,6 +1,6 @@
 package com.datn.backend.service;
 
-import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.AddSpctRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 public interface SanPhamChiTietService {
 
-    void addSpctList(AddSanPhamChiTietRequest request, MultipartFile[] multipartFiles) throws IOException;
+    void addSpctList(AddSpctRequest request, MultipartFile[] multipartFiles) throws IOException;
 
     PagedResponse<SanPhamChiTiet> getByPage(int pageNumber, int pageSize, String search, int spId);
 

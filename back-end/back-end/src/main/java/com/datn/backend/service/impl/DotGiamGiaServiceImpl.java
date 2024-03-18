@@ -131,9 +131,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         Page<DotGiamGiaResponse> dotGiamGiaPage = null;
 
         if (status == 3) {
-            dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate);
+            dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate,search);
         } else {
-            dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate);
+            dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate, search);
         }
 
         PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();
@@ -151,7 +151,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     @Override
     public DotGiamGiaResponse getOne(Integer id) {
         //        Get Data form database
+        System.out.println("hello");
         return repository.getOneById(id);
+
     }
 
     //    Validation
@@ -159,6 +161,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         boolean check = true;
         //        Check Exit by Ten
         if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
+            throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
+        } else if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 2)) {
             throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
         }
 
@@ -185,6 +189,8 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         //        Check Exit by Ten
         if (!repository.findById(id).get().getTenDotGiamGia().equalsIgnoreCase(object.getTenDotGiamGia())) {
             if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 1)) {
+                throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
+            } else if (repository.existsByTenDotGiamGiaAndTrangThai(object.getTenDotGiamGia(), 2)) {
                 throw new ResourceExistsException("Tên Đợt Giảm Giá Đã Tồn Tại!");
             }
         }
@@ -331,6 +337,13 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean nameCheckRealTime(String name) {
+        if (repository.existsByTenDotGiamGiaAndTrangThai(name, 1)) {
+            return true;
+        } else return repository.existsByTenDotGiamGiaAndTrangThai(name, 2);
     }
 
 }

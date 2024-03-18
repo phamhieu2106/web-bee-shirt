@@ -15,45 +15,46 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query(value =
             """
-            SELECT *
-            FROM san_pham_chi_tiet spct
-            WHERE spct.san_pham_id = :spId
-            ORDER BY spct.created_at DESC
-            """, nativeQuery = true)
+                    SELECT *
+                    FROM san_pham_chi_tiet spct
+                    WHERE spct.san_pham_id = :spId
+                    ORDER BY spct.created_at DESC
+                    """, nativeQuery = true)
     Page<SanPhamChiTiet> getByPage(Pageable pageable,
                                    @Param("spId") int spId);
 
     @Query("""
             select spct from SanPhamChiTiet spct
-            where spct.sanPham.ma like %:search% or 
+            where (spct.sanPham.ma like %:search% or 
             spct.sanPham.ten like %:search% or 
             spct.kieuDang.ten like %:search% or 
             spct.thietKe.ten like %:search% or 
             spct.tayAo.ten like %:search% or 
             spct.coAo.ten like %:search% or 
-            spct.chatLieu.ten like %:search%
+            spct.chatLieu.ten like %:search% ) and
+            (spct.trangThai = true and spct.soLuongTon > 0 )
             """)
     Page<SanPhamChiTiet> getAllBySearch(String search, Pageable pageable);
 
     @Query(value = """
-                   SELECT MIN(ct.gia_ban)
-                   FROM san_pham_chi_tiet ct
-                   WHERE ct.san_pham_id = :productId
-                   """, nativeQuery = true)
+            SELECT MIN(ct.gia_ban)
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            """, nativeQuery = true)
     BigDecimal getMinPrice(@Param("productId") int productId);
 
     @Query(value = """
-                   SELECT MAX(ct.gia_ban)
-                   FROM san_pham_chi_tiet ct
-                   WHERE ct.san_pham_id = :productId
-                   """, nativeQuery = true)
+            SELECT MAX(ct.gia_ban)
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            """, nativeQuery = true)
     BigDecimal getMaxPrice(@Param("productId") int productId);
 
     @Query(value = """
-                   UPDATE san_pham_chi_tiet ct
-                   SET ct.trang_thai = :value
-                   WHERE ct.san_pham_id = :sanPhamId
-                   """, nativeQuery = true)
+            UPDATE san_pham_chi_tiet ct
+            SET ct.trang_thai = :value
+            WHERE ct.san_pham_id = :sanPhamId
+            """, nativeQuery = true)
     @Modifying
     void updateStatusAllBySpId(@Param("sanPhamId") int sanPhamId,
                                @Param("value") boolean value);
@@ -77,4 +78,31 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     SanPhamChiTiet findFirstBySanPhamIdAndMauSacId(int sanPhamId, int mauSacId);
 
     SanPhamChiTiet findFirstBySanPhamId(int spId);
+
+    /*
+                left join MauSac ms on ms.id = spct.mauSac.id
+                left join KichCo kc on kc.id = spct.kichCo.id
+                left join KieuDang ms on ms.id = spct.mauSac.id
+                left join KieuThietKe ms on ms.id = spct.mauSac.id
+                left join TayAo ms on ms.id = spct.mauSac.id
+                left join CoAo ms on ms.id = spct.mauSac.id
+                left join ChatLieu ms on ms.id = spct.mauSac.id
+    * */
+    @Query("""
+            select spct from SanPhamChiTiet spct
+            where (spct.sanPham.ten like %:search% or spct.sanPham.ma like %:search%) and
+            spct.mauSac.ten like %:mauSac% and
+            (spct.giaBan between :giaMin and :giaMax) and
+            spct.kichCo.ten like %:kichCo% and
+            spct.kieuDang.ten like %:kieuDang% and
+            spct.thietKe.ten like %:thietKe% and
+            spct.tayAo.ten like %:tayAo% and
+            spct.coAo.ten like %:coAo% and
+            spct.chatLieu.ten like %:chatLieu% and 
+            spct.trangThai = true
+            """)
+    Page<SanPhamChiTiet> findDetailAll(Pageable pageable, String search, String mauSac, String kichCo, String kieuDang, String thietKe, String tayAo, String coAo, String chatLieu,BigDecimal giaMin,BigDecimal giaMax);
+
+    @Query("select min(spct.giaBan),max(spct.giaBan)from SanPhamChiTiet spct")
+    long[][] getMixMaxPrice();
 }

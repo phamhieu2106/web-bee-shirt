@@ -42,6 +42,11 @@ export class TableComponent implements OnInit {
   @Input() listSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[];
   @Output() clickSanPhamChiTiet = new EventEmitter<any>();
 
+  //
+  @Input() filterObject: any;
+  valueSize: any = 5;
+  valuePage: any = 1;
+  //
   constructor(private service: DotGiamGiaService) {}
   ngOnChanges(changes: SimpleChanges) {
     if (
@@ -55,11 +60,19 @@ export class TableComponent implements OnInit {
 
   // For DotGiamGia
   public onChangeSize(sizeNumber: any) {
-    this.onPageChange.emit(sizeNumber.target.value);
+    this.valueSize = sizeNumber.target.value;
+    this.onPageChange.emit({
+      size: this.valueSize,
+      page: this.valuePage,
+    });
   }
 
   public onChangePage(pageNumber: any) {
-    this.onPageNumberChange.emit(pageNumber);
+    this.valuePage = pageNumber;
+    this.onPageNumberChange.emit({
+      size: this.valueSize,
+      page: this.valuePage,
+    });
   }
 
   public onSelectRemove(id: number) {

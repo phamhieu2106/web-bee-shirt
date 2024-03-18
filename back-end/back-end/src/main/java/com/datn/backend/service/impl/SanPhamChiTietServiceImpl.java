@@ -188,7 +188,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
-        PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
 //        Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
 //        find doi giam gia theo spct
@@ -219,7 +219,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
 
             //gán gia tri
-            if (dotGiamGia != null){
+            if (dotGiamGia != null) {
                 spctResp.setDotGiamGia(
                         modelMapper.map(dotGiamGia, DotGiamGiaResponse2.class)
                 );
@@ -346,5 +346,33 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public boolean checkExist(int spId, int mauSacId, int sizeId) {
         return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) != null;
+    }
+
+    @Override
+    public long[][] minMaxPrice() {
+        return spctRepo.getMixMaxPrice();
+    }
+
+    @Override
+    public PagedResponse<SpctResponse> getDetailSpct(int pageSize, int pageNumber, String search, String mauSac, String kichCo, String kieuDang, String thietKe, String tayAo, String coAo, String chatLieu, BigDecimal giaMin, BigDecimal giaMax) {
+        // to page request
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        // lay danh sách sản pẩm chi tiet
+        Page<SanPhamChiTiet> sanPhamChiTietPage = spctRepo.findDetailAll(pageable, search, mauSac, kichCo, kieuDang, thietKe, tayAo, coAo, chatLieu, giaMin, giaMax);
+
+        // mapping sang spct response
+        List<SpctResponse> spctResponses = mapToSpctResponse(sanPhamChiTietPage);
+
+        // tao basePaged
+        PagedResponse<SpctResponse> spctResponsePagedResponse = new PagedResponse<>();
+        spctResponsePagedResponse.setData(spctResponses);
+        spctResponsePagedResponse.setPageNumber(sanPhamChiTietPage.getNumber());
+        spctResponsePagedResponse.setPageSize(sanPhamChiTietPage.getSize());
+        spctResponsePagedResponse.setTotalPages(sanPhamChiTietPage.getTotalPages());
+        spctResponsePagedResponse.setTotalElements(sanPhamChiTietPage.getTotalElements());
+        spctResponsePagedResponse.setSearch(search);
+        spctResponsePagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamChiTietPage.getTotalPages()));
+        return spctResponsePagedResponse;
     }
 }

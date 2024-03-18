@@ -85,8 +85,14 @@ export class ThemNhanVienComponent {
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     if (e && e.length > 0) {
       const qrCodeValue = e[0].value;
+      console.log(qrCodeValue);
       action.stop();
       document.getElementById("closeFormQRCode").click();
+
+      if ((qrCodeValue.match(/\|/g) || []).length !== 6) {
+        this.toastr.error("Mã QR không hợp lệ", "Thất bại");
+        return;
+      }
 
       var arrayQR = qrCodeValue.split("|");
 
@@ -212,7 +218,7 @@ export class ThemNhanVienComponent {
       ]),
       hoTen: new FormControl(hoTenQR === undefined ? "" : hoTenQR.trim(), [
         Validators.required,
-        Validators.pattern(/^[\p{L}\s]+$/u),
+        Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
       ]),
       ngaySinh: new FormControl(ngaySinhQR === undefined ? "" : ngaySinhQR, [
         Validators.required,
@@ -235,6 +241,7 @@ export class ThemNhanVienComponent {
       ]),
       diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
         Validators.required,
+        Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
       ]),
       matKhau: new FormControl(""),
     });

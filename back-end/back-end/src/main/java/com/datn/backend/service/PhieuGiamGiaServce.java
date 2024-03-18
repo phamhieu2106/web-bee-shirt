@@ -1,6 +1,8 @@
 package com.datn.backend.service;
 
+import com.datn.backend.dto.request.DiscountValidRequest;
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
+import com.datn.backend.dto.response.DiscountValidResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
@@ -25,4 +27,6 @@ public interface PhieuGiamGiaServce {
     PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search ,List<Integer> kieu,List<Integer> loai,List<String> trangThai);
 
     PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai,String thoiGianBatDau,String thoiGianKetThuc);
+
+    DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest);
 }

@@ -1,0 +1,15 @@
+<div class="discount-image">
+  <!-- Đặt ảnh của bạn vào đây -->
+  <img
+    [src]="url"
+    alt="Ảnh sản phẩm"
+    class="img-fluid"
+    [width]="width"
+    [height]="height"
+  />
+  <!-- Hiển thị % giảm giá -->
+
+  <div class="discount-badge" *ngIf="discount">
+    {{ "-" + discount + "%" }}
+  </div>
+</div>

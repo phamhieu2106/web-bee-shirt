@@ -44,7 +44,7 @@ public class DotGiamGiaResource {
                                         String endDate,
                                         @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
                                         int pageNumber,
-                                        @RequestParam(value = "pageSize", defaultValue = "9999", required = false)
+                                        @RequestParam(value = "pageSize", defaultValue = "5", required = false)
                                         int pageSize,
                                         @RequestParam(value = "search", defaultValue = "", required = false)
                                         String search) {
@@ -116,5 +116,12 @@ public class DotGiamGiaResource {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't Delete with ID: " + id);
         }
+    }
+
+
+    @GetMapping("/namecheckrealtime")
+    public boolean check(@RequestParam("name") String name) {
+
+      return service.nameCheckRealTime(name);
     }
 }

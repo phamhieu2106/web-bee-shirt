@@ -35,6 +35,10 @@ export class DotGiamGiaComponent implements OnInit {
   pageSize: number;
   search: string;
 
+  //
+  filterObject: any;
+  //
+
   constructor(
     private service: DotGiamGiaService,
     private toast: ToastrService
@@ -67,8 +71,14 @@ export class DotGiamGiaComponent implements OnInit {
 
   // DOT GIAM GIA FILTER HANDLING
   public getValueFromFilter(data: any) {
+    this.filterObject = data;
     this.service
-      .getFilterDotGiamGia(data.status, data.startDate, data.endDate)
+      .getFilterDotGiamGia(
+        data.status,
+        data.startDate,
+        data.endDate,
+        data.search
+      )
       .subscribe({
         next: (value) => {
           this.setDataTable(value);
@@ -84,35 +94,82 @@ export class DotGiamGiaComponent implements OnInit {
 
   public reloadResetFilter() {
     this.getAllDotGiamGia();
+    this.filterObject = undefined;
   }
   // END DOT GIAM GIA FILTER HANDLING
 
   // DOT GIAM GIA TABLE HANDLING
-  public handleChangePageSizeDGG(pageSize: any) {
-    this.service.getDotGiamGiaPageSize(pageSize).subscribe({
-      next: (value) => {
-        this.setDataTable(value);
-      },
-      error: (err) => {
-        console.log(err);
-        this.toast.error(
-          "Lỗi khi tải danh sách đợt giảm giá khi chọn số phần tử hiển thị"
-        );
-      },
-    });
+  public handleChangePageSizeDGG(data: any) {
+    if (this.filterObject) {
+      this.service
+        .getDotGiamGiaFilterPageNumber(
+          data.size,
+          data.page,
+          this.filterObject.status,
+          this.filterObject.startDate,
+          this.filterObject.endDate,
+          this.filterObject.search
+        )
+        .subscribe({
+          next: (value) => {
+            this.setDataTable(value);
+          },
+          error: (err) => {
+            console.log(err);
+            this.toast.error(
+              "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
+            );
+          },
+        });
+    } else {
+      this.service.getDotGiamGiaPageSize(data.size, data.page).subscribe({
+        next: (value) => {
+          this.setDataTable(value);
+        },
+        error: (err) => {
+          console.log(err);
+          this.toast.error(
+            "Lỗi khi tải danh sách đợt giảm giá khi chọn số phần tử hiển thị"
+          );
+        },
+      });
+    }
   }
-  public handleChangePageNumberDGG(pageNumber: any) {
-    this.service.getDotGiamGiaPageNumber(this.pageSize, pageNumber).subscribe({
-      next: (value) => {
-        this.setDataTable(value);
-      },
-      error: (err) => {
-        console.log(err);
-        this.toast.error(
-          "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
-        );
-      },
-    });
+  public handleChangePageNumberDGG(data: any) {
+    if (this.filterObject) {
+      this.service
+        .getDotGiamGiaFilterPageNumber(
+          data.size,
+          data.page,
+          this.filterObject.status,
+          this.filterObject.startDate,
+          this.filterObject.endDate,
+          this.filterObject.search
+        )
+        .subscribe({
+          next: (value) => {
+            this.setDataTable(value);
+          },
+          error: (err) => {
+            console.log(err);
+            this.toast.error(
+              "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
+            );
+          },
+        });
+    } else {
+      this.service.getDotGiamGiaPageNumber(data.size, data.page).subscribe({
+        next: (value) => {
+          this.setDataTable(value);
+        },
+        error: (err) => {
+          console.log(err);
+          this.toast.error(
+            "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
+          );
+        },
+      });
+    }
   }
   public handleChangeSearchDGG(search: any) {
     this.service.getDotGiamGiaSearch(search).subscribe({

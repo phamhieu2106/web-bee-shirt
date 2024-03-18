@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 })
 export class ThanhToanComponent implements OnChanges {
   @Input({ required: true }) tongTien: number;
-  @Input({ required: true }) thanhToans: ThanhToan[];
+  @Input({ required: true }) thanhToans: any[];
   @Output() thanhToansChange = new EventEmitter<ThanhToan[]>();
   thanhToanForm: FormGroup;
 

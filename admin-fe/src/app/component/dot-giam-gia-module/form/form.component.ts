@@ -1,5 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
@@ -45,8 +51,8 @@ export class FormComponent implements OnInit {
     this.form = new FormGroup({
       tenDotGiamGia: new FormControl(null, [
         Validators.required,
-        Validators.pattern(/^[\p{L}0-9\s]+$/u),
-        Validators.pattern(/^[\p{L}0-9]+(?:[\s]?[\p{L}0-9]+)*$/u),
+        Validators.pattern(/^(?=.*[\p{L}0-9])[\p{L}0-9\s]*$/u),
+        ,
       ]),
       giaTriPhanTram: new FormControl(null, [
         Validators.required,
@@ -54,11 +60,14 @@ export class FormComponent implements OnInit {
         Validators.min(5),
         Validators.max(100),
       ]),
-      thoiGianBatDau: new FormControl(
-        { value: null, disabled: this.dotGiamGiaRequest?.trangThai == 1 },
-        [Validators.required]
-      ),
-      thoiGianKetThuc: new FormControl(null, [Validators.required]),
+      thoiGianBatDau: new FormControl(null, [
+        Validators.required,
+        Validators.nullValidator,
+      ]),
+      thoiGianKetThuc: new FormControl(null, [
+        Validators.required,
+        Validators.nullValidator,
+      ]),
     });
   }
   public patchForm() {
@@ -112,29 +121,42 @@ export class FormComponent implements OnInit {
       this.patchForm();
     }
   }
-  public handleChangeTime(thoiGianBatDau: string, thoiGianKetThuc: string) {
+  public handleChangeTime(thoiGianBatDau: Date, thoiGianKetThuc: Date) {
+    if (thoiGianBatDau instanceof Date) {
+      this.form.controls["thoiGianBatDau"].setErrors({ invalid: true });
+      return;
+    }
+    if (thoiGianKetThuc instanceof Date) {
+      this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+      return;
+    }
+
     const currentTime = new Date();
     currentTime.setSeconds(0, 0);
 
     if (thoiGianBatDau > thoiGianKetThuc) {
       this.form.controls["thoiGianBatDau"].setErrors({ invalid: true });
       this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
-    } else {
-      const startTime = new Date(thoiGianBatDau);
-      const endTime = new Date(thoiGianKetThuc);
-      if (startTime < currentTime) {
-        this.form.controls["thoiGianBatDau"].setErrors({ pastDate: true });
-      } else {
-        const oneMinuteAfterStart = new Date(startTime.getTime() + 299999); // 60000 milliseconds = 1 minute
-        if (endTime <= oneMinuteAfterStart) {
-          this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
-        } else {
-          // Nếu không có lỗi, xóa các lỗi hiện có
-          this.form.controls["thoiGianBatDau"].setErrors(null);
-          this.form.controls["thoiGianKetThuc"].setErrors(null);
-        }
-      }
+      return; // Return to exit function early
     }
+
+    const startTime = new Date(thoiGianBatDau);
+    const endTime = new Date(thoiGianKetThuc);
+
+    if (startTime < currentTime) {
+      this.form.controls["thoiGianBatDau"].setErrors({ pastDate: true });
+      return; // Return to exit function early
+    }
+
+    const oneMinuteAfterStart = new Date(startTime.getTime() + 60000); // 60000 milliseconds = 1 minute
+    if (endTime <= oneMinuteAfterStart) {
+      this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+      return; // Return to exit function early
+    }
+
+    // Nếu không có lỗi, xóa các lỗi hiện có
+    this.form.controls["thoiGianBatDau"].setErrors(null);
+    this.form.controls["thoiGianKetThuc"].setErrors(null);
   }
 
   private validateForm(): boolean {
@@ -283,6 +305,19 @@ export class FormComponent implements OnInit {
     }
   };
 
+  public handleCheckNameRealTime(): void {
+    const name = this.form.get("tenDotGiamGia").value;
+    this.service.realTimeNameCheck(name).subscribe({
+      next: (value) => {
+        if (value) {
+          this.form.controls["tenDotGiamGia"].setErrors({ invalid: true });
+          document.getElementById("nameInvalid3").style.display = "block";
+        } else {
+          document.getElementById("nameInvalid3").style.display = "none";
+        }
+      },
+    });
+  }
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;

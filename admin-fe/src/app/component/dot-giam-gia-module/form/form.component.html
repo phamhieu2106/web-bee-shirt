@@ -20,12 +20,15 @@
             "
             placeholder="Tên Đợt Giảm Giá"
             formControlName="tenDotGiamGia"
+            (change)="handleCheckNameRealTime()"
           />
-          <div class="invalid-feedback">Tên không thể có kí tự đặc biệt</div>
-          <div class="invalid-feedback">
-            Tên không thể có nhiều khoảng trắng
+          <!-- <div id="nameInvalid1" class="invalid-feedback">
+            Tên không thể có kí tự đặc biệt
+          </div> -->
+          <div id="nameInvalid2" class="invalid-feedback">Tên không hợp lệ</div>
+          <div id="nameInvalid3" class="invalid-feedback" style="display: none">
+            Tên đã tồn tại
           </div>
-          <div class="invalid-feedback">Tên không hợp lệ</div>
         </div>
       </div>
       <div class="form-group row">

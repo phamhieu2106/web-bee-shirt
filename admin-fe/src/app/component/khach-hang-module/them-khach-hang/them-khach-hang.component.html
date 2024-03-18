@@ -158,6 +158,8 @@
                       </div>
                     </div>
                   </div>
+                  
+                  <!-- ĐỊA CHỈ  -->
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
@@ -170,14 +172,14 @@
                           id="city"
                           aria-label=".form-select-sm"
                           formControlName="tinh"
-                          (change)="onCityChange()"                          
+                          (change)="getAllHuyenByTinh()"                          
                         >
                           <option value="" selected>Chọn tỉnh thành</option>
                           <option
-                            *ngFor="let dc of tinh"
-                            [value]="dc.province_name"
+                            *ngFor="let dc of tinhs"
+                            [value]="dc.ProvinceName"
                           >
-                            {{ dc.province_name }}
+                            {{ dc.ProvinceName }}
                           </option>
                         </select>
                       </div>
@@ -193,14 +195,14 @@
                           id="district"
                           aria-label=".form-select-sm"
                           formControlName="huyen"
-                          (change)="ondistrictChange()"
+                          (change)="getAllXaByHuyen()"
                         >
                           <option value="" selected>Chọn quận huyện</option>
                           <option
-                            *ngFor="let dc of huyen"
-                            [value]="dc.district_name"
+                            *ngFor="let h of huyens"
+                            value="{{ h.DistrictName }}"
                           >
-                            {{ dc.district_name }}
+                            {{ h.DistrictName }}
                           </option>
                         </select>
                       </div>
@@ -220,8 +222,8 @@
                           formControlName="xa"
                         >
                           <option value="" selected>Chọn phường xã</option>
-                          <option *ngFor="let dc of xa" [value]="dc.ward_name">
-                            {{ dc.ward_name }}
+                          <option *ngFor="let dc of xas" [value]="dc.WardName">
+                            {{ dc.WardName }}
                           </option>
                         </select>
                       </div>
@@ -247,6 +249,7 @@
                       </div>
                     </div>
                   </div>
+                  <!-- ĐỊA CHỈ -->
                 </div>
               </div>
             </form>

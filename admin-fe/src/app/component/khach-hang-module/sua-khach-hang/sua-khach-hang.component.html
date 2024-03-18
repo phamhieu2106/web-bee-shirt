@@ -69,6 +69,7 @@
                           class="form-control input"
                           placeholder="Nhập số điện thoại"
                           formControlName="sdt"
+                          readonly
                         />
                       </div>
                     </div>
@@ -274,16 +275,16 @@
                                   id="city"
                                   aria-label=".form-select-sm"
                                   formControlName="tinh"
-                                  (change)="onCityChange()"
+                                  (change)="getAllHuyenByTinh()"
                                 >
                                   <option value="" selected>
                                     Chọn tỉnh thành
                                   </option>
                                   <option
-                                    *ngFor="let dc of dstinh"
-                                    [value]="dc.province_name"
+                                    *ngFor="let dc of tinhs"
+                                    [value]="dc.ProvinceName"
                                   >
-                                    {{ dc.province_name }}
+                                    {{ dc.ProvinceName }}
                                   </option>
                                 </select>
                               </div>
@@ -299,16 +300,16 @@
                                   id="district"
                                   aria-label=".form-select-sm"
                                   formControlName="huyen"
-                                  (change)="ondistrictChange()"
+                                  (change)="getAllXaByHuyen()"
                                 >
                                   <option value="" selected>
                                     Chọn quận huyện
                                   </option>
                                   <option
-                                    *ngFor="let dc of dshuyen"
-                                    [value]="dc.district_name"
+                                    *ngFor="let h of huyens"
+                                    value="{{ h.DistrictName }}"
                                   >
-                                    {{ dc.district_name }}
+                                    {{ h.DistrictName }}
                                   </option>
                                 </select>
                               </div>
@@ -329,10 +330,10 @@
                                     Chọn phường xã
                                   </option>
                                   <option
-                                    *ngFor="let dc of dsxa"
-                                    [value]="dc.ward_name"
+                                    *ngFor="let dc of xas"
+                                    [value]="dc.WardName"
                                   >
-                                    {{ dc.ward_name }}
+                                    {{ dc.WardName }}
                                   </option>
                                 </select>
                               </div>
@@ -454,11 +455,6 @@
                                   <span class="btnDefault disabled">
                                     Mặc định
                                   </span>
-                                  <!-- <label class="toggle">
-                                    <span class="toggle-label">Địa chỉ mặc định</span>
-                                    <input class="toggle-checkbox" type="checkbox" checked disabled>
-                                    <div class="toggle-switch"></div>
-                                  </label>     -->
                                 </div>
                                 <div class="" *ngIf="diaChi.macDinh === false">
                                   <label class="toggle">
@@ -532,31 +528,35 @@
           Cập nhật địa chỉ
         </h1>
       </div>
-      <form [formGroup]="updateFormDC">
+      <!-- <form [formGroup]="updateFormDC"> -->
         <div class="modal-body">
           <div class="form-row">
             <label class="input_label"
               ><b style="color: red">*</b>Tỉnh/Thành phố</label
             >
-            <input
+            <!-- <input
               type="text"
               class="form-control input"
               formControlName="tinh"
-            />
+            /> -->
             <div class="invalid-feedback">Không được bỏ trống</div>
-            <!-- <select
+            <select
               class="form-select form-select-sm mb-3 input"
               style="padding: 5px 10px 5px 10px"
               id="city"
               aria-label=".form-select-sm"
-              formControlName="tinh"
-              (change)="onCityDetailChange()"
+              [(ngModel)]="diaChiVaPhiVanChuyen.tinh"
+              (change)="getAllHuyenByTinh()"
             >
               <option value="" selected>Chọn tỉnh thành</option>
-              <option *ngFor="let dc of dstinh" [value]="dc.province_name">
-                {{ dc.province_name }}
+              <option *ngFor="let dc of tinhs" 
+              [value]="dc.ProvinceName"
+              [selected]="diaChiVaPhiVanChuyen.tinhId == dc.ProvinceID"
+              
+              >
+                {{ dc.ProvinceName }}
               </option>
-            </select> -->
+            </select>
           </div>
 
           <div class="form-row mt-3">
@@ -579,7 +579,7 @@
             <input
               type="text"
               class="form-control input"
-              formControlName="huyen"
+              [(ngModel)]="diaChiVaPhiVanChuyen.huyen"
             />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
@@ -602,7 +602,7 @@
             <input
               type="text"
               class="form-control input"
-              formControlName="xa"
+              [(ngModel)]="diaChiVaPhiVanChuyen.xa"
             />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
@@ -613,7 +613,7 @@
             <input
               type="text"
               class="form-control input"
-              formControlName="duong"
+              [(ngModel)]="diaChiVaPhiVanChuyen.cuThe"
             />
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
@@ -632,7 +632,7 @@
             Cập nhật
           </button>
         </div>
-      </form>
+      <!-- </form> -->
     </div>
   </div>
 </div>

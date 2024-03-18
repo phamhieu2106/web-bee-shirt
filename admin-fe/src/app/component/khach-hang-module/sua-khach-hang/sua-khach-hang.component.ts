@@ -5,9 +5,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { Observable, delay } from "rxjs";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
+import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { DiaChiService } from "src/app/service/dia-chi.service";
+import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import Swal from "sweetalert2";
 
@@ -28,14 +30,22 @@ export class SuaKhachHangComponent {
   public addFormDC: FormGroup;
   public updateFormDC: FormGroup;
   public dsDC: DiaChi[];
+  tinhs: any[];
+  huyens: any[];
+  xas: any[];
+  idTinh: number;
+  idHuyen:number;
+  idXa:number;
+  selectedAddress= new DiaChi();
+  diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
+
+
   public dstinh: any[] = [];
   public dshuyen: any[] = [];
   public dsxa: any[] = [];
   public tinhDetail: any[] = [];
   public huyenDetail: any[] = [];
   public xaDetail: any[] = [];
-  public idTinh: number;
-  public idHuyen: number;
   public idDC: number;
   errorMessage: string = "";
   public idTinhDetail: number;
@@ -43,7 +53,6 @@ export class SuaKhachHangComponent {
   public idDCDetail: number;
   private selectFile: File;
   imageUrl: string;
-  selectedAddress: DiaChi;
   public isCollapsed: boolean = true;
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
@@ -52,15 +61,13 @@ export class SuaKhachHangComponent {
     private khachHangService: KhachHangService,
     private toas: ToastrService,
     private diaChiService: DiaChiService,
-    private http: HttpClient
+    private ghn: GiaoHangNhanhService,
   ) {}
   ngOnInit() {
     this.initFormUpdateKh();
     this.initAddFormDC();
     this.initFormUpdateDC();
-    this.diaChiService.getTinh().subscribe((data: any)=>{
-      this.dstinh = data.results;
-    })
+    this.getAllTinh();
     const ma = this.route.snapshot.paramMap.get("id");
     this.idKh = parseInt(ma, 10);
     this.diaChiService.getAllDc(this.idKh).subscribe({
@@ -86,7 +93,123 @@ export class SuaKhachHangComponent {
         },
       });
     });
+  }
+  getAllTinh() {
+    this.huyens = [];
+    this.xas = [];
+    this.ghn.getAllProvince().subscribe({
+      next: (resp) => {
+        this.tinhs = resp.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  getAllHuyenByTinh() {
+    this.xas = [];       
+    this.findTinhId();
+    this.ghn
+      .getAllDistrictByProvinceID(this.idTinh)
+      .subscribe({
+        next: (resp) => {
+          this.huyens = resp.data;
+          this.addFormDC.get('tinh').setValue(this.getTenTinh());
+          
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });         
+      console.log(this.addFormDC.get('tinh'));
+  }
+
+  getAllXaByHuyen() {
+    this.findHuyenId();
+    console.log(this.idTinh);
+    console.log(this.idHuyen);
     
+    this.ghn
+    .getAllWardByDistrictID(this.idHuyen)
+    .subscribe({
+      next: (resp) => {
+        this.xas = resp.data;
+        this.addFormDC.get('huyen').setValue(this.getTenHuyen());
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });      
+  }
+
+  getTenTinh(): string {
+    let provinceName = this.addFormDC.get('tinh').value;
+    if (provinceName == null || provinceName == "") {
+      this.tinhs.forEach((t) => {
+        if (t.ProvinceID == this.idTinh) {
+          provinceName = t.ProvinceName;
+        }
+      });
+    }
+    return provinceName;
+  }
+  getTenHuyen(): string {
+    let districtName = this.addFormDC.get('huyen').value;
+    this.huyens.forEach((t) => {
+      if (t.DistrictID == this.idHuyen) {
+        districtName = t.DistrictName;
+      }
+    });
+    return districtName;
+  }
+  getTenXa(): string {
+    let wardName = "";
+    this.xas.forEach((t) => {
+      if (t.WardCode == this.idXa) {
+        wardName = t.WardName;
+      }
+    });
+    return wardName;
+  }
+  fillData() {
+    // get all tỉnh => lọc ds tìm tinhId
+    this.getAllTinh();
+    setTimeout(() => this.findTinhId(), 100);
+
+    // get all huyện => lọc danh sách tìm xaId
+    setTimeout(() => this.getAllHuyenByTinh(), 200);
+    setTimeout(() => this.findHuyenId(), 400);
+
+    // get all xã
+    setTimeout(() => this.getAllXaByHuyen(), 600);
+    setTimeout(() => this.findXaId(), 800);
+  }
+  findXaId() {
+    for (let i = 0; i < this.xas.length; i++) {
+      const element = this.xas[i];
+      if (element.NameExtension.includes(this.selectedAddress.xa)) {
+        this.idXa = element.WardCode;
+        break;
+      }
+    }
+  }
+  findHuyenId() {   
+    for (let i = 0; i < this.huyens.length; i++) {
+      const element = this.huyens[i];
+      if (element.NameExtension.includes(this.selectedAddress.huyen)) {
+        this.idHuyen = element.DistrictID;
+        break;
+      }    
+    }
+  }
+  findTinhId() {
+    for (let i = 0; i < this.tinhs.length; i++) {
+      const element = this.tinhs[i];
+      if (element.NameExtension.includes(this.selectedAddress.tinh)) {
+        this.idTinh = element.ProvinceID;       
+        break;
+      }
+    } 
   }
   public imageChange(event: any): void {
     this.selectFile = event.target["files"][0];
@@ -247,9 +370,21 @@ export class SuaKhachHangComponent {
   }
 
   public openUpdateForm(id: number): void {
+    this.getAllTinh();    
     this.diaChiService.getDCById(id).subscribe({
       next: (dc: DiaChi) => {
         this.selectedAddress= dc;
+        this.findTinhId();
+        this.findHuyenId();
+        this.findXaId()
+        this.diaChiVaPhiVanChuyen.tinhId= this.idTinh;
+        this.diaChiVaPhiVanChuyen.huyenId = this.idHuyen;
+        this.diaChiVaPhiVanChuyen.xaCode = '' + this.idXa;
+        console.log(this.diaChiVaPhiVanChuyen);
+        console.log(this.selectedAddress.tinh);
+        
+        
+        
         this.idDC=id;     
         this.updateFormDC = new FormGroup({
           idDC: new FormControl(dc.id, [Validators.required]),

@@ -1,6 +1,6 @@
 package com.datn.backend.service.impl;
 
-import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.AddSpctRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -75,7 +75,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
      */
     @Transactional
     @Override
-    public void addSpctList(AddSanPhamChiTietRequest request, MultipartFile[] multipartFiles) throws IOException {
+    public void addSpctList(AddSpctRequest request, MultipartFile[] multipartFiles) throws IOException {
+        // check for exist by MauSac and KichCo
+        checkExistForAdd(request);
+
         List<SanPhamChiTiet> spctList = new ArrayList<>();
         List<HinhAnh> hinhAnhs = new ArrayList<>();
 
@@ -116,7 +119,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 (String) result.get("public_id"));
     }
 
-    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSanPhamChiTietRequest request) {
+    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSpctRequest request) {
         SanPham sanPham = sanPhamRepo.findById(request.getSanPhamId()).get();
         KieuDang kieuDang = kieuDangRepo.findById(request.getKieuDangId()).get();
         KieuThietKe kieuThietKe = kieuThietKeRepo.findById(request.getThietKeId()).get();
@@ -132,6 +135,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         spct.setChatLieu(chatLieu);
 
         return spct;
+    }
+
+    private void checkExistForAdd(AddSpctRequest request) {
+        for (int kichCoId : request.getRequests().getKichCoIdList()) {
+            SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(request.getSanPhamId(), request.getRequests().getMauSacId(), kichCoId);
+            if (spctByMauSacAndKichCo != null) {
+                MauSac mauSac = mauSacRepo.findById(request.getRequests().getMauSacId()).get();
+                KichCo kichCo = kichCoRepo.findById(kichCoId).get();
+                throw new ResourceExistsException("SPCT màu " + mauSac.getTen() + " và size " + kichCo.getTen() + " đã tồn tại!");
+            }
+        }
     }
 
     @Override
@@ -331,6 +345,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public boolean checkExist(int spId, int mauSacId, int sizeId) {
-        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) == null;
+        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) != null;
     }
 }

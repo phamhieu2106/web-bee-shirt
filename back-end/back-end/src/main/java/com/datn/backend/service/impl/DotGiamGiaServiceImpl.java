@@ -131,9 +131,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         Page<DotGiamGiaResponse> dotGiamGiaPage = null;
 
         if (status == 3) {
-            dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate);
+            dotGiamGiaPage = repository.getStatusAll(pageable, startDate, endDate,search);
         } else {
-            dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate);
+            dotGiamGiaPage = repository.getStatusWithDate(pageable, status, startDate, endDate, search);
         }
 
         PagedResponse<DotGiamGiaResponse> dotGiamGiaPagedResponse = new PagedResponse<>();

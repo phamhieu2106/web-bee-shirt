@@ -26,6 +26,7 @@ export class FilterComponent {
       status: this.status,
       startDate: this.startDate,
       endDate: this.endDate,
+      search: this.search,
     };
     this.filterFromChild.emit(dataEmit);
   }
@@ -42,12 +43,12 @@ export class FilterComponent {
     this.onPageChangeSearch.emit(searchText);
   }
 
-  public onInputSearch(event: any) {
+  public onInputSearch() {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
     this.timeout = setTimeout(() => {
-      this.onChangeSearch(event.target.value);
+      this.onChangeFilter();
     }, 900); // Thời gian debounce là 900 milliseconds ~ 1s
   }
 }

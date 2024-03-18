@@ -135,7 +135,9 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     this.service.getAllSanPhamChiTietUpdateById(id, idDotGiamGia).subscribe({
       next: (value) => {
         this.listSanPhamChiTiet = value;
-        this.dataSanPhamChiTiet = this.listSanPhamChiTiet.data;
+        this.dataSanPhamChiTiet = this.removeDuplicateById(
+          this.listSanPhamChiTiet.data
+        );
         // Set ListIDSanPhamChiTiet from  Dot Giam Gia Update Request
       },
       error: (message) => {
@@ -147,6 +149,19 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
       this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet;
   }
 
+  private removeDuplicateById(data: any[]): any[] {
+    const uniqueIds = new Set<number>();
+    const uniqueData = data.filter((item) => {
+      if (uniqueIds.has(item.id)) {
+        return false; // Return false if ID has already been encountered
+      } else {
+        uniqueIds.add(item.id); // Add ID to set if encountering it for the first time
+        return true; // Return true to keep this item in the filtered array
+      }
+    });
+
+    return uniqueData;
+  }
   //For Table SanPham
   // Page SanPham
   listSanPham: PagedResponse<SanPham>;

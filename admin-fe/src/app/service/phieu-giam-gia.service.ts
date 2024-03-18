@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, interval, throwError } from "rxjs";
-import { catchError, switchMap } from 'rxjs/operators';
-import { format } from 'date-fns';
+import { catchError, switchMap } from "rxjs/operators";
+import { format } from "date-fns";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
@@ -15,11 +15,9 @@ import { KhachHang } from "../model/class/KhachHang.class";
 })
 export class PhieuGiamGiaService {
   private readonly apiUrl = "http://localhost:8080/phieu-giam-gia";
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   //public function
-
-
 
   public filter(
     pageNumber: number = 1,
@@ -27,7 +25,7 @@ export class PhieuGiamGiaService {
     search: string = "",
     kieu: number[] = [0, 1],
     loai: number[] = [0, 1],
-    trangThai: string[] = ["Đang diễn ra","Sắp diễn ra","Đã kết thúc"],
+    trangThai: string[] = ["Đang diễn ra", "Sắp diễn ra", "Đã kết thúc"],
     thoiGianBatDau: string = "",
     thoiGianKetThuc: string = ""
   ): Observable<PagedResponse<PhieuGiamGia>> {
@@ -43,8 +41,7 @@ export class PhieuGiamGiaService {
     search: string = "",
     kieu: number[] = [0, 1],
     loai: number[] = [0, 1],
-    trangThai: string[] = ["Đang diễn ra","Sắp diễn ra","Đã kết thúc"],
-  
+    trangThai: string[] = ["Đang diễn ra", "Sắp diễn ra", "Đã kết thúc"]
   ): Observable<PagedResponse<PhieuGiamGia>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&kieu=${kieu}&loai=${loai}&trangThai=${trangThai}`;
     return this.http.get<PagedResponse<PhieuGiamGia>>(
@@ -56,22 +53,26 @@ export class PhieuGiamGiaService {
     return this.http.get<PhieuGiamGia>(`${this.apiUrl}/sua-phieu/${id}`);
   }
 
-
   public changeStatus(id: number): Observable<PhieuGiamGia> {
     return this.http.put<PhieuGiamGia>(`${this.apiUrl}/status/${id}`, id);
   }
 
   public add(phieuGiamGia: PhieuGiamGia): Observable<PhieuGiamGia> {
-    return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia).pipe(
+    return this.http
+      .post<PhieuGiamGia>(`${this.apiUrl}/add`, phieuGiamGia)
+      .pipe(
         catchError((error: any) => {
-            // Xử lý lỗi ở đây
-            console.error('Error adding PhieuGiamGia:', error);
-            return throwError(error); // Chuyển tiếp lỗi để subscriber xử lý
+          // Xử lý lỗi ở đây
+          console.error("Error adding PhieuGiamGia:", error);
+          return throwError(error); // Chuyển tiếp lỗi để subscriber xử lý
         })
-    );
- }
+      );
+  }
 
-  public addPhieuKhachHang(phieuGiamGiaId: number, selectedIds: number[]): Observable<PhieuGiamGia> {
+  public addPhieuKhachHang(
+    phieuGiamGiaId: number,
+    selectedIds: number[]
+  ): Observable<PhieuGiamGia> {
     const request = {
       phieuGiamGiaId,
       selectedIds,
@@ -80,30 +81,26 @@ export class PhieuGiamGiaService {
   }
 
   public getAllPhieuKhachHang(): Observable<PhieuGiamGiaKhachHang[]> {
-    return this.http.get<PhieuGiamGiaKhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang`);
+    return this.http.get<PhieuGiamGiaKhachHang[]>(
+      `${this.apiUrl}/get-phieu-khach-hang`
+    );
   }
   public getKhachHangTang(id: number): Observable<KhachHang[]> {
-    return this.http.get<KhachHang[]>(`${this.apiUrl}/get-phieu-khach-hang/${id}`);
+    return this.http.get<KhachHang[]>(
+      `${this.apiUrl}/get-phieu-khach-hang/${id}`
+    );
   }
-
-
-
-
-
 
   getPhieuGiamGiaList(): Observable<PhieuGiamGia[]> {
     return this.http.get<PhieuGiamGia[]>(`${this.apiUrl}/get-all`);
   }
 
   startPolling(): Observable<PhieuGiamGia[]> {
-    return interval(5000)  // Cứ sau mỗi 5 giây, bạn có thể điều chỉnh thời gian
-      .pipe(
-        switchMap(() => this.getPhieuGiamGiaList())
-      );
+    return interval(5000) // Cứ sau mỗi 5 giây, bạn có thể điều chỉnh thời gian
+      .pipe(switchMap(() => this.getPhieuGiamGiaList()));
   }
 
   public update(id: number, phieu: PhieuGiamGia): Observable<PhieuGiamGia> {
-
     const thoiGianBatDau = new Date(phieu.thoiGianBatDau); // Chuyển đổi thành kiểu Date
     const thoiGianKetThuc = new Date(phieu.thoiGianKetThuc); // Chuyển đổi thành kiểu Date
     const phieuUpdate: PhieuGiamGiaUpdate = {
@@ -117,51 +114,50 @@ export class PhieuGiamGiaService {
       dieuKienGiam: phieu.dieuKienGiam,
       soLuong: phieu.soLuong,
       trangThai: this.calculateStatus(thoiGianBatDau, thoiGianKetThuc),
-      thoiGianBatDau: format(phieu.thoiGianBatDau, 'yyyy-MM-dd\'T\'HH:mm'),
-      thoiGianKetThuc: format(phieu.thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm'),
-
+      // thoiGianBatDau: format(phieu.thoiGianBatDau, 'yyyy-MM-dd\'T\'HH:mm'),
+      // thoiGianKetThuc: format(phieu.thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm'),
     };
 
     // Gửi đối tượng đã chuyển đổi lên server
-    return this.http.put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate).pipe(
-      catchError((error: any) => {
+    return this.http
+      .put<PhieuGiamGia>(`${this.apiUrl}/update/${id}`, phieuUpdate)
+      .pipe(
+        catchError((error: any) => {
           // Xử lý lỗi ở đây
-          console.error('Error updating PhieuGiamGia:', error);
+          console.error("Error updating PhieuGiamGia:", error);
           return throwError(error); // Chuyển tiếp lỗi để subscriber xử lý
-      })
-  );
+        })
+      );
   }
-
-
-
 
   private calculateStatus(thoiGianBatDau: Date, thoiGianKetThuc: Date): string {
     const currentTime = new Date();
 
     if (thoiGianKetThuc != null && currentTime > thoiGianKetThuc) {
-      return 'Đã kết thúc';
+      return "Đã kết thúc";
     } else if (thoiGianBatDau != null && currentTime < thoiGianBatDau) {
-      return 'Sắp diễn ra';
-    } else if (thoiGianBatDau != null && thoiGianKetThuc != null &&
-      currentTime > thoiGianBatDau && currentTime < thoiGianKetThuc) {
-      return 'Đang diễn ra';
+      return "Sắp diễn ra";
+    } else if (
+      thoiGianBatDau != null &&
+      thoiGianKetThuc != null &&
+      currentTime > thoiGianBatDau &&
+      currentTime < thoiGianKetThuc
+    ) {
+      return "Đang diễn ra";
     } else {
-      return 'Đã hủy';
+      return "Đã hủy";
     }
   }
-
 
   public getPhieuKhach(
     pageNumber: number = 1,
     pageSize: number = 5,
     id: number,
-    check:boolean
-  
+    check: boolean
   ): Observable<PagedResponse<KhachHang>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}&check=${check}`;
     return this.http.get<PagedResponse<KhachHang>>(
       `${this.apiUrl}/ds-khach-tang${param}`
     );
   }
-
 }

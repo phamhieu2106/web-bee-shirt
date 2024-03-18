@@ -154,16 +154,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
       .getDiscountValid(
         this.order.tongTien,
         this.order.khachHang == null ? null : this.order.khachHang.id,
-        this.order == null ? 0 : this.order.tienGiam
+        this.order.tienGiam
       )
       .subscribe({
         next: (resp: DiscountValid) => {
-          console.log(resp);
-          if (this.order.phieuGiamGia == null) {
-            this.order.phieuGiamGia = new PhieuGiamGia();
-          }
           this.order.phieuGiamGia = resp.phieuGiamGia;
-          // this.messagePgg = resp.message;
+          this.getTongTien();
+          this.getTienGiam();
         },
       });
   }
@@ -173,7 +170,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
     hdct.soLuong = 1;
     hdct.giaBan = this.getGiaBan(spct);
-
     return hdct;
   }
   getGiaBan(spct: SanPhamChiTiet): number {
@@ -182,12 +178,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   async deleteHDCT(hdctIndex: number) {
     this.order.hoaDonChiTiets.splice(hdctIndex, 1);
-    this.getPhieuGiamGia();
+    // this.getPhieuGiamGia();
     if (this.order.hoaDonChiTiets.length <= 0) {
       this.order.phieuGiamGia = null;
       this.order.thanhToans = [];
+      this.getTienGiam();
+      this.getTongTien();
+      this.getTienKhachConThieu();
     }
-    this.updateHoaDon();
   }
   async minusQuantity(hdct: HoaDonChiTiet) {
     if (hdct.soLuong > 1) {
@@ -210,7 +208,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
         break;
       }
     }
-    this.updateHoaDon();
+
     if (newHdct == null) {
       //Không tồn tại => tạo mới hdct
       newHdct = this.newHDCT(spct);
@@ -228,6 +226,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
       }
       newHdct.soLuong = newHdct.soLuong + 1;
     }
+    this.updateHoaDon();
   }
   getTongTien(): number {
     if (
@@ -235,9 +234,10 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.order.hoaDonChiTiets &&
       this.order.hoaDonChiTiets.length > 0
     ) {
-      let tongTien = this.banHangService.getTongTien(this.order.hoaDonChiTiets);
-      this.order.tongTien = tongTien;
-      return tongTien;
+      this.order.tongTien = this.banHangService.getTongTien(
+        this.order.hoaDonChiTiets
+      );
+      return this.banHangService.getTongTien(this.order.hoaDonChiTiets);
     }
     return 0; // hoặc giá trị mặc định khác
   }
@@ -292,22 +292,20 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   getTienKhachConThieu(): number {
     if (this.order && this.order.tongTien != null)
-      return this.order.tongTien - this.getTienKhachThanhToan();
-    return 0;
+      return this.getMustPay() - this.getTienKhachThanhToan();
+    else return 0;
   }
 
-  async getTienGiam() {
-    console.log(this.order.phieuGiamGia);
-
+  getTienGiam() {
     if (this.order && this.order.phieuGiamGia) {
       if (this.order.phieuGiamGia.kieu == 0) {
         // giảm theo %
-        let temp = this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100);
         this.order.tienGiam =
-          temp > this.order.phieuGiamGia.giaTriMax
+          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100) >
+          this.order.phieuGiamGia.giaTriMax
             ? this.order.phieuGiamGia.giaTriMax
-            : temp;
-        console.log(temp);
+            : 0;
+        // console.log(temp);
       } else if (this.order.phieuGiamGia.kieu == 1) {
         // giảm theo giá trị
         this.order.tienGiam = this.order.phieuGiamGia.giaTri;
@@ -317,13 +315,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateHoaDon() {
+  async updateHoaDon() {
     // xử lý
-    setTimeout(() => {
-      this.getPhieuGiamGia();
-      this.getTongTien();
-      this.getTienGiam();
-    }, 30);
+
+    await this.getTongTien();
+    await this.getPhieuGiamGia();
+    await this.getTienGiam();
+    await this.getTienKhachConThieu();
   }
 
   insertSLSP() {

@@ -213,7 +213,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         List<PhieuGiamGia> phieuGiamGias = repository.getDiscountValidNotCustomer(discountValidRequest.getGiaTriDonHang());
 
         // pgg success
-        List<PhieuGiamGia> pggSuggests = repository.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
+//        List<PhieuGiamGia> pggSuggests = repository.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
 
         // neu co khach hang lay tat ca phieu cu khach hang do
         if (discountValidRequest.getKhachHangId() != null) {
@@ -223,7 +223,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
             // pgg suggest
             List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = repository.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
-            pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
+//            pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
         }
 
         // phieu giam gia giam nhieu nhat

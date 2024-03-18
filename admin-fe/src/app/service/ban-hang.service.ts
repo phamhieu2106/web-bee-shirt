@@ -41,12 +41,12 @@ export class BanHangService {
   getDiscountValid(
     giaTriDonHang: number,
     khachHangId: number,
-    giaTriDangGiam: number
+    giaDangGiam: number
   ): Observable<DiscountValid> {
     let rawData = {
       giaTriDonHang,
       khachHangId,
-      giaTriDangGiam,
+      giaDangGiam,
     };
     return this.http.post<DiscountValid>(
       this.baseUrl + "/get-discount-valid",

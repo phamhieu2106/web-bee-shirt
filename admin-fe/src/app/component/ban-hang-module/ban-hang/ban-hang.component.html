@@ -171,6 +171,8 @@
                 class="count"
                 [(ngModel)]="hdct.soLuong"
                 (ngModelChange)="insertSLSP()"
+                min="0"
+                step="1"
               />
               <button
                 class="rounded-5 btn-outline-dark p-0"
@@ -421,7 +423,7 @@
         <div class="modal-body" *ngIf="order">
           <app-thanh-toan
             [(thanhToans)]="order.thanhToans"
-            [tongTien]="order.tongTien"
+            [tongTien]="getMustPay()"
           ></app-thanh-toan>
         </div>
         <div class="modal-footer">

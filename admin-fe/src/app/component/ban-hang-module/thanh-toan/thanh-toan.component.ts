@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from "@angular/core";
@@ -16,16 +17,22 @@ import Swal from "sweetalert2";
   templateUrl: "./thanh-toan.component.html",
   styleUrls: ["./thanh-toan.component.css"],
 })
-export class ThanhToanComponent implements OnChanges {
+export class ThanhToanComponent implements OnChanges, OnInit {
   @Input({ required: true }) tongTien: number;
+  // @Input({ required: true }) tienGiam: number;
+  // @Input({ required: true }) phiVanChuyen: number;
   @Input({ required: true }) thanhToans: any[];
   @Output() thanhToansChange = new EventEmitter<ThanhToan[]>();
   thanhToanForm: FormGroup;
 
   constructor(private fb: FormBuilder, private toast: ToastrService) {}
+  ngOnInit(): void {
+    // this.tongTien = this.tongTien = this.phiVanChuyen - this.tienGiam;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.createThanhToanForm();
+    console.log(this.tongTien);
   }
 
   getTienConThieu() {

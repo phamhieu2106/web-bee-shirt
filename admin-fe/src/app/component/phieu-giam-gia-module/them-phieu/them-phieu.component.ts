@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 import {
   FormGroup,
   Validators,
@@ -18,7 +18,6 @@ import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
 
-
 @Component({
   selector: "app-them-phieu",
   templateUrl: "./them-phieu.component.html",
@@ -30,16 +29,15 @@ export class ThemPhieuComponent implements OnInit {
   public pagedResponse: PagedResponse<KhachHangResponse>;
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
-  
 
   errorMessage: string = "";
 
   selectedIds: number[] = [];
+  soLuongCheck: number = 1;
   phieuGiamGiaId: number;
 
-  public giaTriToiDa:number
-  public sendMailChecked:boolean = false
-
+  public giaTriToiDa: number;
+  public sendMailChecked: boolean = false;
 
   constructor(
     private phieuGiamGia: PhieuGiamGiaService,
@@ -51,51 +49,72 @@ export class ThemPhieuComponent implements OnInit {
   ngOnInit(): void {
     this.initAddForm();
     this.getKhachHangList();
-
-
   }
 
   public add(): void {
+    if (
+      this.addForm.get("giaTriMax").value > 999
+    ) {
+      const giaTriMaxFormatted = parseFloat(
+        this.addForm.value.giaTriMax.replace(/,/g, "")
+      );
+      this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
 
-    const giaTriMaxFormatted = parseFloat(this.addForm.value.giaTriMax.replace(/,/g, ""));
-    this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
+    
+    }
+    
 
-    const dieuKienGiamFormatted = parseFloat(this.addForm.value.dieuKienGiam.replace(/,/g, ""));
-    this.addForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
+
+    if (typeof this.addForm.get("dieuKienGiam").value === "string") {
+  
+      const dieuKienGiamFormatted = parseFloat(
+        this.addForm.value.dieuKienGiam.replace(/,/g, "")
+      );
+      this.addForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
+
+    } 
+
+
+    if (typeof this.addForm.get("giaTri").value === "string") {
+    
+
+      const giaTriFormatted = parseFloat(
+        this.addForm.value.giaTri.replace(/,/g, "")
+      );
+      this.addForm.patchValue({ giaTri: giaTriFormatted });
+
+    } 
 
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
-
-
-
-        
         this.initAddForm();
         this.phieuGiamGiaId = response.id;
-
-        
 
         this.phieuGiamGia
           .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
           .subscribe();
 
-         if(this.sendMailChecked){
-          this.selectedIds.forEach(id => {
+        if (this.sendMailChecked) {
+          this.selectedIds.forEach((id) => {
             // Gọi service để lấy thông tin của khách hàng dựa trên id
             this.khachHangService.getById(id).subscribe({
               next: (khachHang: any) => {
                 // Gửi email cho khách hàng
-                console.log(response.maPhieuGiamGia)
-                this.send(response.maPhieuGiamGia,khachHang.email, response.thoiGianKetThuc);
+                console.log(response.maPhieuGiamGia);
+                this.send(
+                  response.maPhieuGiamGia,
+                  khachHang.email,
+                  response.thoiGianKetThuc
+                );
               },
               error: (error: any) => {
-                console.error('Error getting customer information:', error);
-              }
+                console.error("Error getting customer information:", error);
+              },
             });
           });
-         }
+        }
 
-            // Kiểm tra nếu checkbox "Gửi Mail Cho Khách Hàng" được chọn
-     
+        // Kiểm tra nếu checkbox "Gửi Mail Cho Khách Hàng" được chọn
 
         Swal.fire({
           icon: "success",
@@ -103,10 +122,10 @@ export class ThemPhieuComponent implements OnInit {
           showConfirmButton: false,
           timer: 1500,
         });
-          // Delay 3-4 giây trước khi chuyển đến trang danh sách
-     setTimeout(() => {
-      this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
-    }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
+        // Delay 3-4 giây trước khi chuyển đến trang danh sách
+        setTimeout(() => {
+          this.router.navigate(["phieu-giam-gia/ds-phieu-giam-gia"]);
+        }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 400) {
@@ -133,20 +152,16 @@ export class ThemPhieuComponent implements OnInit {
         }
       },
     });
-
-   
   }
 
-  private send( vocher: string, email: string,ngayHetHan:string) {
+  private send(vocher: string, email: string, ngayHetHan: string) {
     emailjs.init("XlFoYJLd1vcoTgaEY");
     emailjs.send("service_uxvm75s", "template_c1qot7h", {
       // from_name: this.authService.getUserFromStorage().hoTen,
       voucher_code: vocher,
       to_email: email,
-      expiry_date:ngayHetHan
-      
+      expiry_date: ngayHetHan,
     });
-   
   }
 
   onSendMailChange(event: any): void {
@@ -154,52 +169,64 @@ export class ThemPhieuComponent implements OnInit {
     this.sendMailChecked = event.target.checked;
   }
 
-
   public initAddForm(): void {
     this.addForm = this.formBuilder.group({
-      maPhieuGiamGia: new FormControl("", [Validators.required]),
+      maPhieuGiamGia: new FormControl(""),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
       kieu: new FormControl("0", [Validators.required]),
       loai: new FormControl("1", [Validators.required]),
-      soLuong: new FormControl(this.soLuongCheck, [Validators.required]),
-      thoiGianBatDau: new FormControl("", [Validators.required,this.validateNgayBatDau()]),
+      soLuong: new FormControl(this.soLuongCheck, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      thoiGianBatDau: new FormControl("", [
+        Validators.required,
+        this.validateNgayBatDau(),
+      ]),
       thoiGianKetThuc: new FormControl("", [
         Validators.required,
         this.validateNgay(),
       ]),
-      dieuKienGiam: new FormControl("", [Validators.required ,Validators.pattern(/^\d+$/)]),
+      dieuKienGiam: new FormControl("", [
+        Validators.required,
+        Validators.pattern(/^(\d{1,3}(,\d{3})*|\d+)$/),
+      ]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl(this.giaTriToiDa, [Validators.required, Validators.pattern(/^\d+$/)]),
+      giaTriMax: new FormControl(this.giaTriToiDa, [
+        Validators.required,
+        Validators.pattern(/^(\d{1,3}(,\d{3})*|\d+)$/),
+      ]),
     });
-
   }
 
-
-
+  giaTriNew: any;
   private validateVip(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const addForm = this.addForm;
-
       if (!addForm) {
         return null;
       }
-
       const kieu = addForm.get("kieu").value;
-      const giaTri = control.value;
-
+      this.giaTriNew = control.value;
       // Kiểm tra nếu ô giá trị trống
-      if (!giaTri) {
+      if (!this.giaTriNew) {
         return { giaTri: "Không để trống giá trị" };
       }
 
+      if (typeof this.giaTriNew === "string") {
+        this.giaTriNew = parseFloat(this.giaTriNew.replace(/,/g, ""));
+      } else {
+        this.giaTriNew = parseFloat(this.giaTriNew);
+      }
+
       // Tiếp tục kiểm tra giá trị nhập vào khi không trống
-      if (kieu === "1" && giaTri > 1000000) {
+      if (kieu === "1" && this.giaTriNew > 1000000) {
         return { giaTri: "Giá trị tối đa là 1.000.000 VNĐ" };
-      } else if (kieu === "1" && giaTri < 10000) {
+      } else if (kieu === "1" && this.giaTriNew < 10000) {
         return { giaTri: "Giá trị nhỏ nhất là 10.000 VNĐ" };
-      } else if (kieu === "0" && giaTri > 100) {
+      } else if (kieu === "0" && this.giaTriNew > 100) {
         return { giaTri: "Giá trị lớn nhất là 100%" };
-      } else if (kieu === "0" && giaTri < 1) {
+      } else if (kieu === "0" && this.giaTriNew < 1) {
         return { giaTri: "Giá trị nhỏ nhất là 1%" };
       }
 
@@ -207,9 +234,7 @@ export class ThemPhieuComponent implements OnInit {
     };
   }
 
-
   private validateNgay(): ValidatorFn {
-
     return (control: AbstractControl): ValidationErrors | null => {
       const addForm = this.addForm;
 
@@ -226,10 +251,9 @@ export class ThemPhieuComponent implements OnInit {
 
       const thoiGianBatDau = this.addForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.addForm.get("thoiGianKetThuc");
-    
+
       // Kiểm tra nếu cả hai ngày đều được nhập
       if (thoiGianBatDau && thoiGianKetThuc) {
-        
         const startDate = new Date(thoiGianBatDau.value);
         const endDate = new Date(thoiGianKetThuc.value);
         // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày bắt đầu
@@ -250,76 +274,71 @@ export class ThemPhieuComponent implements OnInit {
         return null;
       }
       const ngayBatDau = control.value;
-  
+
       // Kiểm tra nếu ô giá trị trống
       if (!ngayBatDau) {
         return { ngayBatDau: "Không để trống ngày bắt đầu" };
       }
-  
+
       const thoiGianBatDau = this.addForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.addForm.get("thoiGianKetThuc");
-      
+
       // Kiểm tra nếu cả hai ngày đều được nhập
       if (thoiGianBatDau && thoiGianKetThuc) {
         const startDate = new Date(thoiGianBatDau.value);
         const endDate = new Date(thoiGianKetThuc.value);
-  
+
         // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
         if (startDate > endDate) {
           return { ngayBatDau: "Ngày bắt đầu không lớn hơn ngày kết thúc" };
         }
       }
-  
+
       return null; // Trả về null nếu không có lỗi
     };
   }
 
-
-  checkThoiGian(){
+  checkThoiGian() {
     this.addForm.get("thoiGianBatDau").updateValueAndValidity();
     this.addForm.get("thoiGianKetThuc").updateValueAndValidity();
   }
 
-public checkGiaTri:boolean =false
+  public checkGiaTri: boolean = false;
   onKieuChange() {
     const kieuValue = this.addForm.get("kieu").value;
     const giaTriMaxControl = this.addForm.get("giaTriMax");
     if (kieuValue == 0) {
-      this.checkGiaTri = false
-     
+      this.checkGiaTri = false;
     } else {
-     this.checkGiaTri = true
+      this.checkGiaTri = true;
       giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
     }
     this.addForm.get("giaTri").updateValueAndValidity();
   }
 
   isTableDisabled: boolean = false;
-  public checkSoLuong:boolean =false
-
+  public checkSoLuong: boolean = false;
 
   onLoaiChange() {
     const loaiValue = this.addForm.get("loai").value;
-   
-    if (loaiValue ==0) {
-      this.checkSoLuong = true
-      this.isTableDisabled =true
-      this.addForm.get("soLuong").setValue(0);
 
-    } else {
-      this.checkSoLuong = false
-      this.isTableDisabled =false
+    if (loaiValue == 0) {
+      this.checkSoLuong = true;
+      this.isTableDisabled = true;
+      this.soLuongCheck = 0;
+
       this.addForm.get("soLuong").setValue(0);
-   
-     
+    } else {
+      this.checkSoLuong = false;
+      this.isTableDisabled = false;
+      this.selectedIds = [];
+
+      this.addForm.get("soLuong").setValue(1);
     }
-    
-  
   }
 
   // onchange check box
 
-  soLuongCheck: number = 0;
   onCheckboxChange(id: number): void {
     const index = this.selectedIds.indexOf(id);
 
@@ -339,23 +358,19 @@ public checkGiaTri:boolean =false
         soLuongControl.setValue(this.soLuongCheck);
       }
     }
-    
   }
 
   isCustomerSelected(id: number): boolean {
-   if(this.selectedIds.length>0){
-    for (const selectedId of this.selectedIds) {
-      if (selectedId == id) {
-       
-        return true; // ID được tìm thấy trong danh sách
+    if (this.selectedIds.length > 0) {
+      for (const selectedId of this.selectedIds) {
+        if (selectedId == id) {
+          return true; // ID được tìm thấy trong danh sách
+        }
       }
     }
-   }
-    
+
     return false; // ID không được tìm thấy trong danh sách
   }
-
-
 
   //Khách hàng
 
@@ -385,12 +400,9 @@ public checkGiaTri:boolean =false
     });
   }
 
-
-
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
-
 
   private timeout: any;
   public timKiem(e: any): void {
@@ -418,10 +430,9 @@ public checkGiaTri:boolean =false
     }).then((result) => {
       if (result.value) {
         this.add();
-      } 
+      }
     });
   }
-  
 
   public formatNumber(event: any, inputName: string): void {
     let value = event.target.value;
@@ -434,7 +445,21 @@ public checkGiaTri:boolean =false
     this.addForm.get(inputName).setValue(value);
   }
 
+  public formatGiaTri(event: any, inputName: string): void {
+    let value = event.target.value;
+    const kieu = this.addForm.get("kieu").value;
+    if (value === "") {
+      this.addForm.get(inputName).setValue("0");
+      return;
+    }
+    console.log(kieu);
 
-
-
+    if (kieu == 1) {
+      value = value.replace(/,/g, "");
+      value = parseFloat(value).toLocaleString("en-US");
+      this.addForm.get(inputName).setValue(value);
+    } else {
+      return;
+    }
+  }
 }

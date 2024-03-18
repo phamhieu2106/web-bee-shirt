@@ -402,6 +402,14 @@
                   <tr
                     *ngFor="let ss of selectedKichCoList"
                     [id]="'row' + sc.id + ss.id"
+                    [ngClass]="
+                      checkColorAndSize(sc.id, ss.id) ? 'table-danger' : ''
+                    "
+                    [title]="
+                      checkColorAndSize(sc.id, ss.id)
+                        ? 'SPCT này đã tồn tại. Vui lòng xóa!'
+                        : ''
+                    "
                   >
                     <input
                       [id]="'mauSacId' + sc.id"
@@ -468,7 +476,7 @@
                       <i
                         class="fa-solid fa-trash pointer"
                         style="color: red"
-                        (click)="deleteRow('row' + sc.id + ss.id)"
+                        (click)="deleteRow('row' + sc.id + ss.id, sc.id, ss.id)"
                       ></i>
                     </td>
                   </tr>
@@ -524,6 +532,12 @@
           </div>
         </div>
       </div>
+      <!-- <div *ngIf="checkExistAndNotify()">
+        <i
+          >Một số SPCT đã tồn tại (Được bôi màu đỏ). Vui lòng xóa trước khi
+          thêm!</i
+        >
+      </div> -->
     </div>
   </div>
 </div>

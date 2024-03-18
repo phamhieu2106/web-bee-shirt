@@ -1,9 +1,11 @@
 package com.datn.backend.dto.request;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class AddSanPhamChiTietRequest {
+@Setter
+public class AddSpctRequest {
 
     private Integer id;
     private int sanPhamId;
@@ -12,7 +14,7 @@ public class AddSanPhamChiTietRequest {
     private int tayAoId;
     private int coAoId;
     private int chatLieuId;
-    private AddSanPhamChiTietSubRequest requests;
+    private AddSpctSubRequest requests;
 
     @Override
     public String toString() {

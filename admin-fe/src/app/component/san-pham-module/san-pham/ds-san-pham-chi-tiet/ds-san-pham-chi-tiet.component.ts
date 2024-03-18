@@ -61,6 +61,8 @@ export class DsSanPhamChiTietComponent {
   public maxPrice: number;
 
   public updateForm: FormGroup;
+  public changeableMinPrice: number;
+  public changeableMaxPrice: number;
 
   filterParams: FilterSPCTParams = {
     pageNumber: 1,
@@ -112,12 +114,12 @@ export class DsSanPhamChiTietComponent {
   }
 
   // I. public functions
-  //
+  // 1
   public formatCurrency(amount: number): string {
     return this.currencyPipe.transform(amount, "VND", "symbol", "1.0-0");
   }
 
-  //
+  // 2
   public onSelectField(event: any, field: string): void {
     if (event.target.value === "0") {
       this.filterParams[`${field}`] = null;
@@ -128,7 +130,7 @@ export class DsSanPhamChiTietComponent {
     this.getSpctByFilterParams();
   }
 
-  //
+  // 3
   public goToPage(newPageNumber: number): void {
     this.filterParams.pageNumber = newPageNumber;
     this.getSpctByFilterParams();
@@ -137,7 +139,7 @@ export class DsSanPhamChiTietComponent {
     ckBoxAll.checked = false;
   }
 
-  //
+  // 4
   public selectAllRows(): void {
     const ckBoxAll = document.getElementById(`ckBoxAll`) as HTMLInputElement;
     const selectedCkBoxs = document.querySelectorAll(`.ckBoxForUpdate`);
@@ -148,7 +150,7 @@ export class DsSanPhamChiTietComponent {
     }
   }
 
-  //
+  // 5
   public isUpdateBtnHidden(): boolean {
     const selectedCkBoxs = document.querySelectorAll(`.ckBoxForUpdate`);
 
@@ -161,7 +163,7 @@ export class DsSanPhamChiTietComponent {
     return false;
   }
 
-  //
+  // 6
   public checkSelectedRow(rowId: string): boolean {
     const selectedCkBox = document.getElementById(`${rowId}`);
     if (!selectedCkBox) {
@@ -172,7 +174,7 @@ export class DsSanPhamChiTietComponent {
     return ckBox.checked ? true : false;
   }
 
-  //
+  // 7
   public onCheckboxChange(index: number): void {
     const row = document.getElementById(`row${index}`);
     const ckBox = document.getElementById(`ckBoxForUpdate${index}`);
@@ -188,7 +190,7 @@ export class DsSanPhamChiTietComponent {
     }
   }
 
-  //
+  // 8
   public formatNumber2(event: any, inputNameId: string): void {
     let value = event.target.value;
     if (value === "") {
@@ -200,7 +202,7 @@ export class DsSanPhamChiTietComponent {
     (document.getElementById(inputNameId) as HTMLInputElement).value = value;
   }
 
-  //
+  // 9
   public chinhSuaNhanh(pageSize: number): void {
     let xacNhan = confirm("Bạn có chắc muốn cập nhật nhanh?");
     if (xacNhan) {
@@ -251,7 +253,7 @@ export class DsSanPhamChiTietComponent {
     }
   }
 
-  //
+  // 10
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
@@ -269,7 +271,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 11
   public selectUpdateSPCT(spctId: number): void {
     this.sanPhamChiTietService.getOneById(spctId).subscribe({
       next: (response: SanPhamChiTiet) => {
@@ -300,26 +302,22 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  public capNhatSpct(): void {
-    console.log(this.updateForm.value);
-
+  // 12
+  public updateSpct(): void {
     this.sanPhamChiTietService.update(this.updateForm.value).subscribe({
-      next: (response: any) => {
-        this.toastr.success(response);
+      next: (response: string) => {
+        this.notifService.success(response);
         this.getSanPhamAndMinMaxPrice();
         document.getElementById("closeUpdateBtn").click();
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error, "Hệ thống");
+        const message = JSON.parse(errorResponse.error).message;
+        this.notifService.error(message);
       },
     });
   }
 
-  // II. private functions
   //
-  public changeableMinPrice: number;
-  public changeableMaxPrice: number;
-
   public onMinPriceChange(e: any): void {
     this.changeableMinPrice = e.target.value;
     this.minPrice = e.target.value;
@@ -327,6 +325,7 @@ export class DsSanPhamChiTietComponent {
     this.getSpctByFilterParams();
   }
 
+  //
   public onMaxPriceChange(e: any): void {
     this.changeableMaxPrice = e.target.value;
     this.maxPrice = e.target.value;
@@ -334,6 +333,27 @@ export class DsSanPhamChiTietComponent {
     this.getSpctByFilterParams();
   }
 
+  //
+  public changeStatus(id: number): void {
+    this.sanPhamChiTietService.changeStatus(id).subscribe({
+      next: (response: string) => {
+        this.toastr.success(response, "");
+        this.getSpctByFilterParams();
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        console.log(errorResponse);
+        this.notifService.error(JSON.parse(errorResponse.error).message);
+      },
+    });
+  }
+
+  public onChangePageSize(e: any): void {
+    this.filterParams.pageSize = e.target.value;
+    this.getSpctByFilterParams();
+  }
+
+  // II. private functions
+  // 1
   private getSanPhamAndMinMaxPrice(): void {
     this.activatedRoute.params.subscribe((params) => {
       let productId = params["sanPhamId"];
@@ -372,26 +392,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
-  public changeStatus(id: number): void {
-    this.sanPhamChiTietService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.getSpctByFilterParams();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
-        this.notifService.error(JSON.parse(errorResponse.error).message);
-      },
-    });
-  }
-
-  public onChangePageSize(e: any): void {
-    this.filterParams.pageSize = e.target.value;
-    this.getSpctByFilterParams();
-  }
-
-  //
+  // 2
   private getAllMauSac(): void {
     this.mauSacService.getAll().subscribe({
       next: (response: MauSac[]) => {
@@ -403,7 +404,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 3
   private getAllKichCo(): void {
     this.kichCoService.getAll().subscribe({
       next: (response: KichCo[]) => {
@@ -415,7 +416,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 4
   private getAllKieuDang(): void {
     this.kieuDangService.getAll().subscribe({
       next: (response: KieuDang[]) => {
@@ -427,7 +428,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 5
   private getAllThietKe(): void {
     this.kieuThietKeService.getAll().subscribe({
       next: (response: KieuThietKe[]) => {
@@ -439,7 +440,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 6
   private getAllTayAo(): void {
     this.kieuTayAoService.getAll().subscribe({
       next: (response: TayAo[]) => {
@@ -451,7 +452,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 7
   private getAllCoAo(): void {
     this.kieuCoAoService.getAll().subscribe({
       next: (response: CoAo[]) => {
@@ -463,7 +464,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 8
   private getAllChatLieu(): void {
     this.chatLieuService.getAll().subscribe({
       next: (response: ChatLieu[]) => {
@@ -475,7 +476,7 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 9
   private getSpctByFilterParams(): void {
     this.sanPhamChiTietService.filterSPCTByPage(this.filterParams).subscribe({
       next: (response: PagedResponse<SanPhamChiTiet>) => {
@@ -487,13 +488,13 @@ export class DsSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 10
   private turnOnOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = true;
   }
 
-  //
+  // 11
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;

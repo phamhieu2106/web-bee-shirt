@@ -151,7 +151,9 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     @Override
     public DotGiamGiaResponse getOne(Integer id) {
         //        Get Data form database
+        System.out.println("hello");
         return repository.getOneById(id);
+
     }
 
     //    Validation

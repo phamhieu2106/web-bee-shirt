@@ -1,6 +1,6 @@
 package com.datn.backend.service;
 
-import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.AddSpctRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 public interface SanPhamChiTietService {
 
-    void addSpctList(AddSanPhamChiTietRequest request, MultipartFile[] multipartFiles) throws IOException;
+    void addSpctList(AddSpctRequest request, MultipartFile[] multipartFiles) throws IOException;
 
     PagedResponse<SanPhamChiTiet> getByPage(int pageNumber, int pageSize, String search, int spId);
 
@@ -35,4 +35,14 @@ public interface SanPhamChiTietService {
     void changeStatus(int id);
 
     boolean checkExist(int spId, int mauSacId, int sizeId);
+
+    long[][] minMaxPrice();
+    PagedResponse<SpctResponse> getDetailSpct(
+            int pageSize, int pageNumber,
+            String search,String mauSac,
+            String kichCo,String kieuDang,
+            String thietKe,String tayAo,
+            String coAo,String chatLieu,
+            BigDecimal giaMin,BigDecimal giaMax
+    );
 }

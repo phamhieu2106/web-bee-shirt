@@ -11,6 +11,8 @@ import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import Swal from "sweetalert2";
+import { DiscountValid } from "src/app/model/class/discount-valid.class";
+import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 
 @Component({
   selector: "app-ban-hang",
@@ -19,6 +21,7 @@ import Swal from "sweetalert2";
 })
 export class BanHangComponent implements OnInit, OnDestroy {
   private readonly key = "orders";
+  // messagePgg = "";
   phiVanChuyenTemp: number;
   orders: HoaDon[] = [];
   khachHangs: KhachHang[];
@@ -42,14 +45,15 @@ export class BanHangComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.orders = this.localStorageService.getData(this.key);
     setTimeout(() => {
-      if (this.orders.length == 0) {
+      if (this.orders == null || this.orders.length == 0) {
+        this.orders = new Array<HoaDon>();
         this.newHoaDon();
       } else {
         this.order = this.orders[0];
       }
       this.getAllSpct();
       this.getAllKhachHang();
-    }, 100);
+    }, 200);
   }
   clearSpcts() {
     this.spcts = [];
@@ -59,13 +63,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.order = this.orders[index];
   }
 
-  newHoaDon() {
-    if (this.orders.length >= 5) {
+  async newHoaDon() {
+    if (this.orders != null && this.orders.length >= 5) {
       this.toast.info("Bạn chỉ có thể tạo tối đa 5 đơn hàng");
       return;
     }
     let hoaDon = new HoaDon();
-    let orderNameTemp = this.newOrderNameTemp();
+    let orderNameTemp =
+      this.orders.length == 0 ? "Đơn 1" : this.newOrderNameTemp();
     // set default value
     hoaDon.orderNameTemp = orderNameTemp;
     hoaDon.tongTien = 0;
@@ -76,7 +81,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hoaDon.phiVanChuyen = 0;
     hoaDon.nhanVien = null;
     hoaDon.khachHang = null;
-    hoaDon.phieuGiamGia = null;
+    hoaDon.phieuGiamGia = new PhieuGiamGia();
+    hoaDon.thanhToans = [];
 
     this.orders.push(hoaDon);
     this.order = hoaDon;
@@ -128,7 +134,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.spctService.getAll(1, 15, this.searchProduct).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
-        console.log(resp);
       },
       error: (err) => {
         console.log(err);
@@ -144,17 +149,66 @@ export class BanHangComponent implements OnInit, OnDestroy {
     });
   }
 
-  chooseProduct(spct: SanPhamChiTiet) {
+  getPhieuGiamGia() {
+    this.banHangService
+      .getDiscountValid(
+        this.order.tongTien,
+        this.order.khachHang == null ? null : this.order.khachHang.id,
+        this.order.tienGiam
+      )
+      .subscribe({
+        next: (resp: DiscountValid) => {
+          this.order.phieuGiamGia = resp.phieuGiamGia;
+          this.getTongTien();
+          this.getTienGiam();
+        },
+      });
+  }
+
+  newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
+    let hdct = new HoaDonChiTiet();
+    hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
+    hdct.soLuong = 1;
+    hdct.giaBan = this.getGiaBan(spct);
+    return hdct;
+  }
+  getGiaBan(spct: SanPhamChiTiet): number {
+    return this.spctService.getGiaBan(spct);
+  }
+
+  async deleteHDCT(hdctIndex: number) {
+    this.order.hoaDonChiTiets.splice(hdctIndex, 1);
+    // this.getPhieuGiamGia();
+    if (this.order.hoaDonChiTiets.length <= 0) {
+      this.order.phieuGiamGia = null;
+      this.order.thanhToans = [];
+      this.getTienGiam();
+      this.getTongTien();
+      this.getTienKhachConThieu();
+    }
+  }
+  async minusQuantity(hdct: HoaDonChiTiet) {
+    if (hdct.soLuong > 1) {
+      hdct.soLuong = hdct.soLuong - 1;
+      this.updateHoaDon();
+    }
+  }
+
+  async plusQuantity(hdct: HoaDonChiTiet) {
+    hdct.soLuong = hdct.soLuong + 1;
+    this.updateHoaDon();
+  }
+  async chooseProduct(spct: SanPhamChiTiet) {
     let newHdct = null;
     // check spct đã tồn tại trong DS HDCT của đơn hàng => +1 số lượng => ngắt vòng lặp
     for (let i = 0; i < this.order.hoaDonChiTiets.length; i++) {
       if (spct.id === this.order.hoaDonChiTiets[i].sanPhamChiTiet.id) {
         newHdct = this.order.hoaDonChiTiets[i];
+
         break;
       }
     }
 
-    // xử lý
     if (newHdct == null) {
       //Không tồn tại => tạo mới hdct
       newHdct = this.newHDCT(spct);
@@ -172,50 +226,41 @@ export class BanHangComponent implements OnInit, OnDestroy {
       }
       newHdct.soLuong = newHdct.soLuong + 1;
     }
+    this.updateHoaDon();
   }
-
-  newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
-    let hdct = new HoaDonChiTiet();
-    hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
-    hdct.soLuong = 1;
-    hdct.giaBan = this.getGiaBan(spct);
-
-    return hdct;
-  }
-  getGiaBan(spct: SanPhamChiTiet): number {
-    console.log(this.spctService.getGiaBan(spct));
-
-    return this.spctService.getGiaBan(spct);
-  }
-
-  deleteHDCT(hdctIndex: number) {
-    this.order.hoaDonChiTiets.splice(hdctIndex, 1);
-  }
-  minusQuantity(hdct: HoaDonChiTiet) {
-    if (hdct.soLuong > 1) {
-      hdct.soLuong = hdct.soLuong - 1;
-    }
-  }
-  plusQuantity(hdct: HoaDonChiTiet) {
-    hdct.soLuong = hdct.soLuong + 1;
-  }
-
   getTongTien(): number {
-    let tongTien = this.banHangService.getTongTien(this.order.hoaDonChiTiets);
-    this.order.tongTien = tongTien;
-    return tongTien;
+    if (
+      this.order &&
+      this.order.hoaDonChiTiets &&
+      this.order.hoaDonChiTiets.length > 0
+    ) {
+      this.order.tongTien = this.banHangService.getTongTien(
+        this.order.hoaDonChiTiets
+      );
+      return this.banHangService.getTongTien(this.order.hoaDonChiTiets);
+    }
+    return 0; // hoặc giá trị mặc định khác
   }
 
   getSoLuongSanPham(): number {
-    return this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets);
+    return this.order != null
+      ? this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets)
+      : 0;
   }
   getMustPay(): number {
     // let total = this.banHangService.getMustPay(this.order);
     return this.banHangService.getMustPay(this.order);
   }
 
-  thanhToan() {
+  muaHang() {
     if (this.order.loaiHoaDon == "TAI_QUAY") {
+      this.order.diaChiNguoiNhan = null;
+    }
+    console.log(this.order);
+  }
+
+  datHang() {
+    if (this.order.loaiHoaDon == "GIAO_HANG") {
       this.order.diaChiNguoiNhan = null;
     }
     console.log(this.order);
@@ -233,16 +278,53 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   getTienKhachThanhToan(): number {
-    if (this.order.thanhToans) {
+    if (
+      this.order &&
+      this.order.thanhToans != null &&
+      this.order.thanhToans.length > 0
+    ) {
       return this.order.thanhToans
         .map((thanhToan) => thanhToan.soTien)
         .reduce((pre, curr) => pre + curr, 0);
-    } else {
-      return 0;
     }
+    return 0;
   }
 
   getTienKhachConThieu(): number {
-    return this.order.tongTien - this.getTienKhachThanhToan();
+    if (this.order && this.order.tongTien != null)
+      return this.getMustPay() - this.getTienKhachThanhToan();
+    else return 0;
+  }
+
+  getTienGiam() {
+    if (this.order && this.order.phieuGiamGia) {
+      if (this.order.phieuGiamGia.kieu == 0) {
+        // giảm theo %
+        this.order.tienGiam =
+          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100) >
+          this.order.phieuGiamGia.giaTriMax
+            ? this.order.phieuGiamGia.giaTriMax
+            : 0;
+        // console.log(temp);
+      } else if (this.order.phieuGiamGia.kieu == 1) {
+        // giảm theo giá trị
+        this.order.tienGiam = this.order.phieuGiamGia.giaTri;
+      }
+    } else {
+      this.order.tienGiam = 0;
+    }
+  }
+
+  async updateHoaDon() {
+    // xử lý
+
+    await this.getTongTien();
+    await this.getPhieuGiamGia();
+    await this.getTienGiam();
+    await this.getTienKhachConThieu();
+  }
+
+  insertSLSP() {
+    this.updateHoaDon();
   }
 }

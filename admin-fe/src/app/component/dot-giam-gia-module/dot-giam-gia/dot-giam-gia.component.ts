@@ -73,7 +73,12 @@ export class DotGiamGiaComponent implements OnInit {
   public getValueFromFilter(data: any) {
     this.filterObject = data;
     this.service
-      .getFilterDotGiamGia(data.status, data.startDate, data.endDate)
+      .getFilterDotGiamGia(
+        data.status,
+        data.startDate,
+        data.endDate,
+        data.search
+      )
       .subscribe({
         next: (value) => {
           this.setDataTable(value);
@@ -102,7 +107,8 @@ export class DotGiamGiaComponent implements OnInit {
           data.page,
           this.filterObject.status,
           this.filterObject.startDate,
-          this.filterObject.endDate
+          this.filterObject.endDate,
+          this.filterObject.search
         )
         .subscribe({
           next: (value) => {
@@ -137,7 +143,8 @@ export class DotGiamGiaComponent implements OnInit {
           data.page,
           this.filterObject.status,
           this.filterObject.startDate,
-          this.filterObject.endDate
+          this.filterObject.endDate,
+          this.filterObject.search
         )
         .subscribe({
           next: (value) => {

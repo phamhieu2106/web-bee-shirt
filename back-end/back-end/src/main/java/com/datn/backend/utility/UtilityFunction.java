@@ -4,6 +4,7 @@ import com.datn.backend.dto.response.PagedResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class UtilityFunction {
@@ -40,5 +41,10 @@ public class UtilityFunction {
                 )
                 .search(search)
                 .build();
+    }
+
+    public static String convertToCurrency(double number) {
+        DecimalFormat formatter = new DecimalFormat("#,###.##");
+        return formatter.format(number);
     }
 }

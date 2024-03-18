@@ -24,10 +24,11 @@ export class DotGiamGiaService {
   public getFilterDotGiamGia(
     status: number,
     startDate: string,
-    endDate: string
+    endDate: string,
+    search: string
   ): Observable<PagedResponse<DotGiamGia>> {
     return this.http.get<PagedResponse<DotGiamGia>>(
-      `${this.apiURL}/filter?status=${status}&startDate=${startDate}&endDate=${endDate}`
+      `${this.apiURL}/filter?status=${status}&startDate=${startDate}&endDate=${endDate}&search=${search}`
     );
   }
   public getDotGiamGiaFilterPageNumber(
@@ -35,10 +36,11 @@ export class DotGiamGiaService {
     pageNumber: number,
     status: number,
     startDate: string,
-    endDate: string
+    endDate: string,
+    search: string
   ): Observable<PagedResponse<DotGiamGia>> {
     return this.http.get<PagedResponse<DotGiamGia>>(
-      `${this.apiURL}/filter?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}&startDate=${startDate}&endDate=${endDate}`
+      `${this.apiURL}/filter?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}&startDate=${startDate}&endDate=${endDate}&search=${search}`
     );
   }
 

@@ -1,6 +1,6 @@
 package com.datn.backend.service.impl;
 
-import com.datn.backend.dto.request.AddSanPhamChiTietRequest;
+import com.datn.backend.dto.request.AddSpctRequest;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -75,7 +75,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
      */
     @Transactional
     @Override
-    public void addSpctList(AddSanPhamChiTietRequest request, MultipartFile[] multipartFiles) throws IOException {
+    public void addSpctList(AddSpctRequest request, MultipartFile[] multipartFiles) throws IOException {
+        // check for exist by MauSac and KichCo
+        checkExistForAdd(request);
+
         List<SanPhamChiTiet> spctList = new ArrayList<>();
         List<HinhAnh> hinhAnhs = new ArrayList<>();
 
@@ -116,7 +119,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 (String) result.get("public_id"));
     }
 
-    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSanPhamChiTietRequest request) {
+    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSpctRequest request) {
         SanPham sanPham = sanPhamRepo.findById(request.getSanPhamId()).get();
         KieuDang kieuDang = kieuDangRepo.findById(request.getKieuDangId()).get();
         KieuThietKe kieuThietKe = kieuThietKeRepo.findById(request.getThietKeId()).get();
@@ -132,6 +135,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         spct.setChatLieu(chatLieu);
 
         return spct;
+    }
+
+    private void checkExistForAdd(AddSpctRequest request) {
+        for (int kichCoId : request.getRequests().getKichCoIdList()) {
+            SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(request.getSanPhamId(), request.getRequests().getMauSacId(), kichCoId);
+            if (spctByMauSacAndKichCo != null) {
+                MauSac mauSac = mauSacRepo.findById(request.getRequests().getMauSacId()).get();
+                KichCo kichCo = kichCoRepo.findById(kichCoId).get();
+                throw new ResourceExistsException("SPCT màu " + mauSac.getTen() + " và size " + kichCo.getTen() + " đã tồn tại!");
+            }
+        }
     }
 
     @Override
@@ -174,7 +188,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
-        PageRequest pageRequest = PageRequest.of(pageNumber -1, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
 //        Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
 //        find doi giam gia theo spct
@@ -205,7 +219,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
 
             //gán gia tri
-            if (dotGiamGia != null){
+            if (dotGiamGia != null) {
                 spctResp.setDotGiamGia(
                         modelMapper.map(dotGiamGia, DotGiamGiaResponse2.class)
                 );
@@ -331,6 +345,34 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public boolean checkExist(int spId, int mauSacId, int sizeId) {
-        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) == null;
+        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) != null;
+    }
+
+    @Override
+    public long[][] minMaxPrice() {
+        return spctRepo.getMixMaxPrice();
+    }
+
+    @Override
+    public PagedResponse<SpctResponse> getDetailSpct(int pageSize, int pageNumber, String search, String mauSac, String kichCo, String kieuDang, String thietKe, String tayAo, String coAo, String chatLieu, BigDecimal giaMin, BigDecimal giaMax) {
+        // to page request
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        // lay danh sách sản pẩm chi tiet
+        Page<SanPhamChiTiet> sanPhamChiTietPage = spctRepo.findDetailAll(pageable, search, mauSac, kichCo, kieuDang, thietKe, tayAo, coAo, chatLieu, giaMin, giaMax);
+
+        // mapping sang spct response
+        List<SpctResponse> spctResponses = mapToSpctResponse(sanPhamChiTietPage);
+
+        // tao basePaged
+        PagedResponse<SpctResponse> spctResponsePagedResponse = new PagedResponse<>();
+        spctResponsePagedResponse.setData(spctResponses);
+        spctResponsePagedResponse.setPageNumber(sanPhamChiTietPage.getNumber());
+        spctResponsePagedResponse.setPageSize(sanPhamChiTietPage.getSize());
+        spctResponsePagedResponse.setTotalPages(sanPhamChiTietPage.getTotalPages());
+        spctResponsePagedResponse.setTotalElements(sanPhamChiTietPage.getTotalElements());
+        spctResponsePagedResponse.setSearch(search);
+        spctResponsePagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamChiTietPage.getTotalPages()));
+        return spctResponsePagedResponse;
     }
 }

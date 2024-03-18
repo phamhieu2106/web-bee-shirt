@@ -1,12 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HoaDon } from "../model/class/hoa-don.class";
 import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
+import { Observable } from "rxjs";
+import { DiscountValid } from "../model/class/discount-valid.class";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
 })
 export class BanHangService {
-  constructor() {}
+  private readonly baseUrl = "http://localhost:8080/phieu-giam-gia";
+  constructor(private http: HttpClient) {}
 
   getTongTien(hoaDonChiTiets: HoaDonChiTiet[]): number {
     let totalPrice = 0;
@@ -23,11 +27,30 @@ export class BanHangService {
   }
 
   getMustPay(hoaDon: HoaDon): number {
-    let total = 0;
-    total =
-      this.getTongTien(hoaDon.hoaDonChiTiets) -
-      hoaDon.tienGiam +
-      hoaDon.phiVanChuyen;
-    return total;
+    if (hoaDon != null || hoaDon != undefined) {
+      let total = 0;
+      total =
+        this.getTongTien(hoaDon.hoaDonChiTiets) -
+        hoaDon.tienGiam +
+        hoaDon.phiVanChuyen;
+      return total;
+    }
+    return 0;
+  }
+
+  getDiscountValid(
+    giaTriDonHang: number,
+    khachHangId: number,
+    giaDangGiam: number
+  ): Observable<DiscountValid> {
+    let rawData = {
+      giaTriDonHang,
+      khachHangId,
+      giaDangGiam,
+    };
+    return this.http.post<DiscountValid>(
+      this.baseUrl + "/get-discount-valid",
+      rawData
+    );
   }
 }

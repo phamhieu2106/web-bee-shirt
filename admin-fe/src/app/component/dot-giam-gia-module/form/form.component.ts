@@ -122,29 +122,41 @@ export class FormComponent implements OnInit {
     }
   }
   public handleChangeTime(thoiGianBatDau: Date, thoiGianKetThuc: Date) {
-    console.log(thoiGianBatDau);
+    if (thoiGianBatDau instanceof Date) {
+      this.form.controls["thoiGianBatDau"].setErrors({ invalid: true });
+      return;
+    }
+    if (thoiGianKetThuc instanceof Date) {
+      this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+      return;
+    }
+
     const currentTime = new Date();
     currentTime.setSeconds(0, 0);
 
     if (thoiGianBatDau > thoiGianKetThuc) {
       this.form.controls["thoiGianBatDau"].setErrors({ invalid: true });
       this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
-    } else {
-      const startTime = new Date(thoiGianBatDau);
-      const endTime = new Date(thoiGianKetThuc);
-      if (startTime < currentTime) {
-        this.form.controls["thoiGianBatDau"].setErrors({ pastDate: true });
-      } else {
-        const oneMinuteAfterStart = new Date(startTime.getTime() + 299999); // 60000 milliseconds = 1 minute
-        if (endTime <= oneMinuteAfterStart) {
-          this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
-        } else {
-          // Nếu không có lỗi, xóa các lỗi hiện có
-          this.form.controls["thoiGianBatDau"].setErrors(null);
-          this.form.controls["thoiGianKetThuc"].setErrors(null);
-        }
-      }
+      return; // Return to exit function early
     }
+
+    const startTime = new Date(thoiGianBatDau);
+    const endTime = new Date(thoiGianKetThuc);
+
+    if (startTime < currentTime) {
+      this.form.controls["thoiGianBatDau"].setErrors({ pastDate: true });
+      return; // Return to exit function early
+    }
+
+    const oneMinuteAfterStart = new Date(startTime.getTime() + 60000); // 60000 milliseconds = 1 minute
+    if (endTime <= oneMinuteAfterStart) {
+      this.form.controls["thoiGianKetThuc"].setErrors({ invalid: true });
+      return; // Return to exit function early
+    }
+
+    // Nếu không có lỗi, xóa các lỗi hiện có
+    this.form.controls["thoiGianBatDau"].setErrors(null);
+    this.form.controls["thoiGianKetThuc"].setErrors(null);
   }
 
   private validateForm(): boolean {

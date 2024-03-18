@@ -93,7 +93,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
         .subscribe({
           next: (value) => {
             this.listIdSanPham = value;
-            console.log(this.listIdSanPham);
             this.getAllSanPhamChiTietById(value);
           },
         });

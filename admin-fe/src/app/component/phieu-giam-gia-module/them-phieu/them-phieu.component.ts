@@ -171,7 +171,7 @@ export class ThemPhieuComponent implements OnInit {
 
   public initAddForm(): void {
     this.addForm = this.formBuilder.group({
-      maPhieuGiamGia: new FormControl("", [Validators.required]),
+      maPhieuGiamGia: new FormControl(""),
       tenPhieuGiamGia: new FormControl("", [Validators.required]),
       kieu: new FormControl("0", [Validators.required]),
       loai: new FormControl("1", [Validators.required]),

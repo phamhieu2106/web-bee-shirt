@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
@@ -44,13 +45,20 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGia add(PhieuGiamGiaRequest phieuGiamGia) {
-
-        if (repository.existsByMaPhieuGiamGia(phieuGiamGia.getMaPhieuGiamGia().trim().toLowerCase())) {
-            throw new ResourceExistsException("Mã Phiếu: " + phieuGiamGia.getMaPhieuGiamGia() + " đã tồn tại.");
-        }
-
         LocalDateTime currentTime = LocalDateTime.now();
 
+        // Nếu trường mã phiếu trống, tự sinh mã mới
+        if (phieuGiamGia.getMaPhieuGiamGia().isEmpty()) {
+            String generatedMaPhieu = generateMaPhieuGiamGia();
+            phieuGiamGia.setMaPhieuGiamGia(generatedMaPhieu);
+        } else {
+            // Kiểm tra xem mã phiếu có tồn tại không
+            if (repository.existsByMaPhieuGiamGia(phieuGiamGia.getMaPhieuGiamGia().trim().toLowerCase())) {
+                throw new ResourceExistsException("Mã Phiếu: " + phieuGiamGia.getMaPhieuGiamGia() + " đã tồn tại.");
+            }
+        }
+
+        // Xác định trạng thái dựa trên thời gian
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
             phieuGiamGia.setTrangThai("Đã kết thúc");
         } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
@@ -62,8 +70,37 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
             phieuGiamGia.setTrangThai("Trạng thái không xác định");
         }
 
+        // Lưu phiếu giảm giá vào cơ sở dữ liệu
         PhieuGiamGia pgg = phieuGiamGia.giamGia(new PhieuGiamGia());
         return repository.save(pgg);
+    }
+
+
+    // Hàm sinh mã phiếu giảm giá mới
+    public  String generateMaPhieuGiamGia() {
+        // Độ dài của mã giảm giá
+        int length = 6;
+
+        // Kí tự cho phép trong mã giảm giá
+        String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        // Chuỗi chứa mã giảm giá
+        StringBuilder maPhieuGiamGia = new StringBuilder();
+
+        // Tạo đối tượng Random
+        Random random = new Random();
+
+        // Sinh các ký tự cho mã giảm giá
+        for (int i = 0; i < length; i++) {
+            // Sinh một chỉ số ngẫu nhiên trong phạm vi của characterSet
+            int randomIndex = random.nextInt(characterSet.length());
+
+            // Lấy ký tự tại chỉ số ngẫu nhiên và thêm vào chuỗi mã giảm giá
+            maPhieuGiamGia.append(characterSet.charAt(randomIndex));
+        }
+
+        // Trả về mã giảm giá đã sinh
+        return maPhieuGiamGia.toString();
     }
 
     @Override

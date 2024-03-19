@@ -71,12 +71,12 @@
       <!-- End search product taskbar -->
       <!-- Order taskbar -->
       <div class="col-6 row">
-        <div class="col-2 order-number h-100 mr-1" [class.order-number-active]="
+        <div class="col-2 order-number" [class.order-number-active]="
             order != null ? order.orderNameTemp == o.orderNameTemp : false
           " (click)="changeHoaDon(i)" *ngFor="let o of orders; index as i">
           <span class="fs-5">{{ o.orderNameTemp }}</span>
           <button class="btn p-1" (click)="deleteOrder(i)">
-            <i class="fa-regular fa-circle-xmark"></i>
+            <i class=" fa-regular fa-circle-xmark"></i>
           </button>
         </div>
         <div class="col-1 h-100 p-0">

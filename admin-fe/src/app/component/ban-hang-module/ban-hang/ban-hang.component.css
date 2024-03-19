@@ -29,13 +29,31 @@
 
 .order-number {
     cursor: pointer;
-    background-color: rgb(233, 233, 233);
+    background-color: #11398a ;
+    color: white;
+    border-radius: 5px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .order-number-active {
     cursor: pointer;
     background-color: rgb(247, 247, 247) !important;
-    color: blue;
+    color: rgb(0, 0, 0);
+}
+.order-number i{
+    color: white;
+}
+
+.order-number-active i{
+    color: rgb(0, 0, 0);;
+}
+
+.iconDelete{
+color: white;
 }
 
 .count {
@@ -110,4 +128,5 @@ input[type=number] {
 .dropdown input{
 border-radius: 15px;
 border: none;
+margin-right: 10px;
 }

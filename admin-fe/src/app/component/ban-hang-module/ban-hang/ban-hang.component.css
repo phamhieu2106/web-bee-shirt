@@ -128,5 +128,11 @@ input[type=number] {
 .dropdown input{
 border-radius: 15px;
 border: none;
-margin-right: 10px;
+padding: 10px;
+
+}
+
+
+.btn-create i{
+    font-size: 30px;
 }

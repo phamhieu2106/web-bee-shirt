@@ -16,9 +16,15 @@ import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam
 import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.module";
 import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
-import { CurrencyPipe } from "@angular/common";
+import { CurrencyPipe, registerLocaleData } from "@angular/common";
 import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
 import { ThongKeModuleModule } from "./component/thong-ke-module/thong-ke-module.module";
+
+import en from "@angular/common/locales/en";
+registerLocaleData(en);
+
+/** config ng-zorro-antd i18n **/
+import { provideNzI18n, en_US } from "ng-zorro-antd/i18n";
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +48,7 @@ import { ThongKeModuleModule } from "./component/thong-ke-module/thong-ke-module
     BanHangModule,
   ],
   providers: [
+    provideNzI18n(en_US),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationInterceptor,

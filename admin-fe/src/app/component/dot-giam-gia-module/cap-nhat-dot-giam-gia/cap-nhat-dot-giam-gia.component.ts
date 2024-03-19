@@ -104,29 +104,12 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
   listSanPhamChiTiet: PagedResponse<DotGiamGiaSanPhamChiTiet>;
   // Data Table
   dataSanPhamChiTiet: DotGiamGiaSanPhamChiTiet[] = [];
-  public setListIdSanPhamChiTiet = (value: number) => {
-    if (
-      this.dotGiamGiaUpdateRequest &&
-      Array.isArray(this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet)
-    ) {
-      const index = this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.indexOf(
-        Number(value)
-      );
-
-      if (index !== -1) {
-        // Giá trị đã tồn tại, nên xoá nó khỏi mảng
-        this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.splice(index, 1);
-      } else {
-        // Giá trị không tồn tại, nên thêm vào mảng
-        this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.push(Number(value));
-      }
-      this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet =
-        this.listIdSanPhamChiTiet;
-    } else {
-      this.toast.error("Danh Sách Sản Phẩm Chi Tiết không được khởi tạo.");
-    }
-  };
-  public async getAllSanPhamChiTietById(id: Array<number>) {
+  public setListIdSanPhamChiTiet(): void {
+    this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet = Array.from(
+      this.setOfCheckedId
+    );
+  }
+  public getAllSanPhamChiTietById(id: Array<number>) {
     let idDotGiamGia: number = null;
     this.route.paramMap.subscribe((params) => {
       idDotGiamGia = Number(params.get("id"));
@@ -135,18 +118,42 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     this.service.getAllSanPhamChiTietUpdateById(id, idDotGiamGia).subscribe({
       next: (value) => {
         this.listSanPhamChiTiet = value;
-        this.dataSanPhamChiTiet = this.listSanPhamChiTiet.data;
-        // Set ListIDSanPhamChiTiet from  Dot Giam Gia Update Request
+        this.listOfData = this.removeDuplicateById(
+          this.listSanPhamChiTiet.data
+        );
       },
       error: (message) => {
         this.toast.error("Có lỗi khi lấy ra danh sách sản phẩm chi tiết");
         console.log(message);
       },
+      complete: () => {
+        let temp: any[] = [];
+        this.listOfData.forEach((item) => {
+          this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet.forEach((id) => {
+            if (id == Number(item.id)) {
+              temp.push(item);
+              return;
+            }
+          });
+        });
+        temp.forEach((item) => this.onItemChecked(item.id, true));
+      },
     });
-    this.listIdSanPhamChiTiet =
-      this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet;
   }
 
+  private removeDuplicateById(data: any[]): any[] {
+    const uniqueIds = new Set<number>();
+    const uniqueData = data.filter((item) => {
+      if (uniqueIds.has(item.id)) {
+        return false; // Return false if ID has already been encountered
+      } else {
+        uniqueIds.add(item.id); // Add ID to set if encountering it for the first time
+        return true; // Return true to keep this item in the filtered array
+      }
+    });
+
+    return uniqueData;
+  }
   //For Table SanPham
   // Page SanPham
   listSanPham: PagedResponse<SanPham>;
@@ -198,5 +205,59 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
         this.toast.error("Có lỗi khi cố gắng lấy danh sách Sản Phẩm");
       },
     });
+  }
+
+  // TEST
+  checked = false;
+  indeterminate = false;
+  listOfCurrentPageData: readonly DotGiamGiaSanPhamChiTiet[] = [];
+  listOfData: readonly DotGiamGiaSanPhamChiTiet[] = [];
+  setOfCheckedId = new Set<number>();
+
+  updateCheckedSet(id: number, checked: boolean): void {
+    if (checked) {
+      this.setOfCheckedId.add(id);
+      this.setListIdSanPhamChiTiet();
+    } else {
+      this.setOfCheckedId.delete(id);
+      this.setListIdSanPhamChiTiet();
+    }
+  }
+  onAllChecked(value: boolean): void {
+    if (value) {
+      // Đặt tất cả các phần tử trên trang hiện tại vào setOfCheckedId
+      this.listOfCurrentPageData.forEach((item) => {
+        this.setOfCheckedId.add(item.id);
+      });
+    } else {
+      // Nếu giá trị là false, xóa tất cả các phần tử khỏi setOfCheckedId
+      this.setOfCheckedId.clear();
+      this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet = [];
+    }
+
+    // Lặp qua danh sách các phần tử đã chọn và cập nhật listIdSanPhamChiTiet
+    this.setListIdSanPhamChiTiet();
+
+    this.refreshCheckedStatus();
+  }
+
+  onItemChecked(id: number, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
+    this.refreshCheckedStatus();
+  }
+
+  onCurrentPageDataChange($event: readonly DotGiamGiaSanPhamChiTiet[]): void {
+    this.listOfCurrentPageData = $event;
+    this.refreshCheckedStatus();
+  }
+
+  refreshCheckedStatus(): void {
+    this.checked = this.listOfCurrentPageData.every((item) => {
+      this.setOfCheckedId.has(item.id);
+    });
+    this.indeterminate =
+      this.listOfCurrentPageData.some((item) =>
+        this.setOfCheckedId.has(item.id)
+      ) && !this.checked;
   }
 }

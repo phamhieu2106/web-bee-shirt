@@ -63,7 +63,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
       giaTriPhanTram: null,
       thoiGianBatDau: null,
       thoiGianKetThuc: null,
-      listIdSanPhamChiTiet: null,
+      listIdSanPhamChiTiet: [],
     };
   }
   ngOnInit(): void {
@@ -124,6 +124,9 @@ export class ThemDotGiamGiaComponent implements OnInit {
         this.dataSanPhamChiTiet = this.removeDuplicateById(
           this.listSanPhamChiTiet.data
         );
+        this.listOfData = this.removeDuplicateById(
+          this.listSanPhamChiTiet.data
+        );
       },
       error: (message) => {
         this.toast.error(message);
@@ -145,21 +148,63 @@ export class ThemDotGiamGiaComponent implements OnInit {
     return uniqueData;
   }
 
-  public setListIdSanPhamChiTiet = (value: number) => {
-    if (this.listIdSanPhamChiTiet && Array.isArray(this.listIdSanPhamChiTiet)) {
-      const index = this.listIdSanPhamChiTiet.indexOf(Number(value));
+  public setListIdSanPhamChiTiet(): void {
+    this.dotGiamGiaRequest.listIdSanPhamChiTiet = Array.from(
+      this.setOfCheckedId
+    );
+  }
 
-      if (index !== -1) {
-        // Giá trị đã tồn tại, nên xoá nó khỏi mảng
-        this.listIdSanPhamChiTiet.splice(index, 1);
-      } else {
-        // Giá trị không tồn tại, nên thêm vào mảng
-        this.listIdSanPhamChiTiet.push(Number(value));
-      }
-      this.dotGiamGiaRequest.listIdSanPhamChiTiet = this.listIdSanPhamChiTiet;
+  // TEST
+  checked = false;
+  indeterminate = false;
+  listOfCurrentPageData: readonly DotGiamGiaSanPhamChiTiet[] = [];
+  listOfData: readonly DotGiamGiaSanPhamChiTiet[] = [];
+  setOfCheckedId = new Set<number>();
+
+  updateCheckedSet(id: number, checked: boolean): void {
+    if (checked) {
+      this.setOfCheckedId.add(id);
+      this.setListIdSanPhamChiTiet();
     } else {
-      this.toast.error("Mảng IdSanPhamChiTiet không được khởi tạo.");
-      console.log("Mảng IdSanPhamChiTiet không được khởi tạo.");
+      this.setOfCheckedId.delete(id);
+      this.setListIdSanPhamChiTiet();
     }
-  };
+  }
+  onAllChecked(value: boolean): void {
+    if (value) {
+      // Đặt tất cả các phần tử trên trang hiện tại vào setOfCheckedId
+      this.listOfCurrentPageData.forEach((item) => {
+        this.setOfCheckedId.add(item.id);
+      });
+    } else {
+      // Nếu giá trị là false, xóa tất cả các phần tử khỏi setOfCheckedId
+      this.setOfCheckedId.clear();
+      this.dotGiamGiaRequest.listIdSanPhamChiTiet = [];
+    }
+
+    // Lặp qua danh sách các phần tử đã chọn và cập nhật listIdSanPhamChiTiet
+    this.setListIdSanPhamChiTiet();
+
+    this.refreshCheckedStatus();
+  }
+
+  onItemChecked(id: number, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
+    this.refreshCheckedStatus();
+  }
+
+  onCurrentPageDataChange($event: readonly DotGiamGiaSanPhamChiTiet[]): void {
+    this.listOfCurrentPageData = $event;
+    this.refreshCheckedStatus();
+  }
+
+  refreshCheckedStatus(): void {
+    this.checked = this.listOfCurrentPageData.every((item) => {
+      this.setOfCheckedId.has(item.id);
+    });
+    this.indeterminate =
+      this.listOfCurrentPageData.some((item) =>
+        this.setOfCheckedId.has(item.id)
+      ) && !this.checked;
+  }
 }

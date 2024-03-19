@@ -27,7 +27,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
     "Tên Sản Phẩm",
     "Trạng Thái",
   ];
-  listSanPham: PagedResponse<SanPham>;
+  listSanPham: SanPham[];
   dataSanPham: SanPham[] = [];
   // Table SanPhamChiTiet
   titleTableProducts: string = "Danh Sách Chi Tiết Sản Phẩm ";
@@ -55,7 +55,6 @@ export class ThemDotGiamGiaComponent implements OnInit {
   // varribles for post methods
   constructor(
     private service: DotGiamGiaService,
-    private sanPhamService: SanPhamService,
     private toast: ToastrService
   ) {
     this.dotGiamGiaRequest = {
@@ -76,10 +75,10 @@ export class ThemDotGiamGiaComponent implements OnInit {
   public getDotGiamGiaRequest(): void {}
   // San Pham
   public getAllSanPham(): void {
-    this.sanPhamService.getByPage().subscribe({
+    this.service.getAllSanPham().subscribe({
       next: (value) => {
         this.listSanPham = value;
-        this.dataSanPham = this.listSanPham.data;
+        this.dataSanPham = this.listSanPham;
       },
       error: (err) => {
         console.log(err);

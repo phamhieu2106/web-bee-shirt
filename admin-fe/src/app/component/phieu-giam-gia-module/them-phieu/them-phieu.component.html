@@ -11,7 +11,7 @@
           <div class="col-md-4">
             <form [formGroup]="addForm">
               <div class="mb-3">
-                <label for="" class="labelChinh">Mã Phiếu:</label>
+                <label for="" class="labelChinh">Mã Phiếu: <strong style="color: red;">Tự động tạo nếu bỏ trống</strong> </label>
                 <input
                   type="text"
                   class="form-control"
@@ -336,7 +336,7 @@
 
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-create"
                 [disabled]="!addForm.valid"
                 (click)="confirmCreation()"
               >

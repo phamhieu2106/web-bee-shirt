@@ -91,7 +91,7 @@ input[type=number] {
     font-size: 13px;
 }
 
-.hoa-don-active {}
+
 
 .product-modal {
     width: 125% !important;
@@ -99,4 +99,15 @@ input[type=number] {
 
 .right-align {
     text-align: right;
+}
+
+/* Bình  */
+.taskbar{
+    padding: 10px;
+    background-color: #574afb;
+}
+
+.dropdown input{
+border-radius: 15px;
+border: none;
 }

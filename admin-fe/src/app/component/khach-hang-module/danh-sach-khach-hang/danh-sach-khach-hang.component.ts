@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
   styleUrls: ["./danh-sach-khach-hang.component.css"],
 })
 export class DanhSachKhachHangComponent {
-  icon: string = "fa-solid fa-users";
+  icon: string = "  fa-solid fa-users";
   title: string = "khách hàng";
   mainHeading: string = "khách hàng";
 

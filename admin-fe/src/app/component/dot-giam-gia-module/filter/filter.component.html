@@ -1,39 +1,34 @@
 <div class="row gutters pt-2">
   <div class="col-sm-12">
-    <div class="card">
+    <!-- <div class="card">
       <h2 class="card-header">Bộ Lọc</h2>
       <div class="card-body">
-        <div
-          class="form-inline p-4 mx-auto d-flex align-items-center justify-content-center"
-        >
-          <div class="form-group">
+
+        
+        <div class="form-inline mx-auto row">
+          <div class="row">
+            <div class="form-group d-flex  justify-content-center col-md-6">
+              <label class="col-form-label">Tìm Kiếm:</label>
+              <input [(ngModel)]="search" type="text" class="form-control col-md-2 ml-1"
+                [placeholder]="'Mã..Tên..Phần Trăm'" (keyup)="onInputSearch()" />
+            </div>
+          </div>
+          
+
+          <div class="form-group col-md-3">
             <label for="ngay-bat-dau">Từ Ngày: </label>
-            <input
-              [(ngModel)]="startDate"
-              (ngModelChange)="onChangeFilter()"
-              class="form-control m-2"
-              type="date"
-              id="ngay-bat-dau"
-            />
+            <input [(ngModel)]="startDate" (ngModelChange)="onChangeFilter()" class="form-control m-2" type="date"
+              id="ngay-bat-dau" />
           </div>
-          <div class="form-group">
+          <div class="form-group col-md-3">
             <label for="ngay-ket-thuc">Tới Ngày: </label>
-            <input
-              [(ngModel)]="endDate"
-              (ngModelChange)="onChangeFilter()"
-              class="form-control m-2"
-              type="date"
-              id="ngay-ket-thuc"
-            />
+            <input [(ngModel)]="endDate" (ngModelChange)="onChangeFilter()" class="form-control m-2" type="date"
+              id="ngay-ket-thuc" />
           </div>
-          <div class="d-flex">
+          <div class="d-flex col-md-3">
             <label for="trang-thai">Trạng Thái: </label>
-            <select
-              [(ngModel)]="status"
-              class="custom-select ml-2 col-md-7.5"
-              id="trang-thai"
-              (change)="onChangeFilter()"
-            >
+            <select [(ngModel)]="status" class="custom-select ml-2 col-md-7.5" id="trang-thai"
+              (change)="onChangeFilter()">
               <option selected [ngValue]="3">Tất Cả</option>
               <option [ngValue]="1">Đang Diễn Ra</option>
               <option [ngValue]="2">Sắp Diễn Ra</option>
@@ -41,28 +36,84 @@
             </select>
           </div>
         </div>
-        <div class="form-group d-flex p-2 justify-content-center">
-          <label class="col-form-label">Tìm Kiếm:</label>
-          <input
-            [(ngModel)]="search"
-            type="text"
-            class="form-control col-md-2 ml-1"
-            [placeholder]="'Mã..Tên..Phần Trăm'"
-            (keyup)="onInputSearch()"
-          />
-        </div>
+        
         <div class="d-flex justify-content-end">
           <button (click)="handleReset()" class="btn btn-info btn-rounded m-1">
             Làm Mới
           </button>
-          <button
-            [routerLink]="'/dot-giam-gia/them-dot-giam-gia'"
-            class="btn btn-success btn-rounded m-1"
-          >
+          <button [routerLink]="'/dot-giam-gia/them-dot-giam-gia'" class="btn btn-success btn-rounded m-1">
             Thêm Mới
           </button>
         </div>
       </div>
+    </div> -->
+
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="float-md-left">Bộ lọc</h4>
+      </div>
+      <div class="card-body pt-4">
+        <!-- Filter start -->
+        <div class="row gutters">
+          <div class="row">
+            <div class="col-md-6">
+              <input type="text" name="" class="form-control rounded"  [(ngModel)]="search"
+                placeholder="Tìm theo mã , tên ,phần trăm" (keyup)="onInputSearch()">
+            </div>
+          
+          </div>
+
+          <div class="row pt-3 pb-3">
+        
+            <div class="col-md-3">
+              <label for="">Từ Ngày</label>
+              <input [(ngModel)]="startDate" (ngModelChange)="onChangeFilter()" class="form-control" type="date"
+              id="ngay-bat-dau" />
+            </div>
+            <div class="col-md-3">
+              <label for="">Tới Ngày</label>
+              <input [(ngModel)]="endDate" (ngModelChange)="onChangeFilter()" class="form-control " type="date"
+              id="ngay-ket-thuc" />
+            </div>
+          
+            <div class="col-md-3">
+              <label for="trang-thai">Trạng Thái: </label>
+              <select [(ngModel)]="status" class="form-control" id="trang-thai"
+                (change)="onChangeFilter()">
+                <option selected [ngValue]="3">Tất Cả</option>
+                <option [ngValue]="1">Đang Diễn Ra</option>
+                <option [ngValue]="2">Sắp Diễn Ra</option>
+                <option [ngValue]="0">Đã Kết Thúc</option>
+              </select>
+            </div>
+          
+          
+          
+            <!-- Thêm nút xóa bộ lọc -->
+            <div class="col-md-1 btnFilter">
+              <button (click)="handleReset()" class="btn btn-info btn-rounded ">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            
+            </div>
+
+            <div class="col-md-2 btnFilter">
+             
+              <button [routerLink]="'/dot-giam-gia/them-dot-giam-gia'" class="btn btn-success btn-rounded ">
+                Thêm Mới
+              </button>
+            
+            </div>
+          </div>
+        </div>
+        <!-- Filter End -->
+      </div>
     </div>
+
+
+
+
+
   </div>
 </div>

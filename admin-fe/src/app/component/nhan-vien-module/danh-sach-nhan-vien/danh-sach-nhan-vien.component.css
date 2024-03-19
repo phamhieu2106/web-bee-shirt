@@ -7,3 +7,14 @@
 #icon-button-detail {
   color: #74c0fc;
 }
+
+.card{
+  border-radius: 8px ;
+ 
+  margin: 10px;
+}
+
+.card-header,
+.card-footer{
+  background:none;
+}

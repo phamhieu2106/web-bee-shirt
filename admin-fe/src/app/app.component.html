@@ -1,4 +1,4 @@
-<div class="app-wrap" *ngIf="isLoggin">
+<!-- <div class="app-wrap" *ngIf="isLoggin">
   <div class="app-container">
     <aside class="app-side" id="app-side">
       <app-side-content></app-side-content>
@@ -7,6 +7,29 @@
       <app-header> </app-header>
       <div class="main-content">
         <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+
+<div *ngIf="!isLoggin">
+  <router-outlet></router-outlet>
+</div> -->
+
+<div class="app-wrap" *ngIf="isLoggin">
+  <div class="app">
+  
+    <div>
+     
+      <div class="main-content1">
+        <div class="sidebarNew">
+          <app-sidebar></app-sidebar>
+        </div>
+        <div class="mainContent">
+          <router-outlet></router-outlet>
+        </div>
+       
       </div>
     </div>
   </div>

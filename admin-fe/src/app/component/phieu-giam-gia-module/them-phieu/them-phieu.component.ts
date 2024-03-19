@@ -52,16 +52,17 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   public add(): void {
-    if (
-      this.addForm.get("giaTriMax").value > 999
-    ) {
-      const giaTriMaxFormatted = parseFloat(
-        this.addForm.value.giaTriMax.replace(/,/g, "")
-      );
-      this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
-
     
-    }
+
+    if (typeof this.addForm.get("giaTriMax").value === "string") {
+  
+      const giaTriMaxFormatted = parseFloat(
+        this.addForm.value.giaTriMax.replace(",", "")
+      );
+      console.log(giaTriMaxFormatted)
+      this.addForm.patchValue({ dieuKienGiam: giaTriMaxFormatted });
+
+    } 
     
 
 

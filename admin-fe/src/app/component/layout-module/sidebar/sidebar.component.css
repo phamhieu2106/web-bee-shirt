@@ -1,0 +1,218 @@
+.contain{
+  position: sticky;
+  top: 0;
+}
+
+.sidebar1{
+    position: relative;
+    width: 250px;
+    min-height: 98vh;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 24px;
+    transition: all 0.3s ;
+    margin-right: 20px;
+  
+
+    
+}
+
+.sidebar1 .head{
+    display: flex;
+    gap: 20px ;
+    padding-bottom: 20px;
+  
+}
+
+.user-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.user-img img{
+    width: 100%;
+    object-fit: cover;
+}
+
+.user-details .title,
+.menu .title{
+    font-size: 10px ;
+    font-weight: 500;
+    color: #757575;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.nav{
+    flex: 1;
+}
+
+.user-details .name{
+    font-size: 14px ;
+    font-weight: 600;
+}
+
+
+.menu ul li{
+    position: relative;
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+.menu ul li a{
+    display: flex;
+    align-items: center;
+    gap: 10px ;
+    font-size: 14px;
+    color: #050505;
+    text-decoration: none;
+    padding: 12px 8px;
+    border-radius: 8px;
+    transition: all 0.3s ;
+}
+
+.menu ul li > a:hover,
+.menu ul li.active > a{
+    color: #ffffff;
+    background-color: #574afb;
+}
+
+.menu ul li .icon{
+    font-size: 20px;
+}
+
+.menu ul li .text{
+    flex: 1;
+}
+
+
+.menu ul li  .arrow{
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.menu ul li.active .arrow{
+    transform: rotate(180deg);
+}
+
+.menu .sub-menu{
+    display: none;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-top: 5px;
+    border-left: 1px solid #f6f6f6;
+}
+
+.menu .sub-menu li a{
+    font-size: 12px ;
+    padding: 10px 8px;
+}
+
+.menu:not(:last-child){
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f6f6f6;
+}
+
+.menu-btn{
+    position: absolute;
+    right: -14px;
+    top: 2.5%;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #574afb;
+    border: 2px solid #f6f6f6;
+    
+}
+
+.menu-btn i:hover {
+    color: #000;
+}
+
+.menu-btn i {
+  transition: all 0.3s;
+}
+
+.sidebar1.active{
+    width: 92px;
+}
+
+.sidebar1.active .menu-btn{
+    transform: rotate(180deg);
+}
+
+.sidebar1.active .user-details{
+    display: none;
+}
+
+.sidebar1.active .menu .title{
+    text-align: center;
+
+}
+
+.sidebar1.active .menu ul li .arrow{
+    display: none;
+}
+
+.sidebar1.active .menu > ul > li > a{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sidebar1.active .menu > ul > li > a .text{
+ position: absolute;
+ top: 50%;
+left: 70px;
+transform: translateY(-50%);
+padding: 10px;
+border-radius: 4px;
+color: #fff;
+background-color: #000;
+opacity: 0;
+visibility: hidden;
+transform: all 0.3s;
+z-index: 888;
+}
+
+.sidebar1.active .menu > ul > li > a .text::after{
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 20%;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    background-color: #000;
+    transform: rotate(45deg);
+    z-index: -1;
+
+}
+
+.sidebar1.active .menu > ul > li > a:hover .text{
+    left: 50px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar1.active .menu .sub-menu{
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 200px;
+    border-radius:20px ;
+    padding: 10px 20px ;
+    border: 1px solid #f6f6f6;
+    background-color: #fff;
+    box-shadow: 0px 10px 8px rgna(0,0,0,0.1);
+}

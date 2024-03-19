@@ -1,8 +1,4 @@
-<app-main-heading
-  [icon]="icon"
-  [mainHeading]="mainHeading"
-  [title]="title"
-></app-main-heading>
+<app-main-heading [icon]="icon" [mainHeading]="mainHeading" [title]="title"></app-main-heading>
 <div class="row gutters mt-4">
   <div class="col">
     <div class="card">
@@ -17,13 +13,8 @@
               <div class="input-group-prepend">
                 <label class="me-3"> Tìm kiếm: </label>
               </div>
-              <input
-                #inputName
-                type="text"
-                class="form-control"
-                placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-                (keyup)="timKiem($event)"
-              />
+              <input #inputName type="text" class="form-control" placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
+                (keyup)="timKiem($event)" />
             </div>
           </div>
           <div class="col-sm-3 col-12">
@@ -31,11 +22,7 @@
               <div class="input-group-prepend">
                 <label class="me-3"> Giới tính: </label>
               </div>
-              <select
-                [(ngModel)]="gioiTinhFilter"
-                class="custom-select"
-                (change)="onChangeFilter()"
-              >
+              <select [(ngModel)]="gioiTinhFilter" class="custom-select" (change)="onChangeFilter()">
                 <!-- <option value="" disabled selected hidden>
                   Tất cả giới tính
                 </option> -->
@@ -50,11 +37,7 @@
               <div class="input-group-prepend">
                 <label class="me-3"> Trạng thái: </label>
               </div>
-              <select
-                class="custom-select"
-                [(ngModel)]="trangThaiFilter"
-                (change)="onChangeFilter()"
-              >
+              <select class="custom-select" [(ngModel)]="trangThaiFilter" (change)="onChangeFilter()">
                 <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
                 <option [ngValue]="[1]">Đang làm việc</option>
                 <option [ngValue]="[0]">Đã nghỉ việc</option>
@@ -63,10 +46,7 @@
           </div>
 
           <div class="col-1 ps-3">
-            <button
-              class="btn btn-primary btn-rounded btn-reload-filter"
-              (click)="reloadFilter()"
-            >
+            <button class="btn btn-create btn-rounded btn-reload-filter" (click)="reloadFilter()">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
@@ -81,21 +61,15 @@
     <div class="card">
       <div class="card-header">
         <h3 class="float-md-left">Danh sách khách hàng</h3>
-        <button
-          type="button"
-          class="btn btn-primary btn-lg float-md-right rounded"
-          routerLink="/khach-hang/them-khach-hang"
-        >
+        <button type="button" class="btn btn-create btn-lg float-md-right rounded"
+          routerLink="/khach-hang/them-khach-hang">
           <span class="icon-user-plus" style="margin-top: 20px"></span>
           Thêm khách hàng
         </button>
       </div>
 
       <div class="card-body">
-        <table
-          id="basicExample"
-          class="table table-striped table-bordered rounded"
-        >
+        <table id="basicExample" class="table table-striped table-bordered rounded">
           <thead>
             <tr>
               <th>STT</th>
@@ -113,9 +87,9 @@
             <tr *ngFor="let kh of pagedResponse?.data; let i = index">
               <th scope="row">
                 {{
-                  i +
-                    1 +
-                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                i +
+                1 +
+                (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
                 }}
               </th>
               <td>{{ kh.hoTen }}</td>
@@ -129,40 +103,24 @@
               </td>
               <td>{{ kh.ngaySinh | date : "dd-MM-yyyy" }}</td>
               <td>
-                <button
-                  class="{{
+                <button class="{{
                     kh.trangThai === 1
-                      ? 'btn btn-info btn-rounded'
+                      ? 'btn btn-success btn-rounded'
                       : 'btn btn-danger btn-rounded'
-                  }}"
-                >
+                  }}">
                   {{
-                    kh.trangThai === 1 ? "Đang hoạt động" : "Ngừng hoạt động"
+                  kh.trangThai === 1 ? "Đang hoạt động" : "Ngừng hoạt động"
                   }}
                 </button>
               </td>
               <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-toggle="modal"
-                  data-target="#formDetailKH"
-                  (click)="openDetailsForm(kh.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
+                <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"
+                  data-target="#formDetailKH" (click)="openDetailsForm(kh.id)">
+                  <i class="fa-solid fa-circle-info fa-xl" style="color: #74c0fc"></i>
                 </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  routerLink="/khach-hang/sua-khach-hang/{{ kh.id }}"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
+                <button class="btn btn-outline-warning btn-rounded" title="Cập nhật"
+                  routerLink="/khach-hang/sua-khach-hang/{{ kh.id }}">
+                  <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
               </td>
             </tr>
@@ -172,14 +130,10 @@
       <div class="card-footer">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-              >Số lượng:
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
             </label>
-            <select
-              class="custom-select my-1 mr-sm-2 col-md-5"
-              id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
-            >
+            <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize($event)">
               >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -189,42 +143,20 @@
           <div class="">
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li
-                  class="page-item"
-                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
-                >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
-                    >Previous</a
-                  >
+                <li class="page-item" [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''">
+                  <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber - 1)">Previous</a>
                 </li>
-                <li
-                  class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
-                >
-                  <a
-                    class="page-link pointer"
-                    [ngClass]="
+                <li class="page-item" *ngFor="let page of pagedResponse?.pageNumberArr">
+                  <a class="page-link pointer" [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
-                    "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
-                  >
+                    " (click)="goToPage(page)">{{ page }}</a>
                 </li>
-                <li
-                  class="page-item"
-                  [ngClass]="
+                <li class="page-item" [ngClass]="
                     pagedResponse?.pageNumber == pagedResponse?.totalPages
                       ? 'disabled'
                       : ''
-                  "
-                >
-                  <a
-                    class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
-                    >Next</a
-                  >
+                  ">
+                  <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber + 1)">Next</a>
                 </li>
               </ul>
             </nav>
@@ -236,24 +168,12 @@
 </div>
 
 <!-- modal chi tiet kh -->
-<div
-  class="modal fade"
-  id="formDetailKH"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="formDetail"
-  aria-hidden="true"
->
+<div class="modal fade" id="formDetailKH" tabindex="-1" role="dialog" aria-labelledby="formDetail" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="formDetail">Thông tin khách hàng</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -262,11 +182,7 @@
         </app-khach-hang-detail>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary btn-rounded"
-          data-dismiss="modal"
-        >
+        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">
           Close
         </button>
       </div>

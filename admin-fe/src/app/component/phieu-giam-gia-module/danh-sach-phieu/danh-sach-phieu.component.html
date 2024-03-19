@@ -18,9 +18,7 @@
                 <input type="text" name="" class="form-control rounded"
                   placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
               </div>
-              <div class="col-md-6 d-flex justify-content-end">
-                <button class="btn btn-primary rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
-              </div>
+             
             </div>
 
             <div class="row pt-3 pb-3">
@@ -69,12 +67,22 @@
               </div>
             
               <!-- Thêm nút xóa bộ lọc -->
-              <div class="col-md-2">
-                <label for="">Hành Động</label>
+              <div class="col-md-1 btnFilter">
+              
                 <div>
-                  <button class="btn btn-primary btn-rounded btn-reload-filter" (click)="clearFilters()"> <i class="fa-solid fa-arrows-rotate"></i></button>
+                  <button class="btn btnReload btn-rounded btn-reload-filter" (click)="clearFilters()"> <i class="fa-solid fa-arrows-rotate"></i></button>
                 </div>
               </div>
+
+              <div class="col-md-1 btnFilter">
+              
+                <div>
+                  <button class="btn btn-create rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
+                </div>
+              </div>
+
+
+             
             
             </div>
           </div>
@@ -100,7 +108,7 @@
 
         <!-- TABLE -->
         <table class="table">
-          <thead class="thead-default">
+          <thead class="thead-default tbaleHead">
             <tr>
               <th>STT</th>
               <th>Mã</th>

@@ -46,8 +46,6 @@ import { provideNzI18n, en_US } from "ng-zorro-antd/i18n";
     LayoutModule,
     AppRoutingModule,
     BanHangModule,
-    
-    
   ],
   providers: [
     provideNzI18n(en_US),

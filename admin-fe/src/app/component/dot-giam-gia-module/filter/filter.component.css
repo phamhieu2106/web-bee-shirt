@@ -1,0 +1,12 @@
+.btnFilter{
+    display: flex;
+    align-items: flex-end;
+   
+}
+
+.btn-create{
+    background-color: #574afb;
+    color: white;
+  }
+  
+ 

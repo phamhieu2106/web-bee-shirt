@@ -59,8 +59,8 @@ export class ThemPhieuComponent implements OnInit {
       const giaTriMaxFormatted = parseFloat(
         this.addForm.value.giaTriMax.replace(",", "")
       );
-      console.log(giaTriMaxFormatted)
-      this.addForm.patchValue({ dieuKienGiam: giaTriMaxFormatted });
+     
+      this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
 
     } 
     

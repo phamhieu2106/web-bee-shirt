@@ -20,6 +20,12 @@ import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
   styleUrls: ["./ban-hang.component.css"],
 })
 export class BanHangComponent implements OnInit, OnDestroy {
+
+  icon: string = "  fa-solid fa-users";
+  title: string = "Bán Hàng";
+  mainHeading: string = "Bán Hàng";
+
+
   private readonly key = "orders";
   // messagePgg = "";
   phiVanChuyenTemp: number;

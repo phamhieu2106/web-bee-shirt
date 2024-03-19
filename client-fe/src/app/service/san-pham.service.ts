@@ -24,4 +24,9 @@ export class SanPhamService {
       `${this.apiUrl}/client/get-by-page${param}`
     );
   }
+
+  // 2
+  public getById(id: number): Observable<SanPham> {
+    return this.http.get<SanPham>(`${this.apiUrl}/get-by-id/${id}`);
+  }
 }

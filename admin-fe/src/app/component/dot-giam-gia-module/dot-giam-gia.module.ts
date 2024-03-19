@@ -12,6 +12,7 @@ import { FormComponent } from "./form/form.component";
 import { ThemDotGiamGiaComponent } from "./them-dot-giam-gia/them-dot-giam-gia.component";
 import { ChiTietDotGiamGiaComponent } from "./chi-tiet-dot-giam-gia/chi-tiet-dot-giam-gia.component";
 import { CapNhatDotGiamGiaComponent } from "./cap-nhat-dot-giam-gia/cap-nhat-dot-giam-gia.component";
+import { NzTableModule } from "ng-zorro-antd/table";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CapNhatDotGiamGiaComponent } from "./cap-nhat-dot-giam-gia/cap-nhat-dot
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    NzTableModule,
   ],
 })
 export class DotGiamGiaModule {}

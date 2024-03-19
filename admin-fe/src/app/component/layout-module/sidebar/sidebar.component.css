@@ -175,6 +175,7 @@
  top: 50%;
 left: 70px;
 transform: translateY(-50%);
+
 padding: 10px;
 border-radius: 4px;
 color: #fff;
@@ -182,7 +183,7 @@ background-color: #000;
 opacity: 0;
 visibility: hidden;
 transform: all 0.3s;
-z-index: 888;
+z-index: 999;
 }
 
 .sidebar1.active .menu > ul > li > a .text::after{

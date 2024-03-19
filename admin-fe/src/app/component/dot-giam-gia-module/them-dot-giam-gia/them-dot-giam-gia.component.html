@@ -27,73 +27,46 @@
             <h2 class="card-header">Danh Sách Sản Phẩm</h2>
           </div>
           <div class="card-body">
-            <table
-              id="rowSelection_wrapper"
-              class="table dataTables_wrapper dt-bootstrap5"
+            <nz-table
+              #headerTable
+              [nzData]="dataSanPham"
+              [nzPageSize]="5"
+              [nzScroll]="{ y: '240px' }"
             >
-              <div class="row">
-                <div class="col-sm-12">
-                  <table
-                    id="rowSelection"
-                    class="table table-striped table-bordered dataTable no-footer table-hover"
-                    role="grid"
-                    aria-describedby="rowSelection_info"
-                  >
-                    <thead>
-                      <tr class="table" role="row">
-                        <th *ngFor="let object of tHeadProduct">
-                          {{ object }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ng-container
-                        *ngIf="
-                          dataSanPham && dataSanPham.length > 0;
-                          else noDataTemplate1
-                        "
-                      >
-                        <tr
-                          role="row"
-                          class="odd"
-                          *ngFor="let object of dataSanPham"
-                        >
-                          <td class="sorting_1">
-                            <input
-                              [checked]="
-                                this.listIdSanPham?.includes(+object.id)
-                              "
-                              [disabled]="
-                                object.trangThai === false ? true : false
-                              "
-                              type="checkbox"
-                              (change)="setListIdSanPham(object.id)"
-                            />
-                          </td>
-                          <td>{{ object.ma }}</td>
-                          <td>{{ object.ten }}</td>
-                          <td>
-                            <button
-                              class="{{
-                                object.trangThai === true
-                                  ? 'btn btn-success btn-rounded'
-                                  : 'btn btn-danger btn-rounded'
-                              }}"
-                            >
-                              {{
-                                object.trangThai === true
-                                  ? "Đang Bán"
-                                  : "Ngừng Bán"
-                              }}
-                            </button>
-                          </td>
-                        </tr>
-                      </ng-container>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Mã Sản Phẩm</th>
+                  <th>Tên Sản Phẩm</th>
+                  <th>Trạng Thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of headerTable.data">
+                  <td class="sorting_1">
+                    <input
+                      [checked]="this.listIdSanPham?.includes(+data.id)"
+                      [disabled]="data.trangThai === false ? true : false"
+                      type="checkbox"
+                      (change)="setListIdSanPham(data.id)"
+                    />
+                  </td>
+                  <td>{{ data.ma }}</td>
+                  <td>{{ data.ten }}</td>
+                  <td>
+                    <button
+                      class="{{
+                        data.trangThai === true
+                          ? 'btn btn-success btn-rounded'
+                          : 'btn btn-danger btn-rounded'
+                      }}"
+                    >
+                      {{ data.trangThai === true ? "Đang Bán" : "Ngừng Bán" }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
           </div>
         </div>
       </div>
@@ -114,84 +87,70 @@
             >
               <div class="row">
                 <div class="col-sm-12">
-                  <table
-                    id="rowSelection"
-                    class="table table-bordered dataTable no-footer table-hover"
-                    role="grid"
-                    aria-describedby="rowSelection_info"
+                  <nz-table
+                    #rowSelectionTable
+                    nzShowSizeChanger
+                    [nzData]="listOfData"
+                    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
                   >
                     <thead>
-                      <tr class="table" role="row">
-                        <th *ngFor="let object of tHeadProducts">
-                          {{ object }}
-                        </th>
+                      <tr>
+                        <th
+                          [(nzChecked)]="checked"
+                          [nzIndeterminate]="indeterminate"
+                          (nzCheckedChange)="onAllChecked($event)"
+                        ></th>
+                        <th>Ảnh Sản Phẩm</th>
+                        <th>Mã Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng Tồn</th>
+                        <th>Giá Bán</th>
+                        <th>Chất Liệu</th>
+                        <th>Cổ Áo</th>
+                        <th>Kích Cỡ</th>
+                        <th>Kiểu Dáng</th>
+                        <th>Tay Áo</th>
+                        <th>Thiết Kế</th>
+                        <th>Màu</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <ng-container
-                        *ngIf="
-                          dataSanPhamChiTiet && dataSanPhamChiTiet.length > 0;
-                          else noDataTemplate
-                        "
-                      >
-                        <tr
-                          role="row"
-                          class="odd p-3"
-                          *ngFor="
-                            let object of dataSanPhamChiTiet;
-                            let index = index
-                          "
-                        >
-                          <td class="sorting_1">
-                            <input
-                              [checked]="
-                                this.listIdSanPhamChiTiet?.includes(+object.id)
-                              "
-                              [disabled]="!object.trangThai ? true : false"
-                              type="checkbox"
-                              (click)="setListIdSanPhamChiTiet(object.id)"
-                            />
-                            {{ index + 1 }}
-                          </td>
-                          <td>
-                            <!-- image -->
-                            <img
-                              *ngIf="object?.hinhAnhSanPham; else defaultImage"
-                              [src]="object?.hinhAnhSanPham"
-                              alt=""
-                              width="100px"
-                              height="80px"
-                            />
-                            <ng-template #defaultImage>
-                              <img
-                                src="assets/img/default-image.jpg"
-                                alt="Default Image"
-                              />
-                            </ng-template>
-                          </td>
-                          <td>{{ object.maSanPham }}</td>
-                          <td>{{ object.tenSanPham }}</td>
-                          <td>{{ object.soLuongTon }}</td>
-                          <td>{{ object.giaBan }}VNĐ</td>
-                          <td>{{ object.tenChatLieu }}</td>
-                          <td>{{ object.tenCoAo }}</td>
-                          <td>{{ object.tenKichCo }}</td>
-                          <td>{{ object.tenKieuDang }}</td>
-                          <td>{{ object.tenTayAo }}</td>
-                          <td>{{ object.tenThietKe }}</td>
-                          <td>
-                            <button
-                              *ngIf="object.maMauSac != null"
-                              [ngClass]="'btn'"
-                              [ngStyle]="{
-                                'background-color': object.maMauSac
-                              }"
-                            ></button>
-                          </td>
-                        </tr>
-                      </ng-container>
+                      <tr *ngFor="let data of rowSelectionTable.data">
+                        <td
+                          [nzChecked]="setOfCheckedId.has(data.id)"
+                          (nzCheckedChange)="onItemChecked(data.id, $event)"
+                        ></td>
+                        <td>
+                          <!-- image -->
+                          <img
+                            [src]="data?.hinhAnhSanPham"
+                            alt=""
+                            width="100px"
+                            height="80px"
+                          />
+                        </td>
+                        <td>{{ data.maSanPham }}</td>
+                        <td>{{ data.tenSanPham }}</td>
+                        <td>{{ data.soLuongTon }}</td>
+                        <td>{{ data.giaBan }}VNĐ</td>
+                        <td>{{ data.tenChatLieu }}</td>
+                        <td>{{ data.tenCoAo }}</td>
+                        <td>{{ data.tenKichCo }}</td>
+                        <td>{{ data.tenKieuDang }}</td>
+                        <td>{{ data.tenTayAo }}</td>
+                        <td>{{ data.tenThietKe }}</td>
+                        <td>
+                          <button
+                            *ngIf="data.maMauSac != null"
+                            [ngClass]="'btn'"
+                            [ngStyle]="{
+                              'background-color': data.maMauSac
+                            }"
+                          ></button>
+                        </td>
+                      </tr>
                     </tbody>
-                  </table>
+                  </nz-table>
                 </div>
               </div>
             </table>

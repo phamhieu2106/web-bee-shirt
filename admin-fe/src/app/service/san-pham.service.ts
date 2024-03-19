@@ -17,7 +17,7 @@ export class SanPhamService {
   // 1
   public getByPage(
     pageNumber: number = 1,
-    pageSize: number = 5,
+    pageSize: number = 999999999,
     search: string = ""
   ): Observable<PagedResponse<SanPham>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;

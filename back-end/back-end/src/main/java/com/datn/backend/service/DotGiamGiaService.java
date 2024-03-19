@@ -5,6 +5,7 @@ import com.datn.backend.dto.response.DotGiamGiaResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SanPhamChiTietResponse;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
+import com.datn.backend.model.san_pham.SanPham;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface DotGiamGiaService {
     List<Integer> getListIdSanPhamChiTietByIdSanPham(Integer id);
 
     List<Integer> getListSanPhamChiTietByIdDotGiamGiaSanPham(Integer id);
+
+    List<SanPham> getAllSanPham();
 
     PagedResponse<SanPhamChiTietResponse> getAllSanPhamChiTiet(int pageNumber, int pageSize, List<Integer> listSanPhamId);
 

@@ -1,33 +1,19 @@
-<div class="row gutters">
+<app-main-heading [icon]="icon" [mainHeading]="mainHeading" [title]="title"></app-main-heading>
+
+<div class="row gutters mt-4">
   <div class="card">
     <!-- Taskbar -->
-    <div class="row bg-primary">
+    <div class="row taskbar">
       <!-- Search Product taskbar -->
       <div class="p-1 col-6">
         <div class="dropdown">
-          <input
-            type="text"
-            class="form-control dropdown-toggle"
-            id="dropdownProduct"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            placeholder="Thêm sản phẩm"
-            (input)="getAllSpct()"
-            (focus)="getAllSpct()"
-            [(ngModel)]="searchProduct"
-          />
-          <div
-            class="dropdown-menu product-suggestions"
-            aria-labelledby="dropdownProduct"
-          >
+          <input type="text" class="form-control dropdown-toggle" id="dropdownProduct" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" placeholder="Thêm sản phẩm" (input)="getAllSpct()"
+            (focus)="getAllSpct()" [(ngModel)]="searchProduct" />
+          <div class="dropdown-menu product-suggestions" aria-labelledby="dropdownProduct">
             <div class="suggestion-item row d-flex">
-              <div
-                class="row p-auto text-center"
-                data-toggle="modal"
-                data-target="#searchProductModal"
-                style="height: 50px"
-              >
+              <div class="row p-auto text-center" data-toggle="modal" data-target="#searchProductModal"
+                style="height: 50px">
                 <div class="col-10 h5">
                   <i class="fa-solid fa-plus h5"></i>
                   Tìm kiếm nâng cao
@@ -35,23 +21,13 @@
               </div>
             </div>
             <!-- Sản phẩm tìm kiếm -->
-            <div
-              class="suggestion-item row d-flex p-1"
-              *ngFor="let spct of spcts"
-              (click)="chooseProduct(spct)"
-            >
+            <div class="suggestion-item row d-flex p-1" *ngFor="let spct of spcts" (click)="chooseProduct(spct)">
               <div class="col-2 text-center">
-                <app-product-image
-                  [url]="spct.hinhAnhs[0].imageUrl"
-                  [discount]="
+                <app-product-image [url]="spct.hinhAnhs[0].imageUrl" [discount]="
                     spct.dotGiamGia == null
                       ? null
                       : spct.dotGiamGia.giaTriPhanTram
-                  "
-                  [width]="90"
-                  [height]="90"
-                  class="m-1"
-                ></app-product-image>
+                  " [width]="90" [height]="90" class="m-1"></app-product-image>
                 <!-- <img
                   class="thumbnail-san-pham"
                   [src]="spct.hinhAnhs[0].imageUrl"
@@ -74,17 +50,14 @@
               </div>
               <div class="col-3 mr-auto">
                 <div class="">
-                  <span
-                    class="gia-chua-giam pr-1"
-                    *ngIf="spct.dotGiamGia != null"
-                  >
+                  <span class="gia-chua-giam pr-1" *ngIf="spct.dotGiamGia != null">
                     {{ spct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
                   </span>
 
                   <span class="gia-da-giam pl-1">
                     {{
-                      (spct.dotGiamGia == null ? spct.giaBan : getGiaBan(spct))
-                        | currency : "đ " : "symbol" : "1.0-0"
+                    (spct.dotGiamGia == null ? spct.giaBan : getGiaBan(spct))
+                    | currency : "đ " : "symbol" : "1.0-0"
                     }}
                   </span>
                 </div>
@@ -98,14 +71,9 @@
       <!-- End search product taskbar -->
       <!-- Order taskbar -->
       <div class="col-6 row">
-        <div
-          class="col-2 order-number h-100 mr-1"
-          [class.order-number-active]="
+        <div class="col-2 order-number h-100 mr-1" [class.order-number-active]="
             order != null ? order.orderNameTemp == o.orderNameTemp : false
-          "
-          (click)="changeHoaDon(i)"
-          *ngFor="let o of orders; index as i"
-        >
+          " (click)="changeHoaDon(i)" *ngFor="let o of orders; index as i">
           <span class="fs-5">{{ o.orderNameTemp }}</span>
           <button class="btn p-1" (click)="deleteOrder(i)">
             <i class="fa-regular fa-circle-xmark"></i>
@@ -138,11 +106,7 @@
       <tbody>
         <tr class="" *ngFor="let hdct of order?.hoaDonChiTiets; index as i">
           <td class="">
-            <button
-              type="button"
-              class="btn btn-outline-danger p-1 m-1"
-              (click)="deleteHDCT(i)"
-            >
+            <button type="button" class="btn btn-outline-danger p-1 m-1" (click)="deleteHDCT(i)">
               <i class="fa-solid fa-trash"></i>
             </button>
             <span>{{ hdct.sanPhamChiTiet.sanPham.ma }}</span>
@@ -152,39 +116,25 @@
               {{ hdct.sanPhamChiTiet.sanPham.ten }}
             </div>
             <div class="text-muted">
-              <span class="mr-3"
-                >Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}</span
-              >
+              <span class="mr-3">Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}</span>
               <span>Màu: {{ hdct.sanPhamChiTiet.mauSac.ten }}</span>
             </div>
           </td>
           <td class="">
             <div class="qty">
-              <button
-                class="rounded-5 btn-outline-dark p-0"
-                (click)="minusQuantity(hdct)"
-              >
+              <button class="rounded-5 btn-outline-dark p-0" (click)="minusQuantity(hdct)">
                 <i class="fa-solid fa-minus"></i>
               </button>
-              <input
-                type="number"
-                class="count"
-                [(ngModel)]="hdct.soLuong"
-                (ngModelChange)="insertSLSP()"
-                min="0"
-                step="1"
-              />
-              <button
-                class="rounded-5 btn-outline-dark p-0"
-                (click)="plusQuantity(hdct)"
-              >
+              <input type="number" class="count" [(ngModel)]="hdct.soLuong" (ngModelChange)="insertSLSP()" min="0"
+                step="1" />
+              <button class="rounded-5 btn-outline-dark p-0" (click)="plusQuantity(hdct)">
                 <i class="fa-solid fa-plus"></i>
               </button>
             </div>
           </td>
           <td class="">
             {{
-              hdct.sanPhamChiTiet.giaBan | currency : " " : "symbol" : "1.0-0"
+            hdct.sanPhamChiTiet.giaBan | currency : " " : "symbol" : "1.0-0"
             }}
           </td>
           <td class="">
@@ -192,7 +142,7 @@
           </td>
           <td class="">
             {{
-              hdct.soLuong * hdct.giaBan | currency : " " : "symbol" : "1.0-0"
+            hdct.soLuong * hdct.giaBan | currency : " " : "symbol" : "1.0-0"
             }}
           </td>
         </tr>
@@ -204,22 +154,13 @@
     <!-- Sidebar -->
     <div class="">
       <div class="user-choose" *ngIf="order != null && order.khachHang != null">
-        <div
-          class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-        >
+        <div class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
           <i class="fa-solid fa-user m-1 me-md-2"></i>
-          <a
-            [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id"
-            class="flex-grow-1"
-          >
+          <a [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id" class="flex-grow-1">
             <p class="d-none d-md-block mb-0" id="userFullName">
               {{ order.khachHang.hoTen }}
             </p>
-            <p
-              class="d-none d-md-block mb-0 text-mute"
-              style="font-size: 12px"
-              id="userPhoneNumber"
-            >
+            <p class="d-none d-md-block mb-0 text-mute" style="font-size: 12px" id="userPhoneNumber">
               {{ order.khachHang.sdt }}
             </p>
           </a>
@@ -230,30 +171,15 @@
       </div>
 
       <div class="dropdown" *ngIf="order != null && order.khachHang == null">
-        <input
-          type="text"
-          class="form-control dropdown-toggle"
-          id="dropdownKhachHang"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          placeholder="Thêm khách hàng vào đơn"
-          (input)="getAllKhachHang()"
-          [(ngModel)]="searchKhachHang"
-        />
-        <div
-          class="dropdown-menu customer-suggerstions"
-          aria-labelledby="dropdownKhachHang"
-        >
+        <input type="text" class="form-control dropdown-toggle" id="dropdownKhachHang" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" placeholder="Thêm khách hàng vào đơn" (input)="getAllKhachHang()"
+          [(ngModel)]="searchKhachHang" />
+        <div class="dropdown-menu customer-suggerstions" aria-labelledby="dropdownKhachHang">
           <div class="suggestion-item text-center p-2">
             <i class="fa-solid fa-plus"></i>
             Thêm mới khách hàng
           </div>
-          <div
-            class="suggestion-item p-2"
-            (click)="chooseKhachHang(kh)"
-            *ngFor="let kh of khachHangs"
-          >
+          <div class="suggestion-item p-2" (click)="chooseKhachHang(kh)" *ngFor="let kh of khachHangs">
             {{ kh.hoTen + " - " + kh.sdt }}
           </div>
         </div>
@@ -263,13 +189,9 @@
     <!-- Tiền nong -->
     <div class="">
       <div class="d-flex justify-content-between m-1">
-        <span class="ml-auto fw-bold"
-          >Giao hàng:
-          <input
-            type="checkbox"
-            [checked]="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-            (change)="changeLoaiHoaDon($event)"
-          />
+        <span class="ml-auto fw-bold">Giao hàng:
+          <input type="checkbox" [checked]="order != null && order.loaiHoaDon == 'GIAO_HANG'"
+            (change)="changeLoaiHoaDon($event)" />
         </span>
       </div>
       <div class="d-flex justify-content-between m-1">
@@ -280,67 +202,47 @@
         <span class="mr-auto fw-bold">Tổng tiền:</span>
         <span class="ml-auto">{{
           getTongTien() | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
 
-      <div
-        class="d-flex justify-content-between m-1"
-        *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-      >
+      <div class="d-flex justify-content-between m-1" *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
         <!-- Show on selected Giao hàng -->
         <span class="mr-auto fw-bold">Phí vận chuyển:</span>
-        <span class="ml-auto"
-          ><input
-            type="number"
-            [(ngModel)]="order.phiVanChuyen"
-            class="right-align"
-        /></span>
+        <span class="ml-auto"><input type="number" [(ngModel)]="order.phiVanChuyen" class="right-align" /></span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Giảm giá:</span>
         <span class="ml-auto">{{
           (order != null ? order.tienGiam : 0)
-            | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
+          | currency : "đ " : "symbol" : "1.0-0"
+          }}</span>
       </div>
       <div class="d-flex justify-content-between m-1 h5">
         <span class="mr-auto fw-bold">Khách phải trả:</span>
         <span class="ml-auto">{{
           getMustPay() | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold"
-          >Khách thanh toán:
-          <button
-            type="button"
-            class="btn btn-outline-info p-1"
-            data-toggle="modal"
-            data-target="#thanhToanModal"
-          >
+        <span class="mr-auto fw-bold">Khách thanh toán:
+          <button type="button" class="btn btn-outline-info p-1" data-toggle="modal" data-target="#thanhToanModal">
             <i class="fa-solid fa-credit-card"></i>
           </button>
         </span>
         <span class="ml-auto">{{
           getTienKhachThanhToan() | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Khách còn thiếu:</span>
         <span class="ml-auto">{{
           getTienKhachConThieu() | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Phiếu giảm giá:</span>
-        <span class="ml-auto"
-          ><input
-            type="text"
-            disabled
-            [(ngModel)]="order.phieuGiamGia.maPhieuGiamGia"
-            *ngIf="order != null && order.phieuGiamGia != null"
-            class="right-align"
-          />
+        <span class="ml-auto"><input type="text" disabled [(ngModel)]="order.phieuGiamGia.maPhieuGiamGia"
+            *ngIf="order != null && order.phieuGiamGia != null" class="right-align" />
           <!-- <div class="text-danger">{{ messagePgg }}</div> -->
         </span>
         <!-- Tự fill PGG -->
@@ -357,41 +259,25 @@
         </div>
         <div class="d-flex justify-content-between m-1">
           <span class="mr-auto fw-bold">Địa chỉ:</span>
-          <span class="ml-auto"
-            ><button
-              type="button"
-              class="btn btn-outline-info p-1"
-              data-toggle="modal"
-              data-target="#diaChiModal"
-            >
+          <span class="ml-auto"><button type="button" class="btn btn-outline-info p-1" data-toggle="modal"
+              data-target="#diaChiModal">
               <i class="fa-solid fa-location-dot"></i> Chọn địa chỉ
-            </button></span
-          >
+            </button></span>
         </div>
       </div>
 
       <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold"
-          >Ghi chú:<textarea rows="2" cols="45"></textarea>
+        <span class="mr-auto fw-bold">Ghi chú:<textarea rows="2" cols="45"></textarea>
         </span>
       </div>
-      <div
-        style="height: 180px"
-        *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'"
-      ></div>
+      <div style="height: 180px" *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'"></div>
       <div class="mb-3 h4">
-        <button
-          class="btn btn-success btn-lg w-100 h-100"
-          (click)="muaHang()"
-          *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'"
-        >
+        <button class="btn btn-success btn-lg w-100 h-100" (click)="muaHang()"
+          *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'">
           Mua Hàng
         </button>
-        <button
-          class="btn btn-warning btn-lg w-100 h-100"
-          (click)="datHang()"
-          *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-        >
+        <button class="btn btn-warning btn-lg w-100 h-100" (click)="datHang()"
+          *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
           Đặt Hàng
         </button>
       </div>
@@ -399,32 +285,18 @@
   </div>
 
   <!-- Modal Thanh Toán-->
-  <div
-    class="modal fade"
-    id="thanhToanModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="thanhToanModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Thanh Toán</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="modal-body" *ngIf="order">
-          <app-thanh-toan
-            [(thanhToans)]="order.thanhToans"
-            [tongTien]="getMustPay()"
-          ></app-thanh-toan>
+          <app-thanh-toan [(thanhToans)]="order.thanhToans" [tongTien]="getMustPay()"></app-thanh-toan>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal">
@@ -435,33 +307,18 @@
     </div>
   </div>
   <!-- Modal địa chỉ -->
-  <div
-    class="modal fade"
-    id="diaChiModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="diaChiModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="modal-body">
-          <app-giao-hang
-            *ngIf="order"
-            [khachHang]="order.khachHang"
-            (phiVanChuyen)="caculatePhiVanChuyen($event)"
-            (diaChi)="getDiaChiNguoiNhan($event)"
-          ></app-giao-hang>
+          <app-giao-hang *ngIf="order" [khachHang]="order.khachHang" (phiVanChuyen)="caculatePhiVanChuyen($event)"
+            (diaChi)="getDiaChiNguoiNhan($event)"></app-giao-hang>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal">
@@ -472,30 +329,17 @@
     </div>
   </div>
   <!-- Search Product Modal -->
-  <div
-    class="modal fade product-modal"
-    id="searchProductModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade product-modal" id="searchProductModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Tìm kiếm nâng cao</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
-        <app-search-product-detail
-          (chooseProduct)="chooseProduct($event)"
-        ></app-search-product-detail>
+        <app-search-product-detail (chooseProduct)="chooseProduct($event)"></app-search-product-detail>
       </div>
     </div>
   </div>

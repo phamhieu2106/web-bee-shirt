@@ -8,12 +8,11 @@ import { HeaderComponent } from "./context/header/header.component";
 import { FooterComponent } from "./context/footer/footer.component";
 import { HomePageComponent } from "./component/home-page/home-page.component";
 import { CurrencyPipe } from "@angular/common";
-import { TopbarComponent } from './context/topbar/topbar.component';
-import { PhieuGiamGiaComponent } from './context/phieu-giam-gia/phieu-giam-gia.component';
-import { DotGiamGiaComponent } from './context/dot-giam-gia/dot-giam-gia.component';
-import { SanPhamChiTietComponent } from './component/san-pham-chi-tiet/san-pham-chi-tiet.component';
-
-
+import { TopbarComponent } from "./context/topbar/topbar.component";
+import { PhieuGiamGiaComponent } from "./context/phieu-giam-gia/phieu-giam-gia.component";
+import { DotGiamGiaComponent } from "./context/dot-giam-gia/dot-giam-gia.component";
+import { SanPhamChiTietComponent } from "./component/san-pham-chi-tiet/san-pham-chi-tiet.component";
+import { ToastrModule } from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -26,9 +25,13 @@ import { SanPhamChiTietComponent } from './component/san-pham-chi-tiet/san-pham-
     PhieuGiamGiaComponent,
     DotGiamGiaComponent,
     SanPhamChiTietComponent,
-    
   ],
-  imports: [BrowserModule, HttpClientModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    ToastrModule.forRoot(),
+  ],
   providers: [CurrencyPipe],
   bootstrap: [AppComponent],
 })

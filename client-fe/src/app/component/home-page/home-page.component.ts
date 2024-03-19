@@ -2,13 +2,10 @@ import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { MauSac } from "src/app/model/class/mau-sac.class";
-import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
-
-
 
 @Component({
   selector: "app-home-page",
@@ -18,8 +15,7 @@ import { SanPhamService } from "src/app/service/san-pham.service";
 export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
 
-  
-
+  // constructor, ngOn
   constructor(
     private currencyPipe: CurrencyPipe,
     private sanPhamService: SanPhamService
@@ -27,12 +23,10 @@ export class HomePageComponent {
 
   ngOnInit(): void {
     this.getSanPhamList();
-   
-   
   }
-  
 
-  // public functions
+  // I. public functions
+  // 1
   public displayPrice(sanPham: SanPham): any {
     const priceArr = [];
     for (let spct of sanPham.sanPhamChiTiets) {
@@ -50,6 +44,7 @@ export class HomePageComponent {
     );
   }
 
+  // 2
   public getMauSacList(sanPham: SanPham): MauSac[] {
     const mauSacs: MauSac[] = [];
     for (let spct of sanPham.sanPhamChiTiets) {
@@ -60,6 +55,8 @@ export class HomePageComponent {
     return mauSacs;
   }
 
+  // II. private functions
+  // 1
   private checkExist(mauSacs: MauSac[], mauSacId: number): boolean {
     for (let m of mauSacs) {
       if (m.id === mauSacId) {
@@ -68,7 +65,8 @@ export class HomePageComponent {
     }
     return false;
   }
-  // private functions
+
+  // 2
   private getSanPhamList(): void {
     this.sanPhamService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {

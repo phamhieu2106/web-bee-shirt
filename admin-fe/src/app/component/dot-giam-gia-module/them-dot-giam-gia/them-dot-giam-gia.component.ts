@@ -149,8 +149,8 @@ export class ThemDotGiamGiaComponent implements OnInit {
   }
 
   public setListIdSanPhamChiTiet(): void {
-    this.setOfCheckedId.forEach((item) =>
-      this.dotGiamGiaRequest.listIdSanPhamChiTiet.push(item)
+    this.dotGiamGiaRequest.listIdSanPhamChiTiet = Array.from(
+      this.setOfCheckedId
     );
   }
 

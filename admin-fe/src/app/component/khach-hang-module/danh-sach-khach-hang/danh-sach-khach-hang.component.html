@@ -46,7 +46,7 @@
           </div>
 
           <div class="col-1 ps-3">
-            <button class="btn btn-primary btn-rounded btn-reload-filter" (click)="reloadFilter()">
+            <button class="btn btn-create btn-rounded btn-reload-filter" (click)="reloadFilter()">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
@@ -61,7 +61,7 @@
     <div class="card">
       <div class="card-header">
         <h3 class="float-md-left">Danh sách khách hàng</h3>
-        <button type="button" class="btn btn-primary btn-lg float-md-right rounded"
+        <button type="button" class="btn btn-create btn-lg float-md-right rounded"
           routerLink="/khach-hang/them-khach-hang">
           <span class="icon-user-plus" style="margin-top: 20px"></span>
           Thêm khách hàng
@@ -105,7 +105,7 @@
               <td>
                 <button class="{{
                     kh.trangThai === 1
-                      ? 'btn btn-info btn-rounded'
+                      ? 'btn btn-success btn-rounded'
                       : 'btn btn-danger btn-rounded'
                   }}">
                   {{

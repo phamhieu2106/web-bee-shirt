@@ -67,6 +67,11 @@ public class DotGiamGiaResource {
         return ResponseEntity.ok(service.getListIdSanPhamChiTietByIdSanPham(id));
     }
 
+    @GetMapping("/sanpham")
+    public ResponseEntity<?> getAllSanPham(){
+        return ResponseEntity.ok(service.getAllSanPham());
+    }
+
     @GetMapping("/sanphamchitiet")
     public ResponseEntity<?> getSanPhamChiTiet(@RequestParam(value = "id", defaultValue = "", required = false)
                                                List<Integer> id,

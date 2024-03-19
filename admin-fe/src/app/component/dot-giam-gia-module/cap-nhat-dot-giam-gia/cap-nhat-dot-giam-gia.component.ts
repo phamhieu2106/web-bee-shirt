@@ -51,7 +51,6 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
 
   constructor(
     private service: DotGiamGiaService,
-    private sanPhamService: SanPhamService,
     private route: ActivatedRoute,
     private toast: ToastrService
   ) {
@@ -156,7 +155,7 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
   }
   //For Table SanPham
   // Page SanPham
-  listSanPham: PagedResponse<SanPham>;
+  listSanPham: SanPham[];
   // Data SanPham
   dataSanPham: SanPham[] = [];
   public setListIdSanPham = (value: number) => {
@@ -195,10 +194,10 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     }
   };
   public getAllSanPham(): void {
-    this.sanPhamService.getByPage().subscribe({
+    this.service.getAllSanPham().subscribe({
       next: (value) => {
         this.listSanPham = value;
-        this.dataSanPham = this.listSanPham.data;
+        this.dataSanPham = this.listSanPham;
       },
       error: (err) => {
         console.log(err);

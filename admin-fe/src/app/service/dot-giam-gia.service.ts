@@ -5,6 +5,7 @@ import { DotGiamGia } from "../model/class/dot-giam-gia.class";
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { SanPhamChiTiet } from "../model/class/san-pham-chi-tiet.class";
 import { DotGiamGiaSanPhamChiTiet } from "../model/interface/dot-giam-gia-san-pham-chi-tiet";
+import { SanPham } from "../model/class/san-pham.class";
 
 @Injectable({
   providedIn: "root",
@@ -69,6 +70,11 @@ export class DotGiamGiaService {
       `${this.apiURL}?pageSize=${pageSize}&pageNumber=${pageNumber}`
     );
   }
+
+  public getAllSanPham(): Observable<SanPham[]> {
+    return this.http.get<SanPham[]>(`${this.apiURL}/sanpham`);
+  }
+
   public getAllSanPhamChiTietById(
     id: Array<number>
   ): Observable<PagedResponse<DotGiamGiaSanPhamChiTiet>> {

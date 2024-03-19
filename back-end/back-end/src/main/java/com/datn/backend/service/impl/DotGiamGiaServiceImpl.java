@@ -9,10 +9,12 @@ import com.datn.backend.exception.custom_exception.ResourceInvalidException;
 import com.datn.backend.exception.custom_exception.ResourceOutOfRangeException;
 import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.model.dot_giam_gia.DotGiamGiaSanPham;
+import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.DotGiamGiaRepository;
 import com.datn.backend.repository.DotGiamGiaSanPhamRepository;
 import com.datn.backend.repository.SanPhamChiTietRepository;
+import com.datn.backend.repository.SanPhamRepository;
 import com.datn.backend.service.DotGiamGiaService;
 import com.datn.backend.utility.UtilityFunction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +35,23 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository;
     private final SanPhamChiTietRepository sanPhamChiTietRepository;
 
+    private final SanPhamRepository sanPhamRepository;
+
     @Autowired
     public DotGiamGiaServiceImpl(DotGiamGiaRepository repository
             , DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepository,
-                                 SanPhamChiTietRepository sanPhamChiTietRepository) {
+                                 SanPhamChiTietRepository sanPhamChiTietRepository,
+                                             SanPhamRepository sanPhamRepository) {
         super();
         this.repository = repository;
         this.dotGiamGiaSanPhamRepository = dotGiamGiaSanPhamRepository;
         this.sanPhamChiTietRepository = sanPhamChiTietRepository;
+        this.sanPhamRepository = sanPhamRepository;
+    }
+
+    @Override
+    public List<SanPham> getAllSanPham() {
+        return sanPhamRepository.findAll();
     }
 
     @Override

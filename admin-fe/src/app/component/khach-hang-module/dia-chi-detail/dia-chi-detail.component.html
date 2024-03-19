@@ -1,45 +1,76 @@
-<form [formGroup]="updateFormDC">
-  <div class="modal-body">
-    <div class="form-row">
-      <label for="inputEmail4">Tỉnh/Thành phố</label>
-      <input type="text" class="form-control" formControlName="tinh" />
-      <input
-        type="text"
-        class="form-control"
-        formControlName="id"
-        hidden
-      />
-      <div class="invalid-feedback">Không được bỏ trống</div>
-    </div>
-
-    <div class="form-row mt-3">
-      <label for="inputEmail4">Huyện</label>
-      <input type="text" class="form-control" formControlName="huyen" />
-      <div class="invalid-feedback">Không được bỏ trống</div>
-    </div>
-    <div class="form-row mt-3">
-      <label for="inputEmail4">Xã</label>
-      <input type="text" class="form-control" formControlName="xa" />
-      <div class="invalid-feedback">Không được bỏ trống</div>
-    </div>
-    <div class="form-row mt-3">
-      <label for="inputEmail4">Địa chỉ giao hàng</label>
-      <input type="text" class="form-control" formControlName="duong" />
-      <div class="invalid-feedback">Không được bỏ trống</div>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary"
-      data-dismiss="modal"
-      id="closeUpdateBtn"
+<div class="modal-body">
+  <div class="form-row">
+    <label class="input_label"><b style="color: red">*</b>Tỉnh/Thành phố</label>
+    <div class="invalid-feedback">Không được bỏ trống</div>
+    <select
+      class="custom-select"
+      [(ngModel)]="diaChiVaPhiVanChuyen.tinhId"
+      (change)="getAllHuyenByTinh()"
     >
-      Đóng
-    </button>
-    <button type="button" class="btn btn-primary" (click)="updateDC(dcDetail.id)">
-      Cập nhật
-    </button>
+      <option
+        *ngFor="let t of tinhs"
+        value="{{ t.ProvinceID }}"
+        [selected]="diaChiVaPhiVanChuyen.tinhId == t.ProvinceID"
+      >
+        {{ t.ProvinceName }}
+      </option>
+    </select>
   </div>
-</form>
+
+  <div class="form-row mt-3">
+    <label class="input_label"><b style="color: red">*</b>Quận/Huyện</label>
+    <select
+      class="custom-select"
+      [(ngModel)]="diaChiVaPhiVanChuyen.huyenId"
+      (change)="getAllXaByHuyen()"
+    >
+      <option
+        *ngFor="let h of huyens"
+        value="{{ h.DistrictID }}"
+        [selected]="diaChiVaPhiVanChuyen.huyenId == h.DistrictID"
+      >
+        {{ h.DistrictName }}
+      </option>
+    </select>
+    <div class="invalid-feedback">Không được bỏ trống</div>
+  </div>
+  <div class="form-row mt-3">
+    <label class="input_label"><b style="color: red">*</b>Xã/Phường</label>
+    <select
+      class="custom-select"
+      
+      [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
+    >
+      <option
+        *ngFor="let x of xas"
+        [value]="x.WardCode"
+        [selected]="diaChiVaPhiVanChuyen.xaCode == x.WardCode"
+      >
+        {{ x.WardName }}
+      </option>
+    </select>
+    <div class="invalid-feedback">Không được bỏ trống</div>
+  </div>
+  <div class="form-row mt-3">
+    <label class="input_label"><b style="color: red">*</b>Địa chỉ cụ thể</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="diaChiVaPhiVanChuyen.cuThe"
+    />
+    <div class="invalid-feedback">Không được bỏ trống</div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-secondary"
+    data-dismiss="modal"
+    id="closeUpdateBtn"
+  >
+    Đóng
+  </button>
+  <button type="button" class="btn btn-primary" (click)="updateDC()">
+    Cập nhật
+  </button>
+</div>

@@ -12,6 +12,8 @@ import { PieDiscountChartComponent } from "./pie-discount-chart/pie-discount-cha
 import { PolarProductChartComponent } from "./polar-product-chart/polar-product-chart.component";
 import { VietnamMapChartComponent } from "./vietnam-map-chart/vietnam-map-chart.component";
 import { BarReviewChartComponent } from "./bar-review-chart/bar-review-chart.component";
+import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -25,6 +27,12 @@ import { BarReviewChartComponent } from "./bar-review-chart/bar-review-chart.com
     VietnamMapChartComponent,
     BarReviewChartComponent,
   ],
-  imports: [CommonModule, ThongKeModuleRoutingModule, LayoutModule],
+  imports: [
+    CommonModule,
+    ThongKeModuleRoutingModule,
+    LayoutModule,
+    NzDatePickerModule,
+    FormsModule,
+  ],
 })
 export class ThongKeModuleModule {}

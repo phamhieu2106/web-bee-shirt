@@ -77,7 +77,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
     // Hàm sinh mã phiếu giảm giá mới
-    public  String generateMaPhieuGiamGia() {
+    public String generateMaPhieuGiamGia() {
         // Độ dài của mã giảm giá
         int length = 6;
 
@@ -204,46 +204,52 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest) {
-        System.out.println(discountValidRequest.getGiaTriDonHang());
-        System.out.println(discountValidRequest.getGiaDangGiam());
-        System.out.println("---------------------------------");
+//        System.out.println(discountValidRequest.getGiaTriDonHang());
+//        System.out.println(discountValidRequest.getGiaDangGiam());
+//        System.out.println("---------------------------------");
         String message = null;
 
         // pgg valid
         List<PhieuGiamGia> phieuGiamGias = repository.getDiscountValidNotCustomer(discountValidRequest.getGiaTriDonHang());
 
-        // pgg success
-//        List<PhieuGiamGia> pggSuggests = repository.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
+        // pgg suggest
+        List<PhieuGiamGia> pggSuggests = repository.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
 
         // neu co khach hang lay tat ca phieu cu khach hang do
         if (discountValidRequest.getKhachHangId() != null) {
-            // pgg valid
+            // danh sac phieu giam gia goi y hop le cua khach hang
             List<PhieuGiamGia> phieuGiamGiaByCustomerId = repository.getDiscountValidByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
             phieuGiamGias.addAll(phieuGiamGiaByCustomerId);
 
-            // pgg suggest
+            // danh sac phieu giam gia goi y voi khach hang
             List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = repository.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
-//            pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
+            pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
         }
 
         // phieu giam gia giam nhieu nhat
         PhieuGiamGia pgg = this.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
 
-        // gợi y pgg mới
-//        pggSuggests.sort((pgg1, pgg2) -> {
-//            int compareValue = pgg1.getDieuKienGiam().compareTo(pgg2.getDieuKienGiam());
-//            if (compareValue != 0) {
-//                return compareValue;
-//            }
-//            return (int) (this.getDiscountValue(pgg1) - this.getDiscountValue(pgg2));
-//        });
 
-//        // pgg goi y
-//        PhieuGiamGia pggSuggest =  pggSuggests.get(0);
-//        if (getDiscountValue(pggSuggest) > discountValidRequest.getGiaDangGiam()){
-//            // neu gia tri giam cua phieu giam gia goi y lon hon gia tri dang giam se goji y pgg day
-//            message = this.getMessage(pggSuggests,discountValidRequest.getGiaTriDonHang());
-//        }
+        // pgg goi y
+        if (pggSuggests.isEmpty()) {
+            message = null;
+        } else {
+            // lay ra phieu giam gia co dieu kien giam gan nhat so voi gia tri don hang
+            pggSuggests.sort((pgg1, pgg2) -> {
+                int compareValue = pgg1.getDieuKienGiam().compareTo(pgg2.getDieuKienGiam());
+                if (compareValue != 0) {
+                    return compareValue;
+                }
+                return -(pgg1.getGiaTriMax().compareTo(pgg2.getGiaTriMax()));
+            });
+            PhieuGiamGia pggSuggest = pggSuggests.get(0);
+
+            if (getDiscountValue(pggSuggest) > discountValidRequest.getGiaDangGiam()) {
+                // neu gia tri giam cua phieu giam gia goi y lon hon gia tri dang giam se goji y pgg day
+                message = this.getMessage(pggSuggests, discountValidRequest.getGiaTriDonHang());
+            }
+        }
+
 
         return DiscountValidResponse
                 .builder()
@@ -255,11 +261,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     private String getMessage(List<PhieuGiamGia> pggSuggests, BigDecimal giaTriDonHang) {
         String message = null;
 
-        if (pggSuggests.isEmpty()){
+        if (pggSuggests.isEmpty()) {
             return message;
         }
         PhieuGiamGia pgg = pggSuggests.get(0);
-        message = "Mua thêm "+(UtilityFunction.convertToCurrency( pgg.getDieuKienGiam().longValue() - giaTriDonHang.longValue()))+" để giảm "+UtilityFunction.convertToCurrency(getDiscountValue(pgg));
+        message = "Mua thêm " + (UtilityFunction.convertToCurrency(pgg.getDieuKienGiam().longValue() - giaTriDonHang.longValue())) + " để giảm " + UtilityFunction.convertToCurrency(getDiscountValue(pgg));
         return message;
 
     }

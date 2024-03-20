@@ -45,16 +45,36 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGia add(PhieuGiamGiaRequest phieuGiamGia) {
-        LocalDateTime currentTime = LocalDateTime.now();
+        PhieuGiamGia pgg = phieuGiamGia.giamGia(new PhieuGiamGia());
 
-        // Nếu trường mã phiếu trống, tự sinh mã mới
-        if (phieuGiamGia.getMaPhieuGiamGia().isEmpty()) {
-            String generatedMaPhieu = generateMaPhieuGiamGia();
-            phieuGiamGia.setMaPhieuGiamGia(generatedMaPhieu);
+        LocalDateTime currentTime = LocalDateTime.now();
+// Xử lý trường mã phiếu
+        String maPhieuGiamGia = pgg.getMaPhieuGiamGia().trim().toLowerCase();
+        String tenPhieuGiamGia = pgg.getTenPhieuGiamGia().trim().toLowerCase();
+
+
+         // Kiểm tra xem mã phiếu có chứa chữ cái không
+        if (maPhieuGiamGia.matches(".*[a-zA-Z]+.*")) {
+            // Replace các khoảng trắng dư thừa nếu có chứa chữ cái
+            maPhieuGiamGia = maPhieuGiamGia.replaceAll("\\s+", " ");
+        }
+
+        // Kiểm tra xem tên phiếu có chứa chữ cái không
+        if (tenPhieuGiamGia.matches(".*[a-zA-Z]+.*")) {
+            // Replace các khoảng trắng dư thừa nếu có chứa chữ cái
+            tenPhieuGiamGia = tenPhieuGiamGia.replaceAll("\\s+", " ");
+        }
+        pgg.setMaPhieuGiamGia(maPhieuGiamGia);
+        pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
+
+
+        if (maPhieuGiamGia.equals("")) {
+            String generatedMaPhieu = generateMaPhieuGiamGia(); // Tự sinh mã mới
+            pgg.setMaPhieuGiamGia(generatedMaPhieu);
         } else {
             // Kiểm tra xem mã phiếu có tồn tại không
-            if (repository.existsByMaPhieuGiamGia(phieuGiamGia.getMaPhieuGiamGia().trim().toLowerCase())) {
-                throw new ResourceExistsException("Mã Phiếu: " + phieuGiamGia.getMaPhieuGiamGia() + " đã tồn tại.");
+            if (repository.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
+                throw new ResourceExistsException("Mã Phiếu: " + maPhieuGiamGia + " đã tồn tại.");
             }
         }
 
@@ -67,11 +87,13 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
             phieuGiamGia.setTrangThai("Đang diễn ra");
         } else {
-            phieuGiamGia.setTrangThai("Trạng thái không xác định");
+            phieuGiamGia.setTrangThai("Đã hủy");
         }
 
         // Lưu phiếu giảm giá vào cơ sở dữ liệu
-        PhieuGiamGia pgg = phieuGiamGia.giamGia(new PhieuGiamGia());
+
+
+
         return repository.save(pgg);
     }
 
@@ -127,7 +149,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                     currentTime.isAfter(object.getThoiGianBatDau()) && currentTime.isBefore(object.getThoiGianKetThuc())) {
                 object.setTrangThai("Đang diễn ra");
             } else {
-                object.setTrangThai("Trạng thái không xác định");
+                object.setTrangThai("Đã hủy");
             }
 
             // Cập nhật thông tin của phiếu và lưu vào cơ sở dữ liệu

@@ -29,8 +29,9 @@ export class DanhSachPhieuComponent {
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
-    this.initUpdateForm();
     this.startPolling();
+
+   
   }
 
 
@@ -44,7 +45,14 @@ export class DanhSachPhieuComponent {
 
   searchPhieuGiamGia(event: any): void {
     this.keyword = event.target.value;
+    // Loại bỏ dấu cách thừa giữa các từ trong chuỗi keyword
+    const keywordWithoutExtraSpaces = this.keyword.replace(/\s+/g, ' ');
+
+    this.keyword = this.keyword.trim();
+    // Gán giá trị đã được xử lý vào thuộc tính this.keyword
+    this.keyword = keywordWithoutExtraSpaces;
     this.filterPrivate(1, 5, this.keyword, this.kieu,this.loai,this.trangThai);
+    console.log(this.pagedResponseBinh)
   }
 
   clearFilters(): void {
@@ -55,6 +63,8 @@ export class DanhSachPhieuComponent {
     this.trangThai = ['Đang diễn ra', 'Sắp diễn ra', 'Đã kết thúc'];
 
     this.goToPage(); // Gọi lại hàm lọc để cập nhật dữ liệu
+
+
   }
 
   public goToPage(
@@ -63,7 +73,7 @@ export class DanhSachPhieuComponent {
     keyword: string = ""
    
   ): void {
-    console.log(this.thoiGianBatDau)
+   
     this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
       
@@ -76,10 +86,13 @@ export class DanhSachPhieuComponent {
     });
   }
 
+  
+ 
+
 
   public filterPrivate(
     page: number = 1,
-    pageSize: number = 5,
+    pageSize: number = 6,
     keyword: string = "",
     kieuFilter: number[] = this.kieu,
     loaiFilter: number[] = this.loai,
@@ -89,9 +102,7 @@ export class DanhSachPhieuComponent {
   ): void {
     // Kiểm tra xem thoiGianBatDauFilter và thoiGianKetThucFilter có giá trị rỗng không
     if (!thoiGianBatDauFilter || !thoiGianKetThucFilter) {
-       
-        console.error("Giá trị thời gian bắt đầu hoặc kết thúc không được để trống.");
-
+      
         this.phieuGiamGiaService.getAll(
           page,
           pageSize,
@@ -111,6 +122,7 @@ export class DanhSachPhieuComponent {
         
         return; // Dừng hàm và không thực hiện truy vấn
     }
+    
 
     // Tiếp tục thực hiện truy vấn nếu không có giá trị rỗng
     this.phieuGiamGiaService.filter(
@@ -134,13 +146,15 @@ export class DanhSachPhieuComponent {
 
 
 
+
 public changeStatus(id: number): void {
   this.phieuGiamGiaService.changeStatus(id).subscribe();
 }
 
 
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.filterPrivate(1, e.target.value, this.search);
+    console.log(this.pagedResponseBinh?.data)
   }
 
   //private function
@@ -156,12 +170,6 @@ public changeStatus(id: number): void {
     });
   }
 
-  private initUpdateForm(): void {
-    this.updateForm = new FormGroup({
-      ten: new FormControl("", [Validators.required])
-
-    })
-  }
 
 
   ngOnDestroy(): void {

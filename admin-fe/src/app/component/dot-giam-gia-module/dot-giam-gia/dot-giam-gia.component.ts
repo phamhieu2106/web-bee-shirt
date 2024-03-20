@@ -20,12 +20,12 @@ export class DotGiamGiaComponent implements OnInit {
   titleTable: string = "Danh Sách Đợt Giảm Giá";
   tHead: Array<string> = [
     "STT",
-    "Mã Đợt Giảm Giá",
-    "Tên Đợt Giảm Giá",
+    "Mã",
+    "Tên ",
     "Giá Trị Giảm",
     "Ngày Bắt Đầu",
     "Ngày Kết Thúc",
-    "Số Lượng Sản Phẩm",
+    "Số Lượng",
     "Trạng Thái",
     "Hành Động",
   ];

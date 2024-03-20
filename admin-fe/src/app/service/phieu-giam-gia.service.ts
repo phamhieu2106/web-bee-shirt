@@ -103,6 +103,10 @@ export class PhieuGiamGiaService {
   public update(id: number, phieu: PhieuGiamGia): Observable<PhieuGiamGia> {
     const thoiGianBatDau = new Date(phieu.thoiGianBatDau); // Chuyển đổi thành kiểu Date
     const thoiGianKetThuc = new Date(phieu.thoiGianKetThuc); // Chuyển đổi thành kiểu Date
+
+    const formattedThoiGianBatDau = format(thoiGianBatDau, 'yyyy-MM-dd\'T\'HH:mm');
+const formattedThoiGianKetThuc = format(thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm');
+
     const phieuUpdate: PhieuGiamGiaUpdate = {
       id: phieu.id,
       maPhieuGiamGia: phieu.maPhieuGiamGia,
@@ -114,8 +118,8 @@ export class PhieuGiamGiaService {
       dieuKienGiam: phieu.dieuKienGiam,
       soLuong: phieu.soLuong,
       trangThai: this.calculateStatus(thoiGianBatDau, thoiGianKetThuc),
-      // thoiGianBatDau: format(phieu.thoiGianBatDau, 'yyyy-MM-dd\'T\'HH:mm'),
-      // thoiGianKetThuc: format(phieu.thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm'),
+      thoiGianBatDau: formattedThoiGianBatDau,
+      thoiGianKetThuc: formattedThoiGianKetThuc,
     };
 
     // Gửi đối tượng đã chuyển đổi lên server

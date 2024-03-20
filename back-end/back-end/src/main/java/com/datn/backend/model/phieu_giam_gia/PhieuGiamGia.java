@@ -31,7 +31,7 @@ public class PhieuGiamGia extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "Không bỏ trống trường mã phiếu")
+
     private String maPhieuGiamGia;
     private String tenPhieuGiamGia;
     private Integer kieu;

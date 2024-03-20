@@ -95,16 +95,27 @@ export class LineChartSaleComponent {
         scales: {
           y: {
             ticks: {
-              // Đơn vị của trục y
               callback: function (value, index, values) {
-                // Nếu giá trị hiện tại là giá trị cuối cùng
-                if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                if (typeof value === "number") {
+                  if (index === values.length - 1) {
+                    return "1+ Tỉ VNĐ";
+                  } else {
+                    let formattedValue =
+                      value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,") +
+                      " Triệu VNĐ";
+                    if (value % 1 === 0) {
+                      // Kiểm tra xem giá trị có phải là số nguyên không
+                      formattedValue = value.toLocaleString() + " VNĐ"; // Sử dụng toLocaleString để loại bỏ số thập phân .00
+                    }
+                    return formattedValue;
+                  }
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value; // Trả về giá trị nguyên nếu không phải là số
                 }
               },
             },
+            min: 0,
+            max: 1000000000,
           },
         },
       },
@@ -143,16 +154,27 @@ export class LineChartSaleComponent {
         scales: {
           y: {
             ticks: {
-              // Đơn vị của trục y
               callback: function (value, index, values) {
-                // Nếu giá trị hiện tại là giá trị cuối cùng
-                if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                if (typeof value === "number") {
+                  if (index === values.length - 1) {
+                    return "1+ Tỉ VNĐ";
+                  } else {
+                    let formattedValue =
+                      value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,") +
+                      " Triệu VNĐ";
+                    if (value % 1 === 0) {
+                      // Kiểm tra xem giá trị có phải là số nguyên không
+                      formattedValue = value.toLocaleString() + " VNĐ"; // Sử dụng toLocaleString để loại bỏ số thập phân .00
+                    }
+                    return formattedValue;
+                  }
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value; // Trả về giá trị nguyên nếu không phải là số
                 }
               },
             },
+            min: 0,
+            max: 1000000000,
           },
         },
       },

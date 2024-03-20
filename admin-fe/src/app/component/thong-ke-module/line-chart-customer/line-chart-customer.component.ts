@@ -85,12 +85,12 @@ export class LineChartCustomerComponent implements OnInit {
         datasets: [
           {
             label: "Tuần Trước",
-            data: this.listTongSoKhachHangTrongTuan,
+            data: this.listTongSoKhachHangTrongTuanTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tuần Hiện Tại",
-            data: this.listTongSoKhachHangTrongTuanTruoc,
+            data: this.listTongSoKhachHangTrongTuan,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -112,9 +112,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Khách Hàng"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value + " Khách Hàng"; // Giữ nguyên các giá trị khác
                 }
               },
             },
@@ -160,9 +160,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Khách Hàng"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value + " Khách Hàng"; // Giữ nguyên các giá trị khác
                 }
               },
             },
@@ -217,9 +217,9 @@ export class LineChartCustomerComponent implements OnInit {
               callback: function (value, index, values) {
                 // Nếu giá trị hiện tại là giá trị cuối cùng
                 if (index === values.length - 1) {
-                  return value + "+ Đơn"; // Thêm dấu "+" vào giá trị cuối cùng
+                  return value + "+ Khách Hàng"; // Thêm dấu "+" vào giá trị cuối cùng
                 } else {
-                  return value + " Đơn"; // Giữ nguyên các giá trị khác
+                  return value + " Khách Hàng"; // Giữ nguyên các giá trị khác
                 }
               },
             },

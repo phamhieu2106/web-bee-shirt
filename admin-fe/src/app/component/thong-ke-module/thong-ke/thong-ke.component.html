@@ -69,10 +69,6 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Đơn Hàng Hoàn Thành</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
         <div>
           <button
             (click)="setChart('week')"
@@ -106,10 +102,7 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Khách Hàng Mới</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
+
         <div>
           <button
             (click)="setCustomerChart('week')"
@@ -148,18 +141,23 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Doanh Thu</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
         <div>
-          <button (click)="setSaleChart('week')" class="btn btn-primary m-1">
+          <button
+            (click)="setSaleChart('week')"
+            class="btn btn-primary rounded m-1"
+          >
             Tuần
           </button>
-          <button (click)="setSaleChart('month')" class="btn btn-primary m-1">
+          <button
+            (click)="setSaleChart('month')"
+            class="btn btn-primary rounded m-1"
+          >
             Tháng
           </button>
-          <button (click)="setSaleChart('year')" class="btn btn-primary m-1">
+          <button
+            (click)="setSaleChart('year')"
+            class="btn btn-primary rounded m-1"
+          >
             Năm
           </button>
         </div>
@@ -178,10 +176,11 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Phiếu Giảm Giá Được Sử Dụng</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
+        <nz-date-picker
+          nzMode="year"
+          [(ngModel)]="datePhieuGiamGia"
+          (ngModelChange)="onChange($event)"
+        ></nz-date-picker>
       </div>
       <div class="card-body">
         <app-pie-chart></app-pie-chart>
@@ -191,28 +190,15 @@
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
-        <strong>Biểu Đồ Số Lượng Sản Phẩm Được Mua Từ Các Đợt Giảm Giá</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
+        <strong>Biểu Đồ Sản Phẩm Được Mua Từ Các Đợt Giảm Giá</strong>
+        <nz-date-picker
+          nzMode="year"
+          [(ngModel)]="dateDotGiamGia"
+          (ngModelChange)="onChange($event)"
+        ></nz-date-picker>
       </div>
       <div class="card-body">
         <app-pie-discount-chart></app-pie-discount-chart>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Biểu Đồ Việt Nam Map -->
-<div class="row gutters">
-  <div class="col col-md-12 col-sm-12">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between">
-        <strong>Biểu Đồ Khu Vực Mua Tại Việt Nam</strong>
-      </div>
-      <div class="card-body">
-        <app-vietnam-map-chart></app-vietnam-map-chart>
       </div>
     </div>
   </div>
@@ -223,10 +209,11 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <strong>Biểu Đồ Loại Sản Phẩm Bán Chạy</strong>
-        <select class="col-auto p-1 bg-primary text-white rounded">
-          <option selected>2023</option>
-          <option>2022</option>
-        </select>
+        <nz-date-picker
+          nzMode="year"
+          [(ngModel)]="dateSanPham"
+          (ngModelChange)="onChange($event)"
+        ></nz-date-picker>
       </div>
       <div class="card-body">
         <app-polar-product-chart></app-polar-product-chart>
@@ -236,7 +223,7 @@
   <div class="col col-md-6 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
-        <strong>Biểu Đồ Đánh Giá Sản Phẩm Của Khách Hàng Đã Mua</strong>
+        <strong>Biểu Đồ Đánh Giá Sản Phẩm </strong>
       </div>
       <div class="card-body">
         <!-- <app-bar-review-chart></app-bar-review-chart> -->

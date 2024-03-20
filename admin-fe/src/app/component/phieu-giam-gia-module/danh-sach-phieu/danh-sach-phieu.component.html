@@ -122,10 +122,10 @@
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân" }}</td>
-              <td>{{ pgg.giaTri }}</td>
-              <td>{{ pgg.giaTriMax | number}}VND</td>
+              <td>{{ formatCurrencyGiaTri(pgg.giaTri) }}</td>
+              <td>{{formatCurrency( pgg.giaTriMax )}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.dieuKienGiam | number}}VND</td>
+              <td>{{ formatCurrency(pgg.dieuKienGiam)}}</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>

@@ -131,12 +131,24 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         Optional<PhieuGiamGia> optional = repository.findById(id);
         if (optional.isPresent()) {
             PhieuGiamGia existingPhieuGiamGia = optional.get();
+//
+//            // Kiểm tra xem mã phiếu đã tồn tại hay chưa (trùng mã)
+//            if (!existingPhieuGiamGia.getMaPhieuGiamGia().equalsIgnoreCase(object.getMaPhieuGiamGia()) &&
+//                    repository.existsByMaPhieuGiamGia(object.getMaPhieuGiamGia().trim().toLowerCase())) {
+//                throw new ResourceExistsException("Mã Phiếu: " + object.getMaPhieuGiamGia() + " đã tồn tại.");
+//            }
 
-            // Kiểm tra xem mã phiếu đã tồn tại hay chưa (trùng mã)
-            if (!existingPhieuGiamGia.getMaPhieuGiamGia().equalsIgnoreCase(object.getMaPhieuGiamGia()) &&
-                    repository.existsByMaPhieuGiamGia(object.getMaPhieuGiamGia().trim().toLowerCase())) {
-                throw new ResourceExistsException("Mã Phiếu: " + object.getMaPhieuGiamGia() + " đã tồn tại.");
+
+
+            String tenPhieuGiamGia = existingPhieuGiamGia.getTenPhieuGiamGia().trim().toLowerCase();
+
+            // Kiểm tra xem tên phiếu có chứa chữ cái không
+            if (tenPhieuGiamGia.matches(".*[a-zA-Z]+.*")) {
+                // Replace các khoảng trắng dư thừa nếu có chứa chữ cái
+                tenPhieuGiamGia = tenPhieuGiamGia.replaceAll("\\s+", " ");
             }
+
+            object.setTenPhieuGiamGia(tenPhieuGiamGia);
 
             LocalDateTime currentTime = LocalDateTime.now();
 

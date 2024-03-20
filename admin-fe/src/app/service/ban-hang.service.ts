@@ -48,6 +48,8 @@ export class BanHangService {
       khachHangId,
       giaDangGiam,
     };
+    console.log(rawData);
+
     return this.http.post<DiscountValid>(
       this.baseUrl + "/get-discount-valid",
       rawData

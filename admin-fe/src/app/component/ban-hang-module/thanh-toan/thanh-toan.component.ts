@@ -32,7 +32,7 @@ export class ThanhToanComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.createThanhToanForm();
-    console.log(this.tongTien);
+    // console.log(this.tongTien);
   }
 
   getTienConThieu() {

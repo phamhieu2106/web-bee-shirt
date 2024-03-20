@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { ChartService } from "src/app/service/chart.service";
-
+import { getISOWeek } from "date-fns";
 @Component({
   selector: "app-thong-ke",
   templateUrl: "./thong-ke.component.html",
@@ -74,5 +74,15 @@ export class ThongKeComponent implements OnInit {
   }
   public setSaleChart(customerChart: string) {
     this.tenChartSale = customerChart;
+  }
+
+  // Model Charts
+  datePhieuGiamGia: any = null;
+  dateDotGiamGia: any = null;
+  dateSanPham: any = null;
+  onChange(result: Date): void {
+    if (result) {
+      console.log("onChange: ", result.getFullYear());
+    }
   }
 }

@@ -1,7 +1,13 @@
 <div class="row gutters">
   <div class="col-md-12 col-sm-12">
     <div class="chart-container">
-      <canvas height="420px" id="ProductChart">{{ chart }}</canvas>
+      <ng-container *ngIf="data; else noData">
+        <canvas height="420px" id="ProductChart">{{ chart }}</canvas>
+      </ng-container>
     </div>
   </div>
 </div>
+
+<ng-template #noData>
+  <app-no-data></app-no-data>
+</ng-template>

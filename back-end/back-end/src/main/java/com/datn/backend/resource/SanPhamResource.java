@@ -51,6 +51,8 @@ public class SanPhamResource {
         return ResponseEntity.ok(sanPhamService.update(sanPham));
     }
 
+
+
     //  client
     @GetMapping("/client/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPageClient(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,

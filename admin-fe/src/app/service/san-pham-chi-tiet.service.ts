@@ -117,6 +117,21 @@ export class SanPhamChiTietService {
     return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/min-max-price`);
   }
 
+  public updateImages(
+    files: File[],
+    spId: number,
+    mauSacId: number
+  ): Observable<any> {
+    const formData = new FormData();
+    for (let file of files) {
+      formData.append("files", file);
+    }
+    return this.http.put<any>(
+      `${this.apiUrl}/update-images?spId=${spId}&mauSacId=${mauSacId}`,
+      formData
+    );
+  }
+
   public getAllDetail(
     pageNumber: number,
     search: string,

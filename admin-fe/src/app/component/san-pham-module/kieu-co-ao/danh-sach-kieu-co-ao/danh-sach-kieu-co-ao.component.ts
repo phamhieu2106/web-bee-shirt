@@ -2,12 +2,12 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import Swal from "sweetalert2";
-import { ToastrService } from "ngx-toastr";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { CoAo } from "src/app/model/class/co-ao.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KieuCoAoService } from "src/app/service/kieu-co-ao.service";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-danh-sach-kieu-co-ao",
@@ -21,9 +21,10 @@ export class DanhSachKieuCoAoComponent {
   public search = "";
   public selectedDetails: CoAo;
 
+  // constructor, ngOn
   constructor(
     private coAoService: KieuCoAoService,
-    private toastr: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -33,38 +34,44 @@ export class DanhSachKieuCoAoComponent {
   }
 
   // public function
+  // 1
   public add(): void {
-    let trimmed = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Thêm kiểu cổ áo?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmed);
 
-    this.coAoService.add(this.addForm.value).subscribe({
-      next: (response: CoAo) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.coAoService.add(this.addForm.value).subscribe({
+          next: (response: CoAo) => {
+            this.goToPage(1, this.pagedResponse.pageSize, "");
+            this.initAddForm();
+            document.getElementById("closeBtn").click();
+            this.notifService.success("Thêm thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
+  // 2
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
 
+  // 3
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -74,35 +81,31 @@ export class DanhSachKieuCoAoComponent {
       next: (response: PagedResponse<CoAo>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  public timKiem(): void {
+  //
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
-  public onClearSearchInput(): void {
-    this.goToPage();
-  }
-
+  //
   public openDetailsForm(id: number): void {
     this.coAoService.getById(id).subscribe({
       next: (response: CoAo) => {
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.coAoService.getById(id).subscribe({
       next: (response: CoAo) => {
@@ -112,66 +115,68 @@ export class DanhSachKieuCoAoComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.coAoService.changeStatus(id).subscribe({
       next: (response: string) => {
-        this.toastr.success(response, "");
         this.goToPage(
           this.pagedResponse.pageNumber,
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
+        this.notifService.success(response);
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
   public update(): void {
-    let trimmed = this.updateForm.get("ten").value.trim();
-    this.updateForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Cập nhật kiểu cổ áo?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmed);
 
-    this.coAoService.update(this.updateForm.value).subscribe({
-      next: (response: CoAo) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.coAoService.update(this.updateForm.value).subscribe({
+          next: (response: CoAo) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initUpdateForm();
+            document.getElementById("updateCloseBtn").click();
+            this.notifService.success("Cập nhật thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {},
         });
-        document.getElementById("updateCloseBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
   // private function
+  //
   private getCoAoList(): void {
     this.coAoService.getByPage().subscribe({
       next: (response: PagedResponse<CoAo>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

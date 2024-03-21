@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
   providedIn: "root",
 })
 export class NotificationService {
-  // 3
   public success(title: string): void {
     Swal.fire({
       toast: true,
@@ -22,11 +21,26 @@ export class NotificationService {
     });
   }
 
-  // 4
   public error(title: string): void {
     Swal.fire({
       toast: true,
       icon: "error",
+      position: "top-end",
+      title: `${title}`,
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+  }
+
+  public warning(title: string): void {
+    Swal.fire({
+      toast: true,
+      icon: "warning",
       position: "top-end",
       title: `${title}`,
       showConfirmButton: false,

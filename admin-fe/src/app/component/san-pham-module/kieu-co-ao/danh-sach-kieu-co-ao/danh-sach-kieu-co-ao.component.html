@@ -8,27 +8,18 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="mb-2">Danh sách cổ áo</h3>
+        <h3 class="mb-2">Danh sách kiểu cổ áo</h3>
         <!-- HEADER  -->
         <div>
           <div class="col col-md-12 d-flex">
             <div class="input-group form-group search-block">
               <input
                 type="search"
-                class="form-control"
-                placeholder="Tìm cổ áo..."
-                (search)="onClearSearchInput()"
+                class="form-control rounded"
+                placeholder="Tìm cổ áo theo tên..."
                 [(ngModel)]="search"
+                (input)="searchByName()"
               />
-              <span class="input-group-btn">
-                <button
-                  class="btn btn-primary rounded"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button>
-              </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
@@ -136,21 +127,29 @@
                 >
                   <a
                     class="page-link pointer rounded"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber - 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Previous</a
                   >
                 </li>
                 <li
                   class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                  *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
                 >
                   <a
                     class="page-link pointer rounded"
                     [ngClass]="
-                      pagedResponse?.pageNumber == page ? 'active' : ''
+                      pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                     "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
+                    (click)="
+                      goToPage(pageNumber, pagedResponse?.pageSize, search)
+                    "
+                    >{{ pageNumber }}</a
                   >
                 </li>
                 <li
@@ -163,7 +162,13 @@
                 >
                   <a
                     class="page-link pointer rounded"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber + 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Next</a
                   >
                 </li>
@@ -176,7 +181,7 @@
   </div>
 </div>
 
-<!-- add modal -->
+<!-- modal: add -->
 <div
   class="modal fade"
   id="coAoAddForm"
@@ -188,7 +193,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">
-          Thêm mới chất liệu
+          Thêm mới kiểu cổ áo
         </h1>
       </div>
       <form [formGroup]="addForm">
@@ -197,7 +202,7 @@
             <label for="inputEmail4">Tên cổ áo:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
@@ -213,7 +218,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -221,7 +226,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >
@@ -299,7 +304,7 @@
   </div>
 </div>
 
-<!-- update modal -->
+<!-- modal: update -->
 <div
   class="modal fade"
   id="coAoUpdateForm"
@@ -322,7 +327,7 @@
             <label>Tên chất liệu:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 updateForm.get('ten').invalid && updateForm.get('ten').touched
                   ? 'is-invalid'
@@ -338,14 +343,14 @@
           <button
             id="updateCloseBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             data-bs-dismiss="modal"
           >
             Đóng
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="updateForm.invalid"
             (click)="update()"
           >

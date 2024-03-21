@@ -79,6 +79,8 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     SanPhamChiTiet findFirstBySanPhamId(int spId);
 
+    List<SanPhamChiTiet> findBySanPhamIdAndMauSacId(int sanPhamId, int mauSacId);
+
     /*
                 left join MauSac ms on ms.id = spct.mauSac.id
                 left join KichCo kc on kc.id = spct.kichCo.id

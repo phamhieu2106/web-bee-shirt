@@ -11,7 +11,7 @@ import { ChartService } from "src/app/service/chart.service";
 })
 export class PolarProductChartComponent {
   chart: any;
-  data: ProductSummary[] = [];
+  data: ProductSummary[];
 
   constructor(private service: ChartService, private toast: ToastrService) {}
   private getData(): void {

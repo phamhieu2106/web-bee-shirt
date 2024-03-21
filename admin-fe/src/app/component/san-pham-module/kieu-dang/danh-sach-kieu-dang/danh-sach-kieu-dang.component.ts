@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ToastrService } from "ngx-toastr";
+
+import Swal, { SweetAlertResult } from "sweetalert2";
+
 import { KieuDang } from "src/app/model/class/kieu-dang.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KieuDangService } from "src/app/service/kieu-dang.service";
-import Swal from "sweetalert2";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-danh-sach-kieu-dang",
@@ -21,7 +23,7 @@ export class DanhSachKieuDangComponent {
 
   constructor(
     private kieuDangService: KieuDangService,
-    private toastr: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -31,38 +33,46 @@ export class DanhSachKieuDangComponent {
   }
 
   // public function
+  //
   public add(): void {
-    let trimmed = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Thêm kiểu dáng?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmed);
 
-    this.kieuDangService.add(this.addForm.value).subscribe({
-      next: (response: KieuDang) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.kieuDangService.add(this.addForm.value).subscribe({
+          next: (response: KieuDang) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initAddForm();
+            this.notifService.success("Thêm thành công!");
+            document.getElementById("closeBtn").click();
+          },
+          error: (errorResponse: HttpErrorResponse) => {},
         });
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
+  //
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
 
+  //
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -78,18 +88,22 @@ export class DanhSachKieuDangComponent {
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
+  //
   public timKiem(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
+  //
   public onClearSearchInput(): void {
     this.goToPage();
   }
 
+  //
   public openDetailsForm(id: number): void {
     this.kieuDangService.getById(id).subscribe({
       next: (response: KieuDang) => {
@@ -103,6 +117,7 @@ export class DanhSachKieuDangComponent {
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.kieuDangService.getById(id).subscribe({
       next: (response: KieuDang) => {
@@ -118,10 +133,10 @@ export class DanhSachKieuDangComponent {
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.kieuDangService.changeStatus(id).subscribe({
       next: (response: string) => {
-        this.toastr.success(response, "");
         this.goToPage(
           this.pagedResponse.pageNumber,
           this.pagedResponse.pageSize,
@@ -134,6 +149,7 @@ export class DanhSachKieuDangComponent {
     });
   }
 
+  //
   public update(): void {
     let trimmed = this.updateForm.get("ten").value.trim();
     this.updateForm.get("ten")?.setValue(trimmed);
@@ -154,13 +170,12 @@ export class DanhSachKieuDangComponent {
         });
         document.getElementById("closeUpdateBtn").click();
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
   // private function
+  //
   private getKieuDangList(): void {
     this.kieuDangService.getByPage().subscribe({
       next: (response: PagedResponse<KieuDang>) => {
@@ -172,6 +187,7 @@ export class DanhSachKieuDangComponent {
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

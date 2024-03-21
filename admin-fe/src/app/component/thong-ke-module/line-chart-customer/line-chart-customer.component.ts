@@ -9,7 +9,7 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./line-chart-customer.component.css"],
 })
 export class LineChartCustomerComponent implements OnInit {
-  flashInterval: any;
+  chartLoad: boolean = false;
   chart: any;
   @Input() tenChart: string;
   private currentYear: number = new Date().getFullYear();
@@ -235,9 +235,10 @@ export class LineChartCustomerComponent implements OnInit {
     const handleCompletion = () => {
       requestsCompleted++;
       if (requestsCompleted === 6) {
+        this.createChartDay();
+        this.createChartWeek();
         this.createChartYear();
-        this.createChartDay();
-        this.createChartDay();
+        this.chartLoad = true;
       }
     };
 

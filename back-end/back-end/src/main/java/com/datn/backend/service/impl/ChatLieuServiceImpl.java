@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.repository.ChatLieuRepository;
 import com.datn.backend.service.ChatLieuService;
@@ -60,7 +61,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public void changeStatus(int id) {
-        ChatLieu chatLieu = chatLieuRepo.findById(id).get();
+        ChatLieu chatLieu = chatLieuRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Chất liệu với ID: " + id + " không tồn tại!"));
         chatLieu.setTrangThai(!chatLieu.isTrangThai());
         chatLieuRepo.save(chatLieu);
     }

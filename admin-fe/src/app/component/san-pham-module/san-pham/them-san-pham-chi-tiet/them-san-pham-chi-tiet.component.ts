@@ -214,14 +214,15 @@ export class ThemSanPhamChiTietComponent {
 
   // 9
   public changeInput(event: any): void {
-    // dựa vào file input (các anh được chọn), ta dùng for loop gán từng file cho 'curUploadImgFileList' (đồng thời phải check xem file đó đã được chọn hay chưa)
+    // dựa vào file input (các ảnh được chọn), ta dùng for loop gán từng file cho 'curUploadImgFileList' (đồng thời phải check xem file đó đã được chọn hay chưa)
     for (let i = 0; i < event.target["files"].length; i++) {
       let currentFile = event.target["files"][i];
       if (!this.checkUploadImage(currentFile.name, this.curUploadImgFileList)) {
         this.curUploadImgFileList.push(currentFile);
-      } else {
-        this.toastr.warning("Một số ảnh bạn chọn đã được tải lên!");
       }
+      // else {
+      //   this.toastr.warning("Một số ảnh bạn chọn đã được tải lên!");
+      // }
     }
 
     // gán list ảnh được upload vào 'list các list ảnh' được upload
@@ -319,12 +320,13 @@ export class ThemSanPhamChiTietComponent {
   //
   public add(): void {
     Swal.fire({
-      toast: true,
       title: "Thêm sản phẩm?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.checkPropertyValidatonForAddForm();

@@ -18,42 +18,44 @@
                 <input type="text" name="" class="form-control rounded"
                   placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
               </div>
-             
+
             </div>
 
             <div class="row pt-3 pb-3">
-          
+
               <div class="col-md-2">
                 <label for="">Từ Ngày</label>
-                <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày" [(ngModel)]="thoiGianBatDau"  (change)="filterPrivate()">
+                <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày"
+                  [(ngModel)]="thoiGianBatDau" (change)="filterPrivate()">
               </div>
               <div class="col-md-2">
                 <label for="">Tới Ngày</label>
-                <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày" [(ngModel)]="thoiGianKetThuc"  (change)="filterPrivate()">
+                <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày"
+                  [(ngModel)]="thoiGianKetThuc" (change)="filterPrivate()">
               </div>
-            
+
               <div class="col-md-2">
                 <label for="">Loại</label>
                 <div>
-                  <select class="form-control"  [(ngModel)]="loai" (change)="filterPrivate()">
+                  <select class="form-control" [(ngModel)]="loai" (change)="filterPrivate()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[1]">Công Khai</option>
                     <option [ngValue]="[0]">Cá Nhân</option>
                   </select>
                 </div>
               </div>
-            
+
               <div class="col-md-2">
                 <label for="">Kiểu</label>
                 <div>
-                  <select class="form-control"  [(ngModel)]="kieu" (change)="filterPrivate()">
+                  <select class="form-control" [(ngModel)]="kieu" (change)="filterPrivate()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[0]">%</option>
                     <option [ngValue]="[1]">Tiền Mặt</option>
                   </select>
                 </div>
               </div>
-            
+
               <div class="col-md-2">
                 <label for="">Trạng Thái</label>
                 <div>
@@ -65,25 +67,22 @@
                   </select>
                 </div>
               </div>
-            
+
               <!-- Thêm nút xóa bộ lọc -->
               <div class="col-md-1 btnFilter">
-              
+
                 <div>
-                  <button class="btn btnReload btn-rounded btn-reload-filter" (click)="clearFilters()"> <i class="fa-solid fa-arrows-rotate"></i></button>
+                  <button class="btn btnReload btn-rounded btn-reload-filter" (click)="clearFilters()"> <i
+                      class="fa-solid fa-arrows-rotate"></i></button>
                 </div>
               </div>
 
               <div class="col-md-1 btnFilter">
-              
+
                 <div>
                   <button class="btn btn-create rounded" routerLink="/phieu-giam-gia/them-phieu">Tạo Mới</button>
                 </div>
               </div>
-
-
-             
-            
             </div>
           </div>
           <!-- Filter End -->
@@ -96,16 +95,7 @@
 
     <div class="card">
       <div class="card-header">Phiếu giảm giá</div>
-
-
       <div class="card-body">
-
-       
-
-       
-
-        <!-- table -->
-
         <!-- TABLE -->
         <table class="table">
           <thead class="thead-default tbaleHead">
@@ -132,10 +122,10 @@
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân" }}</td>
-              <td>{{ pgg.giaTri }}</td>
-              <td>{{ pgg.giaTriMax | number}}VND</td>
+              <td>{{ formatCurrencyGiaTri(pgg.giaTri) }}</td>
+              <td>{{formatCurrency( pgg.giaTriMax )}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.dieuKienGiam | number}}VND</td>
+              <td>{{ formatCurrency(pgg.dieuKienGiam)}}</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>
@@ -149,14 +139,17 @@
                 </div>
               </td>
               <td>
-                <button class="btn btn-outline-light btn-rounded" id="button" data-toggle="modal"
-                  data-target="#formDetailButton" data-whatever="@mdo" (click)="openDetailsForm(pgg.id)">
+                <button class="btn btn-outline-dark btn-rounded" id="button" data-toggle="modal"
+                  data-target="#formDetailButton" data-whatever="@mdo" (click)="openDetailsForm(pgg.id)"
+                  [disabled]="pgg.trangThai === 'Đã kết thúc'">
                   <i class="fa-solid fa-circle-info fa-xl" id="icon-button-detail"></i>
                 </button>
+
                 <button class="btn btn-outline-warning btn-rounded" title="Cập nhật"
-                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}">
+                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}" [disabled]="pgg.trangThai === 'Đã kết thúc'">
                   <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
+
               </td>
             </tr>
           </tbody>

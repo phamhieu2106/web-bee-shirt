@@ -76,6 +76,7 @@ public class DiaChiResource {
         dto.setXa(addDC.getXa());
         dto.setDuong(addDC.getDuong());
         dto.setMacDinh(addDC.isMacDinh());
+        diaChiService.setDefault(id);
         return ResponseEntity.ok(dto);
     }
 

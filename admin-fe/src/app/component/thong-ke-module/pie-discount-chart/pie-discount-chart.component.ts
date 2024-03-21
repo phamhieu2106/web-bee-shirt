@@ -11,7 +11,7 @@ import { ChartService } from "src/app/service/chart.service";
 })
 export class PieDiscountChartComponent {
   chart: any;
-  data: DiscountSummary[] = [];
+  data: DiscountSummary[];
   backgroundColors: string[] = [];
 
   constructor(private service: ChartService, private toast: ToastrService) {}

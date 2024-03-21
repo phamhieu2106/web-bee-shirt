@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -34,10 +34,11 @@ export class SuaKhachHangComponent {
   huyens: any[];
   xas: any[];
   idTinh: number;
-  idHuyen:number;
-  idXa:number;
-  selectedAddress= new DiaChi();
-  diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
+  idHuyen: number;
+  idXa: number;
+  selectedAddress = new DiaChi();
+  public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+  selectedAddressId: number;
 
 
   public dstinh: any[] = [];
@@ -54,14 +55,14 @@ export class SuaKhachHangComponent {
   private selectFile: File;
   imageUrl: string;
   public isCollapsed: boolean = true;
-  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild("fileInput") fileInput: ElementRef;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private khachHangService: KhachHangService,
     private toas: ToastrService,
     private diaChiService: DiaChiService,
-    private ghn: GiaoHangNhanhService,
+    private ghn: GiaoHangNhanhService
   ) {}
   ngOnInit() {
     this.initFormUpdateKh();
@@ -74,12 +75,12 @@ export class SuaKhachHangComponent {
       next: (data: DiaChi[]) => {
         this.dsDC = data;
       },
-    });    
+    });
     this.route.params.subscribe((params) => {
-      this.id = +params["id"];     
+      this.id = +params["id"];
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
-          this.khDetail = kr;      
+          this.khDetail = kr;
           this.formUpdateKH = new FormGroup({
             id: new FormControl(kr.id, [Validators.required]),
             hoTen: new FormControl(kr.hoTen, [Validators.required]),
@@ -107,43 +108,34 @@ export class SuaKhachHangComponent {
     });
   }
   getAllHuyenByTinh() {
-    this.xas = [];       
+    this.xas = [];
     this.findTinhId();
-    this.ghn
-      .getAllDistrictByProvinceID(this.idTinh)
-      .subscribe({
-        next: (resp) => {
-          this.huyens = resp.data;
-          this.addFormDC.get('tinh').setValue(this.getTenTinh());
-          
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });         
-      console.log(this.addFormDC.get('tinh'));
-  }
-
-  getAllXaByHuyen() {
-    this.findHuyenId();
-    console.log(this.idTinh);
-    console.log(this.idHuyen);
-    
-    this.ghn
-    .getAllWardByDistrictID(this.idHuyen)
-    .subscribe({
+    this.ghn.getAllDistrictByProvinceID(this.idTinh).subscribe({
       next: (resp) => {
-        this.xas = resp.data;
-        this.addFormDC.get('huyen').setValue(this.getTenHuyen());
+        this.huyens = resp.data;
+        this.addFormDC.get("tinh").setValue(this.getTenTinh());
       },
       error: (err) => {
         console.log(err);
       },
-    });      
+    });
+  }
+
+  getAllXaByHuyen() {
+    this.findHuyenId();
+    this.ghn.getAllWardByDistrictID(this.idHuyen).subscribe({
+      next: (resp) => {
+        this.xas = resp.data;
+        this.addFormDC.get("huyen").setValue(this.getTenHuyen());
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getTenTinh(): string {
-    let provinceName = this.addFormDC.get('tinh').value;
+    let provinceName = this.addFormDC.get("tinh").value;
     if (provinceName == null || provinceName == "") {
       this.tinhs.forEach((t) => {
         if (t.ProvinceID == this.idTinh) {
@@ -154,7 +146,7 @@ export class SuaKhachHangComponent {
     return provinceName;
   }
   getTenHuyen(): string {
-    let districtName = this.addFormDC.get('huyen').value;
+    let districtName = this.addFormDC.get("huyen").value;
     this.huyens.forEach((t) => {
       if (t.DistrictID == this.idHuyen) {
         districtName = t.DistrictName;
@@ -193,23 +185,23 @@ export class SuaKhachHangComponent {
       }
     }
   }
-  findHuyenId() {   
+  findHuyenId() {
     for (let i = 0; i < this.huyens.length; i++) {
       const element = this.huyens[i];
-      if (element.NameExtension.includes(this.selectedAddress.huyen)) {
+      if (element.NameExtension.includes(this.addFormDC.get("huyen").value)) {
         this.idHuyen = element.DistrictID;
         break;
-      }    
+      }
     }
   }
   findTinhId() {
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
-      if (element.NameExtension.includes(this.selectedAddress.tinh)) {
-        this.idTinh = element.ProvinceID;       
+      if (element.NameExtension.includes(this.addFormDC.get("tinh").value)) {
+        this.idTinh = element.ProvinceID;
         break;
       }
-    } 
+    }
   }
   public imageChange(event: any): void {
     this.selectFile = event.target["files"][0];
@@ -224,7 +216,7 @@ export class SuaKhachHangComponent {
       this.imageUrl = URL.createObjectURL(file);
     }
   }
-  public updateKH(): void { 
+  public updateKH(): void {
     if (
       new Date(this.formUpdateKH.value.ngaySinh) > new Date() ||
       new Date(this.formUpdateKH.value.ngaySinh).toDateString() ===
@@ -242,75 +234,70 @@ export class SuaKhachHangComponent {
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
     }).then((result) => {
- 
-     
+      this.khachHangService
+        .add(this.formUpdateKH.value, this.selectFile)
+        .subscribe({
+          next: () => {
+            // this.goToPage(1, 5, "");
+            this.initFormUpdateKh();
+            Swal.fire({
+              toast: true,
+              icon: "success",
+              position: "top-end",
+              title: "Sửa khách hàng thành công",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            // this.turnOffOverlay("");
+          },
+          error: (error: HttpErrorResponse) => {
+            // this.turnOffOverlay("");
 
-        this.khachHangService
-          .add(this.formUpdateKH.value, this.selectFile)
-          .subscribe({
-            next: () => {
-              // this.goToPage(1, 5, "");
-              this.initFormUpdateKh();
+            if (error.status === 400) {
+              this.errorMessage = error.error.message;
               Swal.fire({
                 toast: true,
-                icon: "success",
+                icon: "error",
                 position: "top-end",
-                title: "Sửa khách hàng thành công",
+                title: this.errorMessage,
                 showConfirmButton: false,
                 timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
-                },
               });
-              // this.turnOffOverlay("");
-            },
-            error: (error: HttpErrorResponse) => {
-              // this.turnOffOverlay("");
-              
-              if (error.status === 400) {
-                this.errorMessage = error.error.message;
-                Swal.fire({
-                  toast: true,
-                  icon: "error",
-                  position: "top-end",
-                  title: this.errorMessage,
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              } else {
-                Swal.fire({
-                  toast: true,
-                  icon: "error",
-                  position: "top-end",
-                  title: "Thêm khách hàng thất bại",
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-                console.log(error.message);
-              }
-            },
-          });       
-    });
-    this.khachHangService.update(this.id, this.formUpdateKH.value,this.selectFile).subscribe({
-      
-      next: (kh: KhachHang) => {
-        this.initFormUpdateDC();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công!`,
-          showConfirmButton: false,
-          timer: 2000,
+            } else {
+              Swal.fire({
+                toast: true,
+                icon: "error",
+                position: "top-end",
+                title: "Thêm khách hàng thất bại",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+              console.log(error.message);
+            }
+          },
         });
-     
-
-      },
-      error: (erros: HttpErrorResponse) => {
-        console.log(this.formUpdateKH.value);
-        this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
-      },
     });
+    this.khachHangService
+      .update(this.id, this.formUpdateKH.value, this.selectFile)
+      .subscribe({
+        next: (kh: KhachHang) => {
+          this.initFormUpdateDC();
+          Swal.fire({
+            icon: "success",
+            title: `Cập nhật thành công!`,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        },
+        error: (erros: HttpErrorResponse) => {
+          this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
+        },
+      });
   }
   public initFormUpdateKh(): void {
     this.formUpdateKH = new FormGroup({
@@ -326,7 +313,7 @@ export class SuaKhachHangComponent {
       huyen: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       duong: new FormControl("", [Validators.required]),
-      xa: new FormControl("", [Validators.required]),   
+      xa: new FormControl("", [Validators.required]),
     });
   }
 
@@ -370,22 +357,31 @@ export class SuaKhachHangComponent {
   }
 
   public openUpdateForm(id: number): void {
-    this.getAllTinh();    
+    this.selectedAddressId = id;
+    this.getAllTinh();
     this.diaChiService.getDCById(id).subscribe({
       next: (dc: DiaChi) => {
-        this.selectedAddress= dc;
+        this.selectedAddress = dc;
         this.findTinhId();
         this.findHuyenId();
-        this.findXaId()
-        this.diaChiVaPhiVanChuyen.tinhId= this.idTinh;
-        this.diaChiVaPhiVanChuyen.huyenId = this.idHuyen;
-        this.diaChiVaPhiVanChuyen.xaCode = '' + this.idXa;
-        console.log(this.diaChiVaPhiVanChuyen);
-        console.log(this.selectedAddress.tinh);
+        this.findXaId();
+        for (let i = 0; i < this.tinhs.length; i++) {
+          const element = this.tinhs[i];
+          if (element.NameExtension.includes(dc.tinh)) {
+            this.idTinh = element.ProvinceID;
+            break;
+          }
+        }
+        this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+        this.diaChiVaPhiVanChuyen.tinh = dc.tinh;
+        this.diaChiVaPhiVanChuyen.tinhId = this.idTinh;
+        this.diaChiVaPhiVanChuyen.huyen = dc.huyen;
+        this.diaChiVaPhiVanChuyen.xa = dc.xa;
+        this.diaChiVaPhiVanChuyen.cuThe = dc.duong;
+        // console.log(this.diaChiVaPhiVanChuyen);
         
-        
-        
-        this.idDC=id;     
+
+        this.idDC = id;
         this.updateFormDC = new FormGroup({
           idDC: new FormControl(dc.id, [Validators.required]),
           tinh: new FormControl(dc.tinh, [Validators.required]),
@@ -393,47 +389,52 @@ export class SuaKhachHangComponent {
           duong: new FormControl(dc.duong, [Validators.required]),
           xa: new FormControl(dc.xa, [Validators.required]),
           macDinh: new FormControl(dc.macDinh, [Validators.required]),
-        });  
-        
-        this.diaChiService.getTinh().subscribe((data: any)=>{
+        });
+
+        this.diaChiService.getTinh().subscribe((data: any) => {
           this.tinhDetail = data.results;
-        })
-        const selectedTinh  = this.dstinh.find(t => t.province_name ==this.updateFormDC.get('tinh')?.value);
+        });
+        const selectedTinh = this.dstinh.find(
+          (t) => t.province_name == this.updateFormDC.get("tinh")?.value
+        );
         if (selectedTinh) {
           const selectedId = selectedTinh.province_id;
-          this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+          this.diaChiService.getHuyen(selectedId).subscribe((data: any) => {
             this.dshuyen = data.results;
-          }) 
-
-        };
-        const selectedHuyen  = this.dshuyen.find(t => t.district_name ==this.updateFormDC.get('huyen')?.value);
-         if (selectedHuyen) {
-      const selectedId = selectedHuyen.district_id;
-      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
-        this.dsxa = data.results;
-      }) 
-    }    
+          });
+        }
+        const selectedHuyen = this.dshuyen.find(
+          (t) => t.district_name == this.updateFormDC.get("huyen")?.value
+        );
+        if (selectedHuyen) {
+          const selectedId = selectedHuyen.district_id;
+          this.diaChiService.getXa(selectedId).subscribe((data: any) => {
+            this.dsxa = data.results;
+          });
+        }
       },
     });
   }
   public updateDC(id: number): void {
-     
-    this.diaChiService.updateDC(this.idDC, this.updateFormDC.value).subscribe({
-      next: (dc: DiaChi) => {
-        this.initFormUpdateDC();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công!`,
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        document.getElementById("closeUpdateBtn").click();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message);
-      },
-    });
+    // this.diaChiService.updateDC(this.idDC, this.updateFormDC.value).subscribe({
+    //   next: (dc: DiaChi) => {
+    //     console.log(dc);
+
+    //     this.initFormUpdateDC();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: `Cập nhật thành công!`,
+    //       showConfirmButton: false,
+    //       timer: 1000,
+    //     });
+    //     document.getElementById("closeUpdateBtn").click();
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.log(error.message);
+    //   },
+    // });
   }
+
   public reloadPage() {
     location.reload();
   }
@@ -456,47 +457,54 @@ export class SuaKhachHangComponent {
 
   public setDefault(idDC: number): void {
     this.diaChiService.setDefaultDC(idDC).subscribe(() => {
-     
       this.reloadPage();
     });
   }
   onCityChange(): void {
-    const selectedTinh  = this.dstinh.find(t => t.province_name ==this.addFormDC.get('tinh')?.value);
+    const selectedTinh = this.dstinh.find(
+      (t) => t.province_name == this.addFormDC.get("tinh")?.value
+    );
     if (selectedTinh) {
       const selectedId = selectedTinh.province_id;
-      this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+      this.diaChiService.getHuyen(selectedId).subscribe((data: any) => {
         this.dshuyen = data.results;
-      }) 
+      });
     }
   }
 
   ondistrictChange(): void {
-    const selectedHuyen  = this.dshuyen.find(t => t.district_name ==this.addFormDC.get('huyen')?.value);
+    const selectedHuyen = this.dshuyen.find(
+      (t) => t.district_name == this.addFormDC.get("huyen")?.value
+    );
     if (selectedHuyen) {
       const selectedId = selectedHuyen.district_id;
-      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
+      this.diaChiService.getXa(selectedId).subscribe((data: any) => {
         this.dsxa = data.results;
-      }) 
+      });
     }
   }
 
   onCityDetailChange(): void {
-    const selectedTinh  = this.tinhDetail.find(t => t.province_name ==this.updateFormDC.get('tinh')?.value);
+    const selectedTinh = this.tinhDetail.find(
+      (t) => t.province_name == this.updateFormDC.get("tinh")?.value
+    );
     if (selectedTinh) {
       const selectedId = selectedTinh.province_id;
-      this.diaChiService.getHuyen(selectedId).subscribe((data: any)=>{
+      this.diaChiService.getHuyen(selectedId).subscribe((data: any) => {
         this.huyenDetail = data.results;
-      }) 
+      });
     }
   }
 
   ondistrictDetailChange(): void {
-    const selectedHuyen  = this.huyenDetail.find(t => t.district_name ==this.updateFormDC.get('huyen')?.value);
+    const selectedHuyen = this.huyenDetail.find(
+      (t) => t.district_name == this.updateFormDC.get("huyen")?.value
+    );
     if (selectedHuyen) {
       const selectedId = selectedHuyen.district_id;
-      this.diaChiService.getXa(selectedId).subscribe((data: any)=>{
+      this.diaChiService.getXa(selectedId).subscribe((data: any) => {
         this.xaDetail = data.results;
-      }) 
+      });
     }
   }
   toggleCollapse(index: number): void {

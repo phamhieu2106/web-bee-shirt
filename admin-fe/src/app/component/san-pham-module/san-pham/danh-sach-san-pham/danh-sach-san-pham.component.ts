@@ -77,6 +77,7 @@ export class DanhSachSanPhamComponent {
     this.getSanPhamList();
     this.initAddForm();
     this.initUpdateForm();
+    this.getListIdSanPhamInDiscount();
   }
 
   // public function
@@ -273,5 +274,28 @@ export class DanhSachSanPhamComponent {
       moTa: new FormControl("", [Validators.required]),
       trangThai: new FormControl(false),
     });
+  }
+
+  //
+  public listIdSanPhamInDiscount: number[];
+  private getListIdSanPhamInDiscount() {
+    this.sanPhamService.getListIdSanPhamInDiscount().subscribe({
+      next: (data) => {
+        this.listIdSanPhamInDiscount = data;
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
+
+  public isDiscounted(id: number) {
+    if (
+      this.listIdSanPhamInDiscount &&
+      this.listIdSanPhamInDiscount.length > 0
+    ) {
+      return this.listIdSanPhamInDiscount.includes(id);
+    }
+    return false;
   }
 }

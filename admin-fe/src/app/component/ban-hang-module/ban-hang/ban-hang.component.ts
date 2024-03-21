@@ -20,14 +20,12 @@ import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
   styleUrls: ["./ban-hang.component.css"],
 })
 export class BanHangComponent implements OnInit, OnDestroy {
-
   icon: string = "  fa-solid fa-users";
   title: string = "Bán Hàng";
   mainHeading: string = "Bán Hàng";
 
-
   private readonly key = "orders";
-  // messagePgg = "";
+  messagePgg = "";
   phiVanChuyenTemp: number;
   orders: HoaDon[] = [];
   khachHangs: KhachHang[];
@@ -130,10 +128,12 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   chooseKhachHang(khachHang: KhachHang) {
     this.order.khachHang = khachHang;
+    this.updateHoaDon();
   }
 
   removeKhachHangInOrder() {
     this.order.khachHang = null;
+    this.updateHoaDon();
   }
 
   getAllSpct() {
@@ -158,15 +158,18 @@ export class BanHangComponent implements OnInit, OnDestroy {
   getPhieuGiamGia() {
     this.banHangService
       .getDiscountValid(
-        this.order.tongTien,
+        this.getTongTien(),
         this.order.khachHang == null ? null : this.order.khachHang.id,
         this.order.tienGiam
       )
       .subscribe({
-        next: (resp: DiscountValid) => {
+        next: async (resp: DiscountValid) => {
           this.order.phieuGiamGia = resp.phieuGiamGia;
-          this.getTongTien();
+          this.messagePgg = resp.message;
+        },
+        complete: () => {
           this.getTienGiam();
+          this.getTongTien();
         },
       });
   }
@@ -182,27 +185,37 @@ export class BanHangComponent implements OnInit, OnDestroy {
     return this.spctService.getGiaBan(spct);
   }
 
-  async deleteHDCT(hdctIndex: number) {
+  deleteHDCT(hdctIndex: number) {
     this.order.hoaDonChiTiets.splice(hdctIndex, 1);
     // this.getPhieuGiamGia();
     if (this.order.hoaDonChiTiets.length <= 0) {
-      this.order.phieuGiamGia = null;
       this.order.thanhToans = [];
-      this.getTienGiam();
+    }
+
+    setTimeout(() => {
       this.getTongTien();
-      this.getTienKhachConThieu();
-    }
+      this.getPhieuGiamGia();
+      this.getTienGiam();
+    }, 100);
   }
-  async minusQuantity(hdct: HoaDonChiTiet) {
+  minusQuantity(hdct: HoaDonChiTiet) {
     if (hdct.soLuong > 1) {
-      hdct.soLuong = hdct.soLuong - 1;
-      this.updateHoaDon();
+      hdct.soLuong -= 1;
     }
+    this.getTongTien();
+    setTimeout(() => {
+      this.getPhieuGiamGia();
+      this.getTienGiam();
+    }, 100);
   }
 
-  async plusQuantity(hdct: HoaDonChiTiet) {
-    hdct.soLuong = hdct.soLuong + 1;
-    this.updateHoaDon();
+  plusQuantity(hdct: HoaDonChiTiet) {
+    hdct.soLuong += 1;
+    this.getTongTien();
+    setTimeout(() => {
+      this.getPhieuGiamGia();
+      this.getTienGiam();
+    }, 100);
   }
   async chooseProduct(spct: SanPhamChiTiet) {
     let newHdct = null;
@@ -302,32 +315,38 @@ export class BanHangComponent implements OnInit, OnDestroy {
     else return 0;
   }
 
-  getTienGiam() {
+  getTienGiam(): number {
     if (this.order && this.order.phieuGiamGia) {
       if (this.order.phieuGiamGia.kieu == 0) {
         // giảm theo %
-        this.order.tienGiam =
-          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100) >
-          this.order.phieuGiamGia.giaTriMax
-            ? this.order.phieuGiamGia.giaTriMax
-            : 0;
-        // console.log(temp);
+        let giaTriGiam =
+          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100);
+        let giaTriMax = this.order.phieuGiamGia.giaTriMax;
+
+        giaTriGiam > giaTriMax
+          ? (this.order.tienGiam = giaTriMax)
+          : (this.order.tienGiam = giaTriGiam);
+
+        return this.order.tienGiam;
       } else if (this.order.phieuGiamGia.kieu == 1) {
         // giảm theo giá trị
         this.order.tienGiam = this.order.phieuGiamGia.giaTri;
+        return this.order.tienGiam;
       }
-    } else {
-      this.order.tienGiam = 0;
     }
+    this.order.tienGiam = 0;
+    return 0;
   }
 
   async updateHoaDon() {
     // xử lý
-
-    await this.getTongTien();
-    await this.getPhieuGiamGia();
-    await this.getTienGiam();
-    await this.getTienKhachConThieu();
+    setTimeout(async () => {
+      await this.getTongTien();
+      // await this.getTienGiam();
+      await this.getPhieuGiamGia();
+      await this.getTienGiam();
+      await this.getTienKhachConThieu();
+    }, 100);
   }
 
   insertSLSP() {

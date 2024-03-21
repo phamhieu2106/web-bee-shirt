@@ -52,39 +52,39 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   public add(): void {
-    
+
 
     if (typeof this.addForm.get("giaTriMax").value === "string") {
-  
+
       const giaTriMaxFormatted = parseFloat(
         this.addForm.value.giaTriMax.replace(",", "")
       );
-      console.log(giaTriMaxFormatted)
-      this.addForm.patchValue({ dieuKienGiam: giaTriMaxFormatted });
 
-    } 
-    
+      this.addForm.patchValue({ giaTriMax: giaTriMaxFormatted });
+
+    }
+
 
 
     if (typeof this.addForm.get("dieuKienGiam").value === "string") {
-  
+
       const dieuKienGiamFormatted = parseFloat(
         this.addForm.value.dieuKienGiam.replace(/,/g, "")
       );
       this.addForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
 
-    } 
+    }
 
 
     if (typeof this.addForm.get("giaTri").value === "string") {
-    
+
 
       const giaTriFormatted = parseFloat(
         this.addForm.value.giaTri.replace(/,/g, "")
       );
       this.addForm.patchValue({ giaTri: giaTriFormatted });
 
-    } 
+    }
 
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
@@ -173,7 +173,7 @@ export class ThemPhieuComponent implements OnInit {
   public initAddForm(): void {
     this.addForm = this.formBuilder.group({
       maPhieuGiamGia: new FormControl(""),
-      tenPhieuGiamGia: new FormControl("", [Validators.required]),
+      tenPhieuGiamGia: new FormControl("", [this.validateTen()]),
       kieu: new FormControl("0", [Validators.required]),
       loai: new FormControl("1", [Validators.required]),
       soLuong: new FormControl(this.soLuongCheck, [
@@ -189,13 +189,11 @@ export class ThemPhieuComponent implements OnInit {
         this.validateNgay(),
       ]),
       dieuKienGiam: new FormControl("", [
-        Validators.required,
-        Validators.pattern(/^(\d{1,3}(,\d{3})*|\d+)$/),
+        this.validateDieuKien()
       ]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
       giaTriMax: new FormControl(this.giaTriToiDa, [
-        Validators.required,
-        Validators.pattern(/^(\d{1,3}(,\d{3})*|\d+)$/),
+        this.validateMax()
       ]),
     });
   }
@@ -212,6 +210,20 @@ export class ThemPhieuComponent implements OnInit {
       // Kiểm tra nếu ô giá trị trống
       if (!this.giaTriNew) {
         return { giaTri: "Không để trống giá trị" };
+      }
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^[0-9]*$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số  Và số > 0" };
+        }
+      } else {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^-?\d{1,3}(?:,\d{3})*(?:\.\d+)?$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số và số > 0" };
+        }
       }
 
       if (typeof this.giaTriNew === "string") {
@@ -299,6 +311,175 @@ export class ThemPhieuComponent implements OnInit {
     };
   }
 
+  private validateTen(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const addForm = this.addForm;
+
+      if (!addForm) {
+        return null;
+      }
+
+      const tenPhieuGiamGia = control.value;
+
+      if (!tenPhieuGiamGia || tenPhieuGiamGia.trim() === '') {
+        return { checkTen: "Tên phiếu giảm giá không được để trống" };
+      }
+
+      // Kiểm tra kí tự đặc biệt
+      const regex = /^[a-zA-Z0-9\sÀ-Ỹà-ỹ]*$/; // Cho phép kí tự chữ, số, khoảng trắng và tiếng Việt có dấu
+      if (!regex.test(tenPhieuGiamGia)) {
+        return { checkTen: "Tên phiếu giảm giá không được chứa kí tự đặc biệt" };
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+
+
+  dieuKienGiam: any
+  giaTri: any
+  giaTriMax: any
+  private validateDieuKien(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const addForm = this.addForm;
+
+      if (!addForm) {
+        return null;
+      }
+
+      this.dieuKienGiam = control.value;
+
+      // Kiểm tra điều kiện trống
+      if (!this.dieuKienGiam) {
+        return { invalidDieuKien: "Không bỏ trống trường này" };
+      }
+
+      if (typeof this.dieuKienGiam === "string") {
+        this.dieuKienGiam = parseFloat(this.dieuKienGiam.replace(/,/g, ""));
+      } else {
+        this.dieuKienGiam = parseFloat(this.dieuKienGiam);
+      }
+
+      // Kiểm tra điều kiện phải là số
+      const numberPattern = /^[0-9]*$/;
+      if (!numberPattern.test(this.dieuKienGiam)) {
+        return { invalidDieuKien: "Vui lòng nhập số  Và số > 0" };
+      }
+
+
+
+      // Kiểm tra điều kiện lớn hơn 0
+      if (this.dieuKienGiam <= 0) {
+        return { invalidDieuKien: "Vui lòng nhập số > 0" };
+      }
+
+      const giaTriMax = addForm.get('giaTriMax').value;
+      const kieu = addForm.get('kieu').value;
+      const giaTri = addForm.get('giaTri').value;
+
+      if (typeof giaTriMax === "string") {
+        this.giaTriMax = parseFloat(giaTriMax.replace(/,/g, ""));
+      } else {
+        this.giaTriMax = parseFloat(giaTriMax);
+      }
+
+      if (typeof giaTri === "string") {
+        this.giaTri = parseFloat(giaTri.replace(/,/g, ""));
+      } else {
+        this.giaTri = parseFloat(giaTri);
+      }
+
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị tối đa
+
+        if (this.dieuKienGiam < this.giaTriMax) {
+
+          return { invalidDieuKien: "Điều kiện giảm lớn hơn hoặc bằng giá trị tối đa" };
+        }
+      } else {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị
+        if (this.dieuKienGiam < this.giaTri) {
+
+          return { invalidDieuKien: "Điều kiện giảm lớn hơn hoặc bằng giá trị" };
+        }
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+
+
+  private validateMax(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const addForm = this.addForm;
+
+      if (!addForm) {
+        return null;
+      }
+
+      this.giaTriMax = control.value;
+
+      // Kiểm tra điều kiện trống
+      if (!this.giaTriMax) {
+        return { invalidMax: "Không bỏ trống trường này" };
+      }
+
+      if (typeof this.giaTriMax === "string") {
+        this.giaTriMax = parseFloat(this.giaTriMax.replace(/,/g, ""));
+      } else {
+        this.giaTriMax = parseFloat(this.giaTriMax);
+      }
+
+      // Kiểm tra điều kiện phải là số
+      const numberPattern = /^[0-9]*$/;
+      if (!numberPattern.test(this.giaTriMax)) {
+        return { invalidMax: "Vui lòng nhập số  Và số > 0" };
+      }
+
+
+
+      // Kiểm tra điều kiện lớn hơn 0
+      if (this.giaTriMax <= 0) {
+        return { invalidMax: "Vui lòng nhập số > 0" };
+      }
+
+      const dieuKienGiam = addForm.get('dieuKienGiam').value;
+      const kieu = addForm.get('kieu').value;
+
+
+
+
+      if (typeof dieuKienGiam === "string") {
+        this.dieuKienGiam = parseFloat(dieuKienGiam.replace(/,/g, ""));
+      } else {
+        this.dieuKienGiam = parseFloat(dieuKienGiam);
+      }
+
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị tối đa
+
+        if (this.giaTriMax > this.dieuKienGiam) {
+
+          return { invalidMax: "Giá trị tối đa nhỏ hơn hoặc bằng điều kiện giảm" };
+
+        }
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+
+  checkGiaTriToiDa() {
+    this.addForm.get("dieuKienGiam").updateValueAndValidity();
+    this.addForm.get("giaTriMax").updateValueAndValidity();
+  }
+
+
   checkThoiGian() {
     this.addForm.get("thoiGianBatDau").updateValueAndValidity();
     this.addForm.get("thoiGianKetThuc").updateValueAndValidity();
@@ -312,9 +493,10 @@ export class ThemPhieuComponent implements OnInit {
       this.checkGiaTri = false;
     } else {
       this.checkGiaTri = true;
-      giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
+      giaTriMaxControl.setValue("1"); // Set giá trị của giaTriMax thành 0
     }
     this.addForm.get("giaTri").updateValueAndValidity();
+    this.addForm.get("giaTriMax").updateValueAndValidity();
   }
 
   isTableDisabled: boolean = false;
@@ -438,7 +620,7 @@ export class ThemPhieuComponent implements OnInit {
   public formatNumber(event: any, inputName: string): void {
     let value = event.target.value;
     if (value === "") {
-      this.addForm.get(inputName).setValue("0");
+      this.addForm.get(inputName).setValue("");
       return;
     }
     value = value.replace(/,/g, "");
@@ -450,7 +632,7 @@ export class ThemPhieuComponent implements OnInit {
     let value = event.target.value;
     const kieu = this.addForm.get("kieu").value;
     if (value === "") {
-      this.addForm.get(inputName).setValue("0");
+      this.addForm.get(inputName).setValue("");
       return;
     }
     console.log(kieu);

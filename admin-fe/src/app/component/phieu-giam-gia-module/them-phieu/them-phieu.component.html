@@ -11,7 +11,10 @@
           <div class="col-md-4">
             <form [formGroup]="addForm">
               <div class="mb-3">
-                <label for="" class="labelChinh">Mã Phiếu: <strong style="color: red;">Tự động tạo nếu bỏ trống</strong> </label>
+                <label for="" class="labelChinh"
+                  >Mã Phiếu:
+                  <strong style="color: red">Tự động tạo nếu bỏ trống</strong>
+                </label>
                 <input
                   type="text"
                   class="form-control"
@@ -43,8 +46,14 @@
                   "
                   formControlName="tenPhieuGiamGia"
                 />
-                <div class="invalid-feedback">
-                  Tên phiếu giảm giá không được để trống
+                <div
+                  *ngIf="
+                    addForm.get('tenPhieuGiamGia').hasError('checkTen') &&
+                    addForm.get('tenPhieuGiamGia').touched
+                  "
+                  class="invalid-feedback"
+                >
+                  {{ addForm.get("tenPhieuGiamGia").getError("checkTen") }}
                 </div>
               </div>
 
@@ -113,9 +122,19 @@
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <label for="" class="labelChinh"   *ngIf="addForm.get('kieu').value === '0'">Số % Chiết Khấu:</label>
+                  <label
+                    for=""
+                    class="labelChinh"
+                    *ngIf="addForm.get('kieu').value === '0'"
+                    >Số % Chiết Khấu:</label
+                  >
 
-                  <label for="" class="labelChinh"   *ngIf="addForm.get('kieu').value === '1'">Số Tiền Chiết Khấu:</label>
+                  <label
+                    for=""
+                    class="labelChinh"
+                    *ngIf="addForm.get('kieu').value === '1'"
+                    >Số Tiền Chiết Khấu:</label
+                  >
                   <div class="input-group mb-3">
                     <input
                       type="text"
@@ -177,24 +196,17 @@
                       aria-describedby="basic-addon2"
                       [readonly]="checkGiaTri"
                       (input)="formatNumber($event, 'giaTriMax')"
+                      (blur)="checkGiaTriToiDa()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
                     <div
                       *ngIf="
-                        (addForm.get('giaTriMax').hasError('required') &&
-                          addForm.get('giaTriMax').touched) ||
-                        (addForm.get('giaTriMax').hasError('pattern') &&
-                          addForm.get('giaTriMax').touched)
+                        addForm.get('giaTriMax').hasError('invalidMax') &&
+                        addForm.get('giaTriMax').touched
                       "
                       class="invalid-feedback"
                     >
-                      <span
-                        *ngIf="addForm.get('giaTriMax').hasError('required')"
-                        >Giá trị tối đa không được để trống</span
-                      >
-                      <span *ngIf="addForm.get('giaTriMax').hasError('pattern')"
-                        >Giá trị tối đa chỉ được nhập số</span
-                      >
+                      {{ addForm.get("giaTriMax").getError("invalidMax") }}
                     </div>
                   </div>
                 </div>
@@ -208,10 +220,10 @@
                     class="form-control"
                     placeholder="Số lượng"
                     [ngClass]="
-                      addForm.get('soLuong').invalid &&
-                      addForm.get('soLuong').touched ||
-                        (addForm.get('soLuong').hasError('min') &&
-                          addForm.get('soLuong').touched)
+                      (addForm.get('soLuong').invalid &&
+                        addForm.get('soLuong').touched) ||
+                      (addForm.get('soLuong').hasError('min') &&
+                        addForm.get('soLuong').touched)
                         ? 'is-invalid'
                         : ''
                     "
@@ -219,20 +231,19 @@
                     [readonly]="checkSoLuong"
                   />
                   <div class="invalid-feedback">
-                  
+                    <span *ngIf="addForm.get('soLuong').hasError('required')">
+                      Số lượng không được để trống</span
+                    >
 
-                    <span
-                        *ngIf="addForm.get('soLuong').hasError('required')"
-                        >  Số lượng không được để trống</span>
-
-                    <span
-                        *ngIf="addForm.get('soLuong').hasError('min')"
-                        >Số lượng  > 0 </span
-                      >
+                    <span *ngIf="addForm.get('soLuong').hasError('min')"
+                      >Số lượng > 0
+                    </span>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label for="" class="labelChinh">Số tiền chi tối thiểu:</label>
+                  <label for="" class="labelChinh"
+                    >Số tiền chi tối thiểu:</label
+                  >
                   <div class="input-group mb-3">
                     <input
                       type="text"
@@ -248,26 +259,22 @@
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                       (input)="formatNumber($event, 'dieuKienGiam')"
+                      (blur)="checkGiaTriToiDa()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
 
                     <div
                       *ngIf="
-                        (addForm.get('dieuKienGiam').hasError('required') &&
-                          addForm.get('dieuKienGiam').touched) ||
-                        (addForm.get('dieuKienGiam').hasError('pattern') &&
-                          addForm.get('dieuKienGiam').touched)
+                        addForm
+                          .get('dieuKienGiam')
+                          .hasError('invalidDieuKien') &&
+                        addForm.get('dieuKienGiam').touched
                       "
                       class="invalid-feedback"
                     >
-                      <span
-                        *ngIf="addForm.get('dieuKienGiam').hasError('required')"
-                        >Điều kiện không được để trống</span
-                      >
-                      <span
-                        *ngIf="addForm.get('dieuKienGiam').hasError('pattern')"
-                        >Điều kiện chỉ được nhập số</span
-                      >
+                      {{
+                        addForm.get("dieuKienGiam").getError("invalidDieuKien")
+                      }}
                     </div>
                   </div>
                 </div>

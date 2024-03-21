@@ -17,6 +17,7 @@ import { SanPham } from "src/app/model/class/san-pham.class";
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { FilterSPCTParams } from "src/app/model/interface/filter-spct-params.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { ProductDiscountResponse } from "src/app/model/interface/product-discount-response";
 import { ChatLieuService } from "src/app/service/chat-lieu.service";
 import { KichCoService } from "src/app/service/kick-co.service";
 import { KieuCoAoService } from "src/app/service/kieu-co-ao.service";
@@ -486,6 +487,7 @@ export class DsSanPhamChiTietComponent {
         console.log(errorResponse);
       },
     });
+    this.getProductInDiscount(this.filterParams.productId);
   }
 
   // 10
@@ -498,5 +500,39 @@ export class DsSanPhamChiTietComponent {
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;
+  }
+
+  // Get Product In Discount
+  public listProductInDiscount: ProductDiscountResponse[];
+  private getProductInDiscount(id: number): void {
+    this.sanPhamService.getListSanPhamChiTietInDiscount(id).subscribe({
+      next: (value) => {
+        this.listProductInDiscount = value;
+      },
+      error: (err) => {
+        console.log(err.message);
+      },
+    });
+  }
+  public returnNewPrice(id: number, giaBan: number): number {
+    if (this.listProductInDiscount && this.listProductInDiscount.length > 0) {
+      const productInDiscount = this.listProductInDiscount.find(
+        (product) => product.id === id
+      );
+      if (productInDiscount) {
+        // Nếu sản phẩm có trong danh sách, tính toán giá bán mới dựa trên phần trăm giảm
+        const phanTranGiam = productInDiscount.phanTramGiam;
+        const giaBanMoi = giaBan * (1 - phanTranGiam / 100);
+        return giaBanMoi; // Trả về giá bán mới
+      }
+    }
+    return giaBan; // Nếu không tìm thấy sản phẩm hoặc mảng không được khởi tạo, trả về giá ban đầu
+  }
+
+  public isDiscounted(id: number): boolean {
+    if (this.listProductInDiscount && this.listProductInDiscount.length > 0) {
+      return this.listProductInDiscount.some((p) => p.id === id);
+    }
+    return false;
   }
 }

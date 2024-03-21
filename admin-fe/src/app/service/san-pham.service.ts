@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 
 import { PagedResponse } from "../model/interface/paged-response.interface";
 import { SanPham } from "../model/class/san-pham.class";
+import { ProductDiscountResponse } from "../model/interface/product-discount-response";
 
 @Injectable({
   providedIn: "root",
@@ -46,5 +47,20 @@ export class SanPhamService {
   // 5
   public update(sanPham: SanPham): Observable<SanPham> {
     return this.http.put<SanPham>(`${this.apiUrl}/update`, sanPham);
+  }
+
+  // 6
+  // get List Id San Pham In Active Discount
+  public getListIdSanPhamInDiscount(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/checkInDiscount`);
+  }
+  // 7
+  // get List San Pham Chi Tiet In Active Discount
+  public getListSanPhamChiTietInDiscount(
+    id: number
+  ): Observable<ProductDiscountResponse[]> {
+    return this.http.get<ProductDiscountResponse[]>(
+      `${this.apiUrl}/itemInDiscount?id=${id}`
+    );
   }
 }

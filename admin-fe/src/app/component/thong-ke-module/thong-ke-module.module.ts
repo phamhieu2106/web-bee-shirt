@@ -13,6 +13,8 @@ import { PolarProductChartComponent } from "./polar-product-chart/polar-product-
 import { BarReviewChartComponent } from "./bar-review-chart/bar-review-chart.component";
 import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
 import { FormsModule } from "@angular/forms";
+import { NoDataComponent } from "./no-data/no-data.component";
+import { NzEmptyModule } from "ng-zorro-antd/empty";
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { FormsModule } from "@angular/forms";
     PieDiscountChartComponent,
     PolarProductChartComponent,
     BarReviewChartComponent,
+    NoDataComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +34,7 @@ import { FormsModule } from "@angular/forms";
     LayoutModule,
     NzDatePickerModule,
     FormsModule,
+    NzEmptyModule,
   ],
 })
 export class ThongKeModuleModule {}

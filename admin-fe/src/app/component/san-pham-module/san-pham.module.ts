@@ -17,7 +17,8 @@ import { DanhSachKieuThietKeComponent } from "./kieu-thiet-ke/danh-sach-kieu-thi
 import { LayoutModule } from "../layout-module/layout.module";
 import { ThemSanPhamChiTietComponent } from "./san-pham/them-san-pham-chi-tiet/them-san-pham-chi-tiet.component";
 import { DsSanPhamChiTietComponent } from "./san-pham/ds-san-pham-chi-tiet/ds-san-pham-chi-tiet.component";
-
+import { NzBadgeModule } from "ng-zorro-antd/badge";
+import { NzTypographyModule } from "ng-zorro-antd/typography";
 @NgModule({
   declarations: [
     DanhSachMauSacComponent,
@@ -40,6 +41,8 @@ import { DsSanPhamChiTietComponent } from "./san-pham/ds-san-pham-chi-tiet/ds-sa
     FormsModule,
     LayoutModule,
     SanPhamRoutingModule,
+    NzBadgeModule,
+    NzTypographyModule,
   ],
 })
 export class SanPhamModule {}

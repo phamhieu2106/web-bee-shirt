@@ -70,11 +70,22 @@
                 }}
               </th>
               <td>
-                <a
-                  class="link-hover"
-                  [routerLink]="'/sp/ds-sp-chi-tiet/' + s.id"
-                  >{{ s.ten }}</a
-                >
+                <ng-container *ngIf="isDiscounted(s.id); else noDiscount">
+                  <nz-ribbon nzText="Sale+" nzColor="red">
+                    <a
+                      class="link-hover"
+                      [routerLink]="'/sp/ds-sp-chi-tiet/' + s.id"
+                      >{{ s.ten }}</a
+                    >
+                  </nz-ribbon>
+                </ng-container>
+                <ng-template #noDiscount>
+                  <a
+                    class="link-hover"
+                    [routerLink]="'/sp/ds-sp-chi-tiet/' + s.id"
+                    >{{ s.ten }}</a
+                  >
+                </ng-template>
               </td>
               <td>{{ s.ma }}</td>
               <td>{{ s.sanPhamChiTiets.length }}</td>

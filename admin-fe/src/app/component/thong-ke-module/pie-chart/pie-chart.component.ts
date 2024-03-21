@@ -11,7 +11,7 @@ import { ChartService } from "src/app/service/chart.service";
 })
 export class PieChartComponent implements OnInit {
   chart: any;
-  data: CouponsSummary[] = [];
+  data: CouponsSummary[];
   backgroundColors: string[] = [];
   ngOnInit(): void {
     this.getData();

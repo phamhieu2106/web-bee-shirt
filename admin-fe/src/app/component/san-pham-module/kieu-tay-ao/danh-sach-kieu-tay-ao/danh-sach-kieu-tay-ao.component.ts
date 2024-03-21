@@ -1,13 +1,13 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import { ToastrService } from "ngx-toastr";
-import Swal from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-danh-sach-kieu-tay-ao",
@@ -21,9 +21,10 @@ export class DanhSachKieuTayAoComponent {
   public search = "";
   public selectedDetails: TayAo;
 
+  // constructor, ngOn
   constructor(
     private tayAoService: KieuTayAoService,
-    private toastr: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -33,38 +34,48 @@ export class DanhSachKieuTayAoComponent {
   }
 
   // public function
+  // 1
   public add(): void {
-    let trimmed = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Thêm kiểu tay áo?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmed);
 
-    this.tayAoService.add(this.addForm.value).subscribe({
-      next: (response: TayAo) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.tayAoService.add(this.addForm.value).subscribe({
+          next: (response: TayAo) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initAddForm();
+            document.getElementById("closeBtn").click();
+            this.notifService.success("Thêm thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
+  //
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
 
+  //
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -74,37 +85,34 @@ export class DanhSachKieuTayAoComponent {
       next: (response: PagedResponse<TayAo>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  public timKiem(): void {
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
-  public onClearSearchInput(): void {
-    this.goToPage();
-  }
-
+  //
   public openDetailsForm(id: number): void {
     this.tayAoService.getById(id).subscribe({
       next: (response: TayAo) => {
-        console.log("tay ao:", response);
-
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.tayAoService.getById(id).subscribe({
       next: (response: TayAo) => {
@@ -114,66 +122,75 @@ export class DanhSachKieuTayAoComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.tayAoService.changeStatus(id).subscribe({
       next: (response: string) => {
-        this.toastr.success(response, "");
         this.goToPage(
           this.pagedResponse.pageNumber,
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
+        this.notifService.success(response);
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public update(): void {
-    let trimmed = this.updateForm.get("ten").value.trim();
-    this.updateForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Cập nhật kiểu tay áo?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmed);
 
-    this.tayAoService.update(this.updateForm.value).subscribe({
-      next: (response: TayAo) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.tayAoService.update(this.updateForm.value).subscribe({
+          next: (response: TayAo) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initUpdateForm();
+            document.getElementById("closeUpdateBtn").click();
+            this.notifService.success("Cập nhật thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.success(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeUpdateBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
   // private function
+  //
   private getCoAoList(): void {
     this.tayAoService.getByPage().subscribe({
       next: (response: PagedResponse<TayAo>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.success(errorResponse.error.message);
       },
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

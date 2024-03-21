@@ -1,32 +1,24 @@
 <!-- Content heading -->
-<app-main-heading
-  [icon]="'fa-solid fa-receipt'"
-  [mainHeading]="''"
-  [title]="'Danh sách hóa đơn'"
-></app-main-heading>
+<app-main-heading [icon]="'fa-solid fa-receipt'" [mainHeading]="''" [title]="'Danh sách hóa đơn'"></app-main-heading>
 
 <!-- Content filter-->
 <br />
 <div class="row gutters">
   <div class="col-sm-12">
-    <div class="card">
+    <!-- <div class="card">
       <div class="card-header d-flex">
-        <i class="fa-solid fa-filter h4 m-1"></i>
+
         <h4>Bộ lọc</h4>
       </div>
 
       <div class="card-body">
-        <!-- Filter -->
+       
         <div class="row">
           <div class="col-md-12">
             <div class="mb-3">
               <label for="" class="form-label">Tìm kiếm:</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Nhập mã hóa đơn, số điện thoại, tên, email ..."
-                [(ngModel)]="search"
-              />
+              <input type="text" class="form-control" placeholder="Nhập mã hóa đơn, số điện thoại, tên, email ..."
+                [(ngModel)]="search" />
             </div>
           </div>
           <div class="col-md-6">
@@ -34,11 +26,7 @@
               <label for="" class="form-label">Loại hóa đơn:</label>
               <div class="form-group">
                 <div class="input-group">
-                  <select
-                    class="custom-select"
-                    id="inputGroupSelect01"
-                    [(ngModel)]="loaiHoaDon"
-                  >
+                  <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="loaiHoaDon">
                     <option value="">Tất cả</option>
                     <option value="ONLINE">Online</option>
                     <option value="TAI_QUAY">Tại quầy</option>
@@ -51,7 +39,7 @@
             <div class="mb-3">
               <label for="" class="form-label">Ngày tạo:</label>
               <input type="date" class="form-control" [(ngModel)]="ngayTao" />
-              <!-- <small class="form-text text-danger">Help text</small> -->
+             
             </div>
           </div>
         </div>
@@ -59,17 +47,70 @@
           <button type="button" class="btn btn-primary m-2" (click)="timKiem()">
             Tìm kiếm
           </button>
-          <button
-            type="button"
-            class="btn btn-success m-2"
-            (click)="clearFilter()"
-          >
+          <button type="button" class="btn btn-success m-2" (click)="clearFilter()">
             Làm mới
           </button>
         </div>
-        <!-- End filter -->
+       
+      </div>
+    </div> -->
+
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="float-md-left">Bộ lọc</h4>
+      </div>
+      <div class="card-body pt-4">
+        <!-- Filter start -->
+        <div class="row gutters d-flex align-items-center">
+          <div class="col-md-5 pe-4">
+            <div class="input-group">
+              <div class="input-group-prepend ">
+                <label class="me-3"> Tìm kiếm: </label>
+              </div>
+              <input type="text" class="form-control" placeholder="Nhập mã hóa đơn, số điện thoại, tên, email ..."
+                [(ngModel)]="search" />
+            </div>
+          </div>
+          <div class="col-md-2 ">
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Loại Hóa Đơn: </label>
+              </div>
+              <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="loaiHoaDon">
+                <option value="">Tất cả</option>
+                <option value="ONLINE">Online</option>
+                <option value="TAI_QUAY">Tại quầy</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group d-flex align-items-center">
+              <div class="input-group-prepend">
+                <label class="me-3"> Ngày Tạo: </label>
+              </div>
+              <input type="date" class="form-control" [(ngModel)]="ngayTao" />
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <button type="button" class="btn btn-create m-2" (click)="timKiem()">
+              Tìm kiếm
+            </button>
+            <button type="button" class="btn btn-success m-2" (click)="clearFilter()">
+              Làm mới
+            </button>
+          </div>
+
+         
+        </div>
+        <!-- Filter End -->
       </div>
     </div>
+
+
+
+    
   </div>
 </div>
 <br />
@@ -78,11 +119,7 @@
     <div class="card">
       <div class="card-header">
         <div class="right-actions d-flex">
-          <a
-            routerLink="/ban-hang"
-            type="button"
-            class="btn btn-primary ml-auto"
-          >
+          <a routerLink="/ban-hang" type="button" class="btn btn-create ml-auto">
             <i class="fa-solid fa-plus"></i>
             Tạo hóa đơn
           </a>
@@ -93,125 +130,63 @@
         <!-- Tab header -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a
-              class="nav-link active"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('')"
-              >Tất cả</a
-            >
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('')">Tất cả</a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('CHO_XAC_NHAN')"
-              >Chờ xác nhận
+            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('CHO_XAC_NHAN')">Chờ xác nhận
               <span class="badge-number text-danger">{{
                 soLuongDonHang.choXacNhanQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.choXacNhanQuantity
-              }}</span></a
-            >
+                ? "99+"
+                : soLuongDonHang.choXacNhanQuantity
+                }}</span></a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('DA_XAC_NHAN')"
-              >Đã xác nhận
+            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('DA_XAC_NHAN')">Đã xác nhận
               <span class="badge-number text-danger">{{
                 soLuongDonHang.daXacNhanQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.daXacNhanQuantity
-              }}</span></a
-            >
+                ? "99+"
+                : soLuongDonHang.daXacNhanQuantity
+                }}</span></a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('CHO_GIAO')"
-              >Chờ giao
+            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('CHO_GIAO')">Chờ giao
               <span class="badge-number text-danger">{{
                 soLuongDonHang.choGiaoQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.choGiaoQuantity
-              }}</span></a
-            >
+                ? "99+"
+                : soLuongDonHang.choGiaoQuantity
+                }}</span></a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('DANG_GIAO')"
-              >Đang giao
+            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('DANG_GIAO')">Đang giao
               <span class="badge-number text-danger">{{
                 soLuongDonHang.dangGiaoQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.dangGiaoQuantity
-              }}</span></a
-            >
+                ? "99+"
+                : soLuongDonHang.dangGiaoQuantity
+                }}</span></a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('HOAN_THANH')"
-              >Hoàn thành
+            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true" (click)="changeStatus('HOAN_THANH')">Hoàn thành
               <span class="badge-number text-danger">{{
                 soLuongDonHang.hoanThanhQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.hoanThanhQuantity
-              }}</span></a
-            >
+                ? "99+"
+                : soLuongDonHang.hoanThanhQuantity
+                }}</span></a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link position-relative"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-              (click)="changeStatus('HUY')"
-            >
+            <a class="nav-link position-relative" id="home-tab" data-toggle="tab" href="#home" role="tab"
+              aria-controls="home" aria-selected="true" (click)="changeStatus('HUY')">
               Hủy
               <span class="badge-number text-danger">{{
                 soLuongDonHang.huyQuantity > 99
-                  ? "99+"
-                  : soLuongDonHang.huyQuantity
-              }}</span>
+                ? "99+"
+                : soLuongDonHang.huyQuantity
+                }}</span>
               <!-- Số thông báo -->
             </a>
           </li>
@@ -219,23 +194,12 @@
         <!--End Tab header -->
         <!-- Tab Table Data -->
         <div class="tab-content" id="myTabContent">
-          <div
-            class="tab-pane fade active show"
-            id="home"
-            role="tabpanel"
-            aria-labelledby="home-tab"
-          >
-            <table
-              id="rowSelection_wrapper"
-              class="table dataTables_wrapper dt-bootstrap4 no-footer rounded"
-            >
+          <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <table id="rowSelection_wrapper" class="table dataTables_wrapper dt-bootstrap4 no-footer rounded">
               <div class="row">
                 <div class="col-sm-12">
-                  <table
-                    class="table table-striped table-bordered no-footer table-hover"
-                    role="grid"
-                    aria-describedby="rowSelection_info"
-                  >
+                  <table class="table table-striped table-bordered no-footer table-hover" role="grid"
+                    aria-describedby="rowSelection_info">
                     <thead>
                       <tr role="row">
                         <th>STT</th>
@@ -257,9 +221,9 @@
                         <td>{{ hd.nhanVien == null ? "" : hd.nhanVien.id }}</td>
                         <td>
                           {{
-                            hd.khachHang == null
-                              ? "Khách lẻ"
-                              : hd.khachHang.hoTen
+                          hd.khachHang == null
+                          ? "Khách lẻ"
+                          : hd.khachHang.hoTen
                           }}
                         </td>
                         <td>
@@ -270,28 +234,19 @@
                         </td>
                         <td>
                           {{
-                            hd.tongTien | currency : "đ " : "symbol" : "1.0-0"
+                          hd.tongTien | currency : "đ " : "symbol" : "1.0-0"
                           }}
                         </td>
                         <td>
-                          <app-loai-hoa-don
-                            [loaiHoaDon]="hd.loaiHoaDon"
-                          ></app-loai-hoa-don>
+                          <app-loai-hoa-don [loaiHoaDon]="hd.loaiHoaDon"></app-loai-hoa-don>
                         </td>
                         <td>
-                          <app-trang-thai-hoa-don
-                            [trangThai]="hd.trangThai"
-                          ></app-trang-thai-hoa-don>
+                          <app-trang-thai-hoa-don [trangThai]="hd.trangThai"></app-trang-thai-hoa-don>
                         </td>
                         <td>
-                          <a
-                            class="btn btn-outline-light btn-rounded"
-                            routerLink="/hoa-don/chi-tiet-hoa-don/{{ hd.id }}"
-                          >
-                            <i
-                              class="fa-solid fa-pen-to-square"
-                              style="color: #ffd43b"
-                            ></i>
+                          <a class="btn btn-outline-light btn-rounded"
+                            routerLink="/hoa-don/chi-tiet-hoa-don/{{ hd.id }}">
+                            <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                           </a>
                         </td>
                       </tr>
@@ -305,13 +260,8 @@
               <div class="col-sm-12 col-md-6">
                 <div class="dataTables_length" id="fixedHeader_length">
                   Xem
-                  <select
-                    name="fixedHeader_length"
-                    aria-controls="fixedHeader"
-                    class=""
-                    [(ngModel)]="pageSize"
-                    (change)="getHoaDons()"
-                  >
+                  <select name="fixedHeader_length" aria-controls="fixedHeader" class="" [(ngModel)]="pageSize"
+                    (change)="getHoaDons()">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="25">25</option>
@@ -324,15 +274,8 @@
               <div class="col-md-6 d-flex justify-content-end">
                 <nav aria-label="Page navigation example">
                   <ul class="pagination">
-                    <li
-                      class="page-item"
-                      *ngFor="let page of hoaDons?.pageNumberArr"
-                    >
-                      <a
-                        class="page-link pointer"
-                        (click)="changePage(page - 1)"
-                        >{{ page }}</a
-                      >
+                    <li class="page-item" *ngFor="let page of hoaDons?.pageNumberArr">
+                      <a class="page-link pointer" (click)="changePage(page - 1)">{{ page }}</a>
                     </li>
                   </ul>
                 </nav>

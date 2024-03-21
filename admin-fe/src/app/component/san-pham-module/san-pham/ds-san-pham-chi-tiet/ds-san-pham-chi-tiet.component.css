@@ -44,3 +44,25 @@ nz-badge {
   display: inline-block;
   vertical-align: middle;
 }
+
+thead tr th{
+  background-color: #574afb ; /* Màu nền của header */
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.page-link.active{
+  background-color: #574afb;
+  color: white !important;
+}
+
+.pagination li a{
+  color: #574afb;
+}
+
+
+.btn-create{
+  background-color: #574afb;
+  color: white;
+}

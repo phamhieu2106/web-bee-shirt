@@ -178,7 +178,7 @@
   </div>
 </div>
 
-<!-- add modal -->
+<!-- modal: add -->
 <div
   class="modal fade"
   id="chatLieuAddForm"
@@ -199,7 +199,7 @@
             <label for="inputEmail4">Tên chất liệu:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
@@ -215,7 +215,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -223,7 +223,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >

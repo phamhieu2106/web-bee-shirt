@@ -226,10 +226,12 @@
               <td>
                 <div
                   id="carouselExampleSlidesOnly"
-                  class="carousel slide"
+                  class="carousel slide pointer"
                   data-bs-ride="carousel"
                   style="width: 60px"
                   data-bs-interval="3000"
+                  (click)="openModalChinhSuaAnh(s.id, s.mauSac.id)"
+                  title="Chỉnh sửa ảnh"
                 >
                   <div class="carousel-inner">
                     <div
@@ -546,6 +548,107 @@
           type="button"
           class="btn btn-primary rounded"
           (click)="updateSpct()"
+        >
+          Cập Nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- button: trigger modal update image -->
+<button
+  id="triggerUpdateAnhModal"
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#updateAnhModal"
+  style="display: none"
+>
+  Launch demo modal
+</button>
+
+<!-- modal: update image -->
+<div
+  class="modal fade"
+  id="updateAnhModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cập nhật ảnh</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- các ảnh đã chọn -->
+        <h6>Ảnh đã chọn:</h6>
+        <div class="text-center">
+          <i *ngIf="selectedImgFileList.length === 0">Chưa có ảnh nảo</i>
+        </div>
+        <div
+          style="display: inline-block"
+          *ngFor="let f of selectedImgFileList; let i = index"
+        >
+          <div>
+            <img class="thumbnail me-5" [id]="'selectedImg2' + i" src="" />
+          </div>
+        </div>
+
+        <!-- Danh sách ảnh tải lên -->
+        <hr />
+        <h6>Danh sách ảnh tải lên:</h6>
+        <div class="text-center">
+          <p><i *ngIf="uploadImgFileList.length === 0">Chưa có ảnh nảo</i></p>
+
+          <button
+            class="mt-3 pointer btn btn-primary rounded"
+            (click)="openInputUpdateImg()"
+          >
+            Tải ảnh lên
+          </button>
+          <input
+            type="file"
+            id="inputUpdateImg"
+            multiple
+            hidden
+            (change)="changeInput($event)"
+          />
+        </div>
+        <div
+          class="image-container"
+          *ngFor="let file of uploadImgFileList; let i = index"
+        >
+          <img class="exist-img" [id]="'uploadImg' + i" />
+          <input
+            [id]="'chkBoxUploadImg' + i"
+            [checked]="isUploadImgChecked(file.name)"
+            type="checkbox"
+            class="checkbox"
+            (change)="toggleUploadImage(i, file, $event)"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="closeUpdateBtn"
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+        >
+          Hủy
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary rounded"
+          (click)="updateAnhSpct()"
         >
           Cập Nhật
         </button>

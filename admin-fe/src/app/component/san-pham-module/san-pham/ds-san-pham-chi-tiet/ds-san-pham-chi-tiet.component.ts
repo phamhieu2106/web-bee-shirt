@@ -27,6 +27,7 @@ import { MauSacService } from "src/app/service/mau-sac.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamService } from "src/app/service/san-pham.service";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-ds-san-pham-chi-tiet",
@@ -64,6 +65,10 @@ export class DsSanPhamChiTietComponent {
   public changeableMinPrice: number;
   public changeableMaxPrice: number;
 
+  public selectedImgFileList: File[] = [];
+  public uploadImgFileList: File[] = [];
+  public currentMauSacId: number = 0;
+
   filterParams: FilterSPCTParams = {
     pageNumber: 1,
     pageSize: 5,
@@ -79,11 +84,12 @@ export class DsSanPhamChiTietComponent {
     materialId: null,
   };
 
+  // constructor, ngOn
   constructor(
     private activatedRoute: ActivatedRoute,
     private currencyPipe: CurrencyPipe,
     private toastr: ToastrService,
-    private sanPhamChiTietService: SanPhamChiTietService,
+    private spctService: SanPhamChiTietService,
     private sanPhamService: SanPhamService,
     private mauSacService: MauSacService,
     private kichCoService: KichCoService,
@@ -215,7 +221,6 @@ export class DsSanPhamChiTietComponent {
           `ckBoxForUpdate${i}`
         ) as HTMLInputElement;
         if (ckBox.checked) {
-          console.log(ckBox as HTMLInputElement);
           const idValue = (
             document.getElementById(`id${i}`) as HTMLInputElement
           ).value;
@@ -238,7 +243,7 @@ export class DsSanPhamChiTietComponent {
             giaBans: giaBans,
             soLuongs: soLuongs,
           };
-          this.sanPhamChiTietService.updateNhanh(updateNhanhReq).subscribe({
+          this.spctService.updateNhanh(updateNhanhReq).subscribe({
             next: (response: string) => {
               this.toastr.success(response);
               this.getSanPhamAndMinMaxPrice();
@@ -273,7 +278,7 @@ export class DsSanPhamChiTietComponent {
 
   // 11
   public selectUpdateSPCT(spctId: number): void {
-    this.sanPhamChiTietService.getOneById(spctId).subscribe({
+    this.spctService.getOneById(spctId).subscribe({
       next: (response: SanPhamChiTiet) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
@@ -304,7 +309,7 @@ export class DsSanPhamChiTietComponent {
 
   // 12
   public updateSpct(): void {
-    this.sanPhamChiTietService.update(this.updateForm.value).subscribe({
+    this.spctService.update(this.updateForm.value).subscribe({
       next: (response: string) => {
         this.notifService.success(response);
         this.getSanPhamAndMinMaxPrice();
@@ -335,21 +340,121 @@ export class DsSanPhamChiTietComponent {
 
   //
   public changeStatus(id: number): void {
-    this.sanPhamChiTietService.changeStatus(id).subscribe({
+    this.spctService.changeStatus(id).subscribe({
       next: (response: string) => {
         this.toastr.success(response, "");
         this.getSpctByFilterParams();
       },
       error: (errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
         this.notifService.error(JSON.parse(errorResponse.error).message);
       },
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.filterParams.pageSize = e.target.value;
     this.getSpctByFilterParams();
+  }
+
+  //
+  public openModalChinhSuaAnh(spctId: number, mauSacId: number): void {
+    document.getElementById("triggerUpdateAnhModal").click();
+    this.currentMauSacId = mauSacId;
+    console.log(spctId);
+    console.log(this.sanPham.id);
+    console.log(mauSacId);
+  }
+
+  //
+  public openInputUpdateImg(): void {
+    document.getElementById("inputUpdateImg").click();
+  }
+
+  //
+  public changeInput(event: any): void {
+    for (let i = 0; i < event.target["files"].length; i++) {
+      let currentFile = event.target["files"][i];
+      if (!this.checkUploadImage(currentFile.name, this.uploadImgFileList)) {
+        this.uploadImgFileList.push(currentFile);
+      }
+    }
+
+    // show list ảnh vừa được chọn
+    for (let i = 0; i < this.uploadImgFileList.length; i++) {
+      this.showImageThumbnail(this.uploadImgFileList[i], `uploadImg${i}`);
+    }
+  }
+
+  //
+  public isUploadImgChecked(fileName: string): boolean {
+    for (let i = 0; i < this.selectedImgFileList.length; i++) {
+      if (this.selectedImgFileList[i].name === fileName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //
+  public toggleUploadImage(chkBoxIndex: number, file: File, event: any): void {
+    const isChecked = event.target.checked;
+    if (this.selectedImgFileList.length === 5 && isChecked) {
+      this.notifService.warning("Không chọn quá 5 ảnh!");
+
+      const currentCheckbox = document.getElementById(
+        `chkBoxUploadImg${chkBoxIndex}`
+      ) as HTMLInputElement;
+      currentCheckbox.checked = !currentCheckbox.checked;
+      return;
+    }
+
+    if (isChecked) {
+      this.selectedImgFileList.push(file);
+    } else {
+      this.selectedImgFileList = this.selectedImgFileList.filter(
+        (item: File) => item.name !== file.name
+      );
+    }
+
+    // show ảnh
+    for (let i = 0; i < this.selectedImgFileList.length; i++) {
+      this.showImageThumbnail(this.selectedImgFileList[i], `selectedImg2${i}`);
+    }
+  }
+
+  //
+  public updateAnhSpct(): void {
+    Swal.fire({
+      title: "Cập nhật ảnh sản phẩm?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        if (this.selectedImgFileList.length > 0) {
+          this.spctService
+            .updateImages(
+              this.selectedImgFileList,
+              this.sanPham.id,
+              this.currentMauSacId
+            )
+            .subscribe({
+              next: (response: any) => {
+                this.notifService.success(response);
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.notifService.error(errorResponse.error.message);
+              },
+            });
+        } else {
+          this.notifService.error("Bạn chưa chọn ảnh!");
+        }
+      }
+    });
   }
 
   // II. private functions
@@ -365,13 +470,11 @@ export class DsSanPhamChiTietComponent {
           this.sanPham = response;
           this.updateForm.get("sanPhamId").setValue(response.id);
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse);
-        },
+        error: (errorResponse: HttpErrorResponse) => {},
       });
 
       // get min price and max price in spctList of sp
-      this.sanPhamChiTietService.getMinAndMaxPrice(productId).subscribe({
+      this.spctService.getMinAndMaxPrice(productId).subscribe({
         next: (response: number[]) => {
           this.minPrice = response[0];
           this.changeableMinPrice = response[0];
@@ -385,9 +488,7 @@ export class DsSanPhamChiTietComponent {
           // get spctList of sp
           this.getSpctByFilterParams();
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse);
-        },
+        error: (errorResponse: HttpErrorResponse) => {},
       });
     });
   }
@@ -398,9 +499,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: MauSac[]) => {
         this.mauSacs = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -410,9 +509,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: KichCo[]) => {
         this.kichCos = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -422,9 +519,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: KieuDang[]) => {
         this.kieuDangs = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -434,9 +529,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: KieuThietKe[]) => {
         this.thietKes = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -446,9 +539,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: TayAo[]) => {
         this.tayAos = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -458,9 +549,7 @@ export class DsSanPhamChiTietComponent {
       next: (response: CoAo[]) => {
         this.coAos = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -470,21 +559,17 @@ export class DsSanPhamChiTietComponent {
       next: (response: ChatLieu[]) => {
         this.chatLieus = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
   // 9
   private getSpctByFilterParams(): void {
-    this.sanPhamChiTietService.filterSPCTByPage(this.filterParams).subscribe({
+    this.spctService.filterSPCTByPage(this.filterParams).subscribe({
       next: (response: PagedResponse<SanPhamChiTiet>) => {
         this.pagedResponse = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
@@ -498,5 +583,20 @@ export class DsSanPhamChiTietComponent {
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;
+  }
+
+  // 12
+  private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
+    return curUploadImgFileList.some((file: File) => file.name === fileName);
+  }
+
+  // 13
+  private showImageThumbnail(file: File, thumnailId: string): void {
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      (document.getElementById(thumnailId) as HTMLImageElement)["src"] = e
+        .target.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 }

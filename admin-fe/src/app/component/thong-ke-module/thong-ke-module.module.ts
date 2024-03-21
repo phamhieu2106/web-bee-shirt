@@ -10,7 +10,6 @@ import { LineChartSaleComponent } from "./line-chart-sale/line-chart-sale.compon
 import { PieChartComponent } from "./pie-chart/pie-chart.component";
 import { PieDiscountChartComponent } from "./pie-discount-chart/pie-discount-chart.component";
 import { PolarProductChartComponent } from "./polar-product-chart/polar-product-chart.component";
-import { VietnamMapChartComponent } from "./vietnam-map-chart/vietnam-map-chart.component";
 import { BarReviewChartComponent } from "./bar-review-chart/bar-review-chart.component";
 import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
 import { FormsModule } from "@angular/forms";
@@ -24,7 +23,6 @@ import { FormsModule } from "@angular/forms";
     PieChartComponent,
     PieDiscountChartComponent,
     PolarProductChartComponent,
-    VietnamMapChartComponent,
     BarReviewChartComponent,
   ],
   imports: [

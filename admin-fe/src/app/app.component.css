@@ -6,4 +6,12 @@
 .mainContent{
     flex: 1;
     margin-bottom: 100px;
+    
+}
+
+.footerNew{
+    position: sticky;
+    margin-top: 50px;
+    bottom: 0;
+    right: 0;
 }

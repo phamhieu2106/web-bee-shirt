@@ -23,7 +23,7 @@
                       : ''
                   "
                   formControlName="maPhieuGiamGia"
-                  readonly
+                  
                 />
               </div>
 
@@ -147,6 +147,7 @@
                       aria-describedby="basic-addon2"
                       value=""
                       (input)="formatGiaTri($event, 'giaTri')"
+                      (blur)="checkGiaTriBlur()"
                     />
                     <span
                       class="input-group-text"
@@ -211,52 +212,67 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Lượt sử dụng:</label>
                   <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Số lượng"
-                    [ngClass]="
-                      updateForm.get('soLuong').invalid &&
-                      updateForm.get('soLuong').touched
-                        ? 'is-invalid'
-                        : ''
-                    "
-                    formControlName="soLuong"
-                  />
-                  <div class="invalid-feedback">
-                    Số lượng không được để trống
-                  </div>
+                  type="number"
+                  class="form-control"
+                  placeholder="Số lượng"
+                  [ngClass]="
+                    (updateForm.get('soLuong').invalid &&
+                    updateForm.get('soLuong').touched) ||
+                    (updateForm.get('soLuong').hasError('min') &&
+                    updateForm.get('soLuong').touched)
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  formControlName="soLuong"
+                  [readonly]="checkSoLuong"
+                />
+                <div class="invalid-feedback">
+                  <span *ngIf="updateForm.get('soLuong').hasError('required')">
+                    Số lượng không được để trống</span
+                  >
+
+                  <span *ngIf="updateForm.get('soLuong').hasError('min')"
+                    >Số lượng > 0
+                  </span>
+                </div>
                 </div>
                 <div class="col-md-6">
                   <label for="" class="labelChinh"
-                    >Số tiền chi tối thiểu:</label
-                  >
-                  <div class="input-group mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Điều kiện"
-                      [ngClass]="
-                        updateForm.get('dieuKienGiam').invalid &&
-                        updateForm.get('dieuKienGiam').touched
-                          ? 'is-invalid'
-                          : ''
-                      "
-                      formControlName="dieuKienGiam"
-                      aria-label="Recipient's username"
-                      aria-describedby="basic-addon2"
-                      
-                    />
-                    <span class="input-group-text" id="basic-addon2">VNĐ</span>
+                  >Số tiền chi tối thiểu:</label
+                >
+                <div class="input-group mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Điều kiện"
+                    [ngClass]="
+                      updateForm.get('dieuKienGiam').invalid &&
+                      updateForm.get('dieuKienGiam').touched
+                        ? 'is-invalid'
+                        : ''
+                    "
+                    formControlName="dieuKienGiam"
+                    aria-label="Recipient's username"
+                    aria-describedby="basic-addon2"
+                    (input)="formatNumber($event, 'dieuKienGiam')"
+                    (blur)="checkGiaTriToiDa()"
+                    (blur)="checkGiaTriBlur()"
+                  />
+                  <span class="input-group-text" id="basic-addon2">VNĐ</span>
 
-                    <div
-                      *ngIf="
-                        updateForm.get('dieuKienGiam').hasError('required') &&
+                  <div
+                    *ngIf="
+                      updateForm
+                        .get('dieuKienGiam')
+                        .hasError('invalidDieuKien') &&
                         updateForm.get('dieuKienGiam').touched
-                      "
-                      class="invalid-feedback"
-                    >
-                      Điều kiện không được để trống
-                    </div>
+                    "
+                    class="invalid-feedback"
+                  >
+                    {{
+                      updateForm.get("dieuKienGiam").getError("invalidDieuKien")
+                    }}
+                  </div>
                   </div>
                 </div>
               </div>

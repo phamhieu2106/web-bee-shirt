@@ -65,7 +65,6 @@ export class ThemPhieuComponent implements OnInit {
     }
 
 
-
     if (typeof this.addForm.get("dieuKienGiam").value === "string") {
 
       const dieuKienGiamFormatted = parseFloat(
@@ -132,6 +131,7 @@ export class ThemPhieuComponent implements OnInit {
         if (error.status === 400) {
           // Trích xuất thông điệp lỗi từ response
           this.errorMessage = error.error.message;
+         
           Swal.fire({
             toast: true,
             icon: "error",
@@ -149,7 +149,7 @@ export class ThemPhieuComponent implements OnInit {
             showConfirmButton: false,
             timer: 3000,
           });
-          console.log(error.message);
+       
         }
       },
     });
@@ -478,6 +478,13 @@ export class ThemPhieuComponent implements OnInit {
     this.addForm.get("dieuKienGiam").updateValueAndValidity();
     this.addForm.get("giaTriMax").updateValueAndValidity();
   }
+
+  checkGiaTriBlur() {
+    this.addForm.get("dieuKienGiam").updateValueAndValidity();
+    this.addForm.get("giaTri").updateValueAndValidity();
+  }
+
+
 
 
   checkThoiGian() {

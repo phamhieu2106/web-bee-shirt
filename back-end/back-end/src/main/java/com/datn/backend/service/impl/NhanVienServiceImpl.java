@@ -4,8 +4,8 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
-import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
 import com.datn.backend.model.khach_hang.KhachHangImage;
@@ -47,7 +47,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         // check exist sdt
         if (nhanVienRepo.existsBySdt(request.getSdt().trim())) {
-            throw new ResourceExistsException("Số điện thoại: " + request.getSdt()+ " đã tồn tại.");
+            throw new ResourceExistsException("Số điện thoại: " + request.getSdt() + " đã tồn tại.");
         }
 
         // khach_hang_image
@@ -130,11 +130,11 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
     @Override
-    public PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter) {
+    public PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter, String search) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        Page<NhanVienResponse> page = nhanVienRepo.filter(pageable, gioiTinhFilter, trangThaiFilter);
+        Page<NhanVienResponse> page = nhanVienRepo.filter(pageable, gioiTinhFilter, trangThaiFilter, search);
 
         PagedResponse<NhanVienResponse> pagedResponse = new PagedResponse<>();
 
@@ -162,8 +162,8 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         if (optionalNhanVien.isPresent()) {
 
-            if(nhanVienRepo.existsBySdtExcluding(request.getSdt().trim(), optionalNhanVien.get().getSdt().trim())) {
-                throw new ResourceExistsException("Số điện thoại: " + request.getSdt()+ " đã tồn tại.");
+            if (nhanVienRepo.existsBySdtExcluding(request.getSdt().trim(), optionalNhanVien.get().getSdt().trim())) {
+                throw new ResourceExistsException("Số điện thoại: " + request.getSdt() + " đã tồn tại.");
             } else if (nhanVienRepo.existsByEmailExcluding(request.getEmail().trim().toLowerCase(), optionalNhanVien.get().getEmail().trim().toLowerCase())) {
                 throw new ResourceExistsException("Email: " + request.getEmail() + " đã tồn tại.");
             } else {
@@ -188,7 +188,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 }
                 KhachHangImage image = nv.getImage();
                 if (bi != null) {
-                    if(image.getImageId() != null) {
+                    if (image.getImageId() != null) {
                         // xóa ảnh cũ
                         cloudinaryService.delete(image.getImageId());
                     }

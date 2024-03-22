@@ -76,6 +76,8 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
 
+
+
         if (maPhieuGiamGia.equals("")) {
             String generatedMaPhieu = generateMaPhieuGiamGia(); // Tự sinh mã mới
             pgg.setMaPhieuGiamGia(generatedMaPhieu);
@@ -86,6 +88,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
         }
+        pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
 
         // Xác định trạng thái dựa trên thời gian
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {

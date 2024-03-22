@@ -140,8 +140,8 @@
               </td>
               <td>
                 <button class="btn btn-outline-dark btn-rounded" id="button" data-toggle="modal"
-                  data-target="#formDetailButton" data-whatever="@mdo" (click)="openDetailsForm(pgg.id)"
-                  [disabled]="pgg.trangThai === 'Đã kết thúc'">
+                  data-target="#updateAnhModal" data-whatever="@mdo" (click)="openDetailsForm(pgg.id)"
+                 >
                   <i class="fa-solid fa-circle-info fa-xl" id="icon-button-detail"></i>
                 </button>
 
@@ -203,7 +203,7 @@
 
 
 <!-- Modal Form Detail start -->
-<div class="modal fade" id="formDetailButton" tabindex="-1" role="dialog" aria-labelledby="formDetail"
+<!-- <div class="modal fade" id="formDetailButton" tabindex="-1" role="dialog" aria-labelledby="formDetail"
   aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -222,6 +222,31 @@
         </button>
       </div>
     </div>
+  </div>
+</div> -->
+
+
+<div
+  class="modal"
+  id="updateAnhModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Thông tin phiếu giảm giá</h1>
+        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">
+          X
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-chi-tiet-phieu [phieuDetails]="phieuDetails"></app-chi-tiet-phieu>
+
+      </div>
+
+      
   </div>
 </div>
 <!-- Modal Form Detail ends -->

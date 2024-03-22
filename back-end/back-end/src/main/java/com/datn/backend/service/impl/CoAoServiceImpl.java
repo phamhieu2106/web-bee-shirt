@@ -25,7 +25,7 @@ public class CoAoServiceImpl implements CoAoService {
     @Override
     public CoAo add(CoAo coAo) {
         if (coAoRepo.existsByTen(coAo.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên cổ áo '" + coAo.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("'" + coAo.getTen() + "' đã tồn tại.");
         }
         coAo.setTrangThai(true);
         return coAoRepo.save(coAo);

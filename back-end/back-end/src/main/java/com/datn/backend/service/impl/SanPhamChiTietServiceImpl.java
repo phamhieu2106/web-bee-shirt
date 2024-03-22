@@ -102,7 +102,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             HinhAnh hinhAnh = saveHinhAnhImage(file);
             hinhAnhs.add(hinhAnh);
         }
-
         for (SanPhamChiTiet spct : spctList) {
             spct.setHinhAnhs(hinhAnhs);
         }
@@ -346,6 +345,28 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public boolean checkExist(int spId, int mauSacId, int sizeId) {
         return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) != null;
+    }
+
+    @Override
+    public void updateImages(MultipartFile[] files, int spId, int mauSacId) throws IOException {
+        List<SanPhamChiTiet> spctList = this.spctRepo.findBySanPhamIdAndMauSacId(spId, mauSacId);
+        List<HinhAnh> hinhAnhs = spctList.get(0).getHinhAnhs();
+        int hinhAnhLength = hinhAnhs.size();
+
+        for (int i = 0; i < files.length; ++i) {
+            MultipartFile file = files[i];
+            HinhAnh newImg = saveHinhAnhImage(file);
+            if (i <= hinhAnhLength - 1) {
+                HinhAnh existImg = hinhAnhs.get(i);
+                System.err.println("existImg: ");
+                System.out.println(existImg);
+//                existImg.setImageName(newImg.getImageName());
+//                existImg.setImageUrl(newImg.getImageUrl());
+//                existImg.setImageId(newImg.getImageId());
+            } else {
+//                hinhAnhs.add(newImg);
+            }
+        }
     }
 
     @Override

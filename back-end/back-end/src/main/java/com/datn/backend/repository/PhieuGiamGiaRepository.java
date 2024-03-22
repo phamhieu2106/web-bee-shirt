@@ -16,6 +16,7 @@ import java.util.List;
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
 
     boolean existsByMaPhieuGiamGia(String maPhieu);
+    boolean existsByTenPhieuGiamGia(String tenPhieu);
 
 
     @Query(value = "select pgg.id  as id,  pgg.ma_phieu_giam_gia as MaPhieuGiamGia," +
@@ -33,7 +34,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
     PhieuGiamGiaResponse getOneById(@Param("id") Integer id);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
-            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  " +
+            "where  (pgg.ten_phieu_giam_gia LIKE %:search% OR pgg.ma_phieu_giam_gia LIKE %:search%)  " +
             "AND pgg.kieu IN (:kieu) " +
             "AND pgg.loai IN (:loai) " +
             "AND pgg.trang_thai IN (:trangThai) " +
@@ -45,7 +46,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                                      @Param("trangThai")List<String> trangThai);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
-            "where  (pgg.ten_phieu_giam_gia LIKE :search% OR pgg.ma_phieu_giam_gia LIKE :search%)  " +
+            "where  (pgg.ten_phieu_giam_gia LIKE %:search% OR pgg.ma_phieu_giam_gia LIKE %:search%)  " +
             "AND pgg.kieu IN (:kieu) " +
             "AND pgg.loai IN (:loai) " +
             "AND pgg.trang_thai IN (:trangThai) " +

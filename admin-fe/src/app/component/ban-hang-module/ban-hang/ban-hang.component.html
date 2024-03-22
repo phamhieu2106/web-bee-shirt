@@ -363,7 +363,13 @@
             *ngIf="order == null || order.phieuGiamGia == null"
             class="right-align"
           />
-          <!-- <div class="text-danger">{{ messagePgg }}</div> -->
+          <input
+            type="text"
+            disabled
+            [ngModel]="messagePgg"
+            *ngIf="messagePgg != null || messagePgg != ''"
+            class="right-align border-0"
+          />
         </span>
         <!-- Tự fill PGG -->
       </div>

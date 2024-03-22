@@ -37,7 +37,7 @@
               <div class="col-md-2">
                 <label for="">Loại</label>
                 <div>
-                  <select class="form-control" [(ngModel)]="loai" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="loai" (change)="filterPrivate()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[1]">Công Khai</option>
                     <option [ngValue]="[0]">Cá Nhân</option>
@@ -48,7 +48,7 @@
               <div class="col-md-2">
                 <label for="">Kiểu</label>
                 <div>
-                  <select class="form-control" [(ngModel)]="kieu" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="kieu" (change)="filterPrivate()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[0]">%</option>
                     <option [ngValue]="[1]">Tiền Mặt</option>
@@ -59,7 +59,7 @@
               <div class="col-md-2">
                 <label for="">Trạng Thái</label>
                 <div>
-                  <select class="form-control" [(ngModel)]="trangThai" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="trangThai" (change)="filterPrivate()">
                     <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
                     <option value="Sắp diễn ra">Sắp diễn ra</option>
                     <option value="Đang diễn ra">Đang diễn ra</option>
@@ -122,10 +122,10 @@
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
               <td>{{ pgg.loai == 1?"Công Khai":"Cá Nhân" }}</td>
-              <td>{{ pgg.giaTri }}</td>
-              <td>{{ pgg.giaTriMax | number}}VND</td>
+              <td>{{ formatCurrencyGiaTri(pgg.giaTri) }}</td>
+              <td>{{formatCurrency( pgg.giaTriMax )}}</td>
               <td>{{ pgg.soLuong }}</td>
-              <td>{{ pgg.dieuKienGiam | number}}VND</td>
+              <td>{{ formatCurrency(pgg.dieuKienGiam)}}</td>
               <td>{{ pgg.thoiGianBatDau | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>{{ pgg.thoiGianKetThuc | date:"dd-MM-yyyy HH:mm:ss" }}</td>
               <td>

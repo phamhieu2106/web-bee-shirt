@@ -19,21 +19,26 @@
 
 <div class="app-wrap" *ngIf="isLoggin">
   <div class="app">
-  
+
     <div>
-     
+
       <div class="main-content1">
         <div class="sidebarNew">
           <app-sidebar></app-sidebar>
         </div>
         <div class="mainContent">
           <router-outlet></router-outlet>
+          <div class="footerNew">
+            <app-footer></app-footer>
+
+          </div>
+
         </div>
-       
+
       </div>
     </div>
   </div>
-  <app-footer></app-footer>
+
 </div>
 
 <div *ngIf="!isLoggin">

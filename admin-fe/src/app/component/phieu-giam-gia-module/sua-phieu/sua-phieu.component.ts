@@ -37,6 +37,8 @@ export class SuaPhieuComponent implements OnInit {
   soLuongCheck: number = 0;
   sendMailChecked: boolean = false
 
+ 
+
 
   idKhach: number
 
@@ -77,7 +79,7 @@ export class SuaPhieuComponent implements OnInit {
           }
         });
 
-        console.log(this.selectedIds)
+       
         this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, false).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
             if (response) {
@@ -101,22 +103,22 @@ export class SuaPhieuComponent implements OnInit {
 
   }
 
-  // Phiếu giảm giá
 
-  public getOne(id: number): void { }
+
+
 
   public initUpdateForm(phieu?: PhieuGiamGia): void {
     this.updateForm = new FormGroup({
-      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia, [Validators.required]),
-      tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [Validators.required]),
+      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia),
+      tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [this.validateTen()]),
       kieu: new FormControl(phieu?.kieu, [Validators.required]),
       loai: new FormControl(phieu?.loai, [Validators.required]),
-      soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
+      soLuong: new FormControl(phieu?.soLuong, [Validators.required, Validators.min(1)]),
       thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required, this.validateNgayBatDau()]),
       thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required, this.validateNgay()]),
-      dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [Validators.required]),
+      dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [this.validateDieuKien()]),
       giaTri: new FormControl(phieu?.giaTri, [Validators.required, this.validateVip()]),
-      giaTriMax: new FormControl(phieu?.giaTriMax, [Validators.required]),
+      giaTriMax: new FormControl(phieu?.giaTriMax, [this.validateMax()]),
     });
 
     const kieuValue = this.updateForm.get("kieu").value;
@@ -140,8 +142,39 @@ export class SuaPhieuComponent implements OnInit {
     });
 
 
+
+   
+
+
+
+
   }
 
+  private validateTen(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const updateForm = this.updateForm;
+
+      if (!updateForm) {
+        return null;
+      }
+      const tenPhieuGiamGia = control.value;
+
+      if (!tenPhieuGiamGia || tenPhieuGiamGia.trim() === '') {
+        return { checkTen: "Tên phiếu giảm giá không được để trống" };
+      }
+
+
+      // Kiểm tra kí tự đặc biệt
+      const regex = /^[a-zA-Z0-9\sÀ-Ỹà-ỹ]*$/; // Cho phép kí tự chữ, số, khoảng trắng và tiếng Việt có dấu
+      if (!regex.test(tenPhieuGiamGia)) {
+        return { checkTen: "Tên phiếu giảm giá không được chứa kí tự đặc biệt" };
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+  giaTriNew: any;
   private validateVip(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const updateForm = this.updateForm;
@@ -151,24 +184,42 @@ export class SuaPhieuComponent implements OnInit {
         return null;
       }
 
-      const kieu = updateForm.get('kieu').value;
-      const giaTri = control.value;
-
-
+      const kieu = updateForm.get("kieu").value;
+      this.giaTriNew = control.value;
       // Kiểm tra nếu ô giá trị trống
-      if (!giaTri) {
-        return { giaTri: 'Không để trống giá trị' };
+      if (!this.giaTriNew) {
+        return { giaTri: "Không để trống giá trị" };
+      }
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^[0-9]*$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số  Và số > 0" };
+        }
+      } else {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^-?\d{1,3}(?:,\d{3})*(?:\.\d+)?$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số và số > 0" };
+        }
+      }
+
+      if (typeof this.giaTriNew === "string") {
+        this.giaTriNew = parseFloat(this.giaTriNew.replace(/,/g, ""));
+      } else {
+        this.giaTriNew = parseFloat(this.giaTriNew);
       }
 
       // Tiếp tục kiểm tra giá trị nhập vào khi không trống
-      if (kieu === '1' && giaTri > 1000000) {
-        return { giaTri: 'Giá trị tối đa là 1.000.000 VNĐ' };
-      } else if (kieu === '1' && giaTri < 10000) {
-        return { giaTri: 'Giá trị nhỏ nhất là 10.000 VNĐ' };
-      } else if (kieu === '0' && giaTri > 100) {
-        return { giaTri: 'Giá trị lớn nhất là 100%' };
-      } else if (kieu === '0' && giaTri < 1) {
-        return { giaTri: 'Giá trị nhỏ nhất là 1%' };
+      if (kieu === "1" && this.giaTriNew > 1000000) {
+        return { giaTri: "Giá trị tối đa là 1.000.000 VNĐ" };
+      } else if (kieu === "1" && this.giaTriNew < 10000) {
+        return { giaTri: "Giá trị nhỏ nhất là 10.000 VNĐ" };
+      } else if (kieu === "0" && this.giaTriNew > 100) {
+        return { giaTri: "Giá trị lớn nhất là 100%" };
+      } else if (kieu === "0" && this.giaTriNew < 1) {
+        return { giaTri: "Giá trị nhỏ nhất là 1%" };
       }
 
       return null; // Trả về null nếu không có lỗi
@@ -240,48 +291,192 @@ export class SuaPhieuComponent implements OnInit {
     };
   }
 
+  dieuKienGiam: any
+  giaTri: any
+  giaTriMax: any
+  private validateDieuKien(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const updateForm = this.updateForm;
+
+      if (!updateForm) {
+        return null;
+      }
+
+      this.dieuKienGiam = control.value;
+
+      // Kiểm tra điều kiện trống
+      if (!this.dieuKienGiam) {
+        return { invalidDieuKien: "Không bỏ trống trường này" };
+      }
+
+      if (typeof this.dieuKienGiam === "string") {
+        this.dieuKienGiam = parseFloat(this.dieuKienGiam.replace(/,/g, ""));
+      } else {
+        this.dieuKienGiam = parseFloat(this.dieuKienGiam);
+      }
+
+      // Kiểm tra điều kiện phải là số
+      const numberPattern = /^[0-9]*$/;
+      if (!numberPattern.test(this.dieuKienGiam)) {
+        return { invalidDieuKien: "Vui lòng nhập số  Và số > 0" };
+      }
+      // Kiểm tra điều kiện lớn hơn 0
+      if (this.dieuKienGiam <= 0) {
+        return { invalidDieuKien: "Vui lòng nhập số > 0" };
+      }
+
+      const giaTriMax = updateForm.get('giaTriMax').value;
+      const kieu = updateForm.get('kieu').value;
+      const giaTri = updateForm.get('giaTri').value;
+
+      if (typeof giaTriMax === "string") {
+        this.giaTriMax = parseFloat(giaTriMax.replace(/,/g, ""));
+      } else {
+        this.giaTriMax = parseFloat(giaTriMax);
+      }
+
+      if (typeof giaTri === "string") {
+        this.giaTri = parseFloat(giaTri.replace(/,/g, ""));
+      } else {
+        this.giaTri = parseFloat(giaTri);
+      }
+
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị tối đa
+
+        if (this.dieuKienGiam < this.giaTriMax) {
+
+          return { invalidDieuKien: "Điều kiện giảm lớn hơn hoặc bằng giá trị tối đa" };
+        }
+      } else {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị
+        if (this.dieuKienGiam < this.giaTri) {
+
+          return { invalidDieuKien: "Điều kiện giảm lớn hơn hoặc bằng giá trị" };
+        }
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+
+
+  private validateMax(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const updateForm = this.updateForm;
+
+      if (!updateForm) {
+        return null;
+      }
+
+      this.giaTriMax = control.value;
+
+      // Kiểm tra điều kiện trống
+      if (!this.giaTriMax) {
+        return { invalidMax: "Không bỏ trống trường này" };
+      }
+
+      if (typeof this.giaTriMax === "string") {
+        this.giaTriMax = parseFloat(this.giaTriMax.replace(/,/g, ""));
+      } else {
+        this.giaTriMax = parseFloat(this.giaTriMax);
+      }
+
+      // Kiểm tra điều kiện phải là số
+      const numberPattern = /^[0-9]*$/;
+      if (!numberPattern.test(this.giaTriMax)) {
+        return { invalidMax: "Vui lòng nhập số  Và số > 0" };
+      }
+
+
+
+      // Kiểm tra điều kiện lớn hơn 0
+      if (this.giaTriMax <= 0) {
+        return { invalidMax: "Vui lòng nhập số > 0" };
+      }
+
+      const dieuKienGiam = updateForm.get('dieuKienGiam').value;
+      const kieu = updateForm.get('kieu').value;
+
+
+
+
+      if (typeof dieuKienGiam === "string") {
+        this.dieuKienGiam = parseFloat(dieuKienGiam.replace(/,/g, ""));
+      } else {
+        this.dieuKienGiam = parseFloat(dieuKienGiam);
+      }
+
+
+      if (kieu === "0") {
+        // Kiểm tra điều kiện giảm lớn hơn hoặc bằng giá trị tối đa
+
+        if (this.giaTriMax > this.dieuKienGiam) {
+
+          return { invalidMax: "Giá trị tối đa nhỏ hơn hoặc bằng điều kiện giảm" };
+
+        }
+      }
+
+      return null; // Trả về null nếu không có lỗi
+    };
+  }
+
+
+  checkGiaTriToiDa() {
+    this.updateForm.get("dieuKienGiam").updateValueAndValidity();
+    this.updateForm.get("giaTriMax").updateValueAndValidity();
+  }
+
+
+  checkGiaTriBlur() {
+    this.updateForm.get("dieuKienGiam").updateValueAndValidity();
+    this.updateForm.get("giaTri").updateValueAndValidity();
+  }
+
 
   checkThoiGian() {
     this.updateForm.get("thoiGianBatDau").updateValueAndValidity();
     this.updateForm.get("thoiGianKetThuc").updateValueAndValidity();
   }
 
-
+  public checkGiaTri: boolean = false;
   onKieuChange() {
-    const kieuValue = this.updateForm.get('kieu').value;
-    const giaTriMaxControl = this.updateForm.get('giaTriMax');
+    const kieuValue = this.updateForm.get("kieu").value;
+    const giaTriMaxControl = this.updateForm.get("giaTriMax");
     if (kieuValue == 0) {
-      giaTriMaxControl.enable();
+      this.checkGiaTri = false;
     } else {
-      giaTriMaxControl.disable();
-      giaTriMaxControl.setValue(0); // Set giá trị của giaTriMax thành 0
-
+      this.checkGiaTri = true;
+      giaTriMaxControl.setValue("1");
     }
-    this.updateForm.get('giaTri').updateValueAndValidity();
+    this.updateForm.get("giaTri").updateValueAndValidity();
+    this.updateForm.get("giaTriMax").updateValueAndValidity();
+    this.updateForm.get("soLuong").updateValueAndValidity();
   }
 
-
   isTableDisabled: boolean = false;
-  public checkSoLuong:boolean =false
 
 
+  public checkSoLuong: boolean = false
   onLoaiChange() {
     const loaiValue = this.updateForm.get("loai").value;
-   
-    if (loaiValue ==0) {
-      this.checkSoLuong = true
-      this.isTableDisabled =true
-      this.updateForm.get("soLuong").setValue(0);
 
-    } else {
-      this.checkSoLuong = false
-      this.isTableDisabled =false
+    if (loaiValue == 0) {
+      this.checkSoLuong = true;
+      this.isTableDisabled = true;
+      this.soLuongCheck = 0;
+
       this.updateForm.get("soLuong").setValue(0);
-   
-     
+    } else {
+      this.checkSoLuong = false;
+      this.isTableDisabled = false;
+      this.selectedIds = [];
+
+      this.updateForm.get("soLuong").setValue(1);
     }
-    
-  
   }
 
 
@@ -367,8 +562,59 @@ export class SuaPhieuComponent implements OnInit {
     return false; // ID không được tìm thấy trong danh sách
   }
 
-
+  giaTriMaxNew: any
+  dieuKienGiamNew: any
+  giaTriNewNew: any
   updatePhieu(): void {
+
+    this.giaTriMaxNew = this.updateForm.get("giaTriMax").value
+    this.dieuKienGiamNew = this.updateForm.get("dieuKienGiam").value
+    this.giaTriNewNew = this.updateForm.get("giaTri").value
+
+    if (typeof this.giaTriMaxNew === "string") {
+
+      const containsComma = /,/g.test(this.giaTriMaxNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const giaTriMaxFormatted = parseFloat(
+          this.updateForm.value.giaTriMax.replace(",", "")
+        );
+
+        this.updateForm.patchValue({ giaTriMax: giaTriMaxFormatted });
+      }
+
+    }
+
+
+    if (typeof this.dieuKienGiamNew === "string") {
+
+      const containsComma = /,/g.test(this.dieuKienGiamNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const dieuKienGiamFormatted = parseFloat(
+          this.updateForm.value.dieuKienGiam.replace(",", "")
+        );
+
+        this.updateForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
+      }
+
+    }
+
+    if (typeof this.giaTriNewNew === "string") {
+
+      const containsComma = /,/g.test(this.giaTriNewNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const giaTriFormatted = parseFloat(
+          this.updateForm.value.giaTri.replace(",", "")
+        );
+
+
+        this.updateForm.patchValue({ giaTri: giaTriFormatted });
+      }
+
+    }
+
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
         console.log(response)
@@ -395,14 +641,14 @@ export class SuaPhieuComponent implements OnInit {
 
         Swal.fire({
           icon: "success",
-          title: `Sửa nhân viên thành công!`,
+          title: `Sừa phiếu giảm giá thành công `,
           showConfirmButton: false,
           timer: 1500,
         });
         // Delay 3-4 giây trước khi chuyển đến trang danh sách
         setTimeout(() => {
           this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
-        }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
+        }, 500); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
 
       },
       error: (error: HttpErrorResponse) => {
@@ -426,7 +672,7 @@ export class SuaPhieuComponent implements OnInit {
             showConfirmButton: false,
             timer: 3000,
           });
-          console.log(error.message);
+
         }
       },
     });
@@ -453,7 +699,7 @@ export class SuaPhieuComponent implements OnInit {
   }
 
   confirmCreation() {
-  
+
     Swal.fire({
       toast: true,
       title: "Bạn có đồng ý sửa không?",
@@ -461,9 +707,42 @@ export class SuaPhieuComponent implements OnInit {
       position: "top",
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
-    }).then((result) =>{
-      this.updatePhieu();
+    }).then((result) => {
+      if (result.value) {
+        this.updatePhieu();
+      }
     });
+  }
+
+  public formatNumber(event: any, inputName: string): void {
+    let value = event.target.value;
+    if (value === "") {
+      this.updateForm.get(inputName).setValue("");
+      return;
+    }
+    value = value.replace(/,/g, "");
+    value = parseFloat(value).toLocaleString("en-US");
+    this.updateForm.get(inputName).setValue(value);
+  }
+
+
+
+  public formatGiaTri(event: any, inputName: string): void {
+    let value = event.target.value;
+    const kieu = this.updateForm.get("kieu").value;
+    if (value === "") {
+      this.updateForm.get(inputName).setValue("");
+      return;
+    }
+    console.log(kieu);
+
+    if (kieu == 1) {
+      value = value.replace(/,/g, "");
+      value = parseFloat(value).toLocaleString("en-US");
+      this.updateForm.get(inputName).setValue(value);
+    } else {
+      return;
+    }
   }
 
 }

@@ -7,6 +7,8 @@ import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { Subscription } from "rxjs";
+import { CurrencyPipe } from "@angular/common";
+import { el } from "date-fns/locale";
 
 
 
@@ -25,6 +27,7 @@ export class DanhSachPhieuComponent {
 
   constructor(
     private phieuGiamGiaService: PhieuGiamGiaService,
+    private currencyPipe: CurrencyPipe,
   ) { }
 
   ngOnInit(): void {
@@ -212,4 +215,17 @@ public changeStatus(id: number): void {
       },
     });
   }
+
+
+  public formatCurrencyGiaTri(amount: number): string {
+   if(amount <999){
+   return amount +"%"
+   }else{
+    return this.currencyPipe.transform(amount, "VND", "symbol", "1.0-0");
+   }
+  }
+
+  public formatCurrency(amount: number): string {
+    return this.currencyPipe.transform(amount, "VND", "symbol", "1.0-0");
+   }
 }

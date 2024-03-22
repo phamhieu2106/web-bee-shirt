@@ -8,3 +8,27 @@
     padding: 0.25em 0.5em;
     border-radius: 50%;
 }
+
+thead tr th {
+    background-color: #574afb;
+    /* Màu nền của header */
+    color: white;
+    text-transform: uppercase;
+}
+
+
+.card {
+    border-radius: 8px;
+
+    margin: 10px;
+}
+
+.card-header,
+.card-footer {
+    background: none;
+}
+
+.btn-create{
+    background-color: #574afb;
+    color: white;
+  }

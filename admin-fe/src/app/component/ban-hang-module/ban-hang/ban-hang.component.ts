@@ -25,7 +25,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   mainHeading: string = "Bán Hàng";
 
   private readonly key = "orders";
-  // messagePgg = "";
+  messagePgg = "";
   phiVanChuyenTemp: number;
   orders: HoaDon[] = [];
   khachHangs: KhachHang[];
@@ -156,23 +156,22 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   getPhieuGiamGia() {
-    setTimeout(() => {
-      this.banHangService
-        .getDiscountValid(
-          this.getTongTien(),
-          this.order.khachHang == null ? null : this.order.khachHang.id,
-          this.getTienGiam()
-        )
-        .subscribe({
-          next: async (resp: DiscountValid) => {
-            this.order.phieuGiamGia = resp.phieuGiamGia;
-          },
-          complete: () => {
-            this.getTienGiam();
-            this.getTongTien();
-          },
-        });
-    }, 50);
+    this.banHangService
+      .getDiscountValid(
+        this.getTongTien(),
+        this.order.khachHang == null ? null : this.order.khachHang.id,
+        this.order.tienGiam
+      )
+      .subscribe({
+        next: async (resp: DiscountValid) => {
+          this.order.phieuGiamGia = resp.phieuGiamGia;
+          this.messagePgg = resp.message;
+        },
+        complete: () => {
+          this.getTienGiam();
+          this.getTongTien();
+        },
+      });
   }
 
   newHDCT(spct: SanPhamChiTiet): HoaDonChiTiet {
@@ -320,11 +319,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     if (this.order && this.order.phieuGiamGia) {
       if (this.order.phieuGiamGia.kieu == 0) {
         // giảm theo %
-        let temp = (this.order.tienGiam =
-          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100));
-        temp > this.order.phieuGiamGia.giaTriMax
-          ? this.order.phieuGiamGia.giaTriMax
-          : 0;
+        let giaTriGiam =
+          this.order.tongTien * (this.order.phieuGiamGia.giaTri / 100);
+        let giaTriMax = this.order.phieuGiamGia.giaTriMax;
+
+        giaTriGiam > giaTriMax
+          ? (this.order.tienGiam = giaTriMax)
+          : (this.order.tienGiam = giaTriGiam);
+
         return this.order.tienGiam;
       } else if (this.order.phieuGiamGia.kieu == 1) {
         // giảm theo giá trị
@@ -340,7 +342,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     // xử lý
     setTimeout(async () => {
       await this.getTongTien();
-      await this.getTienGiam();
+      // await this.getTienGiam();
       await this.getPhieuGiamGia();
       await this.getTienGiam();
       await this.getTienKhachConThieu();

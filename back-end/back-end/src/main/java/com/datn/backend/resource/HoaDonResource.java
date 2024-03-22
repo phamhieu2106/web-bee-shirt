@@ -81,5 +81,8 @@ public class HoaDonResource {
         return ResponseEntity.ok(soLuongDonHangResponse);
     }
 
-
+    @PostMapping("/place-order")
+    public ResponseEntity<?> placeOrder(){
+        return null;
+    }
 }

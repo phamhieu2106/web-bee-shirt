@@ -1,10 +1,12 @@
+import { HoaDonRequest } from "./../model/class/hoa-don-request.class";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { PagedResponse } from "../model/interface/paged-response.interface";
-import { HoaDon } from "../model/class/hoa-don.class";
 import { LichSuHoaDon } from "../model/class/lich-su-hoa-don.class";
 import { SoLuongDonHang } from "../model/class/so-luong-don-hang.class";
+import { HoaDon } from "../model/class/hoa-don.class";
+import { HoaDonChiTietRequest } from "../model/class/hoa-don-chi-tiet-request.class";
 
 @Injectable({
   providedIn: "root",
@@ -66,5 +68,30 @@ export class HoaDonService {
   public getSoLuongDonHang(): Observable<SoLuongDonHang> {
     const url = this.baseUrl + `/get-order-quantity-all`;
     return this.http.get<SoLuongDonHang>(url);
+  }
+  public mapToHoaDonRequest(hoaDon: HoaDon): HoaDonRequest {
+    let hoaDonRequest = new HoaDonRequest();
+    // map properties
+    hoaDonRequest.tongTien = hoaDon.tongTien;
+    hoaDonRequest.tienGiam = hoaDon.tienGiam;
+    hoaDonRequest.phiVanChuyen = hoaDon.phiVanChuyen;
+    hoaDonRequest.loaiHoaDon = hoaDon.loaiHoaDon;
+    hoaDonRequest.hoaDonChiTiets = hoaDon.hoaDonChiTiets.map((hdct) => {
+      let hdctRequest = new HoaDonChiTietRequest();
+      hdctRequest.soLuong = hdct.soLuong;
+      hdctRequest.giaBan = hdct.giaBan;
+      hdctRequest.giaNhap = hdct.giaNhap;
+      hdctRequest.sanPhamChiTietId = hdct.sanPhamChiTiet.id;
+      return hdctRequest;
+    });
+    hoaDonRequest.nhanVienId = null;
+    hoaDonRequest.khachHangId = hoaDon.khachHang.id;
+    hoaDonRequest.phieuGiamGiaId = hoaDon.phieuGiamGia.id;
+    hoaDonRequest.thanhToans = hoaDon.thanhToans;
+    return hoaDonRequest;
+  }
+  // place order
+  public placeOrder(hoaDonRequest: HoaDonRequest): Observable<HoaDon> {
+    return null;
   }
 }

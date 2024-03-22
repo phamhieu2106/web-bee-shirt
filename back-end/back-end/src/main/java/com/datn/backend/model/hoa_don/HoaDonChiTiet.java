@@ -30,6 +30,7 @@ public class HoaDonChiTiet {
 
     private int soLuong;
     private BigDecimal giaBan;
+    private BigDecimal donGia;
 
     @ManyToOne
     @JoinColumn(name = "id_spct")

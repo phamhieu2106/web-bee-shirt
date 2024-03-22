@@ -348,29 +348,36 @@
         }}</span>
       </div>
       <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold">Phiếu giảm giá:</span>
-        <span class="ml-auto"
-          ><input
-            type="text"
-            disabled
-            [ngModel]="order.phieuGiamGia.maPhieuGiamGia"
-            *ngIf="order != null && order.phieuGiamGia != null"
-            class="right-align"
-          />
-          <input
-            type="text"
-            disabled
-            *ngIf="order == null || order.phieuGiamGia == null"
-            class="right-align"
-          />
-          <input
-            type="text"
-            disabled
-            [ngModel]="messagePgg"
-            *ngIf="messagePgg != null || messagePgg != ''"
-            class="right-align border-0"
-          />
+        <div class="mr-auto fw-bold">Phiếu giảm giá:</div>
+        <span class="ml-auto">
+          <div class="">
+            <input
+              type="text"
+              disabled
+              [value]="
+                order.phieuGiamGia.maPhieuGiamGia +
+                ': Giảm ' +
+                (order.phieuGiamGia.kieu == 0
+                  ? order.phieuGiamGia.giaTri + '%'
+                  : (order.phieuGiamGia.giaTri
+                    | currency : ' ' : 'symbol' : '1.0-0')) +
+                'tối đa ' +
+                (order.phieuGiamGia.giaTriMax
+                  | currency : ' ' : 'symbol' : '1.0-0')
+              "
+              *ngIf="order != null && order.phieuGiamGia != null"
+              class="right-align fw-bold"
+            />
+            <input
+              type="text"
+              disabled
+              *ngIf="order == null || order.phieuGiamGia == null"
+              class="right-align form-control"
+            />
+          </div>
+          <div class="text-danger">{{ messagePgg }}</div>
         </span>
+
         <!-- Tự fill PGG -->
       </div>
       <!-- Giao hàng  -->

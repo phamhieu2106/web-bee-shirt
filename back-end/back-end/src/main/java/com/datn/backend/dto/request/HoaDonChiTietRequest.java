@@ -25,6 +25,7 @@ public class HoaDonChiTietRequest {
     @Min(value = 1,message = "Số lượng phải lớn hơn 1")
     private int soLuong;
     private BigDecimal giaBan;
+    private BigDecimal donGia;
     private Integer sanPhamChiTietId;
     private Integer hoaDonID;
 }

@@ -2,11 +2,12 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Component } from "@angular/core";
 
+import Swal, { SweetAlertResult } from "sweetalert2";
+
 import { ChatLieu } from "src/app/model/class/chat-lieu.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { ChatLieuService } from "src/app/service/chat-lieu.service";
-import Swal from "sweetalert2";
-import { ToastrService } from "ngx-toastr";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-danh-sach-chat-lieu",
@@ -20,9 +21,10 @@ export class DanhSachChatLieuComponent {
   public search = "";
   public selectedDetails: ChatLieu;
 
+  // constructor, ngOn
   constructor(
     private chatLieuService: ChatLieuService,
-    private toastr: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -32,81 +34,87 @@ export class DanhSachChatLieuComponent {
   }
 
   // public function
+  // 1
   public add(): void {
-    let trimmed = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Thêm chất liệu?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmed);
 
-    this.chatLieuService.add(this.addForm.value).subscribe({
-      next: (response: ChatLieu) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.chatLieuService.add(this.addForm.value).subscribe({
+          next: (response: ChatLieu) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initAddForm();
+            document.getElementById("closeBtn").click();
+            this.notifService.success("Thêm thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
-
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
+  // 2
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
-  searchPhieuGiamGia(keyword: string): void {
-    this.goToPage(1, 5, keyword); // Gọi hàm goToPage với từ khoá tìm kiếm
-  }
 
+  // 3
   public goToPage(
-    page: number = 1,
+    pageNumber: number = 1,
     pageSize: number = 5,
     keyword: string = ""
   ): void {
-    this.chatLieuService.getByPage(page, pageSize, keyword).subscribe({
+    this.chatLieuService.getByPage(pageNumber, pageSize, keyword).subscribe({
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  // 4
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  public timKiem(): void {
+  //
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
+  //
   public onClearSearchInput(): void {
     this.goToPage();
   }
 
+  //
   public openDetailsForm(id: number): void {
     this.chatLieuService.getById(id).subscribe({
       next: (response: ChatLieu) => {
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.chatLieuService.getById(id).subscribe({
       next: (response: ChatLieu) => {
@@ -116,66 +124,69 @@ export class DanhSachChatLieuComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.chatLieuService.changeStatus(id).subscribe({
       next: (response: string) => {
-        this.toastr.success(response, "");
         this.goToPage(
           this.pagedResponse.pageNumber,
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
+        this.notifService.success(response);
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public update(): void {
-    let trimmed = this.updateForm.get("ten").value.trim();
-    this.updateForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Cập nhật chất liệu?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmed);
 
-    this.chatLieuService.update(this.updateForm.value).subscribe({
-      next: (response: ChatLieu) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.chatLieuService.update(this.updateForm.value).subscribe({
+          next: (response: ChatLieu) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initUpdateForm();
+            document.getElementById("updateCloseBtn").click();
+            this.notifService.success("Cập nhật thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {},
         });
-        document.getElementById("updateCloseBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
   // private function
+  //
   private getChatLieuList(): void {
     this.chatLieuService.getByPage().subscribe({
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

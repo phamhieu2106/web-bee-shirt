@@ -37,6 +37,8 @@ export class SuaPhieuComponent implements OnInit {
   soLuongCheck: number = 0;
   sendMailChecked: boolean = false
 
+ 
+
 
   idKhach: number
 
@@ -77,7 +79,7 @@ export class SuaPhieuComponent implements OnInit {
           }
         });
 
-        console.log(this.selectedIds)
+       
         this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, false).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
             if (response) {
@@ -107,11 +109,11 @@ export class SuaPhieuComponent implements OnInit {
 
   public initUpdateForm(phieu?: PhieuGiamGia): void {
     this.updateForm = new FormGroup({
-      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia ),
+      maPhieuGiamGia: new FormControl(phieu?.maPhieuGiamGia),
       tenPhieuGiamGia: new FormControl(phieu?.tenPhieuGiamGia, [this.validateTen()]),
       kieu: new FormControl(phieu?.kieu, [Validators.required]),
       loai: new FormControl(phieu?.loai, [Validators.required]),
-      soLuong: new FormControl(phieu?.soLuong, [Validators.required]),
+      soLuong: new FormControl(phieu?.soLuong, [Validators.required, Validators.min(1)]),
       thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required, this.validateNgayBatDau()]),
       thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required, this.validateNgay()]),
       dieuKienGiam: new FormControl(phieu?.dieuKienGiam, [this.validateDieuKien()]),
@@ -140,6 +142,12 @@ export class SuaPhieuComponent implements OnInit {
     });
 
 
+
+   
+
+
+
+
   }
 
   private validateTen(): ValidatorFn {
@@ -155,13 +163,12 @@ export class SuaPhieuComponent implements OnInit {
         return { checkTen: "Tên phiếu giảm giá không được để trống" };
       }
 
-      // Kiểm tra kí tự đặc biệt
 
-      const regex = /^[a-zA-Z0-9\s]*$/; // Cho phép kí tự chữ, số và khoảng trắng
+      // Kiểm tra kí tự đặc biệt
+      const regex = /^[a-zA-Z0-9\sÀ-Ỹà-ỹ]*$/; // Cho phép kí tự chữ, số, khoảng trắng và tiếng Việt có dấu
       if (!regex.test(tenPhieuGiamGia)) {
         return { checkTen: "Tên phiếu giảm giá không được chứa kí tự đặc biệt" };
       }
-
 
       return null; // Trả về null nếu không có lỗi
     };
@@ -184,10 +191,18 @@ export class SuaPhieuComponent implements OnInit {
         return { giaTri: "Không để trống giá trị" };
       }
 
-      // Kiểm tra điều kiện phải là số
-      const numberPattern = /^[0-9]*$/;
-      if (!numberPattern.test(this.giaTriNew)) {
-        return { giaTri: "Vui lòng nhập số  Và số > 0" };
+      if (kieu === "0") {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^[0-9]*$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số  Và số > 0" };
+        }
+      } else {
+        // Kiểm tra điều kiện phải là số
+        const numberPattern = /^-?\d{1,3}(?:,\d{3})*(?:\.\d+)?$/;
+        if (!numberPattern.test(this.giaTriNew)) {
+          return { giaTri: "Vui lòng nhập số và số > 0" };
+        }
       }
 
       if (typeof this.giaTriNew === "string") {
@@ -416,6 +431,11 @@ export class SuaPhieuComponent implements OnInit {
   }
 
 
+  checkGiaTriBlur() {
+    this.updateForm.get("dieuKienGiam").updateValueAndValidity();
+    this.updateForm.get("giaTri").updateValueAndValidity();
+  }
+
 
   checkThoiGian() {
     this.updateForm.get("thoiGianBatDau").updateValueAndValidity();
@@ -434,12 +454,13 @@ export class SuaPhieuComponent implements OnInit {
     }
     this.updateForm.get("giaTri").updateValueAndValidity();
     this.updateForm.get("giaTriMax").updateValueAndValidity();
+    this.updateForm.get("soLuong").updateValueAndValidity();
   }
 
   isTableDisabled: boolean = false;
+
+
   public checkSoLuong: boolean = false
-
-
   onLoaiChange() {
     const loaiValue = this.updateForm.get("loai").value;
 
@@ -541,8 +562,59 @@ export class SuaPhieuComponent implements OnInit {
     return false; // ID không được tìm thấy trong danh sách
   }
 
-
+  giaTriMaxNew: any
+  dieuKienGiamNew: any
+  giaTriNewNew: any
   updatePhieu(): void {
+
+    this.giaTriMaxNew = this.updateForm.get("giaTriMax").value
+    this.dieuKienGiamNew = this.updateForm.get("dieuKienGiam").value
+    this.giaTriNewNew = this.updateForm.get("giaTri").value
+
+    if (typeof this.giaTriMaxNew === "string") {
+
+      const containsComma = /,/g.test(this.giaTriMaxNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const giaTriMaxFormatted = parseFloat(
+          this.updateForm.value.giaTriMax.replace(",", "")
+        );
+
+        this.updateForm.patchValue({ giaTriMax: giaTriMaxFormatted });
+      }
+
+    }
+
+
+    if (typeof this.dieuKienGiamNew === "string") {
+
+      const containsComma = /,/g.test(this.dieuKienGiamNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const dieuKienGiamFormatted = parseFloat(
+          this.updateForm.value.dieuKienGiam.replace(",", "")
+        );
+
+        this.updateForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
+      }
+
+    }
+
+    if (typeof this.giaTriNewNew === "string") {
+
+      const containsComma = /,/g.test(this.giaTriNewNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
+      if (containsComma) {
+
+        const giaTriFormatted = parseFloat(
+          this.updateForm.value.giaTri.replace(",", "")
+        );
+
+
+        this.updateForm.patchValue({ giaTri: giaTriFormatted });
+      }
+
+    }
+
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
         console.log(response)
@@ -569,14 +641,14 @@ export class SuaPhieuComponent implements OnInit {
 
         Swal.fire({
           icon: "success",
-          title: `Sửa nhân viên thành công!`,
+          title: `Sừa phiếu giảm giá thành công `,
           showConfirmButton: false,
           timer: 1500,
         });
         // Delay 3-4 giây trước khi chuyển đến trang danh sách
         setTimeout(() => {
           this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
-        }, 3000); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
+        }, 500); // Đặt thời gian delay tại đây (3000 tương đương 3 giây)
 
       },
       error: (error: HttpErrorResponse) => {
@@ -600,7 +672,7 @@ export class SuaPhieuComponent implements OnInit {
             showConfirmButton: false,
             timer: 3000,
           });
-          console.log(error.message);
+
         }
       },
     });
@@ -636,7 +708,9 @@ export class SuaPhieuComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
     }).then((result) => {
-      this.updatePhieu();
+      if (result.value) {
+        this.updatePhieu();
+      }
     });
   }
 

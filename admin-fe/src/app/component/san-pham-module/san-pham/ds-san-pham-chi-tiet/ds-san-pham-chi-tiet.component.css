@@ -2,6 +2,36 @@
   cursor: pointer;
 }
 
+.thumbnail {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  position: relative;
+}
+
+.image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  border: 1px dashed black;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.exist-img {
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}
+
 nz-badge {
   margin-right: 20px;
 }
@@ -13,4 +43,26 @@ nz-badge {
   background: #eee;
   display: inline-block;
   vertical-align: middle;
+}
+
+thead tr th{
+  background-color: #574afb ; /* Màu nền của header */
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.page-link.active{
+  background-color: #574afb;
+  color: white !important;
+}
+
+.pagination li a{
+  color: #574afb;
+}
+
+
+.btn-create{
+  background-color: #574afb;
+  color: white;
 }

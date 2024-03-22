@@ -13,7 +13,9 @@
           >
           <!-- tên sản phẩm -->
           <div class="my-3">
-            <label class="form-label font-weight-bold">Sản phẩm:</label>
+            <label class="form-label font-weight-bold"
+              ><a class="link-label">Sản phẩm:</a></label
+            >
             <input
               type="email"
               class="form-control"
@@ -437,6 +439,7 @@
                     <td>{{ ss.ten.split(" ")[0] }}</td>
                     <td>
                       <input
+                        class="rounded"
                         [id]="'giaNhap' + sc.id + ss.id"
                         [class]="'giaNhap' + sc.id"
                         type="text"
@@ -450,6 +453,7 @@
                     </td>
                     <td>
                       <input
+                        class="rounded"
                         [id]="'giaBan' + sc.id + ss.id"
                         [class]="'giaBan' + sc.id"
                         type="text"
@@ -462,6 +466,7 @@
                     </td>
                     <td>
                       <input
+                        class="rounded"
                         [id]="'soLuong' + sc.id + ss.id"
                         [class]="'soLuong' + sc.id"
                         type="text"
@@ -532,18 +537,12 @@
           </div>
         </div>
       </div>
-      <!-- <div *ngIf="checkExistAndNotify()">
-        <i
-          >Một số SPCT đã tồn tại (Được bôi màu đỏ). Vui lòng xóa trước khi
-          thêm!</i
-        >
-      </div> -->
     </div>
   </div>
-</div>
 
-<div class="text-center">
-  <button class="btn btn-success rounded" (click)="add()">Thêm</button>
+  <div class="text-center mb-5">
+    <button class="btn btn-success rounded" (click)="add()">Thêm</button>
+  </div>
 </div>
 
 <!-- modal: ảnh -->
@@ -558,9 +557,7 @@
     <div class="modal-content">
       <div class="modal-body">
         <div class="text-center mb-3">
-          <h5>
-            Sản phẩm '{{ selectedTenMauSac }}' của sản phẩm '{{ sanPham?.ten }}'
-          </h5>
+          <h5>Ảnh '{{ selectedTenMauSac }}'</h5>
         </div>
         <!-- các ảnh đã chọn -->
         <h6>Danh sách ảnh đã chọn:</h6>

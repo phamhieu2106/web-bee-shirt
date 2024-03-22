@@ -152,6 +152,7 @@
                       aria-describedby="basic-addon2"
                       value=""
                       (input)="formatGiaTri($event, 'giaTri')"
+                      (blur)="checkGiaTriBlur()"
                     />
                     <span
                       class="input-group-text"
@@ -260,6 +261,7 @@
                       aria-describedby="basic-addon2"
                       (input)="formatNumber($event, 'dieuKienGiam')"
                       (blur)="checkGiaTriToiDa()"
+                      (blur)="checkGiaTriBlur()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
 

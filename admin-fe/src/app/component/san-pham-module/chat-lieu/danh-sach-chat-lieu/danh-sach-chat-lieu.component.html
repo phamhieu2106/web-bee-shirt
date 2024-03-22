@@ -15,26 +15,17 @@
             <div class="input-group form-group search-block">
               <input
                 type="search"
-                class="form-control"
-                placeholder="Tìm chất liệu..."
-                (search)="onClearSearchInput()"
+                class="form-control rounded"
+                placeholder="Tìm chất liệu theo tên..."
                 [(ngModel)]="search"
+                (input)="searchByName()"
               />
-              <span class="input-group-btn">
-                <button
-                  class="btn btn-primary rounded"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button>
-              </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
               <button
                 type="button"
-                class="btn btn-primary btn-lg rounded"
+                class="btn btn-create btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
                 data-bs-target="#chatLieuAddForm"
@@ -44,75 +35,77 @@
             </div>
           </div>
         </div>
-        <!--  -->
       </div>
       <div class="card-body">
-        <!-- TABLE -->
-        <table class="table">
-          <thead class="thead-default">
-            <tr>
-              <th width="10%">STT</th>
-              <th width="20%">Tên</th>
-              <th width="15%">Trạng Thái</th>
-              <th width="15%">Ngày Thêm</th>
-              <th width="15%">Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let cl of pagedResponse?.data; let i = index">
-              <th scope="row">
-                {{
-                  i +
-                    1 +
-                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
-                }}
-              </th>
-              <td>{{ cl.ten }}</td>
-              <td>
-                <span
-                  class="pointer"
-                  [ngClass]="
-                    cl.trangThai
-                      ? 'badge rounded-pill text-bg-success'
-                      : 'badge rounded-pill text-bg-danger'
-                  "
-                  (click)="changeStatus(cl.id)"
-                  >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
-                >
-              </td>
-              <td>{{ cl.createdAt }}</td>
-              <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-bs-toggle="modal"
-                  data-bs-target="#chatLieuDetailsForm"
-                  (click)="openDetailsForm(cl.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
-                </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  data-bs-toggle="modal"
-                  data-bs-target="#chatLieuUpdateForm"
-                  (click)="openUpdateForm(cl.id)"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!--  -->
+        <div *ngIf="pagedResponse?.data.length > 0">
+          <table class="table">
+            <thead class="thead-default">
+              <tr>
+                <th width="10%">STT</th>
+                <th width="20%">Tên</th>
+                <th width="15%">Trạng Thái</th>
+                <th width="15%">Ngày Thêm</th>
+                <th width="15%">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cl of pagedResponse?.data; let i = index">
+                <th scope="row">
+                  {{
+                    i +
+                      1 +
+                      (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                  }}
+                </th>
+                <td>{{ cl.ten }}</td>
+                <td>
+                  <span
+                    class="pointer"
+                    [ngClass]="
+                      cl.trangThai
+                        ? 'badge rounded-pill text-bg-success'
+                        : 'badge rounded-pill text-bg-danger'
+                    "
+                    (click)="changeStatus(cl.id)"
+                    >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                  >
+                </td>
+                <td>{{ cl.createdAt }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-light btn-rounded me-2"
+                    title="Xem chi tiết"
+                    data-bs-toggle="modal"
+                    data-bs-target="#chatLieuDetailsForm"
+                    (click)="openDetailsForm(cl.id)"
+                  >
+                    <i
+                      class="fa-solid fa-circle-info fa-xl"
+                      style="color: #74c0fc"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn btn-outline-warning btn-rounded"
+                    title="Cập nhật"
+                    data-bs-toggle="modal"
+                    data-bs-target="#chatLieuUpdateForm"
+                    (click)="openUpdateForm(cl.id)"
+                  >
+                    <i
+                      class="fa-solid fa-pen-to-square"
+                      style="color: #ffd43b"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="pagedResponse?.data.length === 0">
+          <h3 class="text-center"><i>Không có dữ liệu!</i></h3>
+        </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
             <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
@@ -138,7 +131,13 @@
                 >
                   <a
                     class="page-link pointer rounded"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber - 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Previous</a
                   >
                 </li>
@@ -151,7 +150,7 @@
                     [ngClass]="
                       pagedResponse?.pageNumber == page ? 'active' : ''
                     "
-                    (click)="goToPage(page)"
+                    (click)="goToPage(page, pagedResponse?.pageSize, search)"
                     >{{ page }}</a
                   >
                 </li>
@@ -165,7 +164,13 @@
                 >
                   <a
                     class="page-link pointer rounded"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber + 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Next</a
                   >
                 </li>
@@ -178,7 +183,7 @@
   </div>
 </div>
 
-<!-- add modal -->
+<!-- modal: add -->
 <div
   class="modal fade"
   id="chatLieuAddForm"
@@ -199,7 +204,7 @@
             <label for="inputEmail4">Tên chất liệu:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
@@ -215,7 +220,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -223,7 +228,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >
@@ -301,7 +306,7 @@
   </div>
 </div>
 
-<!-- update modal -->
+<!-- modal: update -->
 <div
   class="modal fade"
   id="chatLieuUpdateForm"
@@ -313,7 +318,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">
-          Thêm mới chất liệu
+          Cập nhật chất liệu
         </h1>
       </div>
       <form [formGroup]="updateForm">
@@ -324,7 +329,7 @@
             <label>Tên chất liệu:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 updateForm.get('ten').invalid && updateForm.get('ten').touched
                   ? 'is-invalid'
@@ -340,14 +345,14 @@
           <button
             id="updateCloseBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             data-bs-dismiss="modal"
           >
             Đóng
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="updateForm.invalid"
             (click)="update()"
           >

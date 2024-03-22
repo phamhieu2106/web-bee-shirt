@@ -36,23 +36,22 @@ export class DanhSachNhanVienComponent {
     this.getAllNhanVien();
   }
 
+  filterObject: any = null;
+  pageSize: number = 5;
+  pageNumber: number = 1;
   onChangeFilter() {
-    this.nhanVienService
-      .filter(
-        this.pagedResponse.pageNumber,
-        this.pagedResponse.pageSize,
-        this.search,
-        this.gioiTinhFilter,
-        this.trangThaiFilter
-      )
-      .subscribe({
-        next: (response: PagedResponse<NhanVienResponse>) => {
-          this.pagedResponse = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        },
-      });
+    this.filterObject = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      search: this.search,
+      gioiTinhFilter: this.gioiTinhFilter,
+      trangThaiFilter: this.trangThaiFilter,
+    };
+    this.goToPage(
+      this.filterObject.pageNumber,
+      this.filterObject.pageSize,
+      this.filterObject.search
+    );
   }
 
   reloadFilter(): void {
@@ -60,7 +59,10 @@ export class DanhSachNhanVienComponent {
     this.trangThaiFilter = [0, 1];
     this.gioiTinhFilter = [0, 1];
     this.inputNameRef.nativeElement.value = "";
-    this.onChangeFilter();
+    this.pageSize = 5;
+    this.pageNumber = 1;
+    this.getAllNhanVien();
+    this.filterObject = null;
   }
 
   // private function
@@ -75,23 +77,41 @@ export class DanhSachNhanVienComponent {
     });
   }
 
-  public goToPage(
-    page: number = 1,
-    pageSize: number = 5,
-    keyword: string = ""
-  ): void {
-    this.nhanVienService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<NhanVienResponse>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+  public goToPage(page: number, pageSize: number, keyword: string): void {
+    if (this.filterObject) {
+      this.nhanVienService
+        .filter(
+          page,
+          pageSize,
+          keyword,
+          this.filterObject.gioiTinhFilter,
+          this.filterObject.trangThaiFilter
+        )
+        .subscribe({
+          next: (response: PagedResponse<NhanVienResponse>) => {
+            this.pagedResponse = response;
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          },
+        });
+    } else {
+      this.nhanVienService.getAll(page, pageSize, keyword).subscribe({
+        next: (response: PagedResponse<NhanVienResponse>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+        complete: () => {
+          console.log(this.pagedResponse);
+        },
+      });
+    }
   }
 
-  public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+  public onChangePageSize(): void {
+    this.goToPage(this.pageNumber, this.pageSize, this.search);
   }
 
   public openDetailsForm(id: number): void {

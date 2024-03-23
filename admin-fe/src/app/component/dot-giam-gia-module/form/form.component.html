@@ -1,8 +1,11 @@
 <div class="card">
   <h2 class="card-header d-flex justify-content-between">
     <div>{{ formHeader }}</div>
-    <button (click)="resetForm()" class="btn btn-info">Làm mới</button>
+    <button (click)="resetForm()" class="btn btn-info rounded">Làm mới</button>
   </h2>
+  <ng-template #suffixIconButton>
+    <span nz-icon nzType="percentage" nzTheme="outline"></span>
+  </ng-template>
   <div class="card-body">
     <form [formGroup]="form" (submit)="handleSubmit()">
       <div class="form-group row">
@@ -33,7 +36,7 @@
       </div>
       <div class="form-group row">
         <label class="col-sm-4 col-md-4 col-form-label col-form-label-sm"
-          >Giá Trị Giảm:</label
+          >Giá Trị Giảm (%):</label
         >
         <div class="col-sm-4 col-md-6">
           <input
@@ -100,13 +103,13 @@
       <div class="d-flex justify-content-end">
         <button
           [routerLink]="'/dot-giam-gia/ds-dot-giam-gia'"
-          class="btn btn-danger mr-2"
+          class="btn btn-info rounded mr-2"
         >
           Quay Lại
         </button>
         <button
           type="button"
-          class="btn btn-success"
+          class="btn btn-success rounded"
           [disabled]="form.invalid"
           (click)="handleSubmit()"
         >

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,24 +38,24 @@ public class PhieuGiamGiaResource {
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search,
-                                                 @RequestParam(value = "kieu", defaultValue = "", required = false)List<Integer> kieu,
-                                                 @RequestParam(value = "loai", defaultValue = "", required = false)List<Integer> loai,
-                                                 @RequestParam(value = "trangThai",  required = false)List<String> trangThai) {
+                                                 @RequestParam(value = "kieu", defaultValue = "", required = false) List<Integer> kieu,
+                                                 @RequestParam(value = "loai", defaultValue = "", required = false) List<Integer> loai,
+                                                 @RequestParam(value = "trangThai", required = false) List<String> trangThai) {
 
-        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search,kieu,loai,trangThai));
+        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search, kieu, loai, trangThai));
     }
 
     @GetMapping("/filter")
     public ResponseEntity<?> getFilter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                 @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search,
-                                                 @RequestParam(value = "kieu", defaultValue = "", required = false)List<Integer> kieu,
-                                                 @RequestParam(value = "loai", defaultValue = "", required = false)List<Integer> loai,
-                                                 @RequestParam(value = "trangThai",  required = false)List<String> trangThai,
-                                                 @RequestParam(value = "thoiGianBatDau", defaultValue = "", required = false) String thoiGianBatDau,
-                                                 @RequestParam(value = "thoiGianKetThuc", defaultValue = "", required = false) String thoiGianKetThuc) {
+                                       @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                       @RequestParam(value = "search", defaultValue = "", required = false) String search,
+                                       @RequestParam(value = "kieu", defaultValue = "", required = false) List<Integer> kieu,
+                                       @RequestParam(value = "loai", defaultValue = "", required = false) List<Integer> loai,
+                                       @RequestParam(value = "trangThai", required = false) List<String> trangThai,
+                                       @RequestParam(value = "thoiGianBatDau", defaultValue = "", required = false) String thoiGianBatDau,
+                                       @RequestParam(value = "thoiGianKetThuc", defaultValue = "", required = false) String thoiGianKetThuc) {
 
-        return ResponseEntity.ok(service.getFilter(pageNumber, pageSize, search,kieu,loai,trangThai,thoiGianBatDau,thoiGianKetThuc));
+        return ResponseEntity.ok(service.getFilter(pageNumber, pageSize, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc));
     }
 
     @GetMapping("/get-all")
@@ -90,8 +91,16 @@ public class PhieuGiamGiaResource {
     /// Phiếu Giảm Giá Khách Hàng
     @PostMapping("/add-phieu")
     public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
+        phieuGiamGiaKhachHangService.deletePhieu(request.getPhieuGiamGiaId());
         phieuGiamGiaKhachHangService.addPhieu(request);
         return ResponseEntity.ok(request);
+    }
+
+    @DeleteMapping("/add-phieu")
+    public void xoaPhieuGiamGiaKhach(@PathVariable("id")Integer id) {
+        phieuGiamGiaKhachHangService.deletePhieu(id);
+
+
     }
 
     @GetMapping("/get-phieu-khach-hang")
@@ -102,13 +111,17 @@ public class PhieuGiamGiaResource {
 
     @GetMapping("/ds-khach-tang")
     public ResponseEntity<?> getPhieuTangKhach(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                 @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                 @RequestParam(value = "id", defaultValue = "", required = false) String id,
+                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                               @RequestParam(value = "id", defaultValue = "", required = false) String id,
                                                @RequestParam(value = "check", defaultValue = "", required = false) Boolean check
-                                                ) {
+    ) {
 
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id,check));
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id, check));
     }
+
+
+
+
 
     @PostMapping("/get-discount-valid")
     public ResponseEntity<?> getDiscountValid(@Valid @RequestBody DiscountValidRequest discountValidRequest) {

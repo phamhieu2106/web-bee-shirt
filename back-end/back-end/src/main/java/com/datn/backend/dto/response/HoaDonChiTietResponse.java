@@ -23,5 +23,6 @@ public class HoaDonChiTietResponse {
     private Integer id;
     private int soLuong;
     private BigDecimal giaBan;
-//    private SanPhamChiTietResponse sanPhamChiTiet;
+    private BigDecimal giaNhap;
+    private SpctResponse sanPhamChiTiet;
 }

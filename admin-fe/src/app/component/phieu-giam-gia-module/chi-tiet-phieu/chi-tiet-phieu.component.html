@@ -21,30 +21,13 @@
 
                     <div class=" mb-3">
                         <label for="">Kiểu Phiếu</label> <br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1"
-                                [checked]="phieuDetails?.kieu" [disabled]="true" />
-                            <label class="form-check-label" for="tienMat"> Tiền Mặt </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="kieu" id="%" type="radio" value="0"
-                                [checked]="phieuDetails?.kieu" [disabled]="true" />
-                            <label class="form-check-label" for="%"> % </label>
-                        </div>
+                        
+                        <input type="text" class="form-control" [value]="phieuDetails?.kieu ==0?'%':'Tiền Mặt'" [disabled]="true">
                     </div>
 
                     <div class=" mb-3">
                         <label for="">Loại Phiếu</label> <br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
-                                [checked]="phieuDetails?.loai" [disabled]="true" />
-                            <label class="form-check-label" for="congKhai"> Công Khai </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0"
-                                [checked]="phieuDetails?.loai" [disabled]="true" />
-                            <label class="form-check-label" for="caNhan"> Cá Nhân </label>
-                        </div>
+                        <input type="text" class="form-control" [value]="phieuDetails?.loai ==0?'Công Khai':'Cá Nhân'" [disabled]="true">
                     </div>
 
 

@@ -51,8 +51,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         String maPhieuGiamGia = phieuGiamGia.getMaPhieuGiamGia().trim();
         String tenPhieuGiamGia = phieuGiamGia.getTenPhieuGiamGia().trim();
-        phieuGiamGia.setMaPhieuGiamGia(maPhieuGiamGia);
-        phieuGiamGia.setTenPhieuGiamGia(tenPhieuGiamGia);
+
 
 
         // Kiểm tra xem mã phiếu có chứa chữ cái không
@@ -75,6 +74,9 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
 
+        pgg.setTenPhieuGiamGia(maPhieuGiamGia);
+
+
 
         if (maPhieuGiamGia.equals("")) {
             String generatedMaPhieu = generateMaPhieuGiamGia(); // Tự sinh mã mới
@@ -86,6 +88,8 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
         }
+
+        pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
 
         // Xác định trạng thái dựa trên thời gian
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
@@ -255,17 +259,31 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     @Override
     public PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search, List<Integer> kieu, List<Integer> loai, List<String> trangThai, String thoiGianBatDau, String thoiGianKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getFilter(pageable, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc);
-        PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
-        paged.setPageNumber(pageNumber);
-        paged.setPageSize(pageSize);
-        paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
-        paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
-        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
-        paged.setData(phieuGiamGiaPage.getContent());
-        paged.setSearch(search);
+       if(!thoiGianBatDau.isEmpty() && !thoiGianKetThuc.isEmpty()){
+           Page<PhieuGiamGia> phieuGiamGiaPage = repository.getFilter(pageable, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc);
+           PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
+           paged.setPageNumber(pageNumber);
+           paged.setPageSize(pageSize);
+           paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
+           paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
+           paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
+           paged.setData(phieuGiamGiaPage.getContent());
+           paged.setSearch(search);
 
-        return paged;
+           return paged;
+       }else{
+           Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search, kieu, loai, trangThai);
+           PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
+           paged.setPageNumber(pageNumber);
+           paged.setPageSize(pageSize);
+           paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
+           paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
+           paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
+           paged.setData(phieuGiamGiaPage.getContent());
+           paged.setSearch(search);
+
+           return paged;
+       }
     }
 
     @Override

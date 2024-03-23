@@ -179,11 +179,10 @@
         <nz-date-picker
           nzMode="year"
           [(ngModel)]="datePhieuGiamGia"
-          (ngModelChange)="onChange($event)"
         ></nz-date-picker>
       </div>
       <div class="card-body">
-        <app-pie-chart></app-pie-chart>
+        <app-pie-chart [date]="datePhieuGiamGia"></app-pie-chart>
       </div>
     </div>
   </div>
@@ -194,11 +193,12 @@
         <nz-date-picker
           nzMode="year"
           [(ngModel)]="dateDotGiamGia"
-          (ngModelChange)="onChange($event)"
         ></nz-date-picker>
       </div>
       <div class="card-body">
-        <app-pie-discount-chart></app-pie-discount-chart>
+        <app-pie-discount-chart
+          [date]="dateDotGiamGia"
+        ></app-pie-discount-chart>
       </div>
     </div>
   </div>
@@ -212,11 +212,10 @@
         <nz-date-picker
           nzMode="year"
           [(ngModel)]="dateSanPham"
-          (ngModelChange)="onChange($event)"
         ></nz-date-picker>
       </div>
       <div class="card-body">
-        <app-polar-product-chart></app-polar-product-chart>
+        <app-polar-product-chart [date]="dateSanPham"></app-polar-product-chart>
       </div>
     </div>
   </div>

@@ -52,6 +52,11 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     }
 
     @Override
+    public void deletePhieu(Integer id) {
+        repository.deleteAllPhieu(id);
+    }
+
+    @Override
     public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id,Boolean check) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<KhachHang> khachHangPhieu;

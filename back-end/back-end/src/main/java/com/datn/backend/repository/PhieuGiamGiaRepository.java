@@ -60,6 +60,10 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                                      @Param("trangThai")List<String> trangThai,
                                      @Param("thoiGianBatDau") String thoiGianBatDau,
                                      @Param("thoiGianKetThuc") String thoiGianKetThuc);
+
+
+
+
     @Query("""
             select pgg from PhieuGiamGia pgg
             where 

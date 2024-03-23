@@ -2,7 +2,6 @@ package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.AddNhanVienRequest;
-import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.NhanVien;
@@ -11,16 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -73,7 +63,8 @@ public class NhanVienResource {
     public ResponseEntity<PagedResponse<NhanVienResponse>> filter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                   @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                   @RequestParam(value = "gioiTinhFilter", defaultValue = "0,1", required = false) List<Integer> gioiTinhFilter,
-                                                                  @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter) {
-        return ResponseEntity.ok(nhanVienService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter));
+                                                                  @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter,
+                                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(nhanVienService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter, search));
     }
 }

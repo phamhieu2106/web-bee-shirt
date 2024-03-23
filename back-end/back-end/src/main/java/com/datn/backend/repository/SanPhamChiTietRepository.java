@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Integer> {
 
@@ -107,4 +108,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query("select min(spct.giaBan),max(spct.giaBan)from SanPhamChiTiet spct")
     long[][] getMixMaxPrice();
+
+    Optional<SanPhamChiTiet> findByIdAndTrangThai(Integer id,boolean trangThai);
 }

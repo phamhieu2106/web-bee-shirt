@@ -23,7 +23,7 @@
                       : ''
                   "
                   formControlName="maPhieuGiamGia"
-                  
+           readonly
                 />
               </div>
 
@@ -132,7 +132,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                   
                       class="form-control"
                       class="form-control"
                       placeholder="Giá trị"
@@ -224,15 +224,15 @@
                       : ''
                   "
                   formControlName="soLuong"
-                  [readonly]="checkSoLuong"
+                 
                 />
                 <div class="invalid-feedback">
                   <span *ngIf="updateForm.get('soLuong').hasError('required')">
-                    Số lượng không được để trống</span
+                    Không bỏ trống trường này</span
                   >
 
                   <span *ngIf="updateForm.get('soLuong').hasError('min')"
-                    >Số lượng > 0
+                    >Vui lòng nhập số và số > 0
                   </span>
                 </div>
                 </div>
@@ -242,7 +242,7 @@
                 >
                 <div class="input-group mb-3">
                   <input
-                    type="text"
+                 
                     class="form-control"
                     placeholder="Điều kiện"
                     [ngClass]="
@@ -257,6 +257,7 @@
                     (input)="formatNumber($event, 'dieuKienGiam')"
                     (blur)="checkGiaTriToiDa()"
                     (blur)="checkGiaTriBlur()"
+                    
                   />
                   <span class="input-group-text" id="basic-addon2">VNĐ</span>
 
@@ -335,6 +336,7 @@
                   id="sendMail"
                   class="form-check-inline"
                   (change)="onSendMailChange($event)"
+                [disabled]="!checkMail"
                 />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>
@@ -347,6 +349,15 @@
               >
                 Sửa Phiếu
               </button>
+
+              <a
+              type="button"
+              class="btn btn-warning ml-3"
+              (click)="chuyenTrang()"
+             
+            >
+             Quay Lại
+            </a>
             </form>
           </div>
 
@@ -373,6 +384,7 @@
                           type="checkbox"
                           checked="isCustomerSelected(kh.id)"
                           (change)="onCheckboxChange(kh.id)"
+                          [disabled]="!isTableDisabled"
                         />
                       </td>
 
@@ -470,7 +482,7 @@
 
                 <table
                   class="table"
-                  *ngIf="pagedResponse2?.data && pagedResponse2.data.length > 0"
+                 
                 >
                   <thead class="thead-default">
                     <tr>
@@ -489,6 +501,7 @@
                         <input
                           type="checkbox"
                           (change)="onCheckboxChange(kh.id)"
+                          [disabled]="!isTableDisabled"
                         />
                       </td>
 
@@ -499,21 +512,24 @@
                       <td>{{ kh.ngaySinh }}</td>
                     </tr>
                   </tbody>
+                  
                 </table>
 
-                <ng-template
-                  *ngIf="pagedResponse2?.data && pagedResponse2.data.length < 0"
-                >
-                  <tr>
-                    <td
-                      colspan="8"
-                      class="text-center"
-                      style="font-size: 20px; font-weight: bold"
-                    >
-                      Không có dữ liệu
-                    </td>
-                  </tr>
-                </ng-template>
+                <tr *ngIf="soLuongCheck < 0 ">
+                  <td
+                    colspan="8"
+                    class="text-center"
+                    style="font-size: 20px; font-weight: bold"
+                  >
+                    Không có dữ liệu
+                  </td>
+                </tr>
+
+                
+                
+                
+                 
+              
 
                 <div class="row">
                   <div class="col col-md-12 d-flex justify-content-between">

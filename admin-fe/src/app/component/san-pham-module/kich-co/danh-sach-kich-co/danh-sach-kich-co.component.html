@@ -15,26 +15,17 @@
             <div class="input-group form-group search-block">
               <input
                 type="search"
-                class="form-control"
-                placeholder="Tìm kích cỡ..."
-                (search)="onClearSearchInput()"
+                class="form-control rounded"
+                placeholder="Tìm kích cỡ theo tên..."
                 [(ngModel)]="search"
+                (input)="searchByName()"
               />
-              <span class="input-group-btn">
-                <button
-                  class="btn btn-create"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button>
-              </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
               <button
                 type="button"
-                class="btn btn-create btn-lg"
+                class="btn btn-create btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
                 data-bs-target="#kichCoAddForm"
@@ -47,81 +38,81 @@
         <!--  -->
       </div>
       <div class="card-body">
-        <!-- TABLE -->
-        <table class="table">
-          <thead class="thead-default">
-            <tr>
-              <th width="10%">STT</th>
-              <th width="20%">Tên</th>
-              <th width="15%">Trạng Thái</th>
-              <th width="15%">Ngày Thêm</th>
-              <th width="15%">Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let kc of pagedResponse?.data; let i = index">
-              <th scope="row">
-                {{
-                  i +
-                    1 +
-                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
-                }}
-              </th>
-              <td>{{ kc.ten }}</td>
-              <td>
-                <span
-                  class="pointer"
-                  [ngClass]="
-                    kc.trangThai
-                      ? 'badge rounded-pill text-bg-success'
-                      : 'badge rounded-pill text-bg-danger'
-                  "
-                  (click)="changeStatus(kc.id)"
-                  >{{ kc.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
-                >
-              </td>
-              <td>{{ kc.createdAt }}</td>
-              <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kichCoDetailsForm"
-                  (click)="openDetailsForm(kc.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
-                </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kichCoUpdateForm"
-                  (click)="openUpdateForm(kc.id)"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!--  -->
+        <div *ngIf="pagedResponse?.data.length > 0">
+          <table class="table">
+            <thead class="thead-default">
+              <tr>
+                <th width="10%">STT</th>
+                <th width="20%">Tên</th>
+                <th width="15%">Trạng Thái</th>
+                <th width="15%">Ngày Thêm</th>
+                <th width="15%">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let kc of pagedResponse?.data; let i = index">
+                <th scope="row">
+                  {{
+                    i +
+                      1 +
+                      (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                  }}
+                </th>
+                <td>{{ kc.ten }}</td>
+                <td>
+                  <span
+                    class="pointer"
+                    [ngClass]="
+                      kc.trangThai
+                        ? 'badge rounded-pill text-bg-success'
+                        : 'badge rounded-pill text-bg-danger'
+                    "
+                    (click)="changeStatus(kc.id)"
+                    >{{ kc.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                  >
+                </td>
+                <td>{{ kc.createdAt }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-light btn-rounded me-2"
+                    title="Xem chi tiết"
+                    data-bs-toggle="modal"
+                    data-bs-target="#kichCoDetailsForm"
+                    (click)="openDetailsForm(kc.id)"
+                  >
+                    <i
+                      class="fa-solid fa-circle-info fa-xl"
+                      style="color: #74c0fc"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn btn-outline-warning btn-rounded"
+                    title="Cập nhật"
+                    data-bs-toggle="modal"
+                    data-bs-target="#kichCoUpdateForm"
+                    (click)="openUpdateForm(kc.id)"
+                  >
+                    <i
+                      class="fa-solid fa-pen-to-square"
+                      style="color: #ffd43b"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="pagedResponse?.data.length === 0">
+          <h3 class="text-center"><i>Không có dữ liệu!</i></h3>
+        </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-              >Số lượng:
-            </label>
+            <label class="my-1 mr-2">Số lượng: </label>
             <select
               class="custom-select my-1 mr-sm-2 col-md-5"
-              id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
+              (change)="changePageSize($event)"
             >
               >
               <option value="5">5</option>
@@ -138,21 +129,29 @@
                 >
                   <a
                     class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber - 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Previous</a
                   >
                 </li>
                 <li
                   class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                  *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
                 >
                   <a
                     class="page-link pointer"
                     [ngClass]="
-                      pagedResponse?.pageNumber == page ? 'active' : ''
+                      pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                     "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
+                    (click)="
+                      goToPage(pageNumber, pagedResponse?.pageSize, search)
+                    "
+                    >{{ pageNumber }}</a
                   >
                 </li>
                 <li
@@ -165,7 +164,13 @@
                 >
                   <a
                     class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber + 1,
+                        pagedResponse?.pageSize,
+                        search
+                      )
+                    "
                     >Next</a
                   >
                 </li>
@@ -178,7 +183,7 @@
   </div>
 </div>
 
-<!-- add modal -->
+<!-- modal: add -->
 <div
   class="modal fade"
   id="kichCoAddForm"
@@ -199,7 +204,7 @@
             <label for="inputEmail4">Tên kích cỡ:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
@@ -215,7 +220,7 @@
           <button
             id="closeBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
@@ -223,7 +228,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="addForm.invalid"
             (click)="add()"
           >
@@ -235,7 +240,7 @@
   </div>
 </div>
 
-<!-- details modal -->
+<!-- modal: details -->
 <div
   class="modal fade"
   id="kichCoDetailsForm"
@@ -253,46 +258,46 @@
       <form>
         <div class="modal-body">
           <div class="form-row">
-            <label for="inputEmail4">Tên kích cỡ:</label>
+            <label>Tên kích cỡ:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [value]="selectedDetails?.ten"
               disabled
             />
           </div>
           <div class="form-row">
-            <label for="inputEmail4">Ngày tạo:</label>
+            <label>Ngày tạo:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [value]="selectedDetails?.createdAt"
               disabled
             />
           </div>
           <div class="form-row">
-            <label for="inputEmail4">Người tạo:</label>
+            <label>Người tạo:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [value]="selectedDetails?.createdBy"
               disabled
             />
           </div>
           <div class="form-row">
-            <label for="inputEmail4">Ngày cập nhật gần nhất:</label>
+            <label>Ngày cập nhật gần nhất:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [value]="selectedDetails?.updatedAt"
               disabled
             />
           </div>
           <div class="form-row">
-            <label for="inputEmail4">Người cập nhật gần nhất:</label>
+            <label>Người cập nhật gần nhất:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [value]="selectedDetails?.lastUpdatedBy"
               disabled
             />
@@ -303,7 +308,7 @@
   </div>
 </div>
 
-<!-- update modal -->
+<!-- modal: update -->
 <div
   class="modal fade"
   id="kichCoUpdateForm"
@@ -326,7 +331,7 @@
             <label>Tên kích cỡ:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 updateForm.get('ten').invalid && updateForm.get('ten').touched
                   ? 'is-invalid'
@@ -342,14 +347,14 @@
           <button
             id="closeUpdateBtn"
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary rounded"
             data-bs-dismiss="modal"
           >
             Đóng
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary rounded"
             [disabled]="updateForm.invalid"
             (click)="update()"
           >

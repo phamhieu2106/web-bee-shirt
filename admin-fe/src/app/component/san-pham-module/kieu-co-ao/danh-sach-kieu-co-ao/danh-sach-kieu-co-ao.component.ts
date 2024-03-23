@@ -81,7 +81,9 @@ export class DanhSachKieuCoAoComponent {
       next: (response: PagedResponse<CoAo>) => {
         this.pagedResponse = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
+      },
     });
   }
 
@@ -101,7 +103,9 @@ export class DanhSachKieuCoAoComponent {
       next: (response: CoAo) => {
         this.selectedDetails = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
+      },
     });
   }
 
@@ -115,7 +119,9 @@ export class DanhSachKieuCoAoComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
+      },
     });
   }
 
@@ -130,7 +136,9 @@ export class DanhSachKieuCoAoComponent {
         );
         this.notifService.success(response);
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
+      },
     });
   }
 
@@ -159,7 +167,9 @@ export class DanhSachKieuCoAoComponent {
             document.getElementById("updateCloseBtn").click();
             this.notifService.success("Cập nhật thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {},
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
       }
     });

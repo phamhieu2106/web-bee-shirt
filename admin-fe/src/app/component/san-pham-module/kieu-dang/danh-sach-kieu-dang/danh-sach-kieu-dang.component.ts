@@ -21,6 +21,7 @@ export class DanhSachKieuDangComponent {
   public search = "";
   public selectedDetails: KieuDang;
 
+  // constructor, ngOn
   constructor(
     private kieuDangService: KieuDangService,
     private notifService: NotificationService
@@ -36,7 +37,7 @@ export class DanhSachKieuDangComponent {
   //
   public add(): void {
     Swal.fire({
-      title: "Thêm kiểu dáng?",
+      title: "Thêm kiểu dáng áo?",
       cancelButtonText: "Hủy",
       icon: "warning",
       showCancelButton: true,
@@ -56,10 +57,12 @@ export class DanhSachKieuDangComponent {
               this.pagedResponse.search
             );
             this.initAddForm();
-            this.notifService.success("Thêm thành công!");
             document.getElementById("closeBtn").click();
+            this.notifService.success("Thêm thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {},
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
       }
     });
@@ -82,8 +85,8 @@ export class DanhSachKieuDangComponent {
       next: (response: PagedResponse<KieuDang>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -94,7 +97,7 @@ export class DanhSachKieuDangComponent {
   }
 
   //
-  public timKiem(): void {
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
@@ -107,12 +110,10 @@ export class DanhSachKieuDangComponent {
   public openDetailsForm(id: number): void {
     this.kieuDangService.getById(id).subscribe({
       next: (response: KieuDang) => {
-        console.log("tay ao:", response);
-
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -127,8 +128,8 @@ export class DanhSachKieuDangComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -142,35 +143,45 @@ export class DanhSachKieuDangComponent {
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
+        this.notifService.success(response);
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
   //
   public update(): void {
-    let trimmed = this.updateForm.get("ten").value.trim();
-    this.updateForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Cập nhật kiểu dáng áo?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmed);
 
-    this.kieuDangService.update(this.updateForm.value).subscribe({
-      next: (response: KieuDang) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.kieuDangService.update(this.updateForm.value).subscribe({
+          next: (response: KieuDang) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initUpdateForm();
+            document.getElementById("closeUpdateBtn").click();
+            this.notifService.success("Cập nhật thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeUpdateBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {},
+      }
     });
   }
 

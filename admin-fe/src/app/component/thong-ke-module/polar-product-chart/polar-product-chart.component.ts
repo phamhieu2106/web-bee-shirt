@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Chart, registerables } from "chart.js";
 import { ToastrService } from "ngx-toastr";
 import { ProductSummary } from "src/app/model/interface/product-summary";
@@ -10,20 +10,26 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./polar-product-chart.component.css"],
 })
 export class PolarProductChartComponent {
+  chartLoaded = false;
   chart: any;
   data: ProductSummary[];
 
   constructor(private service: ChartService, private toast: ToastrService) {}
+  @Input() date: any;
   private getData(): void {
-    this.service.getLoaiSanPhamBanChayTrongNam(2024).subscribe({
+    const year = new Date(this.date).getFullYear(); // Lấy năm từ biến date
+    this.service.getLoaiSanPhamBanChayTrongNam(year).subscribe({
       next: (data) => {
         this.data = data;
+        this.createChartCoupon();
       },
       error: (error) => {
-        this.toast.error(error);
+        this.toast.error(error.message.message);
       },
       complete: () => {
-        this.createChartCoupon();
+        if (!(this.data.length > 0)) {
+          this.toast.warning(`Năm ${year} không có dữ liệu được tìm thấy!`);
+        }
       },
     });
   }
@@ -68,7 +74,11 @@ export class PolarProductChartComponent {
   ngOnInit(): void {
     this.getData();
   }
-
+  ngOnChanges() {
+    if (this.date) {
+      this.getData();
+    }
+  }
   ngOnDestroy(): void {
     if (this.chart) {
       this.chart.destroy();

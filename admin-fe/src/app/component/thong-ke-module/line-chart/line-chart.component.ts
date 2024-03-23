@@ -10,7 +10,7 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./line-chart.component.css"],
 })
 export class LineChartComponent implements OnInit {
-  chartLoaded: boolean = false;
+  public chartLoaded: any;
   chart: any;
   @Input() tenChart: string;
   private currentYear: number = new Date().getFullYear();
@@ -272,6 +272,7 @@ export class LineChartComponent implements OnInit {
         this.createChartYear();
       },
       error: (err) => {
+        this.chartLoaded = false;
         this.toastSrc.error(`Có lỗi xảy ra: ${err.message.message}`);
       },
     });

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Chart, registerables } from "chart.js";
 import { ToastrService } from "ngx-toastr";
 import { DiscountSummary } from "src/app/model/interface/discount-summary";
@@ -10,24 +10,31 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./pie-discount-chart.component.css"],
 })
 export class PieDiscountChartComponent {
+  chartLoaded = false;
   chart: any;
   data: DiscountSummary[];
   backgroundColors: string[] = [];
 
   constructor(private service: ChartService, private toast: ToastrService) {}
+
+  @Input() date: any;
   private getData(): void {
-    this.service.getDotGiamGiaTrongNam(2024).subscribe({
+    const year = new Date(this.date).getFullYear(); // Lấy năm từ biến date
+    this.service.getDotGiamGiaTrongNam(year).subscribe({
       next: (data) => {
         this.data = data;
+        this.backgroundColors = this.data.map(() => {
+          return this.generateRandomColor();
+        });
+        this.createChartCoupon();
       },
       error: (error) => {
         this.toast.error(error.message.message);
       },
       complete: () => {
-        this.backgroundColors = this.data.map(() => {
-          return this.generateRandomColor();
-        });
-        this.createChartCoupon();
+        if (!(this.data.length > 0)) {
+          this.toast.warning(`Năm ${year} không có dữ liệu được tìm thấy!`);
+        }
       },
     });
   }
@@ -44,22 +51,21 @@ export class PieDiscountChartComponent {
     if (this.chart) {
       this.chart.destroy(); // Hủy bỏ biểu đồ cũ trước khi tạo mới
     }
+
+    const label = this.data.map((data) => {
+      return String(data.maDotGiamGia);
+    });
+    const data = this.data.map((data) => {
+      return Number(data.tongSanPhamDuocBan);
+    });
     this.chart = new Chart("DiscountChart", {
       type: "pie",
       data: {
-        labels: [
-          this.data.map((data) => {
-            return String(data.maDotGiamGia);
-          }),
-        ],
+        labels: label,
         datasets: [
           {
-            label: "Số Lượt Sử Dụng",
-            data: [
-              this.data.map((data) => {
-                return Number(data.tongSanPhamDuocBan);
-              }),
-            ],
+            label: "Sản Phẩm Được Mua",
+            data: data,
             backgroundColor: this.backgroundColors,
             hoverOffset: 4,
           },
@@ -72,6 +78,11 @@ export class PieDiscountChartComponent {
   }
   ngOnInit(): void {
     this.getData();
+  }
+  ngOnChanges() {
+    if (this.date) {
+      this.getData();
+    }
   }
   ngOnDestroy(): void {
     if (this.chart) {

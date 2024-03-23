@@ -77,12 +77,8 @@ export class ThongKeComponent implements OnInit {
   }
 
   // Model Charts
-  datePhieuGiamGia: any = null;
-  dateDotGiamGia: any = null;
-  dateSanPham: any = null;
-  onChange(result: Date): void {
-    if (result) {
-      console.log("onChange: ", result.getFullYear());
-    }
-  }
+  datePhieuGiamGia: Date = new Date(2024, 0, 1);
+  dateDotGiamGia: Date = new Date(2024, 0, 1);
+  dateSanPham: Date = new Date(2024, 0, 1);
+  //
 }

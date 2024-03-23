@@ -307,9 +307,16 @@ export class BanHangComponent implements OnInit, OnDestroy {
         let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(this.order);
         this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
           next: (resp: HoaDon) => {
-            console.log(resp);
-
+            // console.log(resp);
             this.pdfService.generatePDFHoaDon(resp);
+            // xoa don
+            for (let i = 0; i < this.orders.length; i++) {
+              if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
+                this.deleteOrder(i);
+                break;
+              }
+            }
+            // this.deleteOrder()
           },
           error: (err: any) => {
             this.notification.error(err.error.message);

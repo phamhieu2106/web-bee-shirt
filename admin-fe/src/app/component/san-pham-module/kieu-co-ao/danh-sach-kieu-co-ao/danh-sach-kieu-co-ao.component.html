@@ -35,73 +35,75 @@
             </div>
           </div>
         </div>
-        <!--  -->
       </div>
       <div class="card-body">
-        <!-- TABLE -->
-        <table class="table">
-          <thead class="thead-default">
-            <th width="10%">STT</th>
-            <th width="20%">Tên</th>
-            <th width="15%">Trạng Thái</th>
-            <th width="15%">Ngày Thêm</th>
-            <th width="15%">Hành động</th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ca of pagedResponse?.data; let i = index">
-              <th scope="row">
-                {{
-                  i +
-                    1 +
-                    (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
-                }}
-              </th>
-              <td>{{ ca.ten }}</td>
-              <td>
-                <span
-                  class="pointer"
-                  [ngClass]="
-                    ca.trangThai
-                      ? 'badge rounded-pill text-bg-success'
-                      : 'badge rounded-pill text-bg-danger'
-                  "
-                  (click)="changeStatus(ca.id)"
-                  >{{ ca.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
-                >
-              </td>
-              <td>{{ ca.createdAt }}</td>
-              <td>
-                <button
-                  class="btn btn-outline-light btn-rounded me-2"
-                  title="Xem chi tiết"
-                  data-bs-toggle="modal"
-                  data-bs-target="#coAoDetailsForm"
-                  (click)="openDetailsForm(ca.id)"
-                >
-                  <i
-                    class="fa-solid fa-circle-info fa-xl"
-                    style="color: #74c0fc"
-                  ></i>
-                </button>
-                <button
-                  class="btn btn-outline-warning btn-rounded"
-                  title="Cập nhật"
-                  data-bs-toggle="modal"
-                  data-bs-target="#coAoUpdateForm"
-                  (click)="openUpdateForm(ca.id)"
-                >
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #ffd43b"
-                  ></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!--  -->
+        <div *ngIf="pagedResponse.data.length > 0">
+          <table class="table">
+            <thead class="thead-default">
+              <th width="10%">STT</th>
+              <th width="20%">Tên</th>
+              <th width="15%">Trạng Thái</th>
+              <th width="15%">Ngày Thêm</th>
+              <th width="15%">Hành động</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ca of pagedResponse?.data; let i = index">
+                <th scope="row">
+                  {{
+                    i +
+                      1 +
+                      (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
+                  }}
+                </th>
+                <td>{{ ca.ten }}</td>
+                <td>
+                  <span
+                    class="pointer"
+                    [ngClass]="
+                      ca.trangThai
+                        ? 'badge rounded-pill text-bg-success'
+                        : 'badge rounded-pill text-bg-danger'
+                    "
+                    (click)="changeStatus(ca.id)"
+                    >{{ ca.trangThai ? "Khả dụng" : "Không khả dụng" }}</span
+                  >
+                </td>
+                <td>{{ ca.createdAt }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-light btn-rounded me-2"
+                    title="Xem chi tiết"
+                    data-bs-toggle="modal"
+                    data-bs-target="#coAoDetailsForm"
+                    (click)="openDetailsForm(ca.id)"
+                  >
+                    <i
+                      class="fa-solid fa-circle-info fa-xl"
+                      style="color: #74c0fc"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn btn-outline-warning btn-rounded"
+                    title="Cập nhật"
+                    data-bs-toggle="modal"
+                    data-bs-target="#coAoUpdateForm"
+                    (click)="openUpdateForm(ca.id)"
+                  >
+                    <i
+                      class="fa-solid fa-pen-to-square"
+                      style="color: #ffd43b"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="pagedResponse?.data.length === 0">
+          <h3 class="text-center"><i>Không có dữ liệu!</i></h3>
+        </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="pagedResponse.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
             <label class="my-1 mr-2" for="inlineFormCustomSelectPref"

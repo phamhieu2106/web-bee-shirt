@@ -24,7 +24,7 @@ public class KieuThietKeServiceImpl implements KieuThietKeService {
     @Override
     public KieuThietKe add(KieuThietKe thietKe) {
         if (kieuThietKeRepo.existsByTen(thietKe.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên thiết kế '" + thietKe.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("'" + thietKe.getTen() + "' đã tồn tại.");
         }
         thietKe.setTrangThai(true);
         return kieuThietKeRepo.save(thietKe);
@@ -76,7 +76,7 @@ public class KieuThietKeServiceImpl implements KieuThietKeService {
         KieuThietKe kieuThietKeByTen = kieuThietKeRepo.getKieuThietKeByTen(thietKe.getTen());
 
         if (kieuThietKeByTen != null && kieuThietKeByTen.getId() != thietKeInDB.getId()) {
-            throw new ResourceExistsException("Tên kiểu thiết kế '" + thietKe.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("'" + thietKe.getTen() + "' đã tồn tại.");
         }
     }
 }

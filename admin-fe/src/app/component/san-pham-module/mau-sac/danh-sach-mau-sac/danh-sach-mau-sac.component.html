@@ -9,26 +9,15 @@
     <div class="card">
       <div class="card-header">
         <h3 class="mb-2">Danh sách màu sắc</h3>
-        <!-- HEADER  -->
         <div>
           <div class="col col-md-12 d-flex">
             <div class="input-group form-group search-block">
               <input
                 type="search"
-                class="form-control"
-                placeholder="Tìm màu sắc..."
-                (search)="onClearSearchInput()"
+                class="form-control rounded"
+                placeholder="Tìm màu sắc theo tên hoặc mã..."
                 [(ngModel)]="search"
               />
-              <span class="input-group-btn">
-                <button
-                  class="btn btn-create"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button>
-              </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">
@@ -37,17 +26,15 @@
                 class="btn btn-create btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
-                data-bs-target="#mauSacAddForm"
+                data-bs-target="#thietKeAddForm"
               >
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
             </div>
           </div>
         </div>
-        <!--  -->
       </div>
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
-        <!-- TABLE -->
         <table class="table">
           <thead class="thead-default">
             <tr>
@@ -117,6 +104,9 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="pagedResponse?.data.length === 0">
+        <h3 class="text-center"><i>Không có dữ liệu!</i></h3>
+      </div>
       <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
         <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
@@ -126,7 +116,7 @@
             <select
               class="custom-select my-1 mr-sm-2 col-md-5"
               id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
+              (change)="changePageSize($event)"
             >
               >
               <option value="5">5</option>
@@ -179,18 +169,36 @@
           </div>
         </div>
       </div>
-      <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
-        <h3>Không có dữ liệu!</h3>
-      </div>
     </div>
   </div>
 </div>
 
 <app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
 
-<!-- add modal -->
+<!-- modal: add -->
 <div
   class="modal fade"
+  id="thietKeAddForm"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Thêm mới kiểu thiết kế</h1>
+      </div>
+      <form [formGroup]="addForm">
+        <button type="button" class="btn btn-primary rounded" (click)="add()">
+          Thêm
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade modal-add"
   id="mauSacAddForm"
   tabindex="-1"
   aria-labelledby="exampleModalLabel"
@@ -199,18 +207,16 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">
-          Thêm mới màu sắc
-        </h1>
+        <h1 class="modal-title fs-5">Thêm mới màu sắc</h1>
       </div>
       <form [formGroup]="addForm">
         <div class="modal-body">
-          <!-- ten mau sac -->
+          <!-- tên màu sắc -->
           <div class="form-row">
-            <label for="inputEmail4">Tên màu sắc:</label>
+            <label>Tên màu sắc:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
                 addForm.get('ten').invalid && addForm.get('ten').touched
                   ? 'is-invalid'
@@ -221,14 +227,14 @@
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
 
-          <!-- ma mau sac -->
+          <!-- mã màu sắc -->
           <div class="form-row mt-3">
-            <label for="inputEmail4">Mã màu sắc:</label>
+            <label>Mã màu sắc:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control rounded"
               [ngClass]="
-                addForm.get('ten').invalid && addForm.get('ten').touched
+                addForm.get('ma').invalid && addForm.get('ma').touched
                   ? 'is-invalid'
                   : ''
               "
@@ -237,22 +243,19 @@
             <div class="invalid-feedback">Không được bỏ trống</div>
           </div>
 
-          <!-- file anh -->
+          <!-- file ảnh -->
           <div class="form-row mt-3">
-            <label for="inputEmail4">Ảnh màu sắc:</label>
+            <label>Ảnh màu sắc:</label>
             <div class="custom-file">
               <input
                 type="file"
                 class="custom-file-input"
-                id="inputGroupFile01"
-                aria-describedby="inputGroupFileAddon01"
                 accept="image/*"
                 (change)="imageChange($event, 'thumbnail')"
               />
-              <label class="custom-file-label" for="inputGroupFile01"
-                >Choose file</label
-              >
+              <label class="custom-file-label">Choose file</label>
             </div>
+
             <!-- thumbnail -->
             <div class="text-center">
               <img
@@ -288,7 +291,7 @@
   </div>
 </div>
 
-<!-- details modal -->
+<!-- modal: details -->
 <div
   class="modal fade"
   id="mauSacDetailsForm"
@@ -356,7 +359,7 @@
   </div>
 </div>
 
-<!-- update modal -->
+<!-- modal: update -->
 <div
   class="modal fade"
   id="mauSacUpdateForm"

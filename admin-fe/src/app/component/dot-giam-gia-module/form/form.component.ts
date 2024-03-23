@@ -1,11 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from "@angular/forms";
+import { Component, Input, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";

@@ -38,6 +38,7 @@ export class SidebarComponent {
 
   setInitialSidebarState(): void {
     $('.sidebar1').toggleClass('active');
+ 
   }
 
 

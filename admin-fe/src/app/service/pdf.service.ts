@@ -39,7 +39,9 @@ export class PdfService {
           columns: [
             {
               width: "50%",
-              text: `Tên khách hàng:${hoaDon.tenNguoiNhan} `,
+              text: `Tên khách hàng:${
+                hoaDon.khachHang != null ? hoaDon.khachHang.hoTen : ""
+              } `,
             },
             {
               width: "50%",
@@ -53,11 +55,15 @@ export class PdfService {
           columns: [
             {
               width: "50%",
-              text: `Địa chỉ nhận hàng:${hoaDon.diaChiNguoiNhan} `,
+              text: `Địa chỉ nhận hàng:${
+                hoaDon.diaChiNguoiNhan == null ? "" : hoaDon.diaChiNguoiNhan
+              } `,
             },
             {
               width: "50%",
-              text: `Ngày tạo: ${hoaDon.createdAt}`,
+              text: `Ngày tạo: ${
+                hoaDon.createdAt == null ? "" : hoaDon.createdAt
+              }`,
             },
           ],
           // optional space between columns
@@ -67,17 +73,21 @@ export class PdfService {
           columns: [
             {
               width: "50%",
-              text: `Số điện thoại: ${hoaDon.sdtNguoiNhan} `,
+              text: `Số điện thoại: ${
+                hoaDon.sdtNguoiNhan == null ? "" : hoaDon.sdtNguoiNhan
+              } `,
             },
             {
               width: "50%",
-              text: `Email: ${hoaDon.emailNguoiNhan}`,
+              text: `Email: ${
+                hoaDon.emailNguoiNhan == null ? "" : hoaDon.emailNguoiNhan
+              }`,
             },
           ],
           // optional space between columns
           columnGap: 10,
         },
-        { text: `Ghi chú: ${hoaDon.ghiChu}` },
+        { text: `Ghi chú: ${hoaDon.ghiChu == null ? "" : hoaDon.ghiChu}` },
         { text: `\n` },
         { text: `DANH SÁCH HÓA ĐƠN`, alignment: "center", fontSize: 22 },
         {
@@ -86,7 +96,7 @@ export class PdfService {
             // headers are automatically repeated if the table spans over multiple pages
             // you can declare how many rows should be treated as headers
             headerRows: 1,
-            widths: ["10%", "30%", "10%", "20%", "30%"],
+            widths: ["5%", "50%", "5%", "20%", "20%"],
 
             body: this.genTableContent(hoaDon.hoaDonChiTiets),
           },
@@ -176,12 +186,18 @@ export class PdfService {
 
   genTableContent(hdcts: HoaDonChiTiet[]) {
     var body = [];
-    var titles = ["STT", "Tên sản phẩm", "SL", "Đơn giá", "Thành tiền"];
+    var titles = [
+      "STT",
+      "Tên sản phẩm                                    ",
+      "SL",
+      "Đơn giá",
+      "Thành tiền",
+    ];
     body.push(titles);
     hdcts.forEach((hdct, index) => {
       body.push([
         ...(index + 1).toString(),
-        "Tên sản phẩm",
+        `${hdct.sanPhamChiTiet.sanPham.ten} \n ${hdct.sanPhamChiTiet.kichCo.ten} - ${hdct.sanPhamChiTiet.mauSac.ten}`,
         hdct.soLuong.toString(),
         this.convertToVND(hdct.giaBan),
         this.convertToVND(hdct.giaBan * hdct.soLuong),

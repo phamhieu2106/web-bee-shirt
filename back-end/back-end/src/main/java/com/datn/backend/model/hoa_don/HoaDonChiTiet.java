@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
@@ -22,7 +23,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-@Builder
+@SuperBuilder
 public class HoaDonChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,7 @@ public class HoaDonChiTiet {
 
     private int soLuong;
     private BigDecimal giaBan;
-    private BigDecimal donGia;
+    private BigDecimal giaNhap;
 
     @ManyToOne
     @JoinColumn(name = "id_spct")

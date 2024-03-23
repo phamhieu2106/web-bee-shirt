@@ -384,11 +384,21 @@
       <div *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
         <div class="d-flex justify-content-between m-1">
           <span class="mr-auto fw-bold">Tên người nhận: </span>
-          <span class="ml-auto"><input type="text" /></span>
+          <span class="ml-auto"
+            ><input
+              type="text"
+              class="right-align"
+              [(ngModel)]="order.tenNguoiNhan"
+          /></span>
         </div>
         <div class="d-flex justify-content-between m-1">
           <span class="mr-auto fw-bold">Số điện thoại:</span>
-          <span class="ml-auto"><input type="text" /></span>
+          <span class="ml-auto"
+            ><input
+              type="text"
+              class="right-align"
+              [(ngModel)]="order.sdtNguoiNhan"
+          /></span>
         </div>
         <div class="d-flex justify-content-between m-1">
           <span class="mr-auto fw-bold">Địa chỉ:</span>
@@ -499,8 +509,8 @@
           ></app-giao-hang>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal">
-            Ok
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Xác nhận
           </button>
         </div>
       </div>

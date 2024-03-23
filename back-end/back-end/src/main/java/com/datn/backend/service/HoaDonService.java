@@ -2,6 +2,7 @@ package com.datn.backend.service;
 
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.request.HoaDonRequest;
+import com.datn.backend.dto.request.PlaceOrderRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -25,4 +26,6 @@ public interface HoaDonService {
     HoaDonResponse updateHoaDon(HoaDonRequest hoaDonRequest);
 
     SoLuongDonHangResponse getSoLuongDonHang();
+
+    HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest);
 }

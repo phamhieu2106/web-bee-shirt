@@ -1,19 +1,25 @@
 package com.datn.backend.service.impl;
 
-import com.datn.backend.dto.request.ChangeOrderStatusRequest;
-import com.datn.backend.dto.request.HoaDonRequest;
+import com.datn.backend.dto.request.*;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
+import com.datn.backend.enumeration.LoaiHinhThuc;
 import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.exception.custom_exception.OrderStatusException;
+import com.datn.backend.exception.custom_exception.PlaceOrderException;
+import com.datn.backend.model.NhanVien;
 import com.datn.backend.model.hoa_don.HoaDon;
+import com.datn.backend.model.hoa_don.HoaDonChiTiet;
 import com.datn.backend.model.hoa_don.LichSuHoaDon;
-import com.datn.backend.repository.HoaDonRepository;
-import com.datn.backend.repository.LichSuHoaDonRepository;
+import com.datn.backend.model.hoa_don.ThanhToan;
+import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
+import com.datn.backend.model.san_pham.SanPhamChiTiet;
+import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonService;
 import com.datn.backend.utility.UtilityFunction;
 import jakarta.transaction.Transactional;
@@ -23,7 +29,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +47,13 @@ public class HoaDonServiceImpl implements HoaDonService {
     private final HoaDonRepository hoaDonRepository;
     private final ModelMapper modelMapper;
     private final LichSuHoaDonRepository lichSuHoaDonRepository;
+    private final NhanVienRepository nhanVienRepo;
+    private final KhachHangRepository khachHangRepo;
+    private final HoaDonChiTietRepository hoaDonChiTietRepo;
+    private final ThanhToanRepository thanhToanRepo;
+    private final PhieuGiamGiaRepository phieuGiamGiaRepo;
+    private final SanPhamChiTietRepository spctRepo;
+    private final HinhThucThanhToanRepository hinhThucThanhToanRepo;
 
     /**
      * @param pageable
@@ -174,6 +193,155 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepository.getSoLuongDonHang();
     }
 
+    @Override
+    @Transactional
+    public HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
+        HoaDon hoaDon = null;
+        if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.TAI_QUAY.toString())){
+            hoaDon = this.createHoaDonTaiQuay(placeOrderRequest);
+        } else if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.GIAO_HANG.toString())) {
+            hoaDon = this.createHoaDonGiaoHang(placeOrderRequest);
+        }
+        return mapToHoaDonResponse(hoaDon);
+    }
+
+    private HoaDon createHoaDonTaiQuay(PlaceOrderRequest placeOrderRequest) {
+        NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
+        KhachHang khachHang =placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null):null;
+        PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
+
+        System.out.println(placeOrderRequest);
+        HoaDon hoaDon = HoaDon
+                .builder()
+                .ma(generateMaHD())
+                .loaiHoaDon(LoaiHoaDon.valueOf(placeOrderRequest.getLoaiHoaDon()))
+                .tenNguoiNhan(null)
+                .sdtNguoiNhan(null)
+                .emailNguoiNhan(null)
+                .diaChiNguoiNhan(null)
+                .tongTien(placeOrderRequest.getTongTien())
+                .tienGiam(placeOrderRequest.getTienGiam())
+                .phiVanChuyen(BigDecimal.valueOf(0))
+                .loaiHoaDon(LoaiHoaDon.TAI_QUAY)
+                .trangThai(TrangThaiHoaDon.HOAN_THANH)
+                .ghiChu(placeOrderRequest.getGhiChu())
+                .nhanVien(nhanVien)
+                .khachHang(khachHang)
+                .phieuGiamGia(phieuGiamGia)
+                .build();
+
+        hoaDonRepository.save(hoaDon);
+                hoaDon.setHoaDonChiTiets(this.mapToHoaDonChiTiet(placeOrderRequest.getHoaDonChiTiets(),hoaDon));
+        hoaDon.setLichSuHoaDons(this.createLichSuHoaDonTaiQuay(hoaDon));
+        hoaDon.setThanhToans(this.createThanhToans(placeOrderRequest.getThanhToans(),hoaDon));
+        return hoaDon;
+    }
+
+    private List<ThanhToan> createThanhToans(List<ThanhToanRequest> thanhToans,HoaDon hoaDon) {
+        return thanhToans.stream().map((tt) ->{
+            ThanhToan thanhToan = new ThanhToan();
+            thanhToan.setMaGiaoDich(tt.getMaGiaoDich());
+            thanhToan.setSoTien(tt.getSoTien());
+            thanhToan.setTrangThai(true);
+            thanhToan.setHinhThucThanhToan(
+                    hinhThucThanhToanRepo.findByHinhThuc(
+                            LoaiHinhThuc.valueOf(tt.getHinhThucThanhToan())
+                    ).orElseThrow(() -> new PlaceOrderException("Hình thức thanh toán không hợp lệ"))
+            );
+            thanhToan.setHoaDon(hoaDon);
+            return thanhToan;
+        }).toList();
+    }
+
+    private List<LichSuHoaDon> createLichSuHoaDonTaiQuay(HoaDon hoaDon) {
+        List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
+        LichSuHoaDon lichSuHoaDon =
+                LichSuHoaDon
+                        .builder()
+                        .tieuDe("Hoàn thành")
+                        .moTa("")
+                        .trangThai(TrangThaiHoaDon.HOAN_THANH)
+                        .hoaDon(hoaDon)
+                        .build();
+
+        lichSuHoaDons.add(lichSuHoaDon);
+        return lichSuHoaDons;
+    }
+
+    private PhieuGiamGia validPhieuGiamGia(Integer phieuGiamGiaId) {
+        PhieuGiamGia phieuGiamGia = null;
+        if (phieuGiamGiaId != null) {
+            phieuGiamGia =  phieuGiamGiaRepo.findById(phieuGiamGiaId).orElseThrow(
+                    () -> new PlaceOrderException("Phiếu giảm giá không hợp lệ")
+            );
+            // check so luong
+            if (phieuGiamGia.getSoLuong() <= 0) {
+                throw new PlaceOrderException("Phiếu giảm giá đã hết số lượng sử dụng");
+            }
+            // check thoi han su dung
+            LocalDateTime now = LocalDateTime.now();
+//            if (!(now.isBefore(phieuGiamGia.getThoiGianBatDau()) && now.isAfter(phieuGiamGia.getThoiGianKetThuc()))){
+//                System.out.println(now.toString());
+//                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
+//            }
+            if (!this.isWithinInterval(now,phieuGiamGia.getThoiGianBatDau(),phieuGiamGia.getThoiGianKetThuc())){
+                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
+            }
+            // tru so luong
+            if (phieuGiamGia.getSoLuong()>= 1){
+                phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
+            }
+
+        }
+        return phieuGiamGia;
+    }
+    // Phương thức kiểm tra xem một thời gian cụ thể có nằm trong một khoảng thời gian hay không
+    public boolean isWithinInterval(LocalDateTime time, LocalDateTime startTime, LocalDateTime endTime) {
+        return !time.isBefore(startTime) && !time.isAfter(endTime);
+    }
+    private List<HoaDonChiTiet> mapToHoaDonChiTiet(List<HoaDonChiTietRequest> hoaDonChiTiets,HoaDon hoaDon) {
+        if (hoaDonChiTiets.isEmpty()){
+            throw new PlaceOrderException("Vui lòng thêm sản phẩm vào đơn");
+        }
+        return hoaDonChiTiets.stream().map((hdct)->{
+            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+            SanPhamChiTiet sanPhamChiTiet = spctRepo.findById(hdct.getSanPhamChiTietId()).orElse(null);
+            if (sanPhamChiTiet == null || !sanPhamChiTiet.isTrangThai()){
+                throw new PlaceOrderException("Sản phẩm "+sanPhamChiTiet.getSanPham().getTen() +" đã dừng bán vui lòng xóa khỏi đơn !");
+            }
+            if (hdct.getSoLuong() <= 0){
+                throw new PlaceOrderException("Sản phẩm "+sanPhamChiTiet.getSanPham().getTen() +" số lượng không hợp lệ !");
+            }
+            if (sanPhamChiTiet.getSoLuongTon() <= 0){
+                throw new PlaceOrderException("Sản phẩm "+sanPhamChiTiet.getSanPham().getTen() +" đã hết hàng");
+            }
+            if (hdct.getSoLuong() > sanPhamChiTiet.getSoLuongTon()){
+                throw new PlaceOrderException("Sản phẩm "+sanPhamChiTiet.getSanPham().getTen() +" chỉ có thể mua tối đa "+ sanPhamChiTiet.getSoLuongTon()+" sản phẩm !");
+            }
+            hoaDonChiTiet.setSoLuong(hdct.getSoLuong());
+            hoaDonChiTiet.setGiaBan(hdct.getGiaBan());
+            hoaDonChiTiet.setGiaNhap(hdct.getGiaNhap());
+            hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTiet.setHoaDon(hoaDon);
+            // tru so luong ton
+            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon()-hdct.getSoLuong());
+            return hoaDonChiTiet;
+        }).toList();
+    }
+
+    public String generateMaHD(){
+        long count = hoaDonRepository.count();
+        String maHD = "HD"+count;
+        while (hoaDonRepository.existsByMa(maHD)){
+            count += 1;
+            maHD = "HD"+count;
+        }
+        return maHD;
+    }
+    private HoaDon createHoaDonGiaoHang(PlaceOrderRequest placeOrderRequest) {
+        System.out.println(placeOrderRequest.toString());
+        return null;
+    }
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {
         return modelMapper.map(hoaDon, HoaDonResponse.class);
     }

@@ -7,6 +7,9 @@ import { LichSuHoaDon } from "../model/class/lich-su-hoa-don.class";
 import { SoLuongDonHang } from "../model/class/so-luong-don-hang.class";
 import { HoaDon } from "../model/class/hoa-don.class";
 import { HoaDonChiTietRequest } from "../model/class/hoa-don-chi-tiet-request.class";
+import { NhanVien } from "../model/class/nhan-vien.class";
+import { ThanhToan } from "../model/class/thanh-toan";
+import { ThanhToanRequest } from "../model/class/thanh-toan-reuqest.class";
 
 @Injectable({
   providedIn: "root",
@@ -84,14 +87,30 @@ export class HoaDonService {
       hdctRequest.sanPhamChiTietId = hdct.sanPhamChiTiet.id;
       return hdctRequest;
     });
-    hoaDonRequest.nhanVienId = null;
-    hoaDonRequest.khachHangId = hoaDon.khachHang.id;
-    hoaDonRequest.phieuGiamGiaId = hoaDon.phieuGiamGia.id;
-    hoaDonRequest.thanhToans = hoaDon.thanhToans;
+    hoaDonRequest.nhanVienId = JSON.parse(localStorage.getItem("nhanVien")).id;
+    hoaDonRequest.khachHangId =
+      hoaDon.khachHang == null ? null : hoaDon.khachHang.id;
+    hoaDonRequest.phieuGiamGiaId =
+      hoaDon.phieuGiamGia != null ? hoaDon.phieuGiamGia.id : null;
+    hoaDonRequest.thanhToans = this.mapToThanhToanRequest(hoaDon.thanhToans);
+    hoaDonRequest.tenNguoiNhan = hoaDon.tenNguoiNhan;
+    hoaDonRequest.sdtNguoiNhan = hoaDon.sdtNguoiNhan;
+    hoaDonRequest.emailNguoiNhan = hoaDon.emailNguoiNhan;
+    hoaDonRequest.diaChiNguoiNhan = hoaDon.diaChiNguoiNhan;
     return hoaDonRequest;
+  }
+  mapToThanhToanRequest(thanhToans: ThanhToan[]): ThanhToanRequest[] {
+    return thanhToans.map((tt) => {
+      let ttRequest = new ThanhToanRequest();
+      ttRequest.hinhThucThanhToan = tt.tenHinhThucThanhToan;
+      ttRequest.moTa = tt.moTa;
+      ttRequest.maGiaoDich = tt.maGiaoDich;
+      ttRequest.soTien = tt.soTien;
+      return ttRequest;
+    });
   }
   // place order
   public placeOrder(hoaDonRequest: HoaDonRequest): Observable<HoaDon> {
-    return null;
+    return this.http.post<HoaDon>(this.baseUrl + "/place-order", hoaDonRequest);
   }
 }

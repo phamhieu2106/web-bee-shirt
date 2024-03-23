@@ -31,7 +31,9 @@ export class GiaoHangComponent implements OnInit, OnChanges {
     this.phiVanChuyen.emit(soTien);
     this.diaChi.emit(
       `${
-        this.diaChiVaPhiVanChuyen.cuThe ? this.diaChiVaPhiVanChuyen.cuThe : ""
+        this.diaChiVaPhiVanChuyen.cuThe == null
+          ? ""
+          : this.diaChiVaPhiVanChuyen.cuThe
       },${this.diaChiVaPhiVanChuyen.xa},${this.diaChiVaPhiVanChuyen.huyen},${
         this.diaChiVaPhiVanChuyen.tinh
       }`
@@ -42,5 +44,6 @@ export class GiaoHangComponent implements OnInit, OnChanges {
     this.diaChiVaPhiVanChuyen.tinh = diaChi.tinh;
     this.diaChiVaPhiVanChuyen.huyen = diaChi.huyen;
     this.diaChiVaPhiVanChuyen.xa = diaChi.xa;
+    this.diaChiVaPhiVanChuyen.cuThe = diaChi.duong;
   }
 }

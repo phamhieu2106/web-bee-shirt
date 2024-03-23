@@ -1,5 +1,5 @@
 import { HoaDonChiTietRequest } from "./hoa-don-chi-tiet-request.class";
-import { ThanhToan } from "./thanh-toan";
+import { ThanhToanRequest } from "./thanh-toan-reuqest.class";
 
 export class HoaDonRequest {
   tongTien: number;
@@ -10,5 +10,10 @@ export class HoaDonRequest {
   nhanVienId: number;
   khachHangId: number;
   phieuGiamGiaId: number;
-  thanhToans: ThanhToan[];
+  thanhToans: ThanhToanRequest[];
+  tenNguoiNhan: string;
+  sdtNguoiNhan: string;
+  emailNguoiNhan: string;
+  diaChiNguoiNhan: string;
+  ghiChu: string;
 }

@@ -13,9 +13,9 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import Swal from "sweetalert2";
 import { DiscountValid } from "src/app/model/class/discount-valid.class";
-import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
-import { el } from "date-fns/locale";
 import { HoaDonService } from "src/app/service/hoa-don.service";
+import { DiaChi } from "src/app/model/class/dia-chi.class";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-ban-hang",
@@ -45,7 +45,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
     private banHangService: BanHangService,
     private localStorageService: LocalStorageServiceService,
     private hoaDonService: HoaDonService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private notification: NotificationService
   ) {}
   ngOnDestroy(): void {
     this.localStorageService.saveData(this.key, this.orders);
@@ -141,9 +142,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     if (event.target.checked) {
       this.order.loaiHoaDon = "GIAO_HANG";
       // this.order.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
+      if (this.order.khachHang != null) {
+        this.order.tenNguoiNhan = this.order.khachHang.hoTen + "";
+        this.order.sdtNguoiNhan = this.order.khachHang.sdt + "";
+      }
     } else {
       this.order.loaiHoaDon = "TAI_QUAY";
       this.order.phiVanChuyen = 0;
+      this.order.diaChiNguoiNhan = null;
     }
   }
 
@@ -299,10 +305,16 @@ export class BanHangComponent implements OnInit, OnDestroy {
       if (this.getTienKhachConThieu() == 0) {
         // xác thanh toán
         let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(this.order);
-        this.pdfService.generatePDFHoaDon(this.order);
-        // this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
-        //   next: (resp: HoaDon) => {},
-        // });
+        this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
+          next: (resp: HoaDon) => {
+            console.log(resp);
+
+            this.pdfService.generatePDFHoaDon(resp);
+          },
+          error: (err: any) => {
+            this.notification.error(err.error.message);
+          },
+        });
         console.log(hoaDonRequest);
       } else {
         Swal.fire("Đơn hàng của bạn vẫn chưa được thanh toán đủ tiền .");
@@ -312,7 +324,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   datHang() {
     if (this.order.loaiHoaDon == "GIAO_HANG") {
-      this.order.diaChiNguoiNhan = null;
+      // this.order.diaChiNguoiNhan = null;
     }
     console.log(this.order);
   }
@@ -324,8 +336,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
   caculatePhiVanChuyen(soTien: number) {
     this.order.phiVanChuyen = soTien;
   }
-  getDiaChiNguoiNhan(diaChi: string) {
-    this.order.diaChiNguoiNhan = diaChi;
+  getDiaChiNguoiNhan($event: string) {
+    this.order.diaChiNguoiNhan = $event;
   }
 
   getTienKhachThanhToan(): number {
@@ -383,5 +395,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   insertSLSP() {
     this.updateHoaDon();
+  }
+
+  getDiaChiMacDinh(diaChis: DiaChi[]): DiaChi {
+    for (let i = 0; i < diaChis.length; i++) {
+      if (diaChis[i].macDinh == true) {
+        return diaChis[i];
+      }
+    }
+    return null;
   }
 }

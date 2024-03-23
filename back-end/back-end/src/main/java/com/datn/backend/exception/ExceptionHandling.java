@@ -1,10 +1,6 @@
 package com.datn.backend.exception;
 
-import com.datn.backend.exception.custom_exception.IdNotFoundException;
-import com.datn.backend.exception.custom_exception.OperationNotAllowException;
-import com.datn.backend.exception.custom_exception.OrderStatusException;
-import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.exception.custom_exception.*;
 import com.datn.backend.exception.exception_response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +19,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionHandling {
+
+    @ExceptionHandler(PlaceOrderException.class)
+    public ResponseEntity<?> handlePlaceOrderException(PlaceOrderException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(response, BAD_REQUEST);
+    }
 
     @ExceptionHandler(IdNotFoundException.class)
     public ResponseEntity<?> handleIdNotFoundException(IdNotFoundException ex) {

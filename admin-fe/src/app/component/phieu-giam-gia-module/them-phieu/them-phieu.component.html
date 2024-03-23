@@ -27,9 +27,7 @@
                   "
                   formControlName="maPhieuGiamGia"
                 />
-                <div class="invalid-feedback">
-                  Mã phiếu giảm giá không được để trống
-                </div>
+              
               </div>
 
               <div class="mb-3">
@@ -233,11 +231,11 @@
                   />
                   <div class="invalid-feedback">
                     <span *ngIf="addForm.get('soLuong').hasError('required')">
-                      Số lượng không được để trống</span
+                      Không bỏ trống trường này</span
                     >
 
                     <span *ngIf="addForm.get('soLuong').hasError('min')"
-                      >Số lượng > 0
+                      >Vui lòng nhập số và số > 0
                     </span>
                   </div>
                 </div>
@@ -339,6 +337,7 @@
                   id="sendMail"
                   class="form-check-inline"
                   (change)="onSendMailChange($event)"
+                  [disabled]="!checkMail"
                 />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>
@@ -351,6 +350,15 @@
               >
                 Tạo mới
               </button>
+
+              <a
+              type="button"
+              class="btn btn-warning ml-3"
+              (click)="chuyenTrang()"
+             
+            >
+             Quay Lại
+            </a>
             </form>
           </div>
 

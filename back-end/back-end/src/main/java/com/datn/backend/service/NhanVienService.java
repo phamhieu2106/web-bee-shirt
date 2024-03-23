@@ -4,7 +4,6 @@ import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.NhanVien;
-import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,5 +21,5 @@ public interface NhanVienService {
 
     NhanVien delete(Integer id);
 
-    PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter);
+    PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter, String search);
 }

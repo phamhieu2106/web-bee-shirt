@@ -15,6 +15,8 @@ public interface PhieuGiamGiaKhachHangService {
 
     void addPhieu(PhieuKhachHangRequest request);
 
+    void deletePhieu(Integer id);
+
 
     PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id ,Boolean check);
 

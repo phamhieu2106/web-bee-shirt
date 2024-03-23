@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Chart, registerables } from "chart.js";
 import { ToastrService } from "ngx-toastr";
 import { CouponsSummary } from "src/app/model/interface/coupons-summary";
@@ -13,23 +13,34 @@ export class PieChartComponent implements OnInit {
   chart: any;
   data: CouponsSummary[];
   backgroundColors: string[] = [];
+
+  constructor(private service: ChartService, private toast: ToastrService) {}
   ngOnInit(): void {
     this.getData();
   }
-  constructor(private service: ChartService, private toast: ToastrService) {}
+  ngOnChanges() {
+    if (this.date) {
+      this.getData();
+    }
+  }
+  @Input() date: any;
   private getData(): void {
-    this.service.getPhieGiamGiaDuocSuDungTrongNam(2024).subscribe({
+    const year = new Date(this.date).getFullYear(); // Lấy năm từ biến date
+    this.service.getPhieGiamGiaDuocSuDungTrongNam(year).subscribe({
       next: (data) => {
         this.data = data;
+        this.backgroundColors = this.data.map(() => {
+          return this.generateRandomColor();
+        });
+        this.createChartCoupon();
       },
       error: (error) => {
         this.toast.error(error.message.message);
       },
       complete: () => {
-        this.backgroundColors = this.data.map(() => {
-          return this.generateRandomColor();
-        });
-        this.createChartCoupon();
+        if (!(this.data.length > 0)) {
+          this.toast.warning(`Năm ${year} không có dữ liệu được tìm thấy!`);
+        }
       },
     });
   }
@@ -39,24 +50,19 @@ export class PieChartComponent implements OnInit {
     if (this.chart) {
       this.chart.destroy(); // Hủy bỏ biểu đồ cũ trước khi tạo mới
     }
+    const labels = this.data.map(
+      (data) => `${data.maPhieuGiamGia} - ${data.tenPhieuGiamGia}`
+    );
+    const dataValues = this.data.map((data) => Number(data.soLuotSuDung));
+
     this.chart = new Chart("CouponChart", {
       type: "pie",
       data: {
-        labels: [
-          this.data.map((data) => {
-            return `${String(data.maPhieuGiamGia)} - ${String(
-              data.tenPhieuGiamGia
-            )}`;
-          }),
-        ],
+        labels: labels,
         datasets: [
           {
             label: "Số Lượt Sử Dụng",
-            data: [
-              this.data.map((data) => {
-                return Number(data.soLuotSuDung);
-              }),
-            ],
+            data: dataValues,
             backgroundColor: this.backgroundColors,
             hoverOffset: 4,
           },

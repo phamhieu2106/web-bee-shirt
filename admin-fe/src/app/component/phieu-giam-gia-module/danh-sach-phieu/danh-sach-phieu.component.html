@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col-md-6">
                 <input type="text" name="" class="form-control rounded"
-                  placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (input)="searchPhieuGiamGia($event)">
+                  placeholder="Tìm phiếu giảm giá theo mã hoặc theo tên" (keyup)="timKiem($event)"  [(ngModel)]="search">
               </div>
 
             </div>
@@ -26,18 +26,18 @@
               <div class="col-md-2">
                 <label for="">Từ Ngày</label>
                 <input type="Date" name="" class="form-control rounded" placeholder="Từ ngày"
-                  [(ngModel)]="thoiGianBatDau" (change)="filterPrivate()">
+                  [(ngModel)]="thoiGianBatDau" (change)="onChangeFilter()">
               </div>
               <div class="col-md-2">
                 <label for="">Tới Ngày</label>
                 <input type="Date" name="" class="form-control rounded" placeholder="Đến ngày"
-                  [(ngModel)]="thoiGianKetThuc" (change)="filterPrivate()">
+                  [(ngModel)]="thoiGianKetThuc" (change)="onChangeFilter()">
               </div>
 
               <div class="col-md-2">
                 <label for="">Loại</label>
                 <div>
-                  <select class="custom-select" [(ngModel)]="loai" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="loai" (change)="onChangeFilter()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[1]">Công Khai</option>
                     <option [ngValue]="[0]">Cá Nhân</option>
@@ -48,7 +48,7 @@
               <div class="col-md-2">
                 <label for="">Kiểu</label>
                 <div>
-                  <select class="custom-select" [(ngModel)]="kieu" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="kieu" (change)="onChangeFilter()">
                     <option [ngValue]="[0,1]">Tất Cả</option>
                     <option [ngValue]="[0]">%</option>
                     <option [ngValue]="[1]">Tiền Mặt</option>
@@ -59,7 +59,7 @@
               <div class="col-md-2">
                 <label for="">Trạng Thái</label>
                 <div>
-                  <select class="custom-select" [(ngModel)]="trangThai" (change)="filterPrivate()">
+                  <select class="custom-select" [(ngModel)]="trangThai" (change)="onChangeFilter()">
                     <option [ngValue]="['Đang diễn ra','Sắp diễn ra','Đã kết thúc']">Tất Cả</option>
                     <option value="Sắp diễn ra">Sắp diễn ra</option>
                     <option value="Đang diễn ra">Đang diễn ra</option>
@@ -72,7 +72,7 @@
               <div class="col-md-1 btnFilter">
 
                 <div>
-                  <button class="btn btnReload btn-rounded btn-reload-filter" (click)="clearFilters()"> <i
+                  <button class="btn btnReload btn-rounded btn-reload-filter" (click)="reloadFilter()"> <i
                       class="fa-solid fa-arrows-rotate"></i></button>
                 </div>
               </div>
@@ -116,8 +116,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let pgg of pagedResponseBinh?.data; let i = index">
-              <th scope="row">{{ (i + 1) * pagedResponseBinh.pageNumber }}</th>
+            <tr *ngFor="let pgg of pagedResponse?.data; let i = index">
+              <th scope="row">{{ (i + 1) * pagedResponse.pageNumber }}</th>
               <td>{{ pgg.maPhieuGiamGia }}</td>
               <td>{{ pgg.tenPhieuGiamGia }}</td>
               <td>{{ pgg.kieu == 0?"%":"Tiền Mặt" }}</td>
@@ -146,7 +146,7 @@
                 </button>
 
                 <button class="btn btn-outline-warning btn-rounded" title="Cập nhật"
-                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}" [disabled]="pgg.trangThai === 'Đã kết thúc'">
+                  routerLink="/phieu-giam-gia/sua-phieu/{{pgg.id}}" [hidden]="pgg.trangThai === 'Đã kết thúc'">
                   <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
                 </button>
 
@@ -164,7 +164,8 @@
               <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
               </label>
               <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
-                (change)="onChangePageSize($event)">
+              (change)="onChangePageSize()"
+              [(ngModel)]="pageSize"
                 >
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -174,20 +175,53 @@
             <div class="">
               <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                  <li class="page-item" [ngClass]="pagedResponseBinh?.pageNumber == 1 ? 'disabled' : ''">
-                    <a class="page-link pointer" (click)="goToPage(pagedResponseBinh?.pageNumber - 1)">Previous</a>
+                  <li
+                    class="page-item"
+                    [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                  >
+                    <a
+                      [hidden]="pagedResponse?.pageNumber == 1"
+                      class="page-link pointer"
+                      (click)="
+                        goToPage(
+                          pagedResponse?.pageNumber - 1,
+                          pageSize,
+                          search
+                        )
+                      "
+                      >Previous</a
+                    >
                   </li>
-                  <li class="page-item" *ngFor="let page of pagedResponseBinh?.pageNumberArr">
-                    <a class="page-link pointer" [ngClass]="
-                        pagedResponseBinh?.pageNumber == page ? 'active' : ''
-                      " (click)="goToPage(page)">{{ page }}</a>
+                  <li
+                    class="page-item"
+                    *ngFor="let page of pagedResponse?.pageNumberArr"
+                  >
+                    <a
+                      class="page-link pointer"
+                      [ngClass]="
+                        pagedResponse?.pageNumber == page ? 'active' : ''
+                      "
+                      (click)="goToPage(page, pageSize, search)"
+                      >{{ page }}</a
+                    >
                   </li>
-                  <li class="page-item" [ngClass]="
-                      pagedResponseBinh?.pageNumber == pagedResponseBinh?.totalPages
-                        ? 'disabled'
-                        : ''
-                    ">
-                    <a class="page-link pointer" (click)="goToPage(pagedResponseBinh?.pageNumber + 1)">Next</a>
+                  <li class="page-item">
+                    <a
+                      [hidden]="
+                        pagedResponse?.pageNumber ==
+                          pagedResponse?.pageNumberArr.length ||
+                        pagedResponse?.pageNumberArr.length == 0
+                      "
+                      class="page-link pointer"
+                      (click)="
+                        goToPage(
+                          pagedResponse?.pageNumber + 1,
+                          pageSize,
+                          search
+                        )
+                      "
+                      >Next</a
+                    >
                   </li>
                 </ul>
               </nav>

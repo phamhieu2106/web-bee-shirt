@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 
@@ -8,7 +8,7 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { Subscription } from "rxjs";
 import { CurrencyPipe } from "@angular/common";
-import { el } from "date-fns/locale";
+
 
 
 
@@ -18,7 +18,7 @@ import { el } from "date-fns/locale";
   styleUrls: ["./danh-sach-phieu.component.css"],
 })
 export class DanhSachPhieuComponent {
-  public pagedResponseBinh: PagedResponse<PhieuGiamGia>;
+  public pagedResponse: PagedResponse<PhieuGiamGia>;
   public updateForm: FormGroup;
   public search = "";
   public selectedDetails: PhieuGiamGia;
@@ -45,107 +45,119 @@ export class DanhSachPhieuComponent {
   public thoiGianKetThuc: string=""
   keyword: string
 
+  private timeout: any;
 
-  searchPhieuGiamGia(event: any): void {
-    this.keyword = event.target.value;
+  @ViewChild("inputName") inputNameRef: ElementRef;
+
+
+
+
+
+  public timKiem(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    this.keyword = e.target.value;
     // Loại bỏ dấu cách thừa giữa các từ trong chuỗi keyword
     const keywordWithoutExtraSpaces = this.keyword.replace(/\s+/g, ' ');
 
     this.keyword = this.keyword.trim();
     // Gán giá trị đã được xử lý vào thuộc tính this.keyword
     this.keyword = keywordWithoutExtraSpaces;
-    this.filterPrivate(1, 5, this.keyword, this.kieu,this.loai,this.trangThai);
-    console.log(this.pagedResponseBinh)
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        this.keyword 
+      );
+    }, 500);
   }
 
-  clearFilters(): void {
-    this.thoiGianBatDau = '';
-    this.thoiGianKetThuc = '';
+
+
+
+  filterObject: any = null;
+  pageSize: number = 5;
+  pageNumber: number = 1;
+  onChangeFilter() {
+    this.filterObject = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      search: this.search,
+      kieu: this.kieu,
+      loai: this.loai,
+      trangThai: this.trangThai,
+      thoiGianBatDau: this.thoiGianBatDau,
+      thoiGianKetThuc: this.thoiGianKetThuc
+    };
+    this.goToPage(
+      this.filterObject.pageNumber,
+      this.filterObject.pageSize,
+      this.filterObject.search
+    );
+  }
+
+
+
+
+  reloadFilter(): void {
+    this.search = "";
     this.kieu = [0, 1];
     this.loai = [0, 1];
     this.trangThai = ['Đang diễn ra', 'Sắp diễn ra', 'Đã kết thúc'];
 
-    this.goToPage(); // Gọi lại hàm lọc để cập nhật dữ liệu
-
-
+    this.thoiGianBatDau = '';
+    this.thoiGianKetThuc = '';
+    this.pageSize = 5;
+    this.pageNumber = 1;
+    this.getPhieuGiamGiaList();
+    this.filterObject = null;
   }
 
-  public goToPage(
-    page: number = 1,
-    pageSize: number = 5,
-    keyword: string = ""
-   
-  ): void {
-   
-    this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<PhieuGiamGia>) => {
-      
-        this.pagedResponseBinh = response;
 
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+  public goToPage(page: number, pageSize: number, keyword: string): void {
+    if (this.filterObject) {
+      this.phieuGiamGiaService
+        .filter(
+          page,
+          pageSize,
+          keyword,
+          this.filterObject.kieu,
+          this.filterObject.loai,
+          this.filterObject.trangThai,
+          this.filterObject.thoiGianBatDau,
+          this.filterObject.thoiGianKetThuc,
+        )
+        .subscribe({
+          next: (response: PagedResponse<PhieuGiamGia>) => {
+            this.pagedResponse = response;
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          },
+        });
+    } else {
+      this.phieuGiamGiaService.getAll(page, pageSize, keyword).subscribe({
+        next: (response: PagedResponse<PhieuGiamGia>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+        complete: () => {
+          console.log(this.pagedResponse);
+        },
+      });
+    }
   }
 
   
  
 
 
-  public filterPrivate(
-    page: number = 1,
-    pageSize: number = 6,
-    keyword: string = "",
-    kieuFilter: number[] = this.kieu,
-    loaiFilter: number[] = this.loai,
-    trangThaiFilter: string[] = this.trangThai,
-    thoiGianBatDauFilter: string = this.thoiGianBatDau,
-    thoiGianKetThucFilter: string = this.thoiGianKetThuc
-  ): void {
-    // Kiểm tra xem thoiGianBatDauFilter và thoiGianKetThucFilter có giá trị rỗng không
-    if (!thoiGianBatDauFilter || !thoiGianKetThucFilter) {
-      
-        this.phieuGiamGiaService.getAll(
-          page,
-          pageSize,
-          keyword,
-          kieuFilter,
-          loaiFilter,
-          trangThaiFilter,
-        
-      ).subscribe({
-          next: (response: PagedResponse<PhieuGiamGia>) => {
-              this.pagedResponseBinh = response;
-          },
-          error: (error: HttpErrorResponse) => {
-              console.log(error);
-          },
-      });
-        
-        return; // Dừng hàm và không thực hiện truy vấn
-    }
-    
-
-    // Tiếp tục thực hiện truy vấn nếu không có giá trị rỗng
-    this.phieuGiamGiaService.filter(
-        page,
-        pageSize,
-        keyword,
-        kieuFilter,
-        loaiFilter,
-        trangThaiFilter,
-        thoiGianBatDauFilter,
-        thoiGianKetThucFilter
-    ).subscribe({
-        next: (response: PagedResponse<PhieuGiamGia>) => {
-            this.pagedResponseBinh = response;
-        },
-        error: (error: HttpErrorResponse) => {
-            console.log(error);
-        },
-    });
-}
+ 
 
 
 
@@ -155,16 +167,15 @@ public changeStatus(id: number): void {
 }
 
 
-  public onChangePageSize(e: any): void {
-    this.filterPrivate(1, e.target.value, this.search);
-    console.log(this.pagedResponseBinh?.data)
-  }
+public onChangePageSize(): void {
+  this.goToPage(this.pageNumber, this.pageSize, this.search);
+}
 
   //private function
   private getPhieuGiamGiaList(): void {
     this.phieuGiamGiaService.getAll().subscribe({
       next: (response: PagedResponse<PhieuGiamGia>) => {
-        this.pagedResponseBinh = response;
+        this.pagedResponse = response;
 
       },
       error: (error: HttpErrorResponse) => {

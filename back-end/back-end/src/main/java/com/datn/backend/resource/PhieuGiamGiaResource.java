@@ -4,6 +4,8 @@ import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.DiscountValidRequest;
 import com.datn.backend.dto.request.PhieuGiamGiaRequest;
 import com.datn.backend.dto.request.PhieuKhachHangRequest;
+import com.datn.backend.dto.response.PagedResponse;
+import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.service.PhieuGiamGiaKhachHangService;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import jakarta.validation.Valid;
@@ -118,6 +120,14 @@ public class PhieuGiamGiaResource {
 
         return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id, check));
     }
+
+    @GetMapping("/get-avtive")
+    public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAllActive(pageNumber, pageSize, search));
+    }
+
 
 
 

@@ -71,6 +71,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 repository.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
             throw new ResourceExistsException("Mã Phiếu: " + maPhieuGiamGia + " đã tồn tại.");
         }
+        pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
 
 
 
@@ -88,7 +89,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
             pgg.setMaPhieuGiamGia(maPhieuGiamGia);
-            pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
+
         }
 
 

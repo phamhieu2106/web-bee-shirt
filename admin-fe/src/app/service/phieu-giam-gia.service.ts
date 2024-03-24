@@ -49,6 +49,19 @@ export class PhieuGiamGiaService {
     );
   }
 
+
+  public getAllActive(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    search: string = ""
+  ): Observable<PagedResponse<KhachHang>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
+    return this.http.get<PagedResponse<KhachHang>>(
+      `${this.apiUrl}/get-avtive${param}`
+    );
+  }
+
+
   public getOne(id: number): Observable<PhieuGiamGia> {
     return this.http.get<PhieuGiamGia>(`${this.apiUrl}/sua-phieu/${id}`);
   }

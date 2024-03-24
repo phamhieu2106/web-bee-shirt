@@ -17,6 +17,7 @@ import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
+import { KhachHang } from "src/app/model/class/KhachHang.class";
 
 @Component({
   selector: "app-them-phieu",
@@ -26,7 +27,7 @@ import emailjs from "@emailjs/browser";
 export class ThemPhieuComponent implements OnInit {
   public addForm: FormGroup;
   phieuGiamGiaForm: FormGroup;
-  public pagedResponse: PagedResponse<KhachHangResponse>;
+  public pagedResponse: PagedResponse<KhachHang>
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
 
@@ -54,12 +55,6 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   public add(): void {
-
-
-
-
-
-
     this.phieuGiamGia.add(this.addForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
         this.initAddForm();
@@ -171,6 +166,9 @@ export class ThemPhieuComponent implements OnInit {
         this.validateMax()
       ]),
     });
+
+    this.checkMail=true
+    this.checkSoLuong=true
   }
 
   giaTriNew: any;
@@ -460,25 +458,108 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   //Khách hàng
+  keyword: string
 
-  public goToPage(
-    page: number = 1,
-    pageSize: number = 5,
-    keyword: string = ""
-  ): void {
-    this.khachHangService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+  public search1(e: any): void {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    this.keyword = e.target.value;
+    // Loại bỏ dấu cách thừa giữa các từ trong chuỗi keyword
+    const keywordWithoutExtraSpaces = this.keyword.replace(/\s+/g, ' ');
+
+    this.keyword = this.keyword.trim();
+    // Gán giá trị đã được xử lý vào thuộc tính this.keyword
+    this.keyword = keywordWithoutExtraSpaces;
+
+    this.timeout = setTimeout(() => {
+      this.goToPage(
+        this.pagedResponse.pageNumber,
+        this.pagedResponse.pageSize,
+        this.keyword 
+      );
+    }, 500);
   }
+
+  filterObject: any = null;
+  pageSize: number = 5;
+  pageNumber: number = 1;
+  onChangeFilter() {
+    this.filterObject = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      search: this.search
+     
+    };
+    this.goToPage(
+      this.filterObject.pageNumber,
+      this.filterObject.pageSize,
+      this.filterObject.search
+    );
+  }
+
+  public onChangePageSize(): void {
+    this.goToPage(this.pageNumber, this.pageSize, this.search);
+  }
+
+
+  public goToPage(page: number, pageSize: number, keyword: string): void {
+    console.log(this.filterObject)
+    if (this.filterObject) {
+      this.phieuGiamGia.getAllActive(
+          page,
+          pageSize,
+          keyword
+         
+        )
+        .subscribe({
+          next: (response: PagedResponse<KhachHang>) => {
+            this.pagedResponse = response;
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          },
+        });
+    } else {
+      this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
+        next: (response: PagedResponse<KhachHang>) => {
+          this.pagedResponse = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        },
+        complete: () => {
+          console.log(this.pagedResponse);
+        },
+      });
+    }
+  }
+
+
+
+
+
+
+
+  // public goToPage(
+  //   page: number = 1,
+  //   pageSize: number = 5,
+  //   keyword: string = ""
+  // ): void {
+  //   this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
+  //     next: (response: PagedResponse<KhachHang>) => {
+  //       this.pagedResponse = response;
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.log(error);
+  //     },
+  //   });
+  // }
 
   private getKhachHangList(): void {
-    this.khachHangService.getAll().subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
+    this.phieuGiamGia.getAllActive().subscribe({
+      next: (response: PagedResponse<KhachHang>) => {
         this.pagedResponse = response;
       },
       error: (error: HttpErrorResponse) => {
@@ -487,9 +568,6 @@ export class ThemPhieuComponent implements OnInit {
     });
   }
 
-  public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
-  }
 
   private timeout: any;
   public timKiem(e: any): void {
@@ -521,34 +599,6 @@ export class ThemPhieuComponent implements OnInit {
     });
   }
 
-  // public formatNumber(event: any, inputName: string): void {
-  //   let value = event.target.value;
-  //   if (value === "") {
-  //     this.addForm.get(inputName).setValue("");
-  //     return;
-  //   }
-  //   value = value.replace(/,/g, "");
-  //   value = parseFloat(value).toLocaleString("en-US");
-  //   this.addForm.get(inputName).setValue(value);
-  // }
-
-  // public formatGiaTri(event: any, inputName: string): void {
-  //   let value = event.target.value;
-  //   const kieu = this.addForm.get("kieu").value;
-  //   if (value === "") {
-  //     this.addForm.get(inputName).setValue("");
-  //     return;
-  //   }
-  //   console.log(kieu);
-
-  //   if (kieu == 1) {
-  //     value = value.replace(/,/g, "");
-  //     value = parseFloat(value).toLocaleString("en-US");
-  //     this.addForm.get(inputName).setValue(value);
-  //   } else {
-  //     return;
-  //   }
-  // }
   chuyenTrang() {
     this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
   }

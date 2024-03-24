@@ -638,36 +638,7 @@ export class SuaPhieuComponent implements OnInit {
     });
   }
 
-  public formatNumber(event: any, inputName: string): void {
-    let value = event.target.value;
-    if (value === "") {
-      this.updateForm.get(inputName).setValue("");
-      return;
-    }
-    value = value.replace(/,/g, "");
-    value = parseFloat(value).toLocaleString("en-US");
-    this.updateForm.get(inputName).setValue(value);
-  }
-
-
-
-  public formatGiaTri(event: any, inputName: string): void {
-    let value = event.target.value;
-    const kieu = this.updateForm.get("kieu").value;
-    if (value === "") {
-      this.updateForm.get(inputName).setValue("");
-      return;
-    }
-    console.log(kieu);
-
-    if (kieu == 1) {
-      value = value.replace(/,/g, "");
-      value = parseFloat(value).toLocaleString("en-US");
-      this.updateForm.get(inputName).setValue(value);
-    } else {
-      return;
-    }
-  }
+ 
 
   chuyenTrang(){
     this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);

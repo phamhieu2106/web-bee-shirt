@@ -77,7 +77,21 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
         return paged;
     }
 
+    @Override
+    public PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<KhachHang> page = khachHangRepository.getAllActive(pageable, search);
 
+        PagedResponse<KhachHang> pagedResponse = new PagedResponse<>();
+        pagedResponse.setPageNumber(pageNumber);
+        pagedResponse.setPageSize(pageSize);
+        pagedResponse.setTotalPages(page.getTotalPages());
+        pagedResponse.setTotalElements(page.getTotalElements());
+        pagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(page.getTotalPages()));
+        pagedResponse.setData(page.getContent());
+        pagedResponse.setSearch(search);
+        return pagedResponse;
+    }
 
 
 }

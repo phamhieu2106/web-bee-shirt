@@ -23,7 +23,7 @@
                       : ''
                   "
                   formControlName="maPhieuGiamGia"
-           readonly
+                  readonly
                 />
               </div>
 
@@ -132,7 +132,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                   type="number"
+                      type="number"
                       class="form-control"
                       class="form-control"
                       placeholder="Giá trị"
@@ -145,8 +145,6 @@
                       formControlName="giaTri"
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
-                     
-                      
                       (blur)="checkGiaTriBlur()"
                     />
                     <span
@@ -184,14 +182,13 @@
                       [ngClass]="{
                         'form-control': true,
                         'is-invalid':
-                        updateForm.get('giaTriMax').invalid &&
-                        updateForm.get('giaTriMax').touched
+                          updateForm.get('giaTriMax').invalid &&
+                          updateForm.get('giaTriMax').touched
                       }"
                       formControlName="giaTriMax"
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                       [readonly]="checkGiaTri"
-                     
                       (blur)="checkGiaTriToiDa()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
@@ -212,68 +209,70 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Lượt sử dụng:</label>
                   <input
-    type="number"
-    class="form-control"
-    placeholder="Số lượng"
-    [ngClass]="
-        (updateForm.get('soLuong').invalid &&
-        updateForm.get('soLuong').touched) ||
-        (updateForm.get('soLuong').hasError('min') &&
-        updateForm.get('soLuong').touched)
-            ? 'is-invalid'
-            : ''
-    "
-    formControlName="soLuong"
-    [readonly]="!checkSoLuong"
-/>
-                <div class="invalid-feedback">
-                  <span *ngIf="updateForm.get('soLuong').hasError('required')">
-                    Không bỏ trống trường này</span
-                  >
-
-                  <span *ngIf="updateForm.get('soLuong').hasError('min')"
-                    >Vui lòng nhập số và số > 0
-                  </span>
-                </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="" class="labelChinh"
-                  >Số tiền chi tối thiểu:</label
-                >
-                <div class="input-group mb-3">
-                  <input
-                 type="number"
+                    type="number"
                     class="form-control"
-                    placeholder="Điều kiện"
+                    placeholder="Số lượng"
                     [ngClass]="
-                      updateForm.get('dieuKienGiam').invalid &&
-                      updateForm.get('dieuKienGiam').touched
+                      (updateForm.get('soLuong').invalid &&
+                        updateForm.get('soLuong').touched) ||
+                      (updateForm.get('soLuong').hasError('min') &&
+                        updateForm.get('soLuong').touched)
                         ? 'is-invalid'
                         : ''
                     "
-                    formControlName="dieuKienGiam"
-                    aria-label="Recipient's username"
-                    aria-describedby="basic-addon2"
-                   
-                    (blur)="checkGiaTriToiDa()"
-                    (blur)="checkGiaTriBlur()"
-                    
+                    formControlName="soLuong"
+                    [readonly]="!checkSoLuong"
                   />
-                  <span class="input-group-text" id="basic-addon2">VNĐ</span>
+                  <div class="invalid-feedback">
+                    <span
+                      *ngIf="updateForm.get('soLuong').hasError('required')"
+                    >
+                      Không bỏ trống trường này</span
+                    >
 
-                  <div
-                    *ngIf="
-                      updateForm
-                        .get('dieuKienGiam')
-                        .hasError('invalidDieuKien') &&
-                        updateForm.get('dieuKienGiam').touched
-                    "
-                    class="invalid-feedback"
-                  >
-                    {{
-                      updateForm.get("dieuKienGiam").getError("invalidDieuKien")
-                    }}
+                    <span *ngIf="updateForm.get('soLuong').hasError('min')"
+                      >Vui lòng nhập số và số > 0
+                    </span>
                   </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="" class="labelChinh"
+                    >Số tiền chi tối thiểu:</label
+                  >
+                  <div class="input-group mb-3">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Điều kiện"
+                      [ngClass]="
+                        updateForm.get('dieuKienGiam').invalid &&
+                        updateForm.get('dieuKienGiam').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      formControlName="dieuKienGiam"
+                      aria-label="Recipient's username"
+                      aria-describedby="basic-addon2"
+                      (blur)="checkGiaTriToiDa()"
+                      (blur)="checkGiaTriBlur()"
+                    />
+                    <span class="input-group-text" id="basic-addon2">VNĐ</span>
+
+                    <div
+                      *ngIf="
+                        updateForm
+                          .get('dieuKienGiam')
+                          .hasError('invalidDieuKien') &&
+                        updateForm.get('dieuKienGiam').touched
+                      "
+                      class="invalid-feedback"
+                    >
+                      {{
+                        updateForm
+                          .get("dieuKienGiam")
+                          .getError("invalidDieuKien")
+                      }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -336,7 +335,7 @@
                   id="sendMail"
                   class="form-check-inline"
                   (change)="onSendMailChange($event)"
-               [disabled]="checkMail"
+                  [disabled]="checkMail"
                 />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>
@@ -351,13 +350,12 @@
               </button>
 
               <a
-              type="button"
-              class="btn btn-warning ml-3"
-              (click)="chuyenTrang()"
-             
-            >
-             Quay Lại
-            </a>
+                type="button"
+                class="btn btn-warning ml-3"
+                (click)="chuyenTrang()"
+              >
+                Quay Lại
+              </a>
             </form>
           </div>
 
@@ -480,10 +478,7 @@
               <div class="col-md-12 mt-5">
                 <h3>Danh sách khách hàng không có phiếu giảm giá</h3>
 
-                <table
-                  class="table"
-                 
-                >
+                <table class="table">
                   <thead class="thead-default">
                     <tr>
                       <th>Chọn</th>
@@ -512,10 +507,9 @@
                       <td>{{ kh.ngaySinh }}</td>
                     </tr>
                   </tbody>
-                  
                 </table>
 
-                <tr *ngIf="soLuongCheck < 0 ">
+                <tr *ngIf="soLuongCheck < 0">
                   <td
                     colspan="8"
                     class="text-center"
@@ -524,12 +518,6 @@
                     Không có dữ liệu
                   </td>
                 </tr>
-
-                
-                
-                
-                 
-              
 
                 <div class="row">
                   <div class="col col-md-12 d-flex justify-content-between">

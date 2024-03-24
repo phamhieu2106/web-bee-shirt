@@ -64,7 +64,7 @@
                           min="1"
                           class="form-control input-number col-3"
                           [(ngModel)]="hdct.soLuong"
-                          (change)="quantityChange(hdct)"
+                          (change)="inputSoLuong(hdct, $event)"
                         />
                         <span class="input-group-append col-2">
                           <button

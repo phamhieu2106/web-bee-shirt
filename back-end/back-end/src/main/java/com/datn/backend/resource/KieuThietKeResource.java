@@ -26,7 +26,7 @@ public class KieuThietKeResource {
 
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<KieuThietKe>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(thietKeService.getByPage(pageNumber, pageSize, search));
     }
@@ -46,6 +46,11 @@ public class KieuThietKeResource {
         return ResponseEntity.ok(thietKeService.add(chatLieu));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<KieuThietKe> update(@RequestBody KieuThietKe kieuThietKe) {
+        return ResponseEntity.ok(thietKeService.update(kieuThietKe));
+    }
+
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<KieuThietKe> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok(thietKeService.getById(id));
@@ -55,10 +60,5 @@ public class KieuThietKeResource {
     public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
         thietKeService.changeStatus(id);
         return ResponseEntity.ok("Cập nhật trạng thái thành công!");
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<KieuThietKe> update(@RequestBody KieuThietKe chatLieu) {
-        return ResponseEntity.ok(thietKeService.update(chatLieu));
     }
 }

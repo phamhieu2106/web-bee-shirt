@@ -2,12 +2,12 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import Swal from "sweetalert2";
-import { ToastrService } from "ngx-toastr";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { KieuThietKe } from "src/app/model/class/kieu-thiet-ke.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KieuThietKeService } from "src/app/service/kieu-thiet-ke.service";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-danh-sach-kieu-thiet-ke",
@@ -21,50 +21,61 @@ export class DanhSachKieuThietKeComponent {
   public search = "";
   public selectedDetails: KieuThietKe;
 
+  // constructor, ngOn
   constructor(
     private thietKeService: KieuThietKeService,
-    private toastr: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.getCoAoList();
+    this.getKieuThietKeList();
     this.initAddForm();
     this.initUpdateForm();
   }
 
-  // public function
+  // public functions
+  //
   public add(): void {
-    let trimmed = this.addForm.get("ten").value.trim();
-    this.addForm.get("ten")?.setValue(trimmed);
+    Swal.fire({
+      title: "Thêm kiểu thiết kế?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmed);
 
-    this.thietKeService.add(this.addForm.value).subscribe({
-      next: (response: KieuThietKe) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initAddForm();
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
+        this.thietKeService.add(this.addForm.value).subscribe({
+          next: (response: KieuThietKe) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initAddForm();
+            document.getElementById("closeBtn").click();
+            this.notifService.success("Thêm thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
         });
-        document.getElementById("closeBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
-      },
+      }
     });
   }
 
+  //
   public initAddForm(): void {
     this.addForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
 
+  //
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
@@ -74,37 +85,35 @@ export class DanhSachKieuThietKeComponent {
       next: (response: PagedResponse<KieuThietKe>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public onChangePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.search);
   }
 
-  public timKiem(): void {
+  //
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
-  public onClearSearchInput(): void {
-    this.goToPage();
-  }
-
+  //
   public openDetailsForm(id: number): void {
     this.thietKeService.getById(id).subscribe({
       next: (response: KieuThietKe) => {
-        console.log("tay ao:", response);
-
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public openUpdateForm(id: number): void {
     this.thietKeService.getById(id).subscribe({
       next: (response: KieuThietKe) => {
@@ -114,66 +123,75 @@ export class DanhSachKieuThietKeComponent {
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
+  //
   public changeStatus(id: number): void {
     this.thietKeService.changeStatus(id).subscribe({
       next: (response: string) => {
-        this.toastr.success(response, "");
         this.goToPage(
           this.pagedResponse.pageNumber,
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
-  }
-
-  public update(): void {
-    let trimmed = this.updateForm.get("ten").value.trim();
-    this.updateForm.get("ten")?.setValue(trimmed);
-
-    this.thietKeService.update(this.updateForm.value).subscribe({
-      next: (response: KieuThietKe) => {
-        this.goToPage(
-          this.pagedResponse.pageNumber,
-          this.pagedResponse.pageSize,
-          this.pagedResponse.search
-        );
-        this.initUpdateForm();
-        Swal.fire({
-          icon: "success",
-          title: `Cập nhật thành công '${response.ten}'!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        document.getElementById("closeUpdateBtn").click();
+        this.notifService.success(response);
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
-  // private function
-  private getCoAoList(): void {
+  //
+  public update(): void {
+    Swal.fire({
+      title: "Cập nhật kiểu thiết kế?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let trimmed = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmed);
+
+        this.thietKeService.update(this.updateForm.value).subscribe({
+          next: (response: KieuThietKe) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initUpdateForm();
+            document.getElementById("closeUpdateBtn").click();
+            this.notifService.success("Cập nhật thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
+        });
+      }
+    });
+  }
+
+  // private functions
+  //
+  private getKieuThietKeList(): void {
     this.thietKeService.getByPage().subscribe({
       next: (response: PagedResponse<KieuThietKe>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
+      error: (errorResponse: HttpErrorResponse) => {},
     });
   }
 
+  //
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),

@@ -31,7 +31,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
             kh.sdt like %:keys% ) and
             concat( hd.loaiHoaDon,'') like %:loaiHoaDon%  and 
             concat( hd.trangThai,'') like %:trangThai%  and 
-            concat( hd.createdAt,'') like %:ngayTao%  
+            concat( hd.createdAt,'') like %:ngayTao%   
+            order by hd.createdAt desc 
             """)
     Page<HoaDon> findByKeys(Pageable pageable, String keys,String loaiHoaDon, String ngayTao,String trangThai);
 
@@ -47,4 +48,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
               HoaDon hd
             """)
     SoLuongDonHangResponse getSoLuongDonHang();
+
+    boolean existsByMa(String ma);
 }

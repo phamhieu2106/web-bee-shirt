@@ -3,6 +3,7 @@ package com.datn.backend.resource;
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.request.HoaDonRequest;
+import com.datn.backend.dto.request.PlaceOrderRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -81,5 +82,9 @@ public class HoaDonResource {
         return ResponseEntity.ok(soLuongDonHangResponse);
     }
 
-
+    @PostMapping("/place-order")
+    public ResponseEntity<HoaDonResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest placeOrderRequest){
+        HoaDonResponse hoaDonResponse = hoaDonService.placeOrder(placeOrderRequest);
+        return ResponseEntity.ok(hoaDonResponse) ;
+    }
 }

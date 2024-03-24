@@ -19,24 +19,22 @@
   z-index: 1200;
 }
 
-
-thead tr th{
-  background-color: #574afb ; /* Màu nền của header */
+thead tr th {
+  background-color: #574afb; /* Màu nền của header */
   color: white;
   text-transform: uppercase;
 }
 
-.page-link.active{
+.page-link.active {
   background-color: #574afb;
   color: white !important;
 }
 
-.pagination li a{
+.pagination li a {
   color: #574afb;
 }
 
-
-.btn-create{
+.btn-create {
   background-color: #574afb;
   color: white;
 }

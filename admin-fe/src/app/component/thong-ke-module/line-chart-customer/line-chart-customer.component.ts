@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
 import { Chart, registerables } from "chart.js";
 import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
 import { ChartService } from "src/app/service/chart.service";
 
 @Component({
@@ -9,7 +10,7 @@ import { ChartService } from "src/app/service/chart.service";
   styleUrls: ["./line-chart-customer.component.css"],
 })
 export class LineChartCustomerComponent implements OnInit {
-  chartLoad: boolean = false;
+  public chartLoad: boolean = false;
   chart: any;
   @Input() tenChart: string;
   private currentYear: number = new Date().getFullYear();
@@ -229,6 +230,39 @@ export class LineChartCustomerComponent implements OnInit {
     });
   }
 
+  public loadChartDonHangHoanThanh(): void {
+    forkJoin({
+      listTongSoKhachHangTheoNam: this.service.getSoKhachHangTrongNam(),
+      listTongSoKhachHangTheoNamTruoc:
+        this.service.getSoKhachHangTrongNamTruoc(),
+      listTongSoKhachHangTheoThang: this.service.getSoKhachHangTrongThang(),
+      listTongSoKhachHangTheoThangTruoc:
+        this.service.getSoKhachHangTrongThangTruoc(),
+      listTongSoKhachHangTrongTuan: this.service.getSoKhachHangTrongTuan(),
+      listTongSoKhachHangTrongTuanTruoc:
+        this.service.getSoKhachHangTrongTuanTruoc(),
+    }).subscribe({
+      next: (results) => {
+        this.listTongSoKhachHangTheoNam = results.listTongSoKhachHangTheoNam;
+        this.listTongSoKhachHangTheoNamTruoc =
+          results.listTongSoKhachHangTheoNamTruoc;
+        this.listTongSoKhachHangTheoThang =
+          results.listTongSoKhachHangTheoThang;
+        this.listTongSoKhachHangTheoThangTruoc =
+          results.listTongSoKhachHangTheoThangTruoc;
+        this.listTongSoKhachHangTrongTuan =
+          results.listTongSoKhachHangTrongTuan;
+        this.listTongSoKhachHangTrongTuanTruoc =
+          results.listTongSoKhachHangTrongTuanTruoc;
+        this.chartLoad = true;
+        this.createChartYear();
+      },
+      error: (err) => {
+        this.chartLoad = false;
+        this.toastSrc.error(`Có lỗi xảy ra: ${err.message.message}`);
+      },
+    });
+  }
   public loadChartKhachHangHoanThanh(): void {
     let requestsCompleted = 0;
 

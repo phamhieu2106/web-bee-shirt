@@ -1,3 +1,4 @@
+import { PdfService } from "./../../../service/pdf.service";
 import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
@@ -12,7 +13,9 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import Swal from "sweetalert2";
 import { DiscountValid } from "src/app/model/class/discount-valid.class";
-import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
+import { HoaDonService } from "src/app/service/hoa-don.service";
+import { DiaChi } from "src/app/model/class/dia-chi.class";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-ban-hang",
@@ -40,7 +43,10 @@ export class BanHangComponent implements OnInit, OnDestroy {
     private spctService: SanPhamChiTietService,
     private khachHangService: KhachHangService,
     private banHangService: BanHangService,
-    private localStorageService: LocalStorageServiceService
+    private localStorageService: LocalStorageServiceService,
+    private hoaDonService: HoaDonService,
+    private pdfService: PdfService,
+    private notification: NotificationService
   ) {}
   ngOnDestroy(): void {
     this.localStorageService.saveData(this.key, this.orders);
@@ -85,7 +91,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hoaDon.phiVanChuyen = 0;
     hoaDon.nhanVien = null;
     hoaDon.khachHang = null;
-    hoaDon.phieuGiamGia = new PhieuGiamGia();
+    // hoaDon.phieuGiamGia = new PhieuGiamGia();
     hoaDon.thanhToans = [];
 
     this.orders.push(hoaDon);
@@ -93,14 +99,30 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   deleteOrder(index: number) {
-    if (this.orders.length == 1) {
-      this.orders.splice(index, 1);
-      this.newHoaDon();
-
-      return;
+    if (this.order.hoaDonChiTiets.length > 0) {
+      Swal.fire({
+        text: "Bạn có muốn xóa đơn hàng này không ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Xóa",
+        cancelButtonText: "Hủy",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Đã xóa",
+            icon: "success",
+          });
+          this.orders.splice(index, 1);
+          if (this.orders.length <= 0) {
+            this.newHoaDon();
+          } else {
+            this.order = this.orders[index - 1];
+          }
+        }
+      });
     }
-    this.orders.splice(index, 1);
-    this.order = this.orders[index - 1];
   }
 
   newOrderNameTemp(): string {
@@ -120,9 +142,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     if (event.target.checked) {
       this.order.loaiHoaDon = "GIAO_HANG";
       // this.order.phiVanChuyen = this.diaChiVaPhiVanChuyen.phiVanChuyen;
+      if (this.order.khachHang != null) {
+        this.order.tenNguoiNhan = this.order.khachHang.hoTen + "";
+        this.order.sdtNguoiNhan = this.order.khachHang.sdt + "";
+      }
     } else {
       this.order.loaiHoaDon = "TAI_QUAY";
       this.order.phiVanChuyen = 0;
+      this.order.diaChiNguoiNhan = null;
     }
   }
 
@@ -179,6 +206,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     hdct.sanPhamChiTiet = JSON.parse(JSON.stringify(spct));
     hdct.soLuong = 1;
     hdct.giaBan = this.getGiaBan(spct);
+    hdct.giaNhap = spct.giaNhap;
     return hdct;
   }
   getGiaBan(spct: SanPhamChiTiet): number {
@@ -273,14 +301,30 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   muaHang() {
     if (this.order.loaiHoaDon == "TAI_QUAY") {
-      this.order.diaChiNguoiNhan = null;
+      // kiểm tra khach thanh toán đủ chưa
+      if (this.getTienKhachConThieu() == 0) {
+        // xác thanh toán
+        let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(this.order);
+        this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
+          next: (resp: HoaDon) => {
+            console.log(resp);
+
+            this.pdfService.generatePDFHoaDon(resp);
+          },
+          error: (err: any) => {
+            this.notification.error(err.error.message);
+          },
+        });
+        console.log(hoaDonRequest);
+      } else {
+        Swal.fire("Đơn hàng của bạn vẫn chưa được thanh toán đủ tiền .");
+      }
     }
-    console.log(this.order);
   }
 
   datHang() {
     if (this.order.loaiHoaDon == "GIAO_HANG") {
-      this.order.diaChiNguoiNhan = null;
+      // this.order.diaChiNguoiNhan = null;
     }
     console.log(this.order);
   }
@@ -292,8 +336,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
   caculatePhiVanChuyen(soTien: number) {
     this.order.phiVanChuyen = soTien;
   }
-  getDiaChiNguoiNhan(diaChi: string) {
-    this.order.diaChiNguoiNhan = diaChi;
+  getDiaChiNguoiNhan($event: string) {
+    this.order.diaChiNguoiNhan = $event;
   }
 
   getTienKhachThanhToan(): number {
@@ -351,5 +395,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   insertSLSP() {
     this.updateHoaDon();
+  }
+
+  getDiaChiMacDinh(diaChis: DiaChi[]): DiaChi {
+    for (let i = 0; i < diaChis.length; i++) {
+      if (diaChis[i].macDinh == true) {
+        return diaChis[i];
+      }
+    }
+    return null;
   }
 }

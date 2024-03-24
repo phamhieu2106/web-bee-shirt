@@ -98,6 +98,6 @@ public class SanPhamChiTietResource {
                                           @RequestParam("spId") int spId,
                                           @RequestParam("mauSacId") int mauSacId) throws IOException {
         this.spctService.updateImages(files, spId, mauSacId);
-        return ResponseEntity.ok("null");
+        return ResponseEntity.ok("Cập nhật ảnh thành công!");
     }
 }

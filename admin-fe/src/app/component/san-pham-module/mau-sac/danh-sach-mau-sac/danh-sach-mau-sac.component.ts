@@ -24,6 +24,7 @@ export class DanhSachMauSacComponent {
   public selectedDetails: MauSac;
   public isLoadding = false;
   public overlayText: string = "";
+  public imageError: boolean = false;
 
   // constructor, ngOn
   constructor(
@@ -40,19 +41,6 @@ export class DanhSachMauSacComponent {
   // public functions
   // 1
   public add(): void {
-    // Swal.fire({
-    //   title: "Thêm kiểu thiết kế?",
-    //   cancelButtonText: "Hủy",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Thêm",
-    // }).then((result: SweetAlertResult) => {
-    //   if (result.isConfirmed) {
-    //     console.log("OK");
-    //   }
-    // });
     Swal.fire({
       title: "Thêm màu sắc?",
       cancelButtonText: "Hủy",
@@ -63,13 +51,18 @@ export class DanhSachMauSacComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        if (this.selectFile == null) {
+          this.imageError = true;
+          return;
+        }
+
         let trimmedTen = this.addForm.get("ten").value.trim();
         this.addForm.get("ten")?.setValue(trimmedTen);
 
         let trimmedMa = this.addForm.get("ten").value.trim();
         this.addForm.get("ma")?.setValue(trimmedMa);
 
-        // this.turnOnOverlay("Đang thêm...");
+        this.turnOnOverlay("Đang thêm...");
         this.mauSacService.add(this.addForm.value, this.selectFile).subscribe({
           next: (response: MauSac) => {
             this.goToPage(
@@ -79,11 +72,11 @@ export class DanhSachMauSacComponent {
             );
             this.initAddForm();
             document.getElementById("closeBtn").click();
-            // this.turnOffOverlay("");
+            this.turnOffOverlay("");
             this.notifService.success("Cập nhật thành công!");
           },
           error: (errorResponse: HttpErrorResponse) => {
-            // this.turnOffOverlay("");
+            this.turnOffOverlay("");
             this.notifService.error(errorResponse.error.message);
           },
         });
@@ -131,7 +124,6 @@ export class DanhSachMauSacComponent {
   public openDetailsForm(id: number): void {
     this.mauSacService.getById(id).subscribe({
       next: (response: MauSac) => {
-        console.log("tay ao:", response);
         this.selectedDetails = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
@@ -167,6 +159,7 @@ export class DanhSachMauSacComponent {
           this.pagedResponse.pageSize,
           this.pagedResponse.search
         );
+        this.notifService.success(response);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -230,9 +223,8 @@ export class DanhSachMauSacComponent {
         this.pagedResponse = response;
         this.isLoadding = false;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-        this.isLoadding = false;
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }

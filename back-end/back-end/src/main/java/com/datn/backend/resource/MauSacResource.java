@@ -1,6 +1,5 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.service.MauSacService;
@@ -36,7 +35,7 @@ public class MauSacResource {
 
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<MauSac>> getMauSacList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(mauSacService.getByPage(pageNumber, pageSize, search));
     }

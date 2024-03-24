@@ -38,3 +38,11 @@ thead tr th {
   background-color: #574afb;
   color: white;
 }
+
+.modal-add {
+  z-index: 1050;
+}
+
+.disabled-text {
+  color: gray;
+}

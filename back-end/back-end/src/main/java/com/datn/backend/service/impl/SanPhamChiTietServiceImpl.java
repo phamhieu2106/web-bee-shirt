@@ -351,6 +351,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public void updateImages(MultipartFile[] files, int spId, int mauSacId) throws IOException {
         List<SanPhamChiTiet> spctList = this.spctRepo.findBySanPhamIdAndMauSacId(spId, mauSacId);
         List<HinhAnh> hinhAnhs = spctList.get(0).getHinhAnhs();
+        List<HinhAnh> newHinhAnhs = new ArrayList<>();
         int hinhAnhLength = hinhAnhs.size();
 
         for (int i = 0; i < files.length; ++i) {
@@ -358,14 +359,20 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             HinhAnh newImg = saveHinhAnhImage(file);
             if (i <= hinhAnhLength - 1) {
                 HinhAnh existImg = hinhAnhs.get(i);
-                System.err.println("existImg: ");
-                System.out.println(existImg);
-//                existImg.setImageName(newImg.getImageName());
-//                existImg.setImageUrl(newImg.getImageUrl());
-//                existImg.setImageId(newImg.getImageId());
+                existImg.setImageName(newImg.getImageName());
+                existImg.setImageUrl(newImg.getImageUrl());
+                existImg.setImageId(newImg.getImageId());
+                HinhAnh savedImg = hinhAnhRepo.save(existImg);
+                newHinhAnhs.add(savedImg);
             } else {
-//                hinhAnhs.add(newImg);
+                HinhAnh savedImg = hinhAnhRepo.save(newImg);
+                newHinhAnhs.add(savedImg);
             }
+        }
+
+        for (SanPhamChiTiet spct : spctList) {
+            spct.setHinhAnhs(newHinhAnhs);
+            spctRepo.save(spct);
         }
     }
 

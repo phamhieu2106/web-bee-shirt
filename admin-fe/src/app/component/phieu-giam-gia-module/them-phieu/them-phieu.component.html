@@ -149,7 +149,7 @@
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                       value=""
-                      (input)="formatGiaTri($event, 'giaTri')"
+                    
                       (blur)="checkGiaTriBlur()"
                     />
                     <span
@@ -194,7 +194,7 @@
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                       [readonly]="checkGiaTri"
-                      (input)="formatNumber($event, 'giaTriMax')"
+                     
                       (blur)="checkGiaTriToiDa()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
@@ -257,7 +257,7 @@
                       formControlName="dieuKienGiam"
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
-                      (input)="formatNumber($event, 'dieuKienGiam')"
+                    
                       (blur)="checkGiaTriToiDa()"
                       (blur)="checkGiaTriBlur()"
                     />

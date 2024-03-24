@@ -121,14 +121,17 @@ export class SanPhamChiTietService {
     files: File[],
     spId: number,
     mauSacId: number
-  ): Observable<any> {
+  ): Observable<string> {
     const formData = new FormData();
     for (let file of files) {
       formData.append("files", file);
     }
-    return this.http.put<any>(
+    return this.http.put(
       `${this.apiUrl}/update-images?spId=${spId}&mauSacId=${mauSacId}`,
-      formData
+      formData,
+      {
+        responseType: "text",
+      }
     );
   }
 

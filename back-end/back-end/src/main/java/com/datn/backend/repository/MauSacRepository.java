@@ -25,6 +25,6 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
             OR m.ma LIKE %:search%
             ORDER BY m.created_at DESC
             """, nativeQuery = true)
-    Page<MauSac> getAll(Pageable pageable,
-                          @Param("search") String search);
+    Page<MauSac> getByPage(Pageable pageable,
+                           @Param("search") String search);
 }

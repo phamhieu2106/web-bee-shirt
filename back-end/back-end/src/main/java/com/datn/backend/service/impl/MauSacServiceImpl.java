@@ -56,22 +56,18 @@ public class MauSacServiceImpl implements MauSacService {
 
     private void checkExistForAdd(MauSac mauSac) {
         if (mauSacRepo.existsByTen(mauSac.getTen()) && !mauSacRepo.existsByMa(mauSac.getMa())) {
-            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("Tên '" + mauSac.getTen() + "' đã tồn tại.");
         }
 
         if (!mauSacRepo.existsByTen(mauSac.getTen()) && mauSacRepo.existsByMa(mauSac.getMa())) {
-            throw new ResourceExistsException("Mã màu sắc '" + mauSac.getMa() + "' đã tồn tại.");
-        }
-
-        if (mauSacRepo.existsByTen(mauSac.getTen()) && mauSacRepo.existsByMa(mauSac.getMa())) {
-            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' và mã màu sắc '" + mauSac.getMa() + "' đã tồn tại");
+            throw new ResourceExistsException("Mã '" + mauSac.getMa() + "' đã tồn tại.");
         }
     }
 
     @Override
     public PagedResponse<MauSac> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<MauSac> mauSacPage = mauSacRepo.getAll(pageable, search);
+        Page<MauSac> mauSacPage = mauSacRepo.getByPage(pageable, search);
 
         PagedResponse<MauSac> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
@@ -147,11 +143,11 @@ public class MauSacServiceImpl implements MauSacService {
         MauSac mauSacByMa = mauSacRepo.getMauSacByMa(mauSac.getMa());
 
         if (mauSacByTen != null && mauSacByTen.getId() != mauSacInDB.getId()) {
-            throw new ResourceExistsException("Tên màu sắc '" + mauSac.getTen() + "' đã tồn tại.");
+            throw new ResourceExistsException("Tên '" + mauSac.getTen() + "' đã tồn tại.");
         }
 
         if (mauSacByMa != null && mauSacByMa.getId() != mauSacInDB.getId()) {
-            throw new ResourceExistsException("Mã màu sắc '" + mauSac.getMa() + "' đã tồn tại.");
+            throw new ResourceExistsException("Mã '" + mauSac.getMa() + "' đã tồn tại.");
         }
     }
 }

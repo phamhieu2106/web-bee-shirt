@@ -83,7 +83,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ms of mauSacs" [value]="ms.id">
-                {{ ms.ten }}
+                {{ ms?.ten }}
               </option>
             </select>
           </div>
@@ -96,7 +96,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let kc of kichCos" [value]="kc.id">
-                {{ kc.ten }}
+                {{ kc?.ten }}
               </option>
             </select>
           </div>
@@ -109,7 +109,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let kd of kieuDangs" [value]="kd.id">
-                {{ kd.ten }}
+                {{ kd?.ten }}
               </option>
             </select>
           </div>
@@ -122,7 +122,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let tk of thietKes" [value]="tk.id">
-                {{ tk.ten }}
+                {{ tk?.ten }}
               </option>
             </select>
           </div>
@@ -135,7 +135,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ta of tayAos" [value]="ta.id">
-                {{ ta.ten }}
+                {{ ta?.ten }}
               </option>
             </select>
           </div>
@@ -148,7 +148,7 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let ca of coAos" [value]="ca.id">
-                {{ ca.ten }}
+                {{ ca?.ten }}
               </option>
             </select>
           </div>
@@ -161,14 +161,14 @@
             >
               <option value="0" selected>Tất cả</option>
               <option *ngFor="let cl of chatLieus" [value]="cl.id">
-                {{ cl.ten }}
+                {{ cl?.ten }}
               </option>
             </select>
           </div>
         </div>
       </div>
 
-      <h5 class="m-3">{{ sanPham.ten }}</h5>
+      <h5 class="m-3">{{ sanPham?.ten }}</h5>
 
       <!-- body: table -->
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
@@ -239,7 +239,11 @@
                       [class]="i === 1 ? 'active' : ''"
                       *ngFor="let img of s.hinhAnhs; let i = index"
                     >
-                      <img [src]="img.imageUrl" class="d-block w-100 rounded" />
+                      <img
+                        [src]="img.imageUrl"
+                        class="d-block w-100 rounded"
+                        style="width: 150px; height: 100px; object-fit: cover"
+                      />
                     </div>
                   </div>
                 </div>
@@ -653,7 +657,7 @@
       </div>
       <div class="modal-footer">
         <button
-          id="closeUpdateBtn"
+          id="closeUpdateBtnImg"
           type="button"
           class="btn btn-secondary rounded"
           data-bs-dismiss="modal"

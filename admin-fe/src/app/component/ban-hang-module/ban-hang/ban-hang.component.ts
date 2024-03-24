@@ -118,7 +118,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
           if (this.orders.length <= 0) {
             this.newHoaDon();
           } else {
-            this.order = this.orders[index - 1];
+            this.order = this.orders[this.orders.length - 1];
           }
         }
       });
@@ -156,10 +156,17 @@ export class BanHangComponent implements OnInit, OnDestroy {
   chooseKhachHang(khachHang: KhachHang) {
     this.order.khachHang = khachHang;
     this.updateHoaDon();
+    if (this.order.loaiHoaDon == "GIAO_HANG") {
+      this.order.tenNguoiNhan = khachHang.hoTen;
+      this.order.sdtNguoiNhan = khachHang.sdt;
+    }
   }
 
   removeKhachHangInOrder() {
     this.order.khachHang = null;
+    this.order.tenNguoiNhan = null;
+    this.order.sdtNguoiNhan = null;
+    this.order.diaChiNguoiNhan = null;
     this.updateHoaDon();
   }
 
@@ -304,12 +311,21 @@ export class BanHangComponent implements OnInit, OnDestroy {
       // kiểm tra khach thanh toán đủ chưa
       if (this.getTienKhachConThieu() == 0) {
         // xác thanh toán
-        let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(this.order);
+        let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(
+          this.order,
+          null
+        );
         this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
           next: (resp: HoaDon) => {
-            console.log(resp);
-
+            // console.log(resp);
             this.pdfService.generatePDFHoaDon(resp);
+            // xoa don
+            for (let i = 0; i < this.orders.length; i++) {
+              if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
+                this.deleteOrder(i);
+                break;
+              }
+            }
           },
           error: (err: any) => {
             this.notification.error(err.error.message);
@@ -322,11 +338,58 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }
   }
 
-  datHang() {
-    if (this.order.loaiHoaDon == "GIAO_HANG") {
-      // this.order.diaChiNguoiNhan = null;
-    }
+  async datHang() {
     console.log(this.order);
+
+    if (this.order.loaiHoaDon == "GIAO_HANG") {
+      let regex = new RegExp("^(0[3|5|7|8|9])+([0-9]{8})\\b$");
+
+      if (
+        this.order.tenNguoiNhan == null ||
+        this.order.tenNguoiNhan == undefined
+      ) {
+        this.notification.warning("Bạn chưa nhập tên người nhận");
+        return;
+      }
+      if (
+        this.order.sdtNguoiNhan == null ||
+        this.order.sdtNguoiNhan == undefined
+      ) {
+        this.notification.warning("Bạn chưa nhập số điện thoại người nhận");
+        return;
+      }
+      if (!regex.test(this.order.sdtNguoiNhan)) {
+        this.notification.warning("Số điện thoại người nhận không hợp lệ");
+        return;
+      }
+      if (
+        this.order.diaChiNguoiNhan == null ||
+        this.order.diaChiNguoiNhan == undefined
+      ) {
+        this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+        return;
+      }
+      let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(
+        this.order,
+        this.diaChiVaPhiVanChuyen
+      );
+      this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
+        next: (resp: HoaDon) => {
+          console.log(resp);
+          // xoa don
+          for (let i = 0; i < this.orders.length; i++) {
+            if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
+              this.deleteOrder(i);
+              break;
+            }
+          }
+        },
+        error: (err: any) => {
+          this.notification.error(err.error.message);
+        },
+      });
+      console.log(hoaDonRequest);
+    }
   }
 
   phiVanChuyenChange($event: any) {

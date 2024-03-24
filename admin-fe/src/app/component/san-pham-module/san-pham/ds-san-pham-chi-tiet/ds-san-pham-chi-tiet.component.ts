@@ -433,10 +433,11 @@ export class DsSanPhamChiTietComponent {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Thêm",
+      confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         if (this.selectedImgFileList.length > 0) {
+          this.turnOnOverlay("Đang cập nhật...");
           this.spctService
             .updateImages(
               this.selectedImgFileList,
@@ -446,9 +447,15 @@ export class DsSanPhamChiTietComponent {
             .subscribe({
               next: (response: any) => {
                 this.notifService.success(response);
+                this.getSpctByFilterParams();
+                this.selectedImgFileList = [];
+                this.uploadImgFileList = [];
+                document.getElementById("closeUpdateBtnImg").click();
+                this.turnOffOverlay("");
               },
               error: (errorResponse: HttpErrorResponse) => {
                 this.notifService.error(errorResponse.error.message);
+                this.turnOffOverlay("");
               },
             });
         } else {

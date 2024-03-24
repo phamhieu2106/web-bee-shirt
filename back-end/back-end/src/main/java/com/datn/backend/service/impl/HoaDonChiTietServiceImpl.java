@@ -11,6 +11,7 @@ import com.datn.backend.repository.HoaDonChiTietRepository;
 import com.datn.backend.repository.HoaDonRepository;
 import com.datn.backend.repository.SanPhamChiTietRepository;
 import com.datn.backend.service.HoaDonChiTietService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,11 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         if (hoaDonChiTiet.isEmpty()){
             throw new IdNotFoundException("Không tìm thấy hóa đơn chi tiết id: "+id);
         }
+        //update so luong ton
+        SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.get().getSanPhamChiTiet();
+        sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.get().getSoLuong());
+        sanPhamChiTietRepo.save(sanPhamChiTiet);
+
         hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
         return modelMapper.map(hoaDonChiTiet.get(),HoaDonChiTietResponse.class);
     }

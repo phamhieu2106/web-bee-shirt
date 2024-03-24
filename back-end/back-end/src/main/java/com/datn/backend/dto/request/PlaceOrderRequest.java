@@ -1,5 +1,6 @@
 package com.datn.backend.dto.request;
 
+import com.datn.backend.dto.DiaChiVaPhiVanChuyenDto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -52,4 +53,6 @@ public class PlaceOrderRequest {
     private String diaChiNguoiNhan;
 
     private String ghiChu;
+
+    private DiaChiVaPhiVanChuyenDto diaChiVaPhiVanChuyen;
 }

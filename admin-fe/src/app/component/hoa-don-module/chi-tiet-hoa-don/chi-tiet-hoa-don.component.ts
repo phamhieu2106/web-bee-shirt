@@ -88,6 +88,9 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     }
   }
 
+  inPhieuGiao() {
+    this.pdfService.generatePDFPhieuGiao(this.hoaDon);
+  }
   // private mapToDiaChiVaPhiVanChuyen(diaChi: string): DiaChiVaPhiVanChuyen {
   //   let dcvpvn = new DiaChiVaPhiVanChuyen();
   //   if (diaChi != null && diaChi != undefined) {

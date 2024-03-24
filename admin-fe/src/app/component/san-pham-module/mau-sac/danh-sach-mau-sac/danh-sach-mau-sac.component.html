@@ -17,6 +17,7 @@
                 class="form-control rounded"
                 placeholder="Tìm màu sắc theo tên hoặc mã..."
                 [(ngModel)]="search"
+                (input)="searchByName()"
               />
             </div>
             <div class="col-md-4"></div>
@@ -26,7 +27,7 @@
                 class="btn btn-create btn-lg rounded"
                 title="Thêm mới"
                 data-bs-toggle="modal"
-                data-bs-target="#thietKeAddForm"
+                data-bs-target="#mauSacAddForm"
               >
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
@@ -129,25 +130,33 @@
               <ul class="pagination">
                 <li
                   class="page-item"
-                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled ' : ''"
                 >
                   <a
                     class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber - 1,
+                        pagedResponse.pageSize,
+                        search
+                      )
+                    "
                     >Previous</a
                   >
                 </li>
                 <li
                   class="page-item"
-                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                  *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
                 >
                   <a
                     class="page-link pointer"
                     [ngClass]="
-                      pagedResponse?.pageNumber == page ? 'active' : ''
+                      pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                     "
-                    (click)="goToPage(page)"
-                    >{{ page }}</a
+                    (click)="
+                      goToPage(pageNumber, pagedResponse.pageSize, search)
+                    "
+                    >{{ pageNumber }}</a
                   >
                 </li>
                 <li
@@ -160,7 +169,13 @@
                 >
                   <a
                     class="page-link pointer"
-                    (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber + 1,
+                        pagedResponse.pageSize,
+                        search
+                      )
+                    "
                     >Next</a
                   >
                 </li>
@@ -176,27 +191,6 @@
 <app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
 
 <!-- modal: add -->
-<div
-  class="modal fade"
-  id="thietKeAddForm"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Thêm mới kiểu thiết kế</h1>
-      </div>
-      <form [formGroup]="addForm">
-        <button type="button" class="btn btn-primary rounded" (click)="add()">
-          Thêm
-        </button>
-      </form>
-    </div>
-  </div>
-</div>
-
 <div
   class="modal fade modal-add"
   id="mauSacAddForm"
@@ -264,6 +258,9 @@
                 src="assets/img/default-image.jpg"
               />
             </div>
+          </div>
+          <div *ngIf="imageError">
+            <i class="text-danger">Vui lòng chọn ảnh</i>
           </div>
         </div>
 
@@ -361,7 +358,7 @@
 
 <!-- modal: update -->
 <div
-  class="modal fade"
+  class="modal fade modal-add"
   id="mauSacUpdateForm"
   tabindex="-1"
   aria-labelledby="exampleModalLabel"

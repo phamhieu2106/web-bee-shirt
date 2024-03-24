@@ -16,7 +16,7 @@ import {
   styleUrls: ["./get-dia-chi-va-phi-van-chuyen.component.css"],
 })
 export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
-  @Input({ required: true }) diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
+  @Input({ required: true }) diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen;
   @Output() diaChiVaPhiVanChuyenChange =
     new EventEmitter<DiaChiVaPhiVanChuyen>();
   @Output() changePhiVanChuyen = new EventEmitter<number>();
@@ -191,6 +191,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
       .subscribe({
         next: (resp: any) => {
           service_id = Number(resp.data[0].service_id);
+          this.diaChiVaPhiVanChuyen.service_id = resp.data[0].service_id;
           this.ghnService
             .getFee(this.diaChiVaPhiVanChuyen, service_id)
             .subscribe({

@@ -132,7 +132,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                   
+                   type="number"
                       class="form-control"
                       class="form-control"
                       placeholder="Giá trị"
@@ -145,8 +145,8 @@
                       formControlName="giaTri"
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
-                      value=""
-                      (input)="formatGiaTri($event, 'giaTri')"
+                     
+                      
                       (blur)="checkGiaTriBlur()"
                     />
                     <span
@@ -177,7 +177,7 @@
                   <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       placeholder="Giá trị tối đa"
                       id="giaTriMax"
@@ -191,7 +191,7 @@
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                       [readonly]="checkGiaTri"
-                      (input)="formatNumber($event, 'giaTriMax')"
+                     
                       (blur)="checkGiaTriToiDa()"
                     />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
@@ -212,20 +212,20 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Lượt sử dụng:</label>
                   <input
-                  type="number"
-                  class="form-control"
-                  placeholder="Số lượng"
-                  [ngClass]="
-                    (updateForm.get('soLuong').invalid &&
-                    updateForm.get('soLuong').touched) ||
-                    (updateForm.get('soLuong').hasError('min') &&
-                    updateForm.get('soLuong').touched)
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  formControlName="soLuong"
-                 
-                />
+    type="number"
+    class="form-control"
+    placeholder="Số lượng"
+    [ngClass]="
+        (updateForm.get('soLuong').invalid &&
+        updateForm.get('soLuong').touched) ||
+        (updateForm.get('soLuong').hasError('min') &&
+        updateForm.get('soLuong').touched)
+            ? 'is-invalid'
+            : ''
+    "
+    formControlName="soLuong"
+    [readonly]="!checkSoLuong"
+/>
                 <div class="invalid-feedback">
                   <span *ngIf="updateForm.get('soLuong').hasError('required')">
                     Không bỏ trống trường này</span
@@ -242,7 +242,7 @@
                 >
                 <div class="input-group mb-3">
                   <input
-                 
+                 type="number"
                     class="form-control"
                     placeholder="Điều kiện"
                     [ngClass]="
@@ -254,7 +254,7 @@
                     formControlName="dieuKienGiam"
                     aria-label="Recipient's username"
                     aria-describedby="basic-addon2"
-                    (input)="formatNumber($event, 'dieuKienGiam')"
+                   
                     (blur)="checkGiaTriToiDa()"
                     (blur)="checkGiaTriBlur()"
                     
@@ -336,7 +336,7 @@
                   id="sendMail"
                   class="form-check-inline"
                   (change)="onSendMailChange($event)"
-                [disabled]="!checkMail"
+               [disabled]="checkMail"
                 />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>

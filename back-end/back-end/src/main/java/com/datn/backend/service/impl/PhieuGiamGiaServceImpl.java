@@ -74,7 +74,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
 
 
-        pgg.setTenPhieuGiamGia(maPhieuGiamGia);
+
 
 
 
@@ -87,9 +87,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                     repository.existsByTenPhieuGiamGia(tenPhieuGiamGia)) {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
+            pgg.setMaPhieuGiamGia(maPhieuGiamGia);
+            pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
         }
 
-        pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
+
 
         // Xác định trạng thái dựa trên thời gian
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
@@ -152,8 +154,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
             String maPhieuGiamGia = object.getMaPhieuGiamGia().trim();
             String tenPhieuGiamGia = object.getTenPhieuGiamGia().trim();
 
-            object.setMaPhieuGiamGia(maPhieuGiamGia);
-            object.setTenPhieuGiamGia(tenPhieuGiamGia);
+
 
 
             // Kiểm tra xem mã phiếu có chứa chữ cái không
@@ -167,6 +168,9 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 // Replace các khoảng trắng dư thừa nếu có chứa chữ cái
                 tenPhieuGiamGia = tenPhieuGiamGia.replaceAll("\\s+", " ");
             }
+
+            object.setMaPhieuGiamGia(maPhieuGiamGia);
+            object.setTenPhieuGiamGia(tenPhieuGiamGia);
 
             // Kiểm tra xem mã phiếu đã tồn tại hay không
             if (!maPhieuGiamGia.equalsIgnoreCase(phieu.getMaPhieuGiamGia()) &&

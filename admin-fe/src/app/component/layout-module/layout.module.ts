@@ -16,7 +16,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
     SideContentComponent,
     MainHeadingComponent,
     OverlayComponent,
-    SidebarComponent
+    SidebarComponent,
   ],
   imports: [CommonModule, RouterModule],
   exports: [
@@ -25,7 +25,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
     SideContentComponent,
     MainHeadingComponent,
     OverlayComponent,
-    SidebarComponent
+    SidebarComponent,
   ],
 })
 export class LayoutModule {}

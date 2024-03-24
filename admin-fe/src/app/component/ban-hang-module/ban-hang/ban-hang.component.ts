@@ -326,12 +326,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
                 break;
               }
             }
+            // this.notification.success("Mua hàng thành công");
           },
           error: (err: any) => {
             this.notification.error(err.error.message);
           },
         });
-        console.log(hoaDonRequest);
+        // console.log(hoaDonRequest);
       } else {
         Swal.fire("Đơn hàng của bạn vẫn chưa được thanh toán đủ tiền .");
       }
@@ -375,7 +376,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
       );
       this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
         next: (resp: HoaDon) => {
-          console.log(resp);
+          // console.log(resp);
           // xoa don
           for (let i = 0; i < this.orders.length; i++) {
             if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
@@ -383,12 +384,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
               break;
             }
           }
+          // this.notification.success("Đặt hàng thành công");
         },
         error: (err: any) => {
           this.notification.error(err.error.message);
         },
       });
-      console.log(hoaDonRequest);
+      // console.log(hoaDonRequest);
     }
   }
 

@@ -8,4 +8,6 @@ export class DiaChiVaPhiVanChuyen {
   cuThe: string;
   duKien: Date;
   phiVanChuyen: number = 0;
+  service_id: number;
+  service_type_id: number;
 }

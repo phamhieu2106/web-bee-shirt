@@ -5,6 +5,7 @@ import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { Margins, TDocumentDefinitions } from "pdfmake/interfaces";
 import { HoaDon } from "../model/class/hoa-don.class";
 import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
+import { HoaDonService } from "./hoa-don.service";
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -12,7 +13,7 @@ import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
   providedIn: "root",
 })
 export class PdfService {
-  constructor() {}
+  constructor(private hoaDonService: HoaDonService) {}
   storeInfo = {
     name: "Bee-Shirt",
     sdt: "0123456789",
@@ -20,7 +21,97 @@ export class PdfService {
     address:
       "Tòa nhà FPT Polytechnic, Phố Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội",
   };
+  generatePDFPhieuGiao(hoaDon: HoaDon) {
+    let products = hoaDon.hoaDonChiTiets.map((hdct) => {
+      let product = [
+        `${hdct.sanPhamChiTiet.sanPham.ten} \n Size: ${hdct.sanPhamChiTiet.kichCo.ten} - Màu: ${hdct.sanPhamChiTiet.mauSac.ten}`,
+        hdct.soLuong + "",
+      ];
+      return product;
+    });
 
+    let dd: TDocumentDefinitions = {
+      content: [
+        { text: "Phiếu Giao Hàng", style: "header" },
+        {
+          columns: [
+            {
+              width: "50%",
+              text: [
+                { text: "Bên Gửi:\n", style: "subheader" },
+                {
+                  text: `Tên: ${this.storeInfo.name}\nĐịa chỉ: ${this.storeInfo.address}\nSố điện thoại: ${this.storeInfo.sdt}`,
+                  style: "text",
+                },
+              ],
+            },
+            {
+              width: "50%",
+              text: [
+                { text: "Bên Nhận:\n", style: "subheader" },
+                {
+                  text: `Tên: ${hoaDon.tenNguoiNhan}\nĐịa chỉ: ${hoaDon.diaChiNguoiNhan},\nSố điện thoại: ${hoaDon.sdtNguoiNhan}`,
+                  style: "text",
+                },
+              ],
+            },
+          ],
+        },
+        { text: "Nội dung đơn hàng:", style: "subheader" },
+        {
+          table: {
+            headerRows: 1,
+            widths: ["80%", "20%"], // Thiết lập chiều rộng của các cột
+            body: [["Tên sản phẩm", "Số lượng"], ...products],
+          },
+        },
+        {
+          text:
+            `Tiền Thu Hộ:  ` +
+            this.convertToVND(
+              hoaDon.tongTien +
+                hoaDon.phiVanChuyen -
+                hoaDon.tienGiam -
+                this.hoaDonService.getTienKhachThanhToan(hoaDon.thanhToans)
+            ),
+          style: "boldText",
+          margin: [0, 20, 0, 0],
+        }, // Sử dụng kiểu văn bản mới đã định nghĩa
+        {
+          columns: [
+            { qr: `${hoaDon.ma}`, alignment: "center" }, // QR code
+            {
+              text: "Chữ ký người nhận\n(Xác nhận hàng nguyên vẹn, không móp/méo)",
+              alignment: "center",
+            }, // Chữ ký
+          ],
+          margin: [0, 20, 0, 0],
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 22,
+          bold: true,
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        subheader: {
+          fontSize: 16,
+          bold: true,
+          margin: [0, 10, 0, 5],
+        },
+        text: {
+          margin: [0, 5, 0, 15],
+        },
+        boldText: {
+          // Định nghĩa kiểu văn bản mới cho chữ in đậm và cỡ chữ lớn
+          bold: true,
+          fontSize: 14,
+        },
+      },
+    };
+    pdfMake.createPdf(dd).print();
+  }
   generatePDFHoaDon(hoaDon: HoaDon) {
     const dd: TDocumentDefinitions = {
       content: [

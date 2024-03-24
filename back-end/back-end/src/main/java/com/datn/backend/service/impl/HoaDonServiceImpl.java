@@ -197,6 +197,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Transactional
     public HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
         HoaDon hoaDon = null;
+        System.out.println(placeOrderRequest.getDiaChiVaPhiVanChuyen());
         if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.TAI_QUAY.toString())){
             hoaDon = this.createHoaDonTaiQuay(placeOrderRequest);
         } else if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.GIAO_HANG.toString())) {
@@ -339,9 +340,54 @@ public class HoaDonServiceImpl implements HoaDonService {
         return maHD;
     }
     private HoaDon createHoaDonGiaoHang(PlaceOrderRequest placeOrderRequest) {
-        System.out.println(placeOrderRequest.toString());
-        return null;
+        if (placeOrderRequest.getSdtNguoiNhan() == null || !placeOrderRequest.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")){
+            throw new PlaceOrderException("Số điện thoại người nhận không hợp lệ");
+        }
+        System.out.println(1+placeOrderRequest.toString());
+        NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
+        KhachHang khachHang =placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null):null;
+        PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
+
+        HoaDon hoaDon = HoaDon
+                .builder()
+                .ma(generateMaHD())
+                .loaiHoaDon(LoaiHoaDon.valueOf(placeOrderRequest.getLoaiHoaDon()))
+                .tenNguoiNhan(placeOrderRequest.getTenNguoiNhan())
+                .sdtNguoiNhan(placeOrderRequest.getSdtNguoiNhan())
+                .emailNguoiNhan(null)
+                .diaChiNguoiNhan(placeOrderRequest.getDiaChiNguoiNhan())
+                .tongTien(placeOrderRequest.getTongTien())
+                .tienGiam(placeOrderRequest.getTienGiam())
+                .phiVanChuyen(placeOrderRequest.getPhiVanChuyen())
+                .loaiHoaDon(LoaiHoaDon.GIAO_HANG)
+                .trangThai(TrangThaiHoaDon.CHO_XAC_NHAN)
+                .ghiChu(placeOrderRequest.getGhiChu())
+                .nhanVien(nhanVien)
+                .khachHang(khachHang)
+                .phieuGiamGia(phieuGiamGia)
+                .build();
+
+        hoaDonRepository.save(hoaDon);
+        hoaDon.setHoaDonChiTiets(this.mapToHoaDonChiTiet(placeOrderRequest.getHoaDonChiTiets(),hoaDon));
+        hoaDon.setLichSuHoaDons(this.createLichSuHoaDonGiaoHang(hoaDon));
+        hoaDon.setThanhToans(this.createThanhToans(placeOrderRequest.getThanhToans(),hoaDon));
+        return hoaDon;
     }
+
+    private List<LichSuHoaDon> createLichSuHoaDonGiaoHang(HoaDon hoaDon) {
+        List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
+        LichSuHoaDon lichSuHoaDon =
+                LichSuHoaDon
+                        .builder()
+                        .tieuDe("Chờ xác nhận")
+                        .moTa("")
+                        .trangThai(TrangThaiHoaDon.CHO_XAC_NHAN)
+                        .hoaDon(hoaDon)
+                        .build();
+        lichSuHoaDons.add(lichSuHoaDon);
+        return lichSuHoaDons;
+    }
+
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {
         return modelMapper.map(hoaDon, HoaDonResponse.class);
     }

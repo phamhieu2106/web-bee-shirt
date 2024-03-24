@@ -1,3 +1,4 @@
+import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { HoaDonRequest } from "./../model/class/hoa-don-request.class";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -72,7 +73,10 @@ export class HoaDonService {
     const url = this.baseUrl + `/get-order-quantity-all`;
     return this.http.get<SoLuongDonHang>(url);
   }
-  public mapToHoaDonRequest(hoaDon: HoaDon): HoaDonRequest {
+  public mapToHoaDonRequest(
+    hoaDon: HoaDon,
+    diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen
+  ): HoaDonRequest {
     let hoaDonRequest = new HoaDonRequest();
     // map properties
     hoaDonRequest.tongTien = hoaDon.tongTien;
@@ -97,6 +101,7 @@ export class HoaDonService {
     hoaDonRequest.sdtNguoiNhan = hoaDon.sdtNguoiNhan;
     hoaDonRequest.emailNguoiNhan = hoaDon.emailNguoiNhan;
     hoaDonRequest.diaChiNguoiNhan = hoaDon.diaChiNguoiNhan;
+    hoaDonRequest.diaChiVaPhiVanChuyen = diaChiVaPhiVanChuyen;
     return hoaDonRequest;
   }
   mapToThanhToanRequest(thanhToans: ThanhToan[]): ThanhToanRequest[] {
@@ -112,5 +117,14 @@ export class HoaDonService {
   // place order
   public placeOrder(hoaDonRequest: HoaDonRequest): Observable<HoaDon> {
     return this.http.post<HoaDon>(this.baseUrl + "/place-order", hoaDonRequest);
+  }
+
+  getTienKhachThanhToan(thanhToans: ThanhToan[]): number {
+    if (thanhToans != null && thanhToans.length > 0) {
+      return thanhToans
+        .map((thanhToan) => thanhToan.soTien)
+        .reduce((pre, curr) => pre + curr, 0);
+    }
+    return 0;
   }
 }

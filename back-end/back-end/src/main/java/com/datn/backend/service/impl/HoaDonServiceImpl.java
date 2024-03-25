@@ -197,7 +197,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Transactional
     public HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
         HoaDon hoaDon = null;
-        System.out.println(placeOrderRequest.getDiaChiVaPhiVanChuyen());
+//        System.out.println(placeOrderRequest.getDiaChiVaPhiVanChuyen());
         if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.TAI_QUAY.toString())){
             hoaDon = this.createHoaDonTaiQuay(placeOrderRequest);
         } else if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.GIAO_HANG.toString())) {
@@ -211,7 +211,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         KhachHang khachHang =placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null):null;
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
 
-        System.out.println(placeOrderRequest);
+//        System.out.println(placeOrderRequest);
         HoaDon hoaDon = HoaDon
                 .builder()
                 .ma(generateMaHD())
@@ -343,7 +343,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (placeOrderRequest.getSdtNguoiNhan() == null || !placeOrderRequest.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")){
             throw new PlaceOrderException("Số điện thoại người nhận không hợp lệ");
         }
-        System.out.println(1+placeOrderRequest.toString());
+//        System.out.println(1+placeOrderRequest.toString());
         NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
         KhachHang khachHang =placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null):null;
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());

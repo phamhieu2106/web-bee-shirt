@@ -10,8 +10,8 @@ import { ThanhToanComponent } from "./thanh-toan/thanh-toan.component";
 import { GiaoHangComponent } from "./giao-hang/giao-hang.component";
 import { GiamGiaComponent } from "./giam-gia/giam-gia.component";
 import { HoaDonModule } from "../hoa-don-module/hoa-don.module";
-import { PhieuGiamGiaComponent } from './phieu-giam-gia/phieu-giam-gia.component';
-import { SearchProductDetailComponent } from './search-product-detail/search-product-detail.component';
+import { PhieuGiamGiaComponent } from "./phieu-giam-gia/phieu-giam-gia.component";
+import { SearchProductDetailComponent } from "./search-product-detail/search-product-detail.component";
 
 @NgModule({
   declarations: [
@@ -32,5 +32,6 @@ import { SearchProductDetailComponent } from './search-product-detail/search-pro
     ReactiveFormsModule,
     HoaDonModule,
   ],
+  exports: [SearchProductDetailComponent],
 })
 export class BanHangModule {}

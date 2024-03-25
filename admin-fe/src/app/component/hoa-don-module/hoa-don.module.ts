@@ -14,7 +14,8 @@ import { TrangThaiHoaDonComponent } from "./trang-thai-hoa-don/trang-thai-hoa-do
 import { LoaiHoaDonComponent } from "./loai-hoa-don/loai-hoa-don.component";
 import { PhuongThucThanhToanComponent } from "./phuong-thuc-thanh-toan/phuong-thuc-thanh-toan.component";
 import { CommonComponentModule } from "../common-component/common-component.module";
-import { HinhThucThanhToan } from "src/app/model/class/hinh-thuc-thanh-toan";
+import { AuthModule } from "../auth-module/auth.module";
+import { SearchProductDetailComponent } from "./search-product-detail/search-product-detail.component";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { HinhThucThanhToan } from "src/app/model/class/hinh-thuc-thanh-toan";
     TrangThaiHoaDonComponent,
     LoaiHoaDonComponent,
     PhuongThucThanhToanComponent,
+    SearchProductDetailComponent,
   ],
   imports: [
     HoaDonRoutingModule,

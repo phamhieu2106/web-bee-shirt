@@ -16,6 +16,7 @@ import { DiscountValid } from "src/app/model/class/discount-valid.class";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { NotificationService } from "src/app/service/notification.service";
+import { el } from "date-fns/locale";
 
 @Component({
   selector: "app-ban-hang",
@@ -114,17 +115,21 @@ export class BanHangComponent implements OnInit, OnDestroy {
             title: "Đã xóa",
             icon: "success",
           });
-          this.orders.splice(index, 1);
-          if (this.orders.length <= 0) {
-            this.newHoaDon();
-          } else {
-            this.order = this.orders[this.orders.length - 1];
-          }
+          this.deleteOrderTemp(index);
         }
       });
+    } else {
+      this.deleteOrderTemp(index);
     }
   }
-
+  deleteOrderTemp(index: number) {
+    this.orders.splice(index, 1);
+    if (this.orders.length <= 0) {
+      this.newHoaDon();
+    } else {
+      this.order = this.orders[this.orders.length - 1];
+    }
+  }
   newOrderNameTemp(): string {
     // Lấy ra đối tượng cuối cùng của key
     const lastOrder = this.orders[this.orders.length - 1];
@@ -322,16 +327,17 @@ export class BanHangComponent implements OnInit, OnDestroy {
             // xoa don
             for (let i = 0; i < this.orders.length; i++) {
               if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
-                this.deleteOrder(i);
+                this.deleteOrderTemp(i);
                 break;
               }
             }
+            this.notification.success("Mua hàng thành công");
           },
           error: (err: any) => {
             this.notification.error(err.error.message);
           },
         });
-        console.log(hoaDonRequest);
+        // console.log(hoaDonRequest);
       } else {
         Swal.fire("Đơn hàng của bạn vẫn chưa được thanh toán đủ tiền .");
       }
@@ -375,20 +381,21 @@ export class BanHangComponent implements OnInit, OnDestroy {
       );
       this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
         next: (resp: HoaDon) => {
-          console.log(resp);
+          // console.log(resp);
           // xoa don
           for (let i = 0; i < this.orders.length; i++) {
             if (this.orders[i].orderNameTemp == this.order.orderNameTemp) {
-              this.deleteOrder(i);
+              this.deleteOrderTemp(i);
               break;
             }
           }
+          this.notification.success("Đặt hàng thành công");
         },
         error: (err: any) => {
           this.notification.error(err.error.message);
         },
       });
-      console.log(hoaDonRequest);
+      // console.log(hoaDonRequest);
     }
   }
 

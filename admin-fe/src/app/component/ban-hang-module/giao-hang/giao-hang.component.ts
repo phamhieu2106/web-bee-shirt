@@ -20,10 +20,10 @@ export class GiaoHangComponent implements OnInit, OnChanges {
   @Input() khachHang: KhachHang; // từ khách hàng lấy ra được danh sách địa chỉ
   @Output() phiVanChuyen = new EventEmitter<number>();
   @Output() diaChi = new EventEmitter<string>();
-  // public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-  @Input({ required: true }) diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen;
-  @Output() diaChiVaPhiVanChuyenChange =
-    new EventEmitter<DiaChiVaPhiVanChuyen>();
+  public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+  // @Input({ required: true }) diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen;
+  // @Output() diaChiVaPhiVanChuyenChange =
+  //   new EventEmitter<DiaChiVaPhiVanChuyen>();
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {

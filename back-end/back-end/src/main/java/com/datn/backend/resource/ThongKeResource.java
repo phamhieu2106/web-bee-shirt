@@ -127,4 +127,52 @@ public class ThongKeResource {
     ) {
         return ResponseEntity.ok(chartService.getListCouponsUsedInAnyYear(year));
     }
+
+    @GetMapping("/doanh-thu-nam-hien-tai")
+    public ResponseEntity<List<Double>> getListSalesInThisYear(
+    ) {
+        return ResponseEntity.ok(chartService.getListSalesInThisYear());
+    }
+
+    @GetMapping("/doanh-thu-nam-truoc")
+    public ResponseEntity<List<Double>> getListSalesInLastYear(
+    ) {
+        return ResponseEntity.ok(chartService.getListSalesInLastYear());
+    }
+
+    @GetMapping("/doanh-thu-thang-hien-tai")
+    public ResponseEntity<List<Double>> getListSalesInThisMonth(
+    ) {
+        return ResponseEntity.ok(chartService.getListSales4WeekInThisMonth());
+    }
+
+    @GetMapping("/doanh-thu-thang-truoc")
+    public ResponseEntity<List<Double>> getListSalesInLastMonth(
+    ) {
+        return ResponseEntity.ok(chartService.getListSales4WeekInLastMonth());
+    }
+
+    @GetMapping("/doanh-thu-tuan-hien-tai")
+    public ResponseEntity<List<Double>> getListSalesInThisWeek(
+    ) {
+        return ResponseEntity.ok(chartService.getSale7DaysInThisWeek());
+    }
+
+    @GetMapping("/doanh-thu-tuan-truoc")
+    public ResponseEntity<List<Double>> getListSalesInLastWeek(
+    ) {
+        return ResponseEntity.ok(chartService.getSale7DaysInLastWeek());
+    }
+
+    @GetMapping("/lay-tat-ca-hoa-don-trong-nam")
+    public ResponseEntity<Long> getInvoice(
+    ) {
+        return ResponseEntity.ok(chartService.countAllInvoiceThisYear());
+    }
+
+    @GetMapping("/lay-tat-ca-hoa-don-trong-nam-truoc")
+    public ResponseEntity<Long> getInvoicePerYear(
+    ) {
+        return ResponseEntity.ok(chartService.countAllInvoiceLastYear());
+    }
 }

@@ -1,9 +1,12 @@
 import { ToastrService } from "ngx-toastr";
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
+import { NotificationService } from "src/app/service/notification.service";
+import { ThanhToan } from "src/app/model/class/thanh-toan";
+import { HoaDon } from "src/app/model/class/hoa-don.class";
 
 @Component({
   selector: "app-order-tracking",
@@ -11,22 +14,29 @@ import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
   styleUrls: ["./order-tracking.component.css"],
 })
 export class OrderTrackingComponent {
-  @Input({ required: true }) lichSuHoaDons: LichSuHoaDon[]; // danh sách ls hóa đơn
-  @Input({ required: true }) idHoaDon: number; // id hóa đơn của LSHD cần cập nhật (Next trạng thái, Prev trạng thái)
-  @Input({ required: true }) trangThaiHD: string; // trang thai hiện tại của hóa đơn
-  @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc TAI_QUAY (Check in phiếu giao)
-  @Input({ required: true }) ma: string; // Mã hd để lấy thông tin phiếu giao
+  // @Input({ required: true }) lichSuHoaDons: LichSuHoaDon[]; // danh sách ls hóa đơn
+  // @Input({ required: true }) idHoaDon: number; // id hóa đơn của LSHD cần cập nhật (Next trạng thái, Prev trạng thái)
+  // @Input({ required: true }) trangThaiHD: string; // trang thai hiện tại của hóa đơn
+  // @Output() trangThaiHDChange = new EventEmitter<string>(); // trang thai hiện tại của hóa đơn
+  // @Input({ required: true }) loaiHD: string; // Loại hóa đơn GIAO_HANG hoặc TAI_QUAY (Check in phiếu giao)
+  // @Input({ required: true }) ma: string; // Mã hd để lấy thông tin phiếu giao
+  // @Input({ required: true }) thanhToans: ThanhToan[]; // Mã hd để lấy thông tin phiếu giao
+  // @Input({ required: true }) tongTien: number; // Mã hd để lấy thông tin phiếu giao
+  @Input({ required: true }) hoaDon: HoaDon; // id hóa đơn cần tạo thanh toán
+  @Output() hoaDonChange = new EventEmitter<HoaDon>(); // id hóa đơn cần tạo thanh toán
   public isNext = true; // check trạng thái đơn hàng (Next or Prev)
   public changeStatusForm = this.fb.group({
-    moTa: ["", [Validators.required, Validators.minLength(10)]],
+    moTa: [
+      "Chuyển trạng thái",
+      [Validators.required, Validators.minLength(10)],
+    ],
   }); // form thêm LSHD
   public titleButton: string; // Đổi title button next
 
   constructor(
     private fb: FormBuilder,
     private hoaDonService: HoaDonService,
-    private giaoHangNhanhService: GiaoHangNhanhService,
-    private toastr: ToastrService
+    private notifycation: NotificationService
   ) {}
 
   ngOnInit() {
@@ -39,48 +49,52 @@ export class OrderTrackingComponent {
   }
   // Thay đổi trạng thái
   changeOrderStatus() {
+    // if (this.trangThaiHD == "DANG_GIAO_HANG") {
+    // }
     this.hoaDonService
       .changeOrderStatus(
-        this.idHoaDon,
+        this.hoaDon.id,
         this.changeStatusForm.value.moTa,
         this.isNext
       )
       .subscribe({
         next: (resp) => {
           // Gán lại data cho HoaDon
-          this.lichSuHoaDons.push(resp);
-          this.trangThaiHD = resp.trangThai;
+          this.hoaDon.lichSuHoaDons.push(resp);
+          this.hoaDon.trangThai = resp.trangThai;
           this.chageTitleButton();
-          this.toastr.success("Cập nhật thành công", "Thành công");
+          this.notifycation.success("Cập nhật thành công");
           // Default in phiếu gia khi xác nhận
-          if (this.trangThaiHD === "DA_XAC_NHAN") {
-            this.inPhieuGiao();
+          if (this.hoaDon.trangThai === "DA_XAC_NHAN") {
+            // this.inPhieuGiao();
           }
+          this.hoaDonChange.emit(this.hoaDon);
         },
         error: (err) => {
-          this.toastr.error(err.error.message, "Thất bại");
+          this.notifycation.error(err.error.message);
         },
       });
   }
   // Xử lý khi hủy đơn
   cancelOrder() {
     this.hoaDonService
-      .cancelOrder(this.idHoaDon, this.changeStatusForm.value.moTa)
+      .cancelOrder(this.hoaDon.id, this.changeStatusForm.value.moTa)
       .subscribe({
         next: (resp) => {
-          this.lichSuHoaDons.push(resp);
-          this.trangThaiHD = resp.trangThai;
+          this.hoaDon.lichSuHoaDons.push(resp);
+          this.hoaDon.trangThai = resp.trangThai;
           this.chageTitleButton();
-          this.toastr.success("Cập nhật thành công", "Thành công");
+          this.notifycation.success("Cập nhật thành công");
+          this.hoaDonChange.emit(this.hoaDon);
         },
         error: (err) => {
-          this.toastr.error(err.error.message, "Thất bại");
+          this.notifycation.error(err.error.message);
         },
       });
   }
   // Thay đổi title button
   chageTitleButton() {
-    switch (this.trangThaiHD) {
+    switch (this.hoaDon.trangThai) {
       case "TAO_DON":
         this.titleButton = "Chờ xác nhận";
         break;
@@ -105,31 +119,5 @@ export class OrderTrackingComponent {
       default:
         this.titleButton = "Tiếp tục";
     }
-  }
-
-  inPhieuGiao() {
-    let order_code = "LF7AAF";
-    // get mã đơn hàng trên hệ thống
-    // this.giaoHangNhanhService
-    //   .getOrderInforByClientOrderCode(this.ma)
-    //   .subscribe({
-    //     next: (resp) => {
-    //       order_code = resp.data.order_code;
-    //     },
-    //   });
-
-    this.giaoHangNhanhService.getTokenPhieuGiaoHang(order_code).subscribe({
-      next: (resp) => {
-        console.log(resp);
-        window.open(
-          "https://dev-online-gateway.ghn.vn/a5/public-api/printA5?token=" +
-            resp.data.token
-        );
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Tạo phiếu thất bại");
-      },
-    });
   }
 }

@@ -5,6 +5,7 @@ import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
 import { ToastrService } from "ngx-toastr";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-chi-tiet-hoa-don",
@@ -22,26 +23,38 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private hoaDonService: HoaDonService,
     private pdfService: PdfService,
-    private toastr: ToastrService
-  ) {
-    let id = this.activatedRoute.snapshot.params["id"];
-    this.getHoaDonById(id);
-  }
+    private toastr: ToastrService,
+    private notifycation: NotificationService
+  ) {}
   ngOnDestroy(): void {
     // console.log(this.hoaDon);
-
-    this.hoaDonService.putHoaDon(this.hoaDon).subscribe({
+    // this.updateHoaDon(this.hoaDon);
+    // this.hoaDonService.putHoaDon(this.hoaDon).subscribe({
+    //   next: (resp) => {
+    //     this.toastr.success("Cập nhật hóa đơn thành công", "Thành công");
+    //     // console.log(resp);
+    //   },
+    //   error: (err) => {
+    //     this.toastr.error(err.error.message, "Thất bại");
+    //   },
+    // });
+  }
+  updateHoaDon(hoaDon: HoaDon) {
+    this.hoaDonService.putHoaDon(hoaDon).subscribe({
       next: (resp) => {
-        this.toastr.success("Cập nhật hóa đơn thành công", "Thành công");
+        this.notifycation.success("Cập nhật hóa đơn thành công");
         // console.log(resp);
+        this.hoaDon = resp;
       },
       error: (err) => {
-        this.toastr.error(err.error.message, "Thất bại");
+        this.notifycation.error(err.error.message);
       },
     });
   }
-
-  ngOnInit() {}
+  ngOnInit() {
+    let id = this.activatedRoute.snapshot.params["id"];
+    this.getHoaDonById(id);
+  }
 
   getHoaDonById(id: number) {
     this.hoaDonService.getById(id).subscribe({
@@ -82,6 +95,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
         this.hoaDon.tenNguoiNhan = this.orderNameTemp;
         this.hoaDon.sdtNguoiNhan = this.orderPhoneNumberTemp;
         this.hoaDon.ghiChu = this.orderNoteTemp;
+        this.updateHoaDon(this.hoaDon);
       } else {
         this.toastr.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
       }
@@ -90,6 +104,10 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
 
   inPhieuGiao() {
     this.pdfService.generatePDFPhieuGiao(this.hoaDon);
+  }
+
+  putHoaDon(hoaDon: HoaDon) {
+    this.updateHoaDon(hoaDon);
   }
   // private mapToDiaChiVaPhiVanChuyen(diaChi: string): DiaChiVaPhiVanChuyen {
   //   let dcvpvn = new DiaChiVaPhiVanChuyen();

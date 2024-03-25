@@ -72,6 +72,14 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
 
 
     @Query(value = """
+            SELECT COUNT(*) as TongDonHang FROM hoa_don hd
+            WHERE YEAR(hd.created_at) = YEAR( :year )
+            AND hd.trang_thai != 'HUY';
+            """, nativeQuery = true)
+    Long countAllInvoiceAnyYear(@Param("year") LocalDate year);
+
+
+    @Query(value = """
                      SELECT COUNT(*) AS total_orders
                      FROM hoa_don
                      WHERE trang_thai = 'HOAN_THANH'
@@ -287,4 +295,76 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
             group by pgg.ten_phieu_giam_gia, pgg.ma_phieu_giam_gia ;
                         """, nativeQuery = true)
     List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(@Param("year") Integer year);
+
+
+    @Query(value = """
+            SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                        FROM (
+                            SELECT 1 AS Thang UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
+                            SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL
+                            SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL
+                            SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
+                        ) AS thang
+                        LEFT JOIN hoa_don hd ON thang.Thang = MONTH(hd.created_at)
+                        LEFT JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
+                        AND YEAR(hd.created_at) = YEAR( :year ) AND hd.trang_thai = 'HOAN_THANH'
+                        GROUP BY thang.Thang
+                        ORDER BY thang.Thang;
+            """, nativeQuery = true)
+    List<Double> getListSalesInAnyYear(@Param("year") LocalDate year);
+
+    @Query(value = """
+                    SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         FROM hoa_don
+                                         JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
+                                         WHERE hoa_don.trang_thai = 'HOAN_THANH'
+                                             AND created_at >= :startDate
+                                             AND created_at <= DATE_ADD( :startDate , INTERVAL CEIL( :totalDays / 4) DAY)
+                                         UNION ALL
+                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         FROM hoa_don
+                                         JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
+                                         WHERE hoa_don.trang_thai = 'HOAN_THANH'
+                                             AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 4) DAY)
+                                             AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)
+                                         UNION ALL
+                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         FROM hoa_don
+                                         JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
+                                         WHERE hoa_don.trang_thai = 'HOAN_THANH'
+                                         	AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)
+                                             AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)
+                                         UNION ALL
+                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                            FROM hoa_don
+                                            JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
+                                            WHERE hoa_don.trang_thai = 'HOAN_THANH'
+                                            AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)
+                                            AND created_at <= :endDate ;
+            """, nativeQuery = true)
+    List<Double> getListSales4WeekInAnyMonth(@Param("startDate") LocalDate startDate
+            , @Param("endDate") LocalDate endDate, @Param("totalDays") int totalDays);
+
+    @Query(value = """
+            SELECT IFNULL(SUM(hdct.gia_ban), 0) as DoanhThu
+                        FROM hoa_don
+                        JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
+                        WHERE DAY(created_at) = DAY(LAST_DAY( :today ));
+            """, nativeQuery = true)
+    Double getSaleLastDayOfAnyMonth(@Param("today") LocalDate today);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                        FROM (
+                            SELECT 0 AS num UNION ALL
+                            SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                            SELECT 5 UNION ALL SELECT 6
+                        ) AS numbers
+                        LEFT JOIN hoa_don hd ON DATE(hd.created_at) = DATE_ADD( :startOfWeek , INTERVAL num DAY)
+                                              AND hd.trang_thai = 'HOAN_THANH'
+            			LEFT JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
+                        GROUP BY DATE_ADD( :startOfWeek , INTERVAL num DAY)
+                        ORDER BY DATE_ADD( :startOfWeek , INTERVAL num DAY);
+            """, nativeQuery = true)
+    List<Double> getSale7DaysInAnyWeek(@Param("startOfWeek") Date startOfWeek);
 }

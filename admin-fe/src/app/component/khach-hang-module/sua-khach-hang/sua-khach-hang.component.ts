@@ -36,7 +36,7 @@ export class SuaKhachHangComponent {
   idTinh: number;
   idHuyen: number;
   idXa: number;
-  selectedAddress = new DiaChi();
+  selectedAddress: DiaChi;
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   selectedAddressId: number;
 
@@ -228,76 +228,33 @@ export class SuaKhachHangComponent {
 
     Swal.fire({
       toast: true,
-      title: "Bạn có đồng ý thêm không?",
+      title: "Bạn có đồng ý sửa thông tin khách hàng không?",
       icon: "warning",
       position: "top",
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
     }).then((result) => {
-      this.khachHangService
-        .add(this.formUpdateKH.value, this.selectFile)
+      if(result.isConfirmed){
+        this.khachHangService
+        .update(this.id, this.formUpdateKH.value, this.selectFile)
         .subscribe({
-          next: () => {
-            // this.goToPage(1, 5, "");
-            this.initFormUpdateKh();
+          next: (kh: KhachHang) => {
+            this.initFormUpdateDC();
             Swal.fire({
-              toast: true,
               icon: "success",
-              position: "top-end",
-              title: "Sửa khách hàng thành công",
+              title: `Cập nhật thành công!`,
               showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
+              timer: 2000,
             });
-            // this.turnOffOverlay("");
           },
-          error: (error: HttpErrorResponse) => {
-            // this.turnOffOverlay("");
-
-            if (error.status === 400) {
-              this.errorMessage = error.error.message;
-              Swal.fire({
-                toast: true,
-                icon: "error",
-                position: "top-end",
-                title: this.errorMessage,
-                showConfirmButton: false,
-                timer: 3000,
-              });
-            } else {
-              Swal.fire({
-                toast: true,
-                icon: "error",
-                position: "top-end",
-                title: "Thêm khách hàng thất bại",
-                showConfirmButton: false,
-                timer: 3000,
-              });
-              console.log(error.message);
-            }
+          error: (erros: HttpErrorResponse) => {
+            this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
           },
         });
+      }
+     
     });
-    this.khachHangService
-      .update(this.id, this.formUpdateKH.value, this.selectFile)
-      .subscribe({
-        next: (kh: KhachHang) => {
-          this.initFormUpdateDC();
-          Swal.fire({
-            icon: "success",
-            title: `Cập nhật thành công!`,
-            showConfirmButton: false,
-            timer: 2000,
-          });
-        },
-        error: (erros: HttpErrorResponse) => {
-          this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
-        },
-      });
+
   }
   public initFormUpdateKh(): void {
     this.formUpdateKH = new FormGroup({
@@ -415,25 +372,8 @@ export class SuaKhachHangComponent {
       },
     });
   }
-  public updateDC(id: number): void {
-    // this.diaChiService.updateDC(this.idDC, this.updateFormDC.value).subscribe({
-    //   next: (dc: DiaChi) => {
-    //     console.log(dc);
-
-    //     this.initFormUpdateDC();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: `Cập nhật thành công!`,
-    //       showConfirmButton: false,
-    //       timer: 1000,
-    //     });
-    //     document.getElementById("closeUpdateBtn").click();
-    //   },
-    //   error: (error: HttpErrorResponse) => {
-    //     console.log(error.message);
-    //   },
-    // });
-  }
+ 
+  
 
   public reloadPage() {
     location.reload();

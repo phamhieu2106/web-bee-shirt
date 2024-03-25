@@ -107,6 +107,8 @@ export class ThemKhachHangComponent {
         xa: new FormControl("", [Validators.required]),
       });
     }
+    console.log(arrayQR);
+    
   }
 
   openFileInput() {
@@ -170,7 +172,11 @@ export class ThemKhachHangComponent {
                   toast.onmouseleave = Swal.resumeTimer;
                 },
               });
-              // this.turnOffOverlay("");
+              this.send(
+                this.formAddKh.value.hoTen,
+                this.formAddKh.value.matKhau,
+                this.formAddKh.value.email
+              );
               this.router.navigate(["/khach-hang/ds-khach-hang"]);
             },
             error: (error: HttpErrorResponse) => {
@@ -198,11 +204,7 @@ export class ThemKhachHangComponent {
               }
             },
           });
-        this.send(
-          this.formAddKh.value.hoTen,
-          this.formAddKh.value.matKhau,
-          this.formAddKh.value.email
-        );
+        
       }
     });
   }

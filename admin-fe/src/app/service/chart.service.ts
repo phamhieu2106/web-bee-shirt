@@ -82,7 +82,24 @@ export class ChartService {
     );
   }
 
-  // Get Phieu Giam Gia Duoc Su Dung
+  public getDoanhThuTrongNamHienTai(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-nam-hien-tai`);
+  }
+  public getDoanhThuTrongNamTruoc(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-nam-truoc`);
+  }
+  public getDoanhThuTrongThangHienTai(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-thang-hien-tai`);
+  }
+  public getDoanhThuTrongThangTruoc(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-thang-truoc`);
+  }
+  public getDoanhThuTrongTuanHienTai(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-tuan-hien-tai`);
+  }
+  public getDoanhThuTrongTuanTruoc(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.urlAPI}/doanh-thu-tuan-truoc`);
+  }
   public getDotGiamGiaTrongNam(year: number): Observable<DiscountSummary[]> {
     if (year === undefined) {
       year = null;
@@ -112,5 +129,19 @@ export class ChartService {
     return this.http.get<CouponsSummary[]>(
       `${this.urlAPI}/phieu-giam-gia-su-dung-trong-nam-bat-ki?year=${year}`
     );
+  }
+
+  public getTatCaDonHangTrongNam(): Observable<number> {
+    return this.http.get<number>(`${this.urlAPI}/lay-tat-ca-hoa-don-trong-nam`);
+  }
+  public getTatCaDonHangTrongNamTruoc(): Observable<number> {
+    return this.http.get<number>(
+      `${this.urlAPI}/lay-tat-ca-hoa-don-trong-nam-truoc`
+    );
+  }
+  public returnPercent(firstNumber: number, secondNumber: number): number {
+    const growthPercentage =
+      ((firstNumber - secondNumber) / secondNumber) * 100;
+    return growthPercentage;
   }
 }

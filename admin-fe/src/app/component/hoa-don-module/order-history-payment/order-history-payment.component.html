@@ -10,6 +10,10 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#createLichSuThanhToan"
+            [disabled]="
+              hoaDon.tongTien + hoaDon.phiVanChuyen - hoaDon.tienGiam ==
+                getTienKhachThanhToan() || hoaDon.loaiHoaDon == 'TAI_QUAY'
+            "
           >
             <i class="fa-solid fa-plus"></i>
             Thanh toán
@@ -33,7 +37,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let lstt of thanhToans; index as i">
+              <tr *ngFor="let lstt of hoaDon.thanhToans; index as i">
                 <td>{{ i + 1 }}</td>
                 <td>{{ lstt.maGiaoDich }}</td>
                 <td>
@@ -90,7 +94,10 @@
               <input
                 type="text"
                 class="form-control"
-                value="{{ tongTien | currency : 'đ ' }}"
+                value="{{
+                  hoaDon.tongTien + hoaDon.phiVanChuyen - hoaDon.tienGiam
+                    | currency : 'đ '
+                }}"
                 disabled
               />
             </div>
@@ -101,13 +108,13 @@
                 type="number"
                 class="form-control"
                 formControlName="tienKhachDua"
-                min="{{ tongTien }}"
+                min="{{ hoaDon.tongTien }}"
                 max="99999999999999999999"
               />
               <small
                 class="form-text text-danger"
                 *ngIf="thanhToanForm.controls['tienKhachDua'].invalid"
-                >Tiền khách đưa phải lơn hơn hoặc bằng tổng tiền</small
+                >Tiền khách đưa không hợp lệ</small
               >
             </div>
             <!-- Tiền thừa -->
@@ -119,11 +126,6 @@
                 value="{{ thanhToanForm.value.tienThua | currency : 'đ ' }}"
                 disabled
               />
-              <small
-                class="form-text text-danger"
-                *ngIf="thanhToanForm.controls['tienThua'].invalid"
-                >Tiền thừa không được nhỏ hơn 0</small
-              >
             </div>
             <!-- Ghi chú -->
             <div class="mb-3">

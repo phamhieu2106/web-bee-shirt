@@ -10,7 +10,7 @@
         <div
           class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
         >
-          <div class="step completed" *ngFor="let lshd of lichSuHoaDons">
+          <div class="step completed" *ngFor="let lshd of hoaDon.lichSuHoaDons">
             <!-- Icon -->
             <div class="step-icon-wrap">
               <div class="step-icon" [ngSwitch]="lshd.trangThai">
@@ -48,7 +48,9 @@
           class="btn btn-primary mr-5"
           data-toggle="modal"
           data-target="#chageStatusModal"
-          [disabled]="trangThaiHD == 'HOAN_THANH' || trangThaiHD == 'HUY'"
+          *ngIf="
+            !(hoaDon.trangThai == 'HOAN_THANH' || hoaDon.trangThai == 'HUY')
+          "
           (click)="setIsNext(true)"
         >
           {{ titleButton }}
@@ -58,10 +60,12 @@
           class="btn btn-warning mr-5"
           data-toggle="modal"
           data-target="#chageStatusModal"
-          [disabled]="
-            loaiHD == 'TAI_QUAY' ||
-            trangThaiHD == 'CHO_XAC_NHAN' ||
-            trangThaiHD == 'TAO_DON'
+          *ngIf="
+            !(
+              hoaDon.loaiHoaDon == 'TAI_QUAY' ||
+              hoaDon.trangThai == 'CHO_XAC_NHAN' ||
+              hoaDon.trangThai == 'TAO_DON'
+            )
           "
           (click)="setIsNext(false)"
         >
@@ -72,19 +76,13 @@
           class="btn btn-danger mr-5"
           data-toggle="modal"
           data-target="#cancelOrderModal"
-          [disabled]="trangThaiHD == 'DANG_GIAO' || trangThaiHD == 'HUY'"
+          *ngIf="
+            !(hoaDon.trangThai == 'DANG_GIAO' || hoaDon.trangThai == 'HUY')
+          "
         >
           Hủy
         </button>
 
-        <button
-          type="button"
-          class="btn btn-primary ml-auto"
-          (click)="inPhieuGiao()"
-        >
-          In Phiếu Giao
-        </button>
-        <!-- Button Lịch sử -->
         <button
           type="button"
           class="btn btn-success ml-auto"
@@ -132,7 +130,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="" *ngFor="let lshd of lichSuHoaDons; index as i">
+                <tr
+                  class=""
+                  *ngFor="let lshd of hoaDon.lichSuHoaDons; index as i"
+                >
                   <td>{{ i + 1 }}</td>
                   <td>{{ lshd.tieuDe }}</td>
                   <td>

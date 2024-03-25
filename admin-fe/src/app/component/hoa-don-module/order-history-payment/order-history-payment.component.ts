@@ -1,15 +1,20 @@
+import { HoaDon } from "./../../../model/class/hoa-don.class";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from "@angular/core";
 
 import { ThanhToan } from "src/app/model/class/thanh-toan";
 import { ThanhToanService } from "src/app/service/thanh-toan.service";
 import { ToastrService } from "ngx-toastr";
+import { HoaDonService } from "src/app/service/hoa-don.service";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-order-history-payment",
@@ -17,17 +22,22 @@ import { ToastrService } from "ngx-toastr";
   styleUrls: ["./order-history-payment.component.css"],
 })
 export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
-  @Input({ required: true }) thanhToans: ThanhToan[]; // danh sách lịch sử thanh toán
-  @Input({ required: true }) loaiHoaDon: string; // check disable chức năng thanh toán
-  @Input({ required: true }) tongTien: number; // check disable chức năng thanh toán
+  // @Input({ required: true }) thanhToans: ThanhToan[]; // danh sách lịch sử thanh toán
+  // @Input({ required: true }) loaiHoaDon: string; // check disable chức năng thanh toán
+  // @Input({ required: true }) tongTien: number; // check disable chức năng thanh toán
+  // @Input({ required: true }) tienGiam: number; // check disable chức năng thanh toán
+  // @Input({ required: true }) phiVanChuyen: number; // check disable chức năng thanh toán
+  // @Input({ required: true }) idHoaDon: number; // id hóa đơn cần tạo thanh toán
+  @Input({ required: true }) hoaDon: HoaDon; // id hóa đơn cần tạo thanh toán
+  @Output() hoaDonChange = new EventEmitter<HoaDon>(); // id hóa đơn cần tạo thanh toán
   thanhToanForm: FormGroup; // thanh toán modal
-  @Input({ required: true }) idHoaDon: number; // id hóa đơn cần tạo thanh toán
 
   // constructor
   constructor(
     private formBuilder: FormBuilder,
     private thanhToanService: ThanhToanService,
-    private toastrService: ToastrService
+    private hoaDonService: HoaDonService,
+    private notifycation: NotificationService
   ) {}
 
   //onChanges
@@ -41,16 +51,17 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
   // tạo mới thanh toán
   newThanhToan() {
     this.thanhToanService
-      .postThanhToan(this.thanhToanForm.value, this.idHoaDon)
+      .postThanhToan(this.thanhToanForm.value, this.hoaDon.id)
       .subscribe({
         next: (resp: ThanhToan) => {
           console.log(resp);
-          this.thanhToans.push(resp);
-          this.toastrService.success("Thêm thành công", "Thành công");
+          this.hoaDon.thanhToans.push(resp);
+          this.notifycation.success("Thêm thành công");
+          this.hoaDonChange.emit(this.hoaDon);
         },
         error: (err) => {
           console.log(err);
-          this.toastrService.error(err.error.message, "Thất bại");
+          this.notifycation.error(err.error.message);
         },
       });
   }
@@ -59,10 +70,18 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
   createThanhToanForm(): void {
     this.thanhToanForm = this.formBuilder.group({
       tienKhachDua: [
-        this.tongTien,
-        [Validators.required, Validators.min(this.tongTien)],
+        this.hoaDon.tongTien + this.hoaDon.phiVanChuyen - this.hoaDon.tienGiam,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(
+            this.hoaDon.tongTien +
+              this.hoaDon.phiVanChuyen -
+              this.hoaDon.tienGiam
+          ),
+        ],
       ],
-      tienThua: [0, [Validators.min(0)]],
+      tienThua: [0],
       ghiChu: [""],
       hinhThucThanhToan: ["TIEN_MAT"],
       maGiaoDich: [""],
@@ -74,7 +93,11 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
       .valueChanges.subscribe((tienKhachDua) => {
         // Tính toán và cập nhật giá trị của tienThua khi tienKhachDua thay đổi
         this.thanhToanForm.patchValue({
-          tienThua: tienKhachDua - this.tongTien,
+          tienThua:
+            tienKhachDua -
+            (this.hoaDon.tongTien +
+              this.hoaDon.phiVanChuyen -
+              this.hoaDon.tienGiam),
         });
       });
 
@@ -94,5 +117,8 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
         // Cập nhật lại validation state
         this.thanhToanForm.get("maGiaoDich").updateValueAndValidity();
       });
+  }
+  getTienKhachThanhToan() {
+    return this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans);
   }
 }

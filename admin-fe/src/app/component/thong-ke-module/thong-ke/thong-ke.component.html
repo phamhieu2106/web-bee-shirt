@@ -62,6 +62,23 @@
   </div>
 </div>
 
+<!-- Thống Kê -->
+<div class="row gutters">
+  <div class="col col-md-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <strong>Chỉ Số Lợi Nhuận Và Đơn Hàng</strong>
+      </div>
+      <div class="card-body">
+        <app-static-sales
+          [doanhThuNamHienTai]="listDoanhThuTrongNamHienTai"
+          [doanhThuNamTruoc]="listDoanhThuTrongNamTruoc"
+        ></app-static-sales>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Biểu Đồ Đơn Hoàn Thành -->
 <!-- Biểu Đồ Khách Hàng Mới -->
 <div class="row gutters">
@@ -134,9 +151,8 @@
     </div>
   </div>
 </div>
-
 <!-- Biểu Đồ Doanh Thu -->
-<div class="row gutters">
+<div class="row gutters mt-2">
   <div class="col col-md-12 col-sm-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
@@ -226,7 +242,12 @@
       </div>
       <div class="card-body">
         <!-- <app-bar-review-chart></app-bar-review-chart> -->
-        <h4 class="text-center">TÍNH NĂNG NÀY ĐANG ĐƯỢC PHÁT TRIỂN THÊM</h4>
+        <nz-spin>
+          <nz-alert
+            nzType="info"
+            nzMessage="Tính năng này đang được phát triển thêm"
+          ></nz-alert>
+        </nz-spin>
       </div>
     </div>
   </div>

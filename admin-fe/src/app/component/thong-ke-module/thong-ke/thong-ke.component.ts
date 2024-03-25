@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { ChartService } from "src/app/service/chart.service";
 import { getISOWeek } from "date-fns";
+import { LineChartSaleComponent } from "../line-chart-sale/line-chart-sale.component";
 @Component({
   selector: "app-thong-ke",
   templateUrl: "./thong-ke.component.html",
@@ -17,12 +18,19 @@ export class ThongKeComponent implements OnInit {
   tongSoDonChoGiao: number;
   tongSoDonHuy: number;
   //
-
+  @ViewChild(LineChartSaleComponent) chartSaleComponent: LineChartSaleComponent;
+  listDoanhThuTrongNamHienTai: number[] = [];
+  listDoanhThuTrongNamTruoc: number[] = [];
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
   ngOnInit(): void {
     this.loadChart();
+    setTimeout(() => {
+      this.listDoanhThuTrongNamHienTai =
+        this.chartSaleComponent.listDoanhThuTrongNamHienTai;
+      this.listDoanhThuTrongNamTruoc =
+        this.chartSaleComponent.listDoanhThuTrongNamTruoc;
+    }, 1000);
   }
-
   loadChart(): void {
     this.service.getSoDonHoanThanh().subscribe({
       next: (data) => {
@@ -30,7 +38,7 @@ export class ThongKeComponent implements OnInit {
       },
       error: (err) => {
         this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành do ${err.message.message}`
+          `Có Lỗi khi cố gắng lấy tổng số đơn hoàn thành do ${err.message}`
         );
       },
     });
@@ -40,7 +48,7 @@ export class ThongKeComponent implements OnInit {
       },
       error: (err) => {
         this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn mới do ${err.message.message}`
+          `Có Lỗi khi cố gắng lấy tổng số đơn mới do ${err.message}`
         );
       },
     });
@@ -50,7 +58,7 @@ export class ThongKeComponent implements OnInit {
       },
       error: (err) => {
         this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn đợi giao do ${err.error.message}`
+          `Có Lỗi khi cố gắng lấy tổng số đơn đợi giao do ${err.message}`
         );
       },
     });
@@ -60,7 +68,7 @@ export class ThongKeComponent implements OnInit {
       },
       error: (err) => {
         this.toastSrc.error(
-          `Có Lỗi khi cố gắng lấy tổng số đơn huỷ do ${err.error.message}`
+          `Có Lỗi khi cố gắng lấy tổng số đơn huỷ do ${err.message}`
         );
       },
     });

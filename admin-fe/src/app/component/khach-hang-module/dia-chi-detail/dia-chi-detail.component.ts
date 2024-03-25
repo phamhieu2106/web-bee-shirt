@@ -18,7 +18,7 @@ export class DiaChiDetailComponent implements OnInit {
   new EventEmitter<DiaChiVaPhiVanChuyen>();
   public updateFormDC: FormGroup;
   @Input() dcDetail: any; 
-  @Input() selectedAddressId: number;
+  @Input() selectedAddress: DiaChi;
   tinhs: any[];
   huyens: any[];
   xas: any[];
@@ -178,7 +178,8 @@ export class DiaChiDetailComponent implements OnInit {
   
 
   public updateDC(): void {
-
+    console.log(this.selectedAddress);
+    
     this.tinhs.forEach((t) => {
       if (t.ProvinceID == this.idTinh) {
         this.diaChi.tinh = t.ProvinceName;
@@ -187,9 +188,10 @@ export class DiaChiDetailComponent implements OnInit {
     this.diaChi.duong = this.diaChiVaPhiVanChuyen.cuThe;
     this.diaChi.huyen = this.getTenHuyen();
     this.diaChi.xa = this.getTenXa();  
+    this.diaChi.macDinh = this.selectedAddress.macDinh;
     
     
-    this.diaChiService.updateDC(this.selectedAddressId,this.diaChi).subscribe({
+    this.diaChiService.updateDC(this.selectedAddress.id,this.diaChi).subscribe({
       next: (dc: DiaChi) => {
     
         Swal.fire({

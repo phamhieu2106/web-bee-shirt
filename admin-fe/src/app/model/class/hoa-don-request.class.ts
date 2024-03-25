@@ -1,3 +1,4 @@
+import { DiaChiVaPhiVanChuyen } from "./dia-chi-va-phi-van-chuyen.class";
 import { HoaDonChiTietRequest } from "./hoa-don-chi-tiet-request.class";
 import { ThanhToanRequest } from "./thanh-toan-reuqest.class";
 
@@ -16,4 +17,5 @@ export class HoaDonRequest {
   emailNguoiNhan: string;
   diaChiNguoiNhan: string;
   ghiChu: string;
+  diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen;
 }

@@ -189,7 +189,7 @@
                       type="button"
                       class="btn btn-outline-primary mx-sm-4 rounded"
                       (click)="updateKH()"
-                      onclick="return confirm('Bạn có muốn thêm không?')"
+                      
                     >
                       Lưu
                     </button>
@@ -529,7 +529,7 @@
         </h1>
       </div>
       <!-- <form [formGroup]="updateFormDC"> -->
-      <app-dia-chi-detail [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen" [selectedAddressId]="selectedAddressId"
+      <app-dia-chi-detail [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen" [selectedAddress]="selectedAddress"
    ></app-dia-chi-detail>
 
       

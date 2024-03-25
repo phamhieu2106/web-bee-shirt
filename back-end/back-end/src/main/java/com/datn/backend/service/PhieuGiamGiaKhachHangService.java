@@ -20,6 +20,10 @@ public interface PhieuGiamGiaKhachHangService {
 
     PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id ,Boolean check);
 
+    PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search);
+
+
+
 
 
 }

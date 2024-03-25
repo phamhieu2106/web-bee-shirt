@@ -1,0 +1,66 @@
+<div style="padding: 30px">
+  <nz-row [nzGutter]="16">
+    <nz-col [nzSpan]="12">
+      <nz-card>
+        <nz-statistic
+          nz-popover
+          nzPopoverTitle="Tổng Doanh Thu"
+          [nzPopoverContent]="doanhThuTemplate"
+          nzPopoverPlacement="left"
+          [nzValue]="(this.phanTramTangTruongDoanhThu | number : '1.0-2')!"
+          [nzTitle]="'Phần Trăm Tăng Trưởng Doanh Thu'"
+          [nzPrefix]="
+            this.phanTramTangTruongDoanhThu >= 0 ? prefixTplOne : prefixTplTwo
+          "
+          [nzSuffix]="'%'"
+          [nzValueStyle]="
+            this.phanTramTangTruongDoanhThu >= 0
+              ? { color: '#3F8600' }
+              : { color: '#CF1322' }
+          "
+        ></nz-statistic>
+        <ng-template #prefixTplOne
+          ><span nz-icon nzType="arrow-up"></span
+        ></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+      <nz-card>
+        <nz-statistic
+          nz-popover
+          nzPopoverTitle="Title"
+          [nzPopoverContent]="donHangTemplate"
+          nzPopoverPlacement="left"
+          [nzValue]="(this.phanTramTangTruongDonHang | number : '1.0-2')!"
+          [nzTitle]="'Phần Trăm Tăng Trưởng Đơn Hàng'"
+          [nzPrefix]="
+            this.phanTramTangTruongDonHang >= 0 ? prefixTplOne : prefixTplTwo
+          "
+          [nzSuffix]="'%'"
+          [nzValueStyle]="
+            this.phanTramTangTruongDonHang >= 0
+              ? { color: '#3F8600' }
+              : { color: '#CF1322' }
+          "
+        ></nz-statistic>
+        <ng-template #prefixTplTwo
+          ><span nz-icon nzType="arrow-down"></span
+        ></ng-template>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+</div>
+
+<ng-template #doanhThuTemplate>
+  <div>
+    <p>Tổng Doanh Thu Năm Nay: {{ tongDoanhThuNamNay }}</p>
+    <p>Tổng Doanh Thu Năm Trước: {{ tongDoanhThuNamTruoc }}</p>
+  </div>
+</ng-template>
+
+<ng-template #donHangTemplate>
+  <div>
+    <p>Tổng Đơn Hàng Năm Nay: {{ tongDonHangNamNay }} Đơn</p>
+    <p>Tổng Đơn Hàng Năm Trước: {{ tongDonHangNamTruoc }} Đơn</p>
+  </div>
+</ng-template>

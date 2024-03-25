@@ -1,0 +1,256 @@
+<div class="row pt-2 pb-3 pl-1 pr-1">
+  <!-- Input search -->
+  <div class="col-6 p-3">
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Nhập tên hoặc mã sản phẩm"
+      [(ngModel)]="search"
+      (ngModelChange)="getAllSpct()"
+    />
+  </div>
+
+  <!-- Price range -->
+  <div class="col-6 row d-flex pr-2 w-75">
+    <div class="col-6 text-left">
+      {{ minValue | currency : "đ " : "symbol" : "1.0-0" }}
+    </div>
+    <div class="col-6 text-right">
+      {{ maxValue | currency : "đ " : "symbol" : "1.0-0" }}
+    </div>
+    <section class="range-slider">
+      <input
+        [(ngModel)]="minValue"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [step]="step"
+        type="range"
+        (ngModelChange)="validateRanger()"
+      />
+      <input
+        [(ngModel)]="maxValue"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [step]="step"
+        type="range"
+        (ngModelChange)="validateRanger()"
+      />
+    </section>
+  </div>
+
+  <!-- Combobox -->
+  <div
+    class="col-12 d-flex list-select justify-content-center justify-content-between align-items-center"
+  >
+    <!--Màu sắc  -->
+    <div class="d-flex fw-bold">
+      Màu sắc:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="mauSac"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let ms of mauSacs"
+          [value]="ms.ten"
+          selected="{{ ms.ten === mauSac }}"
+        >
+          {{ ms.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kích cỡ  -->
+    <div class="d-flex fw-bold">
+      Kích cỡ:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="kichCo"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let kc of kichCos"
+          [value]="kc.ten"
+          selected="{{ kc.ten === kichCo }}"
+        >
+          {{ kc.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kiểu dáng  -->
+    <div class="d-flex fw-bold">
+      Kiểu dáng:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="kieuDang"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let kd of kieuDangs"
+          [value]="kd.ten"
+          selected="{{ kd.ten === kieuDang }}"
+        >
+          {{ kd.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kiểu thiết kế  -->
+    <div class="d-flex fw-bold">
+      Thiết kế:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="thietKe"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let tk of thietKes"
+          [value]="tk.ten"
+          selected="{{ tk.ten === thietKe }}"
+        >
+          {{ tk.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kiểu tay áo  -->
+    <div class="d-flex fw-bold">
+      Tay áo:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="tayAo"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let ta of tayAos"
+          [value]="ta.ten"
+          selected="{{ ta.ten === tayAo }}"
+        >
+          {{ ta.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kiểu cổ áo  -->
+    <div class="d-flex fw-bold">
+      Cổ áo:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="coAo"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let ca of coAos"
+          [value]="ca.ten"
+          selected="{{ ca.ten === coAo }}"
+        >
+          {{ ca.ten }}
+        </option>
+      </select>
+    </div>
+
+    <!--Kiểu chất liệu  -->
+    <div class="d-flex fw-bold">
+      Chất liệu:
+      <select
+        class="form-control form-control-sm"
+        [(ngModel)]="chatLieu"
+        (ngModelChange)="getAllSpct()"
+      >
+        <option value="">Tất cả</option>
+        <option
+          *ngFor="let cl of chatLieus"
+          [value]="cl.ten"
+          selected="{{ cl.ten === chatLieu }}"
+        >
+          {{ cl.ten }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <hr />
+  <!-- Sản phẩm -->
+  <div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Mã</th>
+            <th scope="col">Màu sắc</th>
+            <th scope="col">Kích cỡ</th>
+            <th scope="col">Kiểu dáng</th>
+            <th scope="col">Thiết kế</th>
+            <th scope="col">Tay áo</th>
+            <th scope="col">Cổ áo</th>
+            <th scope="col">Chất liệu</th>
+            <th scope="col">Giá</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let spct of spctPage?.data"
+            (click)="chooseSPCT(spct)"
+            data-dismiss="modal"
+          >
+            <td scope="col">
+              <app-product-image
+                [url]="spct.hinhAnhs[0].imageUrl"
+                [discount]="
+                  spct.dotGiamGia == null
+                    ? null
+                    : spct.dotGiamGia.giaTriPhanTram
+                "
+                [width]="80"
+                [height]="80"
+              ></app-product-image>
+            </td>
+            <td scope="col">{{ spct.sanPham.ten }}</td>
+            <td scope="col">{{ spct.sanPham.ma }}</td>
+            <td scope="col">{{ spct.mauSac.ten }}</td>
+            <td scope="col">{{ spct.kichCo.ten }}</td>
+            <td scope="col">{{ spct.kieuDang.ten }}</td>
+            <td scope="col">{{ spct.thietKe.ten }}</td>
+            <td scope="col">{{ spct.tayAo.ten }}</td>
+            <td scope="col">{{ spct.coAo.ten }}</td>
+            <td scope="col">{{ spct.chatLieu.ten }}</td>
+            <td scope="col">
+              <div class="">
+                <div class="gia-chua-giam pr-1" *ngIf="spct.dotGiamGia != null">
+                  {{ spct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
+                </div>
+
+                <div class="gia-da-giam pl-1">
+                  {{ getGiaBan(spct) | currency : "đ " : "symbol" : "1.0-0" }}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Pagination -->
+  <div class="cart-footer d-flex justify-content-between" *ngIf="spctPage">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li
+          class="page-item active"
+          *ngFor="let page of spctPage.pageNumberArr"
+          [class.active]="spctPage.pageNumber + 1 == page"
+          (click)="changepage(page)"
+        >
+          <a class="page-link pointer">{{ page }}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

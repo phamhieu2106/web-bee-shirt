@@ -135,7 +135,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       class="form-control"
                       placeholder="Giá trị"
@@ -180,7 +180,7 @@
                   <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       placeholder="Giá trị tối đa"
                       id="giaTriMax"
@@ -227,7 +227,7 @@
                         : ''
                     "
                     formControlName="soLuong"
-                    [readonly]="checkSoLuong"
+                    [readonly]="!checkSoLuong"
                   />
                   <div class="invalid-feedback">
                     <span *ngIf="addForm.get('soLuong').hasError('required')">
@@ -245,7 +245,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       placeholder="Điều kiện"
                       [ngClass]="
@@ -337,7 +337,7 @@
                   id="sendMail"
                   class="form-check-inline"
                   (change)="onSendMailChange($event)"
-                  [disabled]="!checkMail"
+                  [disabled]="checkMail"
                 />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>
@@ -368,7 +368,7 @@
               type="text"
               class="form-control"
               placeholder="Tìm kiếm theo tên hoặc sdt hoặc email"
-              (keyup)="timKiem($event)"
+              (input)="search1($event)"
               style="margin-bottom: 10px"
             />
             <table class="table">
@@ -379,7 +379,6 @@
                   <th>Số điện thoại</th>
                   <th>Giới tính</th>
                   <th>Email</th>
-                  <th>Địa chỉ</th>
                   <th>Ngày sinh</th>
                 </tr>
               </thead>
@@ -399,9 +398,9 @@
                   <td>{{ kh.sdt }}</td>
                   <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>
                   <td>{{ kh.email }}</td>
-                  <td>{{ kh.xa }}</td>
+                 
                   <td>
-                    {{ kh.ngaySinh | date : "dd-MM-yyyy" }}
+                    {{ kh.ngaySinh }}
                   </td>
                 </tr>
               </tbody>
@@ -413,14 +412,11 @@
             <div class="row">
               <div class="col col-md-12 d-flex justify-content-between">
                 <div class="col-md-3">
-                  <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-                    >Số lượng:
+                  <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
                   </label>
-                  <select
-                    class="custom-select my-1 mr-sm-2 col-md-5"
-                    id="inlineFormCustomSelectPref"
-                    (change)="onChangePageSize($event)"
-                  >
+                  <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref"
+                  (change)="onChangePageSize()"
+                  [(ngModel)]="pageSize"
                     >
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -432,13 +428,18 @@
                     <ul class="pagination">
                       <li
                         class="page-item"
-                        [ngClass]="
-                          pagedResponse?.pageNumber == 1 ? 'disabled' : ''
-                        "
+                        [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                       >
                         <a
+                          [hidden]="pagedResponse?.pageNumber == 1"
                           class="page-link pointer"
-                          (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                          (click)="
+                            goToPage(
+                              pagedResponse?.pageNumber - 1,
+                              pageSize,
+                              search
+                            )
+                          "
                           >Previous</a
                         >
                       </li>
@@ -451,21 +452,25 @@
                           [ngClass]="
                             pagedResponse?.pageNumber == page ? 'active' : ''
                           "
-                          (click)="goToPage(page)"
+                          (click)="goToPage(page, pageSize, search)"
                           >{{ page }}</a
                         >
                       </li>
-                      <li
-                        class="page-item"
-                        [ngClass]="
-                          pagedResponse?.pageNumber == pagedResponse?.totalPages
-                            ? 'disabled'
-                            : ''
-                        "
-                      >
+                      <li class="page-item">
                         <a
+                          [hidden]="
+                            pagedResponse?.pageNumber ==
+                              pagedResponse?.pageNumberArr.length ||
+                            pagedResponse?.pageNumberArr.length == 0
+                          "
                           class="page-link pointer"
-                          (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                          (click)="
+                            goToPage(
+                              pagedResponse?.pageNumber + 1,
+                              pageSize,
+                              search
+                            )
+                          "
                           >Next</a
                         >
                       </li>

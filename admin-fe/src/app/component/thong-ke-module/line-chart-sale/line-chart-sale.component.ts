@@ -1,5 +1,8 @@
 import { Component, Input, SimpleChanges } from "@angular/core";
 import { Chart, registerables } from "chart.js";
+import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
+import { ChartService } from "src/app/service/chart.service";
 
 @Component({
   selector: "app-line-chart-sale",
@@ -7,7 +10,6 @@ import { Chart, registerables } from "chart.js";
   styleUrls: ["./line-chart-sale.component.css"],
 })
 export class LineChartSaleComponent {
-  flashInterval: any;
   chart: any;
   @Input() tenChart: string;
   private currentYear: number = new Date().getFullYear();
@@ -23,11 +25,22 @@ export class LineChartSaleComponent {
     "Chủ Nhật",
   ];
 
-  constructor() {}
+  // Biến
+  listDoanhThuTrongNamHienTai: number[];
+  listDoanhThuTrongNamTruoc: number[];
+
+  listDoanhThuTrongThangHienTai: number[];
+  listDoanhThuTrongThangTruoc: number[];
+
+  listDoanhThuTrongTuanHientai: number[];
+  listDoanhThuTrongTuanTruoc: number[];
+  //
+
+  constructor(private service: ChartService, private toastSrc: ToastrService) {}
 
   ngOnInit(): void {
     this.getMonths();
-    this.createChartYear();
+    this.loadChartDoanhThu();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,6 +77,8 @@ export class LineChartSaleComponent {
     if (this.chart) {
       this.chart.destroy(); // Hủy bỏ biểu đồ cũ trước khi tạo mới
     }
+    const dataHienTai = this.listDoanhThuTrongTuanHientai;
+    const dataTruoc = this.listDoanhThuTrongTuanTruoc;
     this.chart = new Chart("SaleChart", {
       type: "line",
       data: {
@@ -72,12 +87,12 @@ export class LineChartSaleComponent {
         datasets: [
           {
             label: "Tuần Trước",
-            data: [467, 576, 572, 79, 95, 23, 23],
+            data: dataTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tuần Hiện Tại",
-            data: [542, 542, 536, 327, 333, 444, 222],
+            data: dataHienTai,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -126,6 +141,8 @@ export class LineChartSaleComponent {
     if (this.chart) {
       this.chart.destroy(); // Hủy bỏ biểu đồ cũ trước khi tạo mới
     }
+    const dataHienTai = this.listDoanhThuTrongThangHienTai;
+    const dataTruoc = this.listDoanhThuTrongThangTruoc;
     this.chart = new Chart("SaleChart", {
       type: "line",
       data: {
@@ -134,12 +151,12 @@ export class LineChartSaleComponent {
         datasets: [
           {
             label: "Tháng Trước",
-            data: [467, 576, 572, 79],
+            data: dataTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Tháng Hiện Tại",
-            data: [542, 542, 536, 327],
+            data: dataHienTai,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -185,6 +202,8 @@ export class LineChartSaleComponent {
     if (this.chart) {
       this.chart.destroy(); // Hủy bỏ biểu đồ cũ trước khi tạo mới
     }
+    const dataHienTai = this.listDoanhThuTrongNamHienTai;
+    const dataTruoc = this.listDoanhThuTrongNamTruoc;
     this.chart = new Chart("SaleChart", {
       type: "line",
       data: {
@@ -193,15 +212,12 @@ export class LineChartSaleComponent {
         datasets: [
           {
             label: "Năm Trước",
-            data: [467, 576, 572, 79, 92, 574, 573, 576, 576, 576, 576, 576],
+            data: dataTruoc,
             backgroundColor: "blue",
           },
           {
             label: "Năm Hiện Tại",
-            data: [
-              230000000, 10000000, 1000000, 1000000, 1000000, 1000000, 1000000,
-              400000, 22200000, 1000000, 1000000, 100000000,
-            ],
+            data: dataHienTai,
             backgroundColor: [
               "limegreen",
               "limegreen",
@@ -248,6 +264,33 @@ export class LineChartSaleComponent {
             max: 1000000000,
           },
         },
+      },
+    });
+  }
+
+  public loadChartDoanhThu(): void {
+    forkJoin({
+      listDoanhThuTrongNamHienTai: this.service.getDoanhThuTrongNamHienTai(),
+      listDoanhThuTrongNamTruoc: this.service.getDoanhThuTrongNamTruoc(),
+      listDoanhThuTrongThangHienTai:
+        this.service.getDoanhThuTrongThangHienTai(),
+      listDoanhThuTrongThangTruoc: this.service.getDoanhThuTrongThangTruoc(),
+      listDoanhThuTrongTuanHientai: this.service.getDoanhThuTrongTuanHienTai(),
+      listDoanhThuTrongTuanTruoc: this.service.getDoanhThuTrongTuanTruoc(),
+    }).subscribe({
+      next: (results) => {
+        this.listDoanhThuTrongNamHienTai = results.listDoanhThuTrongNamHienTai;
+        this.listDoanhThuTrongNamTruoc = results.listDoanhThuTrongNamTruoc;
+        this.listDoanhThuTrongThangHienTai =
+          results.listDoanhThuTrongThangHienTai;
+        this.listDoanhThuTrongThangTruoc = results.listDoanhThuTrongThangTruoc;
+        this.listDoanhThuTrongTuanHientai =
+          results.listDoanhThuTrongTuanHientai;
+        this.listDoanhThuTrongTuanTruoc = results.listDoanhThuTrongTuanTruoc;
+        this.createChartYear();
+      },
+      error: (err) => {
+        this.toastSrc.error(`Có lỗi xảy ra: ${err.message}`);
       },
     });
   }

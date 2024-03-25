@@ -168,9 +168,61 @@ public class ChartServiceImpl implements ChartService {
         return chartRepository.getListCouponsUsedInAnyYear(year);
     }
 
+    @Override
+    public List<Double> getListSalesInThisYear() {
+        return chartRepository.getListSalesInAnyYear(LocalDate.now());
+    }
+
+    @Override
+    public List<Double> getListSales4WeekInThisMonth() {
+        List<Double> list = chartRepository.getListSales4WeekInAnyMonth(
+                getStartDate(), getEndDate(getStartDate()), getTotalDay(getEndDate(getStartDate())));
+        list.set(list.size() - 1, list.get(list.size() - 1) + countSaleLastDayOfMonth(getStartDate()));
+        return list;
+    }
+
+    @Override
+    public List<Double> getListSales4WeekInLastMonth() {
+        List<Double> list = chartRepository.getListSales4WeekInAnyMonth(
+                getStartDateLastMonth(), getEndDate(getStartDateLastMonth()), getTotalDay(getEndDate(getStartDateLastMonth())));
+        list.set(list.size() - 1, list.get(list.size() - 1) + countSaleLastDayOfMonth(getStartDateLastMonth()));
+        return list;
+    }
+
+    @Override
+    public List<Double> getListSalesInLastYear() {
+        return chartRepository.getListSalesInAnyYear(LocalDate.now().minusYears(1));
+    }
+
+    @Override
+    public List<Double> getSale7DaysInThisWeek() {
+        Date startOfWeek = getStartOfWeek();
+        return chartRepository.getSale7DaysInAnyWeek(startOfWeek);
+    }
+
+    @Override
+    public List<Double> getSale7DaysInLastWeek() {
+        Date startOfWeek = getStartOfLastWeek();
+        return chartRepository.getSale7DaysInAnyWeek(startOfWeek);
+    }
+
+    @Override
+    public Long countAllInvoiceThisYear() {
+        return chartRepository.countAllInvoiceAnyYear(LocalDate.now());
+    }
+
+    @Override
+    public Long countAllInvoiceLastYear() {
+        return chartRepository.countAllInvoiceAnyYear(LocalDate.now().minusYears(1));
+    }
+
     public Long countLastDayOfMonth(LocalDate today) {
 //      Đếm số hoá đơn của ngày cuối cùng trong tháng
         return chartRepository.countInvoiceLastDayOfMonth(today);
+    }
+
+    public Double countSaleLastDayOfMonth(LocalDate today) {
+        return chartRepository.getSaleLastDayOfAnyMonth(today);
     }
 
     public Long counCustomertLastDayOfMonth(LocalDate today) {

@@ -12,7 +12,7 @@
             data-target="#createLichSuThanhToan"
             [disabled]="
               hoaDon.tongTien + hoaDon.phiVanChuyen - hoaDon.tienGiam ==
-              getTienKhachThanhToan()
+                getTienKhachThanhToan() || hoaDon.loaiHoaDon == 'TAI_QUAY'
             "
           >
             <i class="fa-solid fa-plus"></i>

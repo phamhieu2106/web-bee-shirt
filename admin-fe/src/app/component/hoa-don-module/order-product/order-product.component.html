@@ -63,6 +63,7 @@
                             type="button"
                             class="btn btn-outline-secondary btn-number"
                             (click)="minus(hdct)"
+                            *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
                           >
                             <span class="fa fa-minus"></span>
                           </button>
@@ -73,12 +74,14 @@
                           class="form-control input-number w-50"
                           [(ngModel)]="hdct.soLuong"
                           (change)="inputSoLuong(hdct, $event)"
+                          [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
                         />
                         <span class="input-group-append">
                           <button
                             type="button"
                             class="btn btn-outline-secondary btn-number"
                             (click)="plus(hdct)"
+                            *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
                           >
                             <span class="fa fa-plus"></span>
                           </button>
@@ -157,6 +160,7 @@
                               type="number"
                               [(ngModel)]="hoaDon.phiVanChuyen"
                               (change)="onPhiVanChuyenChange()"
+                              [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
                             />
                           </p>
                           <hr

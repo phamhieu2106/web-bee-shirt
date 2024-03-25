@@ -129,6 +129,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    @Transactional
     public LichSuHoaDonResponse cancelOrder(ChangeOrderStatusRequest changeOrderStatus) {
         int id = changeOrderStatus.getIdHoaDon();
         Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
@@ -140,8 +141,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // đổi trạng thái
         if (hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.DANG_GIAO ||
-                hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HUY ||
-                hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HOAN_THANH) {
+                hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HUY ) {
             // Hóa đơn đang ở trạng thái DANG_GIAO || HUY || HOAN_THANH thì k thể hủy hóa đơn
             throw new OrderStatusException("Hóa đơn này không thể thay đổi trạng thái được nữa");
         }
@@ -158,6 +158,19 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tieuDe(cancelOrder.getTitle())
                 .trangThai(cancelOrder)
                 .build();
+        //rollback sl sp va sl pgg
+        if (hoaDonUpdate.getPhieuGiamGia() != null){
+            hoaDonUpdate.getPhieuGiamGia().setSoLuong(hoaDonUpdate.getPhieuGiamGia().getSoLuong() + 1);
+            System.out.println(hoaDonUpdate.getPhieuGiamGia());
+            phieuGiamGiaRepo.save(hoaDonUpdate.getPhieuGiamGia());
+        }
+        if (hoaDonUpdate.getHoaDonChiTiets() != null && !hoaDonUpdate.getHoaDonChiTiets().isEmpty()){
+            hoaDonUpdate.getHoaDonChiTiets().forEach(hdct ->{
+                hdct.getSanPhamChiTiet().setSoLuongTon(hdct.getSanPhamChiTiet().getSoLuongTon() + hdct.getSoLuong());
+                System.out.println(hdct.getSanPhamChiTiet());
+                spctRepo.save(hdct.getSanPhamChiTiet());
+            });
+        }
 
         return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }

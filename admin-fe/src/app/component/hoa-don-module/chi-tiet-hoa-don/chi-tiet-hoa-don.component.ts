@@ -28,7 +28,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   ) {}
   ngOnDestroy(): void {
     // console.log(this.hoaDon);
-    this.updateHoaDon(this.hoaDon);
+    // this.updateHoaDon(this.hoaDon);
     // this.hoaDonService.putHoaDon(this.hoaDon).subscribe({
     //   next: (resp) => {
     //     this.toastr.success("Cập nhật hóa đơn thành công", "Thành công");

@@ -340,8 +340,23 @@ public class HoaDonServiceImpl implements HoaDonService {
         return maHD;
     }
     private HoaDon createHoaDonGiaoHang(PlaceOrderRequest placeOrderRequest) {
+        // check so dien thoai
         if (placeOrderRequest.getSdtNguoiNhan() == null || !placeOrderRequest.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")){
             throw new PlaceOrderException("Số điện thoại người nhận không hợp lệ");
+        }
+
+        // check ten nguoi nhan
+        if ( placeOrderRequest.getTenNguoiNhan() == null ||placeOrderRequest.getTenNguoiNhan().trim().isEmpty()){
+            throw new PlaceOrderException("Tên người nhận không hợp lệ");
+        }
+        //check dia chi
+        if ( placeOrderRequest.getDiaChiNguoiNhan() == null ||placeOrderRequest.getDiaChiNguoiNhan().trim().isEmpty()){
+            throw new PlaceOrderException("Địa chỉ người nhận không hợp lệ");
+        }
+        String[] diaChis = placeOrderRequest.getDiaChiNguoiNhan().split(",");
+        int diaChisLength = diaChis.length;
+        if (UtilityFunction.isNullOrEmpty(diaChis[diaChisLength-1]) || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength-2]) || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength-3])){
+            throw new PlaceOrderException("Vui lòng chọn đầy đủ địa chỉ người nhận");
         }
 //        System.out.println(1+placeOrderRequest.toString());
         NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
@@ -352,10 +367,10 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .builder()
                 .ma(generateMaHD())
                 .loaiHoaDon(LoaiHoaDon.valueOf(placeOrderRequest.getLoaiHoaDon()))
-                .tenNguoiNhan(placeOrderRequest.getTenNguoiNhan())
+                .tenNguoiNhan(placeOrderRequest.getTenNguoiNhan().trim())
                 .sdtNguoiNhan(placeOrderRequest.getSdtNguoiNhan())
                 .emailNguoiNhan(null)
-                .diaChiNguoiNhan(placeOrderRequest.getDiaChiNguoiNhan())
+                .diaChiNguoiNhan(placeOrderRequest.getDiaChiNguoiNhan().trim())
                 .tongTien(placeOrderRequest.getTongTien())
                 .tienGiam(placeOrderRequest.getTienGiam())
                 .phiVanChuyen(placeOrderRequest.getPhiVanChuyen())

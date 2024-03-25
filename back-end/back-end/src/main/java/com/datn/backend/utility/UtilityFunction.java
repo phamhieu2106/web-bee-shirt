@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 public class UtilityFunction {
 
@@ -46,5 +47,33 @@ public class UtilityFunction {
     public static String convertToCurrency(double number) {
         DecimalFormat formatter = new DecimalFormat("#,###.##");
         return formatter.format(number);
+    }
+
+    public static boolean isNullOrEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+
+        if (obj instanceof String) {
+            return ((String) obj).isEmpty();
+        }
+
+        if (obj instanceof CharSequence) {
+            return ((CharSequence) obj).length() == 0;
+        }
+
+        if (obj.getClass().isArray()) {
+            return java.lang.reflect.Array.getLength(obj) == 0;
+        }
+
+        if (obj instanceof Iterable) {
+            return !((Iterable<?>) obj).iterator().hasNext();
+        }
+
+        if (obj instanceof Map) {
+            return ((Map<?, ?>) obj).isEmpty();
+        }
+
+        return false;
     }
 }

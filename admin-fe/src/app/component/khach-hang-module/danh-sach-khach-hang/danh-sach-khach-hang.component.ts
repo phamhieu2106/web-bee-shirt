@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -23,10 +23,13 @@ export class DanhSachKhachHangComponent {
   public search = "";
   public khachHangDetail: KhachHangResponse;
   public khDetail: KhachHangResponse;
-  public formUpdateKH: FormGroup;
+  // public formUpdateKH: FormGroup;
   private timeout: any;
+
   public trangThaiFilter: number[] = [0, 1];
   public gioiTinhFilter: number[] = [0, 1];
+  
+  @ViewChild("inputName") inputNameRef: ElementRef;
   constructor(
     private khachHangService: KhachHangService,
     private toastr: ToastrService,
@@ -34,47 +37,83 @@ export class DanhSachKhachHangComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getKhachHangList();
+  this.filterObject = {
+    pageNumber: this.pageNumber,
+    pageSize: this.pageSize,
+    search: this.search,
+    gioiTinhFilter: [0,1],
+    trangThaiFilter: [0,1],
+  };
+  this.goToPage(
+    this.filterObject.pageNumber,
+    this.filterObject.pageSize,
+    this.filterObject.search
+  );    
+  }
+  filterObject: any = null;
+  pageSize: number = 5;
+  pageNumber: number = 1;
+  onChangeFilter() {
+    this.filterObject = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      search: this.search,
+      gioiTinhFilter: this.gioiTinhFilter,
+      trangThaiFilter: this.trangThaiFilter,
+    };
+    this.goToPage(
+      this.filterObject.pageNumber,
+      this.filterObject.pageSize,
+      this.filterObject.search
+    );    
   }
 
-  public goToPage(
-    page: number = 1,
-    pageSize: number = 5,
-    keyword: string = ""
-  ): void {
-    this.khachHangService.getAll(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<KhachHangResponse>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+  reloadFilter(): void {
+    this.search = "";
+    this.trangThaiFilter = [0, 1];
+    this.gioiTinhFilter = [0, 1];
+    this.inputNameRef.nativeElement.value = "";
+    this.pageSize = 5;
+    this.pageNumber = 1;
+    this.getKhachHangList();
+    this.filterObject = null;
   }
-  onChangeFilter() {
-    this.khachHangService
-      .filter(
-        this.pagedResponse.pageNumber,
-        this.pagedResponse.pageSize,
-        this.search,
-        this.gioiTinhFilter,
-        this.trangThaiFilter
-      )
-      .subscribe({
+  public goToPage(page: number, pageSize: number, keyword: string): void {
+    if (this.filterObject) {
+      this.khachHangService
+        .filter(
+          page,
+          pageSize,
+          keyword,
+          this.filterObject.gioiTinhFilter,
+          this.filterObject.trangThaiFilter
+        )
+        .subscribe({
+          next: (response: PagedResponse<KhachHangResponse>) => {
+            this.pagedResponse = response;
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          },
+        });
+    } else {
+      this.khachHangService.getAll(page, pageSize, keyword).subscribe({
         next: (response: PagedResponse<KhachHangResponse>) => {
           this.pagedResponse = response;
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
         },
+        complete: () => {
+          console.log(this.pagedResponse);
+        },
       });
+    }
   }
 
-  reloadFilter(): void {
-    location.reload();
-  }
-  public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+
+  public onChangePageSize(): void {
+    this.goToPage(this.pageNumber, this.pageSize, this.search);
   }
   public timKiem(e: any): void {
     if (this.timeout) {
@@ -90,9 +129,7 @@ export class DanhSachKhachHangComponent {
     }, 500);
   }
 
-  public onClearSearchInput(): void {
-    this.goToPage();
-  }
+
 
   public khDetail1(id: number) {
     this.router.navigate(["/khach-hang/detail", id]);

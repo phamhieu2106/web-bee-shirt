@@ -22,14 +22,15 @@
               <div class="input-group-prepend">
                 <label class="me-3"> Giới tính: </label>
               </div>
-              <select [(ngModel)]="gioiTinhFilter" class="custom-select" (change)="onChangeFilter()">
-                <!-- <option value="" disabled selected hidden>
-                  Tất cả giới tính
-                </option> -->
-                <option [ngValue]="[0, 1]">Tất cả giới tính</option>
-                <option [ngValue]="[1]">Nam</option>
-                <option [ngValue]="[0]">Nữ</option>
-              </select>
+              <select
+                  [(ngModel)]="gioiTinhFilter"
+                  class="custom-select"
+                  (change)="onChangeFilter()"
+                >
+                  <option [ngValue]="[0,1]">Tất cả giới tính</option>
+                  <option [ngValue]="[1]">Nam</option>
+                  <option [ngValue]="[0]">Nữ</option>
+                </select>
             </div>
           </div>
           <div class="col-sm-3 col-12">
@@ -37,11 +38,15 @@
               <div class="input-group-prepend">
                 <label class="me-3"> Trạng thái: </label>
               </div>
-              <select class="custom-select" [(ngModel)]="trangThaiFilter" (change)="onChangeFilter()">
-                <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
-                <option [ngValue]="[1]">Đang làm việc</option>
-                <option [ngValue]="[0]">Đã nghỉ việc</option>
-              </select>
+              <select
+                  class="custom-select"
+                  [(ngModel)]="trangThaiFilter"
+                  (change)="onChangeFilter()"
+                >
+                  <option [ngValue]="[0, 1]">Tất cả trạng thái</option>
+                  <option [ngValue]="[1]">Đang hoạt động</option>
+                  <option [ngValue]="[0]">Ngừng hoạt động</option>
+                </select>
             </div>
           </div>
 
@@ -128,7 +133,7 @@
         </table>
       </div>
       <div class="card-footer">
-        <div class="col col-md-12 d-flex justify-content-between">
+        <!-- <div class="col col-md-12 d-flex justify-content-between">
           <div class="col-md-3">
             <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
             </label>
@@ -157,6 +162,80 @@
                       : ''
                   ">
                   <a class="page-link pointer" (click)="goToPage(pagedResponse?.pageNumber + 1)">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>  -->
+        
+        
+        <div class="col col-md-12 d-flex justify-content-between">
+          <div class="col-md-3">
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+              >Số lượng:
+            </label>
+            <select
+              class="custom-select my-1 mr-sm-2 col-md-5"
+              id="inlineFormCustomSelectPref"
+              (change)="onChangePageSize()"
+              [(ngModel)]="pageSize"
+            >
+              >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </div>
+          <div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li
+                  class="page-item"
+                  [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+                >
+                  <a
+                    [hidden]="pagedResponse?.pageNumber == 1"
+                    class="page-link pointer"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber - 1,
+                        pageSize,
+                        search
+                      )
+                    "
+                    >Previous</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="let page of pagedResponse?.pageNumberArr"
+                >
+                  <a
+                    class="page-link pointer"
+                    [ngClass]="
+                      pagedResponse?.pageNumber == page ? 'active' : ''
+                    "
+                    (click)="goToPage(page, pageSize, search)"
+                    >{{ page }}</a
+                  >
+                </li>
+                <li class="page-item">
+                  <a
+                    [hidden]="
+                      pagedResponse?.pageNumber ==
+                        pagedResponse?.pageNumberArr.length ||
+                      pagedResponse?.pageNumberArr.length == 0
+                    "
+                    class="page-link pointer"
+                    (click)="
+                      goToPage(
+                        pagedResponse?.pageNumber + 1,
+                        pageSize,
+                        search
+                      )
+                    "
+                    >Next</a
+                  >
                 </li>
               </ul>
             </nav>

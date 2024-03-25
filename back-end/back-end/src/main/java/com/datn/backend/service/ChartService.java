@@ -49,4 +49,20 @@ public interface ChartService {
     List<ProductsSummaryResponse> getListProductPurchasedInAnyYear(Integer year);
 
     List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(Integer year);
+
+    List<Double> getListSalesInThisYear();
+
+    List<Double> getListSalesInLastYear();
+
+    List<Double> getListSales4WeekInThisMonth();
+
+    List<Double> getListSales4WeekInLastMonth();
+
+    List<Double> getSale7DaysInThisWeek();
+
+    List<Double> getSale7DaysInLastWeek();
+
+    Long countAllInvoiceThisYear();
+
+    Long countAllInvoiceLastYear();
 }

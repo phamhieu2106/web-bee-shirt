@@ -38,20 +38,6 @@ export class LineChartComponent implements OnInit {
   //
   constructor(private service: ChartService, private toastSrc: ToastrService) {}
 
-  // ngOnInit() {
-  // async ngOnInit(): Promise<void> {
-  //   await this.getMonths();
-  //   setTimeout(async () => {
-  //     this.loadChartDonHangHoanThanh();
-  //   }, 500);
-  // }
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes["tenChart"] && !changes["tenChart"].firstChange) {
-  //     // Gọi phương thức tạo biểu đồ tương ứng khi giá trị tenChart thay đổi
-  //     this.switchChart(this.tenChart);
-  //   }
-  // }
-
   ngOnInit(): void {
     this.getMonths();
     this.loadChartDonHangHoanThanh();

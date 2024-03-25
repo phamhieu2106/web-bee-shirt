@@ -15,6 +15,14 @@ import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
 import { FormsModule } from "@angular/forms";
 import { NoDataComponent } from "./no-data/no-data.component";
 import { NzEmptyModule } from "ng-zorro-antd/empty";
+import { StaticSalesComponent } from "./static-sales/static-sales.component";
+import { NzStatisticModule } from "ng-zorro-antd/statistic";
+import { NzGridModule } from "ng-zorro-antd/grid";
+import { NzCardModule } from "ng-zorro-antd/card";
+import { NzIconModule } from "ng-zorro-antd/icon";
+import { NzSpinModule } from "ng-zorro-antd/spin";
+import { NzAlertModule } from "ng-zorro-antd/alert";
+import { NzPopoverModule } from "ng-zorro-antd/popover";
 
 @NgModule({
   declarations: [
@@ -27,6 +35,7 @@ import { NzEmptyModule } from "ng-zorro-antd/empty";
     PolarProductChartComponent,
     BarReviewChartComponent,
     NoDataComponent,
+    StaticSalesComponent,
   ],
   imports: [
     CommonModule,
@@ -35,6 +44,13 @@ import { NzEmptyModule } from "ng-zorro-antd/empty";
     NzDatePickerModule,
     FormsModule,
     NzEmptyModule,
+    NzStatisticModule,
+    NzGridModule,
+    NzCardModule,
+    NzIconModule,
+    NzSpinModule,
+    NzAlertModule,
+    NzPopoverModule,
   ],
 })
 export class ThongKeModuleModule {}

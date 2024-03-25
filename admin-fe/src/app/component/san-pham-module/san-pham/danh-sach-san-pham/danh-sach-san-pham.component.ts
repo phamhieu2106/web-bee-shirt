@@ -110,7 +110,7 @@ export class DanhSachSanPhamComponent {
             this.notifService.success("Thêm sản phẩm thành công!");
           },
           error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.success(errorResponse.error.message);
+            this.notifService.error(errorResponse.error.message);
           },
         });
       }
@@ -136,8 +136,8 @@ export class DanhSachSanPhamComponent {
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -148,7 +148,7 @@ export class DanhSachSanPhamComponent {
   }
 
   // 5
-  public timKiem(): void {
+  public searchByName(): void {
     this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
@@ -163,8 +163,8 @@ export class DanhSachSanPhamComponent {
       next: (response: SanPham) => {
         this.selectedDetails = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -182,7 +182,7 @@ export class DanhSachSanPhamComponent {
         });
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -201,7 +201,7 @@ export class DanhSachSanPhamComponent {
       if (result.isConfirmed) {
         this.sanPhamService.changeStatus(id, value).subscribe({
           next: (response: string) => {
-            this.toastr.success(response, "");
+            this.notifService.success(response);
             this.goToPage(
               this.pagedResponse.pageNumber,
               this.pagedResponse.pageSize,
@@ -209,7 +209,7 @@ export class DanhSachSanPhamComponent {
             );
           },
           error: (errorResponse: HttpErrorResponse) => {
-            this.toastr.error(errorResponse.error.message);
+            this.notifService.error(errorResponse.error.message);
           },
         });
       }
@@ -245,7 +245,7 @@ export class DanhSachSanPhamComponent {
             document.getElementById("updateCloseBtn").click();
           },
           error: (errorResponse: HttpErrorResponse) => {
-            this.toastr.error(errorResponse.error.message);
+            this.notifService.error(errorResponse.error.message);
           },
         });
       }
@@ -260,7 +260,7 @@ export class DanhSachSanPhamComponent {
         this.pagedResponse = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }

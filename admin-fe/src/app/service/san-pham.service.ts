@@ -23,7 +23,7 @@ export class SanPhamService {
   ): Observable<PagedResponse<SanPham>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<SanPham>>(
-      `${this.apiUrl}/get-all${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
   }
 

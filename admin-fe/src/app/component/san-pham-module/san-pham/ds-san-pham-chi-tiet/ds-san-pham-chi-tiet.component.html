@@ -7,10 +7,8 @@
 <div class="row gutters pt-2">
   <div class="col-sm-12">
     <div class="card">
-      <!-- header: filter -->
       <div class="card-header">
         <h3 class="mb-4">Danh Sách Sản Phẩm Chi Tiết</h3>
-        <!-- HEADER  -->
         <!-- <div>
           <div class="col col-md-12 d-flex">
             <div class="col-md-4"></div>
@@ -101,7 +99,7 @@
             </select>
           </div>
 
-          <div class="col-3">
+          <!-- <div class="col-3">
             <label class="form-label">Kiểu dáng</label>
             <select
               class="form-select"
@@ -164,15 +162,12 @@
                 {{ cl?.ten }}
               </option>
             </select>
-          </div>
+          </div> -->
         </div>
       </div>
-
       <h5 class="m-3">{{ sanPham?.ten }}</h5>
 
-      <!-- body: table -->
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
-        <!-- TABLE -->
         <table class="table">
           <thead class="thead-default">
             <tr>
@@ -327,13 +322,11 @@
               </td>
               <td>
                 <span
-                  class="pointer"
                   [ngClass]="
                     s.trangThai
                       ? 'badge rounded-pill text-bg-success'
                       : 'badge rounded-pill text-bg-danger'
                   "
-                  (click)="changeStatus(s.id)"
                   >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</span
                 >
               </td>
@@ -357,7 +350,7 @@
         <button
           class="btn btn-primary rounded my-3"
           *ngIf="isUpdateBtnHidden()"
-          (click)="chinhSuaNhanh(pagedResponse?.pageSize)"
+          (click)="quickUpdate(pagedResponse?.pageSize)"
           data-bs-toggle="modal"
           data-bs-target="#updateModal"
         >
@@ -375,7 +368,7 @@
             <select
               class="custom-select my-1 mr-sm-2 col-md-5"
               id="inlineFormCustomSelectPref"
-              (change)="onChangePageSize($event)"
+              (change)="changePageSize($event)"
             >
               >
               <option value="5">5</option>
@@ -638,7 +631,7 @@
             id="inputUpdateImg"
             multiple
             hidden
-            (change)="changeInput($event)"
+            (change)="changeFileInputAndShowThumbnail($event)"
           />
         </div>
         <div
@@ -657,7 +650,7 @@
       </div>
       <div class="modal-footer">
         <button
-          id="closeUpdateBtnImg"
+          id="closeUpdateImgBtn"
           type="button"
           class="btn btn-secondary rounded"
           data-bs-dismiss="modal"

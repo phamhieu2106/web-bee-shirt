@@ -1,6 +1,5 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.service.SanPhamService;
@@ -22,7 +21,7 @@ public class SanPhamResource {
 
     private final SanPhamService sanPhamService;
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                             @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                             @RequestParam(value = "search", defaultValue = "", required = false) String search) {

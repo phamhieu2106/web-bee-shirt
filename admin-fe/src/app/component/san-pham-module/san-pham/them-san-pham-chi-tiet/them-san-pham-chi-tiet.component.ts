@@ -98,7 +98,6 @@ export class ThemSanPhamChiTietComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService,
     private sanPhamService: SanPhamService,
     private kichCoService: KichCoService,
     private mauSacService: MauSacService,
@@ -120,17 +119,17 @@ export class ThemSanPhamChiTietComponent {
   }
 
   // I. Public functions
-  // 1
+  //
   public getMauSacList(): void {
     this.getAllMauSac();
   }
 
-  // 2
+  //
   public getKichCoList(): void {
     this.getAllKichCo();
   }
 
-  // 3
+  //
   public selectColor(ms: MauSac): void {
     if (!this.selectedMauSacList.some((item: MauSac) => item.id === ms.id)) {
       this.selectedMauSacList.push(ms);
@@ -142,7 +141,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  // 4
+  //
   public selectKichCo(kc: KichCo): void {
     if (!this.selectedKichCoList.some((item: KichCo) => item.id === kc.id)) {
       this.selectedKichCoList.push(kc);
@@ -150,7 +149,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  // 5
+  //
   public removeSelectedColor(colorId: number): void {
     // lấy vị trí muốn xóa
     let expectIndex: number;
@@ -166,7 +165,7 @@ export class ThemSanPhamChiTietComponent {
     this.removeColorSizeValidation(colorId, undefined, "color");
   }
 
-  // 6
+  //
   public removeSelectedSize(sizeId: number): void {
     this.selectedKichCoList = this.selectedKichCoList.filter(
       (item: KichCo) => item.id !== sizeId
@@ -175,7 +174,7 @@ export class ThemSanPhamChiTietComponent {
   }
 
   // I.1. functions xử lý sự kiện chọn ảnh
-  // 7
+  //
   public openHinhAnhModal(
     tenMau: string,
     idMau: number,
@@ -207,12 +206,12 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  // 8
+  //
   public openFileInput(imgIndex: number): void {
     document.getElementById(`fileImage${imgIndex}`).click();
   }
 
-  // 9
+  //
   public changeInput(event: any): void {
     // dựa vào file input (các ảnh được chọn), ta dùng for loop gán từng file cho 'curUploadImgFileList' (đồng thời phải check xem file đó đã được chọn hay chưa)
     for (let i = 0; i < event.target["files"].length; i++) {
@@ -237,11 +236,11 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  // 10
+  //
   public toggleUploadImage(chkBoxIndex: number, file: File, event: any): void {
     const isChecked = event.target.checked;
     if (this.curSelectedImgFileList.length === 5 && isChecked) {
-      this.toastr.warning("Không chọn quá 5 ảnh", "");
+      this.notifService.warning("Không chọn quá 5 ảnh!");
 
       const currentCheckbox = document.getElementById(
         `chkBoxUploadImg${chkBoxIndex}`
@@ -334,7 +333,8 @@ export class ThemSanPhamChiTietComponent {
         this.checkAnhSpct();
         const isSpctExist = this.checkExistAndNotify();
 
-        if (this.validation.error || isSpctExist) {
+        if (!this.validation.error || isSpctExist) {
+          this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
           return;
         }
 
@@ -411,7 +411,7 @@ export class ThemSanPhamChiTietComponent {
                 }
               },
               error: (errorResponse: HttpErrorResponse) => {
-                this.notifService.success(errorResponse.error.message);
+                this.notifService.error(errorResponse.error.message);
                 this.turnOffOverlay("");
               },
             });
@@ -539,7 +539,7 @@ export class ThemSanPhamChiTietComponent {
         return response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
+        this.notifService.error(errorResponse.error.message);
       },
     });
     return false;
@@ -581,12 +581,12 @@ export class ThemSanPhamChiTietComponent {
     this.commonService.add(this.addNhanhForm.value).subscribe({
       next: (response: any) => {
         this.initAddNhanhForm();
-        this.toastr.success(`Thêm thành công '${response.ten}'!`, "Hệ thống");
+        this.notifService.success(`Thêm thành công '${response.ten}'!`);
         document.getElementById("closeAddNhanhBtn").click();
         this.getDataForSelector();
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message, "Hệ thống");
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -700,7 +700,7 @@ export class ThemSanPhamChiTietComponent {
         this.kichCoList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -712,7 +712,7 @@ export class ThemSanPhamChiTietComponent {
         this.kieuDangList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error("Không thể tải danh sách kiểu dáng!");
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -724,7 +724,7 @@ export class ThemSanPhamChiTietComponent {
         this.kieuThietKeList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error("Không thể tải danh sách kiểu thiết kế!");
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -736,7 +736,7 @@ export class ThemSanPhamChiTietComponent {
         this.tayAoList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error("Không thể tải danh sách tay áo!");
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -748,7 +748,7 @@ export class ThemSanPhamChiTietComponent {
         this.coAoList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -760,7 +760,7 @@ export class ThemSanPhamChiTietComponent {
         this.chatLieuList = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        this.toastr.error(errorResponse.error.message);
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -872,7 +872,7 @@ export class ThemSanPhamChiTietComponent {
               this.colorSizeValidations.push(colorSizeValidation);
             },
             error: (errorResponse: HttpErrorResponse) => {
-              this.toastr.error(errorResponse.error.message);
+              this.notifService.error(errorResponse.error.message);
             },
           });
       }
@@ -891,7 +891,7 @@ export class ThemSanPhamChiTietComponent {
               this.colorSizeValidations.push(colorSizeValidation);
             },
             error: (errorResponse: HttpErrorResponse) => {
-              this.toastr.error(errorResponse.error.message);
+              this.notifService.error(errorResponse.error.message);
             },
           });
       }

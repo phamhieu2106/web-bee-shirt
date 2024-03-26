@@ -256,6 +256,14 @@ export class SuaPhieuComponent implements OnInit {
         return { ngayBatDau: "Không bỏ trống trường này" };
       }
 
+       // Lấy ngày hiện tại
+       const currentDate = new Date();
+
+       // Kiểm tra nếu ngày bắt đầu sau ngày hiện tại
+       if (ngayBatDau <= currentDate) {
+           return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
+       }
+
       const thoiGianBatDau = this.updateForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.updateForm.get("thoiGianKetThuc");
 

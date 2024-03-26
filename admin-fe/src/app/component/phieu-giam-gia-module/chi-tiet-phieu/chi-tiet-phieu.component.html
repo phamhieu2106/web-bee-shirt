@@ -27,7 +27,7 @@
 
                     <div class=" mb-3">
                         <label for="">Loại Phiếu</label> <br>
-                        <input type="text" class="form-control" [value]="phieuDetails?.loai ==0?'Công Khai':'Cá Nhân'" [disabled]="true">
+                        <input type="text" class="form-control" [value]="phieuDetails?.loai ==1?'Công Khai':'Cá Nhân'" [disabled]="true">
                     </div>
 
 
@@ -43,7 +43,6 @@
                             <label for="">Giá Trị Tối Đa</label> <br>
                             <input type="number" class="form-control" placeholder="Giá trị tối đa"
                                 [value]="phieuDetails?.giaTriMax" [disabled]="true">
-
                         </div>
                     </div>
 

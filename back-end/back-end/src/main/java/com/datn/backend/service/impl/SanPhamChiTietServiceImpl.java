@@ -174,8 +174,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public void updateSpctNhanh(CapNhatNhanhSpctReq req) {
         for (int i = 0; i < req.getIds().size(); ++i) {
             int id = req.getIds().get(i);
-            SanPhamChiTiet spct = spctRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy SPCT ID: " + id));
+//            SanPhamChiTiet spct = spctRepo.findById(id)
+//                    .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + id + " không tồn tại!"));
+            SanPhamChiTiet spct = getOneById(id);
 
             spct.setGiaNhap(req.getGiaNhaps().get(i));
             spct.setGiaBan(req.getGiaBans().get(i));
@@ -256,18 +257,20 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     @Transactional
-    public SanPhamChiTiet update(CapNhatSpctRequest req) {
+    public String update(CapNhatSpctRequest req) {
+        List result = new ArrayList();
         SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(req.getSanPhamId(), req.getMauSacId(), req.getKichCoId());
         SanPhamChiTiet spctById = spctRepo.findById(req.getId()).
                 orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + req.getId() + " không tồn tại!"));
-        boolean isMauSacChange = req.getMauSacId() != spctById.getMauSac().getId();
+        boolean isMauSacChange = (req.getMauSacId() != spctById.getMauSac().getId());
 
         if (spctByMauSacAndKichCo != null && spctByMauSacAndKichCo.getId() != req.getId()) {
             throw new ResourceExistsException("Đã tồn tại sản phẩm có màu sắc và kích cỡ này!");
         } else {
             // nếu có thay đổi màu sắc
             if (isMauSacChange) {
-                spctById = changeImagesWhenColorChange(req.getSanPhamId(), req.getMauSacId(), spctById);
+                result = changeImagesWhenColorChange(req.getSanPhamId(), req.getMauSacId(), spctById);
+                spctById = (SanPhamChiTiet) result.get(1);
             }
 
             int countBySanPham = spctRepo.countBySanPhamId(req.getSanPhamId());
@@ -287,13 +290,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             spctById.setGiaNhap(req.getGiaNhap());
             spctById.setGiaBan(req.getGiaBan());
 
-            MauSac mauSac = mauSacRepo.findById(req.getMauSacId()).get();
+            MauSac mauSac = mauSacRepo.findById(req.getMauSacId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Màu sắc ID: " + req.getMauSacId() + " không tồn tại!"));
             spctById.setMauSac(mauSac);
 
-            KichCo kichCo = kichCoRepo.findById(req.getKichCoId()).get();
+            KichCo kichCo = kichCoRepo.findById(req.getKichCoId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Kích cỡ ID: " + req.getKichCoId() + " không tồn tại!"));
             spctById.setKichCo(kichCo);
 
-            return spctRepo.save(spctById);
+            spctRepo.save(spctById);
+            return (String) result.get(0);
         }
     }
 
@@ -322,19 +328,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         }
     }
 
-    private SanPhamChiTiet changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
+    private List changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
         SanPhamChiTiet spct = spctRepo.findFirstBySanPhamIdAndMauSacId(sanPhamId, newMauSacId);
+        List result = new ArrayList<>();
 
         if (spct != null) {
             updateSpct.setHinhAnhs(new ArrayList<>());
             for (HinhAnh img : spct.getHinhAnhs()) {
                 updateSpct.setHinhAnh(img);
             }
-            System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!");
+            result.add("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!");
         } else {
-            System.out.println("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!");
+            result.add("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!");
         }
-        return updateSpct;
+        result.add(updateSpct);
+        return result;
     }
 
     @Override

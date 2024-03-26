@@ -9,7 +9,6 @@ import {
   Output,
   SimpleChanges,
 } from "@angular/core";
-import { el } from "date-fns/locale";
 
 @Component({
   selector: "app-get-dia-chi-va-phi-van-chuyen",

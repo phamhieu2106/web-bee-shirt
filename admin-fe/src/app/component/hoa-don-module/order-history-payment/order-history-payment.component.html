@@ -10,10 +10,7 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#createLichSuThanhToan"
-            [disabled]="
-              hoaDon.tongTien + hoaDon.phiVanChuyen - hoaDon.tienGiam ==
-                getTienKhachThanhToan() || hoaDon.loaiHoaDon == 'TAI_QUAY'
-            "
+            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
           >
             <i class="fa-solid fa-plus"></i>
             Thanh toán
@@ -34,6 +31,7 @@
                 <th>Phương thức thanh toán</th>
                 <th>Người xác nhận</th>
                 <th>Ghi chú</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -54,6 +52,15 @@
                 </td>
                 <td>{{ lstt.createdBy }}</td>
                 <td>{{ lstt.moTa }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-outline-light btn-rounded"
+                    (click)="deleteThanhToan(lstt)"
+                  >
+                    <i class="fa-solid fa-trash text-danger"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -96,20 +103,30 @@
                 class="form-control"
                 value="{{
                   hoaDon.tongTien + hoaDon.phiVanChuyen - hoaDon.tienGiam
-                    | currency : 'đ '
+                    | currency : 'đ ' : 'symbol' : '1.0-0'
+                }}"
+                disabled
+              />
+            </div>
+            <!-- Tiền thừa -->
+            <div class="mb-3">
+              <label class="form-label">Đã thanh toán:</label>
+              <input
+                type="text"
+                class="form-control"
+                value="{{
+                  getTienKhachThanhToan() | currency : 'đ ' : 'symbol' : '1.0-0'
                 }}"
                 disabled
               />
             </div>
             <!-- Tiền khách đưa -->
             <div class="mb-3">
-              <label class="form-label">Tiền khách đưa:</label>
+              <label class="form-label">Tiền còn thiếu:</label>
               <input
                 type="number"
                 class="form-control"
                 formControlName="tienKhachDua"
-                min="{{ hoaDon.tongTien }}"
-                max="99999999999999999999"
               />
               <small
                 class="form-text text-danger"
@@ -117,16 +134,7 @@
                 >Tiền khách đưa không hợp lệ</small
               >
             </div>
-            <!-- Tiền thừa -->
-            <div class="mb-3">
-              <label class="form-label">Tiền thừa:</label>
-              <input
-                type="text"
-                class="form-control"
-                value="{{ thanhToanForm.value.tienThua | currency : 'đ ' }}"
-                disabled
-              />
-            </div>
+
             <!-- Ghi chú -->
             <div class="mb-3">
               <label class="form-label">Ghi chú:</label>

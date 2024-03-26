@@ -7,6 +7,8 @@ import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
+import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-order-product",
@@ -14,18 +16,6 @@ import { HoaDon } from "src/app/model/class/hoa-don.class";
   styleUrls: ["./order-product.component.css"],
 })
 export class OrderProductComponent {
-  // @Input({ required: true }) idHoaDon: number;
-  // @Input({ required: true }) loaiHoaDon: string;
-  // @Input({ required: true }) hoaDonChiTiets: HoaDonChiTiet[];
-  // @Input({ required: true }) tongTien: number;
-  // @Input({ required: true }) tienGiam: number;
-  // @Input({ required: true }) phiVanChuyen: number;
-  // @Input({ required: true }) phieuGiamGia: PhieuGiamGia;
-
-  // @Output() tongTienChange = new EventEmitter<number>();
-  // @Output() tienGiamChange = new EventEmitter<number>();
-  // @Output() phiVanChuyenChange = new EventEmitter<number>();
-
   @Input({ required: true }) hoaDon: HoaDon;
   @Output() hoaDonChange = new EventEmitter<HoaDon>();
 
@@ -34,23 +24,73 @@ export class OrderProductComponent {
     private notification: NotificationService
   ) {}
 
+  addHDCT(spct: SanPhamChiTiet) {
+    this.hdctService.postHoaDonChiTiet(spct.id, this.hoaDon.id).subscribe({
+      next: (resp: HoaDonChiTiet) => {
+        // console.log(resp);
+
+        this.addOrUpdateHdct(resp);
+        this.notification.success("Thêm thành công");
+        this.hoaDonChange.emit(this.hoaDon);
+      },
+      error: (err) => {
+        this.notification.error(err.error.message);
+      },
+    });
+  }
+
+  async addOrUpdateHdct(hdct: HoaDonChiTiet) {
+    let check = false;
+    for (let i = 0; i < this.hoaDon.hoaDonChiTiets.length; i++) {
+      if (this.hoaDon.hoaDonChiTiets[i].id == hdct.id) {
+        this.hoaDon.hoaDonChiTiets[i] = hdct;
+        check = true;
+        break;
+      }
+    }
+    if (!check) {
+      this.hoaDon.hoaDonChiTiets.push(hdct);
+      Swal.fire({
+        title: `Giá của sản phẩm ${hdct.sanPhamChiTiet.sanPham.ten} đã bị thay đổi`,
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      });
+    }
+    this.hoaDon.tongTien = this.hdctService.tinhTongTien(
+      this.hoaDon.hoaDonChiTiets
+    );
+  }
+
   onPhiVanChuyenChange() {
     this.hoaDonChange.emit(this.hoaDon);
   }
   plus(hdct: any) {
     let soLuong = hdct.soLuong + 1;
     this.quantityChange(hdct, soLuong);
-    // this.hoaDonChange.emit(this.hoaDon);
   }
 
   minus(hdct: any) {
     if (hdct.soLuong > 1) {
       let soLuong = hdct.soLuong - 1;
       this.quantityChange(hdct, soLuong);
-      // this.hoaDonChange.emit(this.hoaDon);
     }
   }
-
+  inputSoLuong(hdct: HoaDonChiTiet, $event: any) {
+    let soLuong = $event.target.value;
+    this.quantityChange(hdct, soLuong);
+  }
   quantityChange(hdct: any, soLuong: number) {
     hdct.soLuong = soLuong;
     this.hdctService.updateHDCT(hdct).subscribe({
@@ -63,7 +103,7 @@ export class OrderProductComponent {
         this.notification.success("Cập nhật thành công");
         setTimeout(() => {
           this.hoaDonChange.emit(this.hoaDon);
-        }, 100);
+        }, 50);
       },
       error: (err) => {
         console.log(err);
@@ -74,27 +114,38 @@ export class OrderProductComponent {
     });
   }
 
-  inputSoLuong(hdct: HoaDonChiTiet, $event: any) {
-    let soLuong = $event.target.value;
-    this.quantityChange(hdct, soLuong);
-    this.hoaDonChange.emit(this.hoaDon);
+  deleteHDCT(id: number) {
+    Swal.fire({
+      title: "Xác nhận xóa sản phẩm?",
+      text: "Bạn chắc chắn muốn xóa sản phẩm ra khỏi đơn hàng ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.hdctService.deleteHDCT(id).subscribe({
+          next: (resp) => {
+            // loại bỏ hdct đã xóa
+            this.hoaDon.hoaDonChiTiets = this.hoaDon.hoaDonChiTiets.filter(
+              (hdct) => hdct.id !== resp.id
+            );
+            this.hoaDon.tongTien = this.hdctService.tinhTongTien(
+              this.hoaDon.hoaDonChiTiets
+            );
+            this.notification.success("Xóa thành công");
+            setTimeout(() => {
+              this.hoaDonChange.emit(this.hoaDon);
+            }, 50);
+          },
+          error: (err) => {
+            console.log(err);
+            this.notification.error(err.error.message);
+          },
+        });
+      }
+    });
   }
-  // delete(id: number) {
-  //   this.hdctService.deleteHDCT(id).subscribe({
-  //     next: (resp) => {
-  //       // loại bỏ hdct đã xóa
-  //       this.hoaDonChiTiets = this.hoaDonChiTiets.filter(
-  //         (hdct) => hdct.id !== resp.id
-  //       );
-  //       // tính lại tổng tiền
-  //       this.tongTien = this.hdctService.tinhTongTien(this.hoaDonChiTiets);
-  //       this.tongTienChange.emit(this.tongTien);
-  //       this.toastr.success("Xóa thành công", "Thành công");
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //       this.toastr.error(err.error.message, "Thất bại");
-  //     },
-  //   });
-  // }
 }

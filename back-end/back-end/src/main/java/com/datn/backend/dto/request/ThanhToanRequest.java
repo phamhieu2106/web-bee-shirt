@@ -38,7 +38,7 @@ public class ThanhToanRequest {
 
     private String maGiaoDich;
 
-    @DecimalMin(value = "1.00", message = "Số tiền phải lớn hơn 1")
+    @DecimalMin(value = "1.00", message = "Số tiền phải lớn hơn 0")
     @NotNull(message = "Số tiền phải lớn hơn 1")
     private BigDecimal soTien;
 

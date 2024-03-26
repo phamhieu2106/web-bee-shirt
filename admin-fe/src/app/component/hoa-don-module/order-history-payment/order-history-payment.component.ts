@@ -1,3 +1,4 @@
+import { error } from "highcharts";
 import { HoaDon } from "./../../../model/class/hoa-don.class";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
@@ -15,6 +16,7 @@ import { ThanhToanService } from "src/app/service/thanh-toan.service";
 import { ToastrService } from "ngx-toastr";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { NotificationService } from "src/app/service/notification.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-order-history-payment",
@@ -42,7 +44,9 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
 
   //onChanges
   ngOnChanges(changes: SimpleChanges): void {
-    this.createThanhToanForm();
+    if (changes["hoaDon"]) {
+      this.createThanhToanForm();
+    }
   }
 
   // onInit
@@ -54,7 +58,7 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
       .postThanhToan(this.thanhToanForm.value, this.hoaDon.id)
       .subscribe({
         next: (resp: ThanhToan) => {
-          console.log(resp);
+          // console.log(resp);
           this.hoaDon.thanhToans.push(resp);
           this.notifycation.success("Thêm thành công");
           this.hoaDonChange.emit(this.hoaDon);
@@ -70,36 +74,37 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
   createThanhToanForm(): void {
     this.thanhToanForm = this.formBuilder.group({
       tienKhachDua: [
-        this.hoaDon.tongTien + this.hoaDon.phiVanChuyen - this.hoaDon.tienGiam,
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(
-            this.hoaDon.tongTien +
-              this.hoaDon.phiVanChuyen -
-              this.hoaDon.tienGiam
-          ),
-        ],
+        this.hoaDon.tongTien +
+          this.hoaDon.phiVanChuyen -
+          this.hoaDon.tienGiam -
+          this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans) <
+        0
+          ? 0
+          : this.hoaDon.tongTien +
+            this.hoaDon.phiVanChuyen -
+            this.hoaDon.tienGiam -
+            this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans),
+        [Validators.required],
       ],
-      tienThua: [0],
       ghiChu: [""],
       hinhThucThanhToan: ["TIEN_MAT"],
       maGiaoDich: [""],
     });
 
     // Đăng ký sự kiện valueChanges cho trường tienKhachDua
-    this.thanhToanForm
-      .get("tienKhachDua")
-      .valueChanges.subscribe((tienKhachDua) => {
-        // Tính toán và cập nhật giá trị của tienThua khi tienKhachDua thay đổi
-        this.thanhToanForm.patchValue({
-          tienThua:
-            tienKhachDua -
-            (this.hoaDon.tongTien +
-              this.hoaDon.phiVanChuyen -
-              this.hoaDon.tienGiam),
-        });
-      });
+    // this.thanhToanForm
+    //   .get("tienKhachDua")
+    //   .valueChanges.subscribe((tienKhachDua) => {
+    //     // Tính toán và cập nhật giá trị của tienThua khi tienKhachDua thay đổi
+    //     this.thanhToanForm.patchValue({
+    //       tienThua:
+    //         tienKhachDua +
+    //         this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans) -
+    //         (this.hoaDon.tongTien +
+    //           this.hoaDon.phiVanChuyen -
+    //           this.hoaDon.tienGiam),
+    //     });
+    //   });
 
     // Đăng ký sự kiện valueChanges cho trường phuongThucThanhToan
     this.thanhToanForm
@@ -120,5 +125,37 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
   }
   getTienKhachThanhToan() {
     return this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans);
+  }
+
+  deleteThanhToan(thanhToan: ThanhToan) {
+    Swal.fire({
+      title: "Xác nhận xóa ?",
+      text: "Bạn đồng ý xóa thanh toán này chứ ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire({
+        //   title: "Đã xóa!",
+        //   icon: "success",
+        // });
+        this.thanhToanService.deleteThanhToan(thanhToan.id).subscribe({
+          next: (resp) => {
+            this.hoaDon.thanhToans = this.hoaDon.thanhToans.filter(
+              (tt) => tt.id != resp.id
+            );
+            this.notifycation.success("Xóa thành công !");
+            this.hoaDonChange.emit(this.hoaDon);
+          },
+          error: (err) => {
+            this.notifycation.error(err.error.message);
+          },
+        });
+      }
+    });
   }
 }

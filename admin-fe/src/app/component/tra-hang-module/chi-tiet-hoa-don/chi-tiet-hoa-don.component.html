@@ -1,0 +1,189 @@
+<div class="card">
+  <div class="card-header">
+    <strong>Chi Tiết Hoá Đơn</strong>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col col-md-12">
+        <ng-container>
+          <div class="card">
+            <div class="card-header">Danh Sách Sản Phẩm Đã Mua</div>
+            <div class="card-body">
+              <nz-table
+                [nzPageSizeOptions]="[5, 10, 20, 30]"
+                [nzPageSize]="5"
+                #rowSelectionTable
+                nzShowSizeChanger
+                [nzData]="listOfData"
+                (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      [nzSelections]="listOfSelection"
+                      [(nzChecked)]="checked"
+                      [nzIndeterminate]="indeterminate"
+                      (nzCheckedChange)="onAllChecked($event)"
+                    ></th>
+                    <th>Sản Phẩm</th>
+                    <th>Số Lượng</th>
+                    <th>Giá Tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of rowSelectionTable.data">
+                    <td
+                      [nzChecked]="setOfCheckedId.has(data.id)"
+                      (nzCheckedChange)="onItemChecked(data.id, $event)"
+                    ></td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.age }}</td>
+                    <td>{{ data.address }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-md-8">
+        <ng-container>
+          <div class="card">
+            <div class="card-header">Danh Sách Sản Phẩm Trả</div>
+            <div class="card-body">
+              <nz-table
+                #headerTable
+                [nzData]="listOfData"
+                [nzPageSize]="50"
+                [nzScroll]="{ y: '240px' }"
+              >
+                <thead>
+                  <tr>
+                    <th>Sản Phẩm</th>
+                    <th>Số Lượng</th>
+                    <th>Giá Tiền</th>
+                    <th>Tổng Tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of headerTable.data">
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.age }}</td>
+                    <td>{{ data.address }}</td>
+                    <td>{{ data.address }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+          ></ng-container
+        >
+      </div>
+      <div class="col col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <nz-divider
+              style="color: #32ba7c; font-weight: bold"
+              nzText="Thông Tin Hoàn Trả"
+            ></nz-divider>
+          </div>
+          <div class="card-body">
+            <nz-list nzBordered>
+              <nz-list-item>
+                <span nz-typography>
+                  <kbd
+                    style="color: #080808; display: flex; align-items: center"
+                  >
+                    <i nz-icon nzType="user" style="margin-right: 5px"></i>
+                    <strong> Tên người nhận: </strong>
+                  </kbd>
+                </span>
+              </nz-list-item>
+              <nz-list-item>
+                <span nz nz-typography>
+                  <kbd
+                    style="color: #080808; display: flex; align-items: center"
+                  >
+                    <i nz-icon nzType="phone" style="margin-right: 5px"></i>
+                    <strong> Số điện thoại: </strong>
+                  </kbd>
+                </span>
+              </nz-list-item>
+              <nz-list-item>
+                <span nz nz-typography>
+                  <kbd
+                    style="color: #080808; display: flex; align-items: center"
+                  >
+                    <i nz-icon nzType="phone" style="margin-right: 5px"></i>
+                    <strong> Địa chỉ: </strong>
+                  </kbd>
+                </span>
+              </nz-list-item>
+              <nz-list-item>
+                <span nz nz-typography>
+                  <kbd
+                    style="color: #080808; display: flex; align-items: center"
+                  >
+                    <i
+                      nz-icon
+                      nzType="money-collect"
+                      style="margin-right: 5px"
+                    ></i>
+                    <strong> Tổng tiền hoàn trả: </strong>
+                  </kbd>
+                </span>
+              </nz-list-item>
+              <nz-list-item>
+                <div></div>
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzBlock
+                  nzDanger
+                  (click)="showModal()"
+                >
+                  Trả Hàng
+                </button>
+                <div></div>
+              </nz-list-item>
+            </nz-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <ng-template #noData>
+  <nz-skeleton [nzActive]="true"></nz-skeleton>
+</ng-template> -->
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Lý Do Trả Hàng"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <nz-radio-group [(ngModel)]="radioValue">
+      <label nz-radio nzValue="A">Sản phẩm không đúng như mô tả</label>
+      <label nz-radio nzValue="B"
+        >Sản phẩm không đúng kích cỡ hoặc màu sắc</label
+      >
+      <label nz-radio nzValue="C"
+        >Sản phẩm bị lỗi (rách, mất cúc áo, cúc tay)</label
+      >
+      <label nz-radio nzValue="M">
+        Khác...
+        <input
+          type="text"
+          [(ngModel)]="moreText"
+          nz-input
+          *ngIf="radioValue === 'M'"
+        />
+      </label>
+    </nz-radio-group>
+  </ng-container>
+</nz-modal>

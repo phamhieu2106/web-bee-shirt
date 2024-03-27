@@ -1,0 +1,25 @@
+<div class="card mt-5">
+  <div class="card-header">
+    <strong>Tìm Kiếm Hoá Đơn</strong>
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-center">
+      <div class="input-group col-md-10">
+        <div class="input-group-prepend">
+          <strong class="input-group-text">Mã Hoá Đơn</strong>
+        </div>
+        <input
+          type="text"
+          aria-label="First name"
+          class="form-control"
+          placeholder="Mã hoá đơn....."
+          [(ngModel)]="maHoaDon"
+        />
+        <button class="btn btn-primary rounded ml-2" (click)="submitForm()">
+          <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
+        </button>
+        <button class="btn btn-primary rounded ml-2">Quét Mã QR</button>
+      </div>
+    </div>
+  </div>
+</div>

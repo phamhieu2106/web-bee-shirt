@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -129,37 +130,37 @@ public class ThongKeResource {
     }
 
     @GetMapping("/doanh-thu-nam-hien-tai")
-    public ResponseEntity<List<Double>> getListSalesInThisYear(
+    public ResponseEntity<List<BigDecimal>> getListSalesInThisYear(
     ) {
         return ResponseEntity.ok(chartService.getListSalesInThisYear());
     }
 
     @GetMapping("/doanh-thu-nam-truoc")
-    public ResponseEntity<List<Double>> getListSalesInLastYear(
+    public ResponseEntity<List<BigDecimal>> getListSalesInLastYear(
     ) {
         return ResponseEntity.ok(chartService.getListSalesInLastYear());
     }
 
     @GetMapping("/doanh-thu-thang-hien-tai")
-    public ResponseEntity<List<Double>> getListSalesInThisMonth(
+    public ResponseEntity<List<BigDecimal>> getListSalesInThisMonth(
     ) {
         return ResponseEntity.ok(chartService.getListSales4WeekInThisMonth());
     }
 
     @GetMapping("/doanh-thu-thang-truoc")
-    public ResponseEntity<List<Double>> getListSalesInLastMonth(
+    public ResponseEntity<List<BigDecimal>> getListSalesInLastMonth(
     ) {
         return ResponseEntity.ok(chartService.getListSales4WeekInLastMonth());
     }
 
     @GetMapping("/doanh-thu-tuan-hien-tai")
-    public ResponseEntity<List<Double>> getListSalesInThisWeek(
+    public ResponseEntity<List<BigDecimal>> getListSalesInThisWeek(
     ) {
         return ResponseEntity.ok(chartService.getSale7DaysInThisWeek());
     }
 
     @GetMapping("/doanh-thu-tuan-truoc")
-    public ResponseEntity<List<Double>> getListSalesInLastWeek(
+    public ResponseEntity<List<BigDecimal>> getListSalesInLastWeek(
     ) {
         return ResponseEntity.ok(chartService.getSale7DaysInLastWeek());
     }

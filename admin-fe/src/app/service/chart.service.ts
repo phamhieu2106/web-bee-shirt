@@ -140,8 +140,12 @@ export class ChartService {
     );
   }
   public returnPercent(firstNumber: number, secondNumber: number): number {
+    if (secondNumber == 0) {
+      return 100;
+    }
     const growthPercentage =
       ((firstNumber - secondNumber) / secondNumber) * 100;
+
     return growthPercentage;
   }
 }

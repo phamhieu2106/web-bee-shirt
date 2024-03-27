@@ -16,19 +16,10 @@
               <input
                 type="search"
                 class="form-control rounded"
-                placeholder="Tìm sản phẩm..."
-                (search)="onClearSearchInput()"
+                placeholder="Tìm sản phẩm theo tên hoặc mã..."
                 [(ngModel)]="search"
+                (input)="searchByName()"
               />
-              <span class="input-group-btn">
-                <button
-                  class="btn btn-create rounded"
-                  type="button"
-                  (click)="timKiem()"
-                >
-                  Tìm kiếm
-                </button>
-              </span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-right">

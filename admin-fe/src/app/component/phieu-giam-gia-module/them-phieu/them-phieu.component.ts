@@ -181,9 +181,9 @@ export class ThemPhieuComponent implements OnInit {
       const kieu = addForm.get("kieu").value;
       this.giaTriNew = control.value;
       // Kiểm tra nếu ô giá trị trống
-      // Kiểm tra nếu ô giá trị trống
-      if (this.giaTriNew === null || this.giaTriNew === undefined) {
-        return { giaTri: "Không bỏ trống trường này" };
+      
+      if (this.giaTriNew === null ) {
+        return { giaTri: "Không bỏ trống trường này1" };
       }
 
       // Tiếp tục kiểm tra giá trị nhập vào khi không trống
@@ -215,6 +215,7 @@ export class ThemPhieuComponent implements OnInit {
       if (!ngayKetThuc) {
         return { ngayKetThuc: "Không bỏ trống trường này" };
       }
+      
 
       const thoiGianBatDau = this.addForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.addForm.get("thoiGianKetThuc");
@@ -253,7 +254,18 @@ export class ThemPhieuComponent implements OnInit {
       // Kiểm tra nếu ô giá trị trống
       if (!ngayBatDau) {
         return { ngayBatDau: "Không bỏ trống trường này" };
+        
       }
+
+       // Lấy ngày hiện tại
+       const currentDate = new Date();
+       console.log(currentDate)
+       console.log(ngayBatDau)
+
+       // Kiểm tra nếu ngày bắt đầu sau ngày hiện tại
+       if (ngayBatDau <= currentDate) {
+           return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
+       }
 
       const thoiGianBatDau = this.addForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.addForm.get("thoiGianKetThuc");

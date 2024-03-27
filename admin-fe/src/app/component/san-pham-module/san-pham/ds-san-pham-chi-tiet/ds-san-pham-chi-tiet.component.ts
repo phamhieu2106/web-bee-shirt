@@ -210,53 +210,62 @@ export class DsSanPhamChiTietComponent {
   }
 
   // 9
-  public chinhSuaNhanh(pageSize: number): void {
-    let xacNhan = confirm("Bạn có chắc muốn cập nhật nhanh?");
-    if (xacNhan) {
-      const ids: number[] = [];
-      const giaNhaps: number[] = [];
-      const giaBans: number[] = [];
-      const soLuongs: number[] = [];
-      for (let i = 0; i < pageSize; i++) {
-        const ckBox = document.getElementById(
-          `ckBoxForUpdate${i}`
-        ) as HTMLInputElement;
-        if (ckBox.checked) {
-          const idValue = (
-            document.getElementById(`id${i}`) as HTMLInputElement
-          ).value;
-          const giaNhapValue = (
-            document.getElementById(`giaNhap${i}`) as HTMLInputElement
-          ).value.replaceAll(",", "");
-          const giaBanValue = (
-            document.getElementById(`giaBan${i}`) as HTMLInputElement
-          ).value.replaceAll(",", "");
-          const soLuongValue = (
-            document.getElementById(`soLuong${i}`) as HTMLInputElement
-          ).value.replaceAll(",", "");
-          ids.push(parseInt(idValue));
-          giaNhaps.push(parseInt(giaNhapValue));
-          giaBans.push(parseInt(giaBanValue));
-          soLuongs.push(parseInt(soLuongValue));
-          const updateNhanhReq = {
-            ids: ids,
-            giaNhaps: giaNhaps,
-            giaBans: giaBans,
-            soLuongs: soLuongs,
-          };
-          this.spctService.updateNhanh(updateNhanhReq).subscribe({
-            next: (response: string) => {
-              this.toastr.success(response);
-              this.getSanPhamAndMinMaxPrice();
-            },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.toastr.error(errorResponse.error.message);
-            },
-          });
-          ckBox.checked = false;
+  public quickUpdate(pageSize: number): void {
+    Swal.fire({
+      title: "Cập nhật nhanh?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        const ids: number[] = [];
+        const giaNhaps: number[] = [];
+        const giaBans: number[] = [];
+        const soLuongs: number[] = [];
+        for (let i = 0; i < pageSize; i++) {
+          const ckBox = document.getElementById(
+            `ckBoxForUpdate${i}`
+          ) as HTMLInputElement;
+          if (ckBox.checked) {
+            const idValue = (
+              document.getElementById(`id${i}`) as HTMLInputElement
+            ).value;
+            const giaNhapValue = (
+              document.getElementById(`giaNhap${i}`) as HTMLInputElement
+            ).value.replaceAll(",", "");
+            const giaBanValue = (
+              document.getElementById(`giaBan${i}`) as HTMLInputElement
+            ).value.replaceAll(",", "");
+            const soLuongValue = (
+              document.getElementById(`soLuong${i}`) as HTMLInputElement
+            ).value.replaceAll(",", "");
+            ids.push(parseInt(idValue));
+            giaNhaps.push(parseInt(giaNhapValue));
+            giaBans.push(parseInt(giaBanValue));
+            soLuongs.push(parseInt(soLuongValue));
+            const updateNhanhReq = {
+              ids: ids,
+              giaNhaps: giaNhaps,
+              giaBans: giaBans,
+              soLuongs: soLuongs,
+            };
+            this.spctService.updateNhanh(updateNhanhReq).subscribe({
+              next: (response: string) => {
+                this.toastr.success(response);
+                this.getSanPhamAndMinMaxPrice();
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.toastr.error(errorResponse.error.message);
+              },
+            });
+            ckBox.checked = false;
+          }
         }
       }
-    }
+    });
   }
 
   // 10
@@ -310,16 +319,28 @@ export class DsSanPhamChiTietComponent {
 
   // 12
   public updateSpct(): void {
-    this.spctService.update(this.updateForm.value).subscribe({
-      next: (response: string) => {
-        this.notifService.success(response);
-        this.getSanPhamAndMinMaxPrice();
-        document.getElementById("closeUpdateBtn").click();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        const message = JSON.parse(errorResponse.error).message;
-        this.notifService.error(message);
-      },
+    Swal.fire({
+      title: "Cập nhật SPCT?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.spctService.update(this.updateForm.value).subscribe({
+          next: (response: string) => {
+            this.notifService.success(response);
+            this.getSanPhamAndMinMaxPrice();
+            document.getElementById("closeUpdateBtn").click();
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            const message = JSON.parse(errorResponse.error).message;
+            this.notifService.error(message);
+          },
+        });
+      }
     });
   }
 
@@ -340,20 +361,20 @@ export class DsSanPhamChiTietComponent {
   }
 
   //
-  public changeStatus(id: number): void {
-    this.spctService.changeStatus(id).subscribe({
-      next: (response: string) => {
-        this.toastr.success(response, "");
-        this.getSpctByFilterParams();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(JSON.parse(errorResponse.error).message);
-      },
-    });
-  }
+  // public changeStatus(id: number): void {
+  //   this.spctService.changeStatus(id).subscribe({
+  //     next: (response: string) => {
+  //       this.getSpctByFilterParams();
+  //       this.notifService.success(response);
+  //     },
+  //     error: (errorResponse: HttpErrorResponse) => {
+  //       this.notifService.error(errorResponse.error.message);
+  //     },
+  //   });
+  // }
 
   //
-  public onChangePageSize(e: any): void {
+  public changePageSize(e: any): void {
     this.filterParams.pageSize = e.target.value;
     this.getSpctByFilterParams();
   }
@@ -373,7 +394,7 @@ export class DsSanPhamChiTietComponent {
   }
 
   //
-  public changeInput(event: any): void {
+  public changeFileInputAndShowThumbnail(event: any): void {
     for (let i = 0; i < event.target["files"].length; i++) {
       let currentFile = event.target["files"][i];
       if (!this.checkUploadImage(currentFile.name, this.uploadImgFileList)) {
@@ -450,7 +471,7 @@ export class DsSanPhamChiTietComponent {
                 this.getSpctByFilterParams();
                 this.selectedImgFileList = [];
                 this.uploadImgFileList = [];
-                document.getElementById("closeUpdateBtnImg").click();
+                document.getElementById("closeUpdateImgBtn").click();
                 this.turnOffOverlay("");
               },
               error: (errorResponse: HttpErrorResponse) => {

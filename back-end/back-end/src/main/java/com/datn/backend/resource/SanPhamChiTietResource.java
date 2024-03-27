@@ -70,9 +70,8 @@ public class SanPhamChiTietResource {
 
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody CapNhatSpctRequest req) {
-        System.out.println(req);
-        spctService.update(req);
-        return ResponseEntity.ok("Cập nhật sản phẩm chi tiết thành công!");
+        String updateResult = spctService.update(req);
+        return ResponseEntity.ok("Cập nhật thành công! " + updateResult);
     }
 
     @GetMapping("/min-max-price/{productId}")

@@ -6,11 +6,15 @@ import com.datn.backend.enumeration.LoaiHinhThuc;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.model.hoa_don.HinhThucThanhToan;
 import com.datn.backend.model.hoa_don.HoaDon;
+import com.datn.backend.model.hoa_don.LichSuHoaDon;
 import com.datn.backend.model.hoa_don.ThanhToan;
 import com.datn.backend.repository.HinhThucThanhToanRepository;
 import com.datn.backend.repository.HoaDonRepository;
+import com.datn.backend.repository.LichSuHoaDonRepository;
 import com.datn.backend.repository.ThanhToanRepository;
 import com.datn.backend.service.ThanhToanService;
+import com.datn.backend.utility.UtilityFunction;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,9 +30,11 @@ public class ThanhToanServiceImpl implements ThanhToanService {
     private final ThanhToanRepository thanhToanRepository;
     private final HoaDonRepository hoaDonRepository;
     private final HinhThucThanhToanRepository htttRepository;
+    private final LichSuHoaDonRepository lshdRepo;
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public ThanhToanResponse createThanhToan(ThanhToanRequest thanhToanRequest) {
         LoaiHinhThuc hinhThuc ;
         try{
@@ -61,6 +67,35 @@ public class ThanhToanServiceImpl implements ThanhToanService {
                 .hinhThucThanhToan(httt.get())
                 .build();
 
+        // tao lshd
+        LichSuHoaDon lichSuHoaDon = LichSuHoaDon
+                .builder()
+                .tieuDe("Tạo thanh toán")
+                .moTa("Tạo thanh toán với số tiền : "+ UtilityFunction.convertToCurrency(thanhToan.getSoTien().doubleValue()))
+                .hoaDon(thanhToan.getHoaDon())
+                .build();
+
+        lshdRepo.save(lichSuHoaDon);
         return modelMapper.map(thanhToanRepository.save(thanhToan),ThanhToanResponse.class);
+    }
+
+    @Override
+    @Transactional
+    public ThanhToanResponse deleteThanhToan(Integer thanhToanId) {
+        if (thanhToanId == null){
+            throw new IdNotFoundException("Thanh toán này không tồn tại vui lòng thử lại.");
+        }
+        ThanhToan thanhToan = thanhToanRepository.findById(thanhToanId).orElseThrow(() -> new IdNotFoundException("Thanh toán này không tồn tại vui lòng thử lại.") );
+        // tao lshd
+        LichSuHoaDon lichSuHoaDon = LichSuHoaDon
+                .builder()
+                .tieuDe("Xóa thanh toán")
+                .moTa("Xóa thanh toán với số tiền : "+UtilityFunction.convertToCurrency(thanhToan.getSoTien().doubleValue()))
+                .hoaDon(thanhToan.getHoaDon())
+                .build();
+        lshdRepo.save(lichSuHoaDon);
+
+        thanhToanRepository.deleteById(thanhToanId);
+        return modelMapper.map(thanhToan,ThanhToanResponse.class);
     }
 }

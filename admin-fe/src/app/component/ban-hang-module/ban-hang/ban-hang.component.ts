@@ -375,6 +375,11 @@ export class BanHangComponent implements OnInit, OnDestroy {
         this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
         return;
       }
+      let diaChis = this.order.diaChiNguoiNhan.split(",");
+      if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
+        this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
+        return;
+      }
       let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(
         this.order,
         this.diaChiVaPhiVanChuyen

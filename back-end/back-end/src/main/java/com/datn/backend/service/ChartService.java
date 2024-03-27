@@ -4,6 +4,7 @@ import com.datn.backend.dto.response.CouponsSumarryResponse;
 import com.datn.backend.dto.response.DiscountSummaryResponse;
 import com.datn.backend.dto.response.ProductsSummaryResponse;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,17 +51,17 @@ public interface ChartService {
 
     List<CouponsSumarryResponse> getListCouponsUsedInAnyYear(Integer year);
 
-    List<Double> getListSalesInThisYear();
+    List<BigDecimal> getListSalesInThisYear();
 
-    List<Double> getListSalesInLastYear();
+    List<BigDecimal> getListSalesInLastYear();
 
-    List<Double> getListSales4WeekInThisMonth();
+    List<BigDecimal> getListSales4WeekInThisMonth();
 
-    List<Double> getListSales4WeekInLastMonth();
+    List<BigDecimal> getListSales4WeekInLastMonth();
 
-    List<Double> getSale7DaysInThisWeek();
+    List<BigDecimal> getSale7DaysInThisWeek();
 
-    List<Double> getSale7DaysInLastWeek();
+    List<BigDecimal> getSale7DaysInLastWeek();
 
     Long countAllInvoiceThisYear();
 

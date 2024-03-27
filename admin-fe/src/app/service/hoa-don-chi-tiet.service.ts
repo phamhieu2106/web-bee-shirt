@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
+import { ht } from "date-fns/locale";
 
 @Injectable({
   providedIn: "root",
@@ -27,5 +28,13 @@ export class HoaDonChiTietService {
 
   deleteHDCT(idHDCT: number): Observable<any> {
     return this.http.delete(this.baseUrl + "/delete/" + idHDCT);
+  }
+
+  postHoaDonChiTiet(
+    sanPhamChiTietId: number,
+    hoaDonId: number
+  ): Observable<HoaDonChiTiet> {
+    let rawData = { sanPhamChiTietId, hoaDonId };
+    return this.http.post<HoaDonChiTiet>(this.baseUrl + "/add", rawData);
   }
 }

@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author HungDV
@@ -24,5 +21,10 @@ public class ThanhToanResource {
     @PostMapping("/add")
     public ResponseEntity<ThanhToanResponse> addThanhToan(@Valid @RequestBody ThanhToanRequest thanhToanRequest){
         return new ResponseEntity<>(thanhToanService.createThanhToan(thanhToanRequest), HttpStatusCode.valueOf(201));
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<ThanhToanResponse> deleteThanhToan(@RequestParam(name = "id") Integer thanhToanId){
+        return new ResponseEntity<>(thanhToanService.deleteThanhToan(thanhToanId), HttpStatusCode.valueOf(200));
     }
 }

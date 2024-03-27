@@ -21,4 +21,9 @@ export class ThanhToanService {
       soTien: thanhToan.tienKhachDua,
     });
   }
+
+  deleteThanhToan(id: number): Observable<ThanhToan> {
+    let params = "?id=" + id;
+    return this.http.delete<ThanhToan>(this.baseUrl + params);
+  }
 }

@@ -10,7 +10,10 @@
         <div
           class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
         >
-          <div class="step completed" *ngFor="let lshd of hoaDon.lichSuHoaDons">
+          <div
+            class="step completed"
+            *ngFor="let lshd of getDanhSachTrangThai()"
+          >
             <!-- Icon -->
             <div class="step-icon-wrap">
               <div class="step-icon" [ngSwitch]="lshd.trangThai">

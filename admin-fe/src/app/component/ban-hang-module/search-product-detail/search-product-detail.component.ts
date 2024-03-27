@@ -14,7 +14,6 @@ import { KieuThietKe } from "src/app/model/class/kieu-thiet-ke.class";
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { CoAo } from "src/app/model/class/co-ao.class";
 import { ChatLieu } from "src/app/model/class/chat-lieu.class";
-import { error } from "highcharts";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 
@@ -80,6 +79,9 @@ export class SearchProductDetailComponent {
       this.minValue = this.maxValue;
       this.maxValue = temp;
     }
+    setTimeout(() => {
+      this.getAllSpct();
+    }, 100);
   }
   getMinMaxPrice() {
     this.spctService.getMinMaxPrice().subscribe({

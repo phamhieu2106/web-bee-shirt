@@ -25,6 +25,7 @@ registerLocaleData(en);
 
 /** config ng-zorro-antd i18n **/
 import { provideNzI18n, en_US } from "ng-zorro-antd/i18n";
+import { TraHangModule } from "./component/tra-hang-module/tra-hang.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,6 +47,7 @@ import { provideNzI18n, en_US } from "ng-zorro-antd/i18n";
     LayoutModule,
     AppRoutingModule,
     BanHangModule,
+    TraHangModule,
   ],
   providers: [
     provideNzI18n(en_US),

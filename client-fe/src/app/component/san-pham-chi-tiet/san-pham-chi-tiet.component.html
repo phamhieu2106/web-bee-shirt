@@ -1,33 +1,24 @@
 <section class="container">
   <div class="row" style="margin-top: 20px">
     <div class="col-md-6">
-      <img id="product-img"
-        src="https://product.hstatic.net/1000253775/product/160_somi_1m-1_55190a94ae74490db6ef21f0fcb89424_master.jpg"
-        alt="">
-      <div class="small-img-row">
-        <div class="small-img-row">
-          <img
-            src="https://product.hstatic.net/1000253775/product/160_somi_1m-10_f569fdf5a82d4feaa7da742da79a14e0_master.jpg"
-            alt="" width="100%" class="small-img">
-        </div>
-        <div class="small-img-row">
-          <img
-            src="https://product.hstatic.net/1000253775/product/160_somi_1m-11_58cd9bcc813949c7be6b839fc5b326eb_master.jpg"
-            alt="" width="100%" class="small-img">
-        </div>
-        <div class="small-img-row">
-          <img
-            src="https://product.hstatic.net/1000253775/product/160_somi_1m-5_77d68f9b16ae4a2392a4ec664d225f3c_master.jpg"
-            alt="" width="100%" class="small-img">
-        </div>
-        <div class="small-img-row">
-          <img
-            src="https://product.hstatic.net/1000253775/product/160_somi_1m-1_55190a94ae74490db6ef21f0fcb89424_master.jpg"
-            alt="" width="100%" class="small-img">
-        </div>
-
+      <owl-carousel-o [options]="sanPhamCT" class="owl-theme owl-dot-custom">
+        <ng-template carouselSlide><img
+          src="https://product.hstatic.net/1000253775/product/160_somi_1m-10_f569fdf5a82d4feaa7da742da79a14e0_master.jpg"
+          alt="" width="100%" class="small-img"></ng-template>  
+        <ng-template carouselSlide><img
+          src="https://product.hstatic.net/1000253775/product/160_somi_1m-11_58cd9bcc813949c7be6b839fc5b326eb_master.jpg"
+          alt="" width="100%" class="small-img"></ng-template>  
+        <ng-template carouselSlide> <img
+          src="https://product.hstatic.net/1000253775/product/160_somi_1m-5_77d68f9b16ae4a2392a4ec664d225f3c_master.jpg"
+          alt="" width="100%" class="small-img"></ng-template>  
+        <ng-template carouselSlide><img
+          src="https://product.hstatic.net/1000253775/product/160_somi_1m-1_55190a94ae74490db6ef21f0fcb89424_master.jpg"
+          alt="" width="100%" class="small-img"></ng-template>  
         
-      </div>
+      </owl-carousel-o>
+
+
+
 
     </div>
 
@@ -328,7 +319,7 @@
       </div>
     </div>
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
           role="tab" aria-controls="home" aria-selected="true" style="color: black">
@@ -385,22 +376,3 @@
 </section>
 
 
-<script>
-  var productImg = document.getElementById('product-img');
-  var smallImg = document.getElementsByClassName('small-img')
-
-  smallImg[0].onclick = function () {
-    productImg.src = smallImg[0].src;
-  }
-
-  smallImg[1].onclick = function () {
-    productImg.src = smallImg[1].src;
-  }
-  smallImg[3].onclick = function () {
-    productImg.src = smallImg[3].src;
-  }
-  smallImg[4].onclick = function () {
-    productImg.src = smallImg[4].src;
-  }
-
-</script>

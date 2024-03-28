@@ -13,45 +13,39 @@
   <app-dot-giam-gia></app-dot-giam-gia>
 </section> -->
 
-<section class="pb-5 container">
-  <!-- Sản Phẩm Mới Ra -->
-  <div class="pb-3">
-    <h2 class="title-section bd-left">
-      <span>Sản Phẩm Mới Ra</span>
-    </h2>
-  </div>
+ <!-- Sản Phẩm Mới Ra -->
+ <div class="pb-3 container">
+  <h2 class="title-section bd-left">
+    <span>Sản Phẩm Mới Ra</span>
+  </h2>
+</div>
 
 
-  <div class="product-carousel" >
-
-
-    <div class="product" *ngFor="let sp of pagedResponse?.data">
-      <div class="product-top">
-        <img class="product-image" [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" />
-        <div class="product-name">
+<div class="container">
+  <owl-carousel-o [options]="customOptions" >
+    <ng-template carouselSlide *ngFor="let sp of pagedResponse?.data" >
+      <div class="product-thumbnail">
+       <a  class="image_thumb">
+        <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" alt="">
+       </a>
+      
+      </div>
+      <div class="details">
+        <h3 class="nameProduct">
           <a [routerLink]="'/san-pham/' + sp.id">{{
             sp.ten
             }}</a>
-        </div>
+        </h3>
+  
+        <p class="priceProduct">{{ displayPrice(sp) }}</p>
+  
+          <button class="btnAdd ">Thêm vào giỏ hàng</button>
       </div>
-      <div class="product-bottom">
-        <p class="product-prices">
-          <span class="price-was">{{ displayPrice(sp) }}</span>
-          
-        </p>
-        <button class="shop-now">Shop Now</button>
-      </div>
-    </div>
-
-
-   
-
-
-
-
-   
-
-  </div>
+    </ng-template>  
+    
+  </owl-carousel-o>
+</div>
 
   
-</section>
+  
+

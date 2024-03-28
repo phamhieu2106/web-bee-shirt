@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<section class="container">
+<!-- <section class="container">
   <div>
     <h2 class="title-section bd-left">
       <span>ƯU ĐÃI DÀNH CHO BẠN</span>
@@ -11,7 +11,7 @@
 
 <section class="container">
   <app-dot-giam-gia></app-dot-giam-gia>
-</section>
+</section> -->
 
 <section class="pb-5 container">
   <!-- Sản Phẩm Mới Ra -->
@@ -21,45 +21,32 @@
     </h2>
   </div>
 
-  <div class="slide-container swiper">
-    <div class="slide-content" style="overflow: hidden">
-      <div class="card-wraper swiper-wrapper">
-        <div
-          class="card-product swiper-slide"
-          *ngFor="let sp of pagedResponse?.data"
-        >
-          <div class="image-content">
-            <Button class="btn add-cart">Thêm Nhanh Vào Giỏ</Button>
-            <div class="card-image">
-              <img
-                [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl"
-                class="card-img rounded"
-                style="width: 150px; height: 250px; object-fit: cover"
-              />
-            </div>
-          </div>
 
-          <div class="card-content">
-            <div>
-              <span *ngFor="let mauSac of getMauSacList(sp)">
-                <img
-                  class="img-color"
-                  [src]="mauSac.image.imageUrl"
-                  [title]="mauSac.ten"
-                />
-              </span>
-            </div>
-            <h2 class="name">
-              <a class="name-link" [routerLink]="'/san-pham/' + sp.id">{{
-                sp.ten
-              }}</a>
-            </h2>
-            <span class="price"> {{ displayPrice(sp) }}</span>
-          </div>
+  <div class="product-carousel" >
+
+
+    <div class="product" *ngFor="let sp of pagedResponse?.data">
+      <div class="product-top">
+        <img class="product-image" [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" />
+        <div class="product-name">
+          <a [routerLink]="'/san-pham/' + sp.id">{{
+            sp.ten
+            }}</a>
         </div>
       </div>
+      <div class="product-bottom">
+        <p class="product-prices">
+          <span class="price-was">{{ displayPrice(sp) }}</span>
+          
+        </p>
+        <button class="shop-now">Shop Now</button>
+      </div>
     </div>
-    <div id="next-content" class="swiper-button-next"></div>
-    <div id="prev-content" class="swiper-button-prev"></div>
+
+
+
+
+   
+
   </div>
 </section>

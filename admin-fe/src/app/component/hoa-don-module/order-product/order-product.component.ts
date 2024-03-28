@@ -1,9 +1,6 @@
-import { error } from "highcharts";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { ToastrService } from "ngx-toastr";
 import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
-import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 import { HoaDonChiTietService } from "src/app/service/hoa-don-chi-tiet.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { HoaDon } from "src/app/model/class/hoa-don.class";

@@ -68,6 +68,11 @@
                             class="btn btn-outline-secondary btn-number"
                             (click)="minus(hdct)"
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                            [disabled]="
+                              hoaDon.trangThai == 'HOAN_THANH' ||
+                              hoaDon.trangThai == 'HUY' ||
+                              hoaDon.trangThai == 'DANG_GIAO'
+                            "
                           >
                             <span class="fa fa-minus"></span>
                           </button>
@@ -78,7 +83,12 @@
                           class="form-control input-number w-50"
                           [(ngModel)]="hdct.soLuong"
                           (change)="inputSoLuong(hdct, $event)"
-                          [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+                          [disabled]="
+                            hoaDon.loaiHoaDon == 'TAI_QUAY' ||
+                            hoaDon.trangThai == 'HOAN_THANH' ||
+                            hoaDon.trangThai == 'HUY' ||
+                            hoaDon.trangThai == 'DANG_GIAO'
+                          "
                         />
                         <span class="input-group-append">
                           <button
@@ -86,6 +96,11 @@
                             class="btn btn-outline-secondary btn-number"
                             (click)="plus(hdct)"
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                            [disabled]="
+                              hoaDon.trangThai == 'HOAN_THANH' ||
+                              hoaDon.trangThai == 'HUY' ||
+                              hoaDon.trangThai == 'DANG_GIAO'
+                            "
                           >
                             <span class="fa fa-plus"></span>
                           </button>

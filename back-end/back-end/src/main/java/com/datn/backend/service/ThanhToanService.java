@@ -9,6 +9,8 @@ import com.datn.backend.dto.response.ThanhToanResponse;
 public interface ThanhToanService {
     // create
     ThanhToanResponse createThanhToan(ThanhToanRequest thanhToanRequest);
+
+    ThanhToanResponse deleteThanhToan(Integer thanhToanId);
     // update
     // delete
     // get

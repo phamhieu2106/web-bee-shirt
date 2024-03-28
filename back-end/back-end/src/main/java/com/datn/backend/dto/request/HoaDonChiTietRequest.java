@@ -27,5 +27,5 @@ public class HoaDonChiTietRequest {
     private BigDecimal giaBan;
     private BigDecimal giaNhap;
     private Integer sanPhamChiTietId;
-    private Integer hoaDonID;
+//    private Integer hoaDonID;
 }

@@ -8,6 +8,6 @@ import { Component, Input } from "@angular/core";
 export class ProductImageComponent {
   @Input() url: string = "/assets/img/default-image.jpg";
   @Input() discount: number;
-  @Input() width: number = 70;
-  @Input() height: number = 70;
+  @Input() widths: number = 70;
+  @Input() heights: number = 70;
 }

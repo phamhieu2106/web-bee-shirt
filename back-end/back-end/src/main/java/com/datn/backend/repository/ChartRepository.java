@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -311,7 +312,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                         GROUP BY thang.Thang
                         ORDER BY thang.Thang;
             """, nativeQuery = true)
-    List<Double> getListSalesInAnyYear(@Param("year") LocalDate year);
+    List<BigDecimal> getListSalesInAnyYear(@Param("year") LocalDate year);
 
     @Query(value = """
                     SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
@@ -342,7 +343,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                                             AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)
                                             AND created_at <= :endDate ;
             """, nativeQuery = true)
-    List<Double> getListSales4WeekInAnyMonth(@Param("startDate") LocalDate startDate
+    List<BigDecimal> getListSales4WeekInAnyMonth(@Param("startDate") LocalDate startDate
             , @Param("endDate") LocalDate endDate, @Param("totalDays") int totalDays);
 
     @Query(value = """
@@ -351,7 +352,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                         JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                         WHERE DAY(created_at) = DAY(LAST_DAY( :today ));
             """, nativeQuery = true)
-    Double getSaleLastDayOfAnyMonth(@Param("today") LocalDate today);
+    BigDecimal getSaleLastDayOfAnyMonth(@Param("today") LocalDate today);
 
     @Query(value = """
             SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
@@ -366,5 +367,5 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
                         GROUP BY DATE_ADD( :startOfWeek , INTERVAL num DAY)
                         ORDER BY DATE_ADD( :startOfWeek , INTERVAL num DAY);
             """, nativeQuery = true)
-    List<Double> getSale7DaysInAnyWeek(@Param("startOfWeek") Date startOfWeek);
+    List<BigDecimal> getSale7DaysInAnyWeek(@Param("startOfWeek") Date startOfWeek);
 }

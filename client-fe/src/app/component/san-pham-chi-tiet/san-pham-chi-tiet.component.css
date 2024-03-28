@@ -1,26 +1,7 @@
-
-#product-img{
-    width: 100%;
+.owl-theme .owl-dots .owl-dot{
+    display: none !important;
 }
 
-.small-img-row{
-    width: 100%;
-    display: flex;
-    overflow: hidden;
-
-
-}
-.small-img-col{
-    flex-basis: 24%;
-    cursor: pointer;
-    
-}
-
-.small-img-row img{
- 
-    padding: 10px;
-
-}
 
 /* Copy Mã  */
 

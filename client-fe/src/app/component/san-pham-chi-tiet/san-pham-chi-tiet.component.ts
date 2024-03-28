@@ -19,10 +19,19 @@ export class SanPhamChiTietComponent {
     private activatedRoute: ActivatedRoute,
     private sanPhamService: SanPhamService,
     private notifService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getSanPham();
+    const productImg = document.getElementById('product-img') as HTMLImageElement;
+    const smallImg = document.getElementsByClassName('small-img');
+    
+    for (let i = 0; i < smallImg.length; i++) {
+      const imgElement = smallImg[i] as HTMLImageElement;
+      imgElement.onclick = function() {
+        productImg.src = imgElement.src;
+      }
+    }
   }
 
   // II. private functions
@@ -43,4 +52,6 @@ export class SanPhamChiTietComponent {
       });
     });
   }
+
+
 }

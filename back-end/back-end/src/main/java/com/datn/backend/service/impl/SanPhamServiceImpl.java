@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -48,9 +50,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search) {
+    public PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search, List<Integer> status) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> sanPhamPage = sanPhamRepo.getByPage(pageable, search);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPage(pageable, search, status);
 
         PagedResponse<SanPham> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
@@ -66,14 +68,14 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public SanPham getById(int id) {
-        return sanPhamRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sản phẩm với ID: " + id + " không tồn tại!"));
+        return sanPhamRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sản phẩm ID: " + id + " không tồn tại!"));
     }
 
     @Override
     @Transactional
     public void changeStatus(int id, boolean value) {
         SanPham sanPham = sanPhamRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm với ID: " + id + " không tồn tại!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm ID: " + id + " không tồn tại!"));
         sanPham.setTrangThai(value);
         sanPhamRepo.save(sanPham);
 
@@ -89,7 +91,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     private void checkExistForUpdate(SanPham sanPham) {
         SanPham sanPhamById = sanPhamRepo.findById(sanPham.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm với ID: " + sanPham.getId() + " không tồn tại!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm  ID: " + sanPham.getId() + " không tồn tại!"));
 
         SanPham sanPhamByTen = sanPhamRepo.getByTen(sanPham.getTen());
         SanPham sanPhamByMa = sanPhamRepo.getByMa(sanPham.getMa());

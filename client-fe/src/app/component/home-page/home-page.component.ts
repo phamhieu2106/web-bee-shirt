@@ -7,6 +7,8 @@ import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { SanPhamService } from "src/app/service/san-pham.service";
 
+import { OwlOptions } from 'ngx-owl-carousel-o';
+
 @Component({
   selector: "app-home-page",
   templateUrl: "./home-page.component.html",
@@ -14,6 +16,32 @@ import { SanPhamService } from "src/app/service/san-pham.service";
 })
 export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
+
+
+  customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: false,
+    navSpeed: 700,
+    navText: ['<i class="bi bi-caret-left"></i>', '<i class="bi bi-caret-right"></i>'],
+    responsive: {
+      0: {
+        items: 1
+      },
+      400: {
+        items: 2
+      },
+      740: {
+        items: 3
+      },
+      940: {
+        items: 4
+      }
+    },
+    nav: true
+  }
 
   // constructor, ngOn
   constructor(
@@ -23,6 +51,8 @@ export class HomePageComponent {
 
   ngOnInit(): void {
     this.getSanPhamList();
+
+   
   }
 
   // I. public functions

@@ -3,7 +3,9 @@ package com.datn.backend.resource;
 import com.datn.backend.model.san_pham.HinhAnh;
 import com.datn.backend.service.HinhAnhSanPhamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +23,11 @@ public class HinhAnhSanPhamResource {
     public List<HinhAnh> getByMauSac(@RequestParam("tenMau") String tenMau,
                                      @RequestParam("sanPhamID") int sanPhamID) {
         return hinhAnhService.getByMauSac(tenMau, sanPhamID);
+    }
+
+    @GetMapping("/url-by-sp-ms/{productId}/{colorId}")
+    public ResponseEntity<List<String>> getAllUrlBySanPhamAndMauSac(@PathVariable("productId") int productId,
+                                                                    @PathVariable("colorId") int colorId) {
+        return ResponseEntity.ok(hinhAnhService.getAllUrlBySanPhamAndMauSac(productId, colorId));
     }
 }

@@ -15,9 +15,13 @@ public interface MauSacService {
 
     List<MauSac> getAll();
 
+    List<MauSac> getAllActiveColors();
+
     MauSac getById(int id);
 
     void changeStatus(int id);
 
     MauSac update(MauSac mauSac, MultipartFile multipartFile) throws IOException;
+
+    List<MauSac> getAllColorOfProduct(int productId);
 }

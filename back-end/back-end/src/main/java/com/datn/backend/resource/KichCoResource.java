@@ -56,4 +56,11 @@ public class KichCoResource {
     public ResponseEntity<KichCo> update(@RequestBody KichCo chatLieu) {
         return ResponseEntity.ok(kichCoService.update(chatLieu));
     }
+
+    // client resources
+    @GetMapping("/by-product-color/{productId}/{colorId}")
+    public ResponseEntity<List<KichCo>> getAllByProductAndColor(@PathVariable("productId") int productId,
+                                                                @PathVariable("colorId") int colorId) {
+        return ResponseEntity.ok(kichCoService.getAllByProductAndColor(productId, colorId));
+    }
 }

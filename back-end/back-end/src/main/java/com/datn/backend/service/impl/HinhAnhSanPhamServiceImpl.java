@@ -18,4 +18,9 @@ public class HinhAnhSanPhamServiceImpl implements HinhAnhSanPhamService {
     public List<HinhAnh> getByMauSac(String tenMau, int sanPhamID) {
         return hinhAnhRepo.getByMauSac(tenMau, sanPhamID);
     }
+
+    @Override
+    public List<String> getAllUrlBySanPhamAndMauSac(int productId, int colorId) {
+        return hinhAnhRepo.getAllUrlBySanPhamAndMauSac(productId, colorId);
+    }
 }

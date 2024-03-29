@@ -88,6 +88,11 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
+    public List<MauSac> getAllActiveColors() {
+        return mauSacRepo.getAllActiveColors();
+    }
+
+    @Override
     public MauSac getById(int id) {
         return mauSacRepo.findById(id).get();
     }
@@ -149,5 +154,10 @@ public class MauSacServiceImpl implements MauSacService {
         if (mauSacByMa != null && mauSacByMa.getId() != mauSacInDB.getId()) {
             throw new ResourceExistsException("Mã '" + mauSac.getMa() + "' đã tồn tại.");
         }
+    }
+
+    @Override
+    public List<MauSac> getAllColorOfProduct(int productId) {
+        return mauSacRepo.getAllColorOfProduct(productId);
     }
 }

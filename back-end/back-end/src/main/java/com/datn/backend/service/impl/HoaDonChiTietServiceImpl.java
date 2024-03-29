@@ -12,6 +12,7 @@ import com.datn.backend.model.hoa_don.LichSuHoaDon;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonChiTietService;
+import com.datn.backend.utility.UtilityFunction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -53,21 +54,19 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
             throw new RuntimeException("Sản phẩm chi tiết này đã hết hàng");
         }
 
+        BigDecimal giaBanHienTai = getGiaBanSpctHienTai(sanPhamChiTiet.getId());
+
         // kiem tra spct da duoc mua chua
-        Optional<HoaDonChiTiet> hoaDonChiTietOptional = hoaDon.getHoaDonChiTiets().stream().filter(
-                (hdct) -> hdct.getSanPhamChiTiet().getId().equals(hoaDonChiTietRequest.getSanPhamChiTietId())
-        ).findFirst();
+        hoaDonChiTiet = hoaDonChiTietRepository.findByHoaDonAndSanPhamChiTietAndGiaBan(hoaDon, sanPhamChiTiet, giaBanHienTai).orElse(null);
 
         // neu san pham chua duoc mua hoac gia ban bi thay doi
-        if (hoaDonChiTietOptional.isEmpty() ||
-                hoaDonChiTietOptional.get().getGiaBan().compareTo(
-                        getGiaBanSpctHienTai(hoaDonChiTietRequest.getSanPhamChiTietId())
-                ) != 0
-        ) {
+        if (hoaDonChiTiet == null ||
+                hoaDonChiTiet.getGiaBan().compareTo(giaBanHienTai) != 0) {
+            // tao moi 1 hdct voi gia ban moi
             hoaDonChiTiet = HoaDonChiTiet
                     .builder()
                     .soLuong(1)
-                    .giaBan(this.getGiaBanSpctHienTai(hoaDonChiTietRequest.getSanPhamChiTietId()))
+                    .giaBan(giaBanHienTai)
                     .giaNhap(sanPhamChiTiet.getGiaNhap())
                     .hoaDon(hoaDon)
                     .sanPhamChiTiet(sanPhamChiTiet)
@@ -84,12 +83,10 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
         } else {
-            // neu san san pham khong bi thay doi gia ban
-            hoaDonChiTiet = hoaDonChiTietOptional.get();
-
-            // tru so luong ton
+            // cong them 1 vao hdct
             hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + 1);
 
+            // cap nhat so luong ton
             sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
             sanPhamChiTietRepo.save(sanPhamChiTiet);
 
@@ -101,7 +98,6 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
         }
-
         return modelMapper.map(hoaDonChiTietRepository.save(hoaDonChiTiet), HoaDonChiTietResponse.class);
     }
 
@@ -120,42 +116,126 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
+    @Transactional
     public HoaDonChiTietResponse updateHoaDonCT(HoaDonChiTietRequest hoaDonChiTietRequest) {
-        Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findById(hoaDonChiTietRequest.getId());
-        if (hoaDonChiTiet.isEmpty()) {
-            throw new IdNotFoundException("Hóa đơn chi tiết không tồn tai id: " + hoaDonChiTietRequest.getId());
-        }
-        // còn kiểm tra số lượng sản phẩm chi tiết nữa
-        SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.get().getSanPhamChiTiet();
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findById(hoaDonChiTietRequest.getId()).orElseThrow(
+                () -> new IdNotFoundException("Sản phẩm không tồn tại trong hóa đơn"));
+        // lay hoa don
+        HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+
+        // lay spct
+        SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+
+        // lay gia ban hien tai
+        BigDecimal giaBanHienTai = getGiaBanSpctHienTai(hoaDonChiTiet.getSanPhamChiTiet().getId());
+
+        // hdct de update
+//        HoaDonChiTiet hoaDonChiTietUpdate = hoaDonChiTietRepository.findByHoaDonAndSanPhamChiTietAndGiaBan(hoaDon, sanPhamChiTiet, giaBanHienTai).orElse(null);
+
         if (!sanPhamChiTiet.isTrangThai()) {
             throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " đã dừng bán!");
         }
+
         if (hoaDonChiTietRequest.getSoLuong() <= 0) {
             throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " số lượng không hợp lệ !");
         }
-//        if (hoaDonChiTietRequest.getSoLuong() <= sanPhamChiTiet.getSoLuongTon()+hoaDonChiTiet.get().getSoLuong()){
-//            throw new PlaceOrderException("Sản phẩm "+sanPhamChiTiet.getSanPham().getTen() +" đã hết hàng");
-//        }
-        if (hoaDonChiTietRequest.getSoLuong() > sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.get().getSoLuong()) {
-            throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " chỉ có thể mua tối đa " + (sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.get().getSoLuong()) + " sản phẩm !");
+
+        if (hoaDonChiTietRequest.getSoLuong() > sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.getSoLuong()) {
+            throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " chỉ có thể mua tối đa " + (sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.getSoLuong()) + " sản phẩm !");
         }
-        // update so luong ton
-        sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.get().getSoLuong() - hoaDonChiTietRequest.getSoLuong());
-        sanPhamChiTietRepo.save(sanPhamChiTiet);
+        int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - hoaDonChiTiet.getSoLuong();
+        // neu soLuongBienDong<=0 thi la dang tru
 
-        HoaDonChiTiet hoaDonCTUpdate = hoaDonChiTiet.get();
-        hoaDonCTUpdate.setGiaBan(hoaDonChiTietRequest.getGiaBan());
-        hoaDonCTUpdate.setSoLuong(hoaDonChiTietRequest.getSoLuong());
-        hoaDonCTUpdate = hoaDonChiTietRepository.save(hoaDonCTUpdate);
+        if (soLuongBienDong <= 0 || hoaDonChiTietRequest.getGiaBan().compareTo(giaBanHienTai) == 0) {
+            // neu tru thi chi can update lai so luong || gia hien tai va gia cua san pham khong co su chenh lech
+            int soLuongCapNhat = hoaDonChiTiet.getSoLuong() + soLuongBienDong;
+            // cap nhat so luong
+            hoaDonChiTiet.setSoLuong(soLuongCapNhat);
+            if (hoaDonChiTiet.getSoLuong() <= 0) {
+                throw new RuntimeException("Số lượng sản phẩm không hợp lệ");
+            }
+            // tao lich su hoa don
+            LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                    .tieuDe("Cập nhật sản phẩm")
+                    .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+                            " màu " + sanPhamChiTiet.getMauSac().getTen() +
+                            " size " + sanPhamChiTiet.getMauSac().getTen() +
+                            " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                    )
+                    .hoaDon(hoaDon)
+                    .build();
+            lichSuHoaDonRepo.save(lichSuHoaDon);
 
-        return modelMapper.map(hoaDonCTUpdate, HoaDonChiTietResponse.class);
+            // cap nhat so luong ton
+            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+            sanPhamChiTietRepo.save(sanPhamChiTiet);
+        } else {
+            // neu cong them || gia ban bi checnh lech
+
+            hoaDonChiTiet = hoaDon.getHoaDonChiTiets().stream().filter(
+                            (hdct) -> hdct.getGiaBan().compareTo(giaBanHienTai) == 0)
+                    .findFirst().orElse(null);
+
+            if (hoaDonChiTiet == null) {// chua co hdct nao voi gia moi
+                // tao moi hdct
+                hoaDonChiTiet = HoaDonChiTiet.builder()
+                        .soLuong(1)
+                        .giaBan(giaBanHienTai)// gia ban hien tai
+                        .giaNhap(sanPhamChiTiet.getGiaNhap())
+                        .hoaDon(hoaDon)
+                        .sanPhamChiTiet(sanPhamChiTiet)
+                        .build();
+
+                // tao lich su hoa don
+                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                        .tieuDe("Thêm mới sản phẩm")
+                        .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+                                " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
+                        )
+                        .hoaDon(hoaDon)
+                        .build();
+                lichSuHoaDonRepo.save(lichSuHoaDon);
+                // cap nhat so luong ton
+                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
+                sanPhamChiTietRepo.save(sanPhamChiTiet);
+            } else { // da co hdct voi gia moi => cap nhat sl
+                int soLuongCapNhat = hoaDonChiTiet.getSoLuong() + soLuongBienDong;
+                // cap nhat so luong
+
+                hoaDonChiTiet.setSoLuong(soLuongCapNhat);
+                if (hoaDonChiTiet.getSoLuong() <= 0) {
+                    throw new RuntimeException("Số lượng sản phẩm không hợp lệ");
+                }
+                // tao lich su hoa don
+                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                        .tieuDe("Cập nhật sản phẩm")
+                        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+                                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                        )
+                        .hoaDon(hoaDon)
+                        .build();
+                lichSuHoaDonRepo.save(lichSuHoaDon);
+
+                // cap nhat so luong ton
+                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+                sanPhamChiTietRepo.save(sanPhamChiTiet);
+            }
+
+        }
+
+        // cap nhat hdct
+        return modelMapper.map(hoaDonChiTietRepository.save(hoaDonChiTiet), HoaDonChiTietResponse.class);
     }
 
     @Override
     public HoaDonChiTietResponse deleteHoaDonCT(Integer id) {
         Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findById(id);
         if (hoaDonChiTiet.isEmpty()) {
-            throw new IdNotFoundException("Không tìm thấy hóa đơn chi tiết id: " + id);
+            throw new IdNotFoundException("Sản phẩm không tồn tại trong hóa đơn");
         }
         //update so luong ton
         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.get().getSanPhamChiTiet();
@@ -166,3 +246,191 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         return modelMapper.map(hoaDonChiTiet.get(), HoaDonChiTietResponse.class);
     }
 }
+
+//// kiem tra gia ban co bi thay doi hay k
+//        if (hoaDonChiTiet.getGiaBan().compareTo(giaBanHienTai) == 0) {
+//// neu khong  thi cap nhat lai sl
+//
+//// tinh so luong bien dong
+//int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - hoaDonChiTiet.getSoLuong();
+//
+//// cap nhat so luong
+//            hoaDonChiTiet.setSoLuong(hoaDonChiTietRequest.getSoLuong());
+//
+//// tao lich su hoa don
+//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//        .tieuDe("Cập nhật sản phẩm")
+//        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                " số lượng " + hoaDonChiTiet + soLuongBienDong
+//        )
+//        .hoaDon(hoaDonChiTiet.getHoaDon())
+//        .build();
+//            lichSuHoaDonRepo.save(lichSuHoaDon);
+//
+//// cap nhat so luong ton
+//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+//        sanPhamChiTietRepo.save(sanPhamChiTiet);
+//        } else {
+//
+//// lay ra so luong ban dau cua hdct
+//int soLuongTemp = hoaDonChiTiet.getSoLuong();
+//
+//hoaDonChiTiet = hoaDonChiTietRepository
+//        .findByHoaDonAndSanPhamChiTietAndGiaBan(hoaDon, sanPhamChiTiet, giaBanHienTai)
+//                    .orElse(null);
+//
+//// chua co hoa don chi tiet voi gia ban moi se tao 1 hdct moi
+//            if (hoaDonChiTiet == null) {
+//// tao moi hdct
+//hoaDonChiTiet = HoaDonChiTiet.builder()
+//                        .soLuong(1)
+//                        .giaBan(giaBanHienTai)// gia ban hien tai
+//                        .giaNhap(sanPhamChiTiet.getGiaNhap())
+//        .hoaDon(hoaDonChiTiet.getHoaDon())
+//        .sanPhamChiTiet(sanPhamChiTiet)
+//                        .build();
+//
+//// tao lich su hoa don
+//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//        .tieuDe("Thêm mới sản phẩm")
+//        .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
+//        )
+//        .hoaDon(hoaDonChiTiet.getHoaDon())
+//        .build();
+//
+//// cap nhat so luong ton
+//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
+//        sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            } else {
+//// da co hdct voi gia ban nay => cap nhat sl
+//
+//
+//// tinh so luong bien dong
+//int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - soLuongTemp;
+//
+//// cap nhat so luong
+//                hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + soLuongBienDong);
+//
+//// tao lich su hoa don
+//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//        .tieuDe("Cập nhật sản phẩm")
+//        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+//        )
+//        .hoaDon(hoaDonChiTiet.getHoaDon())
+//        .build();
+//                lichSuHoaDonRepo.save(lichSuHoaDon);
+//
+//// cap nhat so luong ton
+//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+//        sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            }
+//
+//                    }
+
+//// neu cong them thi cap nhat thang voi gia hien tai
+//            if (soLuongBienDong>0){
+//                // cap nhat so luong
+//                hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong()+soLuongBienDong);
+//
+//                // tao lich su hoa don
+//                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//                        .tieuDe("Cập nhật sản phẩm")
+//                        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+//                        )
+//                        .hoaDon(hoaDon)
+//                        .build();
+//                lichSuHoaDonRepo.save(lichSuHoaDon);
+//
+//                // cap nhat so luong ton
+//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+//                sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            }else {
+//                // neu tru di thi tru di thi cap nhat thang cu
+//                hoaDonChiTiet = hoaDonChiTietRepository.findById(hoaDonChiTietRequest.getId()).get();
+//                // tao lich su hoa don
+//                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//                        .tieuDe("Cập nhật sản phẩm")
+//                        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                                " số lượng " + hoaDonChiTiet.getSoLuong()
+//                        )
+//                        .hoaDon(hoaDon)
+//                        .build();
+//                lichSuHoaDonRepo.save(lichSuHoaDon);
+//
+//                // cap nhat so luong ton
+//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+//                sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            }
+
+
+//// lay ra hdct voi gia ban hien tai
+//        // tinh so luong bien dong
+//        int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - hoaDonChiTiet.getSoLuong();
+//        hoaDonChiTiet = hoaDon.getHoaDonChiTiets().stream().filter(
+//                        (hdct) -> hdct.getGiaBan().compareTo(giaBanHienTai) == 0)
+//                .findFirst().orElse(null);
+//
+//        // chua co hdct voi gia ban hien tai
+//        if (hoaDonChiTiet == null) {
+//            // tao moi hdct
+//            hoaDonChiTiet = HoaDonChiTiet.builder()
+//                    .soLuong(1)
+//                    .giaBan(giaBanHienTai)// gia ban hien tai
+//                    .giaNhap(sanPhamChiTiet.getGiaNhap())
+//                    .hoaDon(hoaDon)
+//                    .sanPhamChiTiet(sanPhamChiTiet)
+//                    .build();
+//
+//            // tao lich su hoa don
+//            LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//                    .tieuDe("Thêm mới sản phẩm")
+//                    .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                            " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                            " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                            " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
+//                    )
+//                    .hoaDon(hoaDon)
+//                    .build();
+//            lichSuHoaDonRepo.save(lichSuHoaDon);
+//            // cap nhat so luong ton
+//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
+//            sanPhamChiTietRepo.save(sanPhamChiTiet);
+//        } else {
+//            int soLuongCapNhat = hoaDonChiTiet.getSoLuong() + soLuongBienDong;
+//            // cap nhat so luong
+//
+//            hoaDonChiTiet.setSoLuong(soLuongCapNhat);
+//            if (hoaDonChiTiet.getSoLuong()<=0) {
+//                throw new RuntimeException("Số lượng sản phẩm không hợp lệ");
+//            }
+//            // tao lich su hoa don
+//            LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+//                    .tieuDe("Cập nhật sản phẩm")
+//                    .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
+//                            " màu " + sanPhamChiTiet.getMauSac().getTen() +
+//                            " size " + sanPhamChiTiet.getMauSac().getTen() +
+//                            " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+//                    )
+//                    .hoaDon(hoaDon)
+//                    .build();
+//            lichSuHoaDonRepo.save(lichSuHoaDon);
+//
+//            // cap nhat so luong ton
+//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
+//            sanPhamChiTietRepo.save(sanPhamChiTiet);
+//
+//
+//        }

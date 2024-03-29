@@ -8,12 +8,15 @@
 
 <div class="row gutters">
   <div class="col col-md-12">
-    <app-tim-kiem-hoa-don></app-tim-kiem-hoa-don>
+    <app-tim-kiem-hoa-don
+      (findHoaDon)="setHoaDonRequest($event)"
+    ></app-tim-kiem-hoa-don>
   </div>
 </div>
 
+<!-- Thông Tin Trả Hàng -->
 <div class="row gutters">
   <div class="col col-md-12">
-    <app-chi-tiet-hoa-don></app-chi-tiet-hoa-don>
+    <app-chi-tiet-hoa-don [hoaDon]="hoaDon"></app-chi-tiet-hoa-don>
   </div>
 </div>

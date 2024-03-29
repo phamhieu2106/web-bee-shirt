@@ -27,17 +27,14 @@
             class="dropdown-menu product-suggestions"
             aria-labelledby="dropdownProduct"
           >
-            <div class="suggestion-item row d-flex">
+            <div class="suggestion-item">
               <div
-                class="row p-auto text-center"
+                class="text-center pt-3 pb-3"
                 data-toggle="modal"
                 data-target="#searchProductModal"
-                style="height: 50px"
               >
-                <div class="col-10 h5">
-                  <i class="fa-solid fa-plus h5"></i>
-                  Tìm kiếm nâng cao
-                </div>
+                <i class="fa-solid fa-plus mr-3"></i>
+                <span class="h5">Tìm kiếm nâng cao</span>
               </div>
             </div>
             <!-- Sản phẩm tìm kiếm -->
@@ -146,12 +143,12 @@
           <td class="">
             <button
               type="button"
-              class="btn btn-outline-danger p-1 m-1"
+              class="btn btn-outline-light btn-rounded"
               (click)="deleteHDCT(i)"
             >
-              <i class="fa-solid fa-trash"></i>
+              <i class="fa-solid fa-trash text-danger"></i>
             </button>
-            <span>{{ hdct.sanPhamChiTiet.sanPham.ma }}</span>
+            <div>{{ hdct.sanPhamChiTiet.sanPham.ma }}</div>
           </td>
           <td class="">
             <div class="fw-bold">
@@ -165,23 +162,24 @@
             </div>
           </td>
           <td class="">
-            <div class="qty">
+            <div class="d-flex">
               <button
-                class="rounded-5 btn-outline-dark p-0"
+                class="btn btn-outline-dark btn-rounded p-1"
                 (click)="minusQuantity(hdct)"
               >
                 <i class="fa-solid fa-minus"></i>
               </button>
               <input
                 type="number"
-                class="count"
+                class="text-center form-control"
                 [(ngModel)]="hdct.soLuong"
                 (ngModelChange)="insertSLSP()"
                 min="0"
                 step="1"
+                style="width: 50px"
               />
               <button
-                class="rounded-5 btn-outline-dark p-0"
+                class="btn btn-outline-dark btn-rounded p-1"
                 (click)="plusQuantity(hdct)"
               >
                 <i class="fa-solid fa-plus"></i>
@@ -194,7 +192,12 @@
             }}
           </td>
           <td class="">
-            <input type="number" [(ngModel)]="hdct.giaBan" />
+            <!-- <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="hdct.giaBan"
+            /> -->
+            <app-input-number [(value)]="hdct.giaBan"></app-input-number>
           </td>
           <td class="">
             {{
@@ -218,7 +221,7 @@
             [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id"
             class="flex-grow-1"
           >
-            <p class="d-none d-md-block mb-0" id="userFullName">
+            <p class="d-none d-md-block mb-0 fs-6" id="userFullName">
               {{ order.khachHang.hoTen }}
             </p>
             <p
@@ -256,16 +259,20 @@
             Thêm mới khách hàng
           </div>
           <div
-            class="suggestion-item p-2"
+            class="suggestion-item p-2 d-flex align-items-center"
             (click)="chooseKhachHang(kh)"
             *ngFor="let kh of khachHangs"
           >
-            {{ kh.hoTen + " - " + kh.sdt }}
+            <hr class="hr-customer" />
+            <i class="fa-solid fa-user mr-2"></i>
+            <span class="fw-bold">{{ kh.hoTen }}</span>
+            <span class="fw-bold ml-auto">{{ kh.sdt }}</span>
           </div>
         </div>
+        <hr class="hr-custom" />
       </div>
     </div>
-    <hr class="fw-bold" />
+
     <!-- Tiền nong -->
     <div class="">
       <div class="d-flex justify-content-between m-1">
@@ -290,26 +297,23 @@
       </div>
 
       <div
-        class="d-flex justify-content-between m-1"
+        class="d-flex justify-content-between m-1 align-items-center"
         *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
       >
         <!-- Show on selected Giao hàng -->
         <span class="mr-auto fw-bold">Phí vận chuyển:</span>
-        <span class="ml-auto"
-          ><input
-            type="number"
-            [(ngModel)]="order.phiVanChuyen"
-            class="right-align"
-        /></span>
+        <span class="ml-auto">
+          <app-input-number [(value)]="order.phiVanChuyen"></app-input-number>
+        </span>
       </div>
       <div class="d-flex justify-content-between m-1">
         <span class="mr-auto fw-bold">Tiền giảm:</span>
-        <!-- <span class="ml-auto">{{
+        <span class="ml-auto">{{
           (order != null ? order.tienGiam : 0)
             | currency : "đ " : "symbol" : "1.0-0"
-        }}</span> -->
-        <input
-          class="border-0 right-align"
+        }}</span>
+        <!-- <input
+          class="form-control"
           type="text"
           [ngModel]="
             order != null
@@ -317,7 +321,7 @@
               : 0
           "
           disabled
-        />
+        /> -->
       </div>
       <div class="d-flex justify-content-between m-1 h5">
         <span class="mr-auto fw-bold">Khách phải trả:</span>
@@ -330,7 +334,7 @@
           >Khách thanh toán:
           <button
             type="button"
-            class="btn btn-outline-info p-1"
+            class="btn btn-success pl-3 pr-3 pt-1 pb-1 rounded-2"
             data-toggle="modal"
             data-target="#thanhToanModal"
           >
@@ -382,21 +386,21 @@
       </div>
       <!-- Giao hàng  -->
       <div *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
-        <div class="d-flex justify-content-between m-1">
+        <div class="d-flex justify-content-between m-1 align-items-center">
           <span class="mr-auto fw-bold">Tên người nhận: </span>
           <span class="ml-auto"
             ><input
               type="text"
-              class="right-align"
+              class="form-control"
               [(ngModel)]="order.tenNguoiNhan"
           /></span>
         </div>
-        <div class="d-flex justify-content-between m-1">
+        <div class="d-flex justify-content-between m-1 align-items-center">
           <span class="mr-auto fw-bold">Số điện thoại:</span>
           <span class="ml-auto"
             ><input
               type="text"
-              class="right-align"
+              class="form-control"
               [(ngModel)]="order.sdtNguoiNhan"
           /></span>
         </div>
@@ -405,7 +409,7 @@
           <span class="ml-auto"
             ><button
               type="button"
-              class="btn btn-outline-info p-1"
+              class="btn btn-primary rounded-2 p-1"
               data-toggle="modal"
               data-target="#diaChiModal"
             >
@@ -415,10 +419,11 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold"
-          >Ghi chú:<textarea rows="2" cols="45"></textarea>
-        </span>
+      <div class="justify-content-between m-1">
+        <span class="mr-auto fw-bold">Ghi chú: </span>
+        <div>
+          <textarea rows="1" class="form-control input-default"></textarea>
+        </div>
       </div>
       <div
         style="height: 180px"

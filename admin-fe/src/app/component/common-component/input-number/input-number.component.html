@@ -1,0 +1,7 @@
+<input
+  type="text"
+  class="form-control"
+  [value]="formatNumber(inputValue)"
+  (input)="onInputChange($event.target)"
+  pattern="[0-9]*"
+/>

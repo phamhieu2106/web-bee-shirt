@@ -29,7 +29,7 @@
 
 .order-number {
     cursor: pointer;
-    background-color: #11398a ;
+    background-color: #11398a;
     color: white;
     border-radius: 5px;
     margin-right: 10px;
@@ -44,16 +44,18 @@
     background-color: rgb(247, 247, 247) !important;
     color: rgb(0, 0, 0);
 }
-.order-number i{
+
+.order-number i {
     color: white;
 }
 
-.order-number-active i{
-    color: rgb(0, 0, 0);;
+.order-number-active i {
+    color: rgb(0, 0, 0);
+    ;
 }
 
-.iconDelete{
-color: white;
+.iconDelete {
+    color: white;
 }
 
 .count {
@@ -73,8 +75,42 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
+input[type=text] {
+    -moz-appearance: textfield;
+    border: none;
+    border-bottom: 1px solid black;
+    /* Đường viền dưới màu đen */
+    text-align: left;
+}
+
 input[type=number] {
     -moz-appearance: textfield;
+    border: none;
+    border-bottom: 1px solid black;
+    /* Đường viền dưới màu đen */
+    text-align: right;
+}
+
+.input-default {
+    border: none;
+    border-bottom: 1px solid black;
+    /* Đường viền dưới màu đen */
+}
+
+.hr-custom {
+    border: 0;
+    height: 2px;
+    background-color: black;
+    margin: 8px 8px;
+    font-weight: bold;
+}
+
+.hr-customer {
+    height: 2px;
+    background-color: black;
+    font-weight: bold;
+    border: 0;
+    margin: 1px 1px;
 }
 
 .gia-chua-giam {
@@ -120,19 +156,19 @@ input[type=number] {
 }
 
 /* Bình  */
-.taskbar{
+.taskbar {
     padding: 10px;
     background-color: #574afb;
 }
 
-.dropdown input{
-border-radius: 15px;
-border: none;
-padding: 10px;
+.dropdown input {
+    border-radius: 15px;
+    border: none;
+    padding: 10px;
 
 }
 
 
-.btn-create i{
+.btn-create i {
     font-size: 30px;
 }

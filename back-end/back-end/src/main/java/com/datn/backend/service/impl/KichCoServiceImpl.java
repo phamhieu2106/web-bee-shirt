@@ -49,8 +49,7 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public List<KichCo> getAll() {
-        Sort sort = Sort.by("ten");
-        return kichCoRepo.findAll(sort);
+        return kichCoRepo.findAll();
     }
 
     @Override

@@ -15,6 +15,8 @@ public interface MauSacService {
 
     List<MauSac> getAll();
 
+    List<MauSac> getAllActiveColors();
+
     MauSac getById(int id);
 
     void changeStatus(int id);

@@ -45,6 +45,11 @@ public class MauSacResource {
         return ResponseEntity.ok(mauSacService.getAll());
     }
 
+    @GetMapping("/all-active")
+    public ResponseEntity<List<MauSac>> getAllActiveColors() {
+        return ResponseEntity.ok(mauSacService.getAllActiveColors());
+    }
+
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<MauSac> add(@PathVariable("id") int id) {
         return ResponseEntity.ok(mauSacService.getById(id));

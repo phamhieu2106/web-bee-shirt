@@ -11,23 +11,64 @@
   background-color: rgb(239, 237, 237);
 }
 
-thead tr th{
-  background-color: #574afb ; /* Màu nền của header */
+thead tr th {
+  background-color: #574afb; /* Màu nền của header */
   color: white;
   text-transform: uppercase;
 }
 
-.page-link.active{
+.page-link.active {
   background-color: #574afb;
   color: white !important;
 }
 
-.pagination li a{
+.pagination li a {
   color: #574afb;
 }
 
+.btn-create {
+  background-color: #574afb;
+  color: white;
+}
 
-.btn-create{
+/*  */
+#add-button,
+#pagination,
+.search-block,
+/* .btn-reload-filter {
+  float: left;
+} */
+#icon-button-detail {
+  color: #74c0fc;
+}
+
+.card {
+  border-radius: 8px;
+
+  margin: 10px;
+}
+
+.card-header,
+.card-footer {
+  background: none;
+}
+
+thead tr th {
+  background-color: #574afb; /* Màu nền của header */
+  color: white;
+  text-transform: uppercase;
+}
+
+.page-link.active {
+  background-color: #574afb;
+  color: white !important;
+}
+
+.pagination li a {
+  color: #574afb;
+}
+
+.btn-create {
   background-color: #574afb;
   color: white;
 }

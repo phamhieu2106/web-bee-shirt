@@ -42,12 +42,12 @@
                   class="form-control rounded col-8 ms-3 me-2"
                   list="kieuDangList"
                   type="text"
-                  (input)="selectThuocTinh($event, kieuDangList, 'kieuDangId')"
+                  (input)="selectThuocTinh($event, activeForms, 'kieuDangId')"
                   [ngClass]="validation.kieuDangId ? 'is-invalid' : ''"
                 />
                 <datalist id="kieuDangList">
                   <option
-                    *ngFor="let kd of kieuDangList"
+                    *ngFor="let kd of activeForms"
                     [value]="kd.ten"
                   ></option>
                 </datalist>
@@ -94,14 +94,12 @@
                   class="form-control rounded col-8 ms-3 me-2"
                   list="thietKeList"
                   type="text"
-                  (input)="
-                    selectThuocTinh($event, kieuThietKeList, 'thietKeId')
-                  "
+                  (input)="selectThuocTinh($event, activeDesigns, 'thietKeId')"
                   [ngClass]="validation.thietKeId ? 'is-invalid' : ''"
                 />
                 <datalist id="thietKeList">
                   <option
-                    *ngFor="let tk of kieuThietKeList"
+                    *ngFor="let tk of activeDesigns"
                     [value]="tk.ten"
                   ></option>
                 </datalist>
@@ -148,12 +146,12 @@
                   class="form-control rounded col-8 ms-3 me-2"
                   list="tayAoList"
                   type="text"
-                  (input)="selectThuocTinh($event, tayAoList, 'tayAoId')"
+                  (input)="selectThuocTinh($event, activeSleeves, 'tayAoId')"
                   [ngClass]="validation.tayAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="tayAoList">
                   <option
-                    *ngFor="let ta of tayAoList"
+                    *ngFor="let ta of activeSleeves"
                     [value]="ta.ten"
                   ></option>
                 </datalist>
@@ -200,11 +198,14 @@
                   class="form-control rounded col-8 ms-3 me-2"
                   list="coAoList"
                   type="text"
-                  (input)="selectThuocTinh($event, coAoList, 'coAoId')"
+                  (input)="selectThuocTinh($event, activeCollars, 'coAoId')"
                   [ngClass]="validation.coAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="coAoList">
-                  <option *ngFor="let ca of coAoList" [value]="ca.ten"></option>
+                  <option
+                    *ngFor="let ca of activeCollars"
+                    [value]="ca.ten"
+                  ></option>
                 </datalist>
                 <button
                   class="btn btn-primary rounded col-2"
@@ -249,12 +250,14 @@
                   class="form-control rounded col-10 ms-3 me-2"
                   list="chatLieuList"
                   type="text"
-                  (input)="selectThuocTinh($event, chatLieuList, 'chatLieuId')"
+                  (input)="
+                    selectThuocTinh($event, activeMaterials, 'chatLieuId')
+                  "
                   [ngClass]="validation.chatLieuId ? 'is-invalid' : ''"
                 />
                 <datalist id="chatLieuList">
                   <option
-                    *ngFor="let cl of chatLieuList"
+                    *ngFor="let cl of activeMaterials"
                     [value]="cl.ten"
                   ></option>
                 </datalist>
@@ -293,15 +296,15 @@
       <div class="card-header">
         <h4 class="text-center mt-2">Chọn Màu sắc & Kích cỡ</h4>
         <form class="form p-2 mb-5">
-          <!-- mau sac -->
+          <!-- Màu sắc -->
           <div class="row">
             <label class="me-3 font-weight-bold col-2">Màu sắc:</label>
             <div class="col-8">
               <div
                 style="display: inline-block"
-                *ngFor="let sc of selectedMauSacList"
+                *ngFor="let sc of selectedColorList"
               >
-                <div class="img-container me-5">
+                <div class="img-container me-5 mb-2">
                   <img class="selected-color-img" [src]="sc.image.imageUrl" />
                   <div class="close-icon" (click)="removeSelectedColor(sc.id)">
                     &#10006;
@@ -314,19 +317,18 @@
               class="btn btn-primary ms-3 rounded col-1"
               data-bs-toggle="modal"
               data-bs-target="#mauSacBoard"
-              (click)="getMauSacList()"
             >
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
 
-          <!-- kich co -->
+          <!-- Kích cỡ -->
           <div class="mt-3 row">
             <label class="me-3 font-weight-bold col-2">Kích cỡ:</label>
             <div class="col-8">
               <div
                 style="display: inline-block"
-                *ngFor="let ss of selectedKichCoList"
+                *ngFor="let ss of selectedSizeList"
               >
                 <div class="frame-container me-5">
                   <div class="content">{{ ss.ten.split(" ")[0] }}</div>
@@ -341,7 +343,6 @@
               class="btn btn-primary ms-3 mb-3 rounded col-1"
               data-bs-toggle="modal"
               data-bs-target="#kichCoBoard"
-              (click)="getKichCoList()"
             >
               <i class="fa-solid fa-plus"></i>
             </button>
@@ -350,10 +351,10 @@
       </div>
     </div>
 
-    <div *ngIf="selectedKichCoList.length > 0">
+    <div *ngIf="selectedSizeList.length > 0">
       <div
         class="card"
-        *ngFor="let sc of selectedMauSacList; let colorIndex = index"
+        *ngFor="let sc of selectedColorList; let colorIndex = index"
       >
         <div class="card-header">
           <div class="row my-3">
@@ -402,7 +403,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let ss of selectedKichCoList"
+                    *ngFor="let ss of selectedSizeList"
                     [id]="'row' + sc.id + ss.id"
                     [ngClass]="
                       checkColorAndSize(sc.id, ss.id) ? 'table-danger' : ''
@@ -498,11 +499,11 @@
                 class="default-img mb-3 pointer"
                 title="Chọn ảnh"
                 src="assets/img/default-image.jpg"
-                (click)="openHinhAnhModal(sc.ten, sc.id, colorIndex)"
+                (click)="openImgModal(sc.ten, sc.id, colorIndex)"
               />
               <!-- (click)="openHinhAnhModal(sc.ten, sc.id, sanPham?.id)" -->
               <button
-                id="anhSpModalBtn"
+                id="triggerBtnImgModal"
                 type="button btn-primary"
                 class="btn btn-primary ms-3 mb-3"
                 data-bs-toggle="modal"
@@ -517,7 +518,7 @@
                   type="file"
                   multiple
                   hidden
-                  (change)="changeInput($event)"
+                  (change)="changeInputForUploadImg($event)"
                 />
               </div>
 
@@ -528,8 +529,10 @@
                       let f of selectedImgFileList[colorIndex];
                       let sizeIndex = index
                     "
-                    [id]="'selectedImg1' + imgIndex + sizeIndex"
-                    [class]="'selectedImg1' + colorIndex + sizeIndex"
+                    [id]="
+                      'selectedImgOutModal' + curWorkingImgIndex + sizeIndex
+                    "
+                    [class]="'selectedImgOutModal' + colorIndex + sizeIndex"
                   />
                 </div>
               </div>
@@ -569,7 +572,10 @@
           *ngFor="let f of curSelectedImgFileList; let i = index"
         >
           <div>
-            <img class="thumbnail me-5" [id]="'selectedImg2' + imgIndex + i" />
+            <img
+              class="thumbnail me-5"
+              [id]="'selectedImgInModal' + curWorkingImgIndex + i"
+            />
           </div>
         </div>
 
@@ -599,12 +605,12 @@
         >
           <img
             class="exist-img"
-            [id]="'uploadImg' + selectedIdMauSac + i"
+            [id]="'uploadedImgInModal' + selectedIdMauSac + i"
             src=""
           />
           <input
             [id]="'chkBoxUploadImg' + i"
-            [checked]="isUploadImgChecked(file.name)"
+            [checked]="isUploadedImgChecked(file.name)"
             type="checkbox"
             class="checkbox"
             (change)="toggleUploadImage(i, file, $event)"
@@ -614,7 +620,7 @@
       <div class="modal-footer">
         <button
           class="btn btn-primary col-2 rounded"
-          (click)="openFileInput(imgIndex)"
+          (click)="openFileInput(curWorkingImgIndex)"
         >
           Tải ảnh lên
         </button>
@@ -651,13 +657,21 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-6 pointer" *ngFor="let ms of mauSacList">
+          <div class="col-6 pointer" *ngFor="let ms of activeColors">
             <img
               class="color-img rounded"
               [src]="ms.image.imageUrl"
               (click)="selectColor(ms)"
             />
-            <p>{{ ms.ten + " - " + ms.ma }}</p>
+            <div>
+              <p
+                class="rounded p-1 mt-1"
+                [ngClass]="checkSelectedColor(ms) ? 'selected-color-size' : ''"
+                style="display: inline-flex"
+              >
+                {{ ms.ten + " - " + ms.ma }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -695,10 +709,11 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-2 pointer" *ngFor="let kc of kichCoList">
+          <div class="col-2 pointer" *ngFor="let kc of activeSizes">
             <div
+              [ngClass]="checkSelectedSize(kc) ? 'selected-color-size' : ''"
               class="border border-secondary p-3 rounded"
-              (click)="selectKichCo(kc)"
+              (click)="selectSize(kc)"
             >
               {{ kc.ten.split(" ")[0] }}
             </div>
@@ -807,7 +822,7 @@
           Thêm mới nhanh '{{ thuocTinhNhanh.ten }}'
         </h1>
       </div>
-      <form [formGroup]="addNhanhForm">
+      <form [formGroup]="quickAddForm">
         <div class="modal-body">
           <div class="form-row">
             <label>Tên {{ thuocTinhNhanh.ten }}:</label>
@@ -815,8 +830,8 @@
               type="text"
               class="form-control rounded"
               [ngClass]="
-                addNhanhForm.get('ten').invalid &&
-                addNhanhForm.get('ten').touched
+                quickAddForm.get('ten').invalid &&
+                quickAddForm.get('ten').touched
                   ? 'is-invalid'
                   : ''
               "
@@ -831,7 +846,7 @@
             id="closeAddNhanhBtn"
             type="button"
             class="btn btn-secondary rounded"
-            (click)="initAddNhanhForm()"
+            (click)="initQuickAddForm()"
             data-bs-dismiss="modal"
           >
             Đóng

@@ -2,8 +2,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { forkJoin } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { ChatLieu } from "src/app/model/class/chat-lieu.class";
 import { CoAo } from "src/app/model/class/co-ao.class";
@@ -30,7 +31,6 @@ import { MauSacService } from "src/app/service/mau-sac.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamService } from "src/app/service/san-pham.service";
-import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-them-san-pham-chi-tiet",
@@ -41,21 +41,23 @@ export class ThemSanPhamChiTietComponent {
   public isLoadding = false;
   public overlayText: string = "";
 
-  public imgIndex: number;
+  public curWorkingImgIndex: number;
   public selectedTenMauSac: string;
   public selectedIdMauSac: number;
   public addForm: FormGroup;
   public sanPham: SanPham;
 
-  public selectedMauSacList: MauSac[] = [];
-  public selectedKichCoList: KichCo[] = [];
-  public mauSacList: MauSac[] = [];
-  public kichCoList: KichCo[] = [];
-  public kieuDangList: KieuDang[] = [];
-  public kieuThietKeList: KieuThietKe[] = [];
-  public tayAoList: TayAo[] = [];
-  public coAoList: CoAo[] = [];
-  public chatLieuList: ChatLieu[] = [];
+  public selectedColorList: MauSac[] = [];
+  public selectedSizeList: KichCo[] = [];
+
+  // 7 danh sách các thuộc tính khả dụng của sản phẩm
+  public activeForms: KieuDang[] = [];
+  public activeDesigns: KieuThietKe[] = [];
+  public activeSleeves: TayAo[] = [];
+  public activeCollars: CoAo[] = [];
+  public activeMaterials: ChatLieu[] = [];
+  public activeColors: MauSac[] = [];
+  public activeSizes: KichCo[] = [];
 
   public selectedImgFileList: File[][] = [];
   public curSelectedImgFileList: File[] = [];
@@ -63,11 +65,11 @@ export class ThemSanPhamChiTietComponent {
   public existingImgList: HinhAnh[][] = [];
   public curExistingImgList: HinhAnh[] = [];
 
-  public uploadImgFileList: File[][] = [];
+  public uploadedImgFileList: File[][] = [];
   public curUploadImgFileList: File[] = [];
 
   public commonService: any;
-  public addNhanhForm: FormGroup;
+  public quickAddForm: FormGroup;
   public thuocTinhNhanh = {
     ten: "",
   };
@@ -80,6 +82,7 @@ export class ThemSanPhamChiTietComponent {
     { ten: "kieuCoAoService", service: this.kieuCoAoService },
     { ten: "chatLieuService", service: this.chatLieuService },
   ];
+
   public existSpct: SanPhamChiTiet;
   public validation: AddSpctValidation = {
     error: false,
@@ -91,7 +94,6 @@ export class ThemSanPhamChiTietComponent {
     giaAndSoLuong: [],
     anh: [],
   };
-
   public colorSizeValidations: ColorSizeValidation[] = [];
 
   // constructor, ngOn
@@ -113,130 +115,139 @@ export class ThemSanPhamChiTietComponent {
 
   ngOnInit(): void {
     this.initAddForm();
-    this.initAddNhanhForm();
-    this.getSanPhamById();
-    this.getDataForSelector();
+    this.initQuickAddForm();
+    this.getProductByIdAndItsSpct();
+    this.getPropertiesForSelectors();
   }
 
-  // I. Public functions
-  //
-  public getMauSacList(): void {
-    this.getAllMauSac();
-  }
-
-  //
-  public getKichCoList(): void {
-    this.getAllKichCo();
-  }
-
-  //
+  // public functions
+  // 1
   public selectColor(ms: MauSac): void {
-    if (!this.selectedMauSacList.some((item: MauSac) => item.id === ms.id)) {
-      this.selectedMauSacList.push(ms);
-
+    if (!this.selectedColorList.some((item: MauSac) => item.id === ms.id)) {
+      this.selectedColorList.push(ms);
       this.selectedImgFileList.push([]);
-      this.uploadImgFileList.push([]);
+      this.uploadedImgFileList.push([]);
       this.validation.giaAndSoLuong.push(false);
       this.addColorSizeValidation(ms.id, undefined, "color");
     }
   }
 
-  //
-  public selectKichCo(kc: KichCo): void {
-    if (!this.selectedKichCoList.some((item: KichCo) => item.id === kc.id)) {
-      this.selectedKichCoList.push(kc);
+  // 2
+  public selectSize(kc: KichCo): void {
+    if (!this.selectedSizeList.some((item: KichCo) => item.id === kc.id)) {
+      this.selectedSizeList.push(kc);
       this.addColorSizeValidation(undefined, kc.id, "size");
     }
   }
 
-  //
+  // hàm 3 và 4 dùng để kiểm tra xem màu hoặc kích cỡ được chọn chưa để đánh dấu
+  // 3
+  public checkSelectedColor(color: MauSac): boolean {
+    return this.selectedColorList.some((c: MauSac) => c.id === color.id);
+  }
+
+  // 4
+  public checkSelectedSize(size: KichCo): boolean {
+    return this.selectedSizeList.some((s: KichCo) => s.id === size.id);
+  }
+
+  // hàm 5 và 6 dùng để xóa màu hoặc cỡ khỏi danh sách đã chọn
+  // 5
   public removeSelectedColor(colorId: number): void {
     // lấy vị trí muốn xóa
     let expectIndex: number;
-    for (let i = 0; i < this.selectedMauSacList.length; i++) {
-      if (this.selectedMauSacList[i].id === colorId) {
+    for (let i = 0; i < this.selectedColorList.length; i++) {
+      if (this.selectedColorList[i].id === colorId) {
         expectIndex = i;
         break;
       }
     }
-    this.selectedMauSacList.splice(expectIndex, 1);
+    this.selectedColorList.splice(expectIndex, 1);
     this.selectedImgFileList.splice(expectIndex, 1);
-    this.uploadImgFileList.splice(expectIndex, 1);
+    this.uploadedImgFileList.splice(expectIndex, 1);
     this.removeColorSizeValidation(colorId, undefined, "color");
   }
 
-  //
+  // 6
   public removeSelectedSize(sizeId: number): void {
-    this.selectedKichCoList = this.selectedKichCoList.filter(
+    this.selectedSizeList = this.selectedSizeList.filter(
       (item: KichCo) => item.id !== sizeId
     );
     this.removeColorSizeValidation(undefined, sizeId, "size");
   }
 
-  // I.1. functions xử lý sự kiện chọn ảnh
-  //
-  public openHinhAnhModal(
-    tenMau: string,
-    idMau: number,
+  // functions xử lý sự kiện chọn ảnh: 7, 8, 9, 10, 11
+  // 7
+  public openImgModal(
+    colorName: string,
+    colorId: number,
     colorIndex: number
   ): void {
-    this.imgIndex = colorIndex;
-    this.selectedTenMauSac = tenMau;
-    this.selectedIdMauSac = idMau;
+    this.curWorkingImgIndex = colorIndex;
+    this.selectedTenMauSac = colorName;
+    this.selectedIdMauSac = colorId;
     // this.getHinhAnhByMauSac(tenMau, sanPhamId);
-    document.getElementById("anhSpModalBtn").click();
+
+    document.getElementById("triggerBtnImgModal").click();
 
     // Gán lại ds ảnh đã chọn và ds ảnh đã upload của modal màu đang chọn vào
-    this.curSelectedImgFileList = this.selectedImgFileList[this.imgIndex];
-    this.curUploadImgFileList = this.uploadImgFileList[this.imgIndex];
+    this.curSelectedImgFileList =
+      this.selectedImgFileList[this.curWorkingImgIndex];
+    this.curUploadImgFileList =
+      this.uploadedImgFileList[this.curWorkingImgIndex];
 
     // sau khi gán các ds, ta show các ảnh đó lên
     for (let i = 0; i < this.curSelectedImgFileList.length; i++) {
       this.showImageThumbnail(
         this.curSelectedImgFileList[i],
-        `selectedImg2${this.imgIndex}${i}`
+        `selectedImgInModal${this.curWorkingImgIndex}${i}`
       );
     }
 
     for (let i = 0; i < this.curUploadImgFileList.length; i++) {
       this.showImageThumbnail(
         this.curUploadImgFileList[i],
-        `uploadImg${this.selectedIdMauSac}${i}`
+        `uploadedImgInModal${this.selectedIdMauSac}${i}`
       );
     }
   }
 
-  //
-  public openFileInput(imgIndex: number): void {
-    document.getElementById(`fileImage${imgIndex}`).click();
+  // 8
+  public openFileInput(curWorkingImgIndex: number): void {
+    document.getElementById(`fileImage${curWorkingImgIndex}`).click();
   }
 
-  //
-  public changeInput(event: any): void {
+  // 9
+  public changeInputForUploadImg(event: any): void {
+    let isHasUploadedImg = false;
     // dựa vào file input (các ảnh được chọn), ta dùng for loop gán từng file cho 'curUploadImgFileList' (đồng thời phải check xem file đó đã được chọn hay chưa)
     for (let i = 0; i < event.target["files"].length; i++) {
       let currentFile = event.target["files"][i];
       if (!this.checkUploadImage(currentFile.name, this.curUploadImgFileList)) {
         this.curUploadImgFileList.push(currentFile);
+      } else {
+        isHasUploadedImg = true;
       }
-      // else {
-      //   this.toastr.warning("Một số ảnh bạn chọn đã được tải lên!");
-      // }
+
+      if (isHasUploadedImg) {
+        this.notifService.warning("Những ảnh đã được tải lên đã bị loại bỏ!");
+      }
     }
 
     // gán list ảnh được upload vào 'list các list ảnh' được upload
-    this.uploadImgFileList[this.imgIndex] = this.curUploadImgFileList;
+    this.uploadedImgFileList[this.curWorkingImgIndex] =
+      this.curUploadImgFileList;
 
     // show list ảnh vừa được upload
     for (let i = 0; i < this.curUploadImgFileList.length; i++) {
       this.showImageThumbnail(
         this.curUploadImgFileList[i],
-        `uploadImg${this.selectedIdMauSac}${i}`
+        `uploadedImgInModal${this.selectedIdMauSac}${i}`
       );
     }
   }
 
-  //
+  // 10
   public toggleUploadImage(chkBoxIndex: number, file: File, event: any): void {
     const isChecked = event.target.checked;
     if (this.curSelectedImgFileList.length === 5 && isChecked) {
@@ -251,13 +262,15 @@ export class ThemSanPhamChiTietComponent {
 
     if (isChecked) {
       this.curSelectedImgFileList.push(file);
-      this.selectedImgFileList[this.imgIndex] = this.curSelectedImgFileList;
+      this.selectedImgFileList[this.curWorkingImgIndex] =
+        this.curSelectedImgFileList;
       this.checkGiaSoLuongAnhSpct();
     } else {
       this.curSelectedImgFileList = this.curSelectedImgFileList.filter(
         (item: File) => item.name !== file.name
       );
-      this.selectedImgFileList[this.imgIndex] = this.curSelectedImgFileList;
+      this.selectedImgFileList[this.curWorkingImgIndex] =
+        this.curSelectedImgFileList;
       this.checkGiaSoLuongAnhSpct();
     }
 
@@ -265,8 +278,8 @@ export class ThemSanPhamChiTietComponent {
     for (let i = 0; i < this.selectedImgFileList.length; i++) {
       let list = this.selectedImgFileList[i];
       for (let j = 0; j < list.length; j++) {
-        if (this.imgIndex === i) {
-          this.showImageThumbnail2(list[j], `.selectedImg1${i}${j}`);
+        if (this.curWorkingImgIndex === i) {
+          this.showImageThumbnail2(list[j], `.selectedImgOutModal${i}${j}`);
         }
       }
     }
@@ -274,13 +287,13 @@ export class ThemSanPhamChiTietComponent {
     for (let i = 0; i < this.curSelectedImgFileList.length; i++) {
       this.showImageThumbnail(
         this.curSelectedImgFileList[i],
-        `selectedImg2${this.imgIndex}${i}`
+        `selectedImgInModal${this.curWorkingImgIndex}${i}`
       );
     }
   }
 
-  //
-  public isUploadImgChecked(fileName: string): boolean {
+  // 11
+  public isUploadedImgChecked(fileName: string): boolean {
     for (let i = 0; i < this.curSelectedImgFileList.length; i++) {
       if (this.curSelectedImgFileList[i].name === fileName) {
         return true;
@@ -290,7 +303,7 @@ export class ThemSanPhamChiTietComponent {
   }
   // end: functions xử lý sự kiện chọn ảnh
 
-  //
+  // 12
   public formatNumber(event: any, inputName: string): void {
     let value = event.target.value;
     if (value === "") {
@@ -302,7 +315,7 @@ export class ThemSanPhamChiTietComponent {
     this.addForm.get(inputName).setValue(value);
   }
 
-  //
+  // 13
   public formatNumber2(event: any, inputNameId: string): void {
     let value = event.target.value;
     if (value === "") {
@@ -316,7 +329,7 @@ export class ThemSanPhamChiTietComponent {
     this.checkGiaSoLuongAnhSpct();
   }
 
-  //
+  // 14
   public add(): void {
     Swal.fire({
       title: "Thêm sản phẩm?",
@@ -327,6 +340,8 @@ export class ThemSanPhamChiTietComponent {
       cancelButtonColor: "#d33",
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
+      const observables = [];
+
       if (result.isConfirmed) {
         this.checkPropertyValidatonForAddForm();
         // this.checkGiaSoLuong();
@@ -334,90 +349,98 @@ export class ThemSanPhamChiTietComponent {
         const isSpctExist = this.checkExistAndNotify();
 
         if (this.validation.error || isSpctExist) {
-          this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
+          // this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
           return;
         }
 
-        console.log("them");
+        this.turnOnOverlay("Đang thêm...");
+        for (let i = 0; i < this.selectedColorList.length; i++) {
+          let isContinue = false;
+          let mauSacEles = document.querySelectorAll(
+            `.mauSacId${this.selectedColorList[i].id}`
+          );
+          let kichCoEles = document.querySelectorAll(
+            `.kichCoId${this.selectedColorList[i].id}`
+          );
+          let giaNhapInputs = document.querySelectorAll(
+            `.giaNhap${this.selectedColorList[i].id}`
+          );
+          let giaBanInputs = document.querySelectorAll(
+            `.giaBan${this.selectedColorList[i].id}`
+          );
+          let soLuongInputs = document.querySelectorAll(
+            `.soLuong${this.selectedColorList[i].id}`
+          );
+          let addSPCTSubRequest: AddSPCTSubRequest;
+          for (let j = 0; j < mauSacEles.length; j++) {
+            let kichCoIdList: number[] = [];
+            let giaNhapList: number[] = [];
+            let giaBanList: number[] = [];
+            let soLuongTonList: number[] = [];
+            for (let k = 0; k < kichCoEles.length; k++) {
+              let kichCoId = parseInt(
+                (kichCoEles[k] as HTMLInputElement).value
+              );
+              let giaNhap = parseInt(
+                (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let giaBan = parseInt(
+                (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              let soLuongTon = parseInt(
+                (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
+              );
+              kichCoIdList.push(kichCoId);
+              giaNhapList.push(giaNhap);
+              giaBanList.push(giaBan);
+              soLuongTonList.push(soLuongTon);
+            }
+            if (kichCoIdList.length === 0) {
+              isContinue = true;
+            }
+            addSPCTSubRequest = {
+              mauSacId: this.selectedColorList[i].id,
+              kichCoIdList: kichCoIdList,
+              giaNhapList: giaNhapList,
+              giaBanList: giaBanList,
+              soLuongTonList: soLuongTonList,
+            };
+          }
+          if (isContinue) {
+            continue;
+          }
+          const addSpctReq: AddSPCTRequest = {
+            id: this.addForm.get("id").value,
+            sanPhamId: this.addForm.get("sanPhamId").value,
+            kieuDangId: this.addForm.get("kieuDangId").value,
+            thietKeId: this.addForm.get("thietKeId").value,
+            tayAoId: this.addForm.get("tayAoId").value,
+            coAoId: this.addForm.get("coAoId").value,
+            chatLieuId: this.addForm.get("chatLieuId").value,
+            requests: addSPCTSubRequest,
+          };
 
-        // this.turnOnOverlay("Đang thêm...");
-        // for (let i = 0; i < this.selectedMauSacList.length; i++) {
-        //   let mauSacEles = document.querySelectorAll(
-        //     `.mauSacId${this.selectedMauSacList[i].id}`
-        //   );
-        //   let kichCoEles = document.querySelectorAll(
-        //     `.kichCoId${this.selectedMauSacList[i].id}`
-        //   );
-        //   let giaNhapInputs = document.querySelectorAll(
-        //     `.giaNhap${this.selectedMauSacList[i].id}`
-        //   );
-        //   let giaBanInputs = document.querySelectorAll(
-        //     `.giaBan${this.selectedMauSacList[i].id}`
-        //   );
-        //   let soLuongInputs = document.querySelectorAll(
-        //     `.soLuong${this.selectedMauSacList[i].id}`
-        //   );
-        //   let addSPCTSubRequest: AddSPCTSubRequest;
-        //   for (let j = 0; j < mauSacEles.length; j++) {
-        //     let kichCoIdList: number[] = [];
-        //     let giaNhapList: number[] = [];
-        //     let giaBanList: number[] = [];
-        //     let soLuongTonList: number[] = [];
-        //     for (let k = 0; k < kichCoEles.length; k++) {
-        //       let kichCoId = parseInt(
-        //         (kichCoEles[k] as HTMLInputElement).value
-        //       );
-        //       let giaNhap = parseInt(
-        //         (giaNhapInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-        //       let giaBan = parseInt(
-        //         (giaBanInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-        //       let soLuongTon = parseInt(
-        //         (soLuongInputs[k] as HTMLInputElement).value.replaceAll(",", "")
-        //       );
-        //       kichCoIdList.push(kichCoId);
-        //       giaNhapList.push(giaNhap);
-        //       giaBanList.push(giaBan);
-        //       soLuongTonList.push(soLuongTon);
-        //     }
-        //     addSPCTSubRequest = {
-        //       mauSacId: this.selectedMauSacList[i].id,
-        //       kichCoIdList: kichCoIdList,
-        //       giaNhapList: giaNhapList,
-        //       giaBanList: giaBanList,
-        //       soLuongTonList: soLuongTonList,
-        //     };
-        //   }
-        //   const addSpctReq: AddSPCTRequest = {
-        //     id: this.addForm.get("id").value,
-        //     sanPhamId: this.addForm.get("sanPhamId").value,
-        //     kieuDangId: this.addForm.get("kieuDangId").value,
-        //     thietKeId: this.addForm.get("thietKeId").value,
-        //     tayAoId: this.addForm.get("tayAoId").value,
-        //     coAoId: this.addForm.get("coAoId").value,
-        //     chatLieuId: this.addForm.get("chatLieuId").value,
-        //     requests: addSPCTSubRequest,
-        //   };
-        //   this.spctService
-        //     .add(addSpctReq, this.selectedImgFileList[i])
-        //     .subscribe({
-        //       next: (response: string) => {
-        //         this.notifService.success(response);
-        //         // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
-        //         if (i === this.selectedMauSacList.length - 1) {
-        //           this.turnOffOverlay("");
-        //           this.router.navigate([
-        //             `/sp/ds-sp-chi-tiet/${this.sanPham.id}`,
-        //           ]);
-        //         }
-        //       },
-        //       error: (errorResponse: HttpErrorResponse) => {
-        //         this.notifService.error(errorResponse.error.message);
-        //         this.turnOffOverlay("");
-        //       },
-        //     });
-        // }
+          observables.push(
+            this.spctService.add(addSpctReq, this.selectedImgFileList[i])
+          );
+        }
+
+        forkJoin(observables).subscribe({
+          next: (responses: string[]) => {
+            responses.forEach((response, index) => {
+              this.notifService.success(response);
+              // chỉ sau khi thêm xong màu sắc cuối cùng mới chuyển trang và đóng overlay
+              if (index === this.selectedColorList.length - 1) {
+                this.turnOffOverlay("");
+                this.router.navigate([`/sp/ds-sp-chi-tiet/${this.sanPham.id}`]);
+              }
+            });
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+            this.turnOffOverlay("");
+          },
+        });
       }
     });
   }
@@ -504,6 +527,7 @@ export class ThemSanPhamChiTietComponent {
 
     const chinhSuaNhanhBtn = document.getElementById("chinhSuaNhanhBtn");
     chinhSuaNhanhBtn.click();
+    this.checkGiaSoLuongAnhSpct();
   }
 
   //
@@ -516,17 +540,17 @@ export class ThemSanPhamChiTietComponent {
     this.addForm = new FormGroup({
       id: new FormControl(0),
       sanPhamId: new FormControl(0),
-      chatLieuId: new FormControl(0),
-      coAoId: new FormControl(0),
       kieuDangId: new FormControl(0),
-      tayAoId: new FormControl(0),
       thietKeId: new FormControl(0),
+      tayAoId: new FormControl(0),
+      coAoId: new FormControl(0),
+      chatLieuId: new FormControl(0),
     });
   }
 
   //
-  public initAddNhanhForm(): void {
-    this.addNhanhForm = new FormGroup({
+  public initQuickAddForm(): void {
+    this.quickAddForm = new FormGroup({
       ten: new FormControl("", [Validators.required]),
     });
   }
@@ -547,8 +571,12 @@ export class ThemSanPhamChiTietComponent {
     return false;
   }
 
-  // I.2: các functions cho sự kiện chọn, thêm nhanh thuộc tính
-  //
+  public checkHasRow(colorId: number): boolean {
+    const rows = document.querySelectorAll(`.ckBoxColor${colorId}`);
+    return rows.length > 0 ? true : false;
+  }
+
+  // functions cho sự kiện chọn, thêm nhanh thuộc tính
   // lấy ID của thuộc tính đã chọn và gán vào addForm
   public selectThuocTinh(event: any, fields: any[], formControl: string): void {
     const fieldValue = event.target.value;
@@ -560,7 +588,6 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  //
   // mỗi khi ấn một nút thêm nhanh, lấy tên thuộc tính và tên service từ đó
   public changeNameAndServiceForThuocTinh(
     ten: string,
@@ -577,15 +604,15 @@ export class ThemSanPhamChiTietComponent {
 
   //
   public addNhanhThuocTinh(): void {
-    let trimmed = this.addNhanhForm.get("ten").value.trim();
-    this.addNhanhForm.get("ten")?.setValue(trimmed);
+    let trimmed = this.quickAddForm.get("ten").value.trim();
+    this.quickAddForm.get("ten")?.setValue(trimmed);
 
-    this.commonService.add(this.addNhanhForm.value).subscribe({
+    this.commonService.add(this.quickAddForm.value).subscribe({
       next: (response: any) => {
-        this.initAddNhanhForm();
+        this.initQuickAddForm();
         this.notifService.success(`Thêm thành công '${response.ten}'!`);
         document.getElementById("closeAddNhanhBtn").click();
-        this.getDataForSelector();
+        this.getPropertiesForSelectors();
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -599,7 +626,7 @@ export class ThemSanPhamChiTietComponent {
     )?.isExist;
   }
 
-  // II. private functions
+  // private functions
   // 1
   private checkUploadImage(fileName: string, curUploadImgFileList: File[]) {
     return curUploadImgFileList.some((file: File) => file.name === fileName);
@@ -638,68 +665,72 @@ export class ThemSanPhamChiTietComponent {
   }
 
   // 5
-  private getSanPhamById(): void {
+  private getProductByIdAndItsSpct(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.sanPhamService.getById(params["sanPhamId"]).subscribe({
         next: (response: SanPham) => {
           this.sanPham = response;
           this.addForm.get("sanPhamId").setValue(response.id);
 
+          // hàm này kiểm tra xem SP hiện tại có SPCT nào chưa
           this.spctService.getAnySpctBySanPhamId(response.id).subscribe({
-            next: (ctspResponse: SanPhamChiTiet) => {
+            next: (spctResponse: SanPhamChiTiet) => {
               if (response != null) {
-                this.existSpct = ctspResponse;
+                this.existSpct = spctResponse;
 
                 this.addForm = new FormGroup({
-                  id: new FormControl(ctspResponse.id),
+                  id: new FormControl(spctResponse.id),
                   sanPhamId: new FormControl(response.id),
-                  chatLieuId: new FormControl(ctspResponse.chatLieu.id),
-                  coAoId: new FormControl(ctspResponse.coAo.id),
-                  kieuDangId: new FormControl(ctspResponse.kieuDang.id),
-                  tayAoId: new FormControl(ctspResponse.tayAo.id),
-                  thietKeId: new FormControl(ctspResponse.thietKe.id),
+                  chatLieuId: new FormControl(spctResponse.chatLieu.id),
+                  coAoId: new FormControl(spctResponse.coAo.id),
+                  kieuDangId: new FormControl(spctResponse.kieuDang.id),
+                  tayAoId: new FormControl(spctResponse.tayAo.id),
+                  thietKeId: new FormControl(spctResponse.thietKe.id),
                 });
               }
             },
             error: (errorResponse: HttpErrorResponse) => {
-              console.log(errorResponse.error.message);
+              this.notifService.error(errorResponse.error.message);
             },
           });
         },
         error: (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse.error.message);
+          this.notifService.error(errorResponse.error.message);
         },
       });
     });
   }
 
   // 6
-  private getDataForSelector(): void {
-    // get all list of each field and all elements must be active
+  private getPropertiesForSelectors(): void {
+    // lấy 7 các thuộc tính của SP: kiểu dáng, thiết kế, tay áo, cổ áo, chất liệu, màu sắc, kích cỡ
     this.getAllForms();
     this.getAllDesigns();
     this.getAllSleeves();
     this.getAllActiveCollars();
     this.getAllActiveMaterials();
+    this.getAllActiveColors();
+    this.getAllActiveSizes();
   }
 
+  // 7, 8, 9, 10, 11, 12, 13: lấy các thuộc tính active của sản phẩm
   // 7
-  private getAllMauSac(): void {
-    this.mauSacService.getAll().subscribe({
+  private getAllActiveColors(): void {
+    this.mauSacService.getAllActiveColors().subscribe({
       next: (response: MauSac[]) => {
-        this.mauSacList = response;
+        this.activeColors = response;
       },
-      error: (error) => {
-        console.log(error);
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
       },
     });
   }
 
   // 8
-  private getAllKichCo(): void {
+  private getAllActiveSizes(): void {
     this.kichCoService.getAll().subscribe({
       next: (response: KichCo[]) => {
-        this.kichCoList = response;
+        this.activeSizes = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -711,7 +742,7 @@ export class ThemSanPhamChiTietComponent {
   private getAllForms(): void {
     this.kieuDangService.getAllActive().subscribe({
       next: (response: KieuDang[]) => {
-        this.kieuDangList = response;
+        this.activeForms = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -723,7 +754,7 @@ export class ThemSanPhamChiTietComponent {
   private getAllDesigns(): void {
     this.kieuThietKeService.getAllActive().subscribe({
       next: (response: KieuThietKe[]) => {
-        this.kieuThietKeList = response;
+        this.activeDesigns = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -735,7 +766,7 @@ export class ThemSanPhamChiTietComponent {
   private getAllSleeves(): void {
     this.kieuTayAoService.getAllActive().subscribe({
       next: (response: TayAo[]) => {
-        this.tayAoList = response;
+        this.activeSleeves = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -747,7 +778,7 @@ export class ThemSanPhamChiTietComponent {
   private getAllActiveCollars(): void {
     this.kieuCoAoService.getAllActive().subscribe({
       next: (response: CoAo[]) => {
-        this.coAoList = response;
+        this.activeCollars = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -759,13 +790,14 @@ export class ThemSanPhamChiTietComponent {
   private getAllActiveMaterials(): void {
     this.chatLieuService.getAllActive().subscribe({
       next: (response: ChatLieu[]) => {
-        this.chatLieuList = response;
+        this.activeMaterials = response;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
       },
     });
   }
+  // end
 
   // 14
   private turnOnOverlay(text: string): void {
@@ -822,8 +854,8 @@ export class ThemSanPhamChiTietComponent {
       }
     }
 
-    for (let i = 0; i < this.selectedMauSacList.length; i++) {
-      const color = this.selectedMauSacList[i];
+    for (let i = 0; i < this.selectedColorList.length; i++) {
+      const color = this.selectedColorList[i];
 
       let giaNhaps = document.querySelectorAll(`.giaNhap${color.id}`);
       let giaBans = document.querySelectorAll(`.giaBan${color.id}`);
@@ -853,8 +885,8 @@ export class ThemSanPhamChiTietComponent {
 
     if (
       hasError ||
-      this.selectedMauSacList.length === 0 ||
-      this.selectedKichCoList.length === 0
+      this.selectedColorList.length === 0 ||
+      this.selectedColorList.length === 0
     ) {
       this.validation.error = true;
     } else {
@@ -869,8 +901,8 @@ export class ThemSanPhamChiTietComponent {
     type: string
   ): void {
     if (colorId && type === "color") {
-      for (let i = 0; i < this.selectedKichCoList.length; ++i) {
-        const size = this.selectedKichCoList[i];
+      for (let i = 0; i < this.selectedSizeList.length; ++i) {
+        const size = this.selectedSizeList[i];
         this.spctService
           .checkSpctExists(this.sanPham.id, colorId, size.id)
           .subscribe({
@@ -888,8 +920,8 @@ export class ThemSanPhamChiTietComponent {
           });
       }
     } else if (sizeId && type === "size") {
-      for (let i = 0; i < this.selectedMauSacList.length; ++i) {
-        const color = this.selectedMauSacList[i];
+      for (let i = 0; i < this.selectedColorList.length; ++i) {
+        const color = this.selectedColorList[i];
         this.spctService
           .checkSpctExists(this.sanPham.id, color.id, sizeId)
           .subscribe({
@@ -938,10 +970,10 @@ export class ThemSanPhamChiTietComponent {
         this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);
       let message: string = "";
       for (let i = 0; i < duplicatedArr.length; i++) {
-        const color = this.selectedMauSacList.find(
+        const color = this.selectedColorList.find(
           (v) => v.id === duplicatedArr[i].colorId
         );
-        const size = this.selectedKichCoList.find(
+        const size = this.selectedColorList.find(
           (v) => v.id === duplicatedArr[i].sizeId
         );
         message += `${color.ten} - ${size.ten.split("-")[0]}`;

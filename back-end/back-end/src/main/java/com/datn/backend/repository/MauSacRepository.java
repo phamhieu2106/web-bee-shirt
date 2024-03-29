@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
 
     boolean existsByTen(String ten);
@@ -16,6 +18,15 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
     MauSac getMauSacByTen(String ten);
 
     MauSac getMauSacByMa(String ma);
+
+    @Query(value =
+           """
+           SELECT *
+           FROM mau_sac m
+           WHERE m.trang_thai = 1
+           ORDER BY m.ten
+           """, nativeQuery = true)
+    List<MauSac> getAllActiveColors();
 
     @Query(value =
             """

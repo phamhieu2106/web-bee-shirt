@@ -88,6 +88,11 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
+    public List<MauSac> getAllActiveColors() {
+        return mauSacRepo.getAllActiveColors();
+    }
+
+    @Override
     public MauSac getById(int id) {
         return mauSacRepo.findById(id).get();
     }

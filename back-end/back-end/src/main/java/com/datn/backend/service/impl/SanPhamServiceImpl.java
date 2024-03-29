@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -48,9 +50,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search) {
+    public PagedResponse<SanPham> getByPage(int pageNumber, int pageSize, String search, List<Integer> status) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> sanPhamPage = sanPhamRepo.getByPage(pageable, search);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPage(pageable, search, status);
 
         PagedResponse<SanPham> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);

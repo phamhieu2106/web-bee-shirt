@@ -16,52 +16,47 @@
 
   <div class="navMain1">
     <header class="container">
-      <label for="nav_check" class="hamburger">
-        <div></div>
-        <div></div>
-        <div></div>
-      </label>
+      <div class="mainHeader">
+        <label for="nav_check" class="hamburger  c">
+          <div></div>
+          <div></div>
+          <div></div>
+        </label>
 
-      <div class="logo">
-        <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
-      </div>
+        <div class="logo c">
+          <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+        </div>
 
-      <div class="site_search search-desktop">
-        <form action="/search" class="wanda-mxm-search">
-          <div class="search-inner">
-            <input
-              name="q"
-              autocomplete="off"
-              class="searchinput input-search search-input"
-              type="text"
-              size="20"
-              placeholder="Bạn đang tìm gì..."
-              aria-label="Search"
-            />
+        <div class="search">
+          <form action="/search" class="wanda-mxm-search">
+            <div class="search-inner">
+              <input name="q" autocomplete="off" class="searchinput " type="text" size="20"
+                placeholder="Bạn đang tìm gì..." aria-label="Search" />
+            </div>
+
+          </form>
+        </div>
+
+        <div class="nav-account">
+          <div class="taiKhoan">
+            <div class="iconnav">
+              <i class="iconUser bi bi-person"></i>
+            </div>
+            <span class="nameIcon">
+              Đăng Nhập
+            </span>
           </div>
-          <button type="submit" class="btn-search" aria-label="Tìm kiếm">
-            <img
-              width="24"
-              height="24"
-              src="//theme.hstatic.net/1000253775/1001202500/14/search-icon.svg?v=4926"
-              alt="Tìm kiếm"
-            />
-          </button>
-        </form>
-      </div>
 
-      <div class="nav-account">
-        <div class="account d-flex">
-          <i class="bi bi-person"></i>
-          <span class="taiKhoan"
-            >Đăng nhập<span class="small-text">Đăng ký</span></span
-          >
+          <div class="gioHang">
+            <div class="iconnav">
+              <i class="iconCart1 bi bi-cart-dash"></i>
+            </div>
+           <span class="nameGioHang">
+            Giỏ Hàng
+           </span>
+          </div>
         </div>
 
-        <div>
-          <i class="bi bi-cart2"></i>
-          <span class="gioHang">Giỏ Hàng</span>
-        </div>
       </div>
     </header>
   </div>
@@ -80,7 +75,7 @@
         <a href="">Trang Chủ</a>
       </li>
       <li>
-        <a href="">Sản Phẩm</a>
+        <a href="/trang-san-pham">Sản Phẩm</a>
         <span class="header_new">New</span>
       </li>
       <li>

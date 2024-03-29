@@ -16,6 +16,7 @@ import { HomePageComponent } from "./component/home-page/home-page.component";
 import { PhieuGiamGiaComponent } from "./component/phieu-giam-gia/phieu-giam-gia.component";
 import { DotGiamGiaComponent } from "./component/dot-giam-gia/dot-giam-gia.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
+import { SanPhamComponent } from './component/san-pham/san-pham.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham
     PhieuGiamGiaComponent,
     DotGiamGiaComponent,
     SanPhamChiTietComponent,
+    SanPhamComponent,
   ],
   imports: [
     BrowserModule,

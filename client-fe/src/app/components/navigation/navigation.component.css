@@ -73,8 +73,36 @@ img {
 .navMain1{
   background: black;
 }
+.iconUser, .iconCart1{
+  font-size: 30px;
+  color: white;
+  
+}
 
-header {
+.taiKhoan ,.gioHang{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-account {
+ width: 20%;
+ display: flex;
+ justify-content: space-between;
+}
+
+
+.search{
+  width: 50%;
+}
+.searchinput{
+  width: 100%;
+  height: 50px;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 15px;
+}
+.mainHeader {
 
   height: 70px;
   display: flex;
@@ -140,18 +168,8 @@ nav ul li a:hover {
 }
 
 
-.nav-account {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
 
-}
-
-.bi-person,
-.bi-cart2 {
-  font-size: 25px;
-}
 
 
 
@@ -206,16 +224,13 @@ nav ul li a:hover {
   .hamburger {
     display: block;
   }
-
-  .taiKhoan,
-  .gioHang,
-  .site_search {
+  .search{
     display: none;
   }
 
-  .nav-account {
-    width: 60px;
-  
+  .nameIcon, .nameGioHang{
+  display: none;
+    
   }
 
 
@@ -238,40 +253,3 @@ nav ul li:nth-child(2) {
 }
 
 
-header .search-desktop {
-  position: relative;
-}
-
-header .search-desktop form {
-  width: 100%;
-}
-
-.search-desktop form input {
-  width: 600px;
-  border-radius: 5px;
-  height: 40px;
-}
-
-header .search-desktop form button {
-  width: 80px;
-  height: 36px;
-  line-height: 36px;
-  position: absolute;
-  padding: 0;
-  top: 2px;
-  right: 2px;
-  transition: opacity 150ms linear;
-  border: none;
-  min-width: auto;
-  outline: none;
-  box-shadow: none;
-  background: black;
-  border-radius: 5px;
-}
-
-.taiKhoan{
-  width: 80px;
-  
-  font-size: 13px;
-  font-weight: 500;
-}

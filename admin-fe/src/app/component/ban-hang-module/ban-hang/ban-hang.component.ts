@@ -2,7 +2,7 @@ import { PdfService } from "./../../../service/pdf.service";
 import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
@@ -52,7 +52,11 @@ export class BanHangComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.localStorageService.saveData(this.key, this.orders);
   }
-
+  @HostListener("window:beforeunload", ["$event"])
+  beforeUnloadHandler(event: Event) {
+    // Thực hiện các công việc cần thiết trước khi trang được thoát hoặc làm mới
+    this.localStorageService.saveData(this.key, this.orders);
+  }
   ngOnInit(): void {
     this.orders = this.localStorageService.getData(this.key);
     setTimeout(() => {

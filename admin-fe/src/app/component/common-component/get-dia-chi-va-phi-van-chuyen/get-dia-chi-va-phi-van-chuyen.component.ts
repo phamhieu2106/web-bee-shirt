@@ -76,7 +76,10 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
       if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.tinh)) {
+        console.log(element);
+
         this.diaChiVaPhiVanChuyen.tinhId = element.ProvinceID;
+        // this.diaChiVaPhiVanChuyen.tinh = element.ProvinceID;
         break;
       }
     }

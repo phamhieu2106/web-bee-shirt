@@ -38,6 +38,10 @@ export class MauSacService {
     return this.http.get<MauSac[]>(`${this.apiUrl}/get-all`);
   }
 
+  public getAllActiveColors(): Observable<MauSac[]> {
+    return this.http.get<MauSac[]>(`${this.apiUrl}/all-active`);
+  }
+
   // 4
   public getById(id: number): Observable<MauSac> {
     return this.http.get<MauSac>(`${this.apiUrl}/get-by-id/${id}`);

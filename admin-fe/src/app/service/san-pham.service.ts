@@ -19,9 +19,10 @@ export class SanPhamService {
   public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
-    search: string = ""
+    search: string = "",
+    status: number[] = [0, 1]
   ): Observable<PagedResponse<SanPham>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}&status=${status}`;
     return this.http.get<PagedResponse<SanPham>>(
       `${this.apiUrl}/get-by-page${param}`
     );

@@ -49,8 +49,7 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public List<KichCo> getAll() {
-        Sort sort = Sort.by("ten");
-        return kichCoRepo.findAll(sort);
+        return kichCoRepo.findAll();
     }
 
     @Override
@@ -78,5 +77,10 @@ public class KichCoServiceImpl implements KichCoService {
         if (kichCoByTen != null && kichCoByTen.getId() != kichCoInDB.getId()) {
             throw new ResourceExistsException("Tên kiểu dáng '" + kichCo.getTen() + "' đã tồn tại.");
         }
+    }
+
+    @Override
+    public List<KichCo> getAllByProductAndColor(int productId, int colorId) {
+        return kichCoRepo.getAllByProductAndColor(productId, colorId);
     }
 }

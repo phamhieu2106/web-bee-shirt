@@ -1,0 +1,424 @@
+<section class="container">
+  <div class="row" style="margin-top: 20px">
+    <div class="col-md-6">
+      <owl-carousel-o [options]="sanPhamCT" class="owl-theme owl-dot-custom">
+        <ng-template carouselSlide *ngFor="let url of curImgUrls"
+          ><img [src]="url" width="100%" class="small-img rounded"
+        /></ng-template>
+      </owl-carousel-o>
+    </div>
+
+    <div class="col-md-6">
+      <h1 data-available="Còn hàng" class="green">
+        {{ sanPham?.ten }}
+      </h1>
+
+      <div class="infoProduct">
+        <div class="product-info d-flex">
+          <div class="pro-type">
+            <span>Loại: </span>
+            <a class="title" rel="nofollow" href="">Áo Sơ Mi</a>
+          </div>
+          <span class="line-info">|</span>
+          <div class="pro-sku ProductSku">
+            <span>Mã SP: </span>
+            <span class="sku-number title">{{ sanPham?.ma }}</span>
+          </div>
+        </div>
+        <span class="priceProduct">390,000₫</span>
+      </div>
+
+      <div class="product-promotion">
+        <h3 class="product-promotion__heading">
+          <img
+            src="https://file.hstatic.net/1000253775/file/gift_new-removebg-preview_fce03d3cd9d24d0cb0be33ac068e41fc.png"
+            alt="Áo Hoodie Don"
+            width="22"
+            height="22"
+            class="mr-2"
+          />
+          KHUYẾN MÃI - ƯU ĐÃI
+        </h3>
+        <div class="product_coupon_new">
+          <ul class="product-promotion__box">
+            <li>
+              <span class="big-bold"
+                >Nhập mã <strong>W10</strong> GIẢM 10K đơn hàng từ 99K</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="product_coupon_new">
+          <ul class="product-promotion__box">
+            <li>
+              <span class="big-bold"
+                >Nhập mã <strong>W50</strong> GIẢM 50K đơn hàng từ 699K</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="product_coupon_new">
+          <ul class="product-promotion__box">
+            <li>
+              <span class="big-bold"
+                >Nhập mã <strong>W100</strong> GIẢM 100K đơn hàng từ 1999K</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="product_coupon_new">
+          <ul class="product-promotion__box"></ul>
+        </div>
+
+        <div class="product_coupon_new">
+          <ul class="product-promotion__box">
+            <li>
+              <span class="big-bold"
+                ><strong>FREESHIP</strong> ĐƠN HÀNG TỪ 399K</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="coupon_new_copy clear">
+        <h4 style="font-size: 14px">Mã giảm giá bạn có thể sử dụng:</h4>
+        <div id="coupon_new_copy">
+          <div class="position_coupon">
+            <button data-code="W10" class="product-coupon" type="button">
+              W10
+            </button>
+            <div class="coupon_new_content">
+              <div>
+                Nhập
+                <strong> W10 </strong>
+                <p>
+                  Lượt đã sử dụng (<span
+                    class="counter"
+                    id="counter1"
+                    data-value=""
+                    >144</span
+                  >)
+                </p>
+              </div>
+              <p>Giảm 10K đơn từ 99K (số lượng có hạn)</p>
+            </div>
+          </div>
+          <div class="position_coupon">
+            <button data-code="W50" class="product-coupon" type="button">
+              W50
+            </button>
+            <div class="coupon_new_content">
+              <div>
+                Nhập
+                <strong> W50 </strong>
+                <p>
+                  Lượt đã sử dụng (<span
+                    class="counter"
+                    id="counter2"
+                    data-value=""
+                    >142</span
+                  >)
+                </p>
+              </div>
+              <p>Giảm 50K đơn từ 699K (số lượng có hạn)</p>
+            </div>
+          </div>
+          <div class="position_coupon">
+            <button data-code="W100" class="product-coupon" type="button">
+              W100
+            </button>
+            <div class="coupon_new_content">
+              <div>
+                Nhập
+                <strong> W100 </strong>
+                <p>
+                  Lượt đã sử dụng (<span
+                    class="counter"
+                    id="counter3"
+                    data-value=""
+                    >138</span
+                  >)
+                </p>
+              </div>
+              <p>Giảm 100K đơn từ 1999K (số lượng có hạn)</p>
+            </div>
+          </div>
+          <div class="position_coupon">
+            <button
+              data-code="GD10"
+              class="product-coupon"
+              type="button"
+              disabled=""
+            >
+              GD10
+            </button>
+            <div class="coupon_new_content">
+              <div>
+                Nhập
+                <strong> GD10 </strong>
+                <p>
+                  Lượt đã sử dụng (<span
+                    class="counter"
+                    id="counter4"
+                    data-value=""
+                    >139</span
+                  >)
+                </p>
+              </div>
+              <p>GIẢM 10% đơn từ 799K (số lượng có hạn)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <span>Màu Sắc: <strong>Trắng</strong></span>
+      <div>
+        <img
+          *ngFor="let color of colorsOfProduct; let i = index"
+          [src]="color.image.imageUrl"
+          class="imgColor me-1 pointer"
+          [ngClass]="curColorIndex === i ? 'border border-secondary' : ''"
+          (click)="changeColorIndex(i, color.id)"
+          [title]="color.ten"
+        />
+      </div>
+
+      <div
+        id="variant-swatch-1"
+        class="swatch clearfix type-image"
+        data-option="option2"
+        data-option-index="1"
+      >
+        <div class="header">
+          Kích thước:
+          <span class="color-text">{{
+            curSizesOfProduct[curSizeIndex]?.ten.split("-")[0]
+          }}</span>
+          <div class="size-chart">
+            <img
+              src="https://file.hstatic.net/200000525917/file/ruler-svg_74f5e49dbd8c4235a98dd991dcdfa38e.svg"
+              width="15"
+              height="15"
+            />Hướng dẫn chọn size
+          </div>
+        </div>
+        <div class="select-swap">
+          <div
+            class="n-sd swatch-element m is-size"
+            *ngFor="let size of curSizesOfProduct; let sizeIndex = index"
+            (click)="changeSizeIndex(sizeIndex)"
+          >
+            <input class="variant-1" type="radio" />
+            <label [ngClass]="curSizeIndex === sizeIndex ? 'sd' : ''">
+              <span>{{ size.ten.split("-")[0] }}</span>
+              <img
+                class="img-check"
+                width="12"
+                height="12"
+                src="https://file.hstatic.net/200000525917/file/select-pro_e3e51c75e13340c1805618324bab59f0.png"
+              />
+            </label>
+
+            <div class="popupover-size">
+              <div class="wrapper-popupover"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="size-infomation"></div>
+
+        <div class="Buy">
+          <div class="wrapper">
+            <span class="minus">-</span>
+            <span
+              class="num"
+              style="
+                border-right: 2px solid rgba(0, 0, 0, 0.2);
+                border-left: 2px solid rgba(0, 0, 0, 0.2);
+              "
+              >01</span
+            >
+            <span class="plus">+</span>
+          </div>
+
+          <button class="AddCard">Thêm Vào Giỏ</button>
+          <button class="Buynow">Mua Ngay</button>
+        </div>
+
+        <div class="product-single__policy">
+          <div class="product-policy">
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451118875_c98fff6e965c4957a2beef70df6df0f8_afcea78391a640c9bcef22ce88aca7d6.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title"
+                >Đổi trả tận nhà trong vòng 7 ngày
+              </span>
+            </div>
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451151763_13f64ed25050f361cfb0a70fda62b2c2_efbb28df6328412b9200cd92a795396e.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title"
+                >Miễn phí vận chuyển đơn từ 500k
+              </span>
+            </div>
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451129757_228e4824d8a593038b9f20d5e53d4d08_7e46b4c108bc481e8c2351f909bdcba4.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title"
+                >Bảo hành trong vòng 30 ngày</span
+              >
+            </div>
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451140541_2b09e178f1b8b4763b266875fd2c8db6_8b536c9ae5e24c17961fdb906d3f5022.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title"
+                >Hotline 0287.100.6789 hỗ trợ từ 8h30-22h
+              </span>
+            </div>
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451129712_78e0e70db6fffe43fbb9a3e680cb3ed0_a2b8379adf4843a4898c621b37c2b42a.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title">Giao hàng toàn quốc </span>
+            </div>
+            <div class="product-policy__item">
+              <div class="product-policy__icon">
+                <img
+                  width="45"
+                  height="45"
+                  src="https://file.hstatic.net/1000253775/file/z4635451151761_2fe8731e9d20060a54130996be16cd2e_e8e090599dd9467abdd66feb9ba3474f.jpg"
+                  alt=""
+                />
+              </div>
+              <span class="product-policy__title"
+                >Có cộng dồn <br />
+                ưu đãi KHTT</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="home-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#home"
+          type="button"
+          role="tab"
+          aria-controls="home"
+          aria-selected="true"
+          style="color: black"
+        >
+          MÔ TẢ
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="profile-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#profile"
+          type="button"
+          role="tab"
+          aria-controls="profile"
+          aria-selected="false"
+          style="color: black"
+        >
+          CHÍNH SÁCH GIAO HÀNG
+        </button>
+      </li>
+    </ul>
+    <div
+      class="tab-content"
+      id="myTabContent"
+      style="border: 1px dashed #d9d9d9"
+    >
+      <div
+        class="tab-pane fade show active"
+        id="home"
+        role="tabpanel"
+        aria-labelledby="home-tab"
+      >
+        <p><strong>Bảng size</strong>:&nbsp;</p>
+        <ul>
+          <li>
+            Size S: Cân nặng 53-60kg; Ngang vai: 45cm; Rộng ngực: 110cm; Dài áo:
+            72cm&nbsp;
+          </li>
+          <li>
+            Size M: Cân nặng 60-68kg; Ngang vai: 46.5cm; Rộng ngực: 114cm; Dài
+            áo: 73,5cm&nbsp;
+          </li>
+          <li>
+            Size L: Cân nặng 68-78kg; Ngang vai: 48cm; Rộng ngực: 118cm; Dài áo:
+            75cm&nbsp;
+          </li>
+          <li>
+            Size XL: Cân nặng 78-88kg; Ngang vai: 49.5cm; Rộng ngực: 122cm; Dài
+            áo: 76,5cm
+          </li>
+        </ul>
+        <p><strong>Đặc điểm sản phẩm :</strong></p>
+        <ul>
+          <li>
+            Sơ mi với chất liệu Oxford sọc truyền thống, dày dặn đứng form và
+            hạn chế nhăn tốt.
+          </li>
+          <li>Lá cổ bản to, dễ dàng gấp, tạo nên sự chỉn chu khi mặc.</li>
+          <li>Tay áo có khuy Manchette dễ dàng thay đổi độ dài tay áo.</li>
+          <li>Form Regular&nbsp;thoải mái, không quá ôm, dễ chịu khi mặc</li>
+          <li>Một gam màu sọc xanh duy nhất.</li>
+        </ul>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="profile"
+        role="tabpanel"
+        aria-labelledby="profile-tab"
+      >
+        <img
+          src="https://i.imgur.com/Nug0HQC.jpeg"
+          alt="Chính sách giao hàng"
+          style="max-width: 100%"
+        />
+      </div>
+    </div>
+  </div>
+</section>

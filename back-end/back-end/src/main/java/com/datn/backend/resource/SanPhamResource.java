@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/san-pham")
 @RequiredArgsConstructor
@@ -24,8 +26,9 @@ public class SanPhamResource {
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                             @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
-                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(sanPhamService.getByPage(pageNumber, pageSize, search));
+                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search,
+                                                            @RequestParam(value = "status", defaultValue = "0, 1", required = false) List<Integer> status) {
+        return ResponseEntity.ok(sanPhamService.getByPage(pageNumber, pageSize, search, status));
     }
 
     @PostMapping("/add")
@@ -34,7 +37,7 @@ public class SanPhamResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<SanPham> add(@PathVariable("id") int id) {
+    public ResponseEntity<SanPham> getOneById(@PathVariable("id") int id) {
         return ResponseEntity.ok(sanPhamService.getById(id));
     }
 
@@ -49,8 +52,6 @@ public class SanPhamResource {
     public ResponseEntity<SanPham> update(@RequestBody SanPham sanPham) {
         return ResponseEntity.ok(sanPhamService.update(sanPham));
     }
-
-
 
     //  client
     @GetMapping("/client/get-by-page")

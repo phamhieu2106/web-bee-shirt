@@ -63,18 +63,18 @@ export class DanhSachSanPhamComponent {
   public pagedResponse: PagedResponse<SanPham>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
-  public search = "";
+  public searchKeyword: string = "";
+  public statusFilter: number[] = [0, 1];
   public selectedDetails: SanPham;
 
   // constructor, ngOn
   constructor(
     private sanPhamService: SanPhamService,
-    private toastr: ToastrService,
     private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.getSanPhamList();
+    this.getProductList();
     this.initAddForm();
     this.initUpdateForm();
     this.getListIdSanPhamInDiscount();
@@ -84,18 +84,19 @@ export class DanhSachSanPhamComponent {
   // 1
   public add(): void {
     Swal.fire({
-      toast: true,
-      title: "Bạn có đồng ý thêm không?",
+      title: "Thêm sản phẩm?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         let trimmedTen = this.addForm.get("ten").value.trim();
         this.addForm.get("ten")?.setValue(trimmedTen);
 
-        let trimmedMa = this.addForm.get("ten").value.trim();
+        let trimmedMa = this.addForm.get("ma").value.trim();
         this.addForm.get("ma")?.setValue(trimmedMa);
 
         this.sanPhamService.add(this.addForm.value).subscribe({
@@ -130,26 +131,51 @@ export class DanhSachSanPhamComponent {
   public goToPage(
     page: number = 1,
     pageSize: number = 5,
-    keyword: string = ""
+    searchKeyword: string = "",
+    status: number[] = [0, 1]
   ): void {
-    this.sanPhamService.getByPage(page, pageSize, keyword).subscribe({
-      next: (response: PagedResponse<SanPham>) => {
-        this.pagedResponse = response;
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
-      },
-    });
+    this.sanPhamService
+      .getByPage(page, pageSize, searchKeyword, status)
+      .subscribe({
+        next: (response: PagedResponse<SanPham>) => {
+          this.pagedResponse = response;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
   }
 
   // 4
-  public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+  public changePageSize(e: any): void {
+    this.goToPage(1, e.target.value, this.searchKeyword, this.statusFilter);
   }
 
   // 5
   public searchByName(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+    this.goToPage(
+      1,
+      this.pagedResponse.pageSize,
+      this.searchKeyword,
+      this.statusFilter
+    );
+  }
+
+  //
+  public searchByStatus(e: any): void {
+    if (e.target.value === "Tất cả trạng thái") {
+      this.statusFilter = [0, 1];
+    } else if (e.target.value === "Đang bán") {
+      this.statusFilter = [1];
+    } else if (e.target.value === "Ngừng bán") {
+      this.statusFilter = [0];
+    }
+    this.goToPage(
+      1,
+      this.pagedResponse.pageSize,
+      this.searchKeyword,
+      this.statusFilter
+    );
   }
 
   // 6
@@ -190,13 +216,14 @@ export class DanhSachSanPhamComponent {
   // 9
   public changeStatus(id: number, value: boolean): void {
     Swal.fire({
-      toast: true,
       title:
         "Thay đổi trạng thái của sản phẩm sẽ ảnh hưởng đến các SPCT liên quan. Bạn có đồng ý thay đổi không?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thay đổi",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.sanPhamService.changeStatus(id, value).subscribe({
@@ -219,18 +246,19 @@ export class DanhSachSanPhamComponent {
   // 10
   public update(): void {
     Swal.fire({
-      toast: true,
-      title: "Bạn có đồng ý cập nhật không?",
+      title: "Cập nhật sản phẩm?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         let trimmedTen = this.addForm.get("ten").value.trim();
         this.addForm.get("ten")?.setValue(trimmedTen);
 
-        let trimmedMa = this.addForm.get("ten").value.trim();
+        let trimmedMa = this.addForm.get("ma").value.trim();
         this.addForm.get("ma")?.setValue(trimmedMa);
 
         this.sanPhamService.update(this.updateForm.value).subscribe({
@@ -254,7 +282,7 @@ export class DanhSachSanPhamComponent {
 
   // private function
   // 1
-  private getSanPhamList(): void {
+  private getProductList(): void {
     this.sanPhamService.getByPage().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;

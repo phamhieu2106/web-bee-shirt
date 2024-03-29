@@ -3,18 +3,20 @@
     <strong>Tìm Kiếm Hoá Đơn</strong>
   </div>
   <div class="card-body">
-    <div class="d-flex justify-content-center">
-      <div class="input-group col-md-10">
+    <div class="row justify-content-center">
+      <div class="d-flex col-md-8 justify-content-center">
         <div class="input-group-prepend">
           <strong class="input-group-text">Mã Hoá Đơn</strong>
         </div>
-        <input
-          type="text"
-          aria-label="First name"
-          class="form-control"
-          placeholder="Mã hoá đơn....."
-          [(ngModel)]="maHoaDon"
-        />
+        <nz-input-group [nzSuffix]="inputClearTpl">
+          <input
+            type="text"
+            nz-input
+            placeholder="Mã hoá đơn....."
+            [(ngModel)]="maHoaDon"
+            width="500"
+          />
+        </nz-input-group>
         <button class="btn btn-primary rounded ml-2" (click)="submitForm()">
           <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
         </button>
@@ -23,3 +25,13 @@
     </div>
   </div>
 </div>
+
+<ng-template #inputClearTpl>
+  <span
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    (click)="maHoaDon = null"
+  ></span>
+</ng-template>

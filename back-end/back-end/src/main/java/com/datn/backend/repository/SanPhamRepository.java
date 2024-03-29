@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     boolean existsByTen(String ten);
@@ -22,12 +24,13 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             """
             SELECT *
             FROM san_pham s
-            WHERE s.ten LIKE %:search%
-            OR s.ma LIKE %:search%
+            WHERE s.trang_thai IN (:status)
+            AND (s.ten LIKE %:search% OR s.ma LIKE %:search%)
             ORDER BY s.created_at DESC
             """, nativeQuery = true)
     Page<SanPham> getByPage(Pageable pageable,
-                            @Param("search") String search);
+                            @Param("search") String search,
+                            @Param("status") List<Integer> status);
 
     @Query(value = """
                    SELECT DISTINCT sp.id, sp.ma, sp.ten, sp.trang_thai, sp.mo_ta, sp.created_at, sp.created_by, sp.updated_at, sp.last_updated_by

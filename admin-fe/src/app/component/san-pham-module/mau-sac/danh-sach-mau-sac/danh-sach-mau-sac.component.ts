@@ -59,7 +59,7 @@ export class DanhSachMauSacComponent {
         let trimmedTen = this.addForm.get("ten").value.trim();
         this.addForm.get("ten")?.setValue(trimmedTen);
 
-        let trimmedMa = this.addForm.get("ten").value.trim();
+        let trimmedMa = this.addForm.get("ma").value.trim();
         this.addForm.get("ma")?.setValue(trimmedMa);
 
         this.turnOnOverlay("Đang thêm...");

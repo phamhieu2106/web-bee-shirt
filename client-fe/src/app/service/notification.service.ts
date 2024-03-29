@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
   providedIn: "root",
 })
 export class NotificationService {
-  // 3
+  // 1
   public success(title: string): void {
     Swal.fire({
       toast: true,
@@ -22,7 +22,7 @@ export class NotificationService {
     });
   }
 
-  // 4
+  // 2
   public error(title: string): void {
     Swal.fire({
       toast: true,

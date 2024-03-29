@@ -7,3 +7,24 @@ input {
   width: 300px;
   margin-left: 10px;
 }
+.product-image {
+  max-width: 100px; /* Điều chỉnh kích thước tối đa của ảnh */
+  height: auto; /* Đảm bảo tỷ lệ khung hình được giữ nguyên */
+}
+
+.large-column {
+  width: 300px; /* Thay đổi kích thước cột Sản Phẩm tùy thích */
+}
+
+.button-container {
+  align-items: center; /* Canh chỉnh các phần tử theo chiều dọc */
+  justify-content: space-between; /* Canh chỉnh các phần tử theo chiều ngang */
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.data {
+  margin: 0 40px; /* Khoảng cách giữa icon và dữ liệu */
+}

@@ -7,7 +7,6 @@ import { LayoutModule } from "../layout-module/layout.module";
 import { TimKiemHoaDonComponent } from "./tim-kiem-hoa-don/tim-kiem-hoa-don.component";
 import { FormsModule } from "@angular/forms";
 import { ChiTietHoaDonComponent } from "./chi-tiet-hoa-don/chi-tiet-hoa-don.component";
-import { NzSkeletonModule } from "ng-zorro-antd/skeleton";
 import { NzTableModule } from "ng-zorro-antd/table";
 import { NzDividerModule } from "ng-zorro-antd/divider";
 import { NzTypographyModule } from "ng-zorro-antd/typography";
@@ -18,6 +17,9 @@ import { NzModalModule } from "ng-zorro-antd/modal";
 import { NzRadioModule } from "ng-zorro-antd/radio";
 import { TraHangThanhCongComponent } from "./tra-hang-thanh-cong/tra-hang-thanh-cong.component";
 import { NzResultModule } from "ng-zorro-antd/result";
+import { NzEmptyModule } from "ng-zorro-antd/empty";
+import { NzInputModule } from "ng-zorro-antd/input";
+import { QuantityInputComponent } from './quantity-input/quantity-input.component';
 
 @NgModule({
   declarations: [
@@ -25,13 +27,13 @@ import { NzResultModule } from "ng-zorro-antd/result";
     TimKiemHoaDonComponent,
     ChiTietHoaDonComponent,
     TraHangThanhCongComponent,
+    QuantityInputComponent,
   ],
   imports: [
     CommonModule,
     TraHangRoutingModule,
     LayoutModule,
     FormsModule,
-    NzSkeletonModule,
     NzTableModule,
     NzDividerModule,
     NzTypographyModule,
@@ -41,6 +43,8 @@ import { NzResultModule } from "ng-zorro-antd/result";
     NzModalModule,
     NzRadioModule,
     NzResultModule,
+    NzEmptyModule,
+    NzInputModule,
   ],
 })
 export class TraHangModule {}

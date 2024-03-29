@@ -1,0 +1,10 @@
+<input
+  class="form-control"
+  type="number"
+  id="quantityInput"
+  placeholder="Nhập số lượng..."
+  [(ngModel)]="quantity"
+  [max]="maxQuantity"
+  [min]="1"
+  (keyup)="checkMaxQuantity(quantity)"
+/>

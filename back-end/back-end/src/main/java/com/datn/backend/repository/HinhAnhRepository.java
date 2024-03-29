@@ -22,4 +22,16 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh, Integer> {
             """, nativeQuery = true)
     List<HinhAnh> getByMauSac(@Param("tenMau") String tenMau,
                               @Param("sanPhamID") int sanPhamID);
+
+    @Query(value =
+            """
+            SELECT DISTINCT ha.image_url
+            FROM san_pham_chi_tiet ct
+            JOIN spct_hinhanh ct_ha ON ct.id = ct_ha.spct_id
+            JOIN hinh_anh ha ON ct_ha.hinhanh_id = ha.id
+            WHERE ct.san_pham_id = :productId
+            AND ct.mau_sac_id = :colorId
+            """, nativeQuery = true)
+    List<String> getAllUrlBySanPhamAndMauSac(@Param("productId") int productId,
+                                             @Param("colorId") int colorId);
 }

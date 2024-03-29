@@ -67,4 +67,10 @@ public class MauSacResource {
         MauSac mauSac = objectMapper.readValue(mauSacReq, MauSac.class);
         return ResponseEntity.ok(mauSacService.update(mauSac, multipartFile));
     }
+
+    // client resources
+    @GetMapping("/colors-of-product/{productId}")
+    public ResponseEntity<List<MauSac>> getAllColorOfProduct(@PathVariable("productId") int productId) {
+        return ResponseEntity.ok(mauSacService.getAllColorOfProduct(productId));
+    }
 }

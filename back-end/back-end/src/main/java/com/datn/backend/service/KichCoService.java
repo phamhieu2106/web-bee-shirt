@@ -18,4 +18,6 @@ public interface KichCoService {
     void changeStatus(int id);
 
     KichCo update(KichCo kichCo);
+
+    List<KichCo> getAllByProductAndColor(int productId, int colorId);
 }

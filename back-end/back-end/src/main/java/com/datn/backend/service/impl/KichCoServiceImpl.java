@@ -78,4 +78,9 @@ public class KichCoServiceImpl implements KichCoService {
             throw new ResourceExistsException("Tên kiểu dáng '" + kichCo.getTen() + "' đã tồn tại.");
         }
     }
+
+    @Override
+    public List<KichCo> getAllByProductAndColor(int productId, int colorId) {
+        return kichCoRepo.getAllByProductAndColor(productId, colorId);
+    }
 }

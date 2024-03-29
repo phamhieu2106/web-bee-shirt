@@ -22,4 +22,6 @@ public interface MauSacService {
     void changeStatus(int id);
 
     MauSac update(MauSac mauSac, MultipartFile multipartFile) throws IOException;
+
+    List<MauSac> getAllColorOfProduct(int productId);
 }

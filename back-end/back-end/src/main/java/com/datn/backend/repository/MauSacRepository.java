@@ -38,4 +38,16 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
             """, nativeQuery = true)
     Page<MauSac> getByPage(Pageable pageable,
                            @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT *
+            FROM mau_sac ms
+            WHERE ms.id IN (
+            SELECT ct.mau_sac_id
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            )
+            """, nativeQuery = true)
+    List<MauSac> getAllColorOfProduct(@Param("productId") int productId);
 }

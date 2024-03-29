@@ -37,7 +37,7 @@ public class SanPhamResource {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<SanPham> add(@PathVariable("id") int id) {
+    public ResponseEntity<SanPham> getOneById(@PathVariable("id") int id) {
         return ResponseEntity.ok(sanPhamService.getById(id));
     }
 
@@ -52,8 +52,6 @@ public class SanPhamResource {
     public ResponseEntity<SanPham> update(@RequestBody SanPham sanPham) {
         return ResponseEntity.ok(sanPhamService.update(sanPham));
     }
-
-
 
     //  client
     @GetMapping("/client/get-by-page")

@@ -155,4 +155,9 @@ public class MauSacServiceImpl implements MauSacService {
             throw new ResourceExistsException("Mã '" + mauSac.getMa() + "' đã tồn tại.");
         }
     }
+
+    @Override
+    public List<MauSac> getAllColorOfProduct(int productId) {
+        return mauSacRepo.getAllColorOfProduct(productId);
+    }
 }

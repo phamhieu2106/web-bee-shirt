@@ -26,7 +26,7 @@ export class SanPhamService {
   }
 
   // 2
-  public getById(id: number): Observable<SanPham> {
+  public getOneById(id: number): Observable<SanPham> {
     return this.http.get<SanPham>(`${this.apiUrl}/get-by-id/${id}`);
   }
 }

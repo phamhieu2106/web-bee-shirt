@@ -25,7 +25,7 @@ export class HomePageComponent {
     pullDrag: true,
     dots: false,
     navSpeed: 700,
-    navText: ['', ''],
+    navText: ['<i class="bi bi-caret-left"></i>', '<i class="bi bi-caret-right"></i>'],
     responsive: {
       0: {
         items: 1

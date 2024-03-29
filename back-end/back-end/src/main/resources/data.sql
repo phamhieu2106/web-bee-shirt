@@ -4,15 +4,19 @@ INSERT INTO account
 VALUES
     (1,'$2a$10$k1XXblzXkl/9cSHvvSp3I.L89Pb4DiFO23nGoenaXunLs8jxDB7de','ROLE_ADMIN','admin0203',1);
 -- pass: 12345678
+INSERT INTO account
+(id,mat_khau,role,ten_dang_nhap,trang_thai)
+VALUES
+    (1,'$2a$10$k1XXblzXkl/9cSHvvSp3I.L89Pb4DiFO23nGoenaXunLs8jxDB7de','ROLE_ADMIN','admin0203',1);
+-- pass: 12345678
 INSERT INTO nhan_vien
 (id,dia_chi,email,gioi_tinh,ho_ten,ngay_sinh,sdt,account_id)
 VALUES
     (1,'Người Miền Núi','langcoc@gmail.com',1,'Nguyễn Lăng Cọc','2002-02-02','0123456789',1);
 
--- Hình thúc thanh toán
-INSERT INTO `datn-bee-shirt`.`hinh_thuc_thanh_toan` (`id`,`hinh_thuc`)
+INSERT INTO hinh_thuc_thanh_toan (`id`,`hinh_thuc`)
 VALUES ('1','TIEN_MAT');
-INSERT INTO `datn-bee-shirt`.`hinh_thuc_thanh_toan` (`id`,`hinh_thuc`)
+INSERT INTO hinh_thuc_thanh_toan (`id`,`hinh_thuc`)
 VALUES ('2','CHUYEN_KHOAN');
 -- Hoa Don
 INSERT INTO `datn-bee-shirt`.`hoa_don` (`id`,`dia_chi_nguoi_nhan`, `email_nguoi_nhan`, `loai_hoa_don`, `ma`, `phi_van_chuyen`, `sdt_nguoi_nhan`, `ten_nguoi_nhan`, `tong_tien`, `trang_thai`)

@@ -113,6 +113,16 @@ export class PdfService {
     pdfMake.createPdf(dd).print();
   }
   generatePDFHoaDon(hoaDon: HoaDon) {
+    let hdcts = hoaDon.hoaDonChiTiets.map((hdct, index) => {
+      let hdctNew = [
+        index + 1 + "",
+        `${hdct.sanPhamChiTiet.sanPham.ten} \n ${hdct.sanPhamChiTiet.kichCo.ten} - ${hdct.sanPhamChiTiet.mauSac.ten}`,
+        hdct.soLuong.toString(),
+        this.convertToVND(hdct.giaBan),
+        this.convertToVND(hdct.giaBan * hdct.soLuong),
+      ];
+      return hdctNew;
+    });
     const dd: TDocumentDefinitions = {
       content: [
         {
@@ -189,7 +199,17 @@ export class PdfService {
             headerRows: 1,
             widths: ["5%", "50%", "5%", "20%", "20%"],
 
-            body: this.genTableContent(hoaDon.hoaDonChiTiets),
+            // body: this.genTableContent(hoaDon.hoaDonChiTiets),
+            body: [
+              [
+                "STT",
+                "Tên sản phẩm                                    ",
+                "SL",
+                "Đơn giá",
+                "Thành tiền",
+              ],
+              ...hdcts,
+            ],
           },
         },
         { text: "\n" },
@@ -263,6 +283,16 @@ export class PdfService {
           // optional space between columns
           columnGap: 10,
         },
+        {
+          columns: [
+            { qr: `${hoaDon.ma}`, alignment: "center" }, // QR code
+            {
+              text: "Chữ ký người nhận\n(Xác nhận hàng nguyên vẹn, không móp/méo)",
+              alignment: "center",
+            }, // Chữ ký
+          ],
+          margin: [0, 20, 0, 0],
+        },
       ],
     };
     pdfMake.createPdf(dd).print();
@@ -298,138 +328,3 @@ export class PdfService {
     return body;
   }
 }
-
-// var docDefinition = {
-//   content: [
-//     this.storeInfo.name,
-//     `Số điện thoại: ${this.storeInfo.name}`,
-//     `Email: ${this.storeInfo.email}`,
-//     `Địa chỉ: ${this.storeInfo.address}`,
-//     `\n`,
-//     `HÓA ĐƠN BÁN HÀNG`,
-//     {
-//       columns: [
-//         {
-//           width: "50%",
-//           text: `Tên khách hàng: ${hoaDon.tenNguoiNhan}`,
-//         },
-//         {
-//           width: "50%",
-//           text: `Mã hóa đơn: ${hoaDon.ma}`,
-//         },
-//       ],
-//       // optional space between columns
-//       columnGap: 10,
-//     },
-//     {
-//       columns: [
-//         {
-//           width: "50%",
-//           text: `Địa chỉ nhận hàng: ${hoaDon.diaChiNguoiNhan}`,
-//         },
-//         {
-//           width: "50%",
-//           text: `Ngày tạo: ${hoaDon.createdAt}`,
-//         },
-//       ],
-//       // optional space between columns
-//       columnGap: 10,
-//     },
-//     {
-//       columns: [
-//         {
-//           width: "50%",
-//           text: `Số điện thoại: ${hoaDon.sdtNguoiNhan} `,
-//         },
-//         {
-//           width: "50%",
-//           text: `Email: ${hoaDon.emailNguoiNhan}`,
-//         },
-//       ],
-//       // optional space between columns
-//       columnGap: 10,
-//     },
-//     {
-//       columns: [
-//         {
-//           width: "50%",
-//           text: `Người tạo: ${hoaDon.createdBy} `,
-//         },
-//       ],
-//       // optional space between columns
-//       columnGap: 10,
-//     },
-//     {
-//       columns: [
-//         {
-//           width: "100%",
-//           text: `Ghi chú: ${hoaDon.ghiChu} `,
-//         },
-//       ],
-//       // optional space between columns
-//       columnGap: 10,
-//     },
-//     "DANH SÁCH SẢN PHẨM",
-//     "\n",
-//     {
-//       columns: [
-//         {
-//           width: "10%",
-//           text: `STT`,
-//         },
-//         {
-//           width: "30%",
-//           text: `Tên sản phẩm`,
-//         },
-//         {
-//           width: "20%",
-//           text: `Đơn giá`,
-//         },
-//         {
-//           width: "10%",
-//           text: `SL`,
-//         },
-//         {
-//           width: "30%",
-//           text: `Thành tiền`,
-//         },
-//       ],
-//     },
-//     this.genTableContent(hoaDon.hoaDonChiTiets),
-//   ],
-// };
-
-// genTableContent(hoaDonChiTiets: HoaDonChiTiet[]) {
-//   let a: TDocumentDefinitions;
-//   let result: { columns: { width: string; text: string }[] }[] = [];
-//   hoaDonChiTiets.forEach((hoaDonChiTiet, index) => {
-//     result.push({
-//       columns: [
-//         {
-//           width: "10%",
-//           text: `${index + 1}`,
-//         },
-//         {
-//           width: "30%",
-//           text: `Tên sản phẩm`,
-//         },
-//         {
-//           width: "20%",
-//           text: `${this.convertToVND(hoaDonChiTiet.giaBan)}`,
-//         },
-//         {
-//           width: "10%",
-//           text: `${hoaDonChiTiet.soLuong}`,
-//         },
-//         {
-//           width: "30%",
-//           text: `${this.convertToVND(
-//             hoaDonChiTiet.soLuong * hoaDonChiTiet.giaBan
-//           )} `,
-//         },
-//       ],
-//     });
-//   });
-
-//   return result;
-// }

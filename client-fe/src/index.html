@@ -14,95 +14,46 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
       rel="stylesheet"
     />
-    <!-- <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    /> -->
+
   </head>
 
   <body>
     <app-root></app-root>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- swiper -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> -->
-
-  <!-- javascript -->
+ 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      initializeSwiper(
-        ".slide-content",
-        "#next-content",
-        "#prev-content",
-        "#pagination-content"
-      );
-      initializeSwiper(
-        ".slide-flash-sale",
-        "#next-flash-sale",
-        "#prev-flash-sale",
-        "#pagination-flash-sale"
-      );
-      newProduct();
-    });
-
-    // Khởi tạo swiper
-    function initializeSwiper(
-      containerClass,
-      nextButton,
-      prevButton,
-      pagination
-    ) {
-      var swiper = new Swiper(containerClass, {
-        slidesPerView: 4,
-        spaceBetween: 25,
-        loop: true,
-        centerSlide: true,
-        fade: true,
-        grabCursor: true,
-        pagination: {
-          el: pagination,
-          clickable: true,
-          dynamicBullets: true,
-        },
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          520: {
-            slidesPerView: 2,
-          },
-          950: {
-            slidesPerView: 3,
-          },
-          1100: {
-            slidesPerView: 4,
-          },
-        },
-      });
-    }
-
-    function newProduct() {
-      var swiper = new Swiper(".mySwiper", {
-        spaceBetween: 10,
-        slidesPerView: 5,
-        freeMode: true,
-        watchSlidesProgress: true,
-      });
-      var swiper2 = new Swiper(".mySwiper2", {
-        spaceBetween: 10,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-        thumbs: {
-          swiper: swiper,
-        },
-      });
-    }
+   $('.product-carousel').slick({
+    lazyLoad: 'ondemand',
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    nextArrow: '<i class="arrow right">',
+    prevArrow: '<i class="arrow left">',
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+     
+    ]
+});
   </script>
 </html>

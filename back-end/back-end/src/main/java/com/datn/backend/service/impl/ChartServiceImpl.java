@@ -8,6 +8,7 @@ import com.datn.backend.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -169,39 +170,39 @@ public class ChartServiceImpl implements ChartService {
     }
 
     @Override
-    public List<Double> getListSalesInThisYear() {
+    public List<BigDecimal> getListSalesInThisYear() {
         return chartRepository.getListSalesInAnyYear(LocalDate.now());
     }
 
     @Override
-    public List<Double> getListSales4WeekInThisMonth() {
-        List<Double> list = chartRepository.getListSales4WeekInAnyMonth(
+    public List<BigDecimal> getListSales4WeekInThisMonth() {
+        List<BigDecimal> list = chartRepository.getListSales4WeekInAnyMonth(
                 getStartDate(), getEndDate(getStartDate()), getTotalDay(getEndDate(getStartDate())));
-        list.set(list.size() - 1, list.get(list.size() - 1) + countSaleLastDayOfMonth(getStartDate()));
+        list.set(list.size() - 1, list.get(list.size() - 1).add(countSaleLastDayOfMonth(getStartDateLastMonth())));
         return list;
     }
 
     @Override
-    public List<Double> getListSales4WeekInLastMonth() {
-        List<Double> list = chartRepository.getListSales4WeekInAnyMonth(
+    public List<BigDecimal> getListSales4WeekInLastMonth() {
+        List<BigDecimal> list = chartRepository.getListSales4WeekInAnyMonth(
                 getStartDateLastMonth(), getEndDate(getStartDateLastMonth()), getTotalDay(getEndDate(getStartDateLastMonth())));
-        list.set(list.size() - 1, list.get(list.size() - 1) + countSaleLastDayOfMonth(getStartDateLastMonth()));
+        list.set(list.size() - 1, list.get(list.size() - 1).add(countSaleLastDayOfMonth(getStartDateLastMonth())));
         return list;
     }
 
     @Override
-    public List<Double> getListSalesInLastYear() {
+    public List<BigDecimal> getListSalesInLastYear() {
         return chartRepository.getListSalesInAnyYear(LocalDate.now().minusYears(1));
     }
 
     @Override
-    public List<Double> getSale7DaysInThisWeek() {
+    public List<BigDecimal> getSale7DaysInThisWeek() {
         Date startOfWeek = getStartOfWeek();
         return chartRepository.getSale7DaysInAnyWeek(startOfWeek);
     }
 
     @Override
-    public List<Double> getSale7DaysInLastWeek() {
+    public List<BigDecimal> getSale7DaysInLastWeek() {
         Date startOfWeek = getStartOfLastWeek();
         return chartRepository.getSale7DaysInAnyWeek(startOfWeek);
     }
@@ -221,7 +222,7 @@ public class ChartServiceImpl implements ChartService {
         return chartRepository.countInvoiceLastDayOfMonth(today);
     }
 
-    public Double countSaleLastDayOfMonth(LocalDate today) {
+    public BigDecimal countSaleLastDayOfMonth(LocalDate today) {
         return chartRepository.getSaleLastDayOfAnyMonth(today);
     }
 

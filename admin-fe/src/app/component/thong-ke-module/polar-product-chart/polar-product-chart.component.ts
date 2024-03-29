@@ -26,11 +26,6 @@ export class PolarProductChartComponent {
       error: (error) => {
         this.toast.error(error.message.message);
       },
-      complete: () => {
-        if (!(this.data.length > 0)) {
-          this.toast.warning(`Năm ${year} không có dữ liệu được tìm thấy!`);
-        }
-      },
     });
   }
 

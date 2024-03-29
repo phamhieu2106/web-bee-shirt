@@ -6,7 +6,7 @@ import { SanPhamChiTietComponent } from './component/san-pham-chi-tiet/san-pham-
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'cua-hang',
+    path: '',
     component: HomePageComponent,
   },
   {

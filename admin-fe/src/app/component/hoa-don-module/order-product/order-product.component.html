@@ -8,7 +8,11 @@
           <button
             type="button"
             class="btn btn-primary"
-            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+            [disabled]="
+              hoaDon.loaiHoaDon == 'TAI_QUAY' ||
+              hoaDon.trangThai == 'HOAN_THANH' ||
+              hoaDon.trangThai == 'DANG_GIAO'
+            "
             data-toggle="modal"
             data-target="#addProductModal"
           >
@@ -36,10 +40,10 @@
                     <th>Tên sản phẩm</th>
                     <th>Size</th>
                     <th>Màu sắc</th>
-                    <th>Đơn giá</th>
+                    <th>Giá bán</th>
                     <th>Số lượng</th>
                     <th>Tổng tiền</th>
-                    <!-- <th>Hành động</th> -->
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,6 +68,11 @@
                             class="btn btn-outline-secondary btn-number"
                             (click)="minus(hdct)"
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                            [disabled]="
+                              hoaDon.trangThai == 'HOAN_THANH' ||
+                              hoaDon.trangThai == 'HUY' ||
+                              hoaDon.trangThai == 'DANG_GIAO'
+                            "
                           >
                             <span class="fa fa-minus"></span>
                           </button>
@@ -74,7 +83,12 @@
                           class="form-control input-number w-50"
                           [(ngModel)]="hdct.soLuong"
                           (change)="inputSoLuong(hdct, $event)"
-                          [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+                          [disabled]="
+                            hoaDon.loaiHoaDon == 'TAI_QUAY' ||
+                            hoaDon.trangThai == 'HOAN_THANH' ||
+                            hoaDon.trangThai == 'HUY' ||
+                            hoaDon.trangThai == 'DANG_GIAO'
+                          "
                         />
                         <span class="input-group-append">
                           <button
@@ -82,6 +96,11 @@
                             class="btn btn-outline-secondary btn-number"
                             (click)="plus(hdct)"
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                            [disabled]="
+                              hoaDon.trangThai == 'HOAN_THANH' ||
+                              hoaDon.trangThai == 'HUY' ||
+                              hoaDon.trangThai == 'DANG_GIAO'
+                            "
                           >
                             <span class="fa fa-plus"></span>
                           </button>
@@ -95,15 +114,16 @@
                           | currency : "đ " : "symbol" : "1.0-0"
                       }}
                     </td>
-                    <!-- <td>
+                    <td>
                       <button
                         class="btn btn-outline-light btn-rounded"
-                        [disabled]="loaiHoaDon == 'TAI_QUAY'"
-                        (click)="delete(hdct.id)"
+                        *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                        [disabled]="hoaDon.hoaDonChiTiets.length <= 1"
+                        (click)="deleteHDCT(hdct.id)"
                       >
                         <i class="fa-solid fa-trash text-danger"></i>
                       </button>
-                    </td> -->
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -212,7 +232,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <app-search-product-detail></app-search-product-detail>
+          <app-search-product-detail
+            (chooseProduct)="addHDCT($event)"
+          ></app-search-product-detail>
         </div>
         <!-- <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">

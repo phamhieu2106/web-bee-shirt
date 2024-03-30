@@ -39,6 +39,10 @@ public interface SanPhamChiTietService {
 
     void updateImages(MultipartFile[] files, int spId, int mauSacId) throws IOException;
 
+    Integer getQuantityOfOne(int productId, int colorId, int sizeId);
+
+    BigDecimal getPriceOfOne(int productId, int colorId, int sizeId);
+
     long[][] minMaxPrice();
     PagedResponse<SpctResponse> getDetailSpct(
             int pageSize, int pageNumber,

@@ -8,7 +8,7 @@ import { SanPham } from "../model/class/san-pham.class";
 @Injectable({
   providedIn: "root",
 })
-export class SanPhamService {
+export class ProductService {
   private readonly apiUrl = "http://localhost:8080/san-pham";
 
   constructor(private http: HttpClient) {}

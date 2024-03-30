@@ -82,15 +82,27 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     List<SanPhamChiTiet> findBySanPhamIdAndMauSacId(int sanPhamId, int mauSacId);
 
-    /*
-                left join MauSac ms on ms.id = spct.mauSac.id
-                left join KichCo kc on kc.id = spct.kichCo.id
-                left join KieuDang ms on ms.id = spct.mauSac.id
-                left join KieuThietKe ms on ms.id = spct.mauSac.id
-                left join TayAo ms on ms.id = spct.mauSac.id
-                left join CoAo ms on ms.id = spct.mauSac.id
-                left join ChatLieu ms on ms.id = spct.mauSac.id
-    * */
+    @Query(value = """
+            SELECT ct.so_luong_ton
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            AND ct.mau_sac_id = :colorId
+            AND ct.kich_co_id = :sizeId
+            """, nativeQuery = true)
+    Integer getQuantityOfOne(@Param("productId") int productId,
+                             @Param("colorId") int colorId,
+                             @Param("sizeId") int sizeId);
+
+    @Query(value = """
+            SELECT ct.gia_ban
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            AND ct.mau_sac_id = :colorId
+            AND ct.kich_co_id = :sizeId
+            """, nativeQuery = true)
+    BigDecimal getPriceOfOne(@Param("productId") int productId,
+                             @Param("colorId") int colorId,
+                             @Param("sizeId") int sizeId);
     @Query("""
             select spct from SanPhamChiTiet spct
             where (spct.sanPham.ten like %:search% or spct.sanPham.ma like %:search%) and

@@ -99,4 +99,19 @@ public class SanPhamChiTietResource {
         this.spctService.updateImages(files, spId, mauSacId);
         return ResponseEntity.ok("Cập nhật ảnh thành công!");
     }
+
+    // client resources
+    @GetMapping("/get-quantity/{productId}/{colorId}/{sizeId}")
+    public ResponseEntity<Integer> getQuantityOfOne(@PathVariable("productId") int productId,
+                                                    @PathVariable("colorId") int colorId,
+                                                    @PathVariable("sizeId") int sizeId) {
+        return ResponseEntity.ok(spctService.getQuantityOfOne(productId, colorId, sizeId));
+    }
+
+    @GetMapping("/get-price/{productId}/{colorId}/{sizeId}")
+    public ResponseEntity<BigDecimal> getPriceOfOne(@PathVariable("productId") int productId,
+                                                 @PathVariable("colorId") int colorId,
+                                                 @PathVariable("sizeId") int sizeId) {
+        return ResponseEntity.ok(spctService.getPriceOfOne(productId, colorId, sizeId));
+    }
 }

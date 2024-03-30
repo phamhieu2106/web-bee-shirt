@@ -1,31 +1,127 @@
-<div class="main-header">
-  <div id="topbar">
-    <div class="marquee-topbar">
-      <div class="item animation">
-        <p><strong>🚛 FREESHIP MỌI ĐƠN TỪ 399K</strong></p>
-      </div>
-      <div class="item">
-        <p><strong>VOUCHER 10K CHO ĐƠN 99K</strong></p>
-      </div>
+<div class="wrapperNav">
+  <div class="main-header">
+    <div id="topbar">
+      <div class="marquee-topbar">
+        <div class="item animation">
+          <p><strong>🚛 FREESHIP MỌI ĐƠN TỪ 399K</strong></p>
+        </div>
+        <div class="item">
+          <p><strong>VOUCHER 10K CHO ĐƠN 99K</strong></p>
+        </div>
 
-      <div class="item">
-        <p><strong>VOUCHER 50K CHO ĐƠN 799K</strong></p>
+        <div class="item">
+          <p><strong>VOUCHER 50K CHO ĐƠN 799K</strong></p>
+        </div>
       </div>
+    </div>
+
+    <div class="navMain1">
+      <header class="container">
+        <div class="mainHeader">
+          <label for="nav_check" class="hamburger c">
+            <div></div>
+            <div></div>
+            <div></div>
+          </label>
+
+          <div class="logo c">
+            <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+          </div>
+
+          <div class="search">
+            <form action="/search" class="wanda-mxm-search">
+              <div class="search-inner">
+                <input
+                  name="q"
+                  autocomplete="off"
+                  class="searchinput"
+                  type="text"
+                  size="20"
+                  placeholder="Bạn đang tìm gì..."
+                  aria-label="Search"
+                />
+              </div>
+            </form>
+          </div>
+
+          <div class="nav-account">
+            <div class="taiKhoan hiddenWeb" (click)="toggleLoginPopup()">
+              <div class="iconnav">
+                <i class="iconUser bi bi-person"></i>
+              </div>
+
+              <!-- <div class="popUpDangNhap " *ngIf="showLoginPopup">
+                <div>
+                  <button class="btnDangNhap">
+                    <a href="">Đăng Nhập</a>
+                  </button>
+                  <button class="btnDangKy">
+                    <a href="">Đăng Ký</a>
+                  </button>
+                  <span class="theoDoiDonHang">
+                    <a href="">
+                      Theo dõi đơn hàng
+                    </a>
+                  </span>
+                </div>
+              </div> -->
+
+              <div class="popUpLogindone" *ngIf="showLoginPopup">
+                <div>
+                  <div class="headerPopup">
+                    <span class="nameCustomer">Chào Phạm Bình</span>
+                  
+                  </div>
+
+                  <ul class="listAction">
+                    <li class="actionItem">
+                      <a href="/tai-khoan"> Tài Khoản </a>
+                    </li>
+                    <li class="actionItem">
+                      <a href=""> Theo dõi đơn hàng </a>
+                    </li>
+                    <li class="actionItem">
+                      <a href=""> Sản phẩm yêu thích </a>
+                    </li>
+                    <li class="actionItem">
+                      <a href=""> Ưu đãi của bạn </a>
+                    </li>
+                  </ul>
+
+                  <div class="footerPopup">
+                    <span>Đăng Xuất</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="yeuThich">
+              <div class="iconnav">
+                <i class="iconyeuThich bi bi-heart"></i>
+              </div>
+            </div>
+
+            <div class="gioHang" (click)="openGioHang()">
+              <div class="iconnav">
+                <i class="icongioHang bi bi-bag"></i>
+                <span class="quantity">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
     </div>
   </div>
 
-  <div class="navMain1">
-    <header class="container">
-      <label for="nav_check" class="hamburger">
-        <div></div>
-        <div></div>
-        <div></div>
-      </label>
+  <div class="header-botton">
+    <input type="checkbox" id="nav_check" hidden />
 
+    <nav class="mainNav">
       <div class="logo">
         <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
       </div>
 
+<<<<<<< HEAD
       <div class="site_search search-desktop">
         <form action="/search" class="wanda-mxm-search">
           <div class="search-inner">
@@ -62,34 +158,220 @@
         </div>
       </div>
     </header>
+=======
+      <ul style="margin: 0">
+        <li>
+          <a href="">Trang Chủ</a>
+        </li>
+        <li>
+          <a href="/trang-san-pham">Sản Phẩm</a>
+          <span class="header_new">New</span>
+        </li>
+        <li>
+          <a href="">Áo Nam</a>
+        </li>
+        <li>
+          <a href="">Về Chúng Tôi</a>
+        </li>
+        <li>
+          <a href="">Liên Hệ</a>
+        </li>
+        <li>
+          <a href="" class="hiddenMobile">Đăng Nhập</a>
+        </li>
+        <li>
+          <a href="" class="hiddenMobile">Đăng Kí</a>
+        </li>
+      </ul>
+    </nav>
+>>>>>>> 15d48c193a15b346a28f4fefe79fa2f78991c4e7
   </div>
 </div>
 
-<div class="header-botton">
-  <input type="checkbox" id="nav_check" hidden />
+<div class="cardgioHang" *ngIf="showGioHang">
+  <div class="cart-header">
+    <div>
+      <span class="nameCart">Giỏ Hàng</span>
+      <i class="bi bi-cart2"></i>
+    </div>
+    <div class="closeShopping" (click)="openGioHang()">
+      <i class="bi bi-x-circle"></i>
+    </div>
+  </div>
 
+<<<<<<< HEAD
   <nav class="mainNav">
     <div class="logo">
       <img src="https://i.imgur.com/XlMdwHa.png" />
+=======
+  <!-- Điều kiện để nhận mã miễn phí vận chuyển -->
+  <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
+    <img src="https://i.imgur.com/uoqTCt1.png" alt="" style="width: 30px" />
+    <span style="font-size: 14px; margin-left: 5px"
+      >Bạn đủ điều kiện nhận miễn phí vận chuyển</span
+    >
+  </div>
+
+  <!-- <div class="dieuKien" style="background-color: #fdc5bc; padding: 10px;">
+    <img src="https://i.imgur.com/GFwsDu9.png" alt="" style="width: 30px;">
+    <span style="font-size: 14px;margin-left: 5px;">Mua thêm 179.700 ₫ để được freeship.</span>
+  </div> -->
+
+  <ul class="listCart" style="padding: 0">
+    <li class="cartItem">
+      <div class="row">
+        <div class="col-md-3 imgProductCart">
+          <img
+            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+            alt=""
+          />
+          <div class="DeleteCart">
+            <i class="bi bi-x-lg"></i>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <span class="nameCartProduct">
+            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
+          </span>
+          <div class="ThuocTinh">
+            <div class="color-cart">
+              <img
+                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+                alt=""
+              />
+            </div>
+            <span class="line-info">|</span>
+            <span class="sizeCart"> Size: L </span>
+          </div>
+
+          <div class="wrapperPrice">
+            <div class="priceCart">599.000đ</div>
+
+            <div class="wrapper">
+              <span class="minus">-</span>
+              <span
+                class="num"
+                style="
+                  border-right: 2px solid rgba(0, 0, 0, 0.2);
+                  border-left: 2px solid rgba(0, 0, 0, 0.2);
+                "
+                >01</span
+              >
+              <span class="plus">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="cartItem">
+      <div class="row">
+        <div class="col-md-3 imgProductCart">
+          <img
+            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+            alt=""
+          />
+          <div class="DeleteCart">
+            <i class="bi bi-x-lg"></i>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <span class="nameCartProduct">
+            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
+          </span>
+          <div class="ThuocTinh">
+            <div class="color-cart">
+              <img
+                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+                alt=""
+              />
+            </div>
+            <span class="line-info">|</span>
+            <span class="sizeCart"> Size: L </span>
+          </div>
+
+          <div class="wrapperPrice">
+            <div class="priceCart">599.000đ</div>
+
+            <div class="wrapper">
+              <span class="minus">-</span>
+              <span
+                class="num"
+                style="
+                  border-right: 2px solid rgba(0, 0, 0, 0.2);
+                  border-left: 2px solid rgba(0, 0, 0, 0.2);
+                "
+                >01</span
+              >
+              <span class="plus">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="cartItem">
+      <div class="row">
+        <div class="col-md-3 imgProductCart">
+          <img
+            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+            alt=""
+          />
+          <div class="DeleteCart">
+            <i class="bi bi-x-lg"></i>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <span class="nameCartProduct">
+            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
+          </span>
+          <div class="ThuocTinh">
+            <div class="color-cart">
+              <img
+                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
+                alt=""
+              />
+            </div>
+            <span class="line-info">|</span>
+            <span class="sizeCart"> Size: L </span>
+          </div>
+
+          <div class="wrapperPrice">
+            <div class="priceCart">599.000đ</div>
+
+            <div class="wrapper">
+              <span class="minus">-</span>
+              <span
+                class="num"
+                style="
+                  border-right: 2px solid rgba(0, 0, 0, 0.2);
+                  border-left: 2px solid rgba(0, 0, 0, 0.2);
+                "
+                >01</span
+              >
+              <span class="plus">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="checkOut">
+    <div class="TinhTien">
+      <div>Giá trị đơn hàng</div>
+      <div class="giaGoc">599.000đ</div>
+      <div>Chiết khấu</div>
+      <div class="chietKhau">-179.000đ</div>
+      <div class="tamTinh">Tạm Tính</div>
+      <div class="total">419.300đ</div>
+      <div></div>
+      <div class="save">(Tiết kiệm 179.000đ)</div>
+>>>>>>> 15d48c193a15b346a28f4fefe79fa2f78991c4e7
     </div>
 
-    <ul style="margin: 0">
-      <li>
-        <a href="">Trang Chủ</a>
-      </li>
-      <li>
-        <a href="">Sản Phẩm</a>
-        <span class="header_new">New</span>
-      </li>
-      <li>
-        <a href="">Áo Nam</a>
-      </li>
-      <li>
-        <a href="">Về Chúng Tôi</a>
-      </li>
-      <li>
-        <a href="">Liên Hệ</a>
-      </li>
-    </ul>
-  </nav>
+    <div class="thanhToan">
+      <button class="btnThanhToan">Thanh Toán</button>
+    </div>
+  </div>
 </div>

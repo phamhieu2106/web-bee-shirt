@@ -8,6 +8,7 @@ import { Component } from "@angular/core";
 export class NavigationComponent {
   showLoginPopup: boolean = false; // Biến để kiểm soát hiển thị phần popup đăng nhập
   showGioHang: boolean = false; 
+  
   constructor() { }
 
   ngOnInit(): void {

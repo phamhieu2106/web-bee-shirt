@@ -6,13 +6,14 @@ import { OwlOptions } from "ngx-owl-carousel-o";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { NotificationService } from "src/app/service/notification.service";
-import { SanPhamService } from "src/app/service/san-pham.service";
+import { ProductService } from "src/app/service/product.service";
 import { MauSac } from "src/app/model/class/mau-sac.class";
-import { MauSacService } from "src/app/service/mau-sac.service";
-import { HinhAnh } from "src/app/model/class/hinh-anh.class";
+import { ColorService } from "src/app/service/color.service";
 import { SizeService } from "src/app/service/size.service";
 import { KichCo } from "src/app/model/class/kich-co.class";
 import { ProductImageService } from "src/app/service/product-img.service";
+import { ProductDetailsService } from "src/app/service/product-details.service";
+import { CurrencyPipe } from "@angular/common";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -27,6 +28,14 @@ export class SanPhamChiTietComponent {
 
   public curColorIndex: number = 0;
   public curSizeIndex: number = 0;
+  public curQuantity: number = 0;
+  public curPrice: number = 0;
+
+  public form: string;
+  public design: string;
+  public collar: string;
+  public sleeve: string;
+  public material: string;
 
   sanPhamCT: OwlOptions = {
     loop: true,
@@ -34,7 +43,7 @@ export class SanPhamChiTietComponent {
     touchDrag: true,
     pullDrag: true,
     dots: true,
-    navSpeed: 700,
+    navSpeed: 500,
     autoplay: true,
     autoplayTimeout: 2000,
     autoplayHoverPause: true,
@@ -59,39 +68,31 @@ export class SanPhamChiTietComponent {
   // constructor, ngOn
   constructor(
     private activatedRoute: ActivatedRoute,
-    private sanPhamService: SanPhamService,
-    private mauSacService: MauSacService,
+    private currencyPipe: CurrencyPipe,
+    private productService: ProductService,
+    private colorService: ColorService,
     private sizeService: SizeService,
     private productImgService: ProductImageService,
+    private productDetailsService: ProductDetailsService,
     private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
+    this.giDoCuaBinh();
     this.getProductById();
-
-    const productImg = document.getElementById(
-      "product-img"
-    ) as HTMLImageElement;
-    const smallImg = document.getElementsByClassName("small-img");
-
-    for (let i = 0; i < smallImg.length; i++) {
-      const imgElement = smallImg[i] as HTMLImageElement;
-      imgElement.onclick = function () {
-        productImg.src = imgElement.src;
-      };
-    }
   }
 
   // public functions
   // 1
   public changeColorIndex(newIndex: number, colorId: number): void {
     this.curColorIndex = newIndex;
+    this.curSizeIndex = 0;
 
+    // lấy lại danh sách size
     this.sizeService
       .getAllByProductAndColor(this.sanPham.id, colorId)
       .subscribe({
         next: (sizeResponse: KichCo[]) => {
-          this.curSizeIndex = 0;
           this.curSizesOfProduct = sizeResponse;
         },
         error: (errorResponse: HttpErrorResponse) => {
@@ -99,6 +100,7 @@ export class SanPhamChiTietComponent {
         },
       });
 
+    // lấy lại danh sách hình ảnh
     this.productImgService
       .getAllUrlBySanPhamAndMauSac(this.sanPham.id, colorId)
       .subscribe({
@@ -109,12 +111,81 @@ export class SanPhamChiTietComponent {
           this.notifService.error(errorResponse.error.message);
         },
       });
+
+    // lấy lại số lượng
+    this.productDetailsService
+      .getQuantityOfOne(
+        this.sanPham.id,
+        colorId,
+        this.curSizesOfProduct[this.curSizeIndex].id
+      )
+      .subscribe({
+        next: (quantity: number) => {
+          this.curQuantity = quantity;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+
+    // lấy lại giá
+    this.productDetailsService
+      .getPriceOfOne(
+        this.sanPham.id,
+        colorId,
+        this.curSizesOfProduct[this.curSizeIndex].id
+      )
+      .subscribe({
+        next: (price: number) => {
+          this.curPrice = price;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
   }
 
-  public changeSizeIndex(newIndex: number): void {
+  // 2
+  public changeSizeIndex(newIndex: number, sizeId: number): void {
     this.curSizeIndex = newIndex;
+
+    // lấy lại số lượng
+    this.productDetailsService
+      .getQuantityOfOne(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        sizeId
+      )
+      .subscribe({
+        next: (quantity: number) => {
+          this.curQuantity = quantity;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+
+    // lấy lại giá
+    this.productDetailsService
+      .getPriceOfOne(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        sizeId
+      )
+      .subscribe({
+        next: (price: number) => {
+          this.curPrice = price;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
   }
 
+  // 3
+  public formatPrice(price: number): any {
+    return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
+  }
   // private functions
   // 1
   private getProductById(): void {
@@ -122,9 +193,12 @@ export class SanPhamChiTietComponent {
       let productId = params["id"];
 
       // get product
-      this.sanPhamService.getOneById(productId).subscribe({
+      this.productService.getOneById(productId).subscribe({
         next: (response: SanPham) => {
           this.sanPham = response;
+
+          // lấy chất liệu
+          this.assignProperties();
         },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
@@ -132,7 +206,7 @@ export class SanPhamChiTietComponent {
       });
 
       // get colors of this product
-      this.mauSacService.getAllColorOfProduct(productId).subscribe({
+      this.colorService.getAllColorOfProduct(productId).subscribe({
         next: (colorResponse: MauSac[]) => {
           this.colorsOfProduct = colorResponse;
 
@@ -142,6 +216,38 @@ export class SanPhamChiTietComponent {
             .subscribe({
               next: (sizeResponse: KichCo[]) => {
                 this.curSizesOfProduct = sizeResponse;
+
+                // lấy số lượng
+                this.productDetailsService
+                  .getQuantityOfOne(
+                    productId,
+                    colorResponse[0].id,
+                    sizeResponse[0].id
+                  )
+                  .subscribe({
+                    next: (quantity: number) => {
+                      this.curQuantity = quantity;
+                    },
+                    error: (errorResponse: HttpErrorResponse) => {
+                      this.notifService.error(errorResponse.error.message);
+                    },
+                  });
+
+                // lấy giá
+                this.productDetailsService
+                  .getPriceOfOne(
+                    productId,
+                    colorResponse[0].id,
+                    sizeResponse[0].id
+                  )
+                  .subscribe({
+                    next: (price: number) => {
+                      this.curPrice = price;
+                    },
+                    error: (errorResponse: HttpErrorResponse) => {
+                      this.notifService.error(errorResponse.error.message);
+                    },
+                  });
               },
               error: (errorResponse: HttpErrorResponse) => {
                 this.notifService.error(errorResponse.error.message);
@@ -165,5 +271,29 @@ export class SanPhamChiTietComponent {
         },
       });
     });
+  }
+
+  //
+  private assignProperties(): void {
+    let anyProductDetails = this.sanPham.sanPhamChiTiets[0];
+    this.form = anyProductDetails.kieuDang.ten;
+    this.design = anyProductDetails.thietKe.ten;
+    this.collar = anyProductDetails.coAo.ten;
+    this.sleeve = anyProductDetails.tayAo.ten;
+    this.material = anyProductDetails.chatLieu.ten;
+  }
+
+  private giDoCuaBinh(): void {
+    const productImg = document.getElementById(
+      "product-img"
+    ) as HTMLImageElement;
+    const smallImg = document.getElementsByClassName("small-img");
+
+    for (let i = 0; i < smallImg.length; i++) {
+      const imgElement = smallImg[i] as HTMLImageElement;
+      imgElement.onclick = function () {
+        productImg.src = imgElement.src;
+      };
+    }
   }
 }

@@ -1,0 +1,56 @@
+<app-header></app-header>
+
+<!-- <section class="container">
+  <div>
+    <h2 class="title-section bd-left">
+      <span>ƯU ĐÃI DÀNH CHO BẠN</span>
+    </h2>
+  </div>
+  <app-phieu-giam-gia></app-phieu-giam-gia>
+</section>
+
+<section class="container">
+  <app-dot-giam-gia></app-dot-giam-gia>
+</section> -->
+
+<!-- Sản Phẩm Mới Ra -->
+<div class="pb-3 container">
+  <h2 class="title-section bd-left">
+    <span>Sản Phẩm Mới Ra <i class="fas fa-user"></i></span>
+  </h2>
+</div>
+
+<section class="policy-product" style="height: 700px">
+  <div class="container">
+    <owl-carousel-o [options]="customOptions">
+      <ng-template
+        carouselSlide
+        *ngFor="let sp of pagedResponse?.data"
+        style="background-color: black"
+      >
+        <div class="product">
+          <div class="product-thumbnail">
+            <a class="image_thumb">
+              <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" />
+            </a>
+          </div>
+          <div class="details">
+            <h3 class="nameProduct">
+              <a [routerLink]="'/san-pham/' + sp.id">{{ sp.ten }}</a>
+            </h3>
+            <p class="priceProduct">{{ displayPrice(sp) }}</p>
+            <div class="swatch-color-wrapper mb-3">
+              <div
+                data-value="Đen"
+                class="swatch-element active"
+                *ngFor="let color of getMauSacList(sp)"
+              >
+                <img class="img-color" [src]="color.image.imageUrl" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </owl-carousel-o>
+  </div>
+</section>

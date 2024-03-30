@@ -15,17 +15,12 @@
 
       <div class="infoProduct">
         <div class="product-info d-flex">
-          <div class="pro-type">
-            <span>Loại: </span>
-            <a class="title" rel="nofollow" href="">Áo Sơ Mi</a>
-          </div>
-          <span class="line-info">|</span>
           <div class="pro-sku ProductSku">
             <span>Mã SP: </span>
             <span class="sku-number title">{{ sanPham?.ma }}</span>
           </div>
         </div>
-        <span class="priceProduct">390,000₫</span>
+        <span class="priceProduct">{{ formatPrice(curPrice) }}</span>
       </div>
 
       <div class="product-promotion">
@@ -84,7 +79,7 @@
         </div>
       </div>
 
-      <div class="coupon_new_copy clear">
+      <div class="coupon_new_copy clear mb-3">
         <h4 style="font-size: 14px">Mã giảm giá bạn có thể sử dụng:</h4>
         <div id="coupon_new_copy">
           <div class="position_coupon">
@@ -136,11 +131,7 @@
                 Nhập
                 <strong> W100 </strong>
                 <p>
-                  Lượt đã sử dụng (<span
-                    class="counter"
-                    id="counter3"
-                    data-value=""
-                    >138</span
+                  Lượt đã sử dụng (<span class="counter" id="counter3">138</span
                   >)
                 </p>
               </div>
@@ -175,7 +166,10 @@
         </div>
       </div>
 
-      <span>Màu Sắc: <strong>Trắng</strong></span>
+      <span
+        >Màu Sắc:
+        <strong>{{ colorsOfProduct[curColorIndex]?.ten }}</strong></span
+      >
       <div>
         <img
           *ngFor="let color of colorsOfProduct; let i = index"
@@ -183,7 +177,7 @@
           class="imgColor me-1 pointer"
           [ngClass]="curColorIndex === i ? 'border border-secondary' : ''"
           (click)="changeColorIndex(i, color.id)"
-          [title]="color.ten"
+          [title]="color?.ten"
         />
       </div>
 
@@ -210,7 +204,7 @@
           <div
             class="n-sd swatch-element m is-size"
             *ngFor="let size of curSizesOfProduct; let sizeIndex = index"
-            (click)="changeSizeIndex(sizeIndex)"
+            (click)="changeSizeIndex(sizeIndex, size.id)"
           >
             <input class="variant-1" type="radio" />
             <label [ngClass]="curSizeIndex === sizeIndex ? 'sd' : ''">
@@ -227,11 +221,10 @@
               <div class="wrapper-popupover"></div>
             </div>
           </div>
+          <div class="m-1">Số lượng tồn: {{ curQuantity }}</div>
         </div>
 
-        <div class="size-infomation"></div>
-
-        <div class="Buy">
+        <div class="Buy mb-5">
           <div class="wrapper">
             <span class="minus">-</span>
             <span
@@ -245,10 +238,32 @@
             <span class="plus">+</span>
           </div>
 
-          <button class="AddCard">Thêm Vào Giỏ</button>
-          <button class="Buynow">Mua Ngay</button>
+          <button class="AddCard rounded">Thêm Vào Giỏ</button>
+          <button class="Buynow rounded">Mua Ngay</button>
         </div>
 
+        <div class="mb-5">
+          <h5>Đặc điểm nổi bật</h5>
+          <ul>
+            <li>
+              Kiểu dáng: &nbsp; &nbsp; <b>{{ form }}</b>
+            </li>
+            <li>
+              Thiết kế: &nbsp; &nbsp; <b>{{ design }}</b>
+            </li>
+            <li>
+              Cổ áo: &nbsp; &nbsp; <b>{{ collar }}</b>
+            </li>
+            <li>
+              Tay áo: &nbsp; &nbsp; <b>{{ sleeve }}</b>
+            </li>
+            <li>
+              Chất liệu: &nbsp; &nbsp; <b>{{ material }}</b>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Chính sách -->
         <div class="product-single__policy">
           <div class="product-policy">
             <div class="product-policy__item">
@@ -257,7 +272,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451118875_c98fff6e965c4957a2beef70df6df0f8_afcea78391a640c9bcef22ce88aca7d6.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title"
@@ -270,7 +284,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451151763_13f64ed25050f361cfb0a70fda62b2c2_efbb28df6328412b9200cd92a795396e.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title"
@@ -283,7 +296,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451129757_228e4824d8a593038b9f20d5e53d4d08_7e46b4c108bc481e8c2351f909bdcba4.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title"
@@ -296,7 +308,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451140541_2b09e178f1b8b4763b266875fd2c8db6_8b536c9ae5e24c17961fdb906d3f5022.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title"
@@ -309,7 +320,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451129712_78e0e70db6fffe43fbb9a3e680cb3ed0_a2b8379adf4843a4898c621b37c2b42a.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title">Giao hàng toàn quốc </span>
@@ -320,7 +330,6 @@
                   width="45"
                   height="45"
                   src="https://file.hstatic.net/1000253775/file/z4635451151761_2fe8731e9d20060a54130996be16cd2e_e8e090599dd9467abdd66feb9ba3474f.jpg"
-                  alt=""
                 />
               </div>
               <span class="product-policy__title"
@@ -346,10 +355,10 @@
           aria-selected="true"
           style="color: black"
         >
-          MÔ TẢ
+          <b>MÔ TẢ</b>
         </button>
       </li>
-      <li class="nav-item" role="presentation">
+      <!-- <li class="nav-item" role="presentation">
         <button
           class="nav-link"
           id="profile-tab"
@@ -363,7 +372,7 @@
         >
           CHÍNH SÁCH GIAO HÀNG
         </button>
-      </li>
+      </li> -->
     </ul>
     <div
       class="tab-content"
@@ -371,41 +380,12 @@
       style="border: 1px dashed #d9d9d9"
     >
       <div
-        class="tab-pane fade show active"
+        class="tab-pane fade show active p-5"
         id="home"
         role="tabpanel"
         aria-labelledby="home-tab"
       >
-        <p><strong>Bảng size</strong>:&nbsp;</p>
-        <ul>
-          <li>
-            Size S: Cân nặng 53-60kg; Ngang vai: 45cm; Rộng ngực: 110cm; Dài áo:
-            72cm&nbsp;
-          </li>
-          <li>
-            Size M: Cân nặng 60-68kg; Ngang vai: 46.5cm; Rộng ngực: 114cm; Dài
-            áo: 73,5cm&nbsp;
-          </li>
-          <li>
-            Size L: Cân nặng 68-78kg; Ngang vai: 48cm; Rộng ngực: 118cm; Dài áo:
-            75cm&nbsp;
-          </li>
-          <li>
-            Size XL: Cân nặng 78-88kg; Ngang vai: 49.5cm; Rộng ngực: 122cm; Dài
-            áo: 76,5cm
-          </li>
-        </ul>
-        <p><strong>Đặc điểm sản phẩm :</strong></p>
-        <ul>
-          <li>
-            Sơ mi với chất liệu Oxford sọc truyền thống, dày dặn đứng form và
-            hạn chế nhăn tốt.
-          </li>
-          <li>Lá cổ bản to, dễ dàng gấp, tạo nên sự chỉn chu khi mặc.</li>
-          <li>Tay áo có khuy Manchette dễ dàng thay đổi độ dài tay áo.</li>
-          <li>Form Regular&nbsp;thoải mái, không quá ôm, dễ chịu khi mặc</li>
-          <li>Một gam màu sọc xanh duy nhất.</li>
-        </ul>
+        <div [innerHTML]="sanPham?.moTa"></div>
       </div>
       <div
         class="tab-pane fade"

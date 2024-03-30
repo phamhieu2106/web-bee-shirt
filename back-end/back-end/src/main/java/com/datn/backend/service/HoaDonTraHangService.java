@@ -1,9 +1,9 @@
 package com.datn.backend.service;
 
+import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.request.HoaDonTraHangRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.SpctResponse;
-import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface HoaDonTraHangService {
 
     List<Integer> getListIdDotGiamGiaSanPhamByIdHoaDon(Integer idHoaDon);
 
-    PhieuGiamGia getPhieuGiamGiaByIdHoaDon(Integer idHoaDon);
+    HoaDonResponse traHang(ChangeOrderStatusRequest changeOrderStatus);
 }

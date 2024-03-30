@@ -3,6 +3,7 @@ package com.datn.backend.service;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.SanPham;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SanPhamService {
@@ -20,4 +21,14 @@ public interface SanPhamService {
 
     // client
     PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize);
+
+    PagedResponse<SanPham> getByFilterForClient(List<Integer> colorIds,
+                                                List<Integer> sizeIds,
+                                                List<Integer> formIds,
+                                                List<Integer> designIds,
+                                                List<Integer> collarIds,
+                                                List<Integer> sleeveIds,
+                                                List<Integer> materialIds,
+                                                BigDecimal minPrice,
+                                                BigDecimal maxPrice);
 }

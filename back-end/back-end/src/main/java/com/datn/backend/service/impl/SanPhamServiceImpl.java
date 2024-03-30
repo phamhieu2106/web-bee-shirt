@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -121,5 +122,18 @@ public class SanPhamServiceImpl implements SanPhamService {
         paged.setSearch(null);
 
         return paged;
+    }
+
+    @Override
+    public PagedResponse<SanPham> getByFilterForClient(List<Integer> colorIds,
+                                                       List<Integer> sizeIds,
+                                                       List<Integer> formIds,
+                                                       List<Integer> designIds,
+                                                       List<Integer> collarIds,
+                                                       List<Integer> sleeveIds,
+                                                       List<Integer> materialIds,
+                                                       BigDecimal minPrice,
+                                                       BigDecimal maxPrice) {
+        return null;
     }
 }

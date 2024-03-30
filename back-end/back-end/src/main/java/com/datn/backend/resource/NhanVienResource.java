@@ -27,7 +27,7 @@ public class NhanVienResource {
 
     @GetMapping("/get-all")
     public ResponseEntity<PagedResponse<NhanVienResponse>> getNhanVienList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(nhanVienService.getAll(pageNumber, pageSize, search.trim()));
     }
@@ -61,7 +61,7 @@ public class NhanVienResource {
 
     @GetMapping("/filter")
     public ResponseEntity<PagedResponse<NhanVienResponse>> filter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                  @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                   @RequestParam(value = "gioiTinhFilter", defaultValue = "0,1", required = false) List<Integer> gioiTinhFilter,
                                                                   @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter,
                                                                   @RequestParam(value = "search", defaultValue = "", required = false) String search) {

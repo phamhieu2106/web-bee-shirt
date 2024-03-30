@@ -47,6 +47,9 @@ export class ChiTietHoaDonComponent {
       this.listReturnItems = [];
       this.listOfSelection = [];
       this.amountOfMoneyReturn = 0;
+      this.oldAmount = 0;
+      this.newAmount = this.hoaDon.tongTien;
+      this.discountMoney = 0;
       this.getListIdDotGiamGiaSanPham(this.hoaDon.id);
       this.hoaDon.hoaDonChiTiets.forEach((item) => this.listOfData.push(item));
       this.cdr.detectChanges();
@@ -207,9 +210,14 @@ export class ChiTietHoaDonComponent {
 
   // Return Information
   public discountMoney: number = 0;
+  public oldAmount: number = 0;
+  public newAmount: number = 0;
   handleCountReturnMoney() {
     if (!this.listReturnItems || this.listReturnItems.length === 0) {
       this.amountOfMoneyReturn = 0;
+      this.oldAmount = 0;
+      this.newAmount = 0;
+      this.discountMoney = 0;
       return;
     }
 
@@ -225,41 +233,44 @@ export class ChiTietHoaDonComponent {
         return sum;
       }
     }, 0);
+
     // Nếu có phiếu giảm giá trong hoá đơn
-    if (this.hoaDon.phieuGiamGia) {
-      // Tổng tiền hoá đơn cũ sau khi trả
-      const tongTienHoaDonCu = this.hoaDon.hoaDonChiTiets.reduce(
-        (sum, item) => {
-          const newSoLuong =
-            item.soLuong -
-            this.listReturnItems.find((returnItem) => returnItem.id === item.id)
-              ?.soLuong;
-          if (newSoLuong) {
-            return sum + item.giaBan * newSoLuong;
-          } else {
-            return sum + item.giaBan * item.soLuong;
-          }
-        },
-        0
-      );
-      // Kiểm tra tổng tiền cũ còn đạt giá trị được giảm
-      if (tongTienHoaDonCu >= this.hoaDon.phieuGiamGia.dieuKienGiam) {
-        if (this.hoaDon.phieuGiamGia.kieu === 1) {
-          this.amountOfMoneyReturn =
-            this.amountOfMoneyReturn - this.hoaDon.phieuGiamGia.giaTri;
-        } else {
-          let discountAmount =
-            (this.hoaDon.phieuGiamGia.giaTri * this.amountOfMoneyReturn) / 100;
-          discountAmount = Math.min(
-            discountAmount,
-            this.hoaDon.phieuGiamGia.giaTriMax
-          );
-          this.discountMoney = discountAmount;
-          this.amountOfMoneyReturn -= discountAmount;
-        }
-      }
-      console.log(this.amountOfMoneyReturn);
-    }
+    // if (this.hoaDon.phieuGiamGia) {
+    //   // Tổng tiền hoá đơn cũ sau khi trả
+    //   const tongTienHoaDonCu = this.hoaDon.hoaDonChiTiets.reduce(
+    //     (sum, item) => {
+    //       const returnItem = this.listReturnItems.find(
+    //         (returnItem) => returnItem.id === item.id
+    //       );
+    //       const newSoLuong = returnItem
+    //         ? item.soLuong - returnItem.soLuong
+    //         : item.soLuong;
+    //       if (newSoLuong > 0) {
+    //         return sum + item.giaBan * newSoLuong;
+    //       } else {
+    //         return sum;
+    //       }
+    //     },
+    //     0
+    //   );
+    //   this.newAmount = tongTienHoaDonCu;
+    //   this.oldAmount = this.hoaDon.tongTien;
+    //   // Tính tiền với kiểu tiền mặt và phần trăm
+    //   if (this.hoaDon.phieuGiamGia.kieu === 1) {
+    //     this.amountOfMoneyReturn =
+    //       this.amountOfMoneyReturn + this.hoaDon.phieuGiamGia.giaTri;
+    //     this.discountMoney = this.hoaDon.phieuGiamGia.giaTri;
+    //   } else {
+    //     let discountAmount =
+    //       (this.hoaDon.phieuGiamGia.giaTri * this.amountOfMoneyReturn) / 100;
+    //     discountAmount = Math.min(
+    //       discountAmount,
+    //       this.hoaDon.phieuGiamGia.giaTriMax
+    //     );
+    //     this.discountMoney = discountAmount;
+    //     this.amountOfMoneyReturn += discountAmount;
+    //   }
+    // }
   }
 
   // End Return Information

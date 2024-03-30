@@ -7,6 +7,7 @@ import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.ResourceInvalidException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.hoa_don.HoaDon;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.repository.HoaDonTraHangRepository;
 import com.datn.backend.service.HoaDonTraHangService;
 import org.modelmapper.ModelMapper;
@@ -65,5 +66,15 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
         return repository.getAllSanPhamChiTiet(idHoaDon)
                 .stream()
                 .map(item -> modelMapper.map(item, SpctResponse.class)).toList();
+    }
+
+    @Override
+    public List<Integer> getListIdDotGiamGiaSanPhamByIdHoaDon(Integer idHoaDon) {
+        return repository.getAllIdSanPhamChiTietInDotGiamGiaByHoaDonId(idHoaDon);
+    }
+
+    @Override
+    public PhieuGiamGia getPhieuGiamGiaByIdHoaDon(Integer idHoaDon) {
+        return repository.getPhieuGiamGia(idHoaDon);
     }
 }

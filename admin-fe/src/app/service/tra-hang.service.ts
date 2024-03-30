@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { SanPhamChiTiet } from "../model/class/san-pham-chi-tiet.class";
 import { HoaDon } from "../model/class/hoa-don.class";
+import { PhieuGiamGia } from "../model/class/phieu-giam-gia.class";
 
 @Injectable({
   providedIn: "root",
@@ -18,6 +19,11 @@ export class TraHangService {
   public getAllSanPhamDaMua(idHoaDon: number): Observable<SanPhamChiTiet[]> {
     return this.https.get<SanPhamChiTiet[]>(
       `${this.apiUrl}/danh-sach-san-pham?id=${idHoaDon}`
+    );
+  }
+  public getListIdDotGiamGiaSanPham(idHoaDon: number): Observable<number[]> {
+    return this.https.get<number[]>(
+      `${this.apiUrl}/dot-giam-gia-san-pham?id=${idHoaDon}`
     );
   }
 }

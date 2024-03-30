@@ -1,11 +1,6 @@
 package com.datn.backend.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -25,6 +20,7 @@ public class PhieuGiamGiaHoaDonResponse {
     private String tenPhieuGiamGia;
     private Integer kieu;
     private Integer loai;
+    private BigDecimal dieuKienGiam;
     private BigDecimal giaTri;
     private BigDecimal giaTriMax;
 }

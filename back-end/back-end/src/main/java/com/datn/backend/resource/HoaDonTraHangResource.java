@@ -2,6 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.SpctResponse;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.service.HoaDonTraHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,17 @@ public class HoaDonTraHangResource {
             @RequestParam("id") Integer idHoaDon
     ) {
         return ResponseEntity.ok(hoaDonTraHangService.getDanhSachSanPhamDaMua(idHoaDon));
+    }
+
+    @GetMapping("/dot-giam-gia-san-pham")
+    public ResponseEntity<List<Integer>> getListIdDotGiamGiaSanPhamByIdHoaDon(
+            @RequestParam("id") Integer idHoaDon
+    ) {
+        return ResponseEntity.ok(hoaDonTraHangService.getListIdDotGiamGiaSanPhamByIdHoaDon(idHoaDon));
+    }
+
+    @GetMapping("/phieu-giam-gia")
+    public ResponseEntity<PhieuGiamGia> getPhieuGiamGia(@RequestParam("id") Integer idHoaDon) {
+        return ResponseEntity.ok(hoaDonTraHangService.getPhieuGiamGiaByIdHoaDon(idHoaDon));
     }
 }

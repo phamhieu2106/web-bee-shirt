@@ -11,7 +11,12 @@
         <div class="col col-md-12">
           <ng-container>
             <div class="card">
-              <div class="card-header">Danh Sách Sản Phẩm Đã Mua</div>
+              <div class="card-header d-flex justify-content-between">
+                Danh Sách Sản Phẩm Đã Mua
+                <span class="text-danger font-italic"
+                  >*Các sản phẩm được khuyến mại sẽ không được trả hàng</span
+                >
+              </div>
               <div class="card-body">
                 <nz-table
                   [nzPageSizeOptions]="[5, 10, 20, 30]"
@@ -38,6 +43,9 @@
                     <tr *ngFor="let data of rowSelectionTable.data">
                       <td
                         [nzChecked]="setOfCheckedId.has(data.id)"
+                        [nzDisabled]="
+                          isInListIdDotGiamGiaSanPham(data.sanPhamChiTiet.id)
+                        "
                         (nzCheckedChange)="
                           showConfirmOfQuantity(data.id, data.soLuong, $event)
                         "
@@ -77,7 +85,7 @@
                     <tr>
                       <th class="large-column">Sản Phẩm</th>
                       <th>Số Lượng Hoàn Trả</th>
-                      <th>Giá Tiền</th>
+                      <th>Giá Tiền Mua</th>
                       <th>Tổng Tiền</th>
                     </tr>
                   </thead>
@@ -206,7 +214,12 @@
                         nzType="money-collect"
                         style="margin-right: 5px"
                       ></i>
-                      <strong> Số Tiền Được Giảm: </strong>
+                      <strong>
+                        Phiếu Giảm Giá:
+                        <strong style="color: #32ba7c">{{
+                          this.hoaDon.phieuGiamGia?.maPhieuGiamGia
+                        }}</strong>
+                      </strong>
                     </kbd>
                   </span>
                   <strong
@@ -219,7 +232,7 @@
                       white-space: nowrap;
                     "
                   >
-                    -
+                    {{ discountMoney | currency : "VND" }}
                   </strong>
                 </nz-list-item>
                 <nz-list-item>

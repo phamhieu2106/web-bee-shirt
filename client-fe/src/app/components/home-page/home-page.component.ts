@@ -5,9 +5,9 @@ import { MauSac } from "src/app/model/class/mau-sac.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
-import { SanPhamService } from "src/app/service/san-pham.service";
+import { ProductService } from "src/app/service/product.service";
 
-import { OwlOptions } from 'ngx-owl-carousel-o';
+import { OwlOptions } from "ngx-owl-carousel-o";
 
 @Component({
   selector: "app-home-page",
@@ -17,42 +17,42 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
 
-
   customOptions: OwlOptions = {
     loop: true,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,
     dots: false,
-    navSpeed: 700,
-    navText: ['<i class="bi bi-caret-left"></i>', '<i class="bi bi-caret-right"></i>'],
+    navSpeed: 800,
+    navText: [
+      '<i class="bi bi-caret-left"></i>',
+      '<i class="bi bi-caret-right"></i>',
+    ],
     responsive: {
       0: {
-        items: 1
+        items: 1,
       },
       400: {
-        items: 2
+        items: 2,
       },
       740: {
-        items: 3
+        items: 3,
       },
       940: {
-        items: 4
-      }
+        items: 4,
+      },
     },
-    nav: true
-  }
+    nav: true,
+  };
 
   // constructor, ngOn
   constructor(
     private currencyPipe: CurrencyPipe,
-    private sanPhamService: SanPhamService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
     this.getSanPhamList();
-
-   
   }
 
   // I. public functions
@@ -98,7 +98,7 @@ export class HomePageComponent {
 
   // 2
   private getSanPhamList(): void {
-    this.sanPhamService.getByPageClient().subscribe({
+    this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },

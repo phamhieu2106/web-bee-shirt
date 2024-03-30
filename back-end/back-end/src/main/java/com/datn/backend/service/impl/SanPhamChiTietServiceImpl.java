@@ -174,8 +174,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public void updateSpctNhanh(CapNhatNhanhSpctReq req) {
         for (int i = 0; i < req.getIds().size(); ++i) {
             int id = req.getIds().get(i);
-//            SanPhamChiTiet spct = spctRepo.findById(id)
-//                    .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + id + " không tồn tại!"));
             SanPhamChiTiet spct = getOneById(id);
 
             spct.setGiaNhap(req.getGiaNhaps().get(i));
@@ -187,11 +185,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
+    public Integer getQuantityOfOne(int productId, int colorId, int sizeId) {
+        return spctRepo.getQuantityOfOne(productId, colorId, sizeId);
+    }
+
+    @Override
+    public BigDecimal getPriceOfOne(int productId, int colorId, int sizeId) {
+        return spctRepo.getPriceOfOne(productId, colorId, sizeId);
+    }
+
+    @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-//        Get list spct
+        //  Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
-//        find doi giam gia theo spct
+        // find doi giam gia theo spct
         List<SpctResponse> data = mapToSpctResponse(spcts);
 
         return PagedResponse

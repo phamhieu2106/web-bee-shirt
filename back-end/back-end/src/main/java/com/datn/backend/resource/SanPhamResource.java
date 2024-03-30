@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -58,5 +59,18 @@ public class SanPhamResource {
     public ResponseEntity<PagedResponse<SanPham>> getByPageClient(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                   @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize) {
         return ResponseEntity.ok(sanPhamService.getByPageClient(pageNumber, pageSize));
+    }
+
+    @GetMapping("/client/filter")
+    public ResponseEntity<PagedResponse<SanPham>> getByFilterForClient(@RequestParam(value = "colorIds", required = false) List<Integer> colorIds,
+                                                                       @RequestParam(value = "sizeIds", required = false) List<Integer> sizeIds,
+                                                                       @RequestParam(value = "formIds", required = false) List<Integer> formIds,
+                                                                       @RequestParam(value = "designIds", required = false) List<Integer> designIds,
+                                                                       @RequestParam(value = "collarId", required = false) List<Integer> collarId,
+                                                                       @RequestParam(value = "sleeveIds", required = false) List<Integer> sleeveIds,
+                                                                       @RequestParam(value = "materialIds", required = false) List<Integer> materialIds,
+                                                                       @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+                                                                       @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice) {
+
     }
 }

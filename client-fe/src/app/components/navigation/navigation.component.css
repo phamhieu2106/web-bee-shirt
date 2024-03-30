@@ -63,25 +63,470 @@ img {
   width: 100%;
 }
 
-.main-header {
+.wrapperNav {
 
   position: sticky;
   top: 0;
   z-index: 998;
+  background-color: white;
 }
 
-.navMain1{
+.navMain1 {
   background: black;
 }
 
-header {
+.iconUser {
+  font-size: 35px;
+  color: white;
+  margin-right: 15px;
+
+}
+.iconyeuThich {
+  font-size: 31px;
+  color: white;
+  margin-right: 15px;
+
+}
+.icongioHang {
+  font-size: 30px;
+  color: white;
+
+}
+
+.taiKhoan,
+.gioHang {
+  display: flex;
+ 
+  
+}
+
+.nav-account {
+
+  display: flex;
+  align-items: center;
+  
+}
+
+.hiddenMobile{
+  display: none !important;
+}
+
+
+.search {
+  width: 50%;
+}
+
+.searchinput {
+  width: 100%;
+  height: 40px;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 15px;
+}
+
+.taiKhoan {
+  position: relative;
+}
+
+
+
+.popUpDangNhap {
+  position: absolute;
+  width: 240px;
+  background-color: #fff;
+  /* Màu nền trắng */
+  height: 180px;
+  bottom: -189px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 6px 4px  rgba(179,179,179,.25);
+
+}
+
+.popUpDangNhap button {
+  display: block;
+  width: 200px;
+  height: 40px;
+  margin-bottom: 10px;
+
+}
+
+
+.btnDangNhap {
+  display: block;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  background: black;
+  text-transform: uppercase;
+  padding: 9px 10px 9px 12px;
+  border: 1px solid #000;
+  margin-bottom: 15px;
+  width: 100%;
+
+  cursor: pointer
+}
+
+.btnDangNhap a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.btnDangKy {
+  display: block;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  background-color: white;
+  text-transform: uppercase;
+  padding: 9px 10px 9px 12px;
+  border: 1px solid #000;
+  margin-bottom: 15px;
+  width: 100%;
+  text-decoration: none;
+  cursor: pointer
+}
+
+.btnDangKy a {
+  text-decoration: none;
+  color: #000000;
+}
+
+.theoDoiDonHang a {
+  text-decoration: none;
+  color: #000;
+}
+
+.theoDoiDonHang a:hover {
+  text-decoration: underline;
+}
+
+.popUpDangNhap:before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 7px 8px;
+  border-color: transparent transparent #fff;
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  top: -5px
+}
+
+
+.popUpLogindone {
+  position: absolute;
+  width: 240px;
+  background-color: #fff;
+  /* Màu nền trắng */
+  height: 250px;
+  bottom: -260px;
+  padding: 10px;
+  /* display: flex;
+  justify-content: center; */
+  box-shadow: 0px 6px 4px  rgba(179,179,179,.25);
+
+}
+
+.popUpLogindone:before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 7px 8px;
+  border-color: transparent transparent #fff;
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  top: -5px
+}
+
+
+.quantity{
+  background-color: #F50000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 0;
+  right: -10px;
+
+}
+
+.iconnav{
+  position: relative;
+}
+
+.cardgioHang{
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background: white;
+  z-index: 1000;
+  transition: 0.5s;
+ 
+}
+
+.cardgioHang .checkOut{
+  position: absolute;
+  bottom: 5%;
+  width: 90%;
+  
+  
+  
+}
+
+.cart-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+ 
+}
+
+.nameCart{
+  font-size: 20px;
+  font-weight: 500;
+}
+.bi-cart2{
+  font-size: 20px;
+ 
+}
+.bi-x-circle{
+  font-size: 25px;
+}
+
+.TinhTien{
+  display: grid;
+  grid-template-columns: repeat(2,1fr) ;
+  margin: 30px 0;
+  padding: 15px;
+}
+.thanhToan{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+
+}
+
+.btnThanhToan{
+
+  width: 100%;
+  height: 40px;
+  border: none;
+  background: #DA291C;
+  color: white;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.listCart{
+  border-bottom:  1px dashed #000;
+  height: 60%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+
+}
+.listCart .cartItem{
+  list-style: none;
+  padding: 10px;
+
+}
+.listCart .cartItem img{
+  border-radius: 5px;
+}
+
+.color-cart{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  margin-right: 20px;
+ 
+}
+.color-cart img{
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+}
+.nameCartProduct a{
+  color: #333F48;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ThuocTinh{
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.sizeCart{ 
+  padding-left: 15px;
+}
+
+.priceCart{
+  font-size: 14px;
+  color: #333f48;
+  margin-right: 30px;
+}
+
+.wrapperPrice{
+  display: flex;
+  margin-top: 20px;
+  
+}
+
+.wrapper {
+  height: 20px;
+  width: calc(30% - 15px);
+  flex: 0 0 calc(30% - 15px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px dashed rgb(194, 194, 194);
+  border-radius: 5px;
+}
+
+.wrapper span {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.imgProductCart{
+  position: relative;
+}
+
+.DeleteCart{
+  position: absolute;
+  top: 0;
+ 
+}
+
+.nameCustomer{
+  display: block;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 16px;
+  color: #000;
+  margin-bottom: 10px
+}
+
+.headerPopup{
+  padding: 10px;
+  border-bottom: 1px solid #cacaca ;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.listAction{
+  padding: 5px;
+  list-style: none;
+
+}
+
+.actionItem a{
+  text-decoration: none;
+  color: #000;
+
+  margin: 0;
+  padding: 6px 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.actionItem a:hover{
+  text-decoration: underline;
+}
+.footerPopup{
+  margin-top: 15px;
+    border-top: 1px solid #cacaca;
+    padding-top: 15px;
+    font-style: normal;
+   
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 32px
+}
+.footerPopup span{
+ 
+  color: black;
+}
+
+
+
+/* CSS cho icon "Đăng Nhập" */
+.nav-account .taiKhoan {
+  cursor: pointer;
+  /* Con trỏ khi rê chuột */
+}
+
+/* CSS cho icon "Giỏ Hàng" */
+.nav-account .gioHang {
+  cursor: pointer;
+  /* Con trỏ khi rê chuột */
+}
+
+.tamTinh , .total{
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+.total, .giaGoc ,.chietKhau ,.save{
+  display: flex;
+  justify-content: end;
+
+}
+
+.total,.save{
+  color: #DA291C;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mainHeader {
 
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: white;
-  
+
 }
 
 .logo img {
@@ -140,18 +585,8 @@ nav ul li a:hover {
 }
 
 
-.nav-account {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
 
-}
-
-.bi-person,
-.bi-cart2 {
-  font-size: 25px;
-}
 
 
 
@@ -207,16 +642,17 @@ nav ul li a:hover {
     display: block;
   }
 
-  .taiKhoan,
-  .gioHang,
-  .site_search {
+  .search {
     display: none;
   }
-
-  .nav-account {
-    width: 60px;
-  
+  .hiddenMobile{
+    display: block !important;
   }
+  .hiddenWeb{
+    display: none !important;
+  }
+
+
 
 
 
@@ -237,41 +673,3 @@ nav ul li:nth-child(2) {
   font-weight: 700;
 }
 
-
-header .search-desktop {
-  position: relative;
-}
-
-header .search-desktop form {
-  width: 100%;
-}
-
-.search-desktop form input {
-  width: 600px;
-  border-radius: 5px;
-  height: 40px;
-}
-
-header .search-desktop form button {
-  width: 80px;
-  height: 36px;
-  line-height: 36px;
-  position: absolute;
-  padding: 0;
-  top: 2px;
-  right: 2px;
-  transition: opacity 150ms linear;
-  border: none;
-  min-width: auto;
-  outline: none;
-  box-shadow: none;
-  background: black;
-  border-radius: 5px;
-}
-
-.taiKhoan{
-  width: 80px;
-  
-  font-size: 13px;
-  font-weight: 500;
-}

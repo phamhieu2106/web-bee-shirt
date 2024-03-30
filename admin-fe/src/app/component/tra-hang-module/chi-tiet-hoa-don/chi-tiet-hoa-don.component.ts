@@ -5,6 +5,8 @@ import { HoaDonChiTiet } from "src/app/model/class/hoa-don-chi-tiet.class";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { TraHangService } from "src/app/service/tra-hang.service";
 import { QuantityInputComponent } from "../quantity-input/quantity-input.component";
+import { HttpErrorResponse } from "@angular/common/http";
+import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
 @Component({
   selector: "app-chi-tiet-hoa-don",
   templateUrl: "./chi-tiet-hoa-don.component.html",
@@ -13,25 +15,6 @@ import { QuantityInputComponent } from "../quantity-input/quantity-input.compone
 export class ChiTietHoaDonComponent {
   // public variables
   @Input() hoaDon: HoaDon;
-
-  // Constructors
-  constructor(
-    private traHangService: TraHangService,
-    private router: Router,
-    private modal: NzModalService,
-    private cdr: ChangeDetectorRef
-  ) {}
-  ngOnInit(): void {}
-
-  ngOnChanges(): void {
-    if (this.hoaDon) {
-      this.listOfData = [];
-      this.hoaDon.hoaDonChiTiets.forEach((item) => this.listOfData.push(item));
-      this.cdr.detectChanges();
-    }
-  }
-  // Varribles Component
-
   // Varribles Table
   listOfSelection = [
     {
@@ -46,13 +29,51 @@ export class ChiTietHoaDonComponent {
   listOfCurrentPageData: readonly HoaDonChiTiet[] = [];
   listOfData: HoaDonChiTiet[] = [];
   setOfCheckedId = new Set<number>();
+  listReturnItems: HoaDonChiTiet[] = [];
+  listIdDotGiamGiaSanPham: number[] = [];
+  private phieuGiamGia: PhieuGiamGia;
+  // Constructors
+  constructor(
+    private traHangService: TraHangService,
+    private router: Router,
+    private modal: NzModalService,
+    private cdr: ChangeDetectorRef
+  ) {}
+  ngOnInit(): void {}
+
+  ngOnChanges(): void {
+    if (this.hoaDon) {
+      this.listOfData = [];
+      this.listReturnItems = [];
+      this.listOfSelection = [];
+      this.amountOfMoneyReturn = 0;
+      this.getListIdDotGiamGiaSanPham(this.hoaDon.id);
+      this.hoaDon.hoaDonChiTiets.forEach((item) => this.listOfData.push(item));
+      this.cdr.detectChanges();
+    }
+  }
+
+  isInListIdDotGiamGiaSanPham(id: number): boolean {
+    return this.listIdDotGiamGiaSanPham.includes(id);
+  }
+
+  getListIdDotGiamGiaSanPham(idHoaDon: number): void {
+    this.traHangService.getListIdDotGiamGiaSanPham(idHoaDon).subscribe({
+      next: (response: number[]) => {
+        this.listIdDotGiamGiaSanPham = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      },
+    });
+  }
 
   onCurrentPageDataChange($event: readonly HoaDonChiTiet[]): void {
     this.listOfCurrentPageData = $event;
     this.refreshCheckedStatus();
   }
 
-  // Functions
+  // Functions Tables
   updateCheckedSet(id: number, checked: boolean): void {
     if (checked) {
       this.setOfCheckedId.add(id);
@@ -71,7 +92,6 @@ export class ChiTietHoaDonComponent {
       ) && !this.checked;
   }
 
-  listReturnItems: HoaDonChiTiet[] = [];
   onItemChecked(id: number, checked: boolean, quantity: number): void {
     if (checked) {
       this.handleReturnItems(id, quantity);
@@ -105,31 +125,18 @@ export class ChiTietHoaDonComponent {
       const newHoaDonChiTiet = {
         ...this.listOfData.find((item) => item.id == id),
       };
+      if (
+        this.listIdDotGiamGiaSanPham.includes(
+          newHoaDonChiTiet.sanPhamChiTiet.id
+        )
+      ) {
+        return;
+      }
       newHoaDonChiTiet.soLuong = quantity;
       updatedListReturnItems.push(newHoaDonChiTiet);
       this.listReturnItems = updatedListReturnItems;
       this.cdr.detectChanges();
     }
-  }
-
-  handleCountReturnMoney() {
-    if (!this.listReturnItems || this.listReturnItems.length === 0) {
-      this.amountOfMoneyReturn = 0;
-      return;
-    }
-
-    // Sử dụng reduce để tính tổng số tiền trả lại từ các mặt hàng trong listReturnItems
-    this.amountOfMoneyReturn = this.listReturnItems.reduce((sum, item) => {
-      if (
-        item &&
-        typeof item.giaBan === "number" &&
-        typeof item.soLuong === "number"
-      ) {
-        return sum + item.giaBan * item.soLuong;
-      } else {
-        return sum;
-      }
-    }, 0);
   }
   onAllChecked(value: boolean): void {
     if (!value) {
@@ -150,6 +157,7 @@ export class ChiTietHoaDonComponent {
     if (checked) {
       if (quantity == 1) {
         this.onItemChecked(id, checked, quantity);
+        return;
       } else {
         this.confirmModal = this.modal.confirm({
           nzTitle: "Số lượng sản phẩm khách hàng muốn trả?",
@@ -197,6 +205,64 @@ export class ChiTietHoaDonComponent {
   }
   // END Quantity Of Products
 
+  // Return Information
+  public discountMoney: number = 0;
+  handleCountReturnMoney() {
+    if (!this.listReturnItems || this.listReturnItems.length === 0) {
+      this.amountOfMoneyReturn = 0;
+      return;
+    }
+
+    // Sử dụng reduce để tính tổng số tiền trả lại từ các mặt hàng trong listReturnItems
+    this.amountOfMoneyReturn = this.listReturnItems.reduce((sum, item) => {
+      if (
+        item &&
+        typeof item.giaBan === "number" &&
+        typeof item.soLuong === "number"
+      ) {
+        return sum + item.giaBan * item.soLuong;
+      } else {
+        return sum;
+      }
+    }, 0);
+    // Nếu có phiếu giảm giá trong hoá đơn
+    if (this.hoaDon.phieuGiamGia) {
+      // Tổng tiền hoá đơn cũ sau khi trả
+      const tongTienHoaDonCu = this.hoaDon.hoaDonChiTiets.reduce(
+        (sum, item) => {
+          const newSoLuong =
+            item.soLuong -
+            this.listReturnItems.find((returnItem) => returnItem.id === item.id)
+              ?.soLuong;
+          if (newSoLuong) {
+            return sum + item.giaBan * newSoLuong;
+          } else {
+            return sum + item.giaBan * item.soLuong;
+          }
+        },
+        0
+      );
+      // Kiểm tra tổng tiền cũ còn đạt giá trị được giảm
+      if (tongTienHoaDonCu >= this.hoaDon.phieuGiamGia.dieuKienGiam) {
+        if (this.hoaDon.phieuGiamGia.kieu === 1) {
+          this.amountOfMoneyReturn =
+            this.amountOfMoneyReturn - this.hoaDon.phieuGiamGia.giaTri;
+        } else {
+          let discountAmount =
+            (this.hoaDon.phieuGiamGia.giaTri * this.amountOfMoneyReturn) / 100;
+          discountAmount = Math.min(
+            discountAmount,
+            this.hoaDon.phieuGiamGia.giaTriMax
+          );
+          this.discountMoney = discountAmount;
+          this.amountOfMoneyReturn -= discountAmount;
+        }
+      }
+      console.log(this.amountOfMoneyReturn);
+    }
+  }
+
+  // End Return Information
   // ON Submit
   isVisible = false;
   showModal(): void {

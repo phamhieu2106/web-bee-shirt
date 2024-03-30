@@ -5,7 +5,7 @@ import { MauSac } from "src/app/model/class/mau-sac.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
-import { SanPhamService } from "src/app/service/product.service";
+import { ProductService } from "src/app/service/product.service";
 
 @Component({
   selector: "app-dot-giam-gia",
@@ -24,7 +24,7 @@ export class DotGiamGiaComponent {
 
   constructor(
     private currencyPipe: CurrencyPipe,
-    private sanPhamService: SanPhamService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -104,7 +104,7 @@ export class DotGiamGiaComponent {
   }
   // private functions
   private getSanPhamList(): void {
-    this.sanPhamService.getByPageClient().subscribe({
+    this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },

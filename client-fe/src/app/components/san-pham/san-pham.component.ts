@@ -1,15 +1,15 @@
-import { CurrencyPipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { MauSac } from 'src/app/model/class/mau-sac.class';
-import { SanPham } from 'src/app/model/class/san-pham.class';
-import { PagedResponse } from 'src/app/model/interface/paged-response.interface';
-import { SanPhamService } from 'src/app/service/san-pham.service';
+import { CurrencyPipe } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component } from "@angular/core";
+import { MauSac } from "src/app/model/class/mau-sac.class";
+import { SanPham } from "src/app/model/class/san-pham.class";
+import { PagedResponse } from "src/app/model/interface/paged-response.interface";
+import { ProductService } from "src/app/service/product.service";
 
 @Component({
-  selector: 'app-san-pham',
-  templateUrl: './san-pham.component.html',
-  styleUrls: ['./san-pham.component.css']
+  selector: "app-san-pham",
+  templateUrl: "./san-pham.component.html",
+  styleUrls: ["./san-pham.component.css"],
 })
 export class SanPhamComponent {
   public pagedResponse: PagedResponse<SanPham>;
@@ -17,13 +17,11 @@ export class SanPhamComponent {
   // constructor, ngOn
   constructor(
     private currencyPipe: CurrencyPipe,
-    private sanPhamService: SanPhamService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
     this.getSanPhamList();
-
-   
   }
 
   // I. public functions
@@ -56,7 +54,7 @@ export class SanPhamComponent {
     return mauSacs;
   }
 
-  // II. private functions
+  // private functions
   // 1
   private checkExist(mauSacs: MauSac[], mauSacId: number): boolean {
     for (let m of mauSacs) {
@@ -69,7 +67,7 @@ export class SanPhamComponent {
 
   // 2
   private getSanPhamList(): void {
-    this.sanPhamService.getByPageClient().subscribe({
+    this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },

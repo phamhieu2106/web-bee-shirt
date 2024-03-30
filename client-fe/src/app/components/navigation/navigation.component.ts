@@ -6,13 +6,12 @@ import { Component } from "@angular/core";
   styleUrls: ["./navigation.component.css"],
 })
 export class NavigationComponent {
-  showLoginPopup: boolean = false; // Biến để kiểm soát hiển thị phần popup đăng nhập
-  showGioHang: boolean = false; 
-  
-  constructor() { }
+  showLoginPopup: boolean = true; // Biến để kiểm soát hiển thị phần popup đăng nhập
+  showGioHang: boolean = false;
 
-  ngOnInit(): void {
-  }
+  constructor() {}
+
+  ngOnInit(): void {}
 
   // Hàm để toggle hiển thị/ẩn phần popup đăng nhập
   toggleLoginPopup() {

@@ -27,7 +27,10 @@
             class="dropdown-menu product-suggestions"
             aria-labelledby="dropdownProduct"
           >
-            <div class="suggestion-item">
+            <div
+              class="suggestion-item"
+              style="background-color: rgb(236, 236, 236)"
+            >
               <div
                 class="text-center pt-3 pb-3"
                 data-toggle="modal"
@@ -222,7 +225,9 @@
             class="flex-grow-1"
           >
             <p class="d-none d-md-block mb-0 fs-6" id="userFullName">
-              {{ order.khachHang.hoTen }}
+              <u>
+                {{ order.khachHang.hoTen }}
+              </u>
             </p>
             <p
               class="d-none d-md-block mb-0 text-mute"
@@ -255,18 +260,21 @@
           aria-labelledby="dropdownKhachHang"
         >
           <div class="suggestion-item text-center p-2">
-            <i class="fa-solid fa-plus"></i>
-            Thêm mới khách hàng
+            <div data-toggle="modal" data-target="#addCustomerModal">
+              <i class="fa-solid fa-plus"></i>
+              Thêm mới khách hàng
+            </div>
           </div>
           <div
-            class="suggestion-item p-2 d-flex align-items-center"
+            class="suggestion-item p-2"
             (click)="chooseKhachHang(kh)"
             *ngFor="let kh of khachHangs"
           >
-            <hr class="hr-customer" />
-            <i class="fa-solid fa-user mr-2"></i>
-            <span class="fw-bold">{{ kh.hoTen }}</span>
-            <span class="fw-bold ml-auto">{{ kh.sdt }}</span>
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-user mr-2"></i>
+              <span class="fw-bold">{{ kh.hoTen }}</span>
+              <span class="fw-bold ml-auto">{{ kh.sdt }}</span>
+            </div>
           </div>
         </div>
         <hr class="hr-custom" />
@@ -438,11 +446,11 @@
           Mua Hàng
         </button>
         <button
-          class="btn btn-warning btn-lg w-100 h-100"
+          class="btn btn-success btn-lg w-100 h-100"
           (click)="datHang()"
           *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
         >
-          Đặt Hàng
+          Mua Hàng
         </button>
       </div>
     </div>
@@ -546,6 +554,34 @@
         <app-search-product-detail
           (chooseProduct)="chooseProduct($event)"
         ></app-search-product-detail>
+      </div>
+    </div>
+  </div>
+  <!-- Add customer modal -->
+  <div
+    class="modal fade product-modal"
+    id="addCustomerModal"
+    tabindex="-1"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Thêm mới khách hàng
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <app-them-khach-hang></app-them-khach-hang>
       </div>
     </div>
   </div>

@@ -93,7 +93,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
 
 .list-select select {
     /* font-size: 12px !important; */
-    width: 60px;
+    width: 80px;
     border: 0;
     padding: 3px;
 }
@@ -102,6 +102,9 @@ section.range-slider input[type=range]::-moz-focus-outer {
     align-items: center;
 }
 
+.under-line {
+    text-decoration: underline;
+}
 
 
 .gia-chua-giam {

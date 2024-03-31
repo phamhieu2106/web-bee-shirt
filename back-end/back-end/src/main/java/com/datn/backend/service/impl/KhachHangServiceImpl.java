@@ -18,6 +18,7 @@ import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     private final DiaChiRepository diaChiRepository;
     private final AccountRepository ar;
     private final CloudinaryService cloudinaryService;
+    private final ModelMapper modelMapper;
 
 
     @Transactional
@@ -85,6 +87,44 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setHuyen(kh.getHuyen());
         diaChi.setXa(kh.getXa());
         diaChi.setDuong(kh.getDuong());
+        diaChi.setMacDinh(true);
+        diaChiRepository.save(diaChi);
+
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public KhachHang add(KhachHangRequest kh) {
+        // check exist sdt
+        if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
+            throw new RuntimeException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
+        }
+
+        // account
+        Account account = new Account();
+        account.setTenDangNhap(kh.getSdt().trim());
+        account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
+        account.setTrangThai(true);
+        account.setRole(Role.ROLE_CUSTOMER.name());
+
+        // khach hang
+        KhachHang khachHang = new KhachHang();
+        khachHang.setHoTen(kh.getHoTen().trim());
+        khachHang.setNgaySinh(kh.getNgaySinh());
+        khachHang.setSdt(kh.getSdt());
+        khachHang.setGioiTinh(kh.isGioiTinh());
+        khachHang.setTrangThai(1);
+        khachHang.setAccount(account);
+        khachHangRepository.save(khachHang);
+
+        // dia chi
+        DiaChi diaChi = new DiaChi();
+        diaChi.setKhachHang(khachHang);
+        diaChi.setTinh(kh.getTinh());
+        diaChi.setHuyen(kh.getHuyen());
+        diaChi.setXa(kh.getXa());
+        diaChi.setDuong(kh.getDuong().trim());
         diaChi.setMacDinh(true);
         diaChiRepository.save(diaChi);
 

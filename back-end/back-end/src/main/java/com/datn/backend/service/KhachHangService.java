@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface KhachHangService {
     KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException;
+    KhachHang add(KhachHangRequest kh);
     PagedResponse<KhachHangResponse> getAll(int pageNumber, int pageSize, String search);
 
     PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search);

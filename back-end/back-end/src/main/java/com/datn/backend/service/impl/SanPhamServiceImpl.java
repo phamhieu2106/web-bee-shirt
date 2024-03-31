@@ -177,10 +177,6 @@ public class SanPhamServiceImpl implements SanPhamService {
             maxPrice = spctRepo.getMaxPrice();
         }
 
-//        Page<SanPham> sanPhamPage = sanPhamRepo.getByFilterForClient(pageable, colorIds, sizeIds,
-//                                                                     formIds, designIds, collarIds,
-//                                                                     sleeveIds, materialIds, minPrice, maxPrice);
-
         Page<Integer> idPages = sanPhamRepo.getByFilterForClient(pageable, colorIds, sizeIds,
                                                                     formIds, designIds, collarIds,
                                                                     sleeveIds, materialIds, minPrice, maxPrice);

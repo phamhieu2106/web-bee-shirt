@@ -12,6 +12,7 @@ import { GiamGiaComponent } from "./giam-gia/giam-gia.component";
 import { HoaDonModule } from "../hoa-don-module/hoa-don.module";
 import { PhieuGiamGiaComponent } from "./phieu-giam-gia/phieu-giam-gia.component";
 import { SearchProductDetailComponent } from "./search-product-detail/search-product-detail.component";
+import { ThemKhachHangComponent } from './them-khach-hang/them-khach-hang.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { SearchProductDetailComponent } from "./search-product-detail/search-pro
     GiamGiaComponent,
     PhieuGiamGiaComponent,
     SearchProductDetailComponent,
+    ThemKhachHangComponent,
   ],
   imports: [
     CommonModule,

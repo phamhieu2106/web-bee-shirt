@@ -276,14 +276,20 @@
 
               <td>
                 <ng-container *ngIf="isDiscounted(s.id); else noDiscount">
-                  <span nz-typography nzType="danger"
+                  <span
                     ><del>
-                      <strong>{{ formatCurrency(s.giaBan) }}</strong>
+                      {{ formatCurrency(s.giaBan) }}
                     </del>
                   </span>
-                  <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
-                    formatCurrency(returnNewPrice(s.id, s.giaBan))
-                  }}</span>
+                  <br />
+                  <span
+                    nz-typography
+                    nzType="danger"
+                    *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)"
+                    ><strong>
+                      {{ formatCurrency(returnNewPrice(s.id, s.giaBan)) }}
+                    </strong>
+                  </span>
                 </ng-container>
                 <br />
 

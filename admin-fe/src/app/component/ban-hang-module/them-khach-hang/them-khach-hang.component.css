@@ -1,24 +1,3 @@
-.button-anh {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 1px dashed red;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    background-color: rgb(255, 255, 255);
-}
-
-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
 .input {
     border: 1px solid #aaaaaa;
     border-radius: 15px;

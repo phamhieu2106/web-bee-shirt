@@ -71,6 +71,6 @@ public class SanPhamResource {
                                                                        @RequestParam(value = "materialIds", required = false) List<Integer> materialIds,
                                                                        @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
                                                                        @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice) {
-
+        return null;
     }
 }

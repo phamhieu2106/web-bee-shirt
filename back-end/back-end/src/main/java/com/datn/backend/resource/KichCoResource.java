@@ -3,6 +3,7 @@ package com.datn.backend.resource;
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.KichCo;
+import com.datn.backend.model.san_pham.KieuDang;
 import com.datn.backend.service.KichCoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,11 @@ public class KichCoResource {
     @GetMapping("/get-all")
     public ResponseEntity<List<KichCo>> getAll() {
         return ResponseEntity.ok(kichCoService.getAll());
+    }
+
+    @GetMapping("/all-active")
+    public ResponseEntity<List<KichCo>> getAllActive() {
+        return ResponseEntity.ok(kichCoService.getAll().stream().filter(KichCo::isTrangThai).toList());
     }
 
     @PostMapping("/add")

@@ -1,161 +1,100 @@
 <section class="container">
   <div class="row mt-5">
     <div class="col-md-2">
+      <!--  -->
       <h5>Màu Sắc</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">
-            <img
-              src="https://res.cloudinary.com/dpsryzyev/image/upload/v1710211881/awa12wr0q3y7fxwuytaq.webp"
-              alt=""
-              width="30px"
-            />
-          </label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" />
-          <label for="">
-            <img
-              src="https://res.cloudinary.com/dpsryzyev/image/upload/v1710211881/awa12wr0q3y7fxwuytaq.webp"
-              alt=""
-              width="30px"
-            />
-          </label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" />
-          <label for="">
-            <img
-              src="https://res.cloudinary.com/dpsryzyev/image/upload/v1710211881/awa12wr0q3y7fxwuytaq.webp"
-              alt=""
-              width="30px"
-            />
-          </label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" />
-          <label for="">
-            <img
-              src="https://res.cloudinary.com/dpsryzyev/image/upload/v1710211881/awa12wr0q3y7fxwuytaq.webp"
-              alt=""
-              width="30px"
-            />
+      <div class="filter">
+        <div *ngFor="let color of activeColors">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'color', color.id)"
+          />
+          <label>
+            <img [src]="color.image.imageUrl" width="30px" />
           </label>
         </div>
       </div>
+
+      <!-- Kích cỡ -->
       <h5>Kích cỡ</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
+      <div class="filter">
+        <div *ngFor="let s of activeSizes">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'size', s.id)"
+          />
+          <label>{{ s.ten.split("-")[0] }}</label>
         </div>
       </div>
+
+      <!-- Kiểu dáng -->
       <h5>Kiểu dáng</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
+      <div class="filter">
+        <div *ngFor="let f of activeForms">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'form', f.id)"
+          />
+          <label>{{ f.ten }}</label>
         </div>
       </div>
+
+      <!-- Thiết Kế -->
       <h5>Thiết Kế</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
+      <div class="filter">
+        <div *ngFor="let d of activeDesigns">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'design', d.id)"
+          />
+          <label>{{ d.ten }}</label>
         </div>
       </div>
 
-      <h5>Tay áo</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-      </div>
-
+      <!-- Cổ áo -->
       <h5>Cổ áo</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
+      <div class="filter">
+        <div *ngFor="let c of activeCollars">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'collar', c.id)"
+          />
+          <label>{{ c.ten }}</label>
         </div>
       </div>
 
+      <!-- Tay áo -->
+      <h5>Tay áo</h5>
+      <div class="filter">
+        <div *ngFor="let s of activeSleeves">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'sleeve', s.id)"
+          />
+          <label>{{ s.ten }}</label>
+        </div>
+      </div>
+
+      <!-- Chất liệu -->
       <h5>Chất liệu</h5>
-      <div class="thietKe">
-        <div class="itemThietKe">
-          <input type="checkbox" name="" id="" />
-          <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="" /> <label for="">Trơn</label>
+      <div class="filter">
+        <div *ngFor="let m of activeMaterials">
+          <input
+            type="checkbox"
+            (change)="toggleProperty($event, 'material', m.id)"
+          />
+          <label>{{ m.ten }}</label>
         </div>
       </div>
     </div>
+
+    <!-- products -->
     <div class="col-md-10 row">
       <div class="col-md-3 mb-5" *ngFor="let sp of pagedResponse?.data">
         <div class="product">
           <div class="product-thumbnail">
             <a class="image_thumb">
-              <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" alt="" />
+              <img [src]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl" />
             </a>
           </div>
           <div class="details">
@@ -166,50 +105,86 @@
             <p class="priceProduct">{{ displayPrice(sp) }}</p>
 
             <div class="swatch-color-wrapper">
-              <div data-value="Đen" class="swatch-element">
-                <img
-                  class="img-color"
-                  src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-so-mi-nam-scm6081-den-6.jpg?v=1704250335827"
-                  alt=""
-                />
-              </div>
-              <div data-value="Đen" class="swatch-element">
-                <img
-                  class="img-color"
-                  src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-so-mi-nam-scm6081-den-6.jpg?v=1704250335827"
-                  alt=""
-                />
-              </div>
-              <div data-value="Đen" class="swatch-element">
-                <img
-                  class="img-color"
-                  src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-so-mi-nam-scm6081-den-6.jpg?v=1704250335827"
-                  alt=""
-                />
-              </div>
-              <div data-value="Đen" class="swatch-element">
-                <img
-                  class="img-color"
-                  src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-so-mi-nam-scm6081-den-6.jpg?v=1704250335827"
-                  alt=""
-                />
+              <div
+                class="swatch-element"
+                *ngFor="let color of getMauSacList(sp)"
+              >
+                <img class="img-color" [src]="color.image.imageUrl" />
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="phanTrang">
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item">
-              <a class="page-link" href="#">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
+
+      <!-- paginations -->
+      <div class="col col-md-12 d-flex justify-content-between">
+        <div class="col-md-3">
+          <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
+            >Số lượng:
+          </label>
+          <select
+            class="custom-select my-1 mr-sm-2 col-md-5"
+            id="inlineFormCustomSelectPref"
+          >
+            >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+          </select>
+        </div>
+        <div class="">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li
+                class="page-item"
+                [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
+              >
+                <a
+                  class="page-link pointer rounded"
+                  (click)="
+                    goToPage(
+                      pagedResponse?.pageNumber - 1,
+                      pagedResponse?.pageSize
+                    )
+                  "
+                  >Previous</a
+                >
+              </li>
+              <li
+                class="page-item"
+                *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
+              >
+                <a
+                  class="page-link pointer rounded"
+                  [ngClass]="
+                    pagedResponse?.pageNumber == pageNumber ? 'active' : ''
+                  "
+                  (click)="goToPage(pageNumber, pagedResponse?.pageSize)"
+                  >{{ pageNumber }}</a
+                >
+              </li>
+              <li
+                class="page-item"
+                [ngClass]="
+                  pagedResponse?.pageNumber == pagedResponse?.totalPages
+                    ? 'disabled'
+                    : ''
+                "
+              >
+                <a
+                  class="page-link pointer rounded"
+                  (click)="
+                    goToPage(
+                      pagedResponse?.pageNumber + 1,
+                      pagedResponse?.pageSize
+                    )
+                  "
+                  >Next</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>

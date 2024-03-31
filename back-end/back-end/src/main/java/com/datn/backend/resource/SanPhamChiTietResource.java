@@ -110,8 +110,8 @@ public class SanPhamChiTietResource {
 
     @GetMapping("/get-price/{productId}/{colorId}/{sizeId}")
     public ResponseEntity<BigDecimal> getPriceOfOne(@PathVariable("productId") int productId,
-                                                 @PathVariable("colorId") int colorId,
-                                                 @PathVariable("sizeId") int sizeId) {
+                                                    @PathVariable("colorId") int colorId,
+                                                    @PathVariable("sizeId") int sizeId) {
         return ResponseEntity.ok(spctService.getPriceOfOne(productId, colorId, sizeId));
     }
 }

@@ -41,23 +41,22 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
     Page<SanPham> getByPageClient(Pageable pageable);
 
     @Query(value = """
-                   SELECT *
-                   FROM san_pham sp
-                   JOIN san_pham_chi_tiet spct ON sp.id = spct.san_pham_id
-                   WHERE (
-                       spct.mau_sac_id IN (:colorIds)
-                       OR spct.kich_co_id IN (:sizeIds)
-                       OR spct.kieu_dang_id IN (:formIds)
-                       OR spct.thiet_ke_id IN (:designIds)
-                       OR spct.co_ao_id IN (:collarIds)
-                       OR spct.tay_ao_id IN (:sleeveIds)
-                       OR spct.chat_lieu_id IN (:materialIds)
-                   )
-                   AND sp.trang_thai = 1
-                   AND sp. gia_ban >= :minPrice
-                   AND sp.gia_ban <= :maxPrice
-                   """, nativeQuery = true)
-    Page<SanPham> getByFilterForClient(Pageable pageable,
+            SELECT DISTINCT sp.id
+            FROM san_pham sp
+            JOIN san_pham_chi_tiet spct ON sp.id = spct.san_pham_id
+            WHERE (
+            	spct.mau_sac_id IN (:colorIds)
+                OR spct.kich_co_id IN (:sizeIds)
+                OR spct.kieu_dang_id IN (:formIds)
+                OR spct.thiet_ke_id IN (:designIds)
+                OR spct.co_ao_id IN (:collarIds)
+                OR spct.tay_ao_id IN (:sleeveIds)
+                OR spct.chat_lieu_id IN (:materialIds)
+            )
+            AND spct.gia_ban >= :minPrice
+            AND spct.gia_ban <= :maxPrice
+            """, nativeQuery = true)
+    Page<Integer> getByFilterForClient(Pageable pageable,
                                        @Param("colorIds") List<Integer> colorIds,
                                        @Param("sizeIds") List<Integer> sizeIds,
                                        @Param("formIds") List<Integer> formIds,
@@ -65,6 +64,13 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
                                        @Param("collarIds") List<Integer> collarIds,
                                        @Param("sleeveIds") List<Integer> sleeveIds,
                                        @Param("materialIds") List<Integer> materialIds,
-                                       @Param("minPrice") List<Integer> minPrice,
-                                       @Param("maxPrice") List<Integer> maxPrice);
+                                       @Param("minPrice") BigDecimal minPrice,
+                                       @Param("maxPrice") BigDecimal maxPrice);
+
+    @Query(value = """
+            SELECT *
+            FROM san_pham sp
+            WHERE sp.id IN (:ids)
+            """, nativeQuery = true)
+    List<SanPham> getProductsByIds(@Param("ids") List<Integer> ids);
 }

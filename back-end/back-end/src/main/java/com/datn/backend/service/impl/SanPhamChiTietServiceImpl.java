@@ -241,8 +241,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public BigDecimal[] getMinAndMaxPrice(int productId) {
         BigDecimal[] result = new BigDecimal[2];
-        result[0] = spctRepo.getMinPrice(productId);
-        result[1] = spctRepo.getMaxPrice(productId);
+        result[0] = spctRepo.getMinPriceOf1Product(productId);
+        result[1] = spctRepo.getMaxPriceOf1Product(productId);
         return result;
     }
 

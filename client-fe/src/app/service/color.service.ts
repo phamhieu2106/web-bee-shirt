@@ -14,9 +14,14 @@ export class ColorService {
 
   // public functions
   // 1
-  public getAllColorOfProduct(productId: number): Observable<MauSac[]> {
+  public getAllColorOf1Product(productId: number): Observable<MauSac[]> {
     return this.http.get<MauSac[]>(
       `${this.apiUrl}/colors-of-product/${productId}`
     );
+  }
+
+  // 2
+  public getAllActiveColors(): Observable<MauSac[]> {
+    return this.http.get<MauSac[]>(`${this.apiUrl}/all-active`);
   }
 }

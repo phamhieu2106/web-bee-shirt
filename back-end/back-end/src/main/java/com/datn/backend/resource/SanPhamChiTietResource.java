@@ -124,6 +124,6 @@ public class SanPhamChiTietResource {
 
     @GetMapping("/get-product-name/{productDetailsId}")
     public ResponseEntity<String> getProductNameByProductDetails(@PathVariable("productDetailsId") int id) {
-
+        return ResponseEntity.ok(spctService.getProductNameByProductDetails(id));
     }
 }

@@ -50,4 +50,10 @@ export class ProductService {
       `${this.apiUrl}/client/filter${params}`
     );
   }
+
+  public getProductNameByProductDetails(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/get-product-name/${id}`, {
+      responseType: "text",
+    });
+  }
 }

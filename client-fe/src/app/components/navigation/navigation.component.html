@@ -68,7 +68,7 @@
                 <div>
                   <div class="headerPopup">
                     <span class="nameCustomer"
-                      >Chào <i>{{ loggedCustomer?.hoTen }}</i></span
+                      >Chào {{ loggedCustomer?.hoTen }}</span
                     >
                   </div>
 
@@ -178,7 +178,9 @@
         </div>
         <div class="col-md-9">
           <span class="nameCartProduct">
-            <a [routerLink]="'/'">{{ ci.spct.sanPham.ten }}</a>
+            <a [routerLink]="'/'">
+              getProductNameByProductDetails(ci.spct.id)
+            </a>
           </span>
           <div class="ThuocTinh">
             <div class="color-cart">

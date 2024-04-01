@@ -9,6 +9,7 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { CartItem } from "src/app/model/class/cart-item.class";
 import { CartItemService } from "src/app/service/cart.service";
+import { ProductService } from "src/app/service/product.service";
 
 @Component({
   selector: "app-navigation",
@@ -28,7 +29,8 @@ export class NavigationComponent {
     private router: Router,
     private authenticationService: AuthenticationService,
     private notifService: NotificationService,
-    private cartItemService: CartItemService
+    private cartItemService: CartItemService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -86,6 +88,19 @@ export class NavigationComponent {
   // 3
   public toggleCart(): void {
     this.isCartShow = !this.isCartShow;
+  }
+
+  // 4
+  public getProductNameByProductDetails(id: number): string {
+    this.productService.getProductNameByProductDetails(id).subscribe({
+      next: (response: string) => {
+        return response;
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
+    return "";
   }
 
   // private functions

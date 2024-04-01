@@ -38,8 +38,9 @@ public class SanPhamChiTiet extends BaseEntity {
     private int soLuongTon; //
     private boolean trangThai;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "san_pham_id")
+    @JsonIgnore
     private SanPham sanPham;
 
     @ManyToOne

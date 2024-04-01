@@ -196,7 +196,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public String getProductNameByProductDetails(int productDetailsId) {
-        return null;
+        return spctRepo.getProductNameByProductDetails(productDetailsId);
     }
 
     @Override

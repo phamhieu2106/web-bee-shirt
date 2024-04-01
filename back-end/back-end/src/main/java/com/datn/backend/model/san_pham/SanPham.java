@@ -35,6 +35,6 @@ public class SanPham extends BaseEntity {
     private String moTa;
     private boolean trangThai;
 
-    @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sanPham")
     private List<SanPhamChiTiet> sanPhamChiTiets;
 }

@@ -241,7 +241,7 @@ export class ThemNhanVienComponent {
       ]),
       diaChi: new FormControl(diaChiQR === undefined ? "" : diaChiQR, [
         Validators.required,
-        Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
+        // Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
       ]),
       matKhau: new FormControl(""),
     });

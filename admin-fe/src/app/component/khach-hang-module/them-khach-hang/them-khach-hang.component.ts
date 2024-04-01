@@ -1,11 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import {
@@ -13,13 +8,14 @@ import {
   ScannerQRCodeResult,
 } from "ngx-scanner-qrcode";
 import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
-import { DiaChiService } from "src/app/service/dia-chi.service";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
+
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
+
 @Component({
   selector: "app-them-khach-hang",
   templateUrl: "./them-khach-hang.component.html",
@@ -36,8 +32,8 @@ export class ThemKhachHangComponent {
   huyens: any[];
   xas: any[];
   idTinh: number;
-  idHuyen:number;
-  idXa:number;
+  idHuyen: number;
+  idXa: number;
   selectedCity: string;
   diaChiVaPhiVanChuyen? = new DiaChiVaPhiVanChuyen();
   private selectFile: File;
@@ -47,6 +43,7 @@ export class ThemKhachHangComponent {
   imageUrl: string;
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("action") action!: NgxScannerQrcodeComponent;
+
   constructor(
     private router: Router,
     private khachHangService: KhachHangService,
@@ -54,10 +51,12 @@ export class ThemKhachHangComponent {
     private ghn: GiaoHangNhanhService,
     private authService: AuthenticationService
   ) {}
+
   ngOnInit(): void {
     this.initFormAddKh();
     this.getAllTinh();
   }
+
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     if (e && e.length > 0) {
       const qrCodeValue = e[0].value;
@@ -108,7 +107,6 @@ export class ThemKhachHangComponent {
       });
     }
     console.log(arrayQR);
-    
   }
 
   openFileInput() {
@@ -180,7 +178,7 @@ export class ThemKhachHangComponent {
               this.router.navigate(["/khach-hang/ds-khach-hang"]);
             },
             error: (error: HttpErrorResponse) => {
-              // this.turnOffOverlay("");              
+              // this.turnOffOverlay("");
               if (error.status === 400) {
                 this.errorMessage = error.error.message;
                 Swal.fire({
@@ -204,7 +202,6 @@ export class ThemKhachHangComponent {
               }
             },
           });
-        
       }
     });
   }
@@ -226,6 +223,7 @@ export class ThemKhachHangComponent {
       const randomIndex = Math.floor(Math.random() * characters.length);
       password += characters.charAt(randomIndex);
     }
+    console.log("password ", password);
     return password;
   }
 
@@ -251,7 +249,7 @@ export class ThemKhachHangComponent {
       xa: new FormControl("", [Validators.required]),
     });
   }
-  
+
   fillData() {
     // get all tỉnh => lọc ds tìm tinhId
     this.getAllTinh();
@@ -274,24 +272,23 @@ export class ThemKhachHangComponent {
       }
     }
   }
-  findHuyenId() {   
+  findHuyenId() {
     for (let i = 0; i < this.huyens.length; i++) {
       const element = this.huyens[i];
-      if (element.NameExtension.includes(this.formAddKh.get('huyen').value)) {
+      if (element.NameExtension.includes(this.formAddKh.get("huyen").value)) {
         this.idHuyen = element.DistrictID;
         break;
-      }    
+      }
     }
   }
   findTinhId() {
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
-      if (element.NameExtension.includes(this.formAddKh.get('tinh').value)) {
-        this.idTinh = element.ProvinceID;        
+      if (element.NameExtension.includes(this.formAddKh.get("tinh").value)) {
+        this.idTinh = element.ProvinceID;
         break;
       }
     }
-    
   }
   getAllTinh() {
     this.huyens = [];
@@ -307,41 +304,37 @@ export class ThemKhachHangComponent {
   }
 
   getAllHuyenByTinh() {
-    this.xas = [];       
+    this.xas = [];
     this.findTinhId();
-    this.ghn
-      .getAllDistrictByProvinceID(this.idTinh)
-      .subscribe({
-        next: (resp) => {
-          this.huyens = resp.data;
-          this.formAddKh.get('tinh').setValue(this.getTenTinh());
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });         
+    this.ghn.getAllDistrictByProvinceID(this.idTinh).subscribe({
+      next: (resp) => {
+        this.huyens = resp.data;
+        this.formAddKh.get("tinh").setValue(this.getTenTinh());
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getAllXaByHuyen() {
     this.findHuyenId();
     console.log(this.idTinh);
     console.log(this.idHuyen);
-    
-    this.ghn
-    .getAllWardByDistrictID(this.idHuyen)
-    .subscribe({
+
+    this.ghn.getAllWardByDistrictID(this.idHuyen).subscribe({
       next: (resp) => {
         this.xas = resp.data;
-        this.formAddKh.get('huyen').setValue(this.getTenHuyen());
+        this.formAddKh.get("huyen").setValue(this.getTenHuyen());
       },
       error: (err) => {
         console.log(err);
       },
-    });      
+    });
   }
 
   getTenTinh(): string {
-    let provinceName = this.formAddKh.get('tinh').value;
+    let provinceName = this.formAddKh.get("tinh").value;
     if (provinceName == null || provinceName == "") {
       this.tinhs.forEach((t) => {
         if (t.ProvinceID == this.idTinh) {
@@ -352,7 +345,7 @@ export class ThemKhachHangComponent {
     return provinceName;
   }
   getTenHuyen(): string {
-    let districtName = this.formAddKh.get('huyen').value;
+    let districtName = this.formAddKh.get("huyen").value;
     this.huyens.forEach((t) => {
       if (t.DistrictID == this.diaChiVaPhiVanChuyen.huyenId) {
         districtName = t.DistrictName;

@@ -1,15 +1,16 @@
-<div class="container">
+<!-- <div class="container">
   <div class="login-screen row align-items-center">
-    <div class="col-sm-12">
+    <div class="col-sm-12 wrapperLogin">
       <form action="index.html">
         <div class="login-container">
           <div class="row no-gutters">
             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
               <div class="login-box">
-                <h5 class="login-logo">Bee Shirt's Administrator</h5>
+                <h5 class="login-logo">Chào mừng đến với Bee Shirt</h5>
                 <form [formGroup]="loginForm">
-                  <!-- tên đăng nhập -->
+                
                   <div class="form-group">
+                    <label for="">Tên đăng nhập</label>
                     <input
                       class="form-control"
                       [ngClass]="
@@ -27,7 +28,7 @@
                     </div>
                   </div>
 
-                  <!-- mật khẩu -->
+                
                   <div class="form-group">
                     <input
                       class="form-control"
@@ -81,4 +82,112 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
+
+
+<!-- Section: Design Block -->
+<section style="margin-bottom: 120px;">
+  <!-- Jumbotron -->
+  <div class="px-4 py-5 px-md-5 text-center text-lg-start" >
+    <div class="container">
+      <div class="row gx-lg-5 align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="my-5 display-3 fw-bold ls-tight">
+            Bee Shirt <br />
+            <span style="color: #ffc107;">Đẹp trong từng thước vải</span>
+          </h1>
+          <p style="color: hsl(217, 10%, 50.8%)">
+            Bee Shirt đang tạo ra những bộ trang phục sản xuất trong nước hoàn toàn có thể sánh ngang với các thương hiệu thời trang nam đến từ nước ngoài về kiểu dáng, chất lượng lẫn phong cách thời trang.” - CEO Bee Shirt
+          </p>
+        </div>
+
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="card">
+            <div class="card-body py-5 px-md-5">
+              <form [formGroup]="loginForm">
+               
+
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form3Example3">Tên đăng nhập</label>
+                  <input
+                  class="form-control"
+                  [ngClass]="
+                    loginForm.get('tenDangNhap').invalid &&
+                    loginForm.get('tenDangNhap').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  placeholder="Tên đăng nhập"
+                  type="text"
+                  formControlName="tenDangNhap"
+                />
+                <div class="invalid-feedback">
+                  Tên đăng nhập không được bỏ trống
+                </div>
+                 
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form3Example4">Mật khẩu</label>
+                  <input
+                      class="form-control"
+                      [ngClass]="
+                        loginForm.get('matKhau').invalid &&
+                        loginForm.get('matKhau').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      placeholder="Mật khẩu"
+                      [type]="passwordInputType ? 'password' : 'text'"
+                      formControlName="matKhau"
+                    />
+               
+                  <div class="invalid-feedback">
+                    Mật khẩu không được bỏ trống
+                  </div>
+                </div>
+                <input type="checkbox" (click)="togglePasswordInputType()"> <label for="">Hiển thị mật khẩu</label> <br>
+
+               
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-dark btn-block mt-3"  type="submit"
+               
+                (click)="login()"
+                [disabled]="loginForm.invalid">
+                Đăng Nhập <i
+                *ngIf="loading"
+                class="fa-solid fa-spin fa-spinner"
+              ></i>
+                </button>
+
+                <!-- Register buttons
+                <div class="text-center">
+                  <p>or sign up with:</p>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                  </button>
+                </div> -->
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->

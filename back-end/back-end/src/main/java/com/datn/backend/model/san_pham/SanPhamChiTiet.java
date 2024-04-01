@@ -1,7 +1,9 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,9 +38,8 @@ public class SanPhamChiTiet extends BaseEntity {
     private int soLuongTon; //
     private boolean trangThai;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "san_pham_id")
-    @JsonIgnore
     private SanPham sanPham;
 
     @ManyToOne

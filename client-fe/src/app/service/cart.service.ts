@@ -12,9 +12,12 @@ export class CartItemService {
 
   public totalCartItems = new BehaviorSubject<number>(0);
   public cartItemsInLocalStorage = new BehaviorSubject<CartItem[]>([]);
+  public cartItemsInLocalStorageQuantity = new BehaviorSubject<number>(0);
 
   // constructor, ngOn
   constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {}
 
   // public functions
   // 1
@@ -29,6 +32,11 @@ export class CartItemService {
 
   // 3
   public addCartItemToLocalStorage(cartItem: CartItem): void {
-    this.cartItemsInLocalStorage.push(cartItem);
+    let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+    cartItems.push(cartItem);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    this.cartItemsInLocalStorage.next(cartItems);
+    this.cartItemsInLocalStorageQuantity.next(cartItems.length);
   }
 }

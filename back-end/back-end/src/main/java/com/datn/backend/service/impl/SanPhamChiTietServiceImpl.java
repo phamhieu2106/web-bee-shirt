@@ -195,6 +195,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
+    public String getProductNameByProductDetails(int productDetailsId) {
+        return null;
+    }
+
+    @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         //  Get list spct

@@ -21,6 +21,7 @@ export class NavigationComponent {
   public loggedCustomer: Customer;
   public isCartShow: boolean = false;
   public cartItems: CartItem[] = [];
+  public cartItemQuantity: number;
 
   // constructor, ngOn
   constructor(
@@ -32,7 +33,27 @@ export class NavigationComponent {
 
   ngOnInit(): void {
     this.getIsLoggedInValue();
-    this.getCartItems();
+    // subcribe cart item in localstorage quantity
+    this.cartItemService.cartItemsInLocalStorageQuantity.subscribe(
+      (quantity: number) => {
+        this.cartItemQuantity = quantity;
+      }
+    );
+    this.cartItemService.cartItemsInLocalStorage.subscribe(
+      (response: CartItem[]) => {
+        this.cartItems = response;
+      }
+    );
+
+    const cartItemsInLocalStorage = localStorage.getItem("cartItems");
+    if (cartItemsInLocalStorage === null) {
+      const initCartItems: CartItem[] = [];
+      localStorage.setItem("cartItems", JSON.stringify(initCartItems));
+    }
+    this.cartItems = JSON.parse(localStorage.getItem("cartItems"));
+    this.cartItemService.cartItemsInLocalStorageQuantity.next(
+      this.cartItems.length
+    );
   }
 
   // public functions
@@ -85,14 +106,15 @@ export class NavigationComponent {
   }
 
   // 2
-  private getCartItems(): void {
-    this.cartItemService.cartItemsInLocalStorage.subscribe({
-      next: (response: CartItem[]) => {
-        this.cartItems = response;
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
-      },
-    });
-  }
+  // private getCartItems(): void {
+  //   this.cartItemService.cartItemsInLocalStorage.subscribe({
+  //     next: (response: CartItem[]) => {
+  //       this.cartItems = response;
+  //       this.cartItemQuantity = response.length;
+  //     },
+  //     error: (errorResponse: HttpErrorResponse) => {
+  //       this.notifService.error(errorResponse.error.message);
+  //     },
+  //   });
+  // }
 }

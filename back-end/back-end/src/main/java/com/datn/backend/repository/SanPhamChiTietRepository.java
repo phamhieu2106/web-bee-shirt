@@ -117,6 +117,15 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                              @Param("colorId") int colorId,
                              @Param("sizeId") int sizeId);
 
+    @Query(value = """
+            SELECT ct.gia_ban
+            FROM san_pham_chi_tiet ct
+            WHERE ct.san_pham_id = :productId
+            AND ct.mau_sac_id = :colorId
+            AND ct.kich_co_id = :sizeId
+            """, nativeQuery = true)
+    String getProductNameByProductDetails(int productDetailsId);
+
     @Query("""
             select spct from SanPhamChiTiet spct
             where (spct.sanPham.ten like %:search% or spct.sanPham.ma like %:search%) and

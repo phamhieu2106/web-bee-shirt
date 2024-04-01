@@ -25,7 +25,7 @@
           </label>
 
           <div class="logo c">
-            <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+            <img src="https://i.imgur.com/XlMdwHa.png" />
           </div>
 
           <div class="search">
@@ -103,7 +103,7 @@
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
-                <span class="quantity">0</span>
+                <span class="quantity">{{ cartItemQuantity }}</span>
               </div>
             </div>
           </div>
@@ -178,18 +178,20 @@
         </div>
         <div class="col-md-9">
           <span class="nameCartProduct">
-            <a [routerLink]="'/'">Áo sơ mi nam cotton flannel họa tiết kẻ</a>
+            <a [routerLink]="'/'">{{ ci.spct.sanPham.ten }}</a>
           </span>
           <div class="ThuocTinh">
             <div class="color-cart">
               <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
             </div>
             <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
+            <span class="sizeCart">
+              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span
+            >
           </div>
 
           <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
+            <div class="priceCart">{{ ci.spct.giaBan }}</div>
             <div class="wrapper">
               <span class="minus">-</span>
               <span
@@ -198,7 +200,7 @@
                   border-right: 2px solid rgba(0, 0, 0, 0.2);
                   border-left: 2px solid rgba(0, 0, 0, 0.2);
                 "
-                >01</span
+                >{{ ci.soLuong }}</span
               >
               <span class="plus">+</span>
             </div>

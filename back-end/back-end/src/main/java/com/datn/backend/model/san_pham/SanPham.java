@@ -1,7 +1,11 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +35,6 @@ public class SanPham extends BaseEntity {
     private String moTa;
     private boolean trangThai;
 
-    @OneToMany(mappedBy = "sanPham")
+    @OneToMany(mappedBy = "sanPham", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SanPhamChiTiet> sanPhamChiTiets;
 }

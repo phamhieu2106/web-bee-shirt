@@ -194,10 +194,6 @@ export class SanPhamChiTietComponent {
 
   // 4
   public addToCart(): void {
-    console.log(this.sanPham.id);
-    console.log(this.colorsOfProduct[this.curColorIndex]);
-    console.log(this.curSizesOfProduct[this.curSizeIndex]);
-
     this.productDetailsService
       .getByProductColorSize(
         this.sanPham.id,
@@ -205,7 +201,10 @@ export class SanPhamChiTietComponent {
         this.curSizesOfProduct[this.curSizeIndex].id
       )
       .subscribe({
-        next: (response: SanPhamChiTiet) => {},
+        next: (response: SanPhamChiTiet) => {
+          const newCartItem = new CartItem(1, response);
+          this.cartItemService.addCartItemToLocalStorage(newCartItem);
+        },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
         },

@@ -45,6 +45,8 @@ public interface SanPhamChiTietService {
 
     SanPhamChiTiet getOneByProColorSize(int productId, int colorId, int sizeId);
 
+    String getProductNameByProductDetails(int productDetailsId);
+
     long[][] minMaxPrice();
     PagedResponse<SpctResponse> getDetailSpct(
             int pageSize, int pageNumber,

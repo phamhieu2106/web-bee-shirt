@@ -46,6 +46,12 @@ export class KhachHangService {
     formData.append("khachHangImage", file);
     return this.http.post<KhachHangResponse>(`${this.apiUrl}/add-kh`, formData);
   }
+  public addQuick(khachHang: KhachHangResponse): Observable<KhachHangResponse> {
+    return this.http.post<KhachHangResponse>(
+      `${this.apiUrl}/add-quick`,
+      khachHang
+    );
+  }
 
   public getById(id: number): Observable<KhachHangResponse> {
     return this.http.get<KhachHangResponse>(`${this.apiUrl}/getById/${id}`);

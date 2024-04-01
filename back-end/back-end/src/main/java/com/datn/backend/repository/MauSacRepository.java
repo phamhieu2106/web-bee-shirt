@@ -44,10 +44,18 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
             SELECT *
             FROM mau_sac ms
             WHERE ms.id IN (
-            SELECT ct.mau_sac_id
-            FROM san_pham_chi_tiet ct
-            WHERE ct.san_pham_id = :productId
+                SELECT ct.mau_sac_id
+                FROM san_pham_chi_tiet ct
+                WHERE ct.san_pham_id = :productId
             )
             """, nativeQuery = true)
     List<MauSac> getAllColorOfProduct(@Param("productId") int productId);
+
+    @Query(value =
+            """
+            SELECT ms.id
+            FROM mau_sac ms
+            WHERE ms.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveColorIds();
 }

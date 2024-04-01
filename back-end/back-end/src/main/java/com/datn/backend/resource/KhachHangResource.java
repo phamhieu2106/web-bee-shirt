@@ -69,4 +69,10 @@ public class KhachHangResource {
                                                                              @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(khachHangService.getAllActive(pageNumber, pageSize, search));
     }
+
+    @PostMapping("/add-quick")
+    public ResponseEntity<KhachHang> addKH(@RequestBody KhachHangRequest khachHangRequest) {
+//        System.out.println(khachHangRequest);
+        return ResponseEntity.ok(khachHangService.add(khachHangRequest));
+    }
 }

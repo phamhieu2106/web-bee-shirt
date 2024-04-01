@@ -206,7 +206,7 @@ export class SanPhamChiTietComponent {
       });
 
       // get colors of this product
-      this.colorService.getAllColorOfProduct(productId).subscribe({
+      this.colorService.getAllColorOf1Product(productId).subscribe({
         next: (colorResponse: MauSac[]) => {
           this.colorsOfProduct = colorResponse;
 

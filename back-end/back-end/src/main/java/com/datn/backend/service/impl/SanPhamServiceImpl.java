@@ -3,10 +3,16 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.model.san_pham.SanPham;
+import com.datn.backend.repository.ChatLieuRepository;
+import com.datn.backend.repository.CoAoRepository;
+import com.datn.backend.repository.KichCoRepository;
+import com.datn.backend.repository.KieuDangRepository;
+import com.datn.backend.repository.KieuThietKeRepository;
+import com.datn.backend.repository.MauSacRepository;
 import com.datn.backend.repository.SanPhamChiTietRepository;
 import com.datn.backend.repository.SanPhamRepository;
+import com.datn.backend.repository.TayAoRepository;
 import com.datn.backend.service.SanPhamService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +33,13 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     private final SanPhamRepository sanPhamRepo;
     private final SanPhamChiTietRepository spctRepo;
+    private final MauSacRepository colorRepo;
+    private final KichCoRepository sizeRepo;
+    private final KieuDangRepository formRepo;
+    private final KieuThietKeRepository designRepo;
+    private final CoAoRepository collarRepo;
+    private final TayAoRepository sleeveRepo;
+    private final ChatLieuRepository materialRepo;
 
     // admin
     @Override
@@ -125,7 +138,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public PagedResponse<SanPham> getByFilterForClient(List<Integer> colorIds,
+    public PagedResponse<SanPham> getByFilterForClient(int pageNumber,
+                                                       int pageSize,
+                                                       List<Integer> colorIds,
                                                        List<Integer> sizeIds,
                                                        List<Integer> formIds,
                                                        List<Integer> designIds,
@@ -134,6 +149,47 @@ public class SanPhamServiceImpl implements SanPhamService {
                                                        List<Integer> materialIds,
                                                        BigDecimal minPrice,
                                                        BigDecimal maxPrice) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        if (colorIds.isEmpty()) {
+            colorIds = colorRepo.getAllActiveColorIds();
+        }
+        if (sizeIds.isEmpty()) {
+            sizeIds = sizeRepo.getAllActiveSizeIds();
+        }
+        if (formIds.isEmpty()) {
+            formIds = formRepo.getAllActiveFormIds();
+        }
+        if (designIds.isEmpty()) {
+            designIds = designRepo.getAllActiveDesignIds();
+        }
+        if (collarIds.isEmpty()) {
+            collarIds = collarRepo.getAllActiveCollarIds();
+        }
+        if (sleeveIds.isEmpty()) {
+            sleeveIds = sleeveRepo.getAllActiveSleeveIds();
+        }
+        if (materialIds.isEmpty()) {
+            materialIds = materialRepo.getAllActiveMaterialIds();
+        }
+        if (minPrice.equals(BigDecimal.ZERO) || maxPrice.equals(BigDecimal.ZERO)) {
+            minPrice = spctRepo.getMinPrice();
+            maxPrice = spctRepo.getMaxPrice();
+        }
+
+        Page<Integer> idPages = sanPhamRepo.getByFilterForClient(pageable, colorIds, sizeIds,
+                                                                    formIds, designIds, collarIds,
+                                                                    sleeveIds, materialIds, minPrice, maxPrice);
+        List<SanPham> sanPhamList = sanPhamRepo.getProductsByIds(idPages.getContent());
+
+        PagedResponse<SanPham> paged = new PagedResponse<>();
+        paged.setPageNumber(pageNumber);
+        paged.setPageSize(pageSize);
+        paged.setTotalElements((int) idPages.getTotalElements());
+        paged.setTotalPages(idPages.getTotalPages());
+        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(idPages.getTotalPages()));
+        paged.setData(sanPhamList);
+
+        return paged;
     }
 }

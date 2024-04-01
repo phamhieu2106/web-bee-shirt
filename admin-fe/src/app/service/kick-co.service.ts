@@ -26,8 +26,14 @@ export class KichCoService {
     );
   }
 
+  //
   public getAll(): Observable<KichCo[]> {
     return this.http.get<KichCo[]>(`${this.apiUrl}/get-all`);
+  }
+
+  //
+  public getAllActiveSizes(): Observable<KichCo[]> {
+    return this.http.get<KichCo[]>(`${this.apiUrl}/all-active`);
   }
 
   // 2

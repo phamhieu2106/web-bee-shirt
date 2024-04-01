@@ -1,15 +1,13 @@
 package com.datn.backend.resource;
 
+import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.SpctResponse;
-import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.service.HoaDonTraHangService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,8 +44,8 @@ public class HoaDonTraHangResource {
         return ResponseEntity.ok(hoaDonTraHangService.getListIdDotGiamGiaSanPhamByIdHoaDon(idHoaDon));
     }
 
-    @GetMapping("/phieu-giam-gia")
-    public ResponseEntity<PhieuGiamGia> getPhieuGiamGia(@RequestParam("id") Integer idHoaDon) {
-        return ResponseEntity.ok(hoaDonTraHangService.getPhieuGiamGiaByIdHoaDon(idHoaDon));
+    @PostMapping
+    public ResponseEntity<HoaDonResponse> traHang(@Valid @RequestBody ChangeOrderStatusRequest changeOrderStatus) {
+        return ResponseEntity.ok(hoaDonTraHangService.traHang(changeOrderStatus));
     }
 }

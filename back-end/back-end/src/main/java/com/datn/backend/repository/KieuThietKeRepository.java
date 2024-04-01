@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface KieuThietKeRepository extends JpaRepository<KieuThietKe, Integer> {
 
     boolean existsByTen(String ten);
@@ -22,4 +24,12 @@ public interface KieuThietKeRepository extends JpaRepository<KieuThietKe, Intege
             """, nativeQuery = true)
     Page<KieuThietKe> getAll(Pageable pageable,
                              @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT tk.id
+            FROM kieu_thiet_ke tk
+            WHERE tk.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveDesignIds();
 }

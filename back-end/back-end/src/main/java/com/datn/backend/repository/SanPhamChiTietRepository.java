@@ -1,5 +1,6 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,14 +43,26 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             FROM san_pham_chi_tiet ct
             WHERE ct.san_pham_id = :productId
             """, nativeQuery = true)
-    BigDecimal getMinPrice(@Param("productId") int productId);
+    BigDecimal getMinPriceOf1Product(@Param("productId") int productId);
 
     @Query(value = """
             SELECT MAX(ct.gia_ban)
             FROM san_pham_chi_tiet ct
             WHERE ct.san_pham_id = :productId
             """, nativeQuery = true)
-    BigDecimal getMaxPrice(@Param("productId") int productId);
+    BigDecimal getMaxPriceOf1Product(@Param("productId") int productId);
+
+    @Query(value = """
+            SELECT MIN(ct.gia_ban)
+            FROM san_pham_chi_tiet ct
+            """, nativeQuery = true)
+    BigDecimal getMinPrice();
+
+    @Query(value = """
+            SELECT MAX(ct.gia_ban)
+            FROM san_pham_chi_tiet ct
+            """, nativeQuery = true)
+    BigDecimal getMaxPrice();
 
     @Query(value = """
             UPDATE san_pham_chi_tiet ct
@@ -103,6 +116,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     BigDecimal getPriceOfOne(@Param("productId") int productId,
                              @Param("colorId") int colorId,
                              @Param("sizeId") int sizeId);
+
     @Query("""
             select spct from SanPhamChiTiet spct
             where (spct.sanPham.ten like %:search% or spct.sanPham.ma like %:search%) and

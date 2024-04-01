@@ -62,7 +62,9 @@ public class SanPhamResource {
     }
 
     @GetMapping("/client/filter")
-    public ResponseEntity<PagedResponse<SanPham>> getByFilterForClient(@RequestParam(value = "colorIds", required = false) List<Integer> colorIds,
+    public ResponseEntity<PagedResponse<SanPham>> getByFilterForClient(@RequestParam("pageNumber") int pageNumber,
+                                                                       @RequestParam("pageSize") int pageSize,
+                                                                       @RequestParam(value = "colorIds", required = false) List<Integer> colorIds,
                                                                        @RequestParam(value = "sizeIds", required = false) List<Integer> sizeIds,
                                                                        @RequestParam(value = "formIds", required = false) List<Integer> formIds,
                                                                        @RequestParam(value = "designIds", required = false) List<Integer> designIds,
@@ -71,6 +73,9 @@ public class SanPhamResource {
                                                                        @RequestParam(value = "materialIds", required = false) List<Integer> materialIds,
                                                                        @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
                                                                        @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice) {
-
+        return ResponseEntity.ok(sanPhamService.getByFilterForClient(pageNumber, pageSize, colorIds,
+                                                                     sizeIds, formIds, designIds,
+                                                                     collarId, sleeveIds, materialIds,
+                                                                     minPrice, maxPrice));
     }
 }

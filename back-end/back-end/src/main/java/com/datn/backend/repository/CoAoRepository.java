@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CoAoRepository extends JpaRepository<CoAo, Integer> {
 
     boolean existsByTen(String ten);
@@ -22,4 +24,12 @@ public interface CoAoRepository extends JpaRepository<CoAo, Integer> {
             """, nativeQuery = true)
     Page<CoAo> getAll(Pageable pageable,
                       @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT ca.id
+            FROM co_ao ca
+            WHERE ca.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveCollarIds();
 }

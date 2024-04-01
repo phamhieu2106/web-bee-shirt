@@ -59,7 +59,7 @@
                     <a [routerLink]="'/signup'">Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
-                    <a> Theo dõi đơn hàng </a>
+                    <a>Theo dõi đơn hàng</a>
                   </span>
                 </div>
               </div>
@@ -67,7 +67,9 @@
               <div class="popUpLogindone" *ngIf="isPopupShow && isLoggedIn">
                 <div>
                   <div class="headerPopup">
-                    <span class="nameCustomer">Chào Phạm Bình</span>
+                    <span class="nameCustomer"
+                      >Chào <i>{{ loggedCustomer?.hoTen }}</i></span
+                    >
                   </div>
 
                   <ul class="listAction">
@@ -86,7 +88,7 @@
                   </ul>
 
                   <div class="footerPopup">
-                    <span>Đăng Xuất</span>
+                    <span (click)="logout()">Đăng Xuất</span>
                   </div>
                 </div>
               </div>
@@ -98,7 +100,7 @@
               </div>
             </div>
 
-            <div class="gioHang" (click)="openGioHang()">
+            <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
                 <span class="quantity">0</span>
@@ -146,52 +148,41 @@
   </div>
 </div>
 
-<div class="cardgioHang" *ngIf="showGioHang">
+<div class="cardgioHang" *ngIf="isCartShow">
   <div class="cart-header">
     <div>
-      <span class="nameCart">Giỏ Hàng</span>
+      <span class="nameCart me-1">Giỏ Hàng</span>
       <i class="bi bi-cart2"></i>
     </div>
-    <div class="closeShopping" (click)="openGioHang()">
+    <div class="closeShopping pointer" (click)="toggleCart()">
       <i class="bi bi-x-circle"></i>
     </div>
   </div>
 
   <!-- Điều kiện để nhận mã miễn phí vận chuyển -->
-  <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
-    <img src="https://i.imgur.com/uoqTCt1.png" alt="" style="width: 30px" />
+  <!-- <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
+    <img src="https://i.imgur.com/uoqTCt1.png" style="width: 30px" />
     <span style="font-size: 14px; margin-left: 5px"
       >Bạn đủ điều kiện nhận miễn phí vận chuyển</span
     >
-  </div>
-
-  <!-- <div class="dieuKien" style="background-color: #fdc5bc; padding: 10px;">
-    <img src="https://i.imgur.com/GFwsDu9.png" alt="" style="width: 30px;">
-    <span style="font-size: 14px;margin-left: 5px;">Mua thêm 179.700 ₫ để được freeship.</span>
   </div> -->
 
   <ul class="listCart" style="padding: 0">
-    <li class="cartItem">
+    <li class="cartItem" *ngFor="let ci of cartItems">
       <div class="row">
         <div class="col-md-3 imgProductCart">
-          <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
-          />
+          <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
           <div class="DeleteCart">
             <i class="bi bi-x-lg"></i>
           </div>
         </div>
         <div class="col-md-9">
           <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
+            <a [routerLink]="'/'">Áo sơ mi nam cotton flannel họa tiết kẻ</a>
           </span>
           <div class="ThuocTinh">
             <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
+              <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
             </div>
             <span class="line-info">|</span>
             <span class="sizeCart"> Size: L </span>
@@ -199,7 +190,6 @@
 
           <div class="wrapperPrice">
             <div class="priceCart">599.000đ</div>
-
             <div class="wrapper">
               <span class="minus">-</span>
               <span
@@ -217,100 +207,12 @@
       </div>
     </li>
 
-    <li class="cartItem">
-      <div class="row">
-        <div class="col-md-3 imgProductCart">
-          <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
-          />
-          <div class="DeleteCart">
-            <i class="bi bi-x-lg"></i>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
-          </span>
-          <div class="ThuocTinh">
-            <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
-            </div>
-            <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
-          </div>
-
-          <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
-
-            <div class="wrapper">
-              <span class="minus">-</span>
-              <span
-                class="num"
-                style="
-                  border-right: 2px solid rgba(0, 0, 0, 0.2);
-                  border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >01</span
-              >
-              <span class="plus">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-
-    <li class="cartItem">
-      <div class="row">
-        <div class="col-md-3 imgProductCart">
-          <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
-          />
-          <div class="DeleteCart">
-            <i class="bi bi-x-lg"></i>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
-          </span>
-          <div class="ThuocTinh">
-            <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
-            </div>
-            <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
-          </div>
-
-          <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
-
-            <div class="wrapper">
-              <span class="minus">-</span>
-              <span
-                class="num"
-                style="
-                  border-right: 2px solid rgba(0, 0, 0, 0.2);
-                  border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >01</span
-              >
-              <span class="plus">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
+    <div class="text-center" *ngIf="cartItems.length === 0">
+      <i>Chưa có sản phẩm nào trong giỏ hàng</i>
+    </div>
   </ul>
 
-  <div class="checkOut">
+  <div class="checkOut" *ngIf="cartItems.length > 0">
     <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
       <div class="giaGoc">599.000đ</div>

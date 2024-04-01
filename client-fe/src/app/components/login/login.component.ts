@@ -22,15 +22,11 @@ export class LoginComponent {
     private router: Router,
     private notifService: NotificationService,
     private authenticationService: AuthenticationService
-  ) {
-    this.loginForm = new FormGroup({
-      tenDangNhap: new FormControl("", [Validators.required]),
-      matKhau: new FormControl("", [Validators.required]),
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.checkLogin();
+    this.initFormLogin();
   }
 
   // public functions
@@ -41,7 +37,6 @@ export class LoginComponent {
 
   // 2
   public login(): void {
-    this.loading = true;
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: user vào localStorage
       next: (response: HttpResponse<Customer>) => {
@@ -50,13 +45,11 @@ export class LoginComponent {
         this.authenticationService.saveCustomerToStorage(response.body);
 
         this.notifService.success("Đăng nhập thành công!");
-        window.location.href = "/";
+        this.router.navigate(["/"]);
         this.authenticationService.isLoggedInSubject.next(true);
-        this.loading = false;
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
-        this.loading = false;
       },
     });
   }
@@ -66,7 +59,15 @@ export class LoginComponent {
   private checkLogin(): void {
     if (this.authenticationService.isLoggedIn()) {
       this.notifService.warning("Bạn cần đăng xuất để đến trang đăng nhập!");
-      this.router.navigate(["/admin"]);
+      this.router.navigate(["/"]);
     }
+  }
+
+  // 2
+  private initFormLogin(): void {
+    this.loginForm = new FormGroup({
+      tenDangNhap: new FormControl("0807760922", [Validators.required]),
+      matKhau: new FormControl("fjJgF", [Validators.required]),
+    });
   }
 }

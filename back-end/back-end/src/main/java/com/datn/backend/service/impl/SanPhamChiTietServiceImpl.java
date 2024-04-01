@@ -359,6 +359,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
+    public SanPhamChiTiet getOneByProColorSize(int productId, int colorId, int sizeId) {
+        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(productId, colorId, sizeId);
+    }
+
+    @Override
     public boolean checkExist(int spId, int mauSacId, int sizeId) {
         return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(spId, mauSacId, sizeId) != null;
     }

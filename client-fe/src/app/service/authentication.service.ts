@@ -35,7 +35,7 @@ export class AuthenticationService {
   public logout(): void {
     this.token = null;
     this.loggedInUsername = null;
-    localStorage.removeItem("nhanVien");
+    localStorage.removeItem("customer");
     localStorage.removeItem("token");
     this.isLoggedInSubject.next(false);
     this.router.navigate(["/login"]);
@@ -53,8 +53,8 @@ export class AuthenticationService {
   }
 
   // 5
-  public getUserFromStorage(): Customer {
-    return JSON.parse(localStorage.getItem("nhanVien"));
+  public getCustomerFromStorage(): Customer {
+    return JSON.parse(localStorage.getItem("customer"));
   }
 
   // 6
@@ -85,7 +85,6 @@ export class AuthenticationService {
       }
       return false;
     } else {
-      // this.logout();
       return false;
     }
   }

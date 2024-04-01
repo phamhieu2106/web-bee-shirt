@@ -14,6 +14,9 @@ import { KichCo } from "src/app/model/class/kich-co.class";
 import { ProductImageService } from "src/app/service/product-img.service";
 import { ProductDetailsService } from "src/app/service/product-details.service";
 import { CurrencyPipe } from "@angular/common";
+import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
+import { CartItem } from "src/app/model/class/cart-item.class";
+import { CartItemService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -25,6 +28,7 @@ export class SanPhamChiTietComponent {
   public colorsOfProduct: MauSac[] = [];
   public curSizesOfProduct: KichCo[] = [];
   public curImgUrls: String[] = [];
+  public cartItems: CartItem[] = [];
 
   public curColorIndex: number = 0;
   public curSizeIndex: number = 0;
@@ -74,7 +78,8 @@ export class SanPhamChiTietComponent {
     private sizeService: SizeService,
     private productImgService: ProductImageService,
     private productDetailsService: ProductDetailsService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private cartItemService: CartItemService
   ) {}
 
   ngOnInit(): void {
@@ -186,6 +191,27 @@ export class SanPhamChiTietComponent {
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
+
+  // 4
+  public addToCart(): void {
+    console.log(this.sanPham.id);
+    console.log(this.colorsOfProduct[this.curColorIndex]);
+    console.log(this.curSizesOfProduct[this.curSizeIndex]);
+
+    this.productDetailsService
+      .getByProductColorSize(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        this.curSizesOfProduct[this.curSizeIndex].id
+      )
+      .subscribe({
+        next: (response: SanPhamChiTiet) => {},
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+  }
+
   // private functions
   // 1
   private getProductById(): void {

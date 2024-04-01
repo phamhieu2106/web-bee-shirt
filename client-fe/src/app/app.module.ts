@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { CurrencyPipe } from "@angular/common";
 
 import { ToastrModule } from "ngx-toastr";
@@ -21,6 +21,7 @@ import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.component";
 import { LoginComponent } from "./components/login/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 
 @NgModule({
   declarations: [
@@ -46,7 +47,14 @@ import { ReactiveFormsModule } from "@angular/forms";
     ToastrModule.forRoot(),
     CarouselModule,
   ],
-  providers: [CurrencyPipe],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
+    CurrencyPipe,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -36,7 +36,7 @@ public class AuthResource {
     private final NhanVienRepository nhanVienRepo;
     private final KhachHangRepository khachHangRepo;
 
-    @PostMapping("/login")
+    @PostMapping("/staff/login")
     public ResponseEntity<NhanVien> staffLogin(@RequestBody LoginRequest request) throws AccessDeniedException {
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
         authManager.authenticate(authentication);

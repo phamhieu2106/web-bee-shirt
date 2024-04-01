@@ -43,6 +43,8 @@ public interface SanPhamChiTietService {
 
     BigDecimal getPriceOfOne(int productId, int colorId, int sizeId);
 
+    SanPhamChiTiet getOneByProColorSize(int productId, int colorId, int sizeId);
+
     long[][] minMaxPrice();
     PagedResponse<SpctResponse> getDetailSpct(
             int pageSize, int pageNumber,

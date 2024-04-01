@@ -114,4 +114,11 @@ public class SanPhamChiTietResource {
                                                     @PathVariable("sizeId") int sizeId) {
         return ResponseEntity.ok(spctService.getPriceOfOne(productId, colorId, sizeId));
     }
+
+    @GetMapping("/by-product-color-size/{productId}/{colorId}/{sizeId}")
+    public ResponseEntity<SanPhamChiTiet> getOneByProColorSize(@PathVariable("productId") int productId,
+                                                           @PathVariable("colorId") int colorId,
+                                                           @PathVariable("sizeId") int sizeId) {
+        return ResponseEntity.ok(spctService.getOneByProColorSize(productId, colorId, sizeId));
+    }
 }

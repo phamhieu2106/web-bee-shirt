@@ -2,8 +2,6 @@ package com.datn.backend.app_configuration;
 
 import com.cloudinary.Cloudinary;
 import com.datn.backend.utility.AuditorAwareImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,15 +27,6 @@ public class ApplicationConfiguration {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
-
-
-//    @Bean("objectMapper1")
-//    public ObjectMapper objectMapper1() {
-
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.registerModule(new JavaTimeModule());
-//        return mapper;
-//    }
 
     @Bean
     public Cloudinary cloudinary() {

@@ -20,13 +20,13 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
     @Query(value =
             """
-                     SELECT CASE
-                               WHEN EXISTS (
-                                   SELECT nv.email FROM nhan_vien nv WHERE nv.email = :emailInput AND nv.email != :emailDetail
-                               ) THEN 'true'
-                               ELSE 'false'
-                           END AS result;
-                    """
+            SELECT CASE
+                       WHEN EXISTS (
+                           SELECT nv.email FROM nhan_vien nv WHERE nv.email = :emailInput AND nv.email != :emailDetail
+                       ) THEN 'true'
+                       ELSE 'false'
+                   END AS result;
+            """
             , nativeQuery = true)
     boolean existsByEmailExcluding(@Param("emailInput") String emailInput, @Param("emailDetail") String emailDetail);
 

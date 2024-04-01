@@ -2,8 +2,8 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Customer } from "src/app/model/class/customer.class";
 
+import { Customer } from "src/app/model/class/customer.class";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { NotificationService } from "src/app/service/notification.service";
 
@@ -40,14 +40,14 @@ export class LoginComponent {
   }
 
   // 2
-  public loginSubmit(): void {
+  public login(): void {
     this.loading = true;
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: user vào localStorage
       next: (response: HttpResponse<Customer>) => {
         const token = response.headers.get("Jwt-Token");
         this.authenticationService.saveTokenToStorage(token);
-        this.authenticationService.saveUserToStorage(response.body);
+        this.authenticationService.saveCustomerToStorage(response.body);
 
         this.notifService.success("Đăng nhập thành công!");
         window.location.href = "/";

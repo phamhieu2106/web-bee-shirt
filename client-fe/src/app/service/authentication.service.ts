@@ -23,7 +23,7 @@ export class AuthenticationService {
   // 1
   public login(loginReq: LoginRequest): Observable<HttpResponse<Customer>> {
     return this.http.post<Customer>(
-      `${this.apiUrl}/auth//customer/login`,
+      `${this.apiUrl}/auth/customer/login`,
       loginReq,
       {
         observe: "response",
@@ -48,7 +48,7 @@ export class AuthenticationService {
   }
 
   // 4
-  public saveUserToStorage(customer: Customer): void {
+  public saveCustomerToStorage(customer: Customer): void {
     localStorage.setItem("customer", JSON.stringify(customer));
   }
 

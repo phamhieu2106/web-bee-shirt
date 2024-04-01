@@ -48,7 +48,6 @@ public class SecurityConfiguration {
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-//                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

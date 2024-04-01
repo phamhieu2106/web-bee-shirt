@@ -6,17 +6,40 @@ import { Component } from "@angular/core";
   styleUrls: ["./navigation.component.css"],
 })
 export class NavigationComponent {
-  showLoginPopup: boolean = true; // Biến để kiểm soát hiển thị phần popup đăng nhập
+  public isPopupShow: boolean = false;
+  public isLoggedIn: boolean = false;
   showGioHang: boolean = false;
 
+  // constructor, ngOn
   constructor() {}
 
   ngOnInit(): void {}
 
-  // Hàm để toggle hiển thị/ẩn phần popup đăng nhập
-  toggleLoginPopup() {
-    this.showLoginPopup = !this.showLoginPopup;
+  // public functions
+  // 1
+  public togglePopup(): void {
+    this.isPopupShow = !this.isPopupShow;
   }
+
+  // private functions
+  // private getCartItems(): void {
+  //   const loggedUser = this.authenticationService.getUserFromStorage();
+  //   if (loggedUser === null) {
+  //     return;
+  //   }
+  //   this.cartItemService.getCartItemsByUserId(loggedUser.id).subscribe(
+  //     (data: CartItem[]) => {
+  //       this.cartItems = data;
+  //       this.cartItemService.setQuantity(data.length);
+  //     },
+  //     (errorResponse: HttpErrorResponse) => {
+  //       this.toastr.error(
+  //         `Lỗi hệ thống: ${errorResponse.error.message}`,
+  //         "Hệ thống"
+  //       );
+  //     }
+  //   );
+  // }
 
   openGioHang() {
     this.showGioHang = !this.showGioHang;

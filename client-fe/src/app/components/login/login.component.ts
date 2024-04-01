@@ -1,12 +1,10 @@
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-
-import Swal from "sweetalert2";
+import { Customer } from "src/app/model/class/customer.class";
 
 import { AuthenticationService } from "src/app/service/authentication.service";
-import { NhanVien } from "src/app/model/class/nhan-vien.class";
 import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
@@ -26,8 +24,8 @@ export class LoginComponent {
     private authenticationService: AuthenticationService
   ) {
     this.loginForm = new FormGroup({
-      tenDangNhap: new FormControl("admin0203", [Validators.required]),
-      matKhau: new FormControl("12345678", [Validators.required]),
+      tenDangNhap: new FormControl("", [Validators.required]),
+      matKhau: new FormControl("", [Validators.required]),
     });
   }
 
@@ -46,7 +44,7 @@ export class LoginComponent {
     this.loading = true;
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: user vào localStorage
-      next: (response: HttpResponse<NhanVien>) => {
+      next: (response: HttpResponse<Customer>) => {
         const token = response.headers.get("Jwt-Token");
         this.authenticationService.saveTokenToStorage(token);
         this.authenticationService.saveUserToStorage(response.body);

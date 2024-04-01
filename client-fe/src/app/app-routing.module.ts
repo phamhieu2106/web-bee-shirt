@@ -5,6 +5,7 @@ import { HomePageComponent } from "./components/home-page/home-page.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
+import { LoginComponent } from "./components/login/login.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: "trang-san-pham",
     component: SanPhamComponent,
+  },
+  {
+    path: "login",
+    component: LoginComponent,
   },
   {
     path: "tai-khoan",

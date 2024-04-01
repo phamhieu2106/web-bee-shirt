@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { CurrencyPipe, registerLocaleData } from "@angular/common";
 
 import { ToastrModule } from "ngx-toastr";
 
@@ -16,7 +17,6 @@ import { PhieuGiamGiaModule } from "./component/phieu-giam-gia-module/phieu-giam
 import { DotGiamGiaModule } from "./component/dot-giam-gia-module/dot-giam-gia.module";
 import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
-import { CurrencyPipe, registerLocaleData } from "@angular/common";
 import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
 import { ThongKeModuleModule } from "./component/thong-ke-module/thong-ke-module.module";
 

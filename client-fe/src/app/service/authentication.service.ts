@@ -1,31 +1,34 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
 import { Router } from "@angular/router";
-
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { BehaviorSubject, Observable } from "rxjs";
 
-import { LoginRequest } from "../model/interface/login-request.interface";
-import { NhanVien } from "../model/class/nhan-vien.class";
+import { LoginRequest } from "../model/interface/login-request.class";
+import { Customer } from "../model/class/customer.class";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthenticationService {
-  public apiUrl = "http://localhost:8080";
+  public readonly apiUrl = "http://localhost:8080";
   private token: string;
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
-  public isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
+  public isLoggedInSubject = new BehaviorSubject<boolean>(true);
 
+  // constructor, ngOn
   constructor(private http: HttpClient, private router: Router) {}
 
-  // public functions
   // 1
-  public login(loginRequest: LoginRequest): Observable<HttpResponse<NhanVien>> {
-    return this.http.post<NhanVien>(`${this.apiUrl}/auth/login`, loginRequest, {
-      observe: "response",
-    });
+  public login(loginReq: LoginRequest): Observable<HttpResponse<Customer>> {
+    return this.http.post<Customer>(
+      `${this.apiUrl}/auth//customer/login`,
+      loginReq,
+      {
+        observe: "response",
+      }
+    );
   }
 
   // 2
@@ -45,12 +48,12 @@ export class AuthenticationService {
   }
 
   // 4
-  public saveUserToStorage(nhanVien: NhanVien): void {
-    localStorage.setItem("nhanVien", JSON.stringify(nhanVien));
+  public saveUserToStorage(customer: Customer): void {
+    localStorage.setItem("customer", JSON.stringify(customer));
   }
 
   // 5
-  public getUserFromStorage(): NhanVien {
+  public getUserFromStorage(): Customer {
     return JSON.parse(localStorage.getItem("nhanVien"));
   }
 

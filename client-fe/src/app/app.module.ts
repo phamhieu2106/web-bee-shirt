@@ -19,6 +19,8 @@ import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.component";
+import { LoginComponent } from "./components/login/login.component";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -33,10 +35,12 @@ import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.
     SanPhamComponent,
     TaiKhoanComponent,
     KhachHangComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
     ToastrModule.forRoot(),

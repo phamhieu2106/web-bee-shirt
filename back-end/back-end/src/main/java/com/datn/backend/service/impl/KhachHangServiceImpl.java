@@ -2,23 +2,24 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.response.KhachHangResponse;
-import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
+import com.datn.backend.model.danh_sach.Cart;
+import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
 import com.datn.backend.repository.AccountRepository;
+import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.DiaChiRepository;
+import com.datn.backend.repository.FavouriteListRepository;
 import com.datn.backend.repository.KhachHangRepository;
-import com.datn.backend.service.DiaChiService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,13 +38,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class KhachHangServiceImpl implements KhachHangService {
+
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepository;
     private final DiaChiRepository diaChiRepository;
-    private final AccountRepository ar;
+    private final AccountRepository accountRepo;
+    private final CartRepository cartRepo;
+    private final FavouriteListRepository favouriteListRepo;
     private final CloudinaryService cloudinaryService;
-    private final ModelMapper modelMapper;
-
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
@@ -80,7 +82,8 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(image);
         khachHang.setAccount(account);
-        khachHangRepository.save(khachHang);
+        KhachHang savedCus = khachHangRepository.save(khachHang);
+
         DiaChi diaChi = new DiaChi();
         diaChi.setKhachHang(khachHang);
         diaChi.setTinh(kh.getTinh());
@@ -90,7 +93,11 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setMacDinh(true);
         diaChiRepository.save(diaChi);
 
-        return null;
+        // Thêm giỏ hàng và danh sách yêu thích cho khách hàng vừa tạo
+        cartRepo.save(new Cart(savedCus));
+        favouriteListRepo.save(new FavouriteList(savedCus));
+
+        return savedCus;
     }
 
     @Override
@@ -175,7 +182,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             image.setImageUrl((String) result.get("url"));
             image.setImageId((String) result.get("public_id"));
         }
-        Account account = ar.findByTenDangNhap(kh.getTenDangNhap()).get();
+        Account account = accountRepo.findByTenDangNhap(kh.getTenDangNhap()).get();
         account.setTenDangNhap(kh.getSdt());
         khInDB.setImage(image);
         khInDB.setHoTen(kh.getHoTen());
@@ -219,6 +226,4 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         return pagedResponse;
     }
-
-
 }

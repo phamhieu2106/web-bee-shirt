@@ -45,26 +45,26 @@
           </div>
 
           <div class="nav-account">
-            <div class="taiKhoan hiddenWeb" (click)="toggleLoginPopup()">
+            <div class="taiKhoan hiddenWeb" (click)="togglePopup()">
               <div class="iconnav">
                 <i class="iconUser bi bi-person"></i>
               </div>
 
-              <!-- <div class="popUpDangNhap" *ngIf="showLoginPopup">
+              <div class="popUpDangNhap" *ngIf="isPopupShow && !isLoggedIn">
                 <div>
                   <button class="btnDangNhap">
-                    <a href="">Đăng Nhập</a>
+                    <a [routerLink]="'/login'">Đăng Nhập</a>
                   </button>
                   <button class="btnDangKy">
-                    <a href="">Đăng Ký</a>
+                    <a [routerLink]="'/signup'">Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
-                    <a href=""> Theo dõi đơn hàng </a>
+                    <a> Theo dõi đơn hàng </a>
                   </span>
                 </div>
-              </div> -->
+              </div>
 
-              <div class="popUpLogindone" *ngIf="!showLoginPopup">
+              <div class="popUpLogindone" *ngIf="isPopupShow && isLoggedIn">
                 <div>
                   <div class="headerPopup">
                     <span class="nameCustomer">Chào Phạm Bình</span>
@@ -72,16 +72,16 @@
 
                   <ul class="listAction">
                     <li class="actionItem">
-                      <a href="/tai-khoan"> Tài Khoản </a>
+                      <a href="/tai-khoan">Tài Khoản</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Theo dõi đơn hàng </a>
+                      <a href="">Theo dõi đơn hàng</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Sản phẩm yêu thích </a>
+                      <a href="">Sản phẩm yêu thích</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Ưu đãi của bạn </a>
+                      <a href="">Ưu đãi của bạn</a>
                     </li>
                   </ul>
 

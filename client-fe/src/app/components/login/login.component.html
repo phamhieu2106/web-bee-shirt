@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="login-screen row align-items-center">
+    <div class="col-sm-12">
+      <form action="index.html">
+        <div class="login-container">
+          <div class="row no-gutters">
+            <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+              <div class="login-box">
+                <h5 class="login-logo">Bee Shirt's Administrator</h5>
+                <form [formGroup]="loginForm">
+                  <!-- tên đăng nhập -->
+                  <div class="form-group">
+                    <input
+                      class="form-control"
+                      [ngClass]="
+                        loginForm.get('tenDangNhap').invalid &&
+                        loginForm.get('tenDangNhap').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      placeholder="Tên đăng nhập"
+                      type="text"
+                      formControlName="tenDangNhap"
+                    />
+                    <div class="invalid-feedback">
+                      Tên đăng nhập không được bỏ trống
+                    </div>
+                  </div>
+
+                  <!-- mật khẩu -->
+                  <div class="form-group">
+                    <input
+                      class="form-control"
+                      [ngClass]="
+                        loginForm.get('matKhau').invalid &&
+                        loginForm.get('matKhau').touched
+                          ? 'is-invalid'
+                          : ''
+                      "
+                      placeholder="Mật khẩu"
+                      [type]="passwordInputType ? 'password' : 'text'"
+                      formControlName="matKhau"
+                    />
+                    <div class="invalid-feedback">
+                      Mật khẩu không được bỏ trống
+                    </div>
+                    <div class="mt-2">
+                      <button
+                        class="btn bg-white text-muted"
+                        type="button"
+                        (click)="togglePasswordInputType()"
+                      >
+                        <span class="far fa-eye-slash"> </span>
+                      </button>
+                      <span>Hiển thị mật khẩu</span>
+                    </div>
+                  </div>
+                  <div class="actions clearfix">
+                    <a href="forgot-pwd.html">Quên mật khẩu?</a>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      (click)="loginSubmit()"
+                      [disabled]="loginForm.invalid"
+                    >
+                      Đăng nhập
+                      <i
+                        *ngIf="loading"
+                        class="fa-solid fa-spin fa-spinner"
+                      ></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
+              <div class="login-slider"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

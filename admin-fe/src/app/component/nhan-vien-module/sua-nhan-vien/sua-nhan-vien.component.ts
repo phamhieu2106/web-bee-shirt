@@ -63,7 +63,7 @@ export class SuaNhanVienComponent {
       hoTen: new FormControl(nhanVienUpdated?.hoTen, [
         Validators.required,
         // Validators.pattern(/^[\p{L}\s]+$/u),
-        Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
+        // Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
       ]),
       ngaySinh: new FormControl(nhanVienUpdated?.ngaySinh, [
         Validators.required,

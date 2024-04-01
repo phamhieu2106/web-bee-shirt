@@ -1,89 +1,134 @@
-<section class="container">
-  <div class="row mt-5">
+<section class="container mt-5">
+  <div class="row mb-2">
     <div class="col-md-2">
-      <!--  -->
-      <h5>Màu Sắc</h5>
-      <div class="filter">
-        <div *ngFor="let color of activeColors">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'color', color.id)"
-          />
-          <label>
-            <img [src]="color.image.imageUrl" width="30px" />
-          </label>
-        </div>
-      </div>
+      <i class="bi bi-funnel-fill"></i>
+Bộ Lọc
+    </div>
+    <div class="col-md-10 filterSanPham" style="padding: 0 35px;"> 
+          <span>66 sản phẩm</span>
 
-      <!-- Kích cỡ -->
-      <h5>Kích cỡ</h5>
-      <div class="filter">
-        <div *ngFor="let s of activeSizes">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'size', s.id)"
-          />
-          <label>{{ s.ten.split("-")[0] }}</label>
-        </div>
-      </div>
+      <select name="" id=" " class="formSelect">
+        <option value="" >Sắp xếp</option>
+        <option value="" >Giá giảm dần</option>
+        <option value="" >Giá tăng dần</option>
+      </select>
+    </div>
+   
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="block-content filter-content">
+        <div class="block-filter-content">
+          <div id="layered-filter-state"></div>
+          <dl class="filter-options" id="narrow-by-list">
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">MÀU SẮC</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered family_color" data-attribute-code="family_color"
+                  data-attribute-id="220">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let color of activeColors">
+                    <div class="wrapperColorSide">
+                      <input type="checkbox" (change)="toggleProperty($event, 'color', color.id)" />
+                      <label class="wrapperSide">
+                        <img [src]="color.image.imageUrl"  class="imgSide" />
+                      </label>
+                    </div>
 
-      <!-- Kiểu dáng -->
-      <h5>Kiểu dáng</h5>
-      <div class="filter">
-        <div *ngFor="let f of activeForms">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'form', f.id)"
-          />
-          <label>{{ f.ten }}</label>
-        </div>
-      </div>
+                  </div>
+                </div>
+              </dd>
+            </div>
 
-      <!-- Thiết Kế -->
-      <h5>Thiết Kế</h5>
-      <div class="filter">
-        <div *ngFor="let d of activeDesigns">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'design', d.id)"
-          />
-          <label>{{ d.ten }}</label>
-        </div>
-      </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">KÍCH CỠ</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered pattern" data-attribute-code="pattern"
+                  data-attribute-id="219">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let s of activeSizes">
+                    <input type="checkbox" (change)="toggleProperty($event, 'size', s.id)" />
+                    <label>{{ s.ten.split("-")[0] }}</label>
+                  </div>
+                </div>
+              </dd>
+            </div>
 
-      <!-- Cổ áo -->
-      <h5>Cổ áo</h5>
-      <div class="filter">
-        <div *ngFor="let c of activeCollars">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'collar', c.id)"
-          />
-          <label>{{ c.ten }}</label>
-        </div>
-      </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">KIỂU DÁNG</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered size" data-attribute-code="size" data-attribute-id="192">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let f of activeForms">
+                    <input type="checkbox" (change)="toggleProperty($event, 'form', f.id)" />
+                    <label>{{ f.ten }}</label>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">THIẾT KẾ</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered life_style" data-attribute-code="life_style"
+                  data-attribute-id="183">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let d of activeDesigns">
+                   <div>
+                    <input type="checkbox" (change)="toggleProperty($event, 'design', d.id)" />
+                    <label>{{ d.ten }}</label>
+                   </div>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">CỔ ÁO</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered family_fabric" data-attribute-code="family_fabric"
+                  data-attribute-id="305">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let c of activeCollars">
+                    <input type="checkbox" (change)="toggleProperty($event, 'collar', c.id)" />
+                    <label>{{ c.ten }}</label>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">TAY ÁO</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered hand_style" data-attribute-code="hand_style"
+                  data-attribute-id="211">
+                  <div class="swatch-attribute-options clearfix" *ngFor="let s of activeSleeves">
+                    <input type="checkbox" (change)="toggleProperty($event, 'sleeve', s.id)" />
+                    <label>{{ s.ten }}</label>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="filter-options-item">
+              <dt role="heading" aria-level="3" class="inactive active" (click)="onClick($event)">
+                <div class="filter-options-title">KHOẢNG GIÁ</div>
+              </dt>
+              <dd class="filter-options-content inactive" style="display: none">
+                <div class="swatch-attribute swatch-layered hand_style" data-attribute-code="hand_style"
+                  data-attribute-id="211">
+                  <div class="swatch-attribute-options clearfix">
+                    
+                  </div>
+                </div>
+              </dd>
+            </div>
 
-      <!-- Tay áo -->
-      <h5>Tay áo</h5>
-      <div class="filter">
-        <div *ngFor="let s of activeSleeves">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'sleeve', s.id)"
-          />
-          <label>{{ s.ten }}</label>
-        </div>
-      </div>
 
-      <!-- Chất liệu -->
-      <h5>Chất liệu</h5>
-      <div class="filter">
-        <div *ngFor="let m of activeMaterials">
-          <input
-            type="checkbox"
-            (change)="toggleProperty($event, 'material', m.id)"
-          />
-          <label>{{ m.ten }}</label>
+          </dl>
         </div>
       </div>
     </div>
@@ -105,10 +150,7 @@
             <p class="priceProduct">{{ displayPrice(sp) }}</p>
 
             <div class="swatch-color-wrapper">
-              <div
-                class="swatch-element"
-                *ngFor="let color of getMauSacList(sp)"
-              >
+              <div class="swatch-element" *ngFor="let color of getMauSacList(sp)">
                 <img class="img-color" [src]="color.image.imageUrl" />
               </div>
             </div>
@@ -119,13 +161,9 @@
       <!-- paginations -->
       <div class="col col-md-12 d-flex justify-content-between">
         <div class="col-md-3">
-          <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-            >Số lượng:
+          <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Số lượng:
           </label>
-          <select
-            class="custom-select my-1 mr-sm-2 col-md-5"
-            id="inlineFormCustomSelectPref"
-          >
+          <select class="custom-select my-1 mr-sm-2 col-md-5" id="inlineFormCustomSelectPref">
             >
             <option value="5">5</option>
             <option value="10">10</option>
@@ -135,52 +173,30 @@
         <div class="">
           <nav aria-label="Page navigation example">
             <ul class="pagination">
-              <li
-                class="page-item"
-                [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
-              >
-                <a
-                  class="page-link pointer rounded"
-                  (click)="
+              <li class="page-item" [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''">
+                <a class="page-link pointer rounded" (click)="
                     goToPage(
                       pagedResponse?.pageNumber - 1,
                       pagedResponse?.pageSize
                     )
-                  "
-                  >Previous</a
-                >
+                  ">Previous</a>
               </li>
-              <li
-                class="page-item"
-                *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
-              >
-                <a
-                  class="page-link pointer rounded"
-                  [ngClass]="
+              <li class="page-item" *ngFor="let pageNumber of pagedResponse?.pageNumberArr">
+                <a class="page-link pointer rounded bg-dark" [ngClass]="
                     pagedResponse?.pageNumber == pageNumber ? 'active' : ''
-                  "
-                  (click)="goToPage(pageNumber, pagedResponse?.pageSize)"
-                  >{{ pageNumber }}</a
-                >
+                  " (click)="goToPage(pageNumber, pagedResponse?.pageSize)">{{ pageNumber }}</a>
               </li>
-              <li
-                class="page-item"
-                [ngClass]="
+              <li class="page-item" [ngClass]="
                   pagedResponse?.pageNumber == pagedResponse?.totalPages
                     ? 'disabled'
                     : ''
-                "
-              >
-                <a
-                  class="page-link pointer rounded"
-                  (click)="
+                ">
+                <a class="page-link pointer rounded" (click)="
                     goToPage(
                       pagedResponse?.pageNumber + 1,
                       pagedResponse?.pageSize
                     )
-                  "
-                  >Next</a
-                >
+                  ">Next</a>
               </li>
             </ul>
           </nav>

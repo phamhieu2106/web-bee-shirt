@@ -1,6 +1,6 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, ElementRef } from "@angular/core";
 import { ChatLieu } from "src/app/model/class/chat-lieu.class";
 import { CoAo } from "src/app/model/class/co-ao.class";
 import { KichCo } from "src/app/model/class/kich-co.class";
@@ -56,7 +56,8 @@ export class SanPhamComponent {
     private sleeveService: SleeveService,
     private collarService: CollarService,
     private materialService: MaterialService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -369,5 +370,40 @@ export class SanPhamComponent {
         this.notifService.error(errorResponse.error.message);
       },
     });
+  }
+
+
+  // filter
+
+  onClick(event: MouseEvent) {
+    // Lấy phần tử được nhấp
+    const target = event.currentTarget as HTMLElement;
+    
+   
+  
+    // Kiểm tra xem phần tử này đã có class "inactive" và "active" hay không
+    if (target.classList.contains('inactive') && target.classList.contains('active')) {
+      // Loại bỏ class "inactive" và "active" khỏi phần tử
+      target.classList.remove('inactive');
+      target.classList.remove('active');
+
+     
+  
+      // Tìm phần tử <dd> tương ứng và loại bỏ style "display: none;"
+      const ddElement = target.nextElementSibling as HTMLElement;
+      
+      if (ddElement && ddElement.classList.contains('filter-options-content')) {
+        ddElement.style.display = 'block';
+      }
+    }else{
+      target.classList.add('inactive');
+      target.classList.add('active');
+
+      const ddElement = target.nextElementSibling as HTMLElement;
+      
+      if (ddElement && ddElement.classList.contains('filter-options-content')) {
+        ddElement.style.display = 'none';
+      }
+    }
   }
 }

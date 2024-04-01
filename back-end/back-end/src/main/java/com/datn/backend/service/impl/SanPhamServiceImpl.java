@@ -192,4 +192,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         return paged;
     }
+
+    @Override
+    public SanPham getProductByProductDetailsId(int productDetailsId) {
+        return sanPhamRepo.getProductByProductDetailsId(productDetailsId);
+    }
 }

@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { CurrencyPipe } from "@angular/common";
 
 import Swal, { SweetAlertResult } from "sweetalert2";
 
@@ -21,8 +22,11 @@ export class NavigationComponent {
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
   public isCartShow: boolean = false;
-  public cartItems: CartItem[] = [];
-  public cartItemQuantity: number;
+  public cartItems1: CartItem[] = [];
+  public cartItemQuantity1: number;
+
+  public cartItems2: CartItem[] = [];
+  public cartItemQuantity2: number;
 
   // constructor, ngOn
   constructor(
@@ -30,32 +34,13 @@ export class NavigationComponent {
     private authenticationService: AuthenticationService,
     private notifService: NotificationService,
     private cartItemService: CartItemService,
-    private productService: ProductService
+    private productService: ProductService,
+    private currencyPipe: CurrencyPipe
   ) {}
 
   ngOnInit(): void {
     this.getIsLoggedInValue();
-    // subcribe cart item in localstorage quantity
-    this.cartItemService.cartItemsInLocalStorageQuantity.subscribe(
-      (quantity: number) => {
-        this.cartItemQuantity = quantity;
-      }
-    );
-    this.cartItemService.cartItemsInLocalStorage.subscribe(
-      (response: CartItem[]) => {
-        this.cartItems = response;
-      }
-    );
-
-    const cartItemsInLocalStorage = localStorage.getItem("cartItems");
-    if (cartItemsInLocalStorage === null) {
-      const initCartItems: CartItem[] = [];
-      localStorage.setItem("cartItems", JSON.stringify(initCartItems));
-    }
-    this.cartItems = JSON.parse(localStorage.getItem("cartItems"));
-    this.cartItemService.cartItemsInLocalStorageQuantity.next(
-      this.cartItems.length
-    );
+    this.getCartItemsFromLocalStorage();
   }
 
   // public functions
@@ -103,6 +88,11 @@ export class NavigationComponent {
     return "";
   }
 
+  //5
+  public formatPrice(price: number): any {
+    return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
+  }
+
   // private functions
   // 1
   private getIsLoggedInValue(): void {
@@ -118,6 +108,31 @@ export class NavigationComponent {
         this.notifService.error(errorResponse.error.message);
       },
     });
+  }
+
+  // 2
+  private getCartItemsFromLocalStorage(): void {
+    // subcribe cart item in localstorage quantity
+    this.cartItemService.cartItemsInLocalStorageQuantity.subscribe(
+      (quantity: number) => {
+        this.cartItemQuantity1 = quantity;
+      }
+    );
+    this.cartItemService.cartItemsInLocalStorage.subscribe(
+      (response: CartItem[]) => {
+        this.cartItems1 = response;
+      }
+    );
+
+    const cartItemsInLocalStorage = localStorage.getItem("cartItems");
+    if (cartItemsInLocalStorage === null) {
+      const initCartItems: CartItem[] = [];
+      localStorage.setItem("cartItems", JSON.stringify(initCartItems));
+    }
+    this.cartItems1 = JSON.parse(localStorage.getItem("cartItems"));
+    this.cartItemService.cartItemsInLocalStorageQuantity.next(
+      this.cartItems1.length
+    );
   }
 
   // 2

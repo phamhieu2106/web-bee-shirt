@@ -73,4 +73,12 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             WHERE sp.id IN (:ids)
             """, nativeQuery = true)
     List<SanPham> getProductsByIds(@Param("ids") List<Integer> ids);
+
+    @Query(value = """
+            SELECT sp.id, sp.ma, sp.ten, sp.trang_thai, sp.mo_ta, sp.created_at, sp.created_by, sp.updated_at, sp.last_updated_by
+            FROM san_pham_chi_tiet ct
+            JOIN san_pham sp ON sp.id = ct.san_pham_id
+            WHERE ct.id = :id
+            """, nativeQuery = true)
+    SanPham getProductByProductDetailsId(@Param("id") int id);
 }

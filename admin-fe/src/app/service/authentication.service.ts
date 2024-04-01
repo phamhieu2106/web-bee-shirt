@@ -23,9 +23,13 @@ export class AuthenticationService {
   // public functions
   // 1
   public login(loginRequest: LoginRequest): Observable<HttpResponse<NhanVien>> {
-    return this.http.post<NhanVien>(`${this.apiUrl}/auth/login`, loginRequest, {
-      observe: "response",
-    });
+    return this.http.post<NhanVien>(
+      `${this.apiUrl}/auth/staff/login`,
+      loginRequest,
+      {
+        observe: "response",
+      }
+    );
   }
 
   // 2

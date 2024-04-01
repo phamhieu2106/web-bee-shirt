@@ -51,6 +51,13 @@ export class ProductService {
     );
   }
 
+  // 4
+  public getProductByProductDetailsId(id: number): Observable<SanPham> {
+    return this.http.get<SanPham>(
+      `${this.apiUrl}/get-by-product-details/${id}`
+    );
+  }
+
   public getProductNameByProductDetails(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/get-product-name/${id}`, {
       responseType: "text",

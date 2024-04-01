@@ -103,7 +103,7 @@
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
-                <span class="quantity">{{ cartItemQuantity }}</span>
+                <span class="quantity">{{ cartItemQuantity1 }}</span>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@
 
     <nav class="mainNav">
       <div class="logo">
-        <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+        <img src="https://i.imgur.com/XlMdwHa.png" />
       </div>
 
       <ul style="margin: 0">
@@ -168,7 +168,7 @@
   </div> -->
 
   <ul class="listCart" style="padding: 0">
-    <li class="cartItem" *ngFor="let ci of cartItems">
+    <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
         <div class="col-md-3 imgProductCart">
           <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
@@ -179,12 +179,12 @@
         <div class="col-md-9">
           <span class="nameCartProduct">
             <a [routerLink]="'/'">
-              getProductNameByProductDetails(ci.spct.id)
+              {{ ci.spct.sanPham.ten }}
             </a>
           </span>
           <div class="ThuocTinh">
             <div class="color-cart">
-              <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
+              <img [src]="ci.spct.mauSac.image.imageUrl" />
             </div>
             <span class="line-info">|</span>
             <span class="sizeCart">
@@ -193,7 +193,7 @@
           </div>
 
           <div class="wrapperPrice">
-            <div class="priceCart">{{ ci.spct.giaBan }}</div>
+            <div class="priceCart">{{ formatPrice(ci.spct.giaBan) }}</div>
             <div class="wrapper">
               <span class="minus">-</span>
               <span
@@ -211,12 +211,12 @@
       </div>
     </li>
 
-    <div class="text-center" *ngIf="cartItems.length === 0">
+    <div class="text-center">
       <i>Chưa có sản phẩm nào trong giỏ hàng</i>
     </div>
   </ul>
 
-  <div class="checkOut" *ngIf="cartItems.length > 0">
+  <div class="checkOut" *ngIf="cartItems1.length > 0">
     <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
       <div class="giaGoc">599.000đ</div>

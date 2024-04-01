@@ -78,4 +78,9 @@ public class SanPhamResource {
                                                                      collarId, sleeveIds, materialIds,
                                                                      minPrice, maxPrice));
     }
+
+    @GetMapping("/get-by-product-details/{productDetailsId}")
+    public ResponseEntity<SanPham> getProductByProductDetailsId(@PathVariable("productDetailsId") int productDetailsId) {
+        return ResponseEntity.ok(sanPhamService.getProductByProductDetailsId(productDetailsId));
+    }
 }

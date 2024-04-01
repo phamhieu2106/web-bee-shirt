@@ -33,4 +33,6 @@ public interface SanPhamService {
                                                 List<Integer> materialIds,
                                                 BigDecimal minPrice,
                                                 BigDecimal maxPrice);
+
+    SanPham getProductByProductDetailsId(int productDetailsId);
 }

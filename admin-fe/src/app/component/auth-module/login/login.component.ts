@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 
-import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
 
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { NhanVien } from "src/app/model/class/nhan-vien.class";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-login",
@@ -22,7 +22,7 @@ export class LoginComponent {
   // constructor, ngOn
   constructor(
     private router: Router,
-    private toastr: ToastrService,
+    private notifService: NotificationService,
     private authenticationService: AuthenticationService
   ) {
     this.loginForm = new FormGroup({
@@ -35,14 +35,14 @@ export class LoginComponent {
     this.checkLogin();
   }
 
-  // public function
+  // public functions
+  // 1
   public togglePasswordInputType(): void {
     this.passwordInputType = !this.passwordInputType;
   }
 
+  // 2
   public loginSubmit(): void {
-    console.log(this.loginForm.value);
-
     this.loading = true;
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: user vào localStorage
@@ -51,37 +51,23 @@ export class LoginComponent {
         this.authenticationService.saveTokenToStorage(token);
         this.authenticationService.saveUserToStorage(response.body);
 
-        Swal.fire({
-          icon: "success",
-          title: "Đăng nhập thành công!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        this.notifService.success("Đăng nhập thành công!");
         window.location.href = "/";
         this.authenticationService.isLoggedInSubject.next(true);
         this.loading = false;
       },
-      error: (error: HttpErrorResponse) => {
-        // login fail => thông báo
-        Swal.fire({
-          icon: "error",
-          title: "Đăng nhập thất bại!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.toastr.error(error.message, "Hệ thống");
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
         this.loading = false;
       },
     });
   }
 
-  // private function
+  // private functions
+  // 1
   private checkLogin(): void {
     if (this.authenticationService.isLoggedIn()) {
-      this.toastr.warning(
-        "Bạn cần đăng xuất để đến trang đăng nhập!",
-        "Hệ thống"
-      );
+      this.notifService.warning("Bạn cần đăng xuất để đến trang đăng nhập!");
       this.router.navigate(["/admin"]);
     }
   }

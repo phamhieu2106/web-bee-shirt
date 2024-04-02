@@ -31,5 +31,6 @@ public class Account {
     private boolean trangThai;
 
     private String role;
-//    private String[] authorities;
+
+    // private String[] authorities;
 }

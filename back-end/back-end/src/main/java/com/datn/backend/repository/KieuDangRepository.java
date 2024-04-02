@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface KieuDangRepository extends JpaRepository<KieuDang, Integer> {
 
     boolean existsByTen(String ten);
@@ -22,4 +24,12 @@ public interface KieuDangRepository extends JpaRepository<KieuDang, Integer> {
             """, nativeQuery = true)
     Page<KieuDang> getAll(Pageable pageable,
                           @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT kd.id
+            FROM kieu_dang kd
+            WHERE kd.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveFormIds();
 }

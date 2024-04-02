@@ -1,6 +1,6 @@
 /* Top bar */
 #topbar {
-  background: #FFFFFF;
+  background: #ffffff;
   font-size: 12px;
   color: #000000;
   overflow: hidden;
@@ -25,7 +25,6 @@
   font-size: 12px;
   padding-right: 60px;
   /* Khoảng cách giữa các item */
-
 }
 
 @keyframes marquee {
@@ -64,7 +63,6 @@ img {
 }
 
 .wrapperNav {
-
   position: sticky;
   top: 0;
   z-index: 998;
@@ -79,38 +77,30 @@ img {
   font-size: 35px;
   color: white;
   margin-right: 15px;
-
 }
 .iconyeuThich {
   font-size: 31px;
   color: white;
   margin-right: 15px;
-
 }
 .icongioHang {
   font-size: 30px;
   color: white;
-
 }
 
 .taiKhoan,
 .gioHang {
   display: flex;
- 
-  
 }
 
 .nav-account {
-
   display: flex;
   align-items: center;
-  
 }
 
-.hiddenMobile{
+.hiddenMobile {
   display: none !important;
 }
-
 
 .search {
   width: 50%;
@@ -128,8 +118,6 @@ img {
   position: relative;
 }
 
-
-
 .popUpDangNhap {
   position: absolute;
   width: 240px;
@@ -140,8 +128,7 @@ img {
   padding: 10px;
   display: flex;
   justify-content: center;
-  box-shadow: 0px 6px 4px  rgba(179,179,179,.25);
-
+  box-shadow: 0px 6px 4px rgba(179, 179, 179, 0.25);
 }
 
 .popUpDangNhap button {
@@ -149,9 +136,7 @@ img {
   width: 200px;
   height: 40px;
   margin-bottom: 10px;
-
 }
-
 
 .btnDangNhap {
   display: block;
@@ -166,7 +151,7 @@ img {
   margin-bottom: 15px;
   width: 100%;
 
-  cursor: pointer
+  cursor: pointer;
 }
 
 .btnDangNhap a {
@@ -187,7 +172,7 @@ img {
   margin-bottom: 15px;
   width: 100%;
   text-decoration: none;
-  cursor: pointer
+  cursor: pointer;
 }
 
 .btnDangKy a {
@@ -214,9 +199,8 @@ img {
   position: absolute;
   z-index: 2;
   left: 12px;
-  top: -5px
+  top: -5px;
 }
-
 
 .popUpLogindone {
   position: absolute;
@@ -228,8 +212,7 @@ img {
   padding: 10px;
   /* display: flex;
   justify-content: center; */
-  box-shadow: 0px 6px 4px  rgba(179,179,179,.25);
-
+  box-shadow: 0px 6px 4px rgba(179, 179, 179, 0.25);
 }
 
 .popUpLogindone:before {
@@ -242,12 +225,11 @@ img {
   position: absolute;
   z-index: 2;
   left: 12px;
-  top: -5px
+  top: -5px;
 }
 
-
-.quantity{
-  background-color: #F50000;
+.quantity {
+  background-color: #f50000;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -257,14 +239,13 @@ img {
   position: absolute;
   top: 0;
   right: -10px;
-
 }
 
-.iconnav{
+.iconnav {
   position: relative;
 }
 
-.cardgioHang{
+.cardgioHang {
   position: fixed;
   top: 0;
   right: 0;
@@ -273,58 +254,50 @@ img {
   background: white;
   z-index: 1000;
   transition: 0.5s;
- 
 }
 
-.cardgioHang .checkOut{
+.cardgioHang .checkOut {
   position: absolute;
   bottom: 5%;
   width: 90%;
-  
-  
-  
 }
 
-.cart-header{
+.cart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
- 
 }
 
-.nameCart{
+.nameCart {
   font-size: 20px;
   font-weight: 500;
 }
-.bi-cart2{
+.bi-cart2 {
   font-size: 20px;
- 
 }
-.bi-x-circle{
+.bi-x-circle {
   font-size: 25px;
 }
 
-.TinhTien{
+.TinhTien {
   display: grid;
-  grid-template-columns: repeat(2,1fr) ;
+  grid-template-columns: repeat(2, 1fr);
   margin: 30px 0;
   padding: 15px;
 }
-.thanhToan{
+.thanhToan {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 15px;
-
 }
 
-.btnThanhToan{
-
+.btnThanhToan {
   width: 100%;
   height: 40px;
   border: none;
-  background: #DA291C;
+  background: #da291c;
   color: white;
   font-size: 14px;
   line-height: 24px;
@@ -332,41 +305,36 @@ img {
   border-radius: 4px;
 }
 
-.listCart{
-  border-bottom:  1px dashed #000;
+.listCart {
+  border-bottom: 1px dashed #000;
   height: 60%;
   overflow-y: auto;
   overflow-x: hidden;
-
-
 }
-.listCart .cartItem{
+.listCart .cartItem {
   list-style: none;
   padding: 10px;
-
 }
-.listCart .cartItem img{
+.listCart .cartItem img {
   border-radius: 5px;
 }
 
-.color-cart{
+.color-cart {
   width: 20px;
   height: 20px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
   margin-right: 20px;
- 
 }
-.color-cart img{
+.color-cart img {
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
-
 }
-.nameCartProduct a{
-  color: #333F48;
+.nameCartProduct a {
+  color: #333f48;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -375,25 +343,24 @@ img {
   overflow: hidden;
 }
 
-.ThuocTinh{
+.ThuocTinh {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
-.sizeCart{ 
+.sizeCart {
   padding-left: 15px;
 }
 
-.priceCart{
+.priceCart {
   font-size: 14px;
   color: #333f48;
   margin-right: 30px;
 }
 
-.wrapperPrice{
+.wrapperPrice {
   display: flex;
   margin-top: 20px;
-  
 }
 
 .wrapper {
@@ -414,41 +381,39 @@ img {
   font-weight: 600;
 }
 
-.imgProductCart{
+.imgProductCart {
   position: relative;
 }
 
-.DeleteCart{
+.DeleteCart {
   position: absolute;
   top: 0;
- 
 }
 
-.nameCustomer{
+.nameCustomer {
   display: block;
   font-style: normal;
   font-weight: 700;
   font-size: 17px;
   line-height: 16px;
   color: #000;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
-.headerPopup{
+.headerPopup {
   padding: 10px;
-  border-bottom: 1px solid #cacaca ;
+  border-bottom: 1px solid #cacaca;
   margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.listAction{
+.listAction {
   padding: 5px;
   list-style: none;
-
 }
 
-.actionItem a{
+.actionItem a {
   text-decoration: none;
   color: #000;
 
@@ -458,25 +423,22 @@ img {
   font-weight: 500;
 }
 
-.actionItem a:hover{
+.actionItem a:hover {
   text-decoration: underline;
 }
-.footerPopup{
+.footerPopup {
   margin-top: 15px;
-    border-top: 1px solid #cacaca;
-    padding-top: 15px;
-    font-style: normal;
-   
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 32px
+  border-top: 1px solid #cacaca;
+  padding-top: 15px;
+  font-style: normal;
+
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 32px;
 }
-.footerPopup span{
- 
+.footerPopup span {
   color: black;
 }
-
-
 
 /* CSS cho icon "Đăng Nhập" */
 .nav-account .taiKhoan {
@@ -490,43 +452,32 @@ img {
   /* Con trỏ khi rê chuột */
 }
 
-.tamTinh , .total{
+.tamTinh,
+.total {
   font-size: 14px;
   font-weight: 700;
   line-height: 22px;
 }
 
-.total, .giaGoc ,.chietKhau ,.save{
+.total,
+.giaGoc,
+.chietKhau,
+.save {
   display: flex;
   justify-content: end;
-
 }
 
-.total,.save{
-  color: #DA291C;
+.total,
+.save {
+  color: #da291c;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .mainHeader {
-
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: white;
-
 }
 
 .logo img {
@@ -536,8 +487,6 @@ img {
 nav .logo {
   display: none;
 }
-
-
 
 nav ul {
   display: flex;
@@ -556,16 +505,11 @@ nav ul li a {
   transition: 0.2s;
 
   text-decoration: none;
-
-
 }
 
 nav ul li a:hover {
-
   color: #ff0404;
 }
-
-
 
 .hamburger {
   display: none;
@@ -576,7 +520,6 @@ nav ul li a:hover {
   transform: 0.2s;
 }
 
-
 .hamburger div {
   width: 30px;
   height: 3px;
@@ -584,15 +527,7 @@ nav ul li a:hover {
   background: #ffffff;
 }
 
-
-
-
-
-
-
-@media only screen and (max-width:1100px) {
-
-
+@media only screen and (max-width: 1100px) {
   nav {
     position: fixed;
     display: none;
@@ -606,7 +541,7 @@ nav ul li a:hover {
     box-shadow: 2px 0 20px 0 rgba(0, 0, 0, 0.05);
   }
 
-  #nav_check:checked~nav {
+  #nav_check:checked ~ nav {
     display: block;
     transition: 0.2s;
     right: 0;
@@ -645,31 +580,27 @@ nav ul li a:hover {
   .search {
     display: none;
   }
-  .hiddenMobile{
+  .hiddenMobile {
     display: block !important;
   }
-  .hiddenWeb{
+  .hiddenWeb {
     display: none !important;
   }
-
-
-
-
-
-
 }
 
 nav ul li:nth-child(2) {
   position: relative;
 }
 
-
 .header_new {
   position: absolute;
   top: 1px;
   right: -3px;
   font-size: 11px;
-  color: #F50000;
+  color: #f50000;
   font-weight: 700;
 }
 
+.pointer {
+  cursor: pointer;
+}

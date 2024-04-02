@@ -22,7 +22,9 @@ public interface SanPhamService {
     // client
     PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize);
 
-    PagedResponse<SanPham> getByFilterForClient(List<Integer> colorIds,
+    PagedResponse<SanPham> getByFilterForClient(int pageNumber,
+                                                int pageSize,
+                                                List<Integer> colorIds,
                                                 List<Integer> sizeIds,
                                                 List<Integer> formIds,
                                                 List<Integer> designIds,
@@ -31,4 +33,6 @@ public interface SanPhamService {
                                                 List<Integer> materialIds,
                                                 BigDecimal minPrice,
                                                 BigDecimal maxPrice);
+
+    SanPham getProductByProductDetailsId(int productDetailsId);
 }

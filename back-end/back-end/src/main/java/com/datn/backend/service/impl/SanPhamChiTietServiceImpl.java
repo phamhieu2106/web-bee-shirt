@@ -195,6 +195,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
+    public String getProductNameByProductDetails(int productDetailsId) {
+        return spctRepo.getProductNameByProductDetails(productDetailsId);
+    }
+
+    @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         //  Get list spct
@@ -241,8 +246,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public BigDecimal[] getMinAndMaxPrice(int productId) {
         BigDecimal[] result = new BigDecimal[2];
-        result[0] = spctRepo.getMinPrice(productId);
-        result[1] = spctRepo.getMaxPrice(productId);
+        result[0] = spctRepo.getMinPriceOf1Product(productId);
+        result[1] = spctRepo.getMaxPriceOf1Product(productId);
         return result;
     }
 
@@ -356,6 +361,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet getAnyBySanPhamId(int spId) {
         return spctRepo.findFirstBySanPhamId(spId);
+    }
+
+    @Override
+    public SanPhamChiTiet getOneByProColorSize(int productId, int colorId, int sizeId) {
+        return spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(productId, colorId, sizeId);
     }
 
     @Override

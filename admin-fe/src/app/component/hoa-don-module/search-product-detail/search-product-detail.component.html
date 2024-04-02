@@ -25,7 +25,7 @@
         [max]="maxPrice"
         [step]="step"
         type="range"
-        (ngModelChange)="validateRanger()"
+        (change)="validateRanger()"
       />
       <input
         [(ngModel)]="maxValue"
@@ -33,7 +33,7 @@
         [max]="maxPrice"
         [step]="step"
         type="range"
-        (ngModelChange)="validateRanger()"
+        (change)="validateRanger()"
       />
     </section>
   </div>
@@ -43,10 +43,10 @@
     class="col-12 d-flex list-select justify-content-center justify-content-between align-items-center"
   >
     <!--Màu sắc  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Màu sắc:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="mauSac"
         (ngModelChange)="getAllSpct()"
       >
@@ -62,10 +62,10 @@
     </div>
 
     <!--Kích cỡ  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Kích cỡ:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="kichCo"
         (ngModelChange)="getAllSpct()"
       >
@@ -81,10 +81,10 @@
     </div>
 
     <!--Kiểu dáng  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Kiểu dáng:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="kieuDang"
         (ngModelChange)="getAllSpct()"
       >
@@ -100,10 +100,10 @@
     </div>
 
     <!--Kiểu thiết kế  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Thiết kế:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="thietKe"
         (ngModelChange)="getAllSpct()"
       >
@@ -119,10 +119,10 @@
     </div>
 
     <!--Kiểu tay áo  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Tay áo:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="tayAo"
         (ngModelChange)="getAllSpct()"
       >
@@ -138,10 +138,10 @@
     </div>
 
     <!--Kiểu cổ áo  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Cổ áo:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="coAo"
         (ngModelChange)="getAllSpct()"
       >
@@ -157,10 +157,10 @@
     </div>
 
     <!--Kiểu chất liệu  -->
-    <div class="d-flex fw-bold">
+    <div class="d-flex">
       Chất liệu:
       <select
-        class="form-control form-control-sm"
+        class="form-control form-control-sm under-line fw-bold"
         [(ngModel)]="chatLieu"
         (ngModelChange)="getAllSpct()"
       >
@@ -239,7 +239,7 @@
     </div>
   </div>
   <!-- Pagination -->
-  <div class="cart-footer d-flex justify-content-between" *ngIf="spctPage">
+  <div class="cart-footer d-flex justify-content-center" *ngIf="spctPage">
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li

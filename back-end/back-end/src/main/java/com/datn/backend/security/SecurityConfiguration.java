@@ -29,13 +29,13 @@ public class SecurityConfiguration {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    // authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
                     authorize.anyRequest().permitAll();
                 })
                 .sessionManagement(session ->
@@ -48,7 +48,6 @@ public class SecurityConfiguration {
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-//                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

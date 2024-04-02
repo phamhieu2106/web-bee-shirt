@@ -29,4 +29,38 @@ export class ProductService {
   public getOneById(id: number): Observable<SanPham> {
     return this.http.get<SanPham>(`${this.apiUrl}/get-by-id/${id}`);
   }
+
+  // 3
+  public getByFilterForClient(
+    pageNumber: number = 1,
+    pageSize: number = 8,
+    selectedColorIds: number[] = [],
+    selectedSizeIds: number[] = [],
+    selectedFormIds: number[] = [],
+    selectedDesignIds: number[] = [],
+    selectedCollarIds: number[] = [],
+    selectedSleeveIds: number[] = [],
+    selectedMaterialIds: number[] = [],
+    minPrice: number = 0,
+    maxPrice: number = 0
+  ): Observable<PagedResponse<SanPham>> {
+    const params = `?pageNumber=${pageNumber}&pageSize=${pageSize}&colorIds=${selectedColorIds}&sizeIds=${selectedSizeIds}&formIds=${selectedFormIds}&designIds=${selectedDesignIds}&collarId=${selectedCollarIds}&sleeveIds=${selectedSleeveIds}&materialIds=${selectedMaterialIds}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+
+    return this.http.get<PagedResponse<SanPham>>(
+      `${this.apiUrl}/client/filter${params}`
+    );
+  }
+
+  // 4
+  public getProductByProductDetailsId(id: number): Observable<SanPham> {
+    return this.http.get<SanPham>(
+      `${this.apiUrl}/get-by-product-details/${id}`
+    );
+  }
+
+  public getProductNameByProductDetails(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/get-product-name/${id}`, {
+      responseType: "text",
+    });
+  }
 }

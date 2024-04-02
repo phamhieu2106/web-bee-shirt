@@ -22,4 +22,9 @@ export class SizeService {
       `${this.apiUrl}/by-product-color/${productId}/${colorId}`
     );
   }
+
+  // 2
+  public getAllActiveSizes(): Observable<KichCo[]> {
+    return this.http.get<KichCo[]>(`${this.apiUrl}/all-active`);
+  }
 }

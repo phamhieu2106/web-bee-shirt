@@ -106,9 +106,8 @@ input[type=number] {
 }
 
 .hr-customer {
-    height: 2px;
+    height: 1px;
     background-color: black;
-    font-weight: bold;
     border: 0;
     margin: 1px 1px;
 }

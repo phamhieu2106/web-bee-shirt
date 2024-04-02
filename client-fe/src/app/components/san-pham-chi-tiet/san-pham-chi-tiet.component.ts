@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { CurrencyPipe } from "@angular/common";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { NotificationService } from "src/app/service/notification.service";
@@ -13,7 +15,9 @@ import { SizeService } from "src/app/service/size.service";
 import { KichCo } from "src/app/model/class/kich-co.class";
 import { ProductImageService } from "src/app/service/product-img.service";
 import { ProductDetailsService } from "src/app/service/product-details.service";
-import { CurrencyPipe } from "@angular/common";
+import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
+import { CartItem } from "src/app/model/class/cart-item.class";
+import { CartItemService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -25,6 +29,7 @@ export class SanPhamChiTietComponent {
   public colorsOfProduct: MauSac[] = [];
   public curSizesOfProduct: KichCo[] = [];
   public curImgUrls: String[] = [];
+  public cartItems: CartItem[] = [];
 
   public curColorIndex: number = 0;
   public curSizeIndex: number = 0;
@@ -36,6 +41,8 @@ export class SanPhamChiTietComponent {
   public collar: string;
   public sleeve: string;
   public material: string;
+
+  public quantity: number = 1;
 
   sanPhamCT: OwlOptions = {
     loop: true,
@@ -74,7 +81,8 @@ export class SanPhamChiTietComponent {
     private sizeService: SizeService,
     private productImgService: ProductImageService,
     private productDetailsService: ProductDetailsService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private cartItemService: CartItemService
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +102,38 @@ export class SanPhamChiTietComponent {
       .subscribe({
         next: (sizeResponse: KichCo[]) => {
           this.curSizesOfProduct = sizeResponse;
+
+          // lấy lại số lượng
+          this.productDetailsService
+            .getQuantityOfOne(
+              this.sanPham.id,
+              colorId,
+              this.curSizesOfProduct[this.curSizeIndex].id
+            )
+            .subscribe({
+              next: (quantity: number) => {
+                this.curQuantity = quantity;
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.notifService.error(errorResponse.error.message);
+              },
+            });
+
+          // lấy lại giá
+          this.productDetailsService
+            .getPriceOfOne(
+              this.sanPham.id,
+              colorId,
+              this.curSizesOfProduct[this.curSizeIndex].id
+            )
+            .subscribe({
+              next: (price: number) => {
+                this.curPrice = price;
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.notifService.error(errorResponse.error.message);
+              },
+            });
         },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
@@ -106,38 +146,6 @@ export class SanPhamChiTietComponent {
       .subscribe({
         next: (urlResponse: String[]) => {
           this.curImgUrls = urlResponse;
-        },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
-        },
-      });
-
-    // lấy lại số lượng
-    this.productDetailsService
-      .getQuantityOfOne(
-        this.sanPham.id,
-        colorId,
-        this.curSizesOfProduct[this.curSizeIndex].id
-      )
-      .subscribe({
-        next: (quantity: number) => {
-          this.curQuantity = quantity;
-        },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
-        },
-      });
-
-    // lấy lại giá
-    this.productDetailsService
-      .getPriceOfOne(
-        this.sanPham.id,
-        colorId,
-        this.curSizesOfProduct[this.curSizeIndex].id
-      )
-      .subscribe({
-        next: (price: number) => {
-          this.curPrice = price;
         },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
@@ -186,6 +194,120 @@ export class SanPhamChiTietComponent {
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
+
+  // 4
+  public addToCart(): void {
+    Swal.fire({
+      title: "Thêm sản phẩm này vào giỏ hàng?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.productDetailsService
+          .getByProductColorSize(
+            this.sanPham.id,
+            this.colorsOfProduct[this.curColorIndex].id,
+            this.curSizesOfProduct[this.curSizeIndex].id
+          )
+          .subscribe({
+            next: (response: SanPhamChiTiet) => {
+              // kiểm tra sp này có trong giỏ hay chưa
+              let cartItemsInstorage: CartItem[] = JSON.parse(
+                localStorage.getItem("cartItems")
+              );
+              let chkCartItem = this.checkCartItemExists(
+                response,
+                cartItemsInstorage
+              );
+
+              if (chkCartItem === null) {
+                // chưa có
+                // lấy sản phẩm cho spct và thêm
+                this.productService
+                  .getProductByProductDetailsId(response.id)
+                  .subscribe({
+                    next: (productRes: SanPham) => {
+                      response.sanPham = productRes;
+                      const newCartItem = new CartItem(this.quantity, response);
+                      this.cartItemService.addCartItemToLocalStorage(
+                        newCartItem
+                      );
+                      this.notifService.success(
+                        "Thêm sản phẩm vào giỏ thành công!"
+                      );
+                    },
+                    error: (errorResponse: HttpErrorResponse) => {
+                      this.notifService.error(errorResponse.error.message);
+                    },
+                  });
+              } else {
+                // đã có
+                if (chkCartItem.soLuong + this.quantity > this.curQuantity) {
+                  this.notifService.warning(
+                    "Số lượng trong kho không đủ để thêm sản phẩm!"
+                  );
+                } else {
+                  // cập nhật số lượng của cart item đã có trong cart
+                  cartItemsInstorage = cartItemsInstorage.map(
+                    (item: CartItem) => {
+                      if (item.spct.id === response.id) {
+                        item.soLuong = item.soLuong + this.quantity;
+                        return item;
+                      }
+                      return item;
+                    }
+                  );
+                  this.cartItemService.updateCartItemsInStorage(
+                    cartItemsInstorage
+                  );
+                  this.notifService.success(
+                    "Tăng số lượng trong giỏ thành công!"
+                  );
+                }
+              }
+            },
+            error: (errorResponse: HttpErrorResponse) => {
+              this.notifService.error(errorResponse.error.message);
+            },
+          });
+      }
+    });
+  }
+
+  private checkCartItemExists(
+    proDetails: SanPhamChiTiet,
+    cartItems: CartItem[]
+  ): CartItem {
+    for (const cartItem of cartItems) {
+      if (cartItem.spct.id === proDetails.id) {
+        return cartItem;
+      }
+    }
+    return null;
+  }
+
+  // 5
+  public minusQuantity(): void {
+    if (this.quantity === 1) {
+      this.notifService.warning("Số lượng sản phẩm phải lớn hơn 0!");
+      return;
+    }
+    --this.quantity;
+  }
+
+  // 6
+  public plusQuantity(): void {
+    if (this.quantity === this.curQuantity) {
+      this.notifService.warning("Số lượng tồn của sản phẩm không đủ!");
+      return;
+    }
+    ++this.quantity;
+  }
+
   // private functions
   // 1
   private getProductById(): void {
@@ -206,7 +328,7 @@ export class SanPhamChiTietComponent {
       });
 
       // get colors of this product
-      this.colorService.getAllColorOfProduct(productId).subscribe({
+      this.colorService.getAllColorOf1Product(productId).subscribe({
         next: (colorResponse: MauSac[]) => {
           this.colorsOfProduct = colorResponse;
 

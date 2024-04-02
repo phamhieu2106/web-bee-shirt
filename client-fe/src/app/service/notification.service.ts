@@ -38,4 +38,21 @@ export class NotificationService {
       },
     });
   }
+
+  //
+  public warning(title: string): void {
+    Swal.fire({
+      toast: true,
+      icon: "warning",
+      position: "top-end",
+      title: `${title}`,
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+  }
 }

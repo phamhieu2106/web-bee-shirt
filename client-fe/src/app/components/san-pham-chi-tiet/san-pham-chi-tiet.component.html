@@ -226,19 +226,21 @@
 
         <div class="Buy mb-5">
           <div class="wrapper">
-            <span class="minus">-</span>
+            <span class="minus pointer" (click)="minusQuantity()">-</span>
             <span
               class="num"
               style="
                 border-right: 2px solid rgba(0, 0, 0, 0.2);
                 border-left: 2px solid rgba(0, 0, 0, 0.2);
               "
-              >01</span
+              >{{ quantity }}</span
             >
-            <span class="plus">+</span>
+            <span class="plus pointer" (click)="plusQuantity()">+</span>
           </div>
 
-          <button class="AddCard rounded">Thêm Vào Giỏ</button>
+          <button class="AddCard rounded" (click)="addToCart()">
+            Thêm Vào Giỏ
+          </button>
           <button class="Buynow rounded">Mua Ngay</button>
         </div>
 
@@ -358,21 +360,6 @@
           <b>MÔ TẢ</b>
         </button>
       </li>
-      <!-- <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
-          id="profile-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#profile"
-          type="button"
-          role="tab"
-          aria-controls="profile"
-          aria-selected="false"
-          style="color: black"
-        >
-          CHÍNH SÁCH GIAO HÀNG
-        </button>
-      </li> -->
     </ul>
     <div
       class="tab-content"

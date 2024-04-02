@@ -1,0 +1,167 @@
+<div class="">
+  <form [formGroup]="formAddKh">
+    <div class="row">
+      <div class="col-6 form-group">
+        <label class="input_label">
+          <b style="color: red">*</b>Tên khách hàng
+        </label>
+        <input
+          formControlName="hoTen"
+          type="text"
+          class="form-control input"
+          placeholder="Nhập tên khách hàng"
+          [ngClass]="
+            formAddKh.get('hoTen').invalid && formAddKh.get('hoTen').touched
+              ? 'is-invalid'
+              : ''
+          "
+        />
+        <div class="invalid-feedback">Không được bỏ trống</div>
+      </div>
+      <div class="col-6 form-group">
+        <label class="input_label">
+          <b style="color: red">*</b>Số điện thoại
+        </label>
+        <input
+          formControlName="sdt"
+          type="text"
+          class="form-control input"
+          placeholder="Nhập số điện thoại"
+          [ngClass]="
+            formAddKh.get('sdt').invalid && formAddKh.get('sdt').touched
+              ? 'is-invalid'
+              : ''
+          "
+        />
+        <div class="invalid-feedback">Số điện thoại không hợp lệ</div>
+      </div>
+      <div class="col-6 form-group">
+        <label class="input_label">
+          <b style="color: red">*</b>Ngày sinh
+        </label>
+        <input
+          formControlName="ngaySinh"
+          type="date"
+          class="form-control input"
+          [ngClass]="
+            formAddKh.get('ngaySinh').invalid &&
+            formAddKh.get('ngaySinh').touched
+              ? 'is-invalid'
+              : ''
+          "
+        />
+        <div class="invalid-feedback">Không được bỏ trống</div>
+      </div>
+      <div class="col-6 form-group">
+        <label class="input_label"><b style="color: red">*</b>Giới tính</label>
+        <br />
+        <div class="button_ngang">
+          <label class="radio-button">
+            <input
+              type="radio"
+              name="gioiTinh"
+              value="true"
+              formControlName="gioiTinh"
+            />
+            <span class="radio"></span>
+            Nam
+          </label>
+
+          <label class="radio-button">
+            <input
+              type="radio"
+              name="gioiTinh"
+              value="false"
+              formControlName="gioiTinh"
+            />
+            <span class="radio"></span>
+            Nữ
+          </label>
+        </div>
+      </div>
+
+      <!-- ĐỊA CHỈ  -->
+      <div class="col-12 row">
+        <div class="col-4 form-group">
+          <label class="input_label"
+            ><b style="color: red">*</b>Tỉnh/Thành phố</label
+          >
+          <select
+            class="form-select form-select-sm input"
+            name="tinhId"
+            [(ngModel)]="tinhIndex"
+            (ngModelChange)="getAllHuyenByTinh()"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <option value="-1">Chọn tỉnh thành</option>
+            <option *ngFor="let tinh of tinhs; index as i" [value]="i">
+              {{ tinh.ProvinceName }}
+            </option>
+          </select>
+        </div>
+        <div class="col-4 form-group">
+          <label class="input_label"
+            ><b style="color: red">*</b>Quận/Huyện</label
+          >
+          <select
+            class="form-select form-select-sm input"
+            name="huyenId"
+            [(ngModel)]="huyenIndex"
+            (ngModelChange)="getAllXaByHuyen()"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <!-- (change)="getAllXaByHuyen()" -->
+            <option value="-1" selected>Chọn quận huyện</option>
+            <option *ngFor="let h of huyens; index as i" [value]="i">
+              {{ h.DistrictName }}
+            </option>
+          </select>
+        </div>
+        <div class="col-4 form-group">
+          <label class="input_label"
+            ><b style="color: red">*</b>Xã/Phường</label
+          >
+          <select
+            class="form-select input"
+            name="xaCode"
+            [(ngModel)]="xaIndex"
+            (ngModelChange)="getXa()"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <option value="-1" selected>Chọn phường xã</option>
+            <option *ngFor="let dc of xas; index as i" [value]="i">
+              {{ dc.WardName }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12 form-group">
+          <label class="input_label"
+            ><b style="color: red">*</b>Địa chỉ cụ thể</label
+          >
+          <input
+            type="text"
+            class="form-control input"
+            placeholder="Nhập số nhà, tên đường,...."
+            formControlName="duong"
+            [ngClass]="
+              formAddKh.get('duong').invalid && formAddKh.get('duong').touched
+                ? 'is-invalid'
+                : ''
+            "
+          />
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+    </div>
+    <div class="controll-btn text-right mr-4">
+      <button
+        type="button"
+        class="btn btn-primary btn-create"
+        [disabled]="formAddKh.invalid"
+        (click)="addKH()"
+      >
+        Lưu
+      </button>
+    </div>
+  </form>
+</div>

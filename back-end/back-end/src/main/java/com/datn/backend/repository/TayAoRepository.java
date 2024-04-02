@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface TayAoRepository extends JpaRepository<TayAo, Integer> {
 
     boolean existsByTen(String ten);
@@ -22,4 +24,12 @@ public interface TayAoRepository extends JpaRepository<TayAo, Integer> {
             """, nativeQuery = true)
     Page<TayAo> getAll(Pageable pageable,
                           @Param("search") String search);
+
+    @Query(value =
+            """
+            SELECT ta.id
+            FROM tay_ao ta
+            WHERE ta.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveSleeveIds();
 }

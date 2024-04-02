@@ -25,7 +25,7 @@
           </label>
 
           <div class="logo c">
-            <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+            <img src="https://i.imgur.com/XlMdwHa.png" />
           </div>
 
           <div class="search">
@@ -45,63 +45,66 @@
           </div>
 
           <div class="nav-account">
-            <div class="taiKhoan hiddenWeb" (click)="toggleLoginPopup()">
+            <div class="taiKhoan hiddenWeb" (click)="togglePopup()">
               <div class="iconnav">
                 <i class="iconUser bi bi-person"></i>
               </div>
 
-              <!-- <div class="popUpDangNhap" *ngIf="showLoginPopup">
+              <div class="popUpDangNhap" *ngIf="isPopupShow && !isLoggedIn">
                 <div>
                   <button class="btnDangNhap">
-                    <a href="">Đăng Nhập</a>
+                    <a [routerLink]="'/login'">Đăng Nhập</a>
                   </button>
                   <button class="btnDangKy">
-                    <a href="">Đăng Ký</a>
+                    <a [routerLink]="'/signup'">Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
-                    <a href=""> Theo dõi đơn hàng </a>
+                    <a>Theo dõi đơn hàng</a>
                   </span>
                 </div>
-              </div> -->
+              </div>
 
-              <div class="popUpLogindone" *ngIf="!showLoginPopup">
+              <div class="popUpLogindone" *ngIf="isPopupShow && isLoggedIn">
                 <div>
                   <div class="headerPopup">
-                    <span class="nameCustomer">Chào Phạm Bình</span>
+                    <span class="nameCustomer"
+                      >Xin chào {{ loggedCustomer?.hoTen }}</span
+                    >
                   </div>
 
                   <ul class="listAction">
                     <li class="actionItem">
-                      <a href="/tai-khoan"> Tài Khoản </a>
+                      <a [routerLink]="'/your-account'">Tài Khoản</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Theo dõi đơn hàng </a>
+                      <a [routerLink]="'/your-orders'">Theo dõi đơn hàng</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Sản phẩm yêu thích </a>
+                      <a href="">Sản phẩm yêu thích</a>
                     </li>
                     <li class="actionItem">
-                      <a href=""> Ưu đãi của bạn </a>
+                      <a href="">Ưu đãi của bạn</a>
                     </li>
                   </ul>
 
                   <div class="footerPopup">
-                    <span>Đăng Xuất</span>
+                    <span (click)="logout()">Đăng Xuất</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="yeuThich">
+            <!-- <div class="yeuThich">
               <div class="iconnav">
                 <i class="iconyeuThich bi bi-heart"></i>
+                <span class="quantity">{{ 0 }}</span>
               </div>
-            </div>
+            </div> -->
 
-            <div class="gioHang" (click)="openGioHang()">
+            <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
-                <span class="quantity">0</span>
+                <span class="quantity">{{ cartItemQuantity1 }}</span>
               </div>
             </div>
           </div>
@@ -115,19 +118,16 @@
 
     <nav class="mainNav">
       <div class="logo">
-        <img src="https://i.imgur.com/XlMdwHa.png" alt="" />
+        <img src="https://i.imgur.com/XlMdwHa.png" />
       </div>
 
       <ul style="margin: 0">
         <li>
-          <a href="">Trang Chủ</a>
+          <a [routerLink]="'/homepage'">Trang Chủ</a>
         </li>
         <li>
-          <a href="/trang-san-pham">Sản Phẩm</a>
+          <a [routerLink]="'/trang-san-pham'">Sản Phẩm</a>
           <span class="header_new">New</span>
-        </li>
-        <li>
-          <a href="">Áo Nam</a>
         </li>
         <li>
           <a href="">Về Chúng Tôi</a>
@@ -135,191 +135,115 @@
         <li>
           <a href="">Liên Hệ</a>
         </li>
-        <li>
-          <a href="" class="hiddenMobile">Đăng Nhập</a>
+        <li *ngIf="!isLoggedIn">
+          <a href="">Đăng Nhập</a>
         </li>
-        <li>
-          <a href="" class="hiddenMobile">Đăng Kí</a>
+        <li *ngIf="!isLoggedIn">
+          <a href="">Đăng Kí</a>
         </li>
       </ul>
     </nav>
   </div>
 </div>
 
-<div class="cardgioHang" *ngIf="showGioHang">
+<div class="cardgioHang" *ngIf="isCartShow">
   <div class="cart-header">
     <div>
-      <span class="nameCart">Giỏ Hàng</span>
+      <span class="nameCart me-1">Giỏ Hàng</span>
       <i class="bi bi-cart2"></i>
     </div>
-    <div class="closeShopping" (click)="openGioHang()">
+    <div class="closeShopping pointer" (click)="toggleCart()">
       <i class="bi bi-x-circle"></i>
     </div>
   </div>
 
   <!-- Điều kiện để nhận mã miễn phí vận chuyển -->
-  <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
-    <img src="https://i.imgur.com/uoqTCt1.png" alt="" style="width: 30px" />
+  <!-- <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
+    <img src="https://i.imgur.com/uoqTCt1.png" style="width: 30px" />
     <span style="font-size: 14px; margin-left: 5px"
       >Bạn đủ điều kiện nhận miễn phí vận chuyển</span
     >
-  </div>
-
-  <!-- <div class="dieuKien" style="background-color: #fdc5bc; padding: 10px;">
-    <img src="https://i.imgur.com/GFwsDu9.png" alt="" style="width: 30px;">
-    <span style="font-size: 14px;margin-left: 5px;">Mua thêm 179.700 ₫ để được freeship.</span>
   </div> -->
 
   <ul class="listCart" style="padding: 0">
-    <li class="cartItem">
+    <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
         <div class="col-md-3 imgProductCart">
           <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
+            [src]="ci.spct.hinhAnhs[0].imageUrl"
+            style="height: 150px; object-fit: cover"
           />
-          <div class="DeleteCart">
+          <div
+            class="DeleteCart pointer"
+            title="Xóa sản phẩm này khỏ giỏ hàng"
+            (click)="deleteItemFromCart(ci)"
+          >
             <i class="bi bi-x-lg"></i>
           </div>
         </div>
         <div class="col-md-9">
           <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
+            <a [routerLink]="'/san-pham/' + ci.spct.sanPham.id">
+              {{ ci.spct.sanPham.ten }}
+            </a>
           </span>
           <div class="ThuocTinh">
             <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
+              <img [src]="ci.spct.mauSac.image.imageUrl" />
             </div>
             <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
+            <span class="sizeCart">
+              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span
+            >
           </div>
 
-          <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
-
+          <div class="wrapperPrice mb-3">
+            <div class="priceCart">
+              <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
+            </div>
             <div class="wrapper">
-              <span class="minus">-</span>
+              <span class="minus pointer" (click)="updateQuantity(ci, 'minus')"
+                >-</span
+              >
               <span
                 class="num"
                 style="
                   border-right: 2px solid rgba(0, 0, 0, 0.2);
                   border-left: 2px solid rgba(0, 0, 0, 0.2);
                 "
-                >01</span
+                >{{ ci.soLuong }}</span
               >
-              <span class="plus">+</span>
+              <span class="plus pointer" (click)="updateQuantity(ci, 'plus')"
+                >+</span
+              >
             </div>
+          </div>
+
+          <div>
+            <small>Số lượng tồn: {{ ci.spct.soLuongTon }}</small>
           </div>
         </div>
       </div>
     </li>
 
-    <li class="cartItem">
-      <div class="row">
-        <div class="col-md-3 imgProductCart">
-          <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
-          />
-          <div class="DeleteCart">
-            <i class="bi bi-x-lg"></i>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
-          </span>
-          <div class="ThuocTinh">
-            <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
-            </div>
-            <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
-          </div>
-
-          <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
-
-            <div class="wrapper">
-              <span class="minus">-</span>
-              <span
-                class="num"
-                style="
-                  border-right: 2px solid rgba(0, 0, 0, 0.2);
-                  border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >01</span
-              >
-              <span class="plus">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-
-    <li class="cartItem">
-      <div class="row">
-        <div class="col-md-3 imgProductCart">
-          <img
-            src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-            alt=""
-          />
-          <div class="DeleteCart">
-            <i class="bi bi-x-lg"></i>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <span class="nameCartProduct">
-            <a href=""> Áo sơ mi nam cotton flannel họa tiết kẻ </a>
-          </span>
-          <div class="ThuocTinh">
-            <div class="color-cart">
-              <img
-                src="https://canifa.com/img/210/300/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                alt=""
-              />
-            </div>
-            <span class="line-info">|</span>
-            <span class="sizeCart"> Size: L </span>
-          </div>
-
-          <div class="wrapperPrice">
-            <div class="priceCart">599.000đ</div>
-
-            <div class="wrapper">
-              <span class="minus">-</span>
-              <span
-                class="num"
-                style="
-                  border-right: 2px solid rgba(0, 0, 0, 0.2);
-                  border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >01</span
-              >
-              <span class="plus">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
+    <div class="text-center" *ngIf="cartItems1.length === 0">
+      <i>Chưa có sản phẩm nào trong giỏ hàng</i>
+    </div>
   </ul>
 
-  <div class="checkOut">
+  <div class="checkOut" *ngIf="cartItems1.length > 0">
     <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
-      <div class="giaGoc">599.000đ</div>
-      <div>Chiết khấu</div>
-      <div class="chietKhau">-179.000đ</div>
-      <div class="tamTinh">Tạm Tính</div>
+      <div class="giaGoc">{{ calculateTotalMoney() }}</div>
+
+      <!-- <div>Chiết khấu</div>
+      <div class="chietKhau">-179.000đ</div> -->
+
+      <div class="tamTinh">Phải trả</div>
       <div class="total">419.300đ</div>
-      <div></div>
-      <div class="save">(Tiết kiệm 179.000đ)</div>
+
+      <!-- <div></div>
+      <div class="save">(Tiết kiệm 179.000đ)</div> -->
     </div>
 
     <div class="thanhToan">

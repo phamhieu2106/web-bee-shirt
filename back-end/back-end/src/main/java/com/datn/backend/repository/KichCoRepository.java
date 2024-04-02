@@ -39,4 +39,12 @@ public interface KichCoRepository extends JpaRepository<KichCo, Integer> {
             """, nativeQuery = true)
     List<KichCo> getAllByProductAndColor(@Param("productId") int productId,
                                          @Param("colorId") int colorId);
+
+    @Query(value =
+            """
+            SELECT kc.id
+            FROM kich_co kc
+            WHERE kc.trang_thai = 1
+            """, nativeQuery = true)
+    List<Integer> getAllActiveSizeIds();
 }

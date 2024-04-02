@@ -2,18 +2,20 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.response.KhachHangResponse;
-import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
+import com.datn.backend.model.danh_sach.Cart;
+import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
 import com.datn.backend.repository.AccountRepository;
+import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.DiaChiRepository;
+import com.datn.backend.repository.FavouriteListRepository;
 import com.datn.backend.repository.KhachHangRepository;
-import com.datn.backend.service.DiaChiService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
@@ -36,12 +38,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class KhachHangServiceImpl implements KhachHangService {
+
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepository;
     private final DiaChiRepository diaChiRepository;
-    private final AccountRepository ar;
+    private final AccountRepository accountRepo;
+    private final CartRepository cartRepo;
+    private final FavouriteListRepository favouriteListRepo;
     private final CloudinaryService cloudinaryService;
-
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
@@ -78,13 +82,56 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(image);
         khachHang.setAccount(account);
-        khachHangRepository.save(khachHang);
+        KhachHang savedCus = khachHangRepository.save(khachHang);
+
         DiaChi diaChi = new DiaChi();
         diaChi.setKhachHang(khachHang);
         diaChi.setTinh(kh.getTinh());
         diaChi.setHuyen(kh.getHuyen());
         diaChi.setXa(kh.getXa());
         diaChi.setDuong(kh.getDuong());
+        diaChi.setMacDinh(true);
+        diaChiRepository.save(diaChi);
+
+        // Thêm giỏ hàng và danh sách yêu thích cho khách hàng vừa tạo
+        cartRepo.save(new Cart(savedCus));
+        favouriteListRepo.save(new FavouriteList(savedCus));
+
+        return savedCus;
+    }
+
+    @Override
+    @Transactional
+    public KhachHang add(KhachHangRequest kh) {
+        // check exist sdt
+        if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
+            throw new RuntimeException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
+        }
+
+        // account
+        Account account = new Account();
+        account.setTenDangNhap(kh.getSdt().trim());
+        account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
+        account.setTrangThai(true);
+        account.setRole(Role.ROLE_CUSTOMER.name());
+
+        // khach hang
+        KhachHang khachHang = new KhachHang();
+        khachHang.setHoTen(kh.getHoTen().trim());
+        khachHang.setNgaySinh(kh.getNgaySinh());
+        khachHang.setSdt(kh.getSdt());
+        khachHang.setGioiTinh(kh.isGioiTinh());
+        khachHang.setTrangThai(1);
+        khachHang.setAccount(account);
+        khachHangRepository.save(khachHang);
+
+        // dia chi
+        DiaChi diaChi = new DiaChi();
+        diaChi.setKhachHang(khachHang);
+        diaChi.setTinh(kh.getTinh());
+        diaChi.setHuyen(kh.getHuyen());
+        diaChi.setXa(kh.getXa());
+        diaChi.setDuong(kh.getDuong().trim());
         diaChi.setMacDinh(true);
         diaChiRepository.save(diaChi);
 
@@ -135,7 +182,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             image.setImageUrl((String) result.get("url"));
             image.setImageId((String) result.get("public_id"));
         }
-        Account account = ar.findByTenDangNhap(kh.getTenDangNhap()).get();
+        Account account = accountRepo.findByTenDangNhap(kh.getTenDangNhap()).get();
         account.setTenDangNhap(kh.getSdt());
         khInDB.setImage(image);
         khInDB.setHoTen(kh.getHoTen());
@@ -179,6 +226,4 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         return pagedResponse;
     }
-
-
 }

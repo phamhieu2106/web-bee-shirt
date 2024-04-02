@@ -5,7 +5,9 @@ import com.datn.backend.dto.request.LoginRequest;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.AccountRepository;
+import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.security.JwtTokenProvider;
 import com.datn.backend.security.MyUserDetails;
@@ -32,9 +34,10 @@ public class AuthResource {
     private final JwtTokenProvider jwtTokenProvider;
     private final AccountRepository accountRepo;
     private final NhanVienRepository nhanVienRepo;
+    private final KhachHangRepository khachHangRepo;
 
-    @PostMapping("/login")
-    public ResponseEntity<NhanVien> login(@RequestBody LoginRequest request) throws AccessDeniedException {
+    @PostMapping("/staff/login")
+    public ResponseEntity<NhanVien> staffLogin(@RequestBody LoginRequest request) throws AccessDeniedException {
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
         authManager.authenticate(authentication);
 
@@ -51,5 +54,22 @@ public class AuthResource {
 
         NhanVien nhanVien = nhanVienRepo.findByAccountId(account.getId());
         return new ResponseEntity<>(nhanVien, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/customer/login")
+    public ResponseEntity<KhachHang> customerLogin(@RequestBody LoginRequest request) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
+        authManager.authenticate(authentication);
+
+        // if credentials right, code continue
+        Account account = accountRepo.findByTenDangNhap(request.getTenDangNhap()).get();
+        MyUserDetails userDetails = new MyUserDetails(account);
+        String token = jwtTokenProvider.generateToken(userDetails);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(SecurityConstant.TOKEN_HEADER, token);
+
+        KhachHang khachHang = khachHangRepo.findByAccountId(account.getId());
+        return new ResponseEntity<>(khachHang, headers, HttpStatus.OK);
     }
 }

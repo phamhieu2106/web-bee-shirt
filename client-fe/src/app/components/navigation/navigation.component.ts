@@ -22,20 +22,20 @@ export class NavigationComponent {
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
   public isCartShow: boolean = false;
+
   public cartItems1: CartItem[] = [];
   public cartItemQuantity1: number;
-
   public cartItems2: CartItem[] = [];
   public cartItemQuantity2: number;
 
   // constructor, ngOn
   constructor(
     private router: Router,
+    private currencyPipe: CurrencyPipe,
     private authenticationService: AuthenticationService,
     private notifService: NotificationService,
     private cartItemService: CartItemService,
-    private productService: ProductService,
-    private currencyPipe: CurrencyPipe
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -88,9 +88,70 @@ export class NavigationComponent {
     return "";
   }
 
-  //5
+  // 5
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
+  }
+
+  // 6
+  public updateQuantity(cartItem: CartItem, type: string): void {
+    // kiểm tra trước khi tăng/giảm
+    if (type === "minus" && cartItem.soLuong === 1) {
+      this.notifService.warning("Số lượng trong giỏ phải lớn hơn 0!");
+      return;
+    } else if (
+      type === "plus" &&
+      cartItem.soLuong === cartItem.spct.soLuongTon
+    ) {
+      this.notifService.warning("Số lượng tồn của sản phẩm này không đủ!");
+      return;
+    }
+
+    let cartItemsInstorage: CartItem[] = JSON.parse(
+      localStorage.getItem("cartItems")
+    );
+    cartItemsInstorage = cartItemsInstorage.map((item: CartItem) => {
+      if (item.spct.id === cartItem.spct.id) {
+        item.soLuong = type === "plus" ? item.soLuong + 1 : item.soLuong - 1;
+        return item;
+      }
+      return item;
+    });
+    this.cartItemService.updateCartItemsInStorage(cartItemsInstorage);
+  }
+
+  // 7
+  public deleteItemFromCart(cartItem: CartItem): void {
+    Swal.fire({
+      title: "Xóa sản phẩm này khỏi giỏ hàng?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        let cartItemsInstorage: CartItem[] = JSON.parse(
+          localStorage.getItem("cartItems")
+        );
+        cartItemsInstorage = cartItemsInstorage.filter(
+          (item: CartItem) => !(item.spct.id === cartItem.spct.id)
+        );
+        this.cartItemService.updateCartItemsInStorage(cartItemsInstorage);
+        this.notifService.success("Xóa sản phẩm khỏi giỏ hàng thành công!");
+      }
+    });
+  }
+
+  // 8
+  public calculateTotalMoney(): string {
+    let totalMoney: number = 0;
+
+    for (const cartItem of this.cartItems1) {
+      totalMoney += cartItem.spct.giaBan * cartItem.soLuong;
+    }
+    return this.formatPrice(totalMoney);
   }
 
   // private functions
@@ -103,9 +164,6 @@ export class NavigationComponent {
           this.loggedCustomer =
             this.authenticationService.getCustomerFromStorage();
         }
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
       },
     });
   }
@@ -129,22 +187,12 @@ export class NavigationComponent {
       const initCartItems: CartItem[] = [];
       localStorage.setItem("cartItems", JSON.stringify(initCartItems));
     }
-    this.cartItems1 = JSON.parse(localStorage.getItem("cartItems"));
+
     this.cartItemService.cartItemsInLocalStorageQuantity.next(
-      this.cartItems1.length
+      JSON.parse(localStorage.getItem("cartItems")).length
+    );
+    this.cartItemService.cartItemsInLocalStorage.next(
+      JSON.parse(localStorage.getItem("cartItems"))
     );
   }
-
-  // 2
-  // private getCartItems(): void {
-  //   this.cartItemService.cartItemsInLocalStorage.subscribe({
-  //     next: (response: CartItem[]) => {
-  //       this.cartItems = response;
-  //       this.cartItemQuantity = response.length;
-  //     },
-  //     error: (errorResponse: HttpErrorResponse) => {
-  //       this.notifService.error(errorResponse.error.message);
-  //     },
-  //   });
-  // }
 }

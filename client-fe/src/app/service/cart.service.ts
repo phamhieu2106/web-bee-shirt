@@ -10,7 +10,7 @@ import { CartItem } from "../model/class/cart-item.class";
 export class CartItemService {
   private readonly apiUrl = "http://localhost:8080/cart-item";
 
-  public totalCartItems = new BehaviorSubject<number>(0);
+  // public totalCartItems = new BehaviorSubject<number>(0);
   public cartItemsInLocalStorage = new BehaviorSubject<CartItem[]>([]);
   public cartItemsInLocalStorageQuantity = new BehaviorSubject<number>(0);
 
@@ -22,7 +22,7 @@ export class CartItemService {
   // public functions
   // 1
   public setQuantity(value: number): void {
-    this.totalCartItems.next(value);
+    // this.totalCartItems.next(value);
   }
 
   // 2
@@ -34,6 +34,14 @@ export class CartItemService {
   public addCartItemToLocalStorage(cartItem: CartItem): void {
     let cartItems = JSON.parse(localStorage.getItem("cartItems"));
     cartItems.push(cartItem);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+    this.cartItemsInLocalStorage.next(cartItems);
+    this.cartItemsInLocalStorageQuantity.next(cartItems.length);
+  }
+
+  // 4
+  public updateCartItemsInStorage(cartItems: CartItem[]): void {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
     this.cartItemsInLocalStorage.next(cartItems);

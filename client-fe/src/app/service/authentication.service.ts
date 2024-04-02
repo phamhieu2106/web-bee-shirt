@@ -15,7 +15,7 @@ export class AuthenticationService {
   private token: string;
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
-  public isLoggedInSubject = new BehaviorSubject<boolean>(true);
+  public isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   // constructor, ngOn
   constructor(private http: HttpClient, private router: Router) {}

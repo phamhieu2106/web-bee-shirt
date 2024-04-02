@@ -41,7 +41,6 @@ export class TimKiemHoaDonComponent implements OnInit {
           });
         },
         complete: () => {
-          console.log(this.hoaDon);
           this.findHoaDon.emit(this.hoaDon);
         },
       });

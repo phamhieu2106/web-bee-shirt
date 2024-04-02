@@ -36,8 +36,8 @@
                 <nz-descriptions-item nzTitle="Email">{{
                   this.hoaDon?.emailNguoiNhan
                     ? this.hoaDon?.emailNguoiNhan
-                    : this.hoaDon?.khachHang.email
-                    ? this.hoaDon?.khachHang.email
+                    : this.hoaDon.khachHang?.email
+                    ? this.hoaDon.khachHang?.email
                     : "-"
                 }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Địa Chỉ">{{
@@ -291,6 +291,29 @@
                     <kbd
                       style="color: #080808; display: flex; align-items: center"
                     >
+                      <i
+                        nz-icon
+                        nzType="rollback"
+                        style="margin-right: 5px"
+                      ></i>
+                      <strong> Số lượng trả: </strong>
+                    </kbd>
+                  </span>
+                  <strong
+                    style="
+                      max-width: 200px;
+                      overflow: auto;
+                      white-space: nowrap;
+                    "
+                  >
+                    {{ calculateSum() }}
+                  </strong>
+                </nz-list-item>
+                <nz-list-item>
+                  <span nz nz-typography>
+                    <kbd
+                      style="color: #080808; display: flex; align-items: center"
+                    >
                       <i nz-icon nzType="euro" style="margin-right: 5px"></i>
                       <strong> Tổng tiền hoá đơn ban đầu: </strong>
                     </kbd>
@@ -336,40 +359,9 @@
                         style="margin-right: 5px"
                       ></i>
                       <strong>
-                        Phiếu giảm giá đã sử dụng:
-                        <strong style="color: #32ba7c">{{
-                          this.hoaDon.phieuGiamGia?.maPhieuGiamGia
-                        }}</strong>
-                      </strong>
-                    </kbd>
-                  </span>
-                  <strong
-                    style="
-                      color: #f26100;
-                      font-weight: bold;
-                      max-width: 200px;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                      white-space: nowrap;
-                    "
-                  >
-                    {{ discountMoney | currency : "VND" }}
-                  </strong>
-                </nz-list-item>
-                <nz-list-item>
-                  <span nz nz-typography>
-                    <kbd
-                      style="color: #080808; display: flex; align-items: center"
-                    >
-                      <i
-                        nz-icon
-                        nzType="money-collect"
-                        style="margin-right: 5px"
-                      ></i>
-                      <strong>
                         Phiếu giảm giá mới:
                         <strong style="color: #32ba7c">{{
-                          this.hoaDon.phieuGiamGia?.maPhieuGiamGia
+                          this.bestVoucher?.maPhieuGiamGia
                         }}</strong>
                       </strong>
                     </kbd>
@@ -388,7 +380,7 @@
                   </strong>
                 </nz-list-item>
                 <nz-list-item
-                  nzTooltipTitle="Tổng tiền trả: "
+                  nzTooltipTitle="Tổng tiền trả = (tổng hoá đơn ban đầu - tổng hoá đơn hiện tại) + phiếu giảm giá mới"
                   nzTooltipPlacement="top"
                   nz-button
                   nz-tooltip
@@ -459,7 +451,7 @@
         Khác...
         <input
           type="text"
-          [(ngModel)]="moreText"
+          [(ngModel)]="text"
           nz-input
           *ngIf="radioValue === 'M'"
         />

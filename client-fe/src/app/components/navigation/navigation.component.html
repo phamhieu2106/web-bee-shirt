@@ -68,16 +68,16 @@
                 <div>
                   <div class="headerPopup">
                     <span class="nameCustomer"
-                      >Chào {{ loggedCustomer?.hoTen }}</span
+                      >Xin chào {{ loggedCustomer?.hoTen }}</span
                     >
                   </div>
 
                   <ul class="listAction">
                     <li class="actionItem">
-                      <a href="/tai-khoan">Tài Khoản</a>
+                      <a [routerLink]="'/your-account'">Tài Khoản</a>
                     </li>
                     <li class="actionItem">
-                      <a href="">Theo dõi đơn hàng</a>
+                      <a [routerLink]="'/your-orders'">Theo dõi đơn hàng</a>
                     </li>
                     <li class="actionItem">
                       <a href="">Sản phẩm yêu thích</a>
@@ -94,11 +94,12 @@
               </div>
             </div>
 
-            <div class="yeuThich">
+            <!-- <div class="yeuThich">
               <div class="iconnav">
                 <i class="iconyeuThich bi bi-heart"></i>
+                <span class="quantity">{{ 0 }}</span>
               </div>
-            </div>
+            </div> -->
 
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
@@ -122,14 +123,11 @@
 
       <ul style="margin: 0">
         <li>
-          <a href="">Trang Chủ</a>
+          <a [routerLink]="'/homepage'">Trang Chủ</a>
         </li>
         <li>
-          <a href="/trang-san-pham">Sản Phẩm</a>
+          <a [routerLink]="'/trang-san-pham'">Sản Phẩm</a>
           <span class="header_new">New</span>
-        </li>
-        <li>
-          <a href="">Áo Nam</a>
         </li>
         <li>
           <a href="">Về Chúng Tôi</a>
@@ -137,11 +135,11 @@
         <li>
           <a href="">Liên Hệ</a>
         </li>
-        <li>
-          <a href="" class="hiddenMobile">Đăng Nhập</a>
+        <li *ngIf="!isLoggedIn">
+          <a href="">Đăng Nhập</a>
         </li>
-        <li>
-          <a href="" class="hiddenMobile">Đăng Kí</a>
+        <li *ngIf="!isLoggedIn">
+          <a href="">Đăng Kí</a>
         </li>
       </ul>
     </nav>
@@ -171,14 +169,21 @@
     <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
         <div class="col-md-3 imgProductCart">
-          <img [src]="ci.spct.hinhAnhs[0].imageUrl" />
-          <div class="DeleteCart">
+          <img
+            [src]="ci.spct.hinhAnhs[0].imageUrl"
+            style="height: 150px; object-fit: cover"
+          />
+          <div
+            class="DeleteCart pointer"
+            title="Xóa sản phẩm này khỏ giỏ hàng"
+            (click)="deleteItemFromCart(ci)"
+          >
             <i class="bi bi-x-lg"></i>
           </div>
         </div>
         <div class="col-md-9">
           <span class="nameCartProduct">
-            <a [routerLink]="'/'">
+            <a [routerLink]="'/san-pham/' + ci.spct.sanPham.id">
               {{ ci.spct.sanPham.ten }}
             </a>
           </span>
@@ -192,10 +197,14 @@
             >
           </div>
 
-          <div class="wrapperPrice">
-            <div class="priceCart">{{ formatPrice(ci.spct.giaBan) }}</div>
+          <div class="wrapperPrice mb-3">
+            <div class="priceCart">
+              <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
+            </div>
             <div class="wrapper">
-              <span class="minus">-</span>
+              <span class="minus pointer" (click)="updateQuantity(ci, 'minus')"
+                >-</span
+              >
               <span
                 class="num"
                 style="
@@ -204,14 +213,20 @@
                 "
                 >{{ ci.soLuong }}</span
               >
-              <span class="plus">+</span>
+              <span class="plus pointer" (click)="updateQuantity(ci, 'plus')"
+                >+</span
+              >
             </div>
+          </div>
+
+          <div>
+            <small>Số lượng tồn: {{ ci.spct.soLuongTon }}</small>
           </div>
         </div>
       </div>
     </li>
 
-    <div class="text-center">
+    <div class="text-center" *ngIf="cartItems1.length === 0">
       <i>Chưa có sản phẩm nào trong giỏ hàng</i>
     </div>
   </ul>
@@ -219,13 +234,16 @@
   <div class="checkOut" *ngIf="cartItems1.length > 0">
     <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
-      <div class="giaGoc">599.000đ</div>
-      <div>Chiết khấu</div>
-      <div class="chietKhau">-179.000đ</div>
-      <div class="tamTinh">Tạm Tính</div>
+      <div class="giaGoc">{{ calculateTotalMoney() }}</div>
+
+      <!-- <div>Chiết khấu</div>
+      <div class="chietKhau">-179.000đ</div> -->
+
+      <div class="tamTinh">Phải trả</div>
       <div class="total">419.300đ</div>
-      <div></div>
-      <div class="save">(Tiết kiệm 179.000đ)</div>
+
+      <!-- <div></div>
+      <div class="save">(Tiết kiệm 179.000đ)</div> -->
     </div>
 
     <div class="thanhToan">

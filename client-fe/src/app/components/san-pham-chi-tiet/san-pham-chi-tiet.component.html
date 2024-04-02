@@ -226,16 +226,16 @@
 
         <div class="Buy mb-5">
           <div class="wrapper">
-            <span class="minus">-</span>
+            <span class="minus pointer" (click)="minusQuantity()">-</span>
             <span
               class="num"
               style="
                 border-right: 2px solid rgba(0, 0, 0, 0.2);
                 border-left: 2px solid rgba(0, 0, 0, 0.2);
               "
-              >01</span
+              >{{ quantity }}</span
             >
-            <span class="plus">+</span>
+            <span class="plus pointer" (click)="plusQuantity()">+</span>
           </div>
 
           <button class="AddCard rounded" (click)="addToCart()">

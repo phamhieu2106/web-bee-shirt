@@ -1,0 +1,637 @@
+<section class="container">
+    <div class="row">
+        <ul data-v-836166ae="" class="checkout-progress-bar">
+            <li data-v-836166ae="" class="checkout-progress-bar-item active">
+                <span data-v-836166ae="" class="step">1</span>
+                <span data-v-836166ae="">Giỏ hàng</span>
+            </li>
+            <li data-v-836166ae="" class="checkout-progress-bar-item current">
+                <span data-v-836166ae="" class="step">2</span>
+                <span data-v-836166ae="">Đặt hàng</span>
+            </li>
+            <li data-v-836166ae="" class="checkout-progress-bar-item">
+                <span data-v-836166ae="" class="step">3</span>
+                <span data-v-836166ae="">Hoàn tất</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="col-md-12">
+                <div data-v-836166ae="" class="checkout-step checkout-shipping">
+                    <div data-v-836166ae="">
+                        <div>
+                            <div class="checkout-step-title">
+                                <h2>Thông tin giao hàng</h2>
+                                <!-- Đăng nhập rồi thì hiện nút này -->
+                                <a href="#" class="edit">Thay đổi</a>
+                            </div>
+                            <div>
+                                <div class="checkout-step-content">
+                                    <div class="shipping-address-items">
+                                        <!-- khách hàng đã đăng nhập -->
+                                        <div class="shipping-address-item">
+                                            <div class="name">
+                                                Bình Phạm
+                                                <span class="phone">0345262229</span>
+                                            </div>
+                                            <div class="address">fgfg, Huyện An Phú, An Giang</div>
+                                            <div class="address-type"></div>
+                                        </div>
+
+                                        <!-- khách hàng không đăng nhập -->
+                                        <!-- <div class="shipping-address-item">
+                                            <div class="addressNot">
+                                                <div class="wraperInfo">
+                                                    <label for="">Họ </label>
+                                                    <input type="text" name="" id="" class="form-control">
+                                                </div>
+                                                <div class="wraperInfo">
+                                                    <label for="">Tên </label>
+                                                    <input type="text" name="" id="" class="form-control">
+                                                </div>
+
+                                                <div class="wraperInfo">
+                                                    <label for="">Số điện thoại </label>
+                                                    <input type="text" name="" id="" class="form-control">
+                                                </div>
+
+                                                <div class="wraperInfo">
+                                                    <label for="">Tỉnh/Thành phố </label>
+                                                    <select name="" id="" class="form-select">
+                                                        <option value="">Tỉnh/Thành phố</option>
+                                                    </select>
+                                                </div>
+                                                <div class="wraperInfo">
+                                                    <label for="">Quận/Huyện </label>
+                                                    <select name="" id="" class="form-select">
+                                                        <option value="">Quận/Huyện</option>
+                                                    </select>
+                                                </div>
+                                                <div class="wraperInfo">
+                                                    <label for="">Phường/Xã </label>
+                                                    <select name="" id="" class="form-select">
+                                                        <option value="">Phường/Xã</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="wraperInfo">
+                                                    <label for="">Số nhà.đường </label>
+                                                    <input type="text" name="" id="" class="form-control">
+                                                </div>
+
+                                                <div class="wraperInfo">
+                                                    <label for="">Email </label>
+                                                    <input type="email" name="" id="" class="form-control">
+                                                </div>
+
+                                                <div class="wraperInfo">
+                                                    <label for="">Ghi chú đơn hàng </label>
+                                                    <input type="text" name="" id="" class="form-control">
+                                                </div>
+
+                                            </div>
+                                        </div> -->
+
+                                        <!-- Thêm in vào class sẽ hiện   <div class="modal-address modal in">-->
+                                        <div class="modal-address modal ">
+                                            <div class="modal-backdrop"></div>
+                                            <div class="modal-container">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <div class="modal-close">
+                                                            <span class="screen-reader-text">close</span>
+                                                        </div>
+                                                        <h4 class="modal-title">Sổ địa chỉ</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="modal-address-item">
+                                                            <div class="info">
+                                                                <div class="address">
+                                                                    fgfg, Huyện An Phú, An Giang
+                                                                </div>
+                                                                <div class="name-phone">
+                                                                    <div class="name">Bình Phạm</div>
+                                                                    <div class="line"></div>
+                                                                    <div class="phone">0345262229</div>
+                                                                </div>
+                                                                <div class="address-type">
+                                                                    
+                                                                    <!---->
+                                                                    <label class="label label-default"><svg width="20"
+                                                                            height="20" viewBox="0 0 20 20" fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path
+                                                                                d="M13.3337 11.1454C16.2768 11.724 18.3337 13.0456 18.3337 14.5833C18.3337 16.6544 14.6027 18.3333 10.0003 18.3333C5.39795 18.3333 1.66699 16.6544 1.66699 14.5833C1.66699 13.0456 3.72382 11.724 6.66699 11.1454M10.0003 14.1667V2.5L14.4318 5.22704C14.755 5.42595 14.9166 5.52541 14.9682 5.65071C15.0131 5.76 15.0096 5.88325 14.9584 5.98976C14.8997 6.11188 14.7326 6.20185 14.3984 6.38179L10.0003 8.75"
+                                                                                stroke="#DA291C" stroke-width="1.2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"></path>
+                                                                        </svg>
+                                                                        <span>Địa chỉ mặc định</span></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="action-edit"><span>Sửa</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary">
+                                                            Thêm địa chỉ
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal new address -->
+                                          <!-- Thêm in vào class sẽ hiện   <div class="modal-new-address modal ">-->
+                                        <div class="modal-new-address modal ">
+                                            <div class="modal-backdrop"></div>
+                                            <div class="modal-container">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <div class="modal-close">
+                                                            <span class="screen-reader-text">close</span>
+                                                        </div>
+                                                        <h4 class="modal-title">Thêm địa chỉ</h4>
+                                                    </div>
+                                                    <div class="checkout-shipping">
+                                                        <div class="checkout-shipping-form">
+                                                            <div class="row">
+                                                                <div class="form-group col-sm-6">
+                                                                    <label for="name">Họ tên</label>
+                                                                    <input type="text" name="" id="name"
+                                                                        class="form-control" />
+                                                                </div>
+                                                                <div class="form-group col-sm-6">
+                                                                    <label for="phone">Số điện thoại</label>
+                                                                    <input type="text" name="" id="phone"
+                                                                        class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-sm-6">
+                                                                    <label for="tinh">Tỉnh / Thành phố</label>
+                                                                    <select name="state" class="form-control">
+                                                                        <option></option>
+                                                                        <option value="508">Hà Nội</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-sm-6">
+                                                                    <label for="huyen">Quận / Huyện</label>
+                                                                    <select name="city" class="form-control">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="xa">Phường / Xã</label>
+                                                                <select name="ward" class="form-control">
+                                                                    <option></option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="dia-chi">Địa chỉ chi tiết</label>
+                                                                <input type="text" name="streetName"
+                                                                    class="form-control" />
+                                                                <!---->
+                                                            </div>
+                                                           
+                                                            <div class="form-checkbox active mt-3">
+                                                                <input type="checkbox" name="" id="checkbox1"
+                                                                    value="true" />
+                                                                <label for="checkbox1"><span>Đặt làm địa chỉ mặc
+                                                                        định</span></label>
+                                                            </div>
+                                                            <div class="button">
+                                                                <button class="btn-save">lưu địa chỉ</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!---->
+                            </div>
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div data-v-836166ae="" class="checkout-step checkout-payment-method" isactive="true">
+                    <div class="checkout-step-title">
+                        <h2>Phương thức thanh toán</h2>
+                    </div>
+                    <div class="checkout-step-content">
+                        <div class="checkout-payment-method-section">
+                            <label for="cashondelivery"><input id="cashondelivery" type="radio" value="cashondelivery"
+                                    name="thanhToan" />
+                                <span><b>Thanh toán khi nhận hàng (COD)</b>
+                                    <img src="https://canifa.com/assets/images/cod.svg" alt="" /></span></label>
+                        </div>
+                        <div class="checkout-payment-method-section">
+                            <label for="vnpay"><input id="vnpay" type="radio" value="vnpay" name="thanhToan" />
+                                <span><b>Thanh toán bằng VNPAY</b>
+                                    <img src="https://canifa.com/assets/images/vnpay.svg" alt="" /></span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div data-v-836166ae="" class="checkout-step checkout-review">
+                    <div data-v-836166ae="" class="checkout-step-title">
+                        <h2 data-v-836166ae="">Sản phẩm (3)</h2>
+                    </div>
+                    <div data-v-836166ae="" class="checkout-step-content" style="height: 500px; overflow-y: auto">
+                        <table data-v-836166ae="" class="checkout-cart-items">
+                            <tbody data-v-836166ae="">
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-sooc-be-gai-1bs24s001"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/1/b/1bs24s001-sk010-122-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-sooc-be-gai-1bs24s001" class="cart-image-container">
+                                                        Quần soóc bé gái cạp chun có túi bên
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sk010.png');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">110</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">129.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/bo-quan-ao-nam-8st24s002"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/8/s/8st24s002-sa222-xl-1-ghep-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/bo-quan-ao-nam-8st24s002" class="cart-image-container">
+                                                        Bộ quần áo active nam
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sa222.png');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">L</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">599.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-v-836166ae="" class="cart-item">
+                                    <td data-v-836166ae="" data-th="Sản phẩm" class="col item">
+                                        <div data-v-836166ae="" class="cart-item-info">
+                                            <div data-v-836166ae="" class="cart-item-photo">
+                                                <a data-v-836166ae="" href="/quan-jeans-nu-6bj24s006"
+                                                    class="cart-image-container"><img data-v-836166ae=""
+                                                        src="https://canifa.com/img/210/300/resize/6/b/6bj24s006-sj867-28-1-u.webp"
+                                                        alt="" /></a>
+                                            </div>
+                                            <div data-v-836166ae="" class="cart-item-details">
+                                                <strong data-v-836166ae="" class="cart-item-name"><a data-v-836166ae=""
+                                                        href="/quan-jeans-nu-6bj24s006" class="cart-image-container">
+                                                        Quần jeans nữ
+                                                    </a></strong>
+                                                <div data-v-836166ae="" class="cart-item-options">
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option color" style="
+                                  background-image: url('https://media.canifa.com/attribute/swatch/images/sj867.webp');
+                                "></span></span>
+                                                    </div>
+                                                    <div data-v-836166ae="" class="cart-item-option">
+                                                        <span data-v-836166ae=""><span data-v-836166ae=""
+                                                                class="swatch-option text">26</span></span>
+                                                    </div>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Giá tiền" class="col price">
+                                        <span data-v-836166ae="" class="price">799.000 ₫</span>
+                                        <!---->
+                                    </td>
+                                    <td data-v-836166ae="" data-th="Số lượng" class="col qty">
+                                        <span data-v-836166ae="">Số lượng : 1</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="col-md-12">
+                <div data-v-836166ae="" class="checkout-step checkout-coupon-wrapper">
+                    <div data-v-60ac2c34="" data-v-836166ae="">
+                        <!---->
+                        <div data-v-60ac2c34="" class="checkout-coupon">
+                            <div data-v-60ac2c34="" class="checkout-step-title1">
+                                <h2 data-v-60ac2c34="">Mã ưu đãi</h2>
+                            </div>
+                            <div data-v-60ac2c34="" class="checkout-step-content">
+                                <!---->
+                            </div>
+                        </div>
+                        <!---->
+                    </div>
+                    <div data-v-836166ae="" class="checkout-point">
+                        <div data-v-836166ae="" class="checkout-step-content">
+                            <div data-v-836166ae="" class="checkout-point-form">
+                                <input data-v-836166ae="" type="text" name="cpoint" placeholder="Nhập mã giảm giá"
+                                    class="form-control" />
+                                <button data-v-836166ae="" class="btn-add-point btn-add">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div data-v-836166ae="" class="checkout-step checkout-summary">
+                    <div data-v-5a78002b="" data-v-836166ae="">
+                        <div data-v-5a78002b="" class="checkout-step-title1">
+                            <h2 data-v-5a78002b="">Chi tiết đơn hàng</h2>
+                        </div>
+                        <div data-v-5a78002b="" class="checkout-totals">
+                            <table data-v-5a78002b="">
+                                <tbody data-v-5a78002b="">
+                                    <tr data-v-5a78002b="">
+                                        <th data-v-5a78002b="">Giá trị đơn hàng</th>
+                                        <td data-v-5a78002b="">4.669.000 ₫</td>
+                                    </tr>
+                                  
+                                </tbody>
+                                <tfoot data-v-5a78002b="">
+                                    <!---->
+                                    <tr data-v-5a78002b="" class="khtt">
+                                        <th data-v-5a78002b="">Số tiền chiết khấu</th>
+                                        <td data-v-5a78002b="">4.669.000 ₫</td>
+                                    </tr>
+                                    <tr data-v-5a78002b="" class="grand-totals">
+                                        <th data-v-5a78002b="">
+                                            Tổng tiền thanh toán
+
+                                            <small data-v-5a78002b="">(Đã bao gồm thuế VAT)</small>
+                                        </th>
+                                        <td data-v-5a78002b="">4.669.000 ₫</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div data-v-836166ae="" class="checkout-proceed-checkout">
+                        <button class="btn-place-order">Thanh toán</button>
+                        <!---->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

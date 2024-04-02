@@ -6,6 +6,7 @@ import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { LoginComponent } from "./components/login/login.component";
+import { CheckoutComponent } from "./component/checkout/checkout.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -28,6 +29,11 @@ const routes: Routes = [
   {
     path: "tai-khoan",
     component: TaiKhoanComponent,
+  },
+  ,
+  {
+    path: "checkout",
+    component: CheckoutComponent,
   },
 ];
 

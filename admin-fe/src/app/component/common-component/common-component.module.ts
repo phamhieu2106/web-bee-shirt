@@ -4,10 +4,19 @@ import { GetDiaChiVaPhiVanChuyenComponent } from "./get-dia-chi-va-phi-van-chuye
 import { FormsModule } from "@angular/forms";
 import { ProductImageComponent } from "./product-image/product-image.component";
 import { SearchProductDetailComponent } from "../ban-hang-module/search-product-detail/search-product-detail.component";
+import { InputNumberComponent } from "./input-number/input-number.component";
 
 @NgModule({
-  declarations: [GetDiaChiVaPhiVanChuyenComponent, ProductImageComponent],
+  declarations: [
+    GetDiaChiVaPhiVanChuyenComponent,
+    ProductImageComponent,
+    InputNumberComponent,
+  ],
   imports: [CommonModule, FormsModule],
-  exports: [GetDiaChiVaPhiVanChuyenComponent, ProductImageComponent],
+  exports: [
+    GetDiaChiVaPhiVanChuyenComponent,
+    ProductImageComponent,
+    InputNumberComponent,
+  ],
 })
 export class CommonComponentModule {}

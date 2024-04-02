@@ -1,17 +1,28 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { HomePageComponent } from "./component/home-page/home-page.component";
+
+import { HomePageComponent } from "./components/home-page/home-page.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
+import { SanPhamComponent } from "./components/san-pham/san-pham.component";
+import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "home", pathMatch: "full" },
+  { path: "", redirectTo: "homepage", pathMatch: "full" },
   {
-    path: "",
+    path: "homepage",
     component: HomePageComponent,
   },
   {
     path: "san-pham/:id",
     component: SanPhamChiTietComponent,
+  },
+  {
+    path: "trang-san-pham",
+    component: SanPhamComponent,
+  },
+  {
+    path: "tai-khoan",
+    component: TaiKhoanComponent,
   },
 ];
 

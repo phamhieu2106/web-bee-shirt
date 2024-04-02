@@ -7,7 +7,7 @@ import { MauSac } from "../model/class/mau-sac.class";
 @Injectable({
   providedIn: "root",
 })
-export class MauSacService {
+export class ColorService {
   private readonly apiUrl = "http://localhost:8080/mau-sac";
 
   constructor(private http: HttpClient) {}

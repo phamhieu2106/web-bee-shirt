@@ -19,7 +19,13 @@ import { TraHangThanhCongComponent } from "./tra-hang-thanh-cong/tra-hang-thanh-
 import { NzResultModule } from "ng-zorro-antd/result";
 import { NzEmptyModule } from "ng-zorro-antd/empty";
 import { NzInputModule } from "ng-zorro-antd/input";
-import { QuantityInputComponent } from './quantity-input/quantity-input.component';
+import { QuantityInputComponent } from "./quantity-input/quantity-input.component";
+import { NzCardModule } from "ng-zorro-antd/card";
+import { QuyDinhComponent } from "./quy-dinh/quy-dinh.component";
+import { NzGridModule } from "ng-zorro-antd/grid";
+import { NzDescriptionsModule } from "ng-zorro-antd/descriptions";
+import { NzBadgeModule } from "ng-zorro-antd/badge";
+import { NzToolTipModule } from "ng-zorro-antd/tooltip";
 
 @NgModule({
   declarations: [
@@ -28,6 +34,7 @@ import { QuantityInputComponent } from './quantity-input/quantity-input.componen
     ChiTietHoaDonComponent,
     TraHangThanhCongComponent,
     QuantityInputComponent,
+    QuyDinhComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +52,11 @@ import { QuantityInputComponent } from './quantity-input/quantity-input.componen
     NzResultModule,
     NzEmptyModule,
     NzInputModule,
+    NzCardModule,
+    NzGridModule,
+    NzDescriptionsModule,
+    NzBadgeModule,
+    NzToolTipModule,
   ],
 })
 export class TraHangModule {}

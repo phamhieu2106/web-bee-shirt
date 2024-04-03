@@ -10,10 +10,21 @@
     <div class="row taskbar">
       <!-- Search Product taskbar -->
       <div class="p-1 col-6">
-        <div class="dropdown">
+        <div class="dropdown d-flex input-group">
+          <div
+            class="input-group-prepend"
+            data-toggle="modal"
+            data-target="#quetQrModal"
+          >
+            <span
+              class="input-group-text qr-code rounded-left"
+              id="basic-addon1"
+              ><i class="fa-solid fa-qrcode fs-5"></i
+            ></span>
+          </div>
           <input
             type="text"
-            class="form-control dropdown-toggle"
+            class="form-control dropdown-toggle rounded-right"
             id="dropdownProduct"
             data-toggle="dropdown"
             aria-haspopup="true"
@@ -112,12 +123,12 @@
           (click)="changeHoaDon(i)"
           *ngFor="let o of orders; index as i"
         >
-          <span class="fs-5">{{ o.orderNameTemp }}</span>
+          <span class="fs-6">{{ o.orderNameTemp }}</span>
           <button class="btn p-1" (click)="deleteOrder(i)">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
-        <div class="col-1 h-100 p-0">
+        <div class="col-1">
           <button class="btn btn-create" (click)="newHoaDon()">
             <i class="fa-solid fa-plus text-light"></i>
           </button>
@@ -134,7 +145,7 @@
     <!-- Items -->
     <table class="table table-hover">
       <thead class="">
-        <th class="">Mã</th>
+        <th class=""></th>
         <th class="">Tên Sản phẩm</th>
         <th class="">Số lượng</th>
         <th class="">Đơn Giá</th>
@@ -151,17 +162,17 @@
             >
               <i class="fa-solid fa-trash text-danger"></i>
             </button>
-            <div>{{ hdct.sanPhamChiTiet.sanPham.ma }}</div>
           </td>
           <td class="">
-            <div class="fw-bold">
-              {{ hdct.sanPhamChiTiet.sanPham.ten }}
-            </div>
-            <div class="text-muted">
-              <span class="mr-3"
-                >Size: {{ hdct.sanPhamChiTiet.kichCo.ten }}</span
-              >
-              <span>Màu: {{ hdct.sanPhamChiTiet.mauSac.ten }}</span>
+            <div class="">
+              {{
+                hdct.sanPhamChiTiet.sanPham.ten +
+                  " [" +
+                  hdct.sanPhamChiTiet.kichCo.ten +
+                  " | " +
+                  hdct.sanPhamChiTiet.mauSac.ten +
+                  "]"
+              }}
             </div>
           </td>
           <td class="">
@@ -195,12 +206,9 @@
             }}
           </td>
           <td class="">
-            <!-- <input
-              type="number"
-              class="form-control"
-              [(ngModel)]="hdct.giaBan"
-            /> -->
-            <app-input-number [(value)]="hdct.giaBan"></app-input-number>
+            <div style="width: 130px">
+              <app-input-number [(value)]="hdct.giaBan"></app-input-number>
+            </div>
           </td>
           <td class="">
             {{
@@ -362,32 +370,57 @@
       <div class="d-flex justify-content-between m-1">
         <div class="mr-auto fw-bold">Phiếu giảm giá:</div>
         <span class="ml-auto">
-          <div class="">
-            <input
-              type="text"
-              disabled
-              [value]="
-                order.phieuGiamGia.maPhieuGiamGia +
-                ': Giảm ' +
-                (order.phieuGiamGia.kieu == 0
-                  ? order.phieuGiamGia.giaTri + '%'
-                  : (order.phieuGiamGia.giaTri
-                    | currency : ' ' : 'symbol' : '1.0-0')) +
-                'tối đa ' +
-                (order.phieuGiamGia.giaTriMax
-                  | currency : ' ' : 'symbol' : '1.0-0')
+          <div class="d-flex">
+            <select
+              class="form-select form-control custom-select"
+              style="width: 100px"
+            >
+              <!-- data-toggle="tooltip"
+              data-placement="left"
+              title="{{
+                order == null || order.phieuGiamGia == null
+                  ? ''
+                  : 'Giảm ' +
+                    (order.phieuGiamGia.kieu == 0
+                      ? order.phieuGiamGia.giaTri + '%'
+                      : (order.phieuGiamGia.giaTri
+                        | currency : ' ' : 'symbol' : '1.0-0')) +
+                    'tối đa ' +
+                    (order.phieuGiamGia.giaTriMax
+                      | currency : ' ' : 'symbol' : '1.0-0')
+              }}" -->
+              <option class="custom-tooltip" selected>
+                {{ order?.phieuGiamGia?.maPhieuGiamGia }}
+              </option>
+              <option class="custom-tooltip">
+                {{
+                  order == null || order.phieuGiamGia == null
+                    ? ""
+                    : "Giảm " +
+                      (order.phieuGiamGia.kieu == 0
+                        ? order.phieuGiamGia.giaTri + "%"
+                        : (order.phieuGiamGia.giaTri
+                          | currency : " " : "symbol" : "1.0-0")) +
+                      "tối đa " +
+                      (order.phieuGiamGia.giaTriMax
+                        | currency : " " : "symbol" : "1.0-0")
+                }}
+              </option>
+            </select>
+            <div
+              class="p-2"
+              *ngIf="
+                messagePgg != null &&
+                messagePgg != '' &&
+                messagePgg != undefined
               "
-              *ngIf="order != null && order.phieuGiamGia != null"
-              class="right-align fw-bold"
-            />
-            <input
-              type="text"
-              disabled
-              *ngIf="order == null || order.phieuGiamGia == null"
-              class="right-align form-control"
-            />
+              data-toggle="tooltip"
+              data-placement="left"
+              [title]="messagePgg"
+            >
+              <i class="fa-solid fa-lightbulb fs-5" style="color: #ffd43b"></i>
+            </div>
           </div>
-          <div class="text-danger">{{ messagePgg }}</div>
         </span>
 
         <!-- Tự fill PGG -->
@@ -576,13 +609,44 @@
             class="close"
             data-dismiss="modal"
             aria-label="Close"
+            id="closeModalThemKhachHang"
           >
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="m-3">
-          <app-them-khach-hang></app-them-khach-hang>
+          <app-them-khach-hang
+            (createSuccess)="chooseKhachHang($event)"
+            (closeModal)="closeModal($event)"
+          ></app-them-khach-hang>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade product-modal"
+    id="quetQrModal"
+    tabindex="-1"
+    style="display: none"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            id="closeModalQrCode"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <!-- Main modal -->
+        <div class="m-3">
+          <app-qr-code (closeModal)="closeModal($event)"></app-qr-code>
         </div>
       </div>
     </div>

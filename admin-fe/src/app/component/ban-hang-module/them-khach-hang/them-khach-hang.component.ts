@@ -1,5 +1,13 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import emailjs from "@emailjs/browser";
@@ -9,6 +17,7 @@ import Swal from "sweetalert2";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
+import { KhachHang } from "src/app/model/class/KhachHang.class";
 @Component({
   selector: "app-them-khach-hang",
   templateUrl: "./them-khach-hang.component.html",
@@ -23,6 +32,11 @@ export class ThemKhachHangComponent {
   xaIndex = -1;
   huyenIndex = -1;
   tinhIndex = -1;
+  private idModal = "closeModalThemKhachHang";
+
+  @Output() createSuccess = new EventEmitter<KhachHang>();
+  @Output() closeModal = new EventEmitter<string>();
+  @ViewChild("addCustomerModal") addCustomerModal!: ElementRef;
   constructor(
     private khachHangService: KhachHangService,
     private notify: NotificationService,
@@ -53,14 +67,12 @@ export class ThemKhachHangComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.khachHangService.addQuick(this.formAddKh.value).subscribe({
-          next: () => {
+          next: (resp: KhachHang) => {
             this.initFormAddKh();
-            // this.send(
-            //   this.formAddKh.value.hoTen,
-            //   this.formAddKh.value.matKhau,
-            //   this.formAddKh.value.sdt
-            // );
+
             // console.log(resp);
+            this.createSuccess.emit(resp);
+            this.closeModal.emit(this.idModal);
             this.notify.success("Thêm khách hàng thành công ");
           },
           error: (error: HttpErrorResponse) => {
@@ -84,16 +96,16 @@ export class ThemKhachHangComponent {
   public initFormAddKh(): void {
     this.formAddKh = new FormGroup({
       hoTen: new FormControl("", [Validators.required]),
-      gioiTinh: new FormControl("true", [Validators.required]),
+      gioiTinh: new FormControl("true"),
       sdt: new FormControl("", [
         Validators.required,
         Validators.pattern(/^(0)[1-9][0-9]{8}$/),
       ]),
-      ngaySinh: new FormControl("", [Validators.required]),
-      huyen: new FormControl("", [Validators.required]),
-      tinh: new FormControl("", [Validators.required]),
-      duong: new FormControl("", [Validators.required]),
-      xa: new FormControl("", [Validators.required]),
+      ngaySinh: new FormControl(""),
+      huyen: new FormControl(""),
+      tinh: new FormControl(""),
+      duong: new FormControl(""),
+      xa: new FormControl(""),
       matKhau: new FormControl(this.generateRandomPassword()),
     });
   }

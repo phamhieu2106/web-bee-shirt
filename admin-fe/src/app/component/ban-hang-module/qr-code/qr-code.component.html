@@ -1,0 +1,17 @@
+<div>
+  <ngx-scanner-qrcode
+    #action="scanner"
+    (event)="onEvent($event, action)"
+  ></ngx-scanner-qrcode>
+  <div class="text-center">
+    <p *ngIf="action.isLoading">
+      <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+    </p>
+    <button
+      class="btn btn-primary btn-rounded"
+      (click)="action.isStart ? action.stop() : action.start()"
+    >
+      {{ action.isStart ? "Stop" : "Start" }}
+    </button>
+  </div>
+</div>

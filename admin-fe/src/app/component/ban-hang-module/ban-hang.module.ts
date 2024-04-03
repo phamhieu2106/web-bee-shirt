@@ -12,7 +12,9 @@ import { GiamGiaComponent } from "./giam-gia/giam-gia.component";
 import { HoaDonModule } from "../hoa-don-module/hoa-don.module";
 import { PhieuGiamGiaComponent } from "./phieu-giam-gia/phieu-giam-gia.component";
 import { SearchProductDetailComponent } from "./search-product-detail/search-product-detail.component";
-import { ThemKhachHangComponent } from './them-khach-hang/them-khach-hang.component';
+import { ThemKhachHangComponent } from "./them-khach-hang/them-khach-hang.component";
+import { QrCodeComponent } from "./qr-code/qr-code.component";
+import { NgxScannerQrcodeModule } from "ngx-scanner-qrcode";
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { ThemKhachHangComponent } from './them-khach-hang/them-khach-hang.compon
     PhieuGiamGiaComponent,
     SearchProductDetailComponent,
     ThemKhachHangComponent,
+    QrCodeComponent,
   ],
   imports: [
     CommonModule,
@@ -33,6 +36,7 @@ import { ThemKhachHangComponent } from './them-khach-hang/them-khach-hang.compon
     CommonComponentModule,
     ReactiveFormsModule,
     HoaDonModule,
+    NgxScannerQrcodeModule,
   ],
   exports: [SearchProductDetailComponent],
 })

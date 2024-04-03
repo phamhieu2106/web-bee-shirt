@@ -18,5 +18,5 @@ public interface DiaChiRepository extends JpaRepository<DiaChi,Integer> {
              join khach_hang kh on dc.khach_hang_id = kh.id
              where kh.id = :id order by dc.mac_dinh desc 
             """, nativeQuery = true)
-    List<DiaChi> getAll(int id);
+    List<DiaChi> getAllAddressOf1Customer(int id);
 }

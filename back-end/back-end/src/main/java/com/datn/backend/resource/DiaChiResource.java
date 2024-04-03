@@ -1,8 +1,6 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.DiaChiRequest;
-import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.DiaChiRepository;
@@ -19,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class DiaChiResource {
+
     private final DiaChiService diaChiService;
     private final DiaChiRepository diaChiRepository;
     private final KhachHangRepository khachHangRepository;
 
-    @GetMapping("/get-all/{id}")
-    public ResponseEntity<List<DiaChi>> getDiaChiList(@PathVariable("id") int id) {
-//        System.out.println(diaChiService.getAllDC(id).toString());
-        return ResponseEntity.ok(diaChiService.getAllDC(id));
+    @GetMapping("/get-all/{custId}")
+    public ResponseEntity<List<DiaChi>> getAllAddressOf1Customer(@PathVariable("custId") int custId) {
+        return ResponseEntity.ok(diaChiService.getAllAddressOf1Customer(custId));
     }
 
     @PostMapping("/add/{id}")
@@ -88,5 +86,4 @@ public class DiaChiResource {
     public void thayDoiTrangThaiDefault(@PathVariable int id) {
         diaChiService.setDefault(id);
     }
-
 }

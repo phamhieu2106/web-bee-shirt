@@ -33,8 +33,8 @@ public class DiaChiServiceImpl implements DiaChiService {
     }
 
     @Override
-    public List<DiaChi> getAllDC(int id) {
-        return diaChiRepository.getAll(id);
+    public List<DiaChi> getAllAddressOf1Customer(int id) {
+        return diaChiRepository.getAllAddressOf1Customer(id);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DiaChiServiceImpl implements DiaChiService {
         if (setDC != null) {
             setDC.setMacDinh(true);
             diaChiRepository.save(setDC);
-            List<DiaChi> ds = getAllDC(setDC.getKhachHang().getId());
+            List<DiaChi> ds = getAllAddressOf1Customer(setDC.getKhachHang().getId());
             for (DiaChi diaChi : ds) {
                 if (!diaChi.getId().equals(id)) {
                     diaChi.setMacDinh(false);

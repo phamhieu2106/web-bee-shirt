@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CurrencyPipe } from "@angular/common";
+import { forkJoin } from "rxjs";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
 import Swal, { SweetAlertResult } from "sweetalert2";
@@ -17,7 +18,12 @@ import { ProductImageService } from "src/app/service/product-img.service";
 import { ProductDetailsService } from "src/app/service/product-details.service";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import { CartItem } from "src/app/model/class/cart-item.class";
-import { CartItemService } from "src/app/service/cart.service";
+import { CartService } from "src/app/service/cart.service";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { Customer } from "src/app/model/class/customer.class";
+import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
+import { NgOnInitService } from "src/app/service/ngoninit.service";
+import { NavigationComponent } from "../navigation/navigation.component";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -42,7 +48,7 @@ export class SanPhamChiTietComponent {
   public sleeve: string;
   public material: string;
 
-  public quantity: number = 1;
+  public quantityToCart: number = 1;
 
   sanPhamCT: OwlOptions = {
     loop: true,
@@ -82,7 +88,9 @@ export class SanPhamChiTietComponent {
     private productImgService: ProductImageService,
     private productDetailsService: ProductDetailsService,
     private notifService: NotificationService,
-    private cartItemService: CartItemService
+    private cartService: CartService,
+    private authenticationService: AuthenticationService,
+    private ngOnInitService: NgOnInitService
   ) {}
 
   ngOnInit(): void {
@@ -207,78 +215,83 @@ export class SanPhamChiTietComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.productDetailsService
-          .getByProductColorSize(
-            this.sanPham.id,
-            this.colorsOfProduct[this.curColorIndex].id,
-            this.curSizesOfProduct[this.curSizeIndex].id
-          )
-          .subscribe({
-            next: (response: SanPhamChiTiet) => {
-              // kiểm tra sp này có trong giỏ hay chưa
-              let cartItemsInstorage: CartItem[] = JSON.parse(
-                localStorage.getItem("cartItems")
-              );
-              let chkCartItem = this.checkCartItemExists(
-                response,
-                cartItemsInstorage
-              );
-
-              if (chkCartItem === null) {
-                // chưa có
-                // lấy sản phẩm cho spct và thêm
-                this.productService
-                  .getProductByProductDetailsId(response.id)
-                  .subscribe({
-                    next: (productRes: SanPham) => {
-                      response.sanPham = productRes;
-                      const newCartItem = new CartItem(this.quantity, response);
-                      this.cartItemService.addCartItemToLocalStorage(
-                        newCartItem
-                      );
-                      this.notifService.success(
-                        "Thêm sản phẩm vào giỏ thành công!"
-                      );
-                    },
-                    error: (errorResponse: HttpErrorResponse) => {
-                      this.notifService.error(errorResponse.error.message);
-                    },
-                  });
-              } else {
-                // đã có
-                if (chkCartItem.soLuong + this.quantity > this.curQuantity) {
-                  this.notifService.warning(
-                    "Số lượng trong kho không đủ để thêm sản phẩm!"
-                  );
-                } else {
-                  // cập nhật số lượng của cart item đã có trong cart
-                  cartItemsInstorage = cartItemsInstorage.map(
-                    (item: CartItem) => {
-                      if (item.spct.id === response.id) {
-                        item.soLuong = item.soLuong + this.quantity;
-                        return item;
-                      }
-                      return item;
-                    }
-                  );
-                  this.cartItemService.updateCartItemsInStorage(
-                    cartItemsInstorage
-                  );
-                  this.notifService.success(
-                    "Tăng số lượng trong giỏ thành công!"
-                  );
-                }
-              }
-            },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.notifService.error(errorResponse.error.message);
-            },
-          });
+        const loggedCust = this.authenticationService.getCustomerFromStorage();
+        // not login
+        if (!loggedCust) {
+          this.addToCartLocal();
+        } else {
+          this.addToCartForLoggedCus(loggedCust);
+        }
       }
     });
   }
 
-  private checkCartItemExists(
+  private addToCartLocal(): void {
+    this.productDetailsService
+      .getByProductColorSize(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        this.curSizesOfProduct[this.curSizeIndex].id
+      )
+      .subscribe({
+        next: (response: SanPhamChiTiet) => {
+          // kiểm tra sp này có trong giỏ hay chưa
+          let cartItemsInstorage: CartItem[] = JSON.parse(
+            localStorage.getItem("cartItems")
+          );
+          let chkCartItem = this.checkExistenceForLocalCart(
+            response,
+            cartItemsInstorage
+          );
+
+          if (chkCartItem === null) {
+            // chưa có
+            // lấy sản phẩm cho spct và thêm
+            this.productService
+              .getProductByProductDetails(response.id)
+              .subscribe({
+                next: (productRes: SanPham) => {
+                  response.sanPham = productRes;
+                  const newCartItem = new CartItem(
+                    this.quantityToCart,
+                    response
+                  );
+                  this.cartService.addCartItemToLocalStorage(newCartItem);
+                  this.notifService.success(
+                    "Thêm sản phẩm vào giỏ thành công!"
+                  );
+                },
+                error: (errorResponse: HttpErrorResponse) => {
+                  this.notifService.error(errorResponse.error.message);
+                },
+              });
+          } else {
+            // đã có
+            if (chkCartItem.soLuong + this.quantityToCart > this.curQuantity) {
+              this.notifService.warning(
+                "Số lượng trong kho không đủ để thêm sản phẩm!"
+              );
+            } else {
+              // cập nhật số lượng của cart item đã có trong cart
+              cartItemsInstorage = cartItemsInstorage.map((item: CartItem) => {
+                if (item.spct.id === response.id) {
+                  item.soLuong = item.soLuong + this.quantityToCart;
+                  return item;
+                }
+                return item;
+              });
+              this.cartService.updateCartItemsInStorage(cartItemsInstorage);
+              this.notifService.success("Tăng số lượng trong giỏ thành công!");
+            }
+          }
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+  }
+
+  private checkExistenceForLocalCart(
     proDetails: SanPhamChiTiet,
     cartItems: CartItem[]
   ): CartItem {
@@ -290,22 +303,109 @@ export class SanPhamChiTietComponent {
     return null;
   }
 
+  private addToCartForLoggedCus(loggedCus: Customer): void {
+    this.productDetailsService
+      .getByProductColorSize(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        this.curSizesOfProduct[this.curSizeIndex].id
+      )
+      .subscribe({
+        next: (response: SanPhamChiTiet) => {
+          // kiểm tra sp này có trong giỏ hay chưa
+          this.cartService
+            .getCartItemByCustomerAndProductDetails(loggedCus.id, response.id)
+            .subscribe({
+              next: (chkCartItem: CartItem) => {
+                if (chkCartItem === null) {
+                  // chưa có
+                  // lấy sản phẩm cho spct và thêm
+                  const addCartItemReq: AddCartItemReq = {
+                    quantity: this.quantityToCart,
+                    productDetails: response,
+                    customerId: loggedCus.id,
+                  };
+
+                  this.cartService
+                    .addCartItemForLoggedCus(addCartItemReq)
+                    .subscribe({
+                      next: () => {
+                        this.notifService.success(
+                          "Thêm sản phẩm vào giỏ thành công!"
+                        );
+                        this.cartService
+                          .getCartItemsOfLoggedCustomer(loggedCus.id)
+                          .subscribe({
+                            next: (newCartItems: CartItem[]) => {
+                              let getProdObservables = [];
+                              for (let item of newCartItems) {
+                                getProdObservables.push(
+                                  this.productService.getProductByProductDetails(
+                                    item.spct.id
+                                  )
+                                );
+                              }
+
+                              forkJoin(getProdObservables).subscribe({
+                                next: (products: SanPham[]) => {
+                                  products.forEach((product, index) => {
+                                    newCartItems[index].spct.sanPham = product;
+                                    if (index === newCartItems.length - 1) {
+                                      this.cartService.updateCartItemsOfLoggedUser(
+                                        newCartItems
+                                      );
+                                      this.cartService.updateCartItemsQuantityOfLoggedUser(
+                                        newCartItems.length
+                                      );
+                                    }
+                                  });
+                                },
+                              });
+                            },
+                          });
+                      },
+                      error: (errorResponse: HttpErrorResponse) => {
+                        this.notifService.error(errorResponse.error.message);
+                      },
+                    });
+                } else {
+                  // đã có
+                  if (
+                    chkCartItem.soLuong + this.quantityToCart >
+                    this.curQuantity
+                  ) {
+                    this.notifService.warning(
+                      "Số lượng trong kho không đủ để thêm sản phẩm!"
+                    );
+                  } else {
+                    // cập nhật số lượng của cart item đã có trong cart
+                  }
+                }
+              },
+            });
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+  }
+
   // 5
   public minusQuantity(): void {
-    if (this.quantity === 1) {
+    if (this.quantityToCart === 1) {
       this.notifService.warning("Số lượng sản phẩm phải lớn hơn 0!");
       return;
     }
-    --this.quantity;
+    --this.quantityToCart;
   }
 
   // 6
   public plusQuantity(): void {
-    if (this.quantity === this.curQuantity) {
+    if (this.quantityToCart === this.curQuantity) {
       this.notifService.warning("Số lượng tồn của sản phẩm không đủ!");
       return;
     }
-    ++this.quantity;
+    ++this.quantityToCart;
   }
 
   // private functions

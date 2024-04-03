@@ -135,7 +135,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setMacDinh(true);
         diaChiRepository.save(diaChi);
 
-        return null;
+        return khachHang;
     }
 
     @Override

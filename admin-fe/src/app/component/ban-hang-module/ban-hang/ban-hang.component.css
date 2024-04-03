@@ -32,7 +32,7 @@
     background-color: #11398a;
     color: white;
     border-radius: 5px;
-    margin-right: 10px;
+    margin: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,4 +170,27 @@ input[type=number] {
 
 .btn-create i {
     font-size: 30px;
+}
+
+/* styles.css hoặc tệp CSS tùy chỉnh của bạn */
+.custom-tooltip {
+    background-color: #333;
+    /* Màu nền của tooltip */
+    color: #fff;
+    /* Màu chữ của tooltip */
+    border-radius: 4px;
+    /* Bo tròn góc của tooltip */
+    font-size: 18px;
+    /* Cỡ chữ của tooltip */
+    padding: 8px 12px;
+    /* Khoảng cách giữa nội dung và biên của tooltip */
+}
+
+.custom-select::-ms-expand {
+    display: none;
+}
+
+.qr-code {
+    color: black;
+    cursor: pointer;
 }

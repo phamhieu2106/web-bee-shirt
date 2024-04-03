@@ -36,24 +36,15 @@
         <div class="invalid-feedback">Số điện thoại không hợp lệ</div>
       </div>
       <div class="col-6 form-group">
-        <label class="input_label">
-          <b style="color: red">*</b>Ngày sinh
-        </label>
+        <label class="input_label"> Ngày sinh </label>
         <input
           formControlName="ngaySinh"
           type="date"
           class="form-control input"
-          [ngClass]="
-            formAddKh.get('ngaySinh').invalid &&
-            formAddKh.get('ngaySinh').touched
-              ? 'is-invalid'
-              : ''
-          "
         />
-        <div class="invalid-feedback">Không được bỏ trống</div>
       </div>
       <div class="col-6 form-group">
-        <label class="input_label"><b style="color: red">*</b>Giới tính</label>
+        <label class="input_label">Giới tính</label>
         <br />
         <div class="button_ngang">
           <label class="radio-button">
@@ -83,9 +74,7 @@
       <!-- ĐỊA CHỈ  -->
       <div class="col-12 row">
         <div class="col-4 form-group">
-          <label class="input_label"
-            ><b style="color: red">*</b>Tỉnh/Thành phố</label
-          >
+          <label class="input_label">Tỉnh/Thành phố</label>
           <select
             class="form-select form-select-sm input"
             name="tinhId"
@@ -100,9 +89,7 @@
           </select>
         </div>
         <div class="col-4 form-group">
-          <label class="input_label"
-            ><b style="color: red">*</b>Quận/Huyện</label
-          >
+          <label class="input_label">Quận/Huyện</label>
           <select
             class="form-select form-select-sm input"
             name="huyenId"
@@ -118,9 +105,7 @@
           </select>
         </div>
         <div class="col-4 form-group">
-          <label class="input_label"
-            ><b style="color: red">*</b>Xã/Phường</label
-          >
+          <label class="input_label">Xã/Phường</label>
           <select
             class="form-select input"
             name="xaCode"
@@ -135,21 +120,13 @@
           </select>
         </div>
         <div class="col-12 form-group">
-          <label class="input_label"
-            ><b style="color: red">*</b>Địa chỉ cụ thể</label
-          >
+          <label class="input_label">Địa chỉ cụ thể</label>
           <input
             type="text"
             class="form-control input"
             placeholder="Nhập số nhà, tên đường,...."
             formControlName="duong"
-            [ngClass]="
-              formAddKh.get('duong').invalid && formAddKh.get('duong').touched
-                ? 'is-invalid'
-                : ''
-            "
           />
-          <div class="invalid-feedback">Không được bỏ trống</div>
         </div>
       </div>
     </div>

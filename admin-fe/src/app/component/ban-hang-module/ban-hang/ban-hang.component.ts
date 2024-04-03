@@ -2,7 +2,16 @@ import { PdfService } from "./../../../service/pdf.service";
 import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
@@ -40,7 +49,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
   diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
 
   constructor(
-    private toast: ToastrService,
     private spctService: SanPhamChiTietService,
     private khachHangService: KhachHangService,
     private banHangService: BanHangService,
@@ -79,8 +87,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   async newHoaDon() {
-    if (this.orders != null && this.orders.length >= 5) {
-      this.toast.info("Bạn chỉ có thể tạo tối đa 5 đơn hàng");
+    if (this.orders != null && this.orders.length >= 10) {
+      this.notification.warning("Bạn chỉ có thể tạo tối đa 10 đơn hàng");
       return;
     }
     let hoaDon = new HoaDon();
@@ -483,5 +491,10 @@ export class BanHangComponent implements OnInit, OnDestroy {
       }
     }
     return null;
+  }
+
+  // Để đóng modal
+  closeModal(idModal: string): void {
+    document.getElementById(idModal).click();
   }
 }

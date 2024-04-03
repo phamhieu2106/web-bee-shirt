@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { LoginRequest } from "../model/interface/login-request.class";
+import { LoginRequest } from "../model/interface/login-request.interface";
 import { Customer } from "../model/class/customer.class";
 
 @Injectable({
@@ -15,7 +15,6 @@ export class AuthenticationService {
   private token: string;
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
-  public isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   // constructor, ngOn
   constructor(private http: HttpClient, private router: Router) {}
@@ -37,7 +36,6 @@ export class AuthenticationService {
     this.loggedInUsername = null;
     localStorage.removeItem("customer");
     localStorage.removeItem("token");
-    this.isLoggedInSubject.next(false);
     this.router.navigate(["/login"]);
   }
 

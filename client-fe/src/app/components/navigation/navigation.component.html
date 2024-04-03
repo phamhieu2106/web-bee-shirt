@@ -104,7 +104,12 @@
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
-                <span class="quantity">{{ cartItemQuantity1 }}</span>
+                <span class="quantity" *ngIf="!isLoggedIn">{{
+                  cartItemQuantity1
+                }}</span>
+                <span class="quantity" *ngIf="isLoggedIn">{{
+                  cartItemQuantity2
+                }}</span>
               </div>
             </div>
           </div>
@@ -146,6 +151,7 @@
   </div>
 </div>
 
+<!-- cart -->
 <div class="cardgioHang" *ngIf="isCartShow">
   <div class="cart-header">
     <div>
@@ -165,7 +171,8 @@
     >
   </div> -->
 
-  <ul class="listCart" style="padding: 0">
+  <!-- not log in -->
+  <ul class="listCart" style="padding: 0" *ngIf="!isLoggedIn">
     <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
         <div class="col-md-3 imgProductCart">
@@ -176,7 +183,7 @@
           <div
             class="DeleteCart pointer"
             title="Xóa sản phẩm này khỏ giỏ hàng"
-            (click)="deleteItemFromCart(ci)"
+            (click)="deleteItemFromCart(ci, 1)"
           >
             <i class="bi bi-x-lg"></i>
           </div>
@@ -202,7 +209,7 @@
               <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
             </div>
             <div class="wrapper">
-              <span class="minus pointer" (click)="updateQuantity(ci, 'minus')"
+              <span class="minus pointer" (click)="updateQuantity1(ci, 'minus')"
                 >-</span
               >
               <span
@@ -213,7 +220,7 @@
                 "
                 >{{ ci.soLuong }}</span
               >
-              <span class="plus pointer" (click)="updateQuantity(ci, 'plus')"
+              <span class="plus pointer" (click)="updateQuantity1(ci, 'plus')"
                 >+</span
               >
             </div>
@@ -231,10 +238,97 @@
     </div>
   </ul>
 
-  <div class="checkOut" *ngIf="cartItems1.length > 0">
+  <div class="checkOut" *ngIf="cartItems1.length > 0 && !isLoggedIn">
     <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
-      <div class="giaGoc">{{ calculateTotalMoney() }}</div>
+      <div class="giaGoc">{{ calculateTotalMoney(cartItems1) }}</div>
+
+      <!-- <div>Chiết khấu</div>
+      <div class="chietKhau">-179.000đ</div> -->
+
+      <div class="tamTinh">Phải trả</div>
+      <div class="total">419.300đ</div>
+
+      <!-- <div></div>
+      <div class="save">(Tiết kiệm 179.000đ)</div> -->
+    </div>
+
+    <div class="thanhToan">
+      <button class="btnThanhToan">Thanh Toán</button>
+    </div>
+  </div>
+
+  <!-- log in -->
+  <ul class="listCart" style="padding: 0" *ngIf="isLoggedIn">
+    <li class="cartItem" *ngFor="let ci of cartItems2">
+      <div class="row">
+        <div class="col-md-3 imgProductCart">
+          <img
+            [src]="ci.spct.hinhAnhs[0].imageUrl"
+            style="height: 150px; object-fit: cover"
+          />
+          <div
+            class="DeleteCart pointer"
+            title="Xóa sản phẩm này khỏ giỏ hàng"
+            (click)="deleteItemFromCart(ci, 2)"
+          >
+            <i class="bi bi-x-lg"></i>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <span class="nameCartProduct">
+            <a [routerLink]="'/san-pham/' + ci.spct.sanPham.id">
+              {{ ci.spct.sanPham.ten }}
+            </a>
+          </span>
+          <div class="ThuocTinh">
+            <div class="color-cart">
+              <img [src]="ci.spct.mauSac.image.imageUrl" />
+            </div>
+            <span class="line-info">|</span>
+            <span class="sizeCart">
+              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span
+            >
+          </div>
+
+          <div class="wrapperPrice mb-3">
+            <div class="priceCart">
+              <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
+            </div>
+            <div class="wrapper">
+              <span class="minus pointer" (click)="updateQuantity2(ci, 'minus')"
+                >-</span
+              >
+              <span
+                class="num"
+                style="
+                  border-right: 2px solid rgba(0, 0, 0, 0.2);
+                  border-left: 2px solid rgba(0, 0, 0, 0.2);
+                "
+                >{{ ci.soLuong }}</span
+              >
+              <span class="plus pointer" (click)="updateQuantity2(ci, 'plus')"
+                >+</span
+              >
+            </div>
+          </div>
+
+          <div>
+            <small>Số lượng tồn: {{ ci.spct.soLuongTon }}</small>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <div class="text-center" *ngIf="cartItems2.length === 0">
+      <i>Chưa có sản phẩm nào trong giỏ hàng</i>
+    </div>
+  </ul>
+
+  <div class="checkOut" *ngIf="cartItems2.length > 0 && isLoggedIn">
+    <div class="TinhTien">
+      <div>Giá trị đơn hàng</div>
+      <div class="giaGoc">{{ calculateTotalMoney(cartItems2) }}</div>
 
       <!-- <div>Chiết khấu</div>
       <div class="chietKhau">-179.000đ</div> -->

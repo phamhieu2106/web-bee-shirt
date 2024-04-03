@@ -22,6 +22,7 @@ import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.
 import { LoginComponent } from "./components/login/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
+import { CheckoutComponent } from './component/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
     TaiKhoanComponent,
     KhachHangComponent,
     LoginComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,

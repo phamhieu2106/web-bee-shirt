@@ -59,7 +59,6 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao, String trangThai) {
         Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao, trangThai);
-
         return PagedResponse.
                 <HoaDonResponse>builder()
                 .pageNumber(hoaDons.getNumber())
@@ -117,7 +116,6 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tieuDe(nextTrangThaiHD.getTitle())
                 .trangThai(nextTrangThaiHD)
                 .build();
-
         return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
@@ -131,7 +129,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
         HoaDon hoaDonUpdate = hoaDon.get();
 
-
         // đổi trạng thái
         if (hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.DANG_GIAO ||
                 hoaDonUpdate.getTrangThai() == TrangThaiHoaDon.HUY) {
@@ -139,19 +136,17 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new OrderStatusException("Hóa đơn này không thể thay đổi trạng thái được nữa");
         }
 
-
         TrangThaiHoaDon cancelOrder = TrangThaiHoaDon.HUY;
         hoaDonUpdate.setTrangThai(cancelOrder);
 
-
-        //tạo 1 lịch sử hóa đơn
+        // tạo 1 lịch sử hóa đơn
         LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
                 .hoaDon(hoaDonUpdate)
                 .moTa(changeOrderStatus.getMoTa())
                 .tieuDe(cancelOrder.getTitle())
                 .trangThai(cancelOrder)
                 .build();
-        //rollback sl sp va sl pgg
+        // rollback sl sp va sl pgg
         if (hoaDonUpdate.getPhieuGiamGia() != null) {
             hoaDonUpdate.getPhieuGiamGia().setSoLuong(hoaDonUpdate.getPhieuGiamGia().getSoLuong() + 1);
             System.out.println(hoaDonUpdate.getPhieuGiamGia());
@@ -164,7 +159,6 @@ public class HoaDonServiceImpl implements HoaDonService {
                 spctRepo.save(hdct.getSanPhamChiTiet());
             });
         }
-
         return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
@@ -252,7 +246,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             if (httt == null) {
                 httt = hinhThucThanhToanRepo.save(HinhThucThanhToan.builder().hinhThuc(LoaiHinhThuc.valueOf(tt.getHinhThucThanhToan())).build());
             }
-
             thanhToan.setMaGiaoDich(tt.getMaGiaoDich());
             thanhToan.setSoTien(tt.getSoTien());
             thanhToan.setTrangThai(true);

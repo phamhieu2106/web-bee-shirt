@@ -18,6 +18,7 @@ import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-them-phieu",
@@ -31,7 +32,9 @@ export class ThemPhieuComponent implements OnInit {
   public search = "";
   public isUpdatingThoiGianKetThuc: boolean = false;
 
+
   errorMessage: string = "";
+  
 
   selectedIds: number[] = [];
   soLuongCheck: number = 0;
@@ -46,7 +49,9 @@ export class ThemPhieuComponent implements OnInit {
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private notifService: NotificationService
+    
   ) { }
 
   ngOnInit(): void {
@@ -183,7 +188,7 @@ export class ThemPhieuComponent implements OnInit {
       // Kiểm tra nếu ô giá trị trống
       
       if (this.giaTriNew === null ) {
-        return { giaTri: "Không bỏ trống trường này1" };
+        return { giaTri: "Không bỏ trống trường này" };
       }
 
       // Tiếp tục kiểm tra giá trị nhập vào khi không trống
@@ -470,82 +475,118 @@ export class ThemPhieuComponent implements OnInit {
   }
 
   //Khách hàng
-  keyword: string
+
 
   public search1(e: any): void {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
-    this.keyword = e.target.value;
+    this.search = e.target.value;
     // Loại bỏ dấu cách thừa giữa các từ trong chuỗi keyword
-    const keywordWithoutExtraSpaces = this.keyword.replace(/\s+/g, ' ');
+    const keywordWithoutExtraSpaces = this.search.replace(/\s+/g, ' ');
 
-    this.keyword = this.keyword.trim();
+    this.search = this.search.trim();
     // Gán giá trị đã được xử lý vào thuộc tính this.keyword
-    this.keyword = keywordWithoutExtraSpaces;
-
-    this.timeout = setTimeout(() => {
-      this.goToPage(
-        this.pagedResponse.pageNumber,
-        this.pagedResponse.pageSize,
-        this.keyword 
-      );
-    }, 500);
+    this.search = keywordWithoutExtraSpaces;
+    this.goToPage(1, this.pagedResponse.pageSize, this.search);
   }
 
-  filterObject: any = null;
-  pageSize: number = 5;
-  pageNumber: number = 1;
-  onChangeFilter() {
-    this.filterObject = {
-      pageNumber: this.pageNumber,
-      pageSize: this.pageSize,
-      search: this.search
+
+
+
+//
+public goToPage(
+  page: number = 1,
+  pageSize: number = 5,
+  keyword: string = ""
+): void {
+  this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
+    next: (response: PagedResponse<KhachHang>) => {
+      this.pagedResponse = response;
+    },
+    error: (errorResponse: HttpErrorResponse) => {
+      this.notifService.error(errorResponse.error.message);
+    },
+  });
+}
+
+//
+public changePageSize(e: any): void {
+  this.goToPage(1, e.target.value, this.search);
+}
+
+
+
+
+
+
+
+  // filterObject: any = null;
+  // pageSize: number = 5;
+  // pageNumber: number = 1;
+  // onChangeFilter() {
+  //   this.filterObject = {
+  //     pageNumber: this.pageNumber,
+  //     pageSize: this.pageSize,
+  //     search: this.search
      
-    };
-    this.goToPage(
-      this.filterObject.pageNumber,
-      this.filterObject.pageSize,
-      this.filterObject.search
-    );
-  }
+  //   };
+  //   this.goToPage(
+  //     this.filterObject.pageNumber,
+  //     this.filterObject.pageSize,
+  //     this.filterObject.search
+  //   );
+  // }
 
-  public onChangePageSize(): void {
-    this.goToPage(this.pageNumber, this.pageSize, this.search);
-  }
+  // public onChangePageSize(): void {
+
+  //   this.filterObject = {
+  //     pageNumber: this.pageNumber,
+  //     pageSize: this.pageSize,
+  //     search: this.search
+     
+  //   };
+  //   console.log(this.filterObject.search)
+
+  //   this.goToPage(
+  //     this.filterObject.pageNumber,
+  //     this.filterObject.pageSize,
+  //     this.filterObject.search
+  //   );
+  // }
 
 
-  public goToPage(page: number, pageSize: number, keyword: string): void {
-    console.log(this.filterObject)
-    if (this.filterObject) {
-      this.phieuGiamGia.getAllActive(
-          page,
-          pageSize,
-          keyword
-        )
-        .subscribe({
-          next: (response: PagedResponse<KhachHang>) => {
-            this.pagedResponse = response;
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error);
-          },
-        });
-    } else {
-      this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
-        next: (response: PagedResponse<KhachHang>) => {
-          this.pagedResponse = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        },
-        complete: () => {
-          console.log(this.pagedResponse);
-        },
-      });
-    }
-  }
+  // public goToPage(page: number, pageSize: number, keyword: string): void {
+  //   console.log(this.filterObject)
+  //   if (this.filterObject) {
+  //     this.phieuGiamGia.getAllActive(
+  //         page,
+  //         pageSize,
+  //         keyword
+  //       )
+  //       .subscribe({
+  //         next: (response: PagedResponse<KhachHang>) => {
+  //           this.pagedResponse = response;
+  //         },
+  //         error: (error: HttpErrorResponse) => {
+  //           console.log(error);
+  //         },
+  //       });
+  //   } else {
+  //     this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
+  //       next: (response: PagedResponse<KhachHang>) => {
+  //         this.pagedResponse = response;
+  //       },
+  //       error: (error: HttpErrorResponse) => {
+  //         console.log(error);
+  //       },
+  //       complete: () => {
+  //         // console.log(this.pagedResponse);
+  //       },
+  //     });
+  //   }
+  // }
 
 
 

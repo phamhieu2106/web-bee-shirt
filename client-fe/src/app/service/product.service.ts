@@ -52,7 +52,7 @@ export class ProductService {
   }
 
   // 4
-  public getProductByProductDetailsId(id: number): Observable<SanPham> {
+  public getProductByProductDetails(id: number): Observable<SanPham> {
     return this.http.get<SanPham>(
       `${this.apiUrl}/get-by-product-details/${id}`
     );

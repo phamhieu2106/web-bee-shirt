@@ -51,7 +51,7 @@
                         : ''
                     "
                     placeholder="Mật khẩu"
-                    [type]="passwordInputType ? 'password' : 'text'"
+                    [type]="isPassInputHidden ? 'password' : 'text'"
                     formControlName="matKhau"
                   />
 
@@ -59,7 +59,7 @@
                     Mật khẩu không được bỏ trống
                   </div>
                 </div>
-                <input type="checkbox" (click)="togglePasswordInputType()" />
+                <input type="checkbox" (click)="togglePasswordInput()" />
                 <label for="">Hiển thị mật khẩu</label> <br />
 
                 <!-- Submit button -->
@@ -71,7 +71,7 @@
                   [disabled]="loginForm.invalid"
                 >
                   Đăng Nhập
-                  <i *ngIf="loading" class="fa-solid fa-spin fa-spinner"></i>
+                  <i *ngIf="isLoading" class="fa-solid fa-spin fa-spinner"></i>
                 </button>
 
                 <!-- Register buttons

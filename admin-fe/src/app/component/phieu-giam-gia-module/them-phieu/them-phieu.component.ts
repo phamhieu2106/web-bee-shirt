@@ -523,7 +523,6 @@ export class ThemPhieuComponent implements OnInit {
           page,
           pageSize,
           keyword
-         
         )
         .subscribe({
           next: (response: PagedResponse<KhachHang>) => {

@@ -16,14 +16,12 @@
         </div>
 
         <div class="col-lg-6 mb-5 mb-lg-0">
-          <div class="card">
-            <div class="card-body py-5 px-md-5">
-              <form [formGroup]="loginForm">
-                <!-- phone number -->
-                <div class="form-outline mb-4">
-                  <label class="form-label">Số điện thoại</label>
-                  <input
-                    class="form-control"
+          <div class="form-container">
+            <h3 class="title">Đăng Nhập</h3>
+            <form class="form-horizontal" [formGroup]="loginForm">
+                <div>
+                    <label>Tài Khoản</label>
+                    <input  class="form-control"
                     [ngClass]="
                       loginForm.get('tenDangNhap').invalid &&
                       loginForm.get('tenDangNhap').touched
@@ -32,70 +30,43 @@
                     "
                     placeholder="Số điện thoại"
                     type="text"
-                    formControlName="tenDangNhap"
-                  />
-                  <div class="invalid-feedback">
-                    Tên đăng nhập không được bỏ trống
-                  </div>
+                    formControlName="tenDangNhap">
+                </div>
+                <div class="invalid-feedback">
+                  Tên đăng nhập không được bỏ trống
                 </div>
 
-                <!-- password -->
-                <div class="form-outline mb-4">
-                  <label class="form-label">Mật khẩu</label>
-                  <input
-                    class="form-control"
-                    [ngClass]="
-                      loginForm.get('matKhau').invalid &&
-                      loginForm.get('matKhau').touched
-                        ? 'is-invalid'
-                        : ''
-                    "
-                    placeholder="Mật khẩu"
-                    [type]="isPassInputHidden ? 'password' : 'text'"
-                    formControlName="matKhau"
-                  />
-
-                  <div class="invalid-feedback">
-                    Mật khẩu không được bỏ trống
-                  </div>
+                <div class="mt-3 mb-3" >
+                    <label>Mật Khẩu</label>
+                    <input  class="form-control"  [ngClass]="
+                    loginForm.get('matKhau').invalid &&
+                    loginForm.get('matKhau').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  placeholder="Mật khẩu"
+                  [type]="isPassInputHidden ? 'password' : 'text'"
+                  formControlName="matKhau">
                 </div>
-                <input type="checkbox" (click)="togglePasswordInput()" />
-                <label for="">Hiển thị mật khẩu</label> <br />
-
-                <!-- Submit button -->
-                <button
-                  type="submit"
-                  class="btn btn-dark btn-block mt-3"
-                  type="submit"
-                  (click)="login()"
-                  [disabled]="loginForm.invalid"
-                >
-                  Đăng Nhập
-                  <i *ngIf="isLoading" class="fa-solid fa-spin fa-spinner"></i>
-                </button>
-
-                <!-- Register buttons
-                <div class="text-center">
-                  <p>or sign up with:</p>
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-facebook-f"></i>
-                  </button>
-
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-google"></i>
-                  </button>
-
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-twitter"></i>
-                  </button>
-
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-github"></i>
-                  </button>
-                </div> -->
-              </form>
-            </div>
-          </div>
+                <div class="invalid-feedback">
+                  Mật khẩu không được bỏ trống
+                </div>
+              
+            
+                
+              
+                <div class="check-terms">
+                    <input type="checkbox" class="checkbox" (click)="togglePasswordInput()">
+                    <span class="check-label">Hiện mật khẩu</span>
+                </div>
+                <span class="signin-link">Bạn chưa có tài khoản <a href="/signin">Đăng ký</a></span>
+                <button class="btn signup"  type="submit"
+                (click)="login()"
+                [disabled]="loginForm.invalid">Đăng Nhập 
+                <i *ngIf="isLoading" class="fa-solid fa-spin fa-spinner"></i>
+              </button>
+            </form>
+        </div>
         </div>
       </div>
     </div>

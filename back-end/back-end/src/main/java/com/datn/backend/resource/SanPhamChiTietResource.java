@@ -1,6 +1,6 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.dto.request.AddSpctRequest;
+import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -34,7 +34,7 @@ public class SanPhamChiTietResource {
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestParam("request") String requestStr,
                                       @RequestParam(value = "files", required = false) MultipartFile[] files) throws IOException {
-        AddSpctRequest request = objectMapper.readValue(requestStr, AddSpctRequest.class);
+        AddSpctReq request = objectMapper.readValue(requestStr, AddSpctReq.class);
         spctService.addSpctList(request, files);
         return ResponseEntity.ok("Thêm các sản phẩm thành công!");
     }

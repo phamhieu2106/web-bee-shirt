@@ -53,27 +53,21 @@ public class UtilityFunction {
         if (obj == null) {
             return true;
         }
-
         if (obj instanceof String) {
             return ((String) obj).isEmpty();
         }
-
         if (obj instanceof CharSequence) {
             return ((CharSequence) obj).length() == 0;
         }
-
         if (obj.getClass().isArray()) {
             return java.lang.reflect.Array.getLength(obj) == 0;
         }
-
         if (obj instanceof Iterable) {
             return !((Iterable<?>) obj).iterator().hasNext();
         }
-
         if (obj instanceof Map) {
             return ((Map<?, ?>) obj).isEmpty();
         }
-
         return false;
     }
 }

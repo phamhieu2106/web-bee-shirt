@@ -28,6 +28,7 @@ import java.util.List;
 @ToString
 @Builder
 public class HinhThucThanhToan extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

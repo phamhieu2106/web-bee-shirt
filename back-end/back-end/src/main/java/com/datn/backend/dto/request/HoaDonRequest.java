@@ -31,7 +31,7 @@ public class HoaDonRequest {
 
     private String tenNguoiNhan;
 
-//    @Length( max =10, message = "Số điện thoại không hợp lệ")
+    //    @Length( max =10, message = "Số điện thoại không hợp lệ")
     private String sdtNguoiNhan;
 
     private String emailNguoiNhan;
@@ -51,6 +51,6 @@ public class HoaDonRequest {
     private BigDecimal phiVanChuyen;
 
     private String loaiHoaDon;
-//    private String trangThai;
+    //    private String trangThai;
     private String ghiChu;
 }

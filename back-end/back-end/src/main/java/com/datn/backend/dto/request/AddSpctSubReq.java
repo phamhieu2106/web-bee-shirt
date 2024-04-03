@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
-public class AddSpctSubRequest {
+public class AddSpctSubReq {
 
     private int mauSacId;
     private List<Integer> kichCoIdList;

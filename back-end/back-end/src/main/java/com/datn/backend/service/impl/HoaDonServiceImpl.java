@@ -27,10 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,13 +38,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class HoaDonServiceImpl implements HoaDonService {
+
     private final HoaDonRepository hoaDonRepository;
     private final ModelMapper modelMapper;
     private final LichSuHoaDonRepository lichSuHoaDonRepository;
     private final NhanVienRepository nhanVienRepo;
     private final KhachHangRepository khachHangRepo;
-    private final HoaDonChiTietRepository hoaDonChiTietRepo;
-    private final ThanhToanRepository thanhToanRepo;
     private final PhieuGiamGiaRepository phieuGiamGiaRepo;
     private final SanPhamChiTietRepository spctRepo;
     private final HinhThucThanhToanRepository hinhThucThanhToanRepo;
@@ -207,7 +203,6 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Transactional
     public HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
         HoaDon hoaDon = null;
-//        System.out.println(placeOrderRequest.getDiaChiVaPhiVanChuyen());
         if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.TAI_QUAY.toString())) {
             hoaDon = this.createHoaDonTaiQuay(placeOrderRequest);
         } else if (placeOrderRequest.getLoaiHoaDon().equals(LoaiHoaDon.GIAO_HANG.toString())) {
@@ -221,7 +216,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         KhachHang khachHang = placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null) : null;
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
 
-//        System.out.println(placeOrderRequest);
         HoaDon hoaDon = HoaDon
                 .builder()
                 .ma(generateMaHD())
@@ -249,21 +243,20 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     private List<ThanhToan> createThanhToans(List<ThanhToanRequest> thanhToans, HoaDon hoaDon) {
-
         return thanhToans.stream().map((tt) -> {
             ThanhToan thanhToan = new ThanhToan();
-            HinhThucThanhToan hinhThucThanhToan = hinhThucThanhToanRepo.findByHinhThuc(
+            HinhThucThanhToan httt = hinhThucThanhToanRepo.findByHinhThuc(
                     LoaiHinhThuc.valueOf(tt.getHinhThucThanhToan())
             ).orElse(null);
-            if (hinhThucThanhToan == null){
-                hinhThucThanhToan = hinhThucThanhToanRepo.save(HinhThucThanhToan.builder().hinhThuc(LoaiHinhThuc.valueOf(tt.getHinhThucThanhToan())).build());
+
+            if (httt == null) {
+                httt = hinhThucThanhToanRepo.save(HinhThucThanhToan.builder().hinhThuc(LoaiHinhThuc.valueOf(tt.getHinhThucThanhToan())).build());
             }
+
             thanhToan.setMaGiaoDich(tt.getMaGiaoDich());
             thanhToan.setSoTien(tt.getSoTien());
             thanhToan.setTrangThai(true);
-            thanhToan.setHinhThucThanhToan(
-                    hinhThucThanhToan
-            );
+            thanhToan.setHinhThucThanhToan(httt);
             thanhToan.setHoaDon(hoaDon);
             return thanhToan;
         }).toList();
@@ -271,43 +264,34 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     private List<LichSuHoaDon> createLichSuHoaDonTaiQuay(HoaDon hoaDon) {
         List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
-        LichSuHoaDon lichSuHoaDon =
-                LichSuHoaDon
-                        .builder()
-                        .tieuDe("Hoàn thành")
-                        .moTa("")
-                        .trangThai(TrangThaiHoaDon.HOAN_THANH)
-                        .hoaDon(hoaDon)
-                        .build();
-
+        LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
+                .tieuDe("Hoàn thành")
+                .moTa("")
+                .trangThai(TrangThaiHoaDon.HOAN_THANH)
+                .hoaDon(hoaDon)
+                .build();
         lichSuHoaDons.add(lichSuHoaDon);
         return lichSuHoaDons;
     }
 
-    private PhieuGiamGia validPhieuGiamGia(Integer phieuGiamGiaId) {
+    private PhieuGiamGia validPhieuGiamGia(Integer phieuId) {
         PhieuGiamGia phieuGiamGia = null;
-        if (phieuGiamGiaId != null) {
-            phieuGiamGia = phieuGiamGiaRepo.findById(phieuGiamGiaId).orElseThrow(
-                    () -> new PlaceOrderException("Phiếu giảm giá không hợp lệ")
-            );
+        if (phieuId != null) {
+            phieuGiamGia = phieuGiamGiaRepo.findById(phieuId)
+                    .orElseThrow(() -> new PlaceOrderException("Phiếu giảm giá không hợp lệ."));
+
             // check so luong
             if (phieuGiamGia.getSoLuong() <= 0) {
-                throw new PlaceOrderException("Phiếu giảm giá đã hết số lượng sử dụng");
+                throw new PlaceOrderException("Phiếu giảm giá đã hết số lượng sử dụng.");
             }
             // check thoi han su dung
-            LocalDateTime now = LocalDateTime.now();
-//            if (!(now.isBefore(phieuGiamGia.getThoiGianBatDau()) && now.isAfter(phieuGiamGia.getThoiGianKetThuc()))){
-//                System.out.println(now.toString());
-//                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
-//            }
-            if (!this.isWithinInterval(now, phieuGiamGia.getThoiGianBatDau(), phieuGiamGia.getThoiGianKetThuc())) {
-                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
+            if (!isWithinInterval(LocalDateTime.now(), phieuGiamGia.getThoiGianBatDau(), phieuGiamGia.getThoiGianKetThuc())) {
+                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng.");
             }
             // tru so luong
             if (phieuGiamGia.getSoLuong() >= 1) {
                 phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
             }
-
         }
         return phieuGiamGia;
     }
@@ -321,28 +305,32 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (hoaDonChiTiets.isEmpty()) {
             throw new PlaceOrderException("Vui lòng thêm sản phẩm vào đơn");
         }
+
         return hoaDonChiTiets.stream().map((hdct) -> {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            SanPhamChiTiet sanPhamChiTiet = spctRepo.findById(hdct.getSanPhamChiTietId()).orElse(null);
-            if (sanPhamChiTiet == null || !sanPhamChiTiet.isTrangThai()) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " đã dừng bán vui lòng xóa khỏi đơn !");
+            SanPhamChiTiet spct = spctRepo.findById(hdct.getSanPhamChiTietId()).orElse(null);
+
+            if (spct == null || !spct.isTrangThai()) {
+                throw new PlaceOrderException("Sản phẩm " + spct.getSanPham().getTen() + " đã dừng bán vui lòng xóa khỏi đơn!");
             }
             if (hdct.getSoLuong() <= 0) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " số lượng không hợp lệ !");
+                throw new PlaceOrderException("Sản phẩm " + spct.getSanPham().getTen() + " số lượng không hợp lệ!");
             }
-            if (sanPhamChiTiet.getSoLuongTon() <= 0) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " đã hết hàng");
+            if (spct.getSoLuongTon() <= 0) {
+                throw new PlaceOrderException("Sản phẩm " + spct.getSanPham().getTen() + " đã hết hàng");
             }
-            if (hdct.getSoLuong() > sanPhamChiTiet.getSoLuongTon()) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " chỉ có thể mua tối đa " + sanPhamChiTiet.getSoLuongTon() + " sản phẩm !");
+            if (hdct.getSoLuong() > spct.getSoLuongTon()) {
+                throw new PlaceOrderException("Sản phẩm " + spct.getSanPham().getTen() + " chỉ có thể mua tối đa " + spct.getSoLuongTon() + " sản phẩm !");
             }
+
             hoaDonChiTiet.setSoLuong(hdct.getSoLuong());
             hoaDonChiTiet.setGiaBan(hdct.getGiaBan());
             hoaDonChiTiet.setGiaNhap(hdct.getGiaNhap());
-            hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTiet.setSanPhamChiTiet(spct);
             hoaDonChiTiet.setHoaDon(hoaDon);
-            // tru so luong ton
-            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - hdct.getSoLuong());
+
+            // trừ số lượng tồn
+            spct.setSoLuongTon(spct.getSoLuongTon() - hdct.getSoLuong());
             return hoaDonChiTiet;
         }).toList();
     }
@@ -357,53 +345,56 @@ public class HoaDonServiceImpl implements HoaDonService {
         return maHD;
     }
 
-    private HoaDon createHoaDonGiaoHang(PlaceOrderRequest placeOrderRequest) {
+    private HoaDon createHoaDonGiaoHang(PlaceOrderRequest request) {
         // check so dien thoai
-        if (placeOrderRequest.getSdtNguoiNhan() == null || !placeOrderRequest.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")) {
+        if (request.getSdtNguoiNhan() == null || !request.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")) {
             throw new PlaceOrderException("Số điện thoại người nhận không hợp lệ");
         }
 
         // check ten nguoi nhan
-        if (placeOrderRequest.getTenNguoiNhan() == null || placeOrderRequest.getTenNguoiNhan().trim().isEmpty()) {
+        if (request.getTenNguoiNhan() == null || request.getTenNguoiNhan().trim().isEmpty()) {
             throw new PlaceOrderException("Tên người nhận không hợp lệ");
         }
-        //check dia chi
-        if (placeOrderRequest.getDiaChiNguoiNhan() == null || placeOrderRequest.getDiaChiNguoiNhan().trim().isEmpty()) {
+        // check dia chi
+        if (request.getDiaChiNguoiNhan() == null || request.getDiaChiNguoiNhan().trim().isEmpty()) {
             throw new PlaceOrderException("Địa chỉ người nhận không hợp lệ");
         }
-        String[] diaChis = placeOrderRequest.getDiaChiNguoiNhan().split(",");
+
+        String[] diaChis = request.getDiaChiNguoiNhan().split(",");
         int diaChisLength = diaChis.length;
-        if (UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 1]) || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 2]) || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 3])) {
+        if (UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 1])
+            || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 2])
+            || UtilityFunction.isNullOrEmpty(diaChis[diaChisLength - 3])) {
             throw new PlaceOrderException("Vui lòng chọn đầy đủ địa chỉ người nhận");
         }
-//        System.out.println(1+placeOrderRequest.toString());
-        NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
-        KhachHang khachHang = placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null) : null;
-        PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
+        // end check
+
+        NhanVien nhanVien = nhanVienRepo.findById(request.getNhanVienId()).orElse(null);
+        KhachHang khachHang = khachHangRepo.findById(request.getKhachHangId()).orElse(null);
+        PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(request.getPhieuGiamGiaId());
 
         HoaDon hoaDon = HoaDon
                 .builder()
                 .ma(generateMaHD())
-                .loaiHoaDon(LoaiHoaDon.valueOf(placeOrderRequest.getLoaiHoaDon()))
-                .tenNguoiNhan(placeOrderRequest.getTenNguoiNhan().trim())
-                .sdtNguoiNhan(placeOrderRequest.getSdtNguoiNhan())
+                .loaiHoaDon(LoaiHoaDon.valueOf(request.getLoaiHoaDon()))
+                .tenNguoiNhan(request.getTenNguoiNhan())
+                .sdtNguoiNhan(request.getSdtNguoiNhan())
                 .emailNguoiNhan(null)
-                .diaChiNguoiNhan(placeOrderRequest.getDiaChiNguoiNhan().trim())
-                .tongTien(placeOrderRequest.getTongTien())
-                .tienGiam(placeOrderRequest.getTienGiam())
-                .phiVanChuyen(placeOrderRequest.getPhiVanChuyen())
+                .diaChiNguoiNhan(request.getDiaChiNguoiNhan().trim())
+                .tongTien(request.getTongTien())
+                .tienGiam(request.getTienGiam())
+                .phiVanChuyen(request.getPhiVanChuyen())
                 .loaiHoaDon(LoaiHoaDon.GIAO_HANG)
                 .trangThai(TrangThaiHoaDon.CHO_XAC_NHAN)
-                .ghiChu(placeOrderRequest.getGhiChu())
+                .ghiChu(request.getGhiChu())
                 .nhanVien(nhanVien)
                 .khachHang(khachHang)
                 .phieuGiamGia(phieuGiamGia)
                 .build();
-
         hoaDonRepository.save(hoaDon);
-        hoaDon.setHoaDonChiTiets(this.mapToHoaDonChiTiet(placeOrderRequest.getHoaDonChiTiets(), hoaDon));
-        hoaDon.setLichSuHoaDons(this.createLichSuHoaDonGiaoHang(hoaDon));
-        hoaDon.setThanhToans(this.createThanhToans(placeOrderRequest.getThanhToans(), hoaDon));
+        hoaDon.setHoaDonChiTiets(mapToHoaDonChiTiet(request.getHoaDonChiTiets(), hoaDon));
+        hoaDon.setLichSuHoaDons(createLichSuHoaDonGiaoHang(hoaDon));
+        hoaDon.setThanhToans(createThanhToans(request.getThanhToans(), hoaDon));
         return hoaDon;
     }
 

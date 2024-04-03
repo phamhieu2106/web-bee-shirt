@@ -14,8 +14,7 @@ public class GHNItemRequest {
     private int quantity;
     private long price;
     private int length; // dai cm
-    private int width;//rong cm
+    private int width; // rong cm
     private int height; //cao cm
-    private long weight;// nang gram
-//            "category":
+    private long weight; // nang gram
 }

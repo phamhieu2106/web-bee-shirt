@@ -5,12 +5,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
 public class KhachHangRequest {
+
     private Integer id;
     private String hoTen;
     private LocalDate ngaySinh;
@@ -25,5 +25,4 @@ public class KhachHangRequest {
     private String huyen;
     private String xa;
     private String duong;
-
 }

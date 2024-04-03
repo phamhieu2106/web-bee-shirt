@@ -47,6 +47,5 @@ public class DotGiamGiaRequest {
         object.setTrangThai(this.trangThai);
 //      return object after map
         return object;
-
     }
 }

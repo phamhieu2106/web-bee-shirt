@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddHoaDonChiTietRequest {
+
     @NotNull(message = "Sản phẩm không hợp lệ")
     private Integer sanPhamChiTietId;
 

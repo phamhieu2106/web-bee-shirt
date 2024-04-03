@@ -37,9 +37,6 @@ public class AddNhanVienRequest {
     @NotBlank(message = "Địa chỉ không được trống")
     private String diaChi;
 
-//    @NotBlank(message = "Tên đăng nhập không được trống")
-//    private String tenDangNhap;
-
     @NotBlank(message = "Mật khẩu không được trống")
     private String matKhau;
 }

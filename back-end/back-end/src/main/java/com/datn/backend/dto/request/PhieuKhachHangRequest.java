@@ -15,5 +15,4 @@ public class PhieuKhachHangRequest {
 
     private List<Integer> selectedIds;
     private Integer phieuGiamGiaId;
-
 }

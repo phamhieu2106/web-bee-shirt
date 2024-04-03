@@ -1,6 +1,6 @@
 package com.datn.backend.service.impl;
 
-import com.datn.backend.dto.request.AddSpctRequest;
+import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
@@ -75,7 +75,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
      */
     @Transactional
     @Override
-    public void addSpctList(AddSpctRequest request, MultipartFile[] multipartFiles) throws IOException {
+    public void addSpctList(AddSpctReq request, MultipartFile[] multipartFiles) throws IOException {
         // check for exist by MauSac and KichCo
         checkExistForAdd(request);
 
@@ -118,7 +118,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 (String) result.get("public_id"));
     }
 
-    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSpctRequest request) {
+    private SanPhamChiTiet setCommonField(SanPhamChiTiet spct, AddSpctReq request) {
         SanPham sanPham = sanPhamRepo.findById(request.getSanPhamId()).get();
         KieuDang kieuDang = kieuDangRepo.findById(request.getKieuDangId()).get();
         KieuThietKe kieuThietKe = kieuThietKeRepo.findById(request.getThietKeId()).get();
@@ -136,7 +136,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return spct;
     }
 
-    private void checkExistForAdd(AddSpctRequest request) {
+    private void checkExistForAdd(AddSpctReq request) {
         for (int kichCoId : request.getRequests().getKichCoIdList()) {
             SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(request.getSanPhamId(), request.getRequests().getMauSacId(), kichCoId);
             if (spctByMauSacAndKichCo != null) {

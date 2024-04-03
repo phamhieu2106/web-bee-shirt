@@ -17,12 +17,12 @@ import java.math.BigDecimal;
 public class HoaDonChiTietRequest {
 
     @NotNull(message = "Bạn phải truyền id của hóa đơn chi tiết")
-        private Integer id;
+    private Integer id;
 
-        @Min(value = 1, message = "Số lượng phải lớn hơn 1")
-        private int soLuong;
+    @Min(value = 1, message = "Số lượng phải lớn hơn 1")
+    private int soLuong;
 
-        private BigDecimal giaBan;
-        private BigDecimal giaNhap;
-        private Integer sanPhamChiTietId;
+    private BigDecimal giaBan;
+    private BigDecimal giaNhap;
+    private Integer sanPhamChiTietId;
 }

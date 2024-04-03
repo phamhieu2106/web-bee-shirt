@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Data
 public class PhieuGiamGiaRequest {
 
-
     private String maPhieuGiamGia;
 
     private String tenPhieuGiamGia;

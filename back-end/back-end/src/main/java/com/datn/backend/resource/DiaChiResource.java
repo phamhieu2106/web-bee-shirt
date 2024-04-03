@@ -28,7 +28,8 @@ public class DiaChiResource {
     }
 
     @PostMapping("/add/{id}")
-    public ResponseEntity<DiaChiRequest> add(@PathVariable("id") int id, @RequestBody DiaChiRequest dc) {
+    public ResponseEntity<DiaChiRequest> add(@PathVariable("id") int id,
+                                             @RequestBody DiaChiRequest dc) {
         KhachHang kh = khachHangRepository.getById(id);
         DiaChi diaChi = new DiaChi();
         diaChi.setId(dc.getId());
@@ -47,6 +48,7 @@ public class DiaChiResource {
         dto.setXa(addDC.getXa());
         dto.setDuong(addDC.getDuong());
         dto.setMacDinh(addDC.isMacDinh());
+
         return ResponseEntity.ok(dto);
     }
 
@@ -82,8 +84,8 @@ public class DiaChiResource {
     public ResponseEntity<DiaChi> deleteDC(@PathVariable("id") int id) {
         return ResponseEntity.ok(diaChiService.deleteDC(id));
     }
-    @PostMapping("/setDefault/{id}")
-    public void thayDoiTrangThaiDefault(@PathVariable int id) {
-        diaChiService.setDefault(id);
+    @PostMapping("/set-default/{id}")
+    public ResponseEntity<DiaChi> setDefaultAddress(@PathVariable int id) {
+        return ResponseEntity.ok(diaChiService.setDefault(id));
     }
 }

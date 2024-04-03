@@ -68,5 +68,4 @@ public class HoaDon extends BaseEntity {
 
     @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL)
     private List<ThanhToan> thanhToans;
-
 }

@@ -16,5 +16,5 @@ public interface DiaChiService {
 
     DiaChi deleteDC(int id);
 
-    void setDefault(int id);
+    DiaChi setDefault(int id);
 }

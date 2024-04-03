@@ -25,128 +25,123 @@
               <div class="checkout-step-title">
                 <h2>Thông tin giao hàng</h2>
                 <!-- Đăng nhập rồi thì hiện nút này -->
-                <a href="#" class="edit">Thay đổi</a>
+                <a class="edit pointer" (click)="toggleAddressesModal(true)"
+                  >Thay đổi</a
+                >
               </div>
               <div>
                 <div class="checkout-step-content">
                   <div class="shipping-address-items">
-                    <!-- khách hàng đã đăng nhập -->
-                    <!-- <div class="shipping-address-item">
-                      <div class="name">
-                        Bình Phạm
-                        <span class="phone">0345262229</span>
-                      </div>
-                      <div class="address">fgfg, Huyện An Phú, An Giang</div>
-                      <div class="address-type"></div>
-                    </div> -->
-
                     <!-- khách hàng không đăng nhập -->
                     <div class="shipping-address-item">
                       <div class="addressNot">
                         <div class="wraperInfo">
-                          <label for="">Họ </label>
+                          <label class="mb-1">Họ tên:</label>
                           <input
                             type="text"
-                            name=""
-                            id=""
                             class="form-control"
-                          />
-                        </div>
-                        <div class="wraperInfo">
-                          <label for="">Tên </label>
-                          <input
-                            type="text"
-                            name=""
-                            id=""
-                            class="form-control"
+                            [value]="loggedCust.hoTen"
+                            disabled
                           />
                         </div>
 
                         <div class="wraperInfo">
-                          <label for="">Số điện thoại </label>
+                          <label class="mb-1">Số điện thoại:</label>
                           <input
                             type="text"
-                            name=""
-                            id=""
                             class="form-control"
+                            [value]="loggedCust.sdt"
+                            disabled
                           />
                         </div>
 
                         <div class="wraperInfo">
-                          <label for="">Tỉnh/Thành phố </label>
-                          <select name="" id="" class="form-select">
-                            <option value="">Tỉnh/Thành phố</option>
-                          </select>
-                        </div>
-                        <div class="wraperInfo">
-                          <label for="">Quận/Huyện </label>
-                          <select name="" id="" class="form-select">
-                            <option value="">Quận/Huyện</option>
-                          </select>
-                        </div>
-                        <div class="wraperInfo">
-                          <label for="">Phường/Xã </label>
-                          <select name="" id="" class="form-select">
-                            <option value="">Phường/Xã</option>
-                          </select>
-                        </div>
-
-                        <div class="wraperInfo">
-                          <label for="">Số nhà - Đường</label>
+                          <label class="mb-1">Email:</label>
                           <input
                             type="text"
-                            name=""
-                            id=""
                             class="form-control"
+                            [value]="loggedCust.email"
+                            disabled
                           />
                         </div>
 
                         <div class="wraperInfo">
-                          <label for="">Email</label>
+                          <label class="mb-1">Tỉnh/Thành phố:</label>
                           <input
-                            type="email"
-                            name=""
-                            id=""
+                            type="text"
                             class="form-control"
+                            [value]="defaultAddr?.tinh"
+                            disabled
                           />
                         </div>
 
                         <div class="wraperInfo">
-                          <label for="">Ghi chú đơn hàng</label>
+                          <label class="mb-1">Quận/Huyện:</label>
                           <input
                             type="text"
-                            name=""
-                            id=""
                             class="form-control"
+                            [value]="defaultAddr?.huyen"
+                            disabled
+                          />
+                        </div>
+
+                        <div class="wraperInfo">
+                          <label class="mb-1">Phường/Xã:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.xa"
+                            disabled
+                          />
+                        </div>
+
+                        <div class="wraperInfo">
+                          <label class="mb-1">Đường:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.duong"
+                            disabled
                           />
                         </div>
                       </div>
                     </div>
 
-                    <!-- Thêm in vào class sẽ hiện   <div class="modal-address modal in">-->
-                    <div class="modal-address modal">
+                    <!-- Modal: danh sách địa chỉ -->
+                    <div
+                      [ngClass]="
+                        isAddressesModalOpen
+                          ? 'modal-address modal in'
+                          : 'modal-address modal'
+                      "
+                    >
                       <div class="modal-backdrop"></div>
                       <div class="modal-container">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <div class="modal-close">
-                              <span class="screen-reader-text">close</span>
+                            <div
+                              class="modal-close"
+                              (click)="toggleAddressesModal(false)"
+                            >
+                              <span class="screen-reader-text">Close</span>
                             </div>
                             <h4 class="modal-title">Sổ địa chỉ</h4>
                           </div>
                           <div class="modal-body">
-                            <div class="modal-address-item">
+                            <div
+                              class="modal-address-item"
+                              *ngFor="let addr of addresses"
+                            >
                               <div class="info">
                                 <div class="address">
-                                  fgfg, Huyện An Phú, An Giang
+                                  {{ formatAddress(addr) }}
                                 </div>
                                 <div class="name-phone">
-                                  <div class="name">Bình Phạm</div>
+                                  <div class="name">{{ loggedCust.hoTen }}</div>
                                   <div class="line"></div>
-                                  <div class="phone">0345262229</div>
+                                  <div class="phone">{{ loggedCust.sdt }}</div>
                                 </div>
-                                <div class="address-type">
-                                  <!---->
+                                <div class="address-type" *ngIf="addr.macDinh">
                                   <label class="label label-default"
                                     ><svg
                                       width="20"
@@ -167,11 +162,18 @@
                                   >
                                 </div>
                               </div>
-                              <div class="action-edit"><span>Sửa</span></div>
+                              <div class="action-edit" *ngIf="!addr.macDinh">
+                                <span (click)="setDefaultAddress(addr.id)"
+                                  >Đặt</span
+                                >
+                              </div>
                             </div>
                           </div>
                           <div class="modal-footer">
-                            <button class="btn btn-primary">
+                            <button
+                              class="btn btn-primary"
+                              (click)="toggleAddAddressModal(true)"
+                            >
                               Thêm địa chỉ
                             </button>
                           </div>
@@ -179,20 +181,30 @@
                       </div>
                     </div>
 
-                    <!-- Modal new address -->
-                    <div class="modal-new-address modal">
+                    <!-- Modal: Thêm địa chỉ -->
+                    <div
+                      [ngClass]="
+                        isAddAddressModalOpen
+                          ? 'modal-new-address modal in'
+                          : 'modal-new-address modal'
+                      "
+                    >
                       <div class="modal-backdrop"></div>
                       <div class="modal-container">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <div class="modal-close">
+                            <div
+                              class="modal-close"
+                              (click)="toggleAddAddressModal(false)"
+                            >
                               <span class="screen-reader-text">close</span>
                             </div>
                             <h4 class="modal-title">Thêm địa chỉ</h4>
                           </div>
                           <div class="checkout-shipping">
-                            <div class="checkout-shipping-form">
-                              <div class="row">
+                            <form [formGroup]="addAddressForm">
+                              <div class="checkout-shipping-form">
+                                <!-- <div class="row">
                                 <div class="form-group col-sm-6">
                                   <label for="name">Họ tên</label>
                                   <input
@@ -211,52 +223,100 @@
                                     class="form-control"
                                   />
                                 </div>
-                              </div>
-                              <div class="row">
-                                <div class="form-group col-sm-6">
-                                  <label for="tinh">Tỉnh / Thành phố</label>
-                                  <select name="state" class="form-control">
-                                    <option></option>
-                                    <option value="508">Hà Nội</option>
-                                  </select>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                  <label for="huyen">Quận / Huyện</label>
-                                  <select name="city" class="form-control">
-                                    <option></option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label for="xa">Phường / Xã</label>
-                                <select name="ward" class="form-control">
-                                  <option></option>
-                                </select>
-                              </div>
-                              <div class="form-group">
-                                <label for="dia-chi">Địa chỉ chi tiết</label>
-                                <input
-                                  type="text"
-                                  name="streetName"
-                                  class="form-control"
-                                />
-                              </div>
+                              </div> -->
 
-                              <div class="form-checkbox active mt-3">
-                                <input
-                                  type="checkbox"
-                                  name=""
-                                  id="checkbox1"
-                                  value="true"
-                                />
-                                <label for="checkbox1"
-                                  ><span>Đặt làm địa chỉ mặc định</span></label
-                                >
+                                <!-- Tỉnh/Thành phố -->
+                                <div class="row">
+                                  <div class="form-group col-sm-6 mb-3">
+                                    <label class="mb-1">Tỉnh/Thành phố:</label>
+                                    <select
+                                      name="state"
+                                      class="form-control"
+                                      (change)="getAllDistrictsByProvince()"
+                                      formControlName="tinh"
+                                    >
+                                      <option value="">
+                                        Chọn Tỉnh/Thành phố
+                                      </option>
+                                      <option
+                                        *ngFor="let p of provinces"
+                                        [value]="p.ProvinceName"
+                                      >
+                                        {{ p.ProvinceName }}
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <div class="form-group col-sm-6 mb-3">
+                                    <label class="mb-1">Quận/Huyện:</label>
+                                    <select
+                                      class="form-control"
+                                      (change)="getAllWardsByDistrict()"
+                                      formControlName="huyen"
+                                    >
+                                      <option value="" selected>
+                                        Chọn quận huyện
+                                      </option>
+                                      <option
+                                        *ngFor="let d of districts"
+                                        value="{{ d.DistrictName }}"
+                                      >
+                                        {{ d.DistrictName }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                  <label class="mb-1">Phường/Xã:</label>
+                                  <select
+                                    class="form-control"
+                                    formControlName="xa"
+                                  >
+                                    <option value="" selected>
+                                      Chọn phường xã
+                                    </option>
+                                    <option
+                                      *ngFor="let w of wards"
+                                      [value]="w.WardName"
+                                    >
+                                      {{ w.WardName }}
+                                    </option>
+                                  </select>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                  <label class="mb-1"
+                                    >Số nhà - Đường/Địa chỉ chi tiết:</label
+                                  >
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="duong"
+                                  />
+                                </div>
+
+                                <div class="form-checkbox mt-3">
+                                  <input
+                                    type="checkbox"
+                                    formControlName="macDinh"
+                                  />
+                                  <label
+                                    ><span
+                                      >Đặt làm địa chỉ mặc định</span
+                                    ></label
+                                  >
+                                </div>
+                                <div class="button">
+                                  <button
+                                    class="btn-save"
+                                    (click)="addAddress()"
+                                  >
+                                    Lưu địa chỉ
+                                  </button>
+                                </div>
                               </div>
-                              <div class="button">
-                                <button class="btn-save">lưu địa chỉ</button>
-                              </div>
-                            </div>
+                            </form>
                           </div>
                         </div>
                       </div>

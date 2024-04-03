@@ -30,7 +30,7 @@ public class PlaceOrderRequest {
     @NotNull(message = "Phí vận chuyển không hợp lệ")
     private BigDecimal phiVanChuyen;
 
-    @Pattern(regexp = "^(TAI_QUAY|GIAO_HANG)$",message = "Loại hóa đơn không hợp lệ")
+    @Pattern(regexp = "^(TAI_QUAY|GIAO_HANG)$", message = "Loại hóa đơn không hợp lệ")
     private String loaiHoaDon;
 
     @NotEmpty(message = "Vui lòng thêm sản phẩm vào đơn hàng")

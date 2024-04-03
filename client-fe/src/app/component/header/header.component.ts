@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { OwlOptions } from 'ngx-owl-carousel-o';
+import { Component } from "@angular/core";
+import { OwlOptions } from "ngx-owl-carousel-o";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.css"],
 })
 export class HeaderComponent {
   headerSlide: OwlOptions = {
@@ -17,22 +17,21 @@ export class HeaderComponent {
     autoplayTimeout: 2000,
     autoplayHoverPause: true,
     navSpeed: 700,
-    navText: ['', ''],
+    navText: ["", ""],
     responsive: {
       0: {
-        items: 1
+        items: 1,
       },
       400: {
-        items: 1
+        items: 1,
       },
       740: {
-        items: 1
+        items: 1,
       },
       940: {
-        items: 1
-      }
+        items: 1,
+      },
     },
-    nav: false
-  }
-
+    nav: false,
+  };
 }

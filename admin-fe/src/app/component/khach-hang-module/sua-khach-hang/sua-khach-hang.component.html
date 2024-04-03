@@ -189,7 +189,6 @@
                       type="button"
                       class="btn btn-outline-primary mx-sm-4 rounded"
                       (click)="updateKH()"
-                      
                     >
                       Lưu
                     </button>
@@ -289,6 +288,7 @@
                                 </select>
                               </div>
                             </div>
+
                             <div class="col">
                               <div class="form-group">
                                 <label class="input_label"
@@ -314,6 +314,7 @@
                                 </select>
                               </div>
                             </div>
+
                             <div class="col">
                               <div class="form-group">
                                 <label class="input_label"
@@ -529,10 +530,11 @@
         </h1>
       </div>
       <!-- <form [formGroup]="updateFormDC"> -->
-      <app-dia-chi-detail [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen" [selectedAddress]="selectedAddress"
-   ></app-dia-chi-detail>
+      <app-dia-chi-detail
+        [(diaChiVaPhiVanChuyen)]="diaChiVaPhiVanChuyen"
+        [selectedAddress]="selectedAddress"
+      ></app-dia-chi-detail>
 
-      
       <!-- </form> -->
     </div>
   </div>

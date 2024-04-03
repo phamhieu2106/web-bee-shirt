@@ -1,9 +1,11 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { Observable, delay } from "rxjs";
+
+import Swal from "sweetalert2";
+
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
@@ -11,7 +13,6 @@ import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.i
 import { DiaChiService } from "src/app/service/dia-chi.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { KhachHangService } from "src/app/service/khach-hang.service";
-import Swal from "sweetalert2";
 
 @Component({
   selector: "app-sua-khach-hang",
@@ -30,16 +31,17 @@ export class SuaKhachHangComponent {
   public addFormDC: FormGroup;
   public updateFormDC: FormGroup;
   public dsDC: DiaChi[];
+
   tinhs: any[];
   huyens: any[];
   xas: any[];
   idTinh: number;
   idHuyen: number;
   idXa: number;
+
   selectedAddress: DiaChi;
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   selectedAddressId: number;
-
 
   public dstinh: any[] = [];
   public dshuyen: any[] = [];
@@ -56,19 +58,21 @@ export class SuaKhachHangComponent {
   imageUrl: string;
   public isCollapsed: boolean = true;
   @ViewChild("fileInput") fileInput: ElementRef;
+
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private khachHangService: KhachHangService,
     private toas: ToastrService,
     private diaChiService: DiaChiService,
     private ghn: GiaoHangNhanhService
   ) {}
+
   ngOnInit() {
     this.initFormUpdateKh();
-    this.initAddFormDC();
+    this.initAddFormDC(); //
     this.initFormUpdateDC();
-    this.getAllTinh();
+    this.getAllTinh(); //
+
     const ma = this.route.snapshot.paramMap.get("id");
     this.idKh = parseInt(ma, 10);
     this.diaChiService.getAllDc(this.idKh).subscribe({
@@ -76,6 +80,7 @@ export class SuaKhachHangComponent {
         this.dsDC = data;
       },
     });
+
     this.route.params.subscribe((params) => {
       this.id = +params["id"];
       this.khachHangService.getById(this.id).subscribe({
@@ -95,7 +100,9 @@ export class SuaKhachHangComponent {
       });
     });
   }
-  getAllTinh() {
+
+  //
+  private getAllTinh() {
     this.huyens = [];
     this.xas = [];
     this.ghn.getAllProvince().subscribe({
@@ -107,7 +114,8 @@ export class SuaKhachHangComponent {
       },
     });
   }
-  getAllHuyenByTinh() {
+
+  public getAllHuyenByTinh() {
     this.xas = [];
     this.findTinhId();
     this.ghn.getAllDistrictByProvinceID(this.idTinh).subscribe({
@@ -121,7 +129,7 @@ export class SuaKhachHangComponent {
     });
   }
 
-  getAllXaByHuyen() {
+  public getAllXaByHuyen() {
     this.findHuyenId();
     this.ghn.getAllWardByDistrictID(this.idHuyen).subscribe({
       next: (resp) => {
@@ -134,7 +142,7 @@ export class SuaKhachHangComponent {
     });
   }
 
-  getTenTinh(): string {
+  private getTenTinh(): string {
     let provinceName = this.addFormDC.get("tinh").value;
     if (provinceName == null || provinceName == "") {
       this.tinhs.forEach((t) => {
@@ -145,7 +153,8 @@ export class SuaKhachHangComponent {
     }
     return provinceName;
   }
-  getTenHuyen(): string {
+
+  private getTenHuyen(): string {
     let districtName = this.addFormDC.get("huyen").value;
     this.huyens.forEach((t) => {
       if (t.DistrictID == this.idHuyen) {
@@ -154,7 +163,8 @@ export class SuaKhachHangComponent {
     });
     return districtName;
   }
-  getTenXa(): string {
+
+  private getTenXa(): string {
     let wardName = "";
     this.xas.forEach((t) => {
       if (t.WardCode == this.idXa) {
@@ -163,20 +173,8 @@ export class SuaKhachHangComponent {
     });
     return wardName;
   }
-  fillData() {
-    // get all tỉnh => lọc ds tìm tinhId
-    this.getAllTinh();
-    setTimeout(() => this.findTinhId(), 100);
 
-    // get all huyện => lọc danh sách tìm xaId
-    setTimeout(() => this.getAllHuyenByTinh(), 200);
-    setTimeout(() => this.findHuyenId(), 400);
-
-    // get all xã
-    setTimeout(() => this.getAllXaByHuyen(), 600);
-    setTimeout(() => this.findXaId(), 800);
-  }
-  findXaId() {
+  private findXaId() {
     for (let i = 0; i < this.xas.length; i++) {
       const element = this.xas[i];
       if (element.NameExtension.includes(this.selectedAddress.xa)) {
@@ -185,7 +183,8 @@ export class SuaKhachHangComponent {
       }
     }
   }
-  findHuyenId() {
+
+  private findHuyenId() {
     for (let i = 0; i < this.huyens.length; i++) {
       const element = this.huyens[i];
       if (element.NameExtension.includes(this.addFormDC.get("huyen").value)) {
@@ -194,7 +193,8 @@ export class SuaKhachHangComponent {
       }
     }
   }
-  findTinhId() {
+
+  private findTinhId() {
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
       if (element.NameExtension.includes(this.addFormDC.get("tinh").value)) {
@@ -203,19 +203,23 @@ export class SuaKhachHangComponent {
       }
     }
   }
+
+  // image
   public imageChange(event: any): void {
     this.selectFile = event.target["files"][0];
   }
-  openFileInput() {
+
+  public openFileInput() {
     this.fileInput.nativeElement.click();
   }
 
-  onFileSelected(event: any) {
+  public onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.imageUrl = URL.createObjectURL(file);
     }
   }
+
   public updateKH(): void {
     if (
       new Date(this.formUpdateKH.value.ngaySinh) > new Date() ||
@@ -225,7 +229,6 @@ export class SuaKhachHangComponent {
       this.toas.error("Ngày sinh không được sau ngày hiện tại", "Thất bại");
       return;
     }
-
     Swal.fire({
       toast: true,
       title: "Bạn có đồng ý sửa thông tin khách hàng không?",
@@ -234,29 +237,31 @@ export class SuaKhachHangComponent {
       showCancelButton: true,
       confirmButtonColor: "#F5B16D",
     }).then((result) => {
-      if(result.isConfirmed){
+      if (result.isConfirmed) {
         this.khachHangService
-        .update(this.id, this.formUpdateKH.value, this.selectFile)
-        .subscribe({
-          next: (kh: KhachHang) => {
-            this.initFormUpdateDC();
-            Swal.fire({
-              icon: "success",
-              title: `Cập nhật thành công!`,
-              showConfirmButton: false,
-              timer: 2000,
-            });
-          },
-          error: (erros: HttpErrorResponse) => {
-            this.toas.error("Cập nhật thông tin không thành công", "Thất bại");
-          },
-        });
+          .update(this.id, this.formUpdateKH.value, this.selectFile)
+          .subscribe({
+            next: (kh: KhachHang) => {
+              this.initFormUpdateDC();
+              Swal.fire({
+                icon: "success",
+                title: `Cập nhật thành công!`,
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            },
+            error: (erros: HttpErrorResponse) => {
+              this.toas.error(
+                "Cập nhật thông tin không thành công",
+                "Thất bại"
+              );
+            },
+          });
       }
-     
     });
-
   }
-  public initFormUpdateKh(): void {
+
+  private initFormUpdateKh(): void {
     this.formUpdateKH = new FormGroup({
       id: new FormControl("", [Validators.required]),
       hoTen: new FormControl("", [Validators.required]),
@@ -274,7 +279,7 @@ export class SuaKhachHangComponent {
     });
   }
 
-  public initAddFormDC(): void {
+  private initAddFormDC(): void {
     this.addFormDC = new FormGroup({
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
@@ -282,7 +287,8 @@ export class SuaKhachHangComponent {
       duong: new FormControl("", [Validators.required]),
     });
   }
-  public initFormUpdateDC(): void {
+
+  private initFormUpdateDC(): void {
     this.updateFormDC = new FormGroup({
       idDC: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
@@ -336,7 +342,6 @@ export class SuaKhachHangComponent {
         this.diaChiVaPhiVanChuyen.xa = dc.xa;
         this.diaChiVaPhiVanChuyen.cuThe = dc.duong;
         // console.log(this.diaChiVaPhiVanChuyen);
-        
 
         this.idDC = id;
         this.updateFormDC = new FormGroup({
@@ -372,12 +377,11 @@ export class SuaKhachHangComponent {
       },
     });
   }
- 
-  
 
   public reloadPage() {
     location.reload();
   }
+
   public xoaDC(id: number): void {
     this.diaChiService.deleteDC(id).subscribe({
       next: (dc: DiaChi) => {
@@ -400,54 +404,8 @@ export class SuaKhachHangComponent {
       this.reloadPage();
     });
   }
-  onCityChange(): void {
-    const selectedTinh = this.dstinh.find(
-      (t) => t.province_name == this.addFormDC.get("tinh")?.value
-    );
-    if (selectedTinh) {
-      const selectedId = selectedTinh.province_id;
-      this.diaChiService.getHuyen(selectedId).subscribe((data: any) => {
-        this.dshuyen = data.results;
-      });
-    }
-  }
 
-  ondistrictChange(): void {
-    const selectedHuyen = this.dshuyen.find(
-      (t) => t.district_name == this.addFormDC.get("huyen")?.value
-    );
-    if (selectedHuyen) {
-      const selectedId = selectedHuyen.district_id;
-      this.diaChiService.getXa(selectedId).subscribe((data: any) => {
-        this.dsxa = data.results;
-      });
-    }
-  }
-
-  onCityDetailChange(): void {
-    const selectedTinh = this.tinhDetail.find(
-      (t) => t.province_name == this.updateFormDC.get("tinh")?.value
-    );
-    if (selectedTinh) {
-      const selectedId = selectedTinh.province_id;
-      this.diaChiService.getHuyen(selectedId).subscribe((data: any) => {
-        this.huyenDetail = data.results;
-      });
-    }
-  }
-
-  ondistrictDetailChange(): void {
-    const selectedHuyen = this.huyenDetail.find(
-      (t) => t.district_name == this.updateFormDC.get("huyen")?.value
-    );
-    if (selectedHuyen) {
-      const selectedId = selectedHuyen.district_id;
-      this.diaChiService.getXa(selectedId).subscribe((data: any) => {
-        this.xaDetail = data.results;
-      });
-    }
-  }
-  toggleCollapse(index: number): void {
+  public toggleCollapse(index: number): void {
     this.dsDC[index].isCollapsed = !this.dsDC[index].isCollapsed;
   }
 }

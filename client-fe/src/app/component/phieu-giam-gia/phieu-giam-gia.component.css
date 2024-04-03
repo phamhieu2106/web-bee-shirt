@@ -1,140 +1,139 @@
 .title-section {
-    margin-top: 30px;
-    border-left: 4px solid #000;
-    padding-left: 10px;
+  margin-top: 30px;
+  border-left: 4px solid #000;
+  padding-left: 10px;
 }
 
 .title-section span {
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 18px;
-    color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 18px;
+  color: black;
 }
 
-
 .wd-list-coupon {
-    margin: 0 -7.5px;
-    padding: 10px 0;
+  margin: 0 -7.5px;
+  padding: 10px 0;
 }
 
 @media only screen and (max-width: 992px) {
-    .wd-list-coupon {
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        overflow-x: auto;
-    }
+  .wd-list-coupon {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
 }
 
 .wd-list-coupon .item {
-    flex: 0 0 25%;
-    width: 25%;
-    padding: 0 7.5px;
-    margin-bottom: 15px;
-    position: relative;
+  flex: 0 0 25%;
+  width: 25%;
+  padding: 0 7.5px;
+  margin-bottom: 15px;
+  position: relative;
 }
 
 @media only screen and (max-width: 992px) and (min-width: 768px) {
-    .wd-list-coupon .item {
-        flex: 0 0 33.3333%;
-        width: 33.3333%;
-        margin-bottom: 5px;
-    }
+  .wd-list-coupon .item {
+    flex: 0 0 33.3333%;
+    width: 33.3333%;
+    margin-bottom: 5px;
+  }
 }
 
 @media only screen and (max-width: 767px) {
-    .wd-list-coupon .item {
-        flex: 0 0 90%;
-        width: 90%;
-        margin-bottom: 5px;
-    }
+  .wd-list-coupon .item {
+    flex: 0 0 90%;
+    width: 90%;
+    margin-bottom: 5px;
+  }
 }
 
 .wd-list-coupon .wd-coupon {
-    background: #fff;
-    border-radius: 8px !important;
-    box-shadow: 0px 0px 4px 2px #ccc;
-    overflow: auto;
+  background: #fff;
+  border-radius: 8px !important;
+  box-shadow: 0px 0px 4px 2px #ccc;
+  overflow: auto;
 }
 
 .wd-list-coupon .wd-coupon-left {
-    flex: 0 0 30%;
-    width: 30%;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border-left: 12px solid #FCBF49;
-    border-right: 1px dashed #ccc;
-    font-size: 22px;
-    color: black;
+  flex: 0 0 30%;
+  width: 30%;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-left: 12px solid #fcbf49;
+  border-right: 1px dashed #ccc;
+  font-size: 22px;
+  color: black;
 }
 
 @media only screen and (max-width: 767px) {
-    .wd-list-coupon .wd-coupon-left {
-        flex: 0 0 25%;
-        width: 25%;
-        font-size: 20px;
-    }
+  .wd-list-coupon .wd-coupon-left {
+    flex: 0 0 25%;
+    width: 25%;
+    font-size: 20px;
+  }
 }
 
 .wd-list-coupon .wd-coupon-right {
-    padding: 5px;
-    background: #fff;
-    flex: 0 0 70%;
-    width: 70%;
-    flex-direction: column;
+  padding: 5px;
+  background: #fff;
+  flex: 0 0 70%;
+  width: 70%;
+  flex-direction: column;
 }
 
 @media only screen and (max-width: 767px) {
-    .wd-list-coupon .wd-coupon-right {
-        flex: 0 0 75%;
-        width: 75%;
-    }
+  .wd-list-coupon .wd-coupon-right {
+    flex: 0 0 75%;
+    width: 75%;
+  }
 }
 
 .wd-list-coupon .wd-coupon-right-top,
 .wd-list-coupon .wd-coupon-right-top span {
-    display: block;
+  display: block;
 }
 
 .wd-list-coupon .wd-coupon-right .big-bold {
-    font-weight: bold;
-    font-size: 15px;
+  font-weight: bold;
+  font-size: 15px;
 }
 
 .wd-list-coupon .wd-coupon-right-bottom {
-    justify-content: space-between;
-    margin-top: 10px;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .wd-list-coupon .wd-coupon-right-bottom button {
-    border: none;
-    background: #000;
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 12px;
+  border: none;
+  background: #000;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
 }
 
 .wd-list-coupon .wd-coupon-right-bottom button:hover,
 .wd-list-coupon .wd-coupon-right-bottom button.iscopied {
-    background: #4E5256;
+  background: #4e5256;
 }
 
 .wd-list-coupon .wd-coupon-right-bottom a {
-    border: none;
-    background: #000;
-    color: #fff;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+  border: none;
+  background: #000;
+  color: #fff;
+  padding: 2px 12px;
+  border-radius: 20px;
+  font-size: 12px;
 }
 
 .wd-list-coupon .wd-coupon-right-bottom a:hover,
 .wd-list-coupon .wd-coupon-right-bottom a.iscopied {
-    background: var(--bgflashsale);
+  background: var(--bgflashsale);
 }
 
 .wd-list-coupon .wd-coupon-detail {
-    flex-direction: column;
-    font-size: 11px;
+  flex-direction: column;
+  font-size: 11px;
 }

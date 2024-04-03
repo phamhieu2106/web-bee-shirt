@@ -8,11 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DiaChiRequest {
+
     private Integer id;
     private String tinh;
     private String huyen;
     private String xa;
     private String duong;
     private boolean macDinh;
-
 }

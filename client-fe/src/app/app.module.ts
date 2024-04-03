@@ -19,11 +19,11 @@ import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.component";
-import { LoginComponent } from "./components/login/login.component";
+import { LoginComponent } from "./components/log-in/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
-import { CheckoutComponent } from "./components/checkout/checkout.component";
-import { SigninComponent } from './components/signin/signin.component';
+import { CheckoutComponent } from "./components/check-out/checkout.component";
+import { SignUpComponent } from "./components/sign-up/sign-up.component";
 
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import { SigninComponent } from './components/signin/signin.component';
     KhachHangComponent,
     LoginComponent,
     CheckoutComponent,
-    SigninComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,

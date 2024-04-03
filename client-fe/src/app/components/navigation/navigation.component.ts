@@ -213,22 +213,20 @@ export class NavigationComponent {
       return;
     }
 
-    this.cartService
-      .updateProdDetailsQuantityInCart(cartItem.id, type)
-      .subscribe({
-        next: (cartItem: CartItem) => {
-          this.cartItems2 = this.cartItems2.map((item: CartItem) => {
-            if (item.id === cartItem.id) {
-              item.soLuong = cartItem.soLuong;
-              return item;
-            }
+    this.cartService.minusOrPlusCartItemQuantity(cartItem.id, type).subscribe({
+      next: (cartItem: CartItem) => {
+        this.cartItems2 = this.cartItems2.map((item: CartItem) => {
+          if (item.id === cartItem.id) {
+            item.soLuong = cartItem.soLuong;
             return item;
-          });
-        },
-        error: (errorRes: HttpErrorResponse) => {
-          this.notifService.error(errorRes.error.message);
-        },
-      });
+          }
+          return item;
+        });
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
   }
 
   // private functions

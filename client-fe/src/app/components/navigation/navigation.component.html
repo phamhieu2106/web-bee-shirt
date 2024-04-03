@@ -53,10 +53,10 @@
               <div class="popUpDangNhap" *ngIf="isPopupShow && !isLoggedIn">
                 <div>
                   <button class="btnDangNhap">
-                    <a [routerLink]="'/login'">Đăng Nhập</a>
+                    <a [routerLink]="'/log-in'">Đăng Nhập</a>
                   </button>
                   <button class="btnDangKy">
-                    <a [routerLink]="'/signup'">Đăng Ký</a>
+                    <a [routerLink]="'/sign-up'">Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
                     <a>Theo dõi đơn hàng</a>
@@ -141,10 +141,10 @@
           <a href="">Liên Hệ</a>
         </li>
         <li *ngIf="!isLoggedIn">
-          <a href="">Đăng Nhập</a>
+          <a routerLink="/log-in">Đăng Nhập</a>
         </li>
         <li *ngIf="!isLoggedIn">
-          <a href="">Đăng Kí</a>
+          <a routerLink="/sign-up">Đăng Kí</a>
         </li>
       </ul>
     </nav>
@@ -345,7 +345,7 @@
     </div>
 
     <div class="thanhToan">
-      <button class="btnThanhToan">Thanh Toán</button>
+      <button class="btnThanhToan" routerLink="/check-out">Thanh Toán</button>
     </div>
   </div>
 </div>

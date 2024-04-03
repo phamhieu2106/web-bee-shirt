@@ -23,7 +23,6 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { Customer } from "src/app/model/class/customer.class";
 import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
 import { NgOnInitService } from "src/app/service/ngoninit.service";
-import { NavigationComponent } from "../navigation/navigation.component";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -89,8 +88,7 @@ export class SanPhamChiTietComponent {
     private productDetailsService: ProductDetailsService,
     private notifService: NotificationService,
     private cartService: CartService,
-    private authenticationService: AuthenticationService,
-    private ngOnInitService: NgOnInitService
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -375,10 +373,54 @@ export class SanPhamChiTietComponent {
                     this.curQuantity
                   ) {
                     this.notifService.warning(
-                      "Số lượng trong kho không đủ để thêm sản phẩm!"
+                      "Số lượng trong kho của sản phẩm không đủ để thêm!"
                     );
                   } else {
                     // cập nhật số lượng của cart item đã có trong cart
+                    this.cartService
+                      .updateCartItemQuantity(
+                        chkCartItem.id,
+                        chkCartItem.soLuong + this.quantityToCart
+                      )
+                      .subscribe({
+                        next: (updatedCartItem: CartItem) => {
+                          this.notifService.success(
+                            "Sản phẩm này đã có trong giỏ, cập nhật số lượng trong giỏ thành công!"
+                          );
+                          this.cartService
+                            .getCartItemsOfLoggedCustomer(loggedCus.id)
+                            .subscribe({
+                              next: (newCartItems: CartItem[]) => {
+                                let getProdObservables = [];
+                                for (let item of newCartItems) {
+                                  getProdObservables.push(
+                                    this.productService.getProductByProductDetails(
+                                      item.spct.id
+                                    )
+                                  );
+                                }
+
+                                forkJoin(getProdObservables).subscribe({
+                                  next: (products: SanPham[]) => {
+                                    products.forEach((product, index) => {
+                                      newCartItems[index].spct.sanPham =
+                                        product;
+                                      if (index === newCartItems.length - 1) {
+                                        this.cartService.updateCartItemsOfLoggedUser(
+                                          newCartItems
+                                        );
+                                        this.cartService.updateCartItemsQuantityOfLoggedUser(
+                                          newCartItems.length
+                                        );
+                                      }
+                                    });
+                                  },
+                                });
+                              },
+                            });
+                        },
+                        error: (errRes: HttpErrorResponse) => {},
+                      });
                   }
                 }
               },

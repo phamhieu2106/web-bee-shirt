@@ -1,0 +1,85 @@
+<section style="margin-bottom: 120px">
+  <div class="px-4 py-5 px-md-5 text-center text-lg-start">
+    <div class="container">
+      <div class="row gx-lg-5 align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="my-5 display-3 fw-bold ls-tight">
+            Bee Shirt <br />
+            <span style="color: #ffc107">Đẹp trong từng thước vải</span>
+          </h1>
+          <p style="color: hsl(217, 10%, 50.8%)">
+            Bee Shirt đang tạo ra những bộ trang phục sản xuất trong nước hoàn
+            toàn có thể sánh ngang với các thương hiệu thời trang nam đến từ
+            nước ngoài về kiểu dáng, chất lượng lẫn phong cách thời trang.” -
+            CEO Bee Shirt
+          </p>
+        </div>
+
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="form-container">
+            <h3 class="title">Đăng Nhập</h3>
+            <form class="form-horizontal" [formGroup]="loginForm">
+              <div>
+                <label>Tài Khoản</label>
+                <input
+                  class="form-control"
+                  [ngClass]="
+                    loginForm.get('tenDangNhap').invalid &&
+                    loginForm.get('tenDangNhap').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  placeholder="Số điện thoại"
+                  type="text"
+                  formControlName="tenDangNhap"
+                />
+              </div>
+              <div class="invalid-feedback">
+                Tên đăng nhập không được bỏ trống
+              </div>
+
+              <div class="mt-3 mb-3">
+                <label>Mật Khẩu</label>
+                <input
+                  class="form-control"
+                  [ngClass]="
+                    loginForm.get('matKhau').invalid &&
+                    loginForm.get('matKhau').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                  placeholder="Mật khẩu"
+                  [type]="isPassInputHidden ? 'password' : 'text'"
+                  formControlName="matKhau"
+                />
+              </div>
+              <div class="invalid-feedback">Mật khẩu không được bỏ trống</div>
+
+              <div class="check-terms">
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  (click)="togglePasswordInput()"
+                />
+                <span class="check-label">Hiện mật khẩu</span>
+              </div>
+              <span class="signin-link"
+                >Bạn chưa có tài khoản
+                <a routerLink="/sign-up">Đăng ký</a></span
+              >
+              <button
+                class="btn signup"
+                type="submit"
+                (click)="login()"
+                [disabled]="loginForm.invalid"
+              >
+                Đăng Nhập
+                <i *ngIf="isLoading" class="fa-solid fa-spin fa-spinner"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

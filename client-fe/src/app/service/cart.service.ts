@@ -72,16 +72,26 @@ export class CartService {
   }
 
   // 7
-  public updateProdDetailsQuantityInCart(
+  public minusOrPlusCartItemQuantity(
     cartItemId: number,
     type: string
   ): Observable<CartItem> {
     return this.http.get<CartItem>(
-      `${this.apiUrl}/items/update-quantity/${cartItemId}/${type}`
+      `${this.apiUrl}/items/minus-plus-quantity/${cartItemId}/${type}`
     );
   }
 
-  // 8
+  // 7
+  public updateCartItemQuantity(
+    cartItemId: number,
+    newQuantity: number
+  ): Observable<CartItem> {
+    return this.http.get<CartItem>(
+      `${this.apiUrl}/items/update-quantity/${cartItemId}/${newQuantity}`
+    );
+  }
+
+  //
   public deleteItemFromCart(cartItemId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/items/delete/${cartItemId}`);
   }

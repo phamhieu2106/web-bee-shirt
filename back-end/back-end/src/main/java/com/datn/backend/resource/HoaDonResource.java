@@ -8,11 +8,9 @@ import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
-import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
 /**
  * @author HungDV
  */
@@ -35,7 +30,9 @@ import java.util.Optional;
 @RequestMapping("/hoa-don")
 @RequiredArgsConstructor
 public class HoaDonResource {
+
     private final HoaDonService hoaDonService;
+
     // get all
     @GetMapping("/ds-hoa-don")
     public ResponseEntity<PagedResponse<HoaDonResponse>> getAll(
@@ -50,6 +47,7 @@ public class HoaDonResource {
         PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable,search,loaiHoaDon,ngayTao, trangThai);
         return ResponseEntity.ok(hoaDons);
     }
+
     // get by id
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<HoaDonResponse> getByID(@PathVariable Integer id) {
@@ -63,18 +61,21 @@ public class HoaDonResource {
         LichSuHoaDonResponse hoaDonResponse = hoaDonService.changeOrderStatus(changeOrderStatus);
         return ResponseEntity.ok(hoaDonResponse);
     }
+
     // Cancel order
     @PostMapping("/change-status/cancel")
     public ResponseEntity<LichSuHoaDonResponse> onCancelOrder(@Valid @RequestBody ChangeOrderStatusRequest changeOrderStatus) {
         LichSuHoaDonResponse lichSuHoaDonResponse = hoaDonService.cancelOrder(changeOrderStatus);
         return ResponseEntity.ok(lichSuHoaDonResponse);
     }
+
     // update
     @PutMapping("/update")
     public ResponseEntity<HoaDonResponse> updateHoaDon(@Valid @RequestBody HoaDonRequest hoaDonRequest) {
         HoaDonResponse hoaDonResponse = hoaDonService.updateHoaDon(hoaDonRequest);
         return ResponseEntity.ok(hoaDonResponse);
     }
+
     // delete
     @GetMapping("/get-order-quantity-all")
     public ResponseEntity<SoLuongDonHangResponse> getSoLuongDonHang() {

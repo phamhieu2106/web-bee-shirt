@@ -21,7 +21,6 @@ public class DotGiamGiaSanPham extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @Column(name = "thoi_gian_bat_dau")
     private LocalDateTime thoiGianBatDau;
 

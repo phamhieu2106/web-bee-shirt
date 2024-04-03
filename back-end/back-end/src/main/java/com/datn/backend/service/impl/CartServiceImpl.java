@@ -42,9 +42,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem updateCartItemQuantity(int cartItemId, String type) {
-        CartItem cartItem = cartItemRepo.findById(cartItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart item ID: " + cartItemId + " not found!"));
+    public CartItem minusOrPlusCartItemQuantity(int cartItemId, String type) {
+        CartItem cartItem = getById(cartItemId);
 
         if (cartItem.getSoLuong() == 1 && type.equals("minus")) {
             throw new RuntimeException("Số lượng phải lớn hơn 0!");
@@ -59,7 +58,24 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public CartItem updateCartItemQuantity(int cartItemId, int newQuantity) {
+        CartItem cartItem = getById(cartItemId);
+
+        if (newQuantity > cartItem.getSpct().getSoLuongTon()) {
+            throw new RuntimeException("Số lượng tồn trong kho không đủ!");
+        }
+        cartItem.setSoLuong(newQuantity);
+        return cartItemRepo.save(cartItem);
+    }
+
+    @Override
     public void deleteItemFromCart(int cartItemId) {
         cartItemRepo.deleteById(cartItemId);
+    }
+
+    private CartItem getById(int cartItemId) {
+        CartItem cartItem = cartItemRepo.findById(cartItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item ID: " + cartItemId + " not found!"));
+        return cartItem;
     }
 }

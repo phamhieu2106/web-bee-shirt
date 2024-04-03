@@ -5,9 +5,9 @@ import { HomePageComponent } from "./components/home-page/home-page.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
-import { LoginComponent } from "./components/login/login.component";
-import { CheckoutComponent } from "./components/checkout/checkout.component";
-import { SigninComponent } from "./components/signin/signin.component";
+import { LoginComponent } from "./components/log-in/login.component";
+import { CheckoutComponent } from "./components/check-out/checkout.component";
+import { SignUpComponent } from "./components/sign-up/sign-up.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -24,7 +24,7 @@ const routes: Routes = [
     component: SanPhamComponent,
   },
   {
-    path: "login",
+    path: "log-in",
     component: LoginComponent,
   },
   {
@@ -33,12 +33,12 @@ const routes: Routes = [
   },
   ,
   {
-    path: "checkout",
+    path: "check-out",
     component: CheckoutComponent,
   },
   {
-    path: "signin",
-    component: SigninComponent,
+    path: "sign-up",
+    component: SignUpComponent,
   },
 ];
 

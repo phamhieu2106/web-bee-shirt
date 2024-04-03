@@ -41,11 +41,18 @@ public class CartResource {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/items/update-quantity/{itemId}/{type}")
-    public ResponseEntity<CartItem> updateCartItemQuantity(@PathVariable("itemId") int cartItemId,
-                                                           @PathVariable("type") String type) {
+    @GetMapping("/items/minus-plus-quantity/{itemId}/{type}")
+    public ResponseEntity<CartItem> minusOrPlusCartItemQuantity(@PathVariable("itemId") int cartItemId,
+                                                                @PathVariable("type") String type) {
         log.info("{} success", type);
-        return ResponseEntity.ok(cartService.updateCartItemQuantity(cartItemId, type));
+        return ResponseEntity.ok(cartService.minusOrPlusCartItemQuantity(cartItemId, type));
+    }
+
+    @GetMapping("/items/update-quantity/{itemId}/{newQuantity}")
+    public ResponseEntity<CartItem> updateCartItemQuantity(@PathVariable("itemId") int cartItemId,
+                                                           @PathVariable("newQuantity") int newQuantity) {
+        log.info("update new quantity: {} for cart item ID: {} success", newQuantity, cartItemId);
+        return ResponseEntity.ok(cartService.updateCartItemQuantity(cartItemId, newQuantity));
     }
 
     @DeleteMapping("/items/delete/{cartItemId}")

@@ -13,7 +13,9 @@ public interface CartService {
 
     void addCartItem(AddCartItemReq req);
 
-    CartItem updateCartItemQuantity(int cartItemId, String type);
+    CartItem minusOrPlusCartItemQuantity(int cartItemId, String type);
+
+    CartItem updateCartItemQuantity(int cartItemId, int newQuantity);
 
     void deleteItemFromCart(int cartItemId);
 }

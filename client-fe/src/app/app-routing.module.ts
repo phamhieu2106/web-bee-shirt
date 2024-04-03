@@ -6,7 +6,7 @@ import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { LoginComponent } from "./components/login/login.component";
-import { CheckoutComponent } from "./component/checkout/checkout.component";
+import { CheckoutComponent } from "./components/checkout/checkout.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },

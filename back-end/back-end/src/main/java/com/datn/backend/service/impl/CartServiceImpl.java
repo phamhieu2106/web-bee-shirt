@@ -20,8 +20,8 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepo;
 
     @Override
-    public List<CartItem> getAllCartItemsByCusId(int cusId) {
-        return cartItemRepo.getByCustomerId(cusId);
+    public List<CartItem> getAllCartItemsOf1Customer(int cusId) {
+        return cartItemRepo.getAllCartItemsOf1Customer(cusId);
     }
 
     @Override

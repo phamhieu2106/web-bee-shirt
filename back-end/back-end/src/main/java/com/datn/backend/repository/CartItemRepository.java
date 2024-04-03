@@ -19,7 +19,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
                WHERE gh.khach_hang_id = :customerId
            );
            """, nativeQuery = true)
-    List<CartItem> getByCustomerId(@Param("customerId") int customerId);
+    List<CartItem> getAllCartItemsOf1Customer(@Param("customerId") int customerId);
 
     @Query(value =
             """

@@ -25,8 +25,8 @@ public class CartResource {
     private final CartService cartService;
 
     @GetMapping("/items/by-customer/{cusId}")
-    public ResponseEntity<List<CartItem>> getAllCartItemsByCusId(@PathVariable("cusId") int cusId) {
-        return ResponseEntity.ok(cartService.getAllCartItemsByCusId(cusId));
+    public ResponseEntity<List<CartItem>> getAllCartItemsOf1Customer(@PathVariable("cusId") int cusId) {
+        return ResponseEntity.ok(cartService.getAllCartItemsOf1Customer(cusId));
     }
 
     @GetMapping("/items/by-cus-details/{cusId}/{proDetailsId}")

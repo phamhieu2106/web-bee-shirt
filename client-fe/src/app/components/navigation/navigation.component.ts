@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { CurrencyPipe } from "@angular/common";
@@ -13,7 +13,6 @@ import { CartService } from "src/app/service/cart.service";
 import { ProductService } from "src/app/service/product.service";
 import { forkJoin } from "rxjs";
 import { SanPham } from "src/app/model/class/san-pham.class";
-import { Cart } from "src/app/model/class/cart.class";
 
 @Component({
   selector: "app-navigation",
@@ -22,9 +21,9 @@ import { Cart } from "src/app/model/class/cart.class";
 })
 export class NavigationComponent {
   public isPopupShow: boolean = false;
+  public isCartShow: boolean = false;
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
-  public isCartShow: boolean = false;
 
   public cartItems1: CartItem[] = [];
   public cartItemQuantity1: number;
@@ -42,6 +41,10 @@ export class NavigationComponent {
   ) {}
 
   ngOnInit(): void {
+    this.authenticationService.isLoggedInSubj.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    });
+
     this.cartService.cartItemsOfLoggedUser.subscribe(
       (cartItems: CartItem[]) => {
         this.cartItems2 = cartItems;
@@ -148,15 +151,15 @@ export class NavigationComponent {
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         if (type === 1) {
-          this.deleteItemFromCart1(cartItem);
+          this.deleteItemFromLocalCart(cartItem);
         } else if (type === 2) {
-          this.deleteItemFromCart2(cartItem);
+          this.deleteItemFromCartOfLoggedCust(cartItem);
         }
       }
     });
   }
 
-  private deleteItemFromCart1(cartItem: CartItem): void {
+  private deleteItemFromLocalCart(cartItem: CartItem): void {
     let cartItemsInstorage: CartItem[] = JSON.parse(
       localStorage.getItem("cartItems")
     );
@@ -167,12 +170,17 @@ export class NavigationComponent {
     this.notifService.success("Xóa sản phẩm khỏi giỏ hàng thành công!");
   }
 
-  private deleteItemFromCart2(cartItem: CartItem): void {
+  private deleteItemFromCartOfLoggedCust(cartItem: CartItem): void {
     this.cartService.deleteItemFromCart(cartItem.id).subscribe({
       next: () => {
         this.notifService.success("Xóa sản phẩm khỏi giỏ hàng thành công!");
-        this.cartItems2 = this.cartItems2.filter(
+        const newCartItems = this.cartItems2.filter(
           (item: CartItem) => !(item.id === cartItem.id)
+        );
+
+        this.cartService.updateCartItemsOfLoggedUser(newCartItems);
+        this.cartService.updateCartItemsQuantityOfLoggedUser(
+          newCartItems.length
         );
       },
       error: (errorRes: HttpErrorResponse) => {
@@ -192,7 +200,7 @@ export class NavigationComponent {
   }
 
   // 9
-  public updateQuantity2(cartItem: CartItem, type: string): void {
+  public updateQuantityOfLoggedCust(cartItem: CartItem, type: string): void {
     // kiểm tra trước khi tăng/giảm
     if (type === "minus" && cartItem.soLuong === 1) {
       this.notifService.warning("Số lượng trong giỏ phải lớn hơn 0!");
@@ -205,20 +213,22 @@ export class NavigationComponent {
       return;
     }
 
-    this.cartService.updateCartItemQuantity(cartItem.id, type).subscribe({
-      next: (cartItem: CartItem) => {
-        this.cartItems2 = this.cartItems2.map((item: CartItem) => {
-          if (item.id === cartItem.id) {
-            item.soLuong = cartItem.soLuong;
+    this.cartService
+      .updateProdDetailsQuantityInCart(cartItem.id, type)
+      .subscribe({
+        next: (cartItem: CartItem) => {
+          this.cartItems2 = this.cartItems2.map((item: CartItem) => {
+            if (item.id === cartItem.id) {
+              item.soLuong = cartItem.soLuong;
+              return item;
+            }
             return item;
-          }
-          return item;
-        });
-      },
-      error: (errorRes: HttpErrorResponse) => {
-        this.notifService.error(errorRes.error.message);
-      },
-    });
+          });
+        },
+        error: (errorRes: HttpErrorResponse) => {
+          this.notifService.error(errorRes.error.message);
+        },
+      });
   }
 
   // private functions
@@ -266,7 +276,7 @@ export class NavigationComponent {
         let observables = [];
         for (let item of response) {
           observables.push(
-            this.productService.getProductByProductDetailsId(item.spct.id)
+            this.productService.getProductByProductDetails(item.spct.id)
           );
         }
         forkJoin(observables).subscribe({
@@ -276,8 +286,10 @@ export class NavigationComponent {
               if (index === response.length - 1) {
                 this.cartItems2 = response;
                 this.cartItemQuantity2 = response.length;
-                this.cartService.updateCartItems(response);
-                this.cartService.updateCartItemsQuantity(response.length);
+                this.cartService.updateCartItemsOfLoggedUser(response);
+                this.cartService.updateCartItemsQuantityOfLoggedUser(
+                  response.length
+                );
               }
             });
           },

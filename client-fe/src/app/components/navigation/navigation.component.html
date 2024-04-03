@@ -296,7 +296,9 @@
               <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
             </div>
             <div class="wrapper">
-              <span class="minus pointer" (click)="updateQuantity2(ci, 'minus')"
+              <span
+                class="minus pointer"
+                (click)="updateQuantityOfLoggedCust(ci, 'minus')"
                 >-</span
               >
               <span
@@ -307,7 +309,9 @@
                 "
                 >{{ ci.soLuong }}</span
               >
-              <span class="plus pointer" (click)="updateQuantity2(ci, 'plus')"
+              <span
+                class="plus pointer"
+                (click)="updateQuantityOfLoggedCust(ci, 'plus')"
                 >+</span
               >
             </div>

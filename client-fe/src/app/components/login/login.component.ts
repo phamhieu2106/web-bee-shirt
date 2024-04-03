@@ -18,9 +18,9 @@ import { ProductService } from "src/app/service/product.service";
   styleUrls: ["./login.component.css"],
 })
 export class LoginComponent {
-  public loading: boolean;
+  public isLoading: boolean;
   public loginForm: FormGroup;
-  public passwordInputType = true;
+  public isPassInputHidden = true;
 
   // constructor, ngOn
   constructor(
@@ -38,8 +38,8 @@ export class LoginComponent {
 
   // public functions
   // 1
-  public togglePasswordInputType(): void {
-    this.passwordInputType = !this.passwordInputType;
+  public togglePasswordInput(): void {
+    this.isPassInputHidden = !this.isPassInputHidden;
   }
 
   // 2
@@ -48,45 +48,44 @@ export class LoginComponent {
       // - login succeed => lấy token từ server, lưu token và object: customer vào localStorage
       next: (response: HttpResponse<Customer>) => {
         const token = response.headers.get("Jwt-Token");
+        const loggedCust = response.body;
+
         this.authenticationService.saveTokenToStorage(token);
-        this.authenticationService.saveCustomerToStorage(response.body);
+        this.authenticationService.saveCustomerToStorage(loggedCust);
 
         this.notifService.success("Đăng nhập thành công!");
-        // setTimeout(() => {
-        //   window.location.href = "/";
-        // }, 1000);
+        this.authenticationService.updateisLoggedInSubj(true);
 
-        // get cart items of logged customers
-        this.cartService
-          .getCartItemsOfLoggedCustomer(
-            this.authenticationService.getCustomerFromStorage().id
-          )
-          .subscribe({
-            next: (response: CartItem[]) => {
-              const observables = [];
-              for (let item of response) {
-                observables.push(
-                  this.productService.getProductByProductDetailsId(item.spct.id)
-                );
-              }
+        // lấy lại danh sách cart-item
+        this.cartService.getCartItemsOfLoggedCustomer(loggedCust.id).subscribe({
+          next: (newCartItems: CartItem[]) => {
+            // sau khi đã lấy hết cart-item, ta vẫn phải gán sp cho spct của từng cart-item
+            let getProdObservables = [];
+            for (let item of newCartItems) {
+              getProdObservables.push(
+                this.productService.getProductByProductDetails(item.spct.id)
+              );
+            }
 
-              forkJoin(observables).subscribe({
-                next: (productsRes: SanPham[]) => {
-                  productsRes.forEach((productRes, index) => {
-                    response[index].spct.sanPham = productRes;
-                    if (index === response.length - 1) {
-                      this.cartService.updateCartItems(response);
-                      this.cartService.updateCartItemsQuantity(response.length);
-                      this.router.navigate(["/"]);
-                    }
-                  });
-                },
-              });
-            },
-          });
+            forkJoin(getProdObservables).subscribe({
+              next: (products: SanPham[]) => {
+                products.forEach((product, index) => {
+                  newCartItems[index].spct.sanPham = product;
+                  if (index === newCartItems.length - 1) {
+                    this.cartService.updateCartItemsOfLoggedUser(newCartItems);
+                    this.cartService.updateCartItemsQuantityOfLoggedUser(
+                      newCartItems.length
+                    );
+                    this.router.navigate(["/"]);
+                  }
+                });
+              },
+            });
+          },
+        });
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
       },
     });
   }

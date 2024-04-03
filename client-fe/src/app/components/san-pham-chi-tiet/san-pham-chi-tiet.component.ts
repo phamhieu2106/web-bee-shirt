@@ -2,6 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CurrencyPipe } from "@angular/common";
+import { forkJoin } from "rxjs";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
 import Swal, { SweetAlertResult } from "sweetalert2";
@@ -23,7 +24,6 @@ import { Customer } from "src/app/model/class/customer.class";
 import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
 import { NgOnInitService } from "src/app/service/ngoninit.service";
 import { NavigationComponent } from "../navigation/navigation.component";
-import { forkJoin } from "rxjs";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -49,7 +49,6 @@ export class SanPhamChiTietComponent {
   public material: string;
 
   public quantityToCart: number = 1;
-  @ViewChild(NavigationComponent) navigation: NavigationComponent;
 
   sanPhamCT: OwlOptions = {
     loop: true,
@@ -216,13 +215,12 @@ export class SanPhamChiTietComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        const loggedCus = this.authenticationService.getCustomerFromStorage();
-
+        const loggedCust = this.authenticationService.getCustomerFromStorage();
         // not login
-        if (!loggedCus) {
+        if (!loggedCust) {
           this.addToCartLocal();
         } else {
-          this.addToCartForLoggedCus(loggedCus);
+          this.addToCartForLoggedCus(loggedCust);
         }
       }
     });
@@ -241,7 +239,7 @@ export class SanPhamChiTietComponent {
           let cartItemsInstorage: CartItem[] = JSON.parse(
             localStorage.getItem("cartItems")
           );
-          let chkCartItem = this.checkCartItemExists(
+          let chkCartItem = this.checkExistenceForLocalCart(
             response,
             cartItemsInstorage
           );
@@ -250,7 +248,7 @@ export class SanPhamChiTietComponent {
             // chưa có
             // lấy sản phẩm cho spct và thêm
             this.productService
-              .getProductByProductDetailsId(response.id)
+              .getProductByProductDetails(response.id)
               .subscribe({
                 next: (productRes: SanPham) => {
                   response.sanPham = productRes;
@@ -293,6 +291,18 @@ export class SanPhamChiTietComponent {
       });
   }
 
+  private checkExistenceForLocalCart(
+    proDetails: SanPhamChiTiet,
+    cartItems: CartItem[]
+  ): CartItem {
+    for (const cartItem of cartItems) {
+      if (cartItem.spct.id === proDetails.id) {
+        return cartItem;
+      }
+    }
+    return null;
+  }
+
   private addToCartForLoggedCus(loggedCus: Customer): void {
     this.productDetailsService
       .getByProductColorSize(
@@ -327,32 +337,25 @@ export class SanPhamChiTietComponent {
                           .getCartItemsOfLoggedCustomer(loggedCus.id)
                           .subscribe({
                             next: (newCartItems: CartItem[]) => {
-                              // this.cartService.updateCartItems(newCartItems);
-                              this.cartService.updateCartItemsQuantity(
-                                newCartItems.length
-                              );
-
-                              let observables = [];
+                              let getProdObservables = [];
                               for (let item of newCartItems) {
-                                observables.push(
-                                  this.productService.getProductByProductDetailsId(
+                                getProdObservables.push(
+                                  this.productService.getProductByProductDetails(
                                     item.spct.id
                                   )
                                 );
                               }
-                              forkJoin(observables).subscribe({
-                                next: (productsRes: SanPham[]) => {
-                                  productsRes.forEach((productRes, index) => {
-                                    newCartItems[index].spct.sanPham =
-                                      productRes;
+
+                              forkJoin(getProdObservables).subscribe({
+                                next: (products: SanPham[]) => {
+                                  products.forEach((product, index) => {
+                                    newCartItems[index].spct.sanPham = product;
                                     if (index === newCartItems.length - 1) {
-                                      // this.cartItems2 = response;
-                                      // this.cartItemQuantity2 = response.length;
-                                      // this.cartService.updateCartItems(
-                                      //   response
-                                      // );
-                                      this.cartService.updateCartItems(
+                                      this.cartService.updateCartItemsOfLoggedUser(
                                         newCartItems
+                                      );
+                                      this.cartService.updateCartItemsQuantityOfLoggedUser(
+                                        newCartItems.length
                                       );
                                     }
                                   });
@@ -385,18 +388,6 @@ export class SanPhamChiTietComponent {
           this.notifService.error(errorResponse.error.message);
         },
       });
-  }
-
-  private checkCartItemExists(
-    proDetails: SanPhamChiTiet,
-    cartItems: CartItem[]
-  ): CartItem {
-    for (const cartItem of cartItems) {
-      if (cartItem.spct.id === proDetails.id) {
-        return cartItem;
-      }
-    }
-    return null;
   }
 
   // 5

@@ -13,8 +13,6 @@ export class CartService {
 
   public cartItemsOfLoggedUser = new BehaviorSubject<CartItem[]>([]);
   public cartItemsQuantityOfLoggedUser = new BehaviorSubject<number>(0);
-  // public cartItemsOfLoggedUser$ = this.cartItemsOfLoggedUser.asObservable();
-  // public cartItemsQuantityOfLoggedUser$ = this.cartItemsQuantityOfLoggedUser.asObservable();
 
   public cartItemsInLocalStorage = new BehaviorSubject<CartItem[]>([]);
   public cartItemsQuantityInLocalStorage = new BehaviorSubject<number>(0);
@@ -24,11 +22,11 @@ export class CartService {
 
   ngOnInit(): void {}
 
-  public updateCartItems(cartItems: CartItem[]): void {
+  public updateCartItemsOfLoggedUser(cartItems: CartItem[]): void {
     this.cartItemsOfLoggedUser.next(cartItems);
   }
 
-  public updateCartItemsQuantity(quantity: number): void {
+  public updateCartItemsQuantityOfLoggedUser(quantity: number): void {
     this.cartItemsQuantityOfLoggedUser.next(quantity);
   }
 
@@ -74,7 +72,7 @@ export class CartService {
   }
 
   // 7
-  public updateCartItemQuantity(
+  public updateProdDetailsQuantityInCart(
     cartItemId: number,
     type: string
   ): Observable<CartItem> {

@@ -12,9 +12,15 @@ import { Customer } from "../model/class/customer.class";
 })
 export class AuthenticationService {
   public readonly apiUrl = "http://localhost:8080";
+
   private token: string;
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
+  public isLoggedInSubj = new BehaviorSubject<boolean>(false);
+
+  public updateisLoggedInSubj(value: boolean): void {
+    this.isLoggedInSubj.next(value);
+  }
 
   // constructor, ngOn
   constructor(private http: HttpClient, private router: Router) {}

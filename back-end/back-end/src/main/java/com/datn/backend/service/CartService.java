@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CartService {
 
-    List<CartItem> getAllCartItemsByCusId(int cusId);
+    List<CartItem> getAllCartItemsOf1Customer(int cusId);
 
     CartItem getCartItemByCustomerAndProductDetails(int cusId, int proDetailsId);
 

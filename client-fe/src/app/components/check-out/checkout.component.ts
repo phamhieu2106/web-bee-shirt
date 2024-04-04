@@ -48,7 +48,7 @@ export class CheckoutComponent {
   public wardId: number;
 
   public discounts: Discount[] = [];
-  public bestDiscount: Discount;
+  public selectedDiscount: Discount;
 
   // constructor, ngOn
   constructor(
@@ -105,6 +105,15 @@ export class CheckoutComponent {
   }
 
   // 3
+  public formatSalePrice(): any {
+    return this.formatPrice(this.calculateSalePrice());
+  }
+
+  private calculateSalePrice(): number {
+    return 0;
+  }
+
+  // 4
   public formatDiscountPrice(): any {
     return this.formatPrice(this.calculateDiscountPrice());
   }
@@ -113,22 +122,35 @@ export class CheckoutComponent {
     return 0;
   }
 
-  // 4
-  public calculateFinalPrice(): any {
-    let totalPrice = 0;
-    for (const item of this.cartItems2) {
-      totalPrice += item.spct.giaBan * item.soLuong;
-    }
-    let discountPrice = 0;
-    return this.formatPrice(totalPrice - discountPrice);
+  // 5
+  public formatShipPrice(): any {
+    return this.formatPrice(this.calculateShipPrice());
   }
 
-  // 5
+  private calculateShipPrice(): number {
+    return 0;
+  }
+
+  // 6
+  public formatFinalPrice(): any {
+    return this.formatPrice(this.calculateFinalPrice());
+  }
+
+  public calculateFinalPrice(): number {
+    return (
+      this.calculateRealPrice() -
+      this.calculateSalePrice() -
+      this.calculateDiscountPrice() +
+      this.calculateShipPrice()
+    );
+  }
+
+  // 7
   public toggleAddressesModal(value: boolean): void {
     this.isAddressesModalOpen = value;
   }
 
-  // 6
+  //
   public toggleAddAddressModal(value: boolean): void {
     this.isAddressesModalOpen = false;
     this.isAddAddressModalOpen = value;
@@ -137,12 +159,12 @@ export class CheckoutComponent {
     }
   }
 
-  // 7
+  //
   public formatAddress(address: Address): string {
     return `${address.duong}, ${address.xa}, ${address.huyen}, ${address.tinh}`;
   }
 
-  // 8
+  //
   public setDefaultAddress(addressId: number): void {
     Swal.fire({
       title: "Cập nhật địa chỉ mặc định?",
@@ -367,7 +389,7 @@ export class CheckoutComponent {
   }
 
   // private functions
-  //
+  // 1
   private checkLoggedIn(): void {
     const isLoggedIn: boolean = this.authService.isLoggedIn();
     if (!isLoggedIn) {
@@ -375,7 +397,7 @@ export class CheckoutComponent {
       this.router.navigate(["/log-in"]);
     }
   }
-  //
+  // 2
   private getAllAddressOfLoggedCust(): void {
     this.addressService.getAllAddressOf1Customer(this.loggedCust.id).subscribe({
       next: (addresses: Address[]) => {
@@ -423,6 +445,7 @@ export class CheckoutComponent {
     });
   }
 
+  // 4
   private initAddAddressForm(): void {
     this.addAddressForm = new FormGroup({
       tinh: new FormControl("", [Validators.required]),
@@ -433,6 +456,7 @@ export class CheckoutComponent {
     });
   }
 
+  // 5
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
@@ -447,9 +471,25 @@ export class CheckoutComponent {
   }
 
   private getAllDiscounts(): void {
-    // this.discountService.getDiscountsForCheckOut(
-    //   this.loggedCust,
-    //   this.calculateFinalPrice
-    // ).subscribe;
+    this.discountService
+      .getDiscountsForCheckOut(
+        this.loggedCust.id,
+        this.calculateRealPrice() - this.calculateSalePrice()
+      )
+      .subscribe({
+        next: (discounts: Discount[]) => {
+          this.discounts = discounts;
+        },
+        error: (errorRes: HttpErrorResponse) => {
+          this.notifService.error(errorRes.error.message);
+        },
+      });
+  }
+
+  private initSelectedDiscounts(): void {
+    // for (let d of this.discounts) {
+    //   const reducedPrice = 0;
+    //    if (d.)
+    // }
   }
 }

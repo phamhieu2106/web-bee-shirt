@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Address } from "../model/class/address.class";
+import { Discount } from "../model/class/discount.class";
 
 @Injectable({
   providedIn: "root",
@@ -18,8 +18,8 @@ export class DiscountService {
   public getDiscountsForCheckOut(
     priceCondition: number,
     custId: number
-  ): Observable<Address[]> {
-    return this.http.get<Address[]>(
+  ): Observable<Discount[]> {
+    return this.http.get<Discount[]>(
       `${this.apiUrl}/discount-for-checkout/${priceCondition}/${custId}`
     );
   }

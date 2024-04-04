@@ -8,6 +8,7 @@ import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
 import { LoginComponent } from "./components/log-in/login.component";
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
+import { TrackingComponent } from "./components/tracking/tracking.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -39,6 +40,10 @@ const routes: Routes = [
   {
     path: "sign-up",
     component: SignUpComponent,
+  },
+  {
+    path: "tracking",
+    component: TrackingComponent,
   },
 ];
 

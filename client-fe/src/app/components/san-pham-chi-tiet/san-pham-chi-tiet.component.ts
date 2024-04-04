@@ -22,7 +22,6 @@ import { CartService } from "src/app/service/cart.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { Customer } from "src/app/model/class/customer.class";
 import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
-import { NgOnInitService } from "src/app/service/ngoninit.service";
 
 @Component({
   selector: "app-san-pham-chi-tiet",

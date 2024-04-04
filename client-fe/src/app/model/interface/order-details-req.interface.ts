@@ -1,5 +1,5 @@
 export interface OrderDetailsReq {
-  id: number;
+  id?: number;
   soLuong: number;
   giaBan: number;
   giaNhap: number;

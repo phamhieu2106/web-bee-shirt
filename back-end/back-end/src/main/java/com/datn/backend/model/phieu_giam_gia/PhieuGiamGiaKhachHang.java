@@ -25,7 +25,7 @@ public class PhieuGiamGiaKhachHang {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String moTa;
+    private boolean isUsed;
 
     @ManyToOne
     @JoinColumn(name = "khach_hang_id")

@@ -192,7 +192,7 @@
                       <div class="modal-backdrop"></div>
                       <div class="modal-container">
                         <div class="modal-content">
-                          <div class="modal-header">
+                          <div class="modal-header mb-3">
                             <div
                               class="modal-close"
                               (click)="toggleAddAddressModal(false)"
@@ -253,6 +253,7 @@
                                       class="form-control"
                                       (change)="getAllWardsByDistrict()"
                                       formControlName="huyen"
+                                      (click)="checkProvinceSelection()"
                                     >
                                       <option value="" selected>
                                         Chọn quận huyện
@@ -272,6 +273,7 @@
                                   <select
                                     class="form-control"
                                     formControlName="xa"
+                                    (click)="checkDistrictSelection()"
                                   >
                                     <option value="" selected>
                                       Chọn phường xã
@@ -312,7 +314,7 @@
                                     class="btn-save"
                                     (click)="addAddress()"
                                   >
-                                    Lưu địa chỉ
+                                    Thêm
                                   </button>
                                 </div>
                               </div>
@@ -481,19 +483,20 @@
                 <tbody>
                   <tr>
                     <th>Giá trị đơn hàng</th>
-                    <td>{{ calculateRealPrice() }}</td>
+                    <td>{{ formatRealPrice() }}</td>
+                  </tr>
+                  <tr>
+                    <th>Số tiền giảm</th>
+                    <td>{{ formatDiscountPrice() }}</td>
+                  </tr>
+                  <tr>
+                    <th>Phí vận chuyển</th>
+                    <td>{{ formatDiscountPrice() }}</td>
                   </tr>
                 </tbody>
                 <tfoot>
-                  <!-- <tr>
-                    <th>Số tiền chiết khấu</th>
-                    <td>4.669.000 ₫</td>
-                  </tr> -->
                   <tr class="grand-totals">
-                    <th>
-                      Tổng tiền thanh toán
-                      <!-- <small>(Đã bao gồm thuế VAT)</small> -->
-                    </th>
+                    <th>Tổng tiền thanh toán</th>
                     <td>{{ calculateFinalPrice() }}</td>
                   </tr>
                 </tfoot>
@@ -501,7 +504,9 @@
             </div>
           </div>
           <div class="checkout-proceed-checkout">
-            <button class="btn-place-order rounded">Thanh toán</button>
+            <button class="btn-place-order rounded" (click)="checkOut()">
+              Thanh toán
+            </button>
           </div>
         </div>
       </div>

@@ -7,11 +7,10 @@ import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
-import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.repository.PhieuGiamGiaRepository;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import com.datn.backend.utility.UtilityFunction;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,23 +23,15 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
+@RequiredArgsConstructor
+public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
 
 
-    private PhieuGiamGiaRepository repository;
-
-    private KhachHangRepository khachHangRepository;
-
-    @Autowired
-    public PhieuGiamGiaServceImpl(PhieuGiamGiaRepository repository) {
-        super();
-        this.repository = repository;
-    }
-
+    private final PhieuGiamGiaRepository pggRepo;
 
     @Override
     public PhieuGiamGiaResponse getOne(Integer id) {
-        return repository.getOneById(id);
+        return pggRepo.getOneById(id);
     }
 
     @Override
@@ -51,8 +42,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         String maPhieuGiamGia = phieuGiamGia.getMaPhieuGiamGia().trim();
         String tenPhieuGiamGia = phieuGiamGia.getTenPhieuGiamGia().trim();
-
-
 
         // Kiểm tra xem mã phiếu có chứa chữ cái không
         if (maPhieuGiamGia.matches(".*[a-zA-Z]+.*")) {
@@ -68,15 +57,10 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
         // Kiểm tra xem mã phiếu đã tồn tại hay không
         if (!maPhieuGiamGia.equalsIgnoreCase(phieuGiamGia.getMaPhieuGiamGia()) &&
-                repository.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
+                pggRepo.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
             throw new ResourceExistsException("Mã Phiếu: " + maPhieuGiamGia + " đã tồn tại.");
         }
         pgg.setTenPhieuGiamGia(tenPhieuGiamGia);
-
-
-
-
-
 
 
         if (maPhieuGiamGia.equals("")) {
@@ -85,14 +69,11 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         } else {
             // Kiểm tra xem tên phiếu đã tồn tại hay không
             if (!tenPhieuGiamGia.equalsIgnoreCase(phieuGiamGia.getTenPhieuGiamGia()) &&
-                    repository.existsByTenPhieuGiamGia(tenPhieuGiamGia)) {
+                    pggRepo.existsByTenPhieuGiamGia(tenPhieuGiamGia)) {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
             pgg.setMaPhieuGiamGia(maPhieuGiamGia);
-
         }
-
-
 
         // Xác định trạng thái dựa trên thời gian
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
@@ -107,10 +88,7 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         }
 
         // Lưu phiếu giảm giá vào cơ sở dữ liệu
-
-
-
-        return repository.save(pgg);
+        return pggRepo.save(pgg);
     }
 
 
@@ -136,26 +114,19 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
             // Lấy ký tự tại chỉ số ngẫu nhiên và thêm vào chuỗi mã giảm giá
             maPhieuGiamGia.append(characterSet.charAt(randomIndex));
         }
-
         // Trả về mã giảm giá đã sinh
         return maPhieuGiamGia.toString();
     }
 
     @Override
     public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest object) {
-
-
-        Optional<PhieuGiamGia> optional = repository.findById(id);
+        Optional<PhieuGiamGia> optional = pggRepo.findById(id);
         if (optional.isPresent()) {
             PhieuGiamGia phieu = optional.get();
-
-
 
             // Xử lý trường mã phiếu
             String maPhieuGiamGia = object.getMaPhieuGiamGia().trim();
             String tenPhieuGiamGia = object.getTenPhieuGiamGia().trim();
-
-
 
 
             // Kiểm tra xem mã phiếu có chứa chữ cái không
@@ -175,21 +146,15 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
             // Kiểm tra xem mã phiếu đã tồn tại hay không
             if (!maPhieuGiamGia.equalsIgnoreCase(phieu.getMaPhieuGiamGia()) &&
-                    repository.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
+                    pggRepo.existsByMaPhieuGiamGia(maPhieuGiamGia)) {
                 throw new ResourceExistsException("Mã Phiếu: " + maPhieuGiamGia + " đã tồn tại.");
             }
 
             // Kiểm tra xem tên phiếu đã tồn tại hay không
             if (!tenPhieuGiamGia.equalsIgnoreCase(phieu.getTenPhieuGiamGia()) &&
-                    repository.existsByTenPhieuGiamGia(tenPhieuGiamGia)) {
+                    pggRepo.existsByTenPhieuGiamGia(tenPhieuGiamGia)) {
                 throw new ResourceExistsException("Tên Phiếu: " + tenPhieuGiamGia + " đã tồn tại.");
             }
-
-
-
-
-
-
 
             LocalDateTime currentTime = LocalDateTime.now();
 
@@ -204,9 +169,8 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
             } else {
                 object.setTrangThai("Đã hủy");
             }
-
             // Cập nhật thông tin của phiếu và lưu vào cơ sở dữ liệu
-            return repository.save(object.giamGia(phieu));
+            return pggRepo.save(object.giamGia(phieu));
         } else {
             // Trả về null nếu không tìm thấy phiếu
             return null;
@@ -215,14 +179,12 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     @Override
     public PhieuGiamGia remove(Integer id) {
-
         return null;
     }
 
     @Override
     public PhieuGiamGia changeStatus(Integer id) {
-
-        PhieuGiamGia phieuGiamGia = repository.findById(id).get();
+        PhieuGiamGia phieuGiamGia = pggRepo.findById(id).get();
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
@@ -235,20 +197,19 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         } else {
             phieuGiamGia.setTrangThai("Đã hủy");
         }
-
-        return repository.save(phieuGiamGia);
+        return pggRepo.save(phieuGiamGia);
     }
 
     @Override
     public List<PhieuGiamGia> getAll() {
-        return repository.findAll();
+        return pggRepo.findAll();
     }
 
 
     @Override
     public PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search, List<Integer> kieu, List<Integer> loai, List<String> trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search, kieu, loai, trangThai);
+        Page<PhieuGiamGia> phieuGiamGiaPage = pggRepo.getPagination(pageable, search, kieu, loai, trangThai);
         PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
@@ -264,60 +225,56 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
     @Override
     public PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search, List<Integer> kieu, List<Integer> loai, List<String> trangThai, String thoiGianBatDau, String thoiGianKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-       if(!thoiGianBatDau.isEmpty() && !thoiGianKetThuc.isEmpty()){
-           Page<PhieuGiamGia> phieuGiamGiaPage = repository.getFilter(pageable, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc);
-           PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
-           paged.setPageNumber(pageNumber);
-           paged.setPageSize(pageSize);
-           paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
-           paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
-           paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
-           paged.setData(phieuGiamGiaPage.getContent());
-           paged.setSearch(search);
+        if (!thoiGianBatDau.isEmpty() && !thoiGianKetThuc.isEmpty()) {
+            Page<PhieuGiamGia> phieuGiamGiaPage = pggRepo.getFilter(pageable, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc);
+            PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
+            paged.setPageNumber(pageNumber);
+            paged.setPageSize(pageSize);
+            paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
+            paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
+            paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
+            paged.setData(phieuGiamGiaPage.getContent());
+            paged.setSearch(search);
 
-           return paged;
-       }else{
-           Page<PhieuGiamGia> phieuGiamGiaPage = repository.getPagination(pageable, search, kieu, loai, trangThai);
-           PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
-           paged.setPageNumber(pageNumber);
-           paged.setPageSize(pageSize);
-           paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
-           paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
-           paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
-           paged.setData(phieuGiamGiaPage.getContent());
-           paged.setSearch(search);
+            return paged;
+        } else {
+            Page<PhieuGiamGia> phieuGiamGiaPage = pggRepo.getPagination(pageable, search, kieu, loai, trangThai);
+            PagedResponse<PhieuGiamGia> paged = new PagedResponse<>();
+            paged.setPageNumber(pageNumber);
+            paged.setPageSize(pageSize);
+            paged.setTotalElements((int) phieuGiamGiaPage.getTotalElements());
+            paged.setTotalPages(phieuGiamGiaPage.getTotalPages());
+            paged.setPageNumberArr(UtilityFunction.getPageNumberArr(phieuGiamGiaPage.getTotalPages()));
+            paged.setData(phieuGiamGiaPage.getContent());
+            paged.setSearch(search);
 
-           return paged;
-       }
+            return paged;
+        }
     }
 
     @Override
     public DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest) {
-//        System.out.println(discountValidRequest.getGiaTriDonHang());
-//        System.out.println(discountValidRequest.getGiaDangGiam());
-//        System.out.println("---------------------------------");
         String message = null;
 
         // pgg valid
-        List<PhieuGiamGia> phieuGiamGias = repository.getDiscountValidNotCustomer(discountValidRequest.getGiaTriDonHang());
+        List<PhieuGiamGia> phieuGiamGias = pggRepo.getDiscountValidNotCustomer(discountValidRequest.getGiaTriDonHang());
 
         // pgg suggest
-        List<PhieuGiamGia> pggSuggests = repository.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
+        List<PhieuGiamGia> pggSuggests = pggRepo.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
 
         // neu co khach hang lay tat ca phieu cu khach hang do
         if (discountValidRequest.getKhachHangId() != null) {
             // danh sac phieu giam gia goi y hop le cua khach hang
-            List<PhieuGiamGia> phieuGiamGiaByCustomerId = repository.getDiscountValidByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+            List<PhieuGiamGia> phieuGiamGiaByCustomerId = pggRepo.getDiscountValidByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
             phieuGiamGias.addAll(phieuGiamGiaByCustomerId);
 
             // danh sac phieu giam gia goi y voi khach hang
-            List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = repository.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+            List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = pggRepo.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
             pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
         }
 
         // phieu giam gia giam nhieu nhat
         PhieuGiamGia pgg = this.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
-
 
         // pgg goi y
         if (pggSuggests.isEmpty()) {
@@ -338,8 +295,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
                 message = this.getMessage(pggSuggests, discountValidRequest.getGiaTriDonHang());
             }
         }
-
-
         return DiscountValidResponse
                 .builder()
                 .message(message)
@@ -359,7 +314,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
     }
 
-
     private PhieuGiamGia getDiscountMax(List<PhieuGiamGia> phieuGiamGias, BigDecimal giaTriDonHang) {
         PhieuGiamGia pgg = null;
         String message = null;
@@ -373,7 +327,6 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
 
             // thang dau tien la thang giam nhieu nhat
             pgg = phieuGiamGias.get(0);
-
         }
         return pgg;
     }
@@ -406,5 +359,8 @@ public class PhieuGiamGiaServceImpl implements PhieuGiamGiaServce {
         return value;
     }
 
-
+    @Override
+    public List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal priceCondition, int customerId) {
+        return pggRepo.getDiscountsForCheckOut(priceCondition, customerId);
+    }
 }

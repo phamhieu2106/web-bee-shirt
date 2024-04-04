@@ -7,6 +7,7 @@ import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PhieuGiamGiaServce {
@@ -29,4 +30,6 @@ public interface PhieuGiamGiaServce {
     PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai,String thoiGianBatDau,String thoiGianKetThuc);
 
     DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest);
+
+    List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId);
 }

@@ -16,8 +16,8 @@ import java.util.List;
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
 
     boolean existsByMaPhieuGiamGia(String maPhieu);
-    boolean existsByTenPhieuGiamGia(String tenPhieu);
 
+    boolean existsByTenPhieuGiamGia(String tenPhieu);
 
     @Query(value = "select pgg.id  as id,  pgg.ma_phieu_giam_gia as MaPhieuGiamGia," +
             " pgg.ten_phieu_giam_gia  as TenPhieuGiamGia ," +
@@ -41,9 +41,9 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             "ORDER BY pgg.created_at DESC",
             nativeQuery = true)
     Page<PhieuGiamGia> getPagination(Pageable pageable, @Param("search") String search,
-                                     @Param("kieu")List<Integer> kieu,
-                                     @Param("loai")List<Integer> loai,
-                                     @Param("trangThai")List<String> trangThai);
+                                     @Param("kieu") List<Integer> kieu,
+                                     @Param("loai") List<Integer> loai,
+                                     @Param("trangThai") List<String> trangThai);
 
     @Query(value = "select * from phieu_giam_gia pgg " +
             "where  (pgg.ten_phieu_giam_gia LIKE %:search% OR pgg.ma_phieu_giam_gia LIKE %:search%)  " +
@@ -55,14 +55,11 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             "ORDER BY pgg.created_at DESC",
             nativeQuery = true)
     Page<PhieuGiamGia> getFilter(Pageable pageable, @Param("search") String search,
-                                     @Param("kieu")List<Integer> kieu,
-                                     @Param("loai")List<Integer> loai,
-                                     @Param("trangThai")List<String> trangThai,
-                                     @Param("thoiGianBatDau") String thoiGianBatDau,
-                                     @Param("thoiGianKetThuc") String thoiGianKetThuc);
-
-
-
+                                 @Param("kieu") List<Integer> kieu,
+                                 @Param("loai") List<Integer> loai,
+                                 @Param("trangThai") List<String> trangThai,
+                                 @Param("thoiGianBatDau") String thoiGianBatDau,
+                                 @Param("thoiGianKetThuc") String thoiGianKetThuc);
 
     @Query("""
             select pgg from PhieuGiamGia pgg
@@ -83,7 +80,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             and pgg.loai = 0
             and pggkh.khachHang.id = :khachHangId
             """)
-    List<PhieuGiamGia> getDiscountValidByCustomer(BigDecimal giaTriDonHang,Integer khachHangId);
+    List<PhieuGiamGia> getDiscountValidByCustomer(BigDecimal giaTriDonHang, Integer khachHangId);
 
     @Query("""
             select pgg from PhieuGiamGia pgg
@@ -106,6 +103,21 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             and pggkh.khachHang.id = :khachHangId
             order by pgg.dieuKienGiam asc 
             """)
-    List<PhieuGiamGia> getDiscountSuggestByCustomer(BigDecimal giaTriDonHang,Integer khachHangId);
+    List<PhieuGiamGia> getDiscountSuggestByCustomer(BigDecimal giaTriDonHang, Integer khachHangId);
 
+    // use for client
+    @Query(value = """
+                   SELECT pgg.id, pgg.ma_phieu_giam_gia, pgg.ten_phieu_giam_gia, pgg.kieu, pgg.loai, pgg.gia_tri,
+                          pgg.gia_tri_max, pgg.dieu_kien_giam, pgg.so_luong, pgg.thoi_gian_bat_dau, pgg.thoi_gian_ket_thuc, pgg.trang_thai,
+                          pgg.created_at, pgg.created_by, pgg.updated_at, pgg.last_updated_by
+                   FROM phieu_giam_gia pgg
+                   LEFT JOIN phieu_giam_gia_kh pgg_kh ON pgg.id = pgg_kh.phieu_giam_gia_id
+                   WHERE pgg.dieu_kien_giam <= :priceCondition
+                   AND (pgg_kh.khach_hang_id IS NULL OR pgg_kh.khach_hang_id = :customerId)
+                   AND (CURRENT_TIMESTAMP() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc)
+                   AND pgg.so_luong > 0
+                   AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)
+                   """, nativeQuery = true)
+    List<PhieuGiamGia> getDiscountsForCheckOut(@Param("priceCondition") BigDecimal priceCondition,
+                                                   @Param("customerId") int customerId);
 }

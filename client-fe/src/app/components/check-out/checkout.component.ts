@@ -3,6 +3,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { forkJoin } from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import Swal, { SweetAlertResult } from "sweetalert2";
 
@@ -16,7 +17,13 @@ import { CartService } from "src/app/service/cart.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { ProductService } from "src/app/service/product.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { PlaceOrderRequest } from "src/app/model/interface/place-order-request.interface";
+import { OrderDetailsReq } from "src/app/model/interface/order-details-req.interface";
+import { PaymentReq } from "src/app/model/interface/payment-req.interface";
+import { AddressShipFee } from "src/app/model/class/address-ship-fee.class";
+import { OrderService } from "src/app/service/order.service";
+import { DiscountService } from "src/app/service/discount.service";
+import { Discount } from "src/app/model/class/discount.class";
 
 @Component({
   selector: "app-checkout",
@@ -40,16 +47,21 @@ export class CheckoutComponent {
   public districtId: number;
   public wardId: number;
 
+  public discounts: Discount[] = [];
+  public bestDiscount: Discount;
+
   // constructor, ngOn
   constructor(
+    private router: Router,
+    private currencyPipe: CurrencyPipe,
+    private giaoHangNhanhService: GiaoHangNhanhService,
     private addressService: AddressService,
     private authService: AuthenticationService,
-    private router: Router,
     private notifService: NotificationService,
     private cartService: CartService,
     private productService: ProductService,
-    private currencyPipe: CurrencyPipe,
-    private giaoHangNhanhService: GiaoHangNhanhService
+    private orderService: OrderService,
+    private discountService: DiscountService
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +82,7 @@ export class CheckoutComponent {
     this.getCartItemsFromLoggedCustomer();
     this.initAddAddressForm();
     this.getAllProvinces();
+    this.getAllDiscounts();
   }
 
   // public functions
@@ -79,18 +92,25 @@ export class CheckoutComponent {
   }
 
   // 2
-  public calculateRealPrice(): any {
+  public formatRealPrice(): any {
+    return this.formatPrice(this.calculateRealPrice());
+  }
+
+  private calculateRealPrice(): number {
     let totalPrice = 0;
     for (const item of this.cartItems2) {
       totalPrice += item.spct.giaBan * item.soLuong;
     }
-    return this.formatPrice(totalPrice);
+    return totalPrice;
   }
 
   // 3
-  public calculateDiscountPrice(): any {
-    let discountPrice = 0;
-    return this.formatPrice(0);
+  public formatDiscountPrice(): any {
+    return this.formatPrice(this.calculateDiscountPrice());
+  }
+
+  private calculateDiscountPrice(): number {
+    return 0;
   }
 
   // 4
@@ -112,6 +132,9 @@ export class CheckoutComponent {
   public toggleAddAddressModal(value: boolean): void {
     this.isAddressesModalOpen = false;
     this.isAddAddressModalOpen = value;
+    if (!value) {
+      this.initAddAddressForm();
+    }
   }
 
   // 7
@@ -148,6 +171,38 @@ export class CheckoutComponent {
             this.notifService.error(errorRes.error.message);
           },
         });
+      }
+    });
+  }
+
+  //
+  public addAddress(): void {
+    Swal.fire({
+      title: "Thêm mới địa chỉ?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.addressService
+          .addAddress(this.loggedCust.id, this.addAddressForm.value)
+          .subscribe({
+            next: () => {
+              this.initAddAddressForm();
+              this.notifService.success("Thêm địa chỉ thành công!");
+              this.getAllAddressOfLoggedCust();
+
+              // open/close modal
+              this.isAddAddressModalOpen = false;
+              this.isAddressesModalOpen = true;
+            },
+            error: (errRes: HttpErrorResponse) => {
+              this.notifService.error(errRes.error.message);
+            },
+          });
       }
     });
   }
@@ -226,23 +281,89 @@ export class CheckoutComponent {
     return districtName;
   }
 
-  public addAddress(): void {
-    this.addressService
-      .addAddress(this.loggedCust.id, this.addAddressForm.value)
-      .subscribe({
-        next: () => {
-          this.initAddAddressForm();
-          this.notifService.success("Thêm địa chỉ thành công!");
-          this.getAllAddressOfLoggedCust();
+  public checkProvinceSelection(): void {
+    if (!this.provinceId) {
+      this.notifService.warning("Vui lòng chọn tỉnh/thành phố trước!");
+      return;
+    }
+  }
 
-          // open/close modal
-          this.isAddAddressModalOpen = false;
-          this.isAddressesModalOpen = true;
-        },
-        error: (errRes: HttpErrorResponse) => {
-          this.notifService.error(errRes.error.message);
-        },
-      });
+  public checkDistrictSelection(): void {
+    if (!this.provinceId) {
+      this.notifService.warning("Vui lòng chọn quận/huyện trước!");
+      return;
+    }
+  }
+
+  //
+  public checkOut(): void {
+    Swal.fire({
+      title: "Xác nhận thanh toán?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xác nhận",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        const tongTien = this.calculateRealPrice();
+        const tienGiam = this.calculateDiscountPrice();
+        const phiVanChuyen = 0;
+        const loaiHoaDon = "GIAO_HANG";
+        const hoaDonChiTiets: OrderDetailsReq[] =
+          this.mapCartItemsToOrderDetails();
+        const nhanVienId = 0;
+        const khachHangId = this.loggedCust.id;
+        const phieuGiamGiaId = 0;
+        const thanhToans: PaymentReq[] = [];
+        const tenNguoiNhan = this.loggedCust.hoTen;
+        const sdtNguoiNhan = this.loggedCust.sdt;
+        const emailNguoiNhan = this.loggedCust.email;
+        const diaChiNguoiNhan = this.formatAddress(this.defaultAddr);
+        const ghiChu = "";
+        let diaChiVaPhiVanChuyen: AddressShipFee;
+
+        let req: PlaceOrderRequest = {
+          tongTien: tongTien,
+          tienGiam: tienGiam,
+          phiVanChuyen: phiVanChuyen,
+          loaiHoaDon: loaiHoaDon,
+          hoaDonChiTiets: hoaDonChiTiets,
+          nhanVienId: nhanVienId,
+          khachHangId: khachHangId,
+          phieuGiamGiaId: phieuGiamGiaId,
+          thanhToans: thanhToans,
+          tenNguoiNhan: tenNguoiNhan,
+          sdtNguoiNhan: sdtNguoiNhan,
+          emailNguoiNhan: emailNguoiNhan,
+          diaChiNguoiNhan: diaChiNguoiNhan,
+          ghiChu: ghiChu,
+          diaChiVaPhiVanChuyen: diaChiVaPhiVanChuyen,
+        };
+
+        this.orderService.placeOrder(req).subscribe({
+          next: (resp: any) => {},
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
+          },
+        });
+      }
+    });
+  }
+
+  private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
+    let result: OrderDetailsReq[] = [];
+    for (let item of this.cartItems2) {
+      let orderDetails: OrderDetailsReq = {
+        soLuong: item.soLuong,
+        giaBan: item.spct.giaBan,
+        giaNhap: item.spct.giaNhap,
+        sanPhamChiTietId: item.spct.id,
+      };
+      result.push(orderDetails);
+    }
+    return result;
   }
 
   // private functions
@@ -323,5 +444,12 @@ export class CheckoutComponent {
         this.notifService.error(errorRes.error.message);
       },
     });
+  }
+
+  private getAllDiscounts(): void {
+    // this.discountService.getDiscountsForCheckOut(
+    //   this.loggedCust,
+    //   this.calculateFinalPrice
+    // ).subscribe;
   }
 }

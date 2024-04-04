@@ -69,7 +69,6 @@ export class ThemKhachHangComponent {
       const address = arrayQR[5].split(",");
       const dateObject = new Date(year, month, day);
       const formattedDate = dateObject.toLocaleDateString("en-CA");
-      console.log(address[3]);
       this.formAddKh = new FormGroup({
         hoTen: new FormControl(arrayQR[2] === undefined ? "" : arrayQR[2], [
           Validators.required,
@@ -319,9 +318,6 @@ export class ThemKhachHangComponent {
 
   getAllXaByHuyen() {
     this.findHuyenId();
-    console.log(this.idTinh);
-    console.log(this.idHuyen);
-
     this.ghn.getAllWardByDistrictID(this.idHuyen).subscribe({
       next: (resp) => {
         this.xas = resp.data;

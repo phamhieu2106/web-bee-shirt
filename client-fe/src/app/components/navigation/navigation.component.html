@@ -345,7 +345,13 @@
     </div>
 
     <div class="thanhToan">
-      <button class="btnThanhToan" routerLink="/check-out">Thanh Toán</button>
+      <button
+        class="btnThanhToan"
+        routerLink="/check-out"
+        (click)="toggleCart()"
+      >
+        Thanh Toán
+      </button>
     </div>
   </div>
 </div>

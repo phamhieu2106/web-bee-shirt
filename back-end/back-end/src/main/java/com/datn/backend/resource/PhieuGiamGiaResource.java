@@ -6,11 +6,11 @@ import com.datn.backend.dto.request.PhieuGiamGiaRequest;
 import com.datn.backend.dto.request.PhieuKhachHangRequest;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.service.PhieuGiamGiaKhachHangService;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -30,84 +31,74 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PhieuGiamGiaResource {
 
-    @Autowired
-    private PhieuGiamGiaServce service;
-
-    @Autowired
-    private PhieuGiamGiaKhachHangService phieuGiamGiaKhachHangService;
+    private final PhieuGiamGiaServce pggService;
+    private final PhieuGiamGiaKhachHangService pggKhService;
 
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                 @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                 @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search,
                                                  @RequestParam(value = "kieu", defaultValue = "", required = false) List<Integer> kieu,
                                                  @RequestParam(value = "loai", defaultValue = "", required = false) List<Integer> loai,
                                                  @RequestParam(value = "trangThai", required = false) List<String> trangThai) {
-
-        return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search, kieu, loai, trangThai));
+        return ResponseEntity.ok(pggService.getPagination(pageNumber, pageSize, search, kieu, loai, trangThai));
     }
 
     @GetMapping("/filter")
     public ResponseEntity<?> getFilter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                       @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                       @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                        @RequestParam(value = "search", defaultValue = "", required = false) String search,
                                        @RequestParam(value = "kieu", defaultValue = "", required = false) List<Integer> kieu,
                                        @RequestParam(value = "loai", defaultValue = "", required = false) List<Integer> loai,
                                        @RequestParam(value = "trangThai", required = false) List<String> trangThai,
                                        @RequestParam(value = "thoiGianBatDau", defaultValue = "", required = false) String thoiGianBatDau,
                                        @RequestParam(value = "thoiGianKetThuc", defaultValue = "", required = false) String thoiGianKetThuc) {
-
-        return ResponseEntity.ok(service.getFilter(pageNumber, pageSize, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc));
+        return ResponseEntity.ok(pggService.getFilter(pageNumber, pageSize, search, kieu, loai, trangThai, thoiGianBatDau, thoiGianKetThuc));
     }
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(pggService.getAll());
     }
 
     @GetMapping("/sua-phieu/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
-
-        return ResponseEntity.ok(service.getOne(id));
+        return ResponseEntity.ok(pggService.getOne(id));
     }
 
     @PutMapping("/status/{id}")
     public ResponseEntity<?> changeStatus(@PathVariable("id") int id) {
-
-        return ResponseEntity.ok(service.changeStatus(id));
+        return ResponseEntity.ok(pggService.changeStatus(id));
     }
 
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@Valid @RequestBody PhieuGiamGiaRequest phieuGiamGia, BindingResult result) {
-        return ResponseEntity.ok(service.add(phieuGiamGia));
+        return ResponseEntity.ok(pggService.add(phieuGiamGia));
     }
 
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PhieuGiamGiaRequest request) {
-
-        return ResponseEntity.ok().body(service.update(id, request));
+        return ResponseEntity.ok().body(pggService.update(id, request));
     }
 
     /// Phiếu Giảm Giá Khách Hàng
     @PostMapping("/add-phieu")
     public ResponseEntity<?> themPhieuGiamGia(@RequestBody PhieuKhachHangRequest request) {
-        phieuGiamGiaKhachHangService.deletePhieu(request.getPhieuGiamGiaId());
-        phieuGiamGiaKhachHangService.addPhieu(request);
+        pggKhService.deletePhieu(request.getPhieuGiamGiaId());
+        pggKhService.addPhieu(request);
         return ResponseEntity.ok(request);
     }
 
     @DeleteMapping("/add-phieu")
     public void xoaPhieuGiamGiaKhach(@PathVariable("id")Integer id) {
-        phieuGiamGiaKhachHangService.deletePhieu(id);
-
-
+        pggKhService.deletePhieu(id);
     }
 
     @GetMapping("/get-phieu-khach-hang")
     public ResponseEntity<?> getAllPhieuKhachHang() {
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAll());
+        return ResponseEntity.ok(pggKhService.getAll());
     }
 
 
@@ -117,27 +108,25 @@ public class PhieuGiamGiaResource {
                                                @RequestParam(value = "id", defaultValue = "", required = false) String id,
                                                @RequestParam(value = "check", defaultValue = "", required = false) Boolean check
     ) {
-
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getPagination(pageNumber, pageSize, id, check));
+        return ResponseEntity.ok(pggKhService.getPagination(pageNumber, pageSize, id, check));
     }
 
     @GetMapping("/get-avtive")
     public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.ok(phieuGiamGiaKhachHangService.getAllActive(pageNumber, pageSize, search));
+        return ResponseEntity.ok(pggKhService.getAllActive(pageNumber, pageSize, search));
     }
-
-
-
-
-
 
     @PostMapping("/get-discount-valid")
     public ResponseEntity<?> getDiscountValid(@Valid @RequestBody DiscountValidRequest discountValidRequest) {
-
-        return ResponseEntity.ok(service.getDiscountValid(discountValidRequest));
+        return ResponseEntity.ok(pggService.getDiscountValid(discountValidRequest));
     }
 
-
+    // client resources
+    @GetMapping("/discount-for-checkout/{priceCond}/{custId}")
+    public ResponseEntity<List<PhieuGiamGia>> getDiscountsForCheckOut(@PathVariable("priceCond") BigDecimal dieuKien,
+                                                                      @PathVariable("custId") int custId) {
+        return ResponseEntity.ok(pggService.getDiscountsForCheckOut(dieuKien, custId));
+    }
 }

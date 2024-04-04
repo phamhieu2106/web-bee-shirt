@@ -24,6 +24,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
+import { TrackingComponent } from './components/tracking/tracking.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { SignUpComponent } from "./components/sign-up/sign-up.component";
     LoginComponent,
     CheckoutComponent,
     SignUpComponent,
+    TrackingComponent,
   ],
   imports: [
     BrowserModule,

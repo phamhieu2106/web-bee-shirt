@@ -11,4 +11,5 @@ export class Discount {
   thoiGianBatDau: string;
   thoiGianKetThuc: string;
   trangThai: string;
+  isSelected: boolean;
 }

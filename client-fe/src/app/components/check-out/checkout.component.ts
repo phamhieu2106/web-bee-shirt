@@ -36,8 +36,10 @@ export class CheckoutComponent {
   public loggedCust: Customer;
   public cartItems2: CartItem[] = [];
   public cartItemQuantity2: number;
+
   public isAddressesModalOpen: boolean = false;
   public isAddAddressModalOpen: boolean = false;
+  public isDiscountModalOpen: boolean = false;
 
   public addAddressForm: FormGroup;
   public provinces: any[];
@@ -49,6 +51,12 @@ export class CheckoutComponent {
 
   public discounts: Discount[] = [];
   public selectedDiscount: Discount;
+
+  public realPrice: number = 0;
+  public salePrice: number = 0;
+  public discountPrice: number = 0;
+  public shipPrice: number = 0;
+  public finalPrice: number = 0;
 
   // constructor, ngOn
   constructor(
@@ -82,7 +90,6 @@ export class CheckoutComponent {
     this.getCartItemsFromLoggedCustomer();
     this.initAddAddressForm();
     this.getAllProvinces();
-    this.getAllDiscounts();
   }
 
   // public functions
@@ -92,65 +99,16 @@ export class CheckoutComponent {
   }
 
   // 2
-  public formatRealPrice(): any {
-    return this.formatPrice(this.calculateRealPrice());
-  }
-
-  private calculateRealPrice(): number {
-    let totalPrice = 0;
-    for (const item of this.cartItems2) {
-      totalPrice += item.spct.giaBan * item.soLuong;
-    }
-    return totalPrice;
-  }
-
-  // 3
-  public formatSalePrice(): any {
-    return this.formatPrice(this.calculateSalePrice());
-  }
-
-  private calculateSalePrice(): number {
-    return 0;
-  }
-
-  // 4
-  public formatDiscountPrice(): any {
-    return this.formatPrice(this.calculateDiscountPrice());
-  }
-
-  private calculateDiscountPrice(): number {
-    return 0;
-  }
-
-  // 5
-  public formatShipPrice(): any {
-    return this.formatPrice(this.calculateShipPrice());
-  }
-
-  private calculateShipPrice(): number {
-    return 0;
-  }
-
-  // 6
-  public formatFinalPrice(): any {
-    return this.formatPrice(this.calculateFinalPrice());
-  }
-
-  public calculateFinalPrice(): number {
-    return (
-      this.calculateRealPrice() -
-      this.calculateSalePrice() -
-      this.calculateDiscountPrice() +
-      this.calculateShipPrice()
-    );
-  }
-
-  // 7
   public toggleAddressesModal(value: boolean): void {
     this.isAddressesModalOpen = value;
   }
 
-  //
+  // 3
+  public toggleDiscountsModal(value: boolean): void {
+    this.isDiscountModalOpen = value;
+  }
+
+  // 4
   public toggleAddAddressModal(value: boolean): void {
     this.isAddressesModalOpen = false;
     this.isAddAddressModalOpen = value;
@@ -159,12 +117,12 @@ export class CheckoutComponent {
     }
   }
 
-  //
+  // 5
   public formatAddress(address: Address): string {
     return `${address.duong}, ${address.xa}, ${address.huyen}, ${address.tinh}`;
   }
 
-  //
+  // 6
   public setDefaultAddress(addressId: number): void {
     Swal.fire({
       title: "Cập nhật địa chỉ mặc định?",
@@ -197,7 +155,7 @@ export class CheckoutComponent {
     });
   }
 
-  //
+  // 7
   public addAddress(): void {
     Swal.fire({
       title: "Thêm mới địa chỉ?",
@@ -229,8 +187,8 @@ export class CheckoutComponent {
     });
   }
 
-  // address event functions
-  // get All Districts By Province
+  // select address event functions
+  // get districts by province
   public getAllDistrictsByProvince(): void {
     this.wards = [];
     this.getProvinceId();
@@ -268,7 +226,7 @@ export class CheckoutComponent {
     return provinceName;
   }
 
-  // get All Wards By District
+  // get wards by district
   public getAllWardsByDistrict(): void {
     this.getDistrictId();
     this.giaoHangNhanhService
@@ -316,6 +274,7 @@ export class CheckoutComponent {
       return;
     }
   }
+  // end: select address event functions
 
   //
   public checkOut(): void {
@@ -329,8 +288,8 @@ export class CheckoutComponent {
       confirmButtonText: "Xác nhận",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        const tongTien = this.calculateRealPrice();
-        const tienGiam = this.calculateDiscountPrice();
+        const tongTien = this.finalPrice;
+        const tienGiam = this.getDiscountPrice();
         const phiVanChuyen = 0;
         const loaiHoaDon = "GIAO_HANG";
         const hoaDonChiTiets: OrderDetailsReq[] =
@@ -348,7 +307,7 @@ export class CheckoutComponent {
 
         let req: PlaceOrderRequest = {
           tongTien: tongTien,
-          tienGiam: tienGiam,
+          tienGiam: 0,
           phiVanChuyen: phiVanChuyen,
           loaiHoaDon: loaiHoaDon,
           hoaDonChiTiets: hoaDonChiTiets,
@@ -388,6 +347,52 @@ export class CheckoutComponent {
     return result;
   }
 
+  //
+  public getDiscountTitle(discount: Discount): string {
+    if (discount?.kieu === 0) {
+      return ` Giảm ${discount?.giaTri}% cho đơn  từ ${this.formatPrice(
+        discount?.dieuKienGiam
+      )}`;
+    } else {
+      return ` Giảm ${this.formatPrice(
+        discount?.giaTri
+      )}k cho đơn  từ ${this.formatPrice(discount?.dieuKienGiam)}`;
+    }
+  }
+
+  //
+  public changeDiscount(discountId: number): void {
+    this.discounts = this.discounts.map((d: Discount) => {
+      if (d.id === discountId) {
+        this.selectedDiscount = d;
+        d.isSelected = true;
+      } else {
+        d.isSelected = false;
+      }
+      return d;
+    });
+    this.discountPrice = this.getDiscountPrice();
+    this.finalPrice = this.getFinalPrice();
+  }
+
+  public checkBestDiscount(): boolean {
+    for (let d of this.discounts) {
+      let reduceInFor = 0;
+      if (d.kieu === 0) {
+        let temp = Math.round(
+          (d.giaTri * (this.realPrice - this.salePrice)) / 100
+        );
+        reduceInFor = temp > d.giaTriMax ? d.giaTriMax : temp;
+      } else if (d.kieu === 1) {
+        reduceInFor = d.giaTri;
+      }
+      if (this.discountPrice < reduceInFor) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // private functions
   // 1
   private checkLoggedIn(): void {
@@ -416,9 +421,16 @@ export class CheckoutComponent {
   private getCartItemsFromLoggedCustomer(): void {
     const loggedCus = this.authService.getCustomerFromStorage();
     this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
-      next: (response: CartItem[]) => {
+      next: (cartItems: CartItem[]) => {
+        // calculate prices
+        this.realPrice = this.getRealPrice(cartItems);
+        // this.calculateSalePrice(cartItems);
+        this.salePrice = this.getSalePrice();
+        this.finalPrice = this.getFinalPrice();
+        this.getAllDiscounts();
+
         let observables = [];
-        for (let item of response) {
+        for (let item of cartItems) {
           observables.push(
             this.productService.getProductByProductDetails(item.spct.id)
           );
@@ -426,13 +438,13 @@ export class CheckoutComponent {
         forkJoin(observables).subscribe({
           next: (productsRes: SanPham[]) => {
             productsRes.forEach((productRes, index) => {
-              response[index].spct.sanPham = productRes;
-              if (index === response.length - 1) {
-                this.cartItems2 = response;
-                this.cartItemQuantity2 = response.length;
-                this.cartService.updateCartItemsOfLoggedUser(response);
+              cartItems[index].spct.sanPham = productRes;
+              if (index === cartItems.length - 1) {
+                this.cartItems2 = cartItems;
+                this.cartItemQuantity2 = cartItems.length;
+                this.cartService.updateCartItemsOfLoggedUser(cartItems);
                 this.cartService.updateCartItemsQuantityOfLoggedUser(
-                  response.length
+                  cartItems.length
                 );
               }
             });
@@ -443,6 +455,53 @@ export class CheckoutComponent {
         this.notifService.error(errorRes.error.message);
       },
     });
+  }
+
+  // 3.1
+  private getAllDiscounts(): void {
+    this.discountService
+      .getDiscountsForCheckOut(
+        this.realPrice - this.salePrice,
+        this.loggedCust.id
+      )
+      .subscribe({
+        next: (discounts: Discount[]) => {
+          this.discounts = discounts;
+          this.initSelectedDiscounts();
+        },
+        error: (errorRes: HttpErrorResponse) => {
+          this.notifService.error(errorRes.error.message);
+        },
+      });
+  }
+
+  // 3.2
+  private initSelectedDiscounts(): void {
+    if (this.discounts.length === 1) {
+      this.selectedDiscount = this.discounts[0];
+      this.selectedDiscount.isSelected = true;
+    } else {
+      let reducedPrice = 0;
+      for (let d of this.discounts) {
+        let reduceInFor = 0;
+        if (d.kieu === 0) {
+          let temp = Math.round(
+            (d.giaTri * (this.realPrice - this.salePrice)) / 100
+          );
+          reduceInFor = temp > d.giaTriMax ? d.giaTriMax : temp;
+        } else if (d.kieu === 1) {
+          reduceInFor = d.giaTri;
+        }
+
+        if (reducedPrice < reduceInFor) {
+          reducedPrice = reduceInFor;
+          this.selectedDiscount = d;
+        }
+      }
+      this.selectedDiscount.isSelected = true;
+    }
+    this.discountPrice = this.getDiscountPrice();
+    this.finalPrice = this.getFinalPrice();
   }
 
   // 4
@@ -470,26 +529,45 @@ export class CheckoutComponent {
     });
   }
 
-  private getAllDiscounts(): void {
-    this.discountService
-      .getDiscountsForCheckOut(
-        this.loggedCust.id,
-        this.calculateRealPrice() - this.calculateSalePrice()
-      )
-      .subscribe({
-        next: (discounts: Discount[]) => {
-          this.discounts = discounts;
-        },
-        error: (errorRes: HttpErrorResponse) => {
-          this.notifService.error(errorRes.error.message);
-        },
-      });
+  // calculate prices
+  private getRealPrice(cartItems: CartItem[]): number {
+    let result: number = 0;
+    for (const item of cartItems) {
+      result += item.spct.giaBan * item.soLuong;
+    }
+    return result;
   }
 
-  private initSelectedDiscounts(): void {
-    // for (let d of this.discounts) {
-    //   const reducedPrice = 0;
-    //    if (d.)
-    // }
+  private getSalePrice(): number {
+    return 0;
   }
+
+  private getDiscountPrice(): number {
+    if (this.selectedDiscount) {
+      if (this.selectedDiscount.kieu === 0) {
+        let temp =
+          (this.selectedDiscount.giaTri * (this.realPrice - this.salePrice)) /
+          100;
+        this.discountPrice =
+          temp > this.selectedDiscount.giaTriMax
+            ? this.selectedDiscount.giaTriMax
+            : temp;
+        return temp;
+      } else if (this.selectedDiscount.kieu === 1) {
+        return this.selectedDiscount.giaTri;
+      }
+    }
+    return 0;
+  }
+
+  private getShipPrice(): number {
+    return 0;
+  }
+
+  private getFinalPrice(): number {
+    return (
+      this.realPrice - this.salePrice - this.discountPrice + this.shipPrice
+    );
+  }
+  // end: calculate prices
 }

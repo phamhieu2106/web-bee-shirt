@@ -25,7 +25,9 @@
               <div class="checkout-step-title">
                 <h2>Thông tin giao hàng</h2>
                 <!-- Đăng nhập rồi thì hiện nút này -->
-                <a class="edit pointer" (click)="toggleAddressesModal(true)">Thay đổi</a>
+                <a class="edit pointer" (click)="toggleAddressesModal(true)"
+                  >Thay đổi</a
+                >
               </div>
               <div>
                 <div class="checkout-step-content">
@@ -35,58 +37,101 @@
                       <div class="addressNot">
                         <div class="wraperInfo">
                           <label class="mb-1">Họ tên:</label>
-                          <input type="text" class="form-control" [value]="loggedCust.hoTen" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="loggedCust.hoTen"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Số điện thoại:</label>
-                          <input type="text" class="form-control" [value]="loggedCust.sdt" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="loggedCust.sdt"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Email:</label>
-                          <input type="text" class="form-control" [value]="loggedCust.email" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="loggedCust.email"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Tỉnh/Thành phố:</label>
-                          <input type="text" class="form-control" [value]="defaultAddr?.tinh" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.tinh"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Quận/Huyện:</label>
-                          <input type="text" class="form-control" [value]="defaultAddr?.huyen" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.huyen"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Phường/Xã:</label>
-                          <input type="text" class="form-control" [value]="defaultAddr?.xa" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.xa"
+                            disabled
+                          />
                         </div>
 
                         <div class="wraperInfo">
                           <label class="mb-1">Đường:</label>
-                          <input type="text" class="form-control" [value]="defaultAddr?.duong" disabled />
+                          <input
+                            type="text"
+                            class="form-control"
+                            [value]="defaultAddr?.duong"
+                            disabled
+                          />
                         </div>
                       </div>
                     </div>
 
                     <!-- Modal: danh sách địa chỉ -->
-                    <div [ngClass]="
+                    <div
+                      [ngClass]="
                         isAddressesModalOpen
                           ? 'modal-address modal in'
                           : 'modal-address modal'
-                      ">
+                      "
+                    >
                       <div class="modal-backdrop"></div>
                       <div class="modal-container">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <div class="modal-close" (click)="toggleAddressesModal(false)">
+                            <div
+                              class="modal-close"
+                              (click)="toggleAddressesModal(false)"
+                            >
                               <span class="screen-reader-text">Close</span>
                             </div>
                             <h4 class="modal-title">Sổ địa chỉ</h4>
                           </div>
                           <div class="modal-body">
-                            <div class="modal-address-item" *ngFor="let addr of addresses">
+                            <div
+                              class="modal-address-item"
+                              *ngFor="let addr of addresses"
+                            >
                               <div class="info">
                                 <div class="address">
                                   {{ formatAddress(addr) }}
@@ -97,23 +142,38 @@
                                   <div class="phone">{{ loggedCust.sdt }}</div>
                                 </div>
                                 <div class="address-type" *ngIf="addr.macDinh">
-                                  <label class="label label-default"><svg width="20" height="20" viewBox="0 0 20 20"
-                                      fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <label class="label label-default"
+                                    ><svg
+                                      width="20"
+                                      height="20"
+                                      viewBox="0 0 20 20"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
                                       <path
                                         d="M13.3337 11.1454C16.2768 11.724 18.3337 13.0456 18.3337 14.5833C18.3337 16.6544 14.6027 18.3333 10.0003 18.3333C5.39795 18.3333 1.66699 16.6544 1.66699 14.5833C1.66699 13.0456 3.72382 11.724 6.66699 11.1454M10.0003 14.1667V2.5L14.4318 5.22704C14.755 5.42595 14.9166 5.52541 14.9682 5.65071C15.0131 5.76 15.0096 5.88325 14.9584 5.98976C14.8997 6.11188 14.7326 6.20185 14.3984 6.38179L10.0003 8.75"
-                                        stroke="#DA291C" stroke-width="1.2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
+                                        stroke="#DA291C"
+                                        stroke-width="1.2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      ></path>
                                     </svg>
-                                    <span>Địa chỉ mặc định</span></label>
+                                    <span>Địa chỉ mặc định</span></label
+                                  >
                                 </div>
                               </div>
                               <div class="action-edit" *ngIf="!addr.macDinh">
-                                <span (click)="setDefaultAddress(addr.id)">Đặt</span>
+                                <span (click)="setDefaultAddress(addr.id)"
+                                  >Đặt</span
+                                >
                               </div>
                             </div>
                           </div>
                           <div class="modal-footer">
-                            <button class="btn btn-primary" (click)="toggleAddAddressModal(true)">
+                            <button
+                              class="btn btn-primary"
+                              (click)="toggleAddAddressModal(true)"
+                            >
                               Thêm địa chỉ
                             </button>
                           </div>
@@ -122,16 +182,21 @@
                     </div>
 
                     <!-- Modal: Thêm địa chỉ -->
-                    <div [ngClass]="
+                    <div
+                      [ngClass]="
                         isAddAddressModalOpen
                           ? 'modal-new-address modal in'
                           : 'modal-new-address modal'
-                      ">
+                      "
+                    >
                       <div class="modal-backdrop"></div>
                       <div class="modal-container">
                         <div class="modal-content">
                           <div class="modal-header mb-3">
-                            <div class="modal-close" (click)="toggleAddAddressModal(false)">
+                            <div
+                              class="modal-close"
+                              (click)="toggleAddAddressModal(false)"
+                            >
                               <span class="screen-reader-text">close</span>
                             </div>
                             <h4 class="modal-title">Thêm địa chỉ</h4>
@@ -164,12 +229,19 @@
                                 <div class="row">
                                   <div class="form-group col-sm-6 mb-3">
                                     <label class="mb-1">Tỉnh/Thành phố:</label>
-                                    <select name="state" class="form-control" (change)="getAllDistrictsByProvince()"
-                                      formControlName="tinh">
+                                    <select
+                                      name="state"
+                                      class="form-control"
+                                      (change)="getAllDistrictsByProvince()"
+                                      formControlName="tinh"
+                                    >
                                       <option value="">
                                         Chọn Tỉnh/Thành phố
                                       </option>
-                                      <option *ngFor="let p of provinces" [value]="p.ProvinceName">
+                                      <option
+                                        *ngFor="let p of provinces"
+                                        [value]="p.ProvinceName"
+                                      >
                                         {{ p.ProvinceName }}
                                       </option>
                                     </select>
@@ -177,12 +249,19 @@
 
                                   <div class="form-group col-sm-6 mb-3">
                                     <label class="mb-1">Quận/Huyện:</label>
-                                    <select class="form-control" (change)="getAllWardsByDistrict()"
-                                      formControlName="huyen" (click)="checkProvinceSelection()">
+                                    <select
+                                      class="form-control"
+                                      (change)="getAllWardsByDistrict()"
+                                      formControlName="huyen"
+                                      (click)="checkProvinceSelection()"
+                                    >
                                       <option value="" selected>
                                         Chọn quận huyện
                                       </option>
-                                      <option *ngFor="let d of districts" value="{{ d.DistrictName }}">
+                                      <option
+                                        *ngFor="let d of districts"
+                                        value="{{ d.DistrictName }}"
+                                      >
                                         {{ d.DistrictName }}
                                       </option>
                                     </select>
@@ -191,27 +270,50 @@
 
                                 <div class="form-group mb-3">
                                   <label class="mb-1">Phường/Xã:</label>
-                                  <select class="form-control" formControlName="xa" (click)="checkDistrictSelection()">
+                                  <select
+                                    class="form-control"
+                                    formControlName="xa"
+                                    (click)="checkDistrictSelection()"
+                                  >
                                     <option value="" selected>
                                       Chọn phường xã
                                     </option>
-                                    <option *ngFor="let w of wards" [value]="w.WardName">
+                                    <option
+                                      *ngFor="let w of wards"
+                                      [value]="w.WardName"
+                                    >
                                       {{ w.WardName }}
                                     </option>
                                   </select>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                  <label class="mb-1">Số nhà - Đường/Địa chỉ chi tiết:</label>
-                                  <input type="text" class="form-control" formControlName="duong" />
+                                  <label class="mb-1"
+                                    >Số nhà - Đường/Địa chỉ chi tiết:</label
+                                  >
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="duong"
+                                  />
                                 </div>
 
                                 <div class="form-checkbox mt-3">
-                                  <input type="checkbox" formControlName="macDinh" />
-                                  <label><span>Đặt làm địa chỉ mặc định</span></label>
+                                  <input
+                                    type="checkbox"
+                                    formControlName="macDinh"
+                                  />
+                                  <label
+                                    ><span
+                                      >Đặt làm địa chỉ mặc định</span
+                                    ></label
+                                  >
                                 </div>
                                 <div class="button">
-                                  <button class="btn-save" (click)="addAddress()">
+                                  <button
+                                    class="btn-save"
+                                    (click)="addAddress()"
+                                  >
                                     Thêm
                                   </button>
                                 </div>
@@ -237,15 +339,28 @@
           </div>
           <div class="checkout-step-content">
             <div class="checkout-payment-method-section">
-              <label for="cashondelivery"><input id="cashondelivery" type="radio" value="cashondelivery"
+              <label for="cashondelivery"
+                ><input
+                  id="cashondelivery"
+                  type="radio"
+                  value="cashondelivery"
                   name="thanhToan" />
-                <span><b>Thanh toán khi nhận hàng (COD)</b>
-                  <img src="https://canifa.com/assets/images/cod.svg" /></span></label>
+                <span
+                  ><b>Thanh toán khi nhận hàng (COD)</b>
+                  <img src="https://canifa.com/assets/images/cod.svg" /></span
+              ></label>
             </div>
             <div class="checkout-payment-method-section">
-              <label for="vnpay"><input id="vnpay" type="radio" value="vnpay" name="thanhToan" />
-                <span><b>Thanh toán bằng VNPAY</b>
-                  <img src="https://canifa.com/assets/images/vnpay.svg" /></span></label>
+              <label for="vnpay"
+                ><input
+                  id="vnpay"
+                  type="radio"
+                  value="vnpay"
+                  name="thanhToan" />
+                <span
+                  ><b>Thanh toán bằng VNPAY</b>
+                  <img src="https://canifa.com/assets/images/vnpay.svg" /></span
+              ></label>
             </div>
           </div>
         </div>
@@ -256,47 +371,70 @@
           <div class="checkout-step-title">
             <h2>Sản phẩm ({{ cartItemQuantity2 }})</h2>
           </div>
-          <div class="checkout-step-content" style="height: 500px; overflow-y: auto">
+          <div
+            class="checkout-step-content"
+            style="height: 500px; overflow-y: auto"
+          >
             <table class="checkout-cart-items">
               <tbody>
                 <tr class="cart-item" *ngFor="let item of cartItems2">
                   <td data-th="Sản phẩm" class="col item">
                     <div class="cart-item-info">
                       <div class="cart-item-photo">
-                        <a class="cart-image-container" [routerLink]="'/san-pham/' + item.spct.sanPham.id"><img
-                            class="rounded" [src]="item.spct.hinhAnhs[0].imageUrl" /></a>
+                        <a
+                          class="cart-image-container"
+                          [routerLink]="'/san-pham/' + item.spct.sanPham.id"
+                          ><img
+                            class="rounded"
+                            [src]="item.spct.hinhAnhs[0].imageUrl"
+                        /></a>
                       </div>
                       <div class="cart-item-details">
-                        <strong class="cart-item-name"><a [routerLink]="'/san-pham/' + item.spct.sanPham.id"
-                            class="cart-image-container">
+                        <strong class="cart-item-name"
+                          ><a
+                            [routerLink]="'/san-pham/' + item.spct.sanPham.id"
+                            class="cart-image-container"
+                          >
                             {{ item.spct.sanPham.ten }}
-                          </a></strong>
+                          </a></strong
+                        >
                         <div class="cart-item-options">
                           <div class="cart-item-option">
                             Màu:
-                            <img class="ms-1" [src]="item.spct.mauSac.image.imageUrl" style="
+                            <img
+                              class="ms-1"
+                              [src]="item.spct.mauSac.image.imageUrl"
+                              style="
                                 height: 20px;
                                 width: 20px;
                                 border-radius: 50%;
-                              " />
+                              "
+                            />
                           </div>
                           <div class="cart-item-option">
-                            <span><span class="swatch-option text">Size:
-                                {{ item.spct.kichCo.ten.split("-")[0] }}</span></span>
+                            <span
+                              ><span class="swatch-option text"
+                                >Size:
+                                {{ item.spct.kichCo.ten.split("-")[0] }}</span
+                              ></span
+                            >
                           </div>
                         </div>
                       </div>
                     </div>
                   </td>
                   <td data-th="Giá tiền" class="col price">
-                    <span class="price">Đơn giá: {{ formatPrice(item.spct.giaBan) }}</span>
+                    <span class="price"
+                      >Đơn giá: {{ formatPrice(item.spct.giaBan) }}</span
+                    >
                   </td>
                   <td data-th="Số lượng" class="col qty">
                     <span>Số lượng : {{ item.soLuong }}</span>
                   </td>
                   <td data-th="Số lượng" class="col qty">
                     <span>
-                      {{ formatPrice(item.spct.giaBan * item.soLuong) }}</span>
+                      {{ formatPrice(item.spct.giaBan * item.soLuong) }}</span
+                    >
                   </td>
                 </tr>
               </tbody>
@@ -309,79 +447,151 @@
     <!-- Bên phải -->
     <div class="col-md-4">
       <div class="col-md-12">
-        <div data-v-836166ae="" class="checkout-step checkout-coupon-wrapper ">
-          <div data-v-60ac2c34="" data-v-836166ae=""><!---->
-            <div data-v-60ac2c34="" class="checkout-coupon">
-              <div data-v-60ac2c34="" class="checkout-step-title">
-                <h2 data-v-60ac2c34="">Mã ưu đãi</h2>
-                <div data-v-60ac2c34="" class="action-show"><span data-v-60ac2c34="">Chọn hoặc nhập mã</span>
+        <div data-v-836166ae="" class="checkout-step checkout-coupon-wrapper">
+          <div data-v-836166ae="">
+            <div class="checkout-coupon">
+              <div class="checkout-step-title">
+                <h2>Mã ưu đãi</h2>
+                <div class="action-show" (click)="toggleDiscountsModal(true)">
+                  <span>Thay đổi mã giảm giá</span>
                 </div>
               </div>
-              <div data-v-60ac2c34="" class="checkout-step-content">
-                <div data-v-3d1a4f76="" data-v-60ac2c34="" class="coupon-list slick-slider slick-initialized"><div data-v-3d1a4f76="" class="slick-list"><div data-v-e4caeaf8="" data-v-3d1a4f76="" class="slick-track" style="opacity: 1; transform: translate3d(0px, 0px, 0px); width: 349px;"><div data-v-e4caeaf8="" tabindex="-1" data-index="0" aria-hidden="false" class="slick-slide slick-active slick-current" style="outline: none;"><div data-v-e4caeaf8=""><div data-v-60ac2c34="" data-v-e4caeaf8="" tabindex="-1" class="item" style="width: 100%; display: inline-block;"><div data-v-60ac2c34="" data-v-e4caeaf8="" class="coupon">CHAOHE</div> <div data-v-60ac2c34="" data-v-e4caeaf8="" class="des">
-                  Giảm 100k cho đơn nguyên giá từ 599k
-              </div></div></div></div></div></div></div>
-
-                <div data-v-3ce41d14="" data-v-60ac2c34="" class="modal modal-coupon active ">
-                  <div data-v-3ce41d14="" class="modal-backdrop"></div>
-                  <div data-v-3ce41d14="" class="modal-container">
-                    <div data-v-3ce41d14="" class="modal-content">
-                      <div data-v-3ce41d14="" class="modal-header">
-                        <div data-v-3ce41d14="" class="modal-close"><span data-v-3ce41d14=""
-                            class="screen-reader-text">close</span></div>
-                        <h4 data-v-3ce41d14="" class="modal-title">Mã ưu đãi</h4>
-                      </div>
-                      <div data-v-3ce41d14="" class="modal-body">
-                        <div data-v-3ce41d14="" class="checkout-coupon-form">
-                          <div data-v-3ce41d14="" class="checkout-coupon-form-group">
-                            <div data-v-3ce41d14="" class="control"><input data-v-3ce41d14="" type="text"
-                                name="promoCode" placeholder="Nhập mã ưu đãi" class="form-control "> <!----></div>
-                            <button data-v-3ce41d14="" disabled="disabled" class="btn-add-coupon btn-add">Sử
-                              dụng</button> <!---->
-                          </div> <!---->
-                        </div>
-                        <div data-v-3ce41d14="" class="voucher-items"><!---->
-                          <div data-v-3ce41d14="" class="voucher-item ">
-                            <div data-v-3ce41d14="" class="voucher-item-info">
-                              <div data-v-3ce41d14="" class="voucher-item-detail">
-                                <div data-v-3ce41d14="" class="voucher-item-title">Giảm 100k cho đơn nguyên giá từ 599k
-                                </div>
-                                <div data-v-3ce41d14="" class="voucher-item-code">BANMOI80</div>
-                                <div data-v-3ce41d14="" class="voucher-item-date">HSD: 2024-04-30</div>
-                              </div>
-                              <div data-v-3ce41d14="" class="voucher-item-action">
-                                <div data-v-3ce41d14="" class="action"><span data-v-3ce41d14="">Sử dụng</span></div>
-                              </div>
-                            </div> <!---->
-                            <div data-v-3ce41d14="" class="voucher-item-error">Mã giảm giá không đúng hoặc không thỏa
-                              mãn điều kiện chương trình, vui lòng kiểm tra lại..</div>
-                          </div>
-                          <div data-v-3ce41d14="" class="voucher-item ">
-                            <div data-v-3ce41d14="" class="voucher-item-info">
-                              <div data-v-3ce41d14="" class="voucher-item-detail">
-                                <div data-v-3ce41d14="" class="voucher-item-title">Giảm 100k cho đơn nguyên giá từ 599k
-                                </div>
-                                <div data-v-3ce41d14="" class="voucher-item-code">CHAOHE</div>
-                                <div data-v-3ce41d14="" class="voucher-item-date">HSD: 2024-04-30</div>
-                              </div>
-                              <div data-v-3ce41d14="" class="voucher-item-action">
-                                <div data-v-3ce41d14="" class="action"><span data-v-3ce41d14="">Sử dụng</span></div>
-                              </div>
-                            </div> <!---->
+              <div class="checkout-step-content">
+                <div class="coupon-list slick-slider slick-initialized mb-3">
+                  <div class="slick-list">
+                    <div
+                      class="slick-track"
+                      style="
+                        opacity: 1;
+                        transform: translate3d(0px, 0px, 0px);
+                        width: 349px;
+                      "
+                    >
+                      <div
+                        class="slick-slide slick-active slick-current"
+                        style="outline: none"
+                      >
+                        <div>
+                          <div
+                            class="item"
+                            style="width: 100%; display: inline-block"
+                          >
+                            <div class="coupon">
+                              {{ selectedDiscount?.tenPhieuGiamGia }}
+                            </div>
+                            <div class="des">
+                              {{ getDiscountTitle(selectedDiscount) }}
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div data-v-3ce41d14="" class="modal-footer"><button data-v-3ce41d14=""
-                          class="btn btn-primary">Tiếp tục</button></div>
                     </div>
-                  </div> <!---->
+                  </div>
+                </div>
+                <div *ngIf="checkBestDiscount() && this.discounts.length > 1">
+                  <i class="text-danger"
+                    >* Đang áp dụng mã giảm giá tốt nhất bạn đang có!</i
+                  >
+                </div>
+                <div *ngIf="!checkBestDiscount() && this.discounts.length > 1">
+                  <i class="text-danger"
+                    >* Bạn chưa sử dụng mã tốt nhất đang có đang có!</i
+                  >
+                </div>
+                <div *ngIf="this.discounts.length === 1">
+                  <i class="text-danger">* Mã giảm giá duy nhất bạn đang có!</i>
                 </div>
 
-
+                <div
+                  [ngClass]="
+                    isDiscountModalOpen
+                      ? 'modal modal-coupon active in'
+                      : 'modal modal-coupon active'
+                  "
+                >
+                  <div class="modal-backdrop"></div>
+                  <div class="modal-container">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div
+                          class="modal-close"
+                          (click)="toggleDiscountsModal(false)"
+                        >
+                          <span class="screen-reader-text">close</span>
+                        </div>
+                        <h4 class="modal-title">Mã ưu đãi</h4>
+                      </div>
+                      <div class="modal-body">
+                        <!-- <div class="checkout-coupon-form">
+                          <div class="checkout-coupon-form-group">
+                            <div class="control">
+                              <input
+                                type="text"
+                                name="promoCode"
+                                placeholder="Nhập mã ưu đãi"
+                                class="form-control"
+                              />
+                            </div>
+                            <button
+                              disabled="disabled"
+                              class="btn-add-coupon btn-add"
+                            >
+                              Sử dụng
+                            </button>
+                          </div>
+                        </div> -->
+                        <div class="voucher-items">
+                          <div
+                            [ngClass]="
+                              d.isSelected
+                                ? 'voucher-item active'
+                                : 'voucher-item'
+                            "
+                            [title]="
+                              !d.isSelected ? 'Chọn mã này' : 'Đang sử dụng'
+                            "
+                            (click)="changeDiscount(d.id)"
+                            *ngFor="let d of discounts"
+                          >
+                            <div class="voucher-item-info">
+                              <div class="voucher-item-detail">
+                                <div class="voucher-item-title">
+                                  {{ getDiscountTitle(d) }}
+                                </div>
+                                <div class="voucher-item-code">
+                                  {{ d?.tenPhieuGiamGia }}
+                                </div>
+                                <div class="voucher-item-date">
+                                  HSD: {{ d.thoiGianKetThuc }}
+                                </div>
+                              </div>
+                              <div class="voucher-item-action">
+                                <div class="action">
+                                  <span>Sử dụng</span>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- <div class="voucher-item-error">
+                              Mã giảm giá không đúng hoặc không thỏa mãn điều
+                              kiện chương trình, vui lòng kiểm tra lại..
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          class="btn btn-primary"
+                          (click)="toggleDiscountsModal(false)"
+                        >
+                          Tiếp tục
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -396,21 +606,25 @@
                 <tbody>
                   <tr>
                     <th>Giá trị đơn hàng</th>
-                    <td>{{ formatRealPrice() }}</td>
+                    <td>{{ formatPrice(realPrice) }}</td>
                   </tr>
                   <tr>
-                    <th>Số tiền giảm</th>
-                    <td>{{ formatDiscountPrice() }}</td>
+                    <th>Số tiền giảm từ đợt</th>
+                    <td>{{ formatPrice(salePrice) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Số tiền giảm từ mã</th>
+                    <td>{{ formatPrice(discountPrice) }}</td>
                   </tr>
                   <tr>
                     <th>Phí vận chuyển</th>
-                    <td>{{ formatDiscountPrice() }}</td>
+                    <td>{{ formatPrice(shipPrice) }}</td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr class="grand-totals">
                     <th>Tổng tiền thanh toán</th>
-                    <td>{{ calculateFinalPrice() }}</td>
+                    <td>{{ formatPrice(finalPrice) }}</td>
                   </tr>
                 </tfoot>
               </table>

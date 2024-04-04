@@ -13,6 +13,15 @@
   margin-right: 10px;
 }
 
+.saleProduct{
+  position: absolute;
+  top: 0;
+  padding: 5px 15px;
+  background-color: red;
+  color: white;
+  border-bottom-right-radius: 40%;
+}
+
 h5 {
   font-weight: 700;
   font-size: 14px;

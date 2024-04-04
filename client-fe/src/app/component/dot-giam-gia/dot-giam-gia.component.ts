@@ -1,6 +1,7 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
+import { OwlOptions } from "ngx-owl-carousel-o";
 import { MauSac } from "src/app/model/class/mau-sac.class";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
@@ -13,6 +14,34 @@ import { ProductService } from "src/app/service/product.service";
   styleUrls: ["./dot-giam-gia.component.css"],
 })
 export class DotGiamGiaComponent {
+  dotGiamGiaProduct: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: false,
+    navSpeed: 800,
+    navText: [
+      '<i class="bi bi-caret-left"></i>',
+      '<i class="bi bi-caret-right"></i>',
+    ],
+    responsive: {
+      0: {
+        items: 1,
+      },
+      400: {
+        items: 2,
+      },
+      740: {
+        items: 3,
+      },
+      940: {
+        items: 4,
+      },
+    },
+    nav: true,
+  };
+
   public pagedResponse: PagedResponse<SanPham>;
   public hours: number = 0;
   public minutes: number = 0;

@@ -78,10 +78,11 @@
   padding-bottom: 133%;
   transition: all 0.5s;
   border-radius: 5px;
+  height: 300px;
 }
 
 .image_thumb img {
-  position: absolute;
+  
   transition: all 0.9s ease;
 }
 .image_thumb img:hover {

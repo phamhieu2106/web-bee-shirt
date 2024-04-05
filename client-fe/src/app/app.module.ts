@@ -10,7 +10,7 @@ import { CarouselModule } from "ngx-owl-carousel-o";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { NavigationComponent } from "./components/navigation/navigation.component";
-import { HeaderComponent } from "./component/header/header.component";
+import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { HomePageComponent } from "./components/home-page/home-page.component";
 import { PhieuGiamGiaComponent } from "./component/phieu-giam-gia/phieu-giam-gia.component";
@@ -24,7 +24,8 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
-import { TrackingComponent } from './components/tracking/tracking.component';
+import { TrackingComponent } from "./components/tracking/tracking.component";
+import { ProfileModule } from "./profile/profile.module";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { TrackingComponent } from './components/tracking/tracking.component';
     AppRoutingModule,
     ToastrModule.forRoot(),
     CarouselModule,
+    ProfileModule,
   ],
   providers: [
     {

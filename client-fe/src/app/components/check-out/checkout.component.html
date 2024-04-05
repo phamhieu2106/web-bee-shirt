@@ -1,25 +1,124 @@
 <section class="container">
-  <!-- <div class="row">
-    <ul  class="checkout-progress-bar">
-      <li  class="checkout-progress-bar-item active">
-        <span  class="step">1</span>
-        <span >Giỏ hàng</span>
-      </li>
-      <li  class="checkout-progress-bar-item current">
-        <span  class="step">2</span>
-        <span >Đặt hàng</span>
-      </li>
-      <li  class="checkout-progress-bar-item">
-        <span  class="step">3</span>
-        <span >Hoàn tất</span>
-      </li>
-    </ul>
-  </div> -->
-
   <div class="row">
     <div class="col-md-8">
       <div class="col-md-12">
         <div class="checkout-step checkout-shipping">
+          <div class="col-md-12">
+            <div class="checkout-step checkout-review">
+              <div class="checkout-step-title">
+                <h2>Sản phẩm ({{ cartItemQuantity2 }})</h2>
+              </div>
+              <div
+                class="checkout-step-content"
+                style="height: 500px; overflow-y: auto"
+              >
+                <table class="checkout-cart-items">
+                  <thead>
+                    <tr>
+                      <td class="text-center">Sản phẩm</td>
+                      <td>Đơn giá</td>
+                      <td>Số lượng</td>
+                      <td>Tổng</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="cart-item" *ngFor="let item of cartItems2">
+                      <td data-th="Sản phẩm" class="col item">
+                        <div class="cart-item-info">
+                          <div class="cart-item-photo">
+                            <a
+                              class="cart-image-container"
+                              [routerLink]="'/san-pham/' + item.spct.sanPham.id"
+                              ><img
+                                class="rounded"
+                                [src]="item.spct.hinhAnhs[0].imageUrl"
+                            /></a>
+                          </div>
+                          <div class="cart-item-details">
+                            <strong class="cart-item-name"
+                              ><a
+                                [routerLink]="
+                                  '/san-pham/' + item.spct.sanPham.id
+                                "
+                                class="cart-image-container"
+                              >
+                                {{ item.spct.sanPham.ten }}
+                              </a></strong
+                            >
+                            <div class="cart-item-options">
+                              <div class="cart-item-option">
+                                Màu:
+                                <img
+                                  class="ms-1"
+                                  [src]="item.spct.mauSac.image.imageUrl"
+                                  style="
+                                    height: 20px;
+                                    width: 20px;
+                                    border-radius: 50%;
+                                  "
+                                />
+                              </div>
+                              <div class="cart-item-option">
+                                <span
+                                  ><span class="swatch-option text"
+                                    >Size:
+                                    {{
+                                      item.spct.kichCo.ten.split("-")[0]
+                                    }}</span
+                                  ></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td data-th="Giá tiền" class="col price">
+                        <span *ngIf="item.spct.saleEvent"
+                          ><s>{{ formatPrice(item.spct.giaBan) }}</s></span
+                        >
+                        <div class="text-danger" *ngIf="item.spct.saleEvent">
+                          {{
+                            formatPrice(
+                              (item.spct.giaBan *
+                                (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                                100
+                            )
+                          }}
+                        </div>
+                        <div *ngIf="!item.spct.saleEvent">
+                          {{ formatPrice(item.spct.giaBan) }}
+                        </div>
+                      </td>
+                      <td data-th="Số lượng" class="col qty">
+                        <span>{{ item.soLuong }}</span>
+                      </td>
+                      <td data-th="Số lượng" class="col qty">
+                        <span *ngIf="item.spct.saleEvent"
+                          ><s>{{
+                            formatPrice(item.spct.giaBan * item.soLuong)
+                          }}</s></span
+                        >
+                        <div class="text-danger" *ngIf="item.spct.saleEvent">
+                          {{
+                            formatPrice(
+                              ((item.spct.giaBan *
+                                (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                                100) *
+                                item.soLuong
+                            )
+                          }}
+                        </div>
+                        <div *ngIf="!item.spct.saleEvent">
+                          {{ formatPrice(item.spct.giaBan * item.soLuong) }}
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <div>
             <div>
               <div class="checkout-step-title">
@@ -204,27 +303,6 @@
                           <div class="checkout-shipping">
                             <form [formGroup]="addAddressForm">
                               <div class="checkout-shipping-form">
-                                <!-- <div class="row">
-                                <div class="form-group col-sm-6">
-                                  <label for="name">Họ tên</label>
-                                  <input
-                                    type="text"
-                                    name=""
-                                    id="name"
-                                    class="form-control"
-                                  />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                  <label for="phone">Số điện thoại</label>
-                                  <input
-                                    type="text"
-                                    name=""
-                                    id="phone"
-                                    class="form-control"
-                                  />
-                                </div>
-                              </div> -->
-
                                 <!-- Tỉnh/Thành phố -->
                                 <div class="row">
                                   <div class="form-group col-sm-6 mb-3">
@@ -362,122 +440,6 @@
                   <img src="https://canifa.com/assets/images/vnpay.svg" /></span
               ></label>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-        <div class="checkout-step checkout-review">
-          <div class="checkout-step-title">
-            <h2>Sản phẩm ({{ cartItemQuantity2 }})</h2>
-          </div>
-          <div
-            class="checkout-step-content"
-            style="height: 500px; overflow-y: auto"
-          >
-            <table class="checkout-cart-items">
-              <thead>
-                <tr>
-                  <td class="text-center">Sản phẩm</td>
-                  <td>Đơn giá</td>
-                  <td>Số lượng</td>
-                  <td>Tổng</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="cart-item" *ngFor="let item of cartItems2">
-                  <td data-th="Sản phẩm" class="col item">
-                    <div class="cart-item-info">
-                      <div class="cart-item-photo">
-                        <a
-                          class="cart-image-container"
-                          [routerLink]="'/san-pham/' + item.spct.sanPham.id"
-                          ><img
-                            class="rounded"
-                            [src]="item.spct.hinhAnhs[0].imageUrl"
-                        /></a>
-                      </div>
-                      <div class="cart-item-details">
-                        <strong class="cart-item-name"
-                          ><a
-                            [routerLink]="'/san-pham/' + item.spct.sanPham.id"
-                            class="cart-image-container"
-                          >
-                            {{ item.spct.sanPham.ten }}
-                          </a></strong
-                        >
-                        <div class="cart-item-options">
-                          <div class="cart-item-option">
-                            Màu:
-                            <img
-                              class="ms-1"
-                              [src]="item.spct.mauSac.image.imageUrl"
-                              style="
-                                height: 20px;
-                                width: 20px;
-                                border-radius: 50%;
-                              "
-                            />
-                          </div>
-                          <div class="cart-item-option">
-                            <span
-                              ><span class="swatch-option text"
-                                >Size:
-                                {{ item.spct.kichCo.ten.split("-")[0] }}</span
-                              ></span
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td data-th="Giá tiền" class="col price">
-                    <span *ngIf="item.spct.saleEvent"
-                      ><s>{{ formatPrice(item.spct.giaBan) }}</s></span
-                    >
-                    <div class="text-danger" *ngIf="item.spct.saleEvent">
-                      {{
-                        formatPrice(
-                          (item.spct.giaBan *
-                            (100 - item.spct.saleEvent.giaTriPhanTram)) /
-                            100
-                        )
-                      }}
-                    </div>
-                    <div *ngIf="!item.spct.saleEvent">
-                      {{ formatPrice(item.spct.giaBan) }}
-                    </div>
-                  </td>
-                  <td data-th="Số lượng" class="col qty">
-                    <span>{{ item.soLuong }}</span>
-                  </td>
-                  <td data-th="Số lượng" class="col qty">
-                    <!-- <span>
-                      {{ formatPrice(item.spct.giaBan * item.soLuong) }}</span
-                    > -->
-
-                    <span *ngIf="item.spct.saleEvent"
-                      ><s>{{
-                        formatPrice(item.spct.giaBan * item.soLuong)
-                      }}</s></span
-                    >
-                    <div class="text-danger" *ngIf="item.spct.saleEvent">
-                      {{
-                        formatPrice(
-                          ((item.spct.giaBan *
-                            (100 - item.spct.saleEvent.giaTriPhanTram)) /
-                            100) *
-                            item.soLuong
-                        )
-                      }}
-                    </div>
-                    <div *ngIf="!item.spct.saleEvent">
-                      {{ formatPrice(item.spct.giaBan * item.soLuong) }}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>

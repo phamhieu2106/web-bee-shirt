@@ -1,6 +1,5 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.TayAo;
 import com.datn.backend.service.TayAoService;

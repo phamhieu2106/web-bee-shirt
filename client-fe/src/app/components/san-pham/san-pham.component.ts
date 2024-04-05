@@ -1,6 +1,7 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef } from "@angular/core";
+import { Component } from "@angular/core";
+import { forkJoin } from "rxjs";
 
 import { ChatLieu } from "src/app/model/class/chat-lieu.class";
 import { CoAo } from "src/app/model/class/co-ao.class";
@@ -8,6 +9,7 @@ import { KichCo } from "src/app/model/class/kich-co.class";
 import { KieuDang } from "src/app/model/class/kieu-dang.class";
 import { KieuThietKe } from "src/app/model/class/kieu-thiet-ke.class";
 import { MauSac } from "src/app/model/class/mau-sac.class";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
@@ -18,6 +20,7 @@ import { FormService } from "src/app/service/form.service";
 import { MaterialService } from "src/app/service/material.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { ProductService } from "src/app/service/product.service";
+import { SaleEventService } from "src/app/service/sale-event.service";
 import { SizeService } from "src/app/service/size.service";
 import { SleeveService } from "src/app/service/sleeve.service";
 
@@ -56,7 +59,8 @@ export class SanPhamComponent {
     private sleeveService: SleeveService,
     private collarService: CollarService,
     private materialService: MaterialService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
@@ -66,10 +70,30 @@ export class SanPhamComponent {
 
   // public functions
   // 1
-  public displayPrice(sanPham: SanPham): any {
+  public displayPrice(prod: SanPham): any {
     const priceArr = [];
-    for (let spct of sanPham.sanPhamChiTiets) {
+    for (let spct of prod.sanPhamChiTiets) {
       priceArr.push(spct.giaBan);
+    }
+    const minPrice = Math.min(...priceArr);
+    const maxPrice = Math.max(...priceArr);
+    if (minPrice === maxPrice) {
+      return this.currencyPipe.transform(minPrice, "VND", "symbol", "1.0-0");
+    }
+    return (
+      this.currencyPipe.transform(minPrice, "VND", "symbol", "1.0-0") +
+      " - " +
+      this.currencyPipe.transform(maxPrice, "VND", "symbol", "1.0-0")
+    );
+  }
+
+  public displayDiscountPrice(prod: SanPham): any {
+    const priceArr = [];
+    for (let spct of prod.sanPhamChiTiets) {
+      let saleEvent = prod.saleEvent;
+      priceArr.push(
+        Math.round((spct.giaBan * (100 - saleEvent.giaTriPhanTram)) / 100)
+      );
     }
     const minPrice = Math.min(...priceArr);
     const maxPrice = Math.max(...priceArr);
@@ -268,6 +292,19 @@ export class SanPhamComponent {
       .subscribe({
         next: (response: PagedResponse<SanPham>) => {
           this.pagedResponse = response;
+
+          // check product in sale or not
+          let observables = [];
+          for (let prod of response.data) {
+            observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
+          }
+          forkJoin(observables).subscribe({
+            next: (values: SaleEvent[]) => {
+              values.forEach((v, index) => {
+                response.data[index].saleEvent = v;
+              });
+            },
+          });
         },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
@@ -372,8 +409,7 @@ export class SanPhamComponent {
   }
 
   // filter
-
-  onClick(event: MouseEvent) {
+  public onClick(event: MouseEvent): void {
     // Lấy phần tử được nhấp
     const target = event.currentTarget as HTMLElement;
 

@@ -17,13 +17,13 @@ import { CartService } from "src/app/service/cart.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { ProductService } from "src/app/service/product.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
-import { PlaceOrderRequest } from "src/app/model/interface/place-order-request.interface";
+import { OnlineOrderRequest } from "src/app/model/interface/online-order-request.interface";
 import { OrderDetailsReq } from "src/app/model/interface/order-details-req.interface";
-import { PaymentReq } from "src/app/model/interface/payment-req.interface";
-import { AddressShipFee } from "src/app/model/class/address-ship-fee.class";
 import { OrderService } from "src/app/service/order.service";
 import { DiscountService } from "src/app/service/discount.service";
 import { Discount } from "src/app/model/class/discount.class";
+import { SaleEventService } from "src/app/service/sale-event.service";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 
 @Component({
   selector: "app-checkout",
@@ -69,13 +69,19 @@ export class CheckoutComponent {
     private cartService: CartService,
     private productService: ProductService,
     private orderService: OrderService,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
     this.cartService.cartItemsOfLoggedUser.subscribe(
       (cartItems: CartItem[]) => {
         this.cartItems2 = cartItems;
+
+        this.realPrice = this.getRealPrice();
+        this.salePrice = this.getSalePrice();
+        this.discountPrice = this.getDiscountPrice();
+        this.finalPrice = this.getFinalPrice();
       }
     );
 
@@ -288,43 +294,30 @@ export class CheckoutComponent {
       confirmButtonText: "Xác nhận",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        const tongTien = this.finalPrice;
-        const tienGiam = this.getDiscountPrice();
-        const phiVanChuyen = 0;
-        const loaiHoaDon = "GIAO_HANG";
         const hoaDonChiTiets: OrderDetailsReq[] =
           this.mapCartItemsToOrderDetails();
-        const nhanVienId = 0;
-        const khachHangId = this.loggedCust.id;
-        const phieuGiamGiaId = 0;
-        const thanhToans: PaymentReq[] = [];
-        const tenNguoiNhan = this.loggedCust.hoTen;
-        const sdtNguoiNhan = this.loggedCust.sdt;
-        const emailNguoiNhan = this.loggedCust.email;
-        const diaChiNguoiNhan = this.formatAddress(this.defaultAddr);
-        const ghiChu = "";
-        let diaChiVaPhiVanChuyen: AddressShipFee;
 
-        let req: PlaceOrderRequest = {
-          tongTien: tongTien,
-          tienGiam: 0,
-          phiVanChuyen: phiVanChuyen,
-          loaiHoaDon: loaiHoaDon,
+        let req: OnlineOrderRequest = {
+          tongTien: this.finalPrice,
+          tienGiam: this.salePrice + this.discountPrice,
+          phiVanChuyen: this.shipPrice,
           hoaDonChiTiets: hoaDonChiTiets,
-          nhanVienId: nhanVienId,
-          khachHangId: khachHangId,
-          phieuGiamGiaId: phieuGiamGiaId,
-          thanhToans: thanhToans,
-          tenNguoiNhan: tenNguoiNhan,
-          sdtNguoiNhan: sdtNguoiNhan,
-          emailNguoiNhan: emailNguoiNhan,
-          diaChiNguoiNhan: diaChiNguoiNhan,
-          ghiChu: ghiChu,
-          diaChiVaPhiVanChuyen: diaChiVaPhiVanChuyen,
+          khachHangId: this.loggedCust?.id,
+          phieuGiamGiaId: this.selectedDiscount?.id,
+          tenNguoiNhan: this.loggedCust?.hoTen,
+          sdtNguoiNhan: this.loggedCust?.sdt,
+          emailNguoiNhan: this.loggedCust?.email,
+          diaChiNguoiNhan: this.formatAddress(this.defaultAddr),
+          ghiChu: "ghiChu",
         };
 
-        this.orderService.placeOrder(req).subscribe({
-          next: (resp: any) => {},
+        this.orderService.placeOrderOnline(req).subscribe({
+          next: (orderCode: string) => {
+            this.notifService.success("Đặt hàng thành công!");
+            this.router.navigate([`/tracking-order/${orderCode}`]);
+            this.cartService.updateCartItemsOfLoggedUser([]);
+            this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+          },
           error: (errRes: HttpErrorResponse) => {
             this.notifService.error(errRes.error.message);
           },
@@ -337,6 +330,7 @@ export class CheckoutComponent {
     let result: OrderDetailsReq[] = [];
     for (let item of this.cartItems2) {
       let orderDetails: OrderDetailsReq = {
+        id: null,
         soLuong: item.soLuong,
         giaBan: item.spct.giaBan,
         giaNhap: item.spct.giaNhap,
@@ -375,6 +369,7 @@ export class CheckoutComponent {
     this.finalPrice = this.getFinalPrice();
   }
 
+  //
   public checkBestDiscount(): boolean {
     for (let d of this.discounts) {
       let reduceInFor = 0;
@@ -423,12 +418,12 @@ export class CheckoutComponent {
     this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
       next: (cartItems: CartItem[]) => {
         // calculate prices
-        this.realPrice = this.getRealPrice(cartItems);
-        // this.calculateSalePrice(cartItems);
+        this.realPrice = this.getRealPrice();
         this.salePrice = this.getSalePrice();
+        this.discountPrice = this.getDiscountPrice();
         this.finalPrice = this.getFinalPrice();
-        this.getAllDiscounts();
 
+        // get product for prod-details
         let observables = [];
         for (let item of cartItems) {
           observables.push(
@@ -446,6 +441,32 @@ export class CheckoutComponent {
                 this.cartService.updateCartItemsQuantityOfLoggedUser(
                   cartItems.length
                 );
+              }
+            });
+          },
+        });
+
+        // get sale events for prod-details
+        let observables2 = [];
+        for (let item of cartItems) {
+          observables2.push(
+            this.saleEventService.getSaleEventOfProdDetails(item.spct.id)
+          );
+        }
+        forkJoin(observables2).subscribe({
+          next: (values: SaleEvent[]) => {
+            values.forEach((v, index) => {
+              cartItems[index].spct.saleEvent = v;
+              if (index === cartItems.length - 1) {
+                this.cartItems2 = cartItems;
+                this.cartItemQuantity2 = cartItems.length;
+
+                this.cartService.updateCartItemsOfLoggedUser(cartItems);
+                this.cartService.updateCartItemsQuantityOfLoggedUser(
+                  cartItems.length
+                );
+                this.salePrice = this.getSalePrice();
+                this.getAllDiscounts();
               }
             });
           },
@@ -530,16 +551,26 @@ export class CheckoutComponent {
   }
 
   // calculate prices
-  private getRealPrice(cartItems: CartItem[]): number {
+  private getRealPrice(): number {
     let result: number = 0;
-    for (const item of cartItems) {
+    for (const item of this.cartItems2) {
       result += item.spct.giaBan * item.soLuong;
     }
     return result;
   }
 
   private getSalePrice(): number {
-    return 0;
+    let result: number = 0;
+    for (const item of this.cartItems2) {
+      if (item.spct.saleEvent) {
+        result +=
+          (item.spct.giaBan *
+            item.spct.saleEvent.giaTriPhanTram *
+            item.soLuong) /
+          100;
+      }
+    }
+    return result;
   }
 
   private getDiscountPrice(): number {

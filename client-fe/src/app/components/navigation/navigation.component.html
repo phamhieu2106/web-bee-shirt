@@ -265,7 +265,7 @@
         <div class="col-md-3 imgProductCart">
           <img
             [src]="ci.spct.hinhAnhs[0].imageUrl"
-            style="height: 150px; object-fit: cover"
+            style="height: 200px; object-fit: cover"
           />
           <div
             class="DeleteCart pointer"
@@ -293,7 +293,27 @@
 
           <div class="wrapperPrice mb-3">
             <div class="priceCart">
-              <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
+              <div *ngIf="ci.spct.saleEvent">
+                <p style="margin: 0">
+                  <s> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</s>
+                </p>
+                <p>
+                  <b>
+                    {{
+                      formatPrice(
+                        ((ci.spct.giaBan *
+                          (100 - ci.spct.saleEvent.giaTriPhanTram)) /
+                          100) *
+                          ci.soLuong
+                      )
+                    }}</b
+                  >
+                </p>
+              </div>
+
+              <div *ngIf="!ci.spct.saleEvent">
+                <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
+              </div>
             </div>
             <div class="wrapper">
               <span
@@ -330,19 +350,19 @@
   </ul>
 
   <div class="checkOut" *ngIf="cartItems2.length > 0 && isLoggedIn">
-    <div class="TinhTien">
+    <!-- <div class="TinhTien">
       <div>Giá trị đơn hàng</div>
       <div class="giaGoc">{{ calculateTotalMoney(cartItems2) }}</div>
 
-      <!-- <div>Chiết khấu</div>
-      <div class="chietKhau">-179.000đ</div> -->
+      <div>Chiết khấu</div>
+      <div class="chietKhau">-179.000đ</div>
 
       <div class="tamTinh">Phải trả</div>
       <div class="total">419.300đ</div>
 
-      <!-- <div></div>
-      <div class="save">(Tiết kiệm 179.000đ)</div> -->
-    </div>
+      <div></div>
+      <div class="save">(Tiết kiệm 179.000đ)</div>
+    </div> -->
 
     <div class="thanhToan">
       <button

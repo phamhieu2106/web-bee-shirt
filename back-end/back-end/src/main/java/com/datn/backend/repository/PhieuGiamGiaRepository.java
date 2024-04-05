@@ -120,4 +120,14 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    """, nativeQuery = true)
     List<PhieuGiamGia> getDiscountsForCheckOut(@Param("priceCondition") BigDecimal priceCondition,
                                                    @Param("customerId") int customerId);
+
+    @Query(value = """
+                   SELECT t2.is_used
+                   FROM phieu_giam_gia t1
+                   JOIN phieu_giam_gia_kh t2 ON t1.id = t2.phieu_giam_gia_id
+                   WHERE t1.id = :discountId
+                   AND t2.khach_hang_id = :customerId
+                   """, nativeQuery = true)
+    boolean checkPrivateDiscountUsedOrNot(@Param("discountId") int discountId,
+                                          @Param("customerId") int customerId);
 }

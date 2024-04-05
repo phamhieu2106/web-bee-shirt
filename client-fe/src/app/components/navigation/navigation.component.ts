@@ -13,6 +13,8 @@ import { CartService } from "src/app/service/cart.service";
 import { ProductService } from "src/app/service/product.service";
 import { forkJoin } from "rxjs";
 import { SanPham } from "src/app/model/class/san-pham.class";
+import { SaleEventService } from "src/app/service/sale-event.service";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 
 @Component({
   selector: "app-navigation",
@@ -37,7 +39,8 @@ export class NavigationComponent {
     private authenticationService: AuthenticationService,
     private notifService: NotificationService,
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
@@ -222,6 +225,7 @@ export class NavigationComponent {
           }
           return item;
         });
+        this.cartService.updateCartItemsOfLoggedUser(this.cartItems2);
       },
       error: (errorRes: HttpErrorResponse) => {
         this.notifService.error(errorRes.error.message);
@@ -271,6 +275,7 @@ export class NavigationComponent {
     const loggedCus = this.authenticationService.getCustomerFromStorage();
     this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
       next: (response: CartItem[]) => {
+        // get prod for prod-details
         let observables = [];
         for (let item of response) {
           observables.push(
@@ -284,6 +289,31 @@ export class NavigationComponent {
               if (index === response.length - 1) {
                 this.cartItems2 = response;
                 this.cartItemQuantity2 = response.length;
+
+                this.cartService.updateCartItemsOfLoggedUser(response);
+                this.cartService.updateCartItemsQuantityOfLoggedUser(
+                  response.length
+                );
+              }
+            });
+          },
+        });
+
+        // get sale events for prod-details
+        let observables2 = [];
+        for (let item of response) {
+          observables2.push(
+            this.saleEventService.getSaleEventOfProdDetails(item.spct.id)
+          );
+        }
+        forkJoin(observables2).subscribe({
+          next: (values: SaleEvent[]) => {
+            values.forEach((v, index) => {
+              response[index].spct.saleEvent = v;
+              if (index === response.length - 1) {
+                this.cartItems2 = response;
+                this.cartItemQuantity2 = response.length;
+
                 this.cartService.updateCartItemsOfLoggedUser(response);
                 this.cartService.updateCartItemsQuantityOfLoggedUser(
                   response.length

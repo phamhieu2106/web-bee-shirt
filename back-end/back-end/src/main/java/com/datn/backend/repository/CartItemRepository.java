@@ -2,6 +2,7 @@ package com.datn.backend.repository;
 
 import com.datn.backend.model.danh_sach.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -31,4 +32,15 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
             """, nativeQuery = true)
     CartItem getCartItemByCustomerAndProductDetails(@Param("cusId") int cusId,
                                                     @Param("proDetailsId") int proDetailsId);
+
+    @Modifying
+    @Query(value = """
+                   DELETE FROM gio_hang_chi_tiet t1
+                   WHERE t1.gio_hang_id = (
+                       SELECT gh.id
+                       FROM gio_hang gh
+                       WHERE gh.khach_hang_id = :custId
+                   )
+                    """, nativeQuery = true)
+    void deleteAllItemsOf1Cart(@Param("custId") int custId);
 }

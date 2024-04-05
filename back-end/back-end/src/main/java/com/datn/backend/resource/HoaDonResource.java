@@ -3,11 +3,13 @@ package com.datn.backend.resource;
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.request.HoaDonRequest;
+import com.datn.backend.dto.request.OnlineOrderRequest;
 import com.datn.backend.dto.request.PlaceOrderRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
+import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,5 +89,17 @@ public class HoaDonResource {
     public ResponseEntity<HoaDonResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest placeOrderRequest){
         HoaDonResponse hoaDonResponse = hoaDonService.placeOrder(placeOrderRequest);
         return ResponseEntity.ok(hoaDonResponse) ;
+    }
+
+    // client
+    @PostMapping("/place-order-online")
+    public ResponseEntity<String> placeOrderOnline(@RequestBody OnlineOrderRequest req){
+        String savedOrderCode = hoaDonService.placeOrderOnline(req);
+        return ResponseEntity.ok(savedOrderCode);
+    }
+
+    @GetMapping("/get-by-code/{code}")
+    public ResponseEntity<HoaDonResponse> getByCode(@PathVariable("code") String code) {
+        return ResponseEntity.ok(hoaDonService.getByCode(code));
     }
 }

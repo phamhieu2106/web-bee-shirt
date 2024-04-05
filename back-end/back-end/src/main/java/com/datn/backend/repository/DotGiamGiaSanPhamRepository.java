@@ -44,5 +44,4 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
             where dggsp.sanPhamChiTiet.id = :id and dgg.trangThai = 1
                         """)
     DotGiamGia findDotGiamGiaSanPhamActiveBySanPhamChiTietId(Integer id);
-
 }

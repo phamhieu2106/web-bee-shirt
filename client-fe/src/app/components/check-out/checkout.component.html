@@ -376,6 +376,14 @@
             style="height: 500px; overflow-y: auto"
           >
             <table class="checkout-cart-items">
+              <thead>
+                <tr>
+                  <td class="text-center">Sản phẩm</td>
+                  <td>Đơn giá</td>
+                  <td>Số lượng</td>
+                  <td>Tổng</td>
+                </tr>
+              </thead>
               <tbody>
                 <tr class="cart-item" *ngFor="let item of cartItems2">
                   <td data-th="Sản phẩm" class="col item">
@@ -424,17 +432,48 @@
                     </div>
                   </td>
                   <td data-th="Giá tiền" class="col price">
-                    <span class="price"
-                      >Đơn giá: {{ formatPrice(item.spct.giaBan) }}</span
+                    <span *ngIf="item.spct.saleEvent"
+                      ><s>{{ formatPrice(item.spct.giaBan) }}</s></span
                     >
+                    <div class="text-danger" *ngIf="item.spct.saleEvent">
+                      {{
+                        formatPrice(
+                          (item.spct.giaBan *
+                            (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                            100
+                        )
+                      }}
+                    </div>
+                    <div *ngIf="!item.spct.saleEvent">
+                      {{ formatPrice(item.spct.giaBan) }}
+                    </div>
                   </td>
                   <td data-th="Số lượng" class="col qty">
-                    <span>Số lượng : {{ item.soLuong }}</span>
+                    <span>{{ item.soLuong }}</span>
                   </td>
                   <td data-th="Số lượng" class="col qty">
-                    <span>
+                    <!-- <span>
                       {{ formatPrice(item.spct.giaBan * item.soLuong) }}</span
+                    > -->
+
+                    <span *ngIf="item.spct.saleEvent"
+                      ><s>{{
+                        formatPrice(item.spct.giaBan * item.soLuong)
+                      }}</s></span
                     >
+                    <div class="text-danger" *ngIf="item.spct.saleEvent">
+                      {{
+                        formatPrice(
+                          ((item.spct.giaBan *
+                            (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                            100) *
+                            item.soLuong
+                        )
+                      }}
+                    </div>
+                    <div *ngIf="!item.spct.saleEvent">
+                      {{ formatPrice(item.spct.giaBan * item.soLuong) }}
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -605,15 +644,15 @@
               <table>
                 <tbody>
                   <tr>
-                    <th>Giá trị đơn hàng</th>
+                    <th>Giá gốc</th>
                     <td>{{ formatPrice(realPrice) }}</td>
                   </tr>
                   <tr>
-                    <th>Số tiền giảm từ đợt</th>
+                    <th>Giá giảm từ đợt</th>
                     <td>{{ formatPrice(salePrice) }}</td>
                   </tr>
                   <tr>
-                    <th>Số tiền giảm từ mã</th>
+                    <th>Giá giảm từ mã</th>
                     <td>{{ formatPrice(discountPrice) }}</td>
                   </tr>
                   <tr>

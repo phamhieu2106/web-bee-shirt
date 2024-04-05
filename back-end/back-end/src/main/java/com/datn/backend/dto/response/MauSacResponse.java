@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class MauSacResponse {
+
     private Integer id;
     private String ten;
     private String ma;

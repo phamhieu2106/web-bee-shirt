@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 @ToString
 @SuperBuilder
 public class HoaDonChiTiet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

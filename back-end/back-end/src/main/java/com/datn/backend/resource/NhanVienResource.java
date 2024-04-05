@@ -1,6 +1,5 @@
 package com.datn.backend.resource;
 
-import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;

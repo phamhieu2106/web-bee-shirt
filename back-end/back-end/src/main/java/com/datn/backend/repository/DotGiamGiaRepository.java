@@ -54,7 +54,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
     Page<DotGiamGiaResponse> getStatusAll(Pageable pageable,
                                           @Param("startDate") String startDate,
                                           @Param("endDate") String endDate,
-                                          @Param("search")String search);
+                                          @Param("search") String search);
 
     @Query(value = """
 
@@ -76,7 +76,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
                                                @Param("status") Integer status,
                                                @Param("startDate") String startDate,
                                                @Param("endDate") String endDate,
-                                               @Param("search")String search);
+                                               @Param("search") String search);
 
     @Query(value = """
             SELECT\s
@@ -186,4 +186,51 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
             """, nativeQuery = true)
     List<Integer> getListIdSanPhamChiTietByIdSanPham(@Param("id") Integer id);
 
+    // client query
+    @Query(value = """
+            SELECT DISTINCT t4.id, t4.gia_tri_phan_tram, t4.ma_dot_giam_gia, t4.ten_dot_giam_gia, t4.trang_thai,
+                            t4.created_at, t4.created_by, t4.updated_at, t4.last_updated_by
+            FROM dot_giam_gia_san_pham t1
+            JOIN san_pham_chi_tiet t2 ON t1.san_pham_chi_tiet_id = t2.id
+            JOIN san_pham t3 ON t2.san_pham_id = t3.id
+            JOIN dot_giam_gia t4 ON t1.dot_giam_gia_id = t4.id
+            WHERE t3.id = :prodId
+            AND CURRENT_TIMESTAMP() <= t1.thoi_gian_ket_thuc
+            AND t4.trang_thai = 1
+            """, nativeQuery = true)
+    DotGiamGia getSaleEventByProd(@Param("prodId") int prodId);
+
+    @Query(value = """
+            SELECT DISTINCT t4.id, t4.gia_tri_phan_tram, t4.ma_dot_giam_gia, t4.ten_dot_giam_gia, t4.trang_thai,
+                            t4.created_at, t4.created_by, t4.updated_at, t4.last_updated_by
+            FROM dot_giam_gia_san_pham t1
+            JOIN san_pham_chi_tiet t2 ON t1.san_pham_chi_tiet_id = t2.id
+            JOIN san_pham t3 ON t2.san_pham_id = t3.id
+            JOIN dot_giam_gia t4 ON t1.dot_giam_gia_id = t4.id
+            WHERE t2.id = :prodId
+            AND CURRENT_TIMESTAMP() <= t1.thoi_gian_ket_thuc
+            AND t4.trang_thai = 1
+            """, nativeQuery = true)
+    DotGiamGia getSaleEventByProdDetails(@Param("prodId") int prodId);
+
+    @Query(value = """
+            SELECT DISTINCT t4.id, t4.gia_tri_phan_tram, t4.ma_dot_giam_gia, t4.ten_dot_giam_gia, t4.trang_thai,
+                            t4.created_at, t4.created_by, t4.updated_at, t4.last_updated_by
+            FROM dot_giam_gia_san_pham t1
+            JOIN san_pham_chi_tiet t2 ON t1.san_pham_chi_tiet_id = t2.id
+            JOIN san_pham t3 ON t2.san_pham_id = t3.id
+            JOIN dot_giam_gia t4 ON t1.dot_giam_gia_id = t4.id
+            WHERE t2.id = (
+                SELECT id
+                FROM san_pham_chi_tiet ct
+                WHERE ct.san_pham_id = :prodId
+                AND ct.mau_sac_id = :colorId
+                AND ct.kich_co_id = :sizeId
+            )
+            AND CURRENT_TIMESTAMP() <= t1.thoi_gian_ket_thuc
+            AND t4.trang_thai = 1
+            """, nativeQuery = true)
+    DotGiamGia getSaleEventByProdDetails2(@Param("prodId") int prodId,
+                                          @Param("colorId") int colorId,
+                                          @Param("sizeId") int sizeId);
 }

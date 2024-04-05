@@ -11,6 +11,7 @@ import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.exception.custom_exception.OrderStatusException;
 import com.datn.backend.exception.custom_exception.PlaceOrderException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.NhanVien;
 import com.datn.backend.model.hoa_don.*;
 import com.datn.backend.model.khach_hang.KhachHang;
@@ -19,12 +20,12 @@ import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonService;
 import com.datn.backend.utility.UtilityFunction;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,14 +40,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HoaDonServiceImpl implements HoaDonService {
 
-    private final HoaDonRepository hoaDonRepository;
+    private final HoaDonRepository hoaDonRepo;
+    private final HoaDonChiTietRepository hdctRepo;
     private final ModelMapper modelMapper;
-    private final LichSuHoaDonRepository lichSuHoaDonRepository;
+    private final LichSuHoaDonRepository lichSuHoaDonRepo;
     private final NhanVienRepository nhanVienRepo;
     private final KhachHangRepository khachHangRepo;
     private final PhieuGiamGiaRepository phieuGiamGiaRepo;
+    private final PhieuGiamGiaKhachHangRepository pggKhRepo;
     private final SanPhamChiTietRepository spctRepo;
     private final HinhThucThanhToanRepository hinhThucThanhToanRepo;
+    private final CartItemRepository cartItemRepo;
 
     /**
      * @param pageable
@@ -58,7 +62,7 @@ public class HoaDonServiceImpl implements HoaDonService {
      */
     @Override
     public PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao, String trangThai) {
-        Page<HoaDon> hoaDons = hoaDonRepository.findByKeys(pageable, search, loaiHoaDon, ngayTao, trangThai);
+        Page<HoaDon> hoaDons = hoaDonRepo.findByKeys(pageable, search, loaiHoaDon, ngayTao, trangThai);
         return PagedResponse.
                 <HoaDonResponse>builder()
                 .pageNumber(hoaDons.getNumber())
@@ -75,7 +79,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public HoaDonResponse getById(Integer id) {
-        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        Optional<HoaDon> hoaDon = hoaDonRepo.findById(id);
         if (hoaDon.isEmpty()) {
             throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
         }
@@ -86,7 +90,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public LichSuHoaDonResponse changeOrderStatus(ChangeOrderStatusRequest changeOrderStatus) {
         int id = changeOrderStatus.getIdHoaDon();
-        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        Optional<HoaDon> hoaDon = hoaDonRepo.findById(id);
         if (hoaDon.isEmpty()) {
             throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
         }
@@ -116,14 +120,14 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tieuDe(nextTrangThaiHD.getTitle())
                 .trangThai(nextTrangThaiHD)
                 .build();
-        return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
+        return modelMapper.map(lichSuHoaDonRepo.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
     @Override
     @Transactional
     public LichSuHoaDonResponse cancelOrder(ChangeOrderStatusRequest changeOrderStatus) {
         int id = changeOrderStatus.getIdHoaDon();
-        Optional<HoaDon> hoaDon = hoaDonRepository.findById(id);
+        Optional<HoaDon> hoaDon = hoaDonRepo.findById(id);
         if (hoaDon.isEmpty()) {
             throw new IdNotFoundException("Không tồn tại hóa đơn id=" + id);
         }
@@ -159,12 +163,12 @@ public class HoaDonServiceImpl implements HoaDonService {
                 spctRepo.save(hdct.getSanPhamChiTiet());
             });
         }
-        return modelMapper.map(lichSuHoaDonRepository.save(lichSuHoaDon), LichSuHoaDonResponse.class);
+        return modelMapper.map(lichSuHoaDonRepo.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
     @Override
     public HoaDonResponse updateHoaDon(HoaDonRequest hoaDonRequest) {
-        Optional<HoaDon> hoaDon = hoaDonRepository.findById(hoaDonRequest.getId());
+        Optional<HoaDon> hoaDon = hoaDonRepo.findById(hoaDonRequest.getId());
         LoaiHoaDon loaiHoaDon;
         if (hoaDon.isEmpty()) {
             throw new IdNotFoundException("Id hóa đơn không hợp lệ id: " + hoaDonRequest.getId());
@@ -185,12 +189,12 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonUpdate.setLoaiHoaDon(loaiHoaDon);
         hoaDonUpdate.setGhiChu(hoaDonRequest.getGhiChu());
 
-        return modelMapper.map(hoaDonRepository.save(hoaDonUpdate), HoaDonResponse.class);
+        return modelMapper.map(hoaDonRepo.save(hoaDonUpdate), HoaDonResponse.class);
     }
 
     @Override
     public SoLuongDonHangResponse getSoLuongDonHang() {
-        return hoaDonRepository.getSoLuongDonHang();
+        return hoaDonRepo.getSoLuongDonHang();
     }
 
     @Override
@@ -208,6 +212,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     private HoaDon createHoaDonTaiQuay(PlaceOrderRequest placeOrderRequest) {
         NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
         KhachHang khachHang = placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null) : null;
+        KhachHang khachHang2 = khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null);
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
 
         HoaDon hoaDon = HoaDon
@@ -229,7 +234,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .phieuGiamGia(phieuGiamGia)
                 .build();
 
-        hoaDonRepository.save(hoaDon);
+        hoaDonRepo.save(hoaDon);
         hoaDon.setHoaDonChiTiets(this.mapToHoaDonChiTiet(placeOrderRequest.getHoaDonChiTiets(), hoaDon));
         hoaDon.setLichSuHoaDons(this.createLichSuHoaDonTaiQuay(hoaDon));
         hoaDon.setThanhToans(this.createThanhToans(placeOrderRequest.getThanhToans(), hoaDon));
@@ -329,9 +334,9 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     public String generateMaHD() {
-        long count = hoaDonRepository.count();
+        long count = hoaDonRepo.count();
         String maHD = "HD" + count;
-        while (hoaDonRepository.existsByMa(maHD)) {
+        while (hoaDonRepo.existsByMa(maHD)) {
             count += 1;
             maHD = "HD" + count;
         }
@@ -384,7 +389,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .khachHang(khachHang)
                 .phieuGiamGia(phieuGiamGia)
                 .build();
-        hoaDonRepository.save(hoaDon);
+        hoaDonRepo.save(hoaDon);
         hoaDon.setHoaDonChiTiets(mapToHoaDonChiTiet(request.getHoaDonChiTiets(), hoaDon));
         hoaDon.setLichSuHoaDons(createLichSuHoaDonGiaoHang(hoaDon));
         hoaDon.setThanhToans(createThanhToans(request.getThanhToans(), hoaDon));
@@ -407,5 +412,133 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     public HoaDonResponse mapToHoaDonResponse(HoaDon hoaDon) {
         return modelMapper.map(hoaDon, HoaDonResponse.class);
+    }
+
+    // client
+    @Transactional
+    @Override
+    public String placeOrderOnline(OnlineOrderRequest req) {
+        KhachHang customer = khachHangRepo.findById(req.getKhachHangId()).orElse(null);
+        PhieuGiamGia discount = checkAndGetDiscount(req.getPhieuGiamGiaId(), req.getKhachHangId());
+        List<HoaDonChiTiet> orderDetails = checkAndGetOrderDetails(req.getHoaDonChiTiets());
+
+        HoaDon hoaDon = HoaDon
+                .builder()
+                .ma(generateMaHD())
+                .tenNguoiNhan(req.getTenNguoiNhan())
+                .sdtNguoiNhan(req.getSdtNguoiNhan())
+                .emailNguoiNhan(req.getEmailNguoiNhan())
+                .diaChiNguoiNhan(req.getDiaChiNguoiNhan())
+                .tongTien(req.getTongTien())
+                .tienGiam(req.getTienGiam())
+                .phiVanChuyen(req.getPhiVanChuyen())
+                .loaiHoaDon(LoaiHoaDon.GIAO_HANG)
+                .trangThai(TrangThaiHoaDon.CHO_XAC_NHAN)
+                .ghiChu(req.getGhiChu())
+                .nhanVien(null)
+                .khachHang(customer)
+                .phieuGiamGia(discount)
+                .hoaDonChiTiets(orderDetails)
+                .build();
+
+        // save order, order details
+        HoaDon savedOrder = hoaDonRepo.save(hoaDon);
+        saveOrderDetails(orderDetails, savedOrder);
+        initOrderHistory(savedOrder);
+
+        // update discount, product details
+        deleteAllItemsOf1Cart(req.getKhachHangId());
+        updateDiscount(discount, req.getKhachHangId());
+        updateProductDetailsQuantity(req.getHoaDonChiTiets());
+
+        return savedOrder.getMa();
+    }
+
+    private PhieuGiamGia checkAndGetDiscount(int discountId, int custId) {
+        PhieuGiamGia discount = phieuGiamGiaRepo.findById(discountId)
+                .orElseThrow(() -> new PlaceOrderException("Phiếu giảm giá ID: " + discountId + " không tồn tại."));
+        // check time
+        if (!isWithinInterval(LocalDateTime.now(), discount.getThoiGianBatDau(), discount.getThoiGianKetThuc())) {
+            throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng.");
+        }
+
+        // check discount
+        // 1. public
+        if (discount.getSoLuong() <= 0 && discount.getLoai() == 1) {
+            throw new PlaceOrderException("Phiếu giảm giá công khai đã hết số lượng sử dụng.");
+        }
+        // 2. private
+        if (discount.getLoai() == 0 && phieuGiamGiaRepo.checkPrivateDiscountUsedOrNot(discountId, custId)) {
+            throw new PlaceOrderException("Phiếu giảm giá cá nhân đã được sử dụng.");
+        }
+        return discount;
+    }
+
+    private List<HoaDonChiTiet> checkAndGetOrderDetails(List<OrderDetailsReq> reqs) {
+        List<HoaDonChiTiet> hdcts = new ArrayList<>();
+        for (OrderDetailsReq req : reqs) {
+            int spctId = req.getSanPhamChiTietId();
+            SanPhamChiTiet spct = spctRepo.findById(spctId)
+                    .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + spctId + " không tồn tại."));
+            if (spct.getSoLuongTon() < req.getSoLuong()) {
+                throw new PlaceOrderException("Số lượng tồn SPCT ID: " + spctId + " không đủ.");
+            } else if (!spct.isTrangThai()) {
+                throw new PlaceOrderException("SPCT ID: " + spctId + " đã ngừng bán.");
+            }
+
+            HoaDonChiTiet hdct = new HoaDonChiTiet();
+            hdct.setSoLuong(req.getSoLuong());
+            hdct.setGiaNhap(req.getGiaNhap());
+            hdct.setGiaBan(req.getGiaBan());
+            hdct.setSanPhamChiTiet(spct);
+            hdcts.add(hdct);
+        }
+        return hdcts;
+    }
+
+    public void saveOrderDetails(List<HoaDonChiTiet> orderDetails, HoaDon order) {
+        for (HoaDonChiTiet details : orderDetails) {
+            details.setHoaDon(order);
+            hdctRepo.save(details);
+        }
+    }
+
+    private void initOrderHistory(HoaDon order) {
+        LichSuHoaDon history = new LichSuHoaDon();
+        history.setTieuDe(TrangThaiHoaDon.CHO_XAC_NHAN.getTitle());
+        history.setTrangThai(TrangThaiHoaDon.CHO_XAC_NHAN);
+        history.setHoaDon(order);
+        lichSuHoaDonRepo.save(history);
+    }
+
+    private void updateDiscount(PhieuGiamGia discount, int custId) {
+        // public
+        if (discount.getLoai() == 1) {
+            discount.setSoLuong(discount.getSoLuong() - 1);
+            phieuGiamGiaRepo.save(discount);
+        }
+        // 2. private
+        if (discount.getLoai() == 0) {
+            pggKhRepo.updateIsUsed(discount.getId(), custId);
+        }
+    }
+
+    private void updateProductDetailsQuantity(List<OrderDetailsReq> reqs) {
+        for (OrderDetailsReq req : reqs) {
+            SanPhamChiTiet spct = spctRepo.findById(req.getSanPhamChiTietId()).get();
+            spct.setSoLuongTon(spct.getSoLuongTon() - req.getSoLuong());
+            spctRepo.save(spct);
+        }
+    }
+
+    public void deleteAllItemsOf1Cart(int custId) {
+        cartItemRepo.deleteAllItemsOf1Cart(custId);
+    }
+
+    @Override
+    public HoaDonResponse getByCode(String code) {
+        HoaDon order = hoaDonRepo.getByMa(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Hóa đơn mã: " + code + " không tồn tại."));
+        return mapToHoaDonResponse(order);
     }
 }

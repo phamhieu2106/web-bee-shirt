@@ -20,7 +20,21 @@
             <span class="sku-number title">{{ sanPham?.ma }}</span>
           </div>
         </div>
-        <span class="priceProduct">{{ formatPrice(curPrice) }}</span>
+        <div *ngIf="curSaleEvent">
+          <span
+            ><s>{{ formatPrice(curPrice) }}</s>
+            <b class="ms-2 text-danger"
+              >{{ -curSaleEvent.giaTriPhanTram }}%</b
+            ></span
+          >
+          <span class="priceProduct">{{
+            formatPrice((curPrice * (100 - curSaleEvent?.giaTriPhanTram)) / 100)
+          }}</span>
+        </div>
+
+        <div *ngIf="!curSaleEvent">
+          <span class="priceProduct">{{ formatPrice(curPrice) }}</span>
+        </div>
       </div>
 
       <div class="product-promotion">

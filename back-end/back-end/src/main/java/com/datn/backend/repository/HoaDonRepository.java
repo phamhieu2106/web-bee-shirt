@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 /**
  * @author HungDV
  */
@@ -50,4 +52,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     SoLuongDonHangResponse getSoLuongDonHang();
 
     boolean existsByMa(String ma);
+
+    Optional<HoaDon> getByMa(String ma);
 }

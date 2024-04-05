@@ -42,7 +42,7 @@ const routes: Routes = [
     component: SignUpComponent,
   },
   {
-    path: "tracking",
+    path: "tracking-order/:orderCode",
     component: TrackingComponent,
   },
 ];

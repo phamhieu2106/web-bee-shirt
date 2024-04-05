@@ -2,7 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { PlaceOrderRequest } from "../model/interface/place-order-request.interface";
+import { OnlineOrderRequest } from "../model/interface/online-order-request.interface";
+import { Order } from "../model/class/order.class";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,14 @@ export class OrderService {
 
   // public functions
   // 1
-  public placeOrder(req: PlaceOrderRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/place-order`, req);
+  public placeOrderOnline(req: OnlineOrderRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/place-order-online`, req, {
+      responseType: "text",
+    });
+  }
+
+  // 2
+  public getByCode(code: number): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/get-by-code/${code}`);
   }
 }

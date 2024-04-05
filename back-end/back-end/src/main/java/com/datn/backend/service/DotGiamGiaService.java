@@ -37,4 +37,11 @@ public interface DotGiamGiaService {
     boolean remove(Integer id);
 
     boolean nameCheckRealTime(String name);
+
+    // client
+    DotGiamGia getSaleEventOfProd(int prodId);
+
+    DotGiamGia getSaleEventOfProdDetails(int prodId);
+
+    DotGiamGia getSaleEventOfProdDetails2(int prodId, int colorId, int sizeId);
 }

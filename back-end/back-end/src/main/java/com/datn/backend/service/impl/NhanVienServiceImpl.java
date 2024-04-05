@@ -112,7 +112,6 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public NhanVien delete(Integer id) {
-
         Optional<NhanVien> optionalNhanVien = nhanVienRepo.findById(id);
 
         if (optionalNhanVien.isPresent()) {

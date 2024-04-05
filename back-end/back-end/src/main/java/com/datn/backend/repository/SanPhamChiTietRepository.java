@@ -1,6 +1,5 @@
 package com.datn.backend.repository;
 
-import com.datn.backend.model.san_pham.SanPham;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

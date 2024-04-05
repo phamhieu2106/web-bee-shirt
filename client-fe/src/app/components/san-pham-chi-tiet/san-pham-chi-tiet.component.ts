@@ -22,6 +22,8 @@ import { CartService } from "src/app/service/cart.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { Customer } from "src/app/model/class/customer.class";
 import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
+import { SaleEventService } from "src/app/service/sale-event.service";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -34,6 +36,7 @@ export class SanPhamChiTietComponent {
   public curSizesOfProduct: KichCo[] = [];
   public curImgUrls: String[] = [];
   public cartItems: CartItem[] = [];
+  public curSaleEvent: SaleEvent;
 
   public curColorIndex: number = 0;
   public curSizeIndex: number = 0;
@@ -87,7 +90,8 @@ export class SanPhamChiTietComponent {
     private productDetailsService: ProductDetailsService,
     private notifService: NotificationService,
     private cartService: CartService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
@@ -134,6 +138,22 @@ export class SanPhamChiTietComponent {
             .subscribe({
               next: (price: number) => {
                 this.curPrice = price;
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.notifService.error(errorResponse.error.message);
+              },
+            });
+
+          // lấy lại đợt gg
+          this.saleEventService
+            .getSaleEventOfProdDetails2(
+              this.sanPham.id,
+              colorId,
+              this.curSizesOfProduct[this.curSizeIndex].id
+            )
+            .subscribe({
+              next: (saleEvent: SaleEvent) => {
+                this.curSaleEvent = saleEvent;
               },
               error: (errorResponse: HttpErrorResponse) => {
                 this.notifService.error(errorResponse.error.message);
@@ -188,6 +208,22 @@ export class SanPhamChiTietComponent {
       .subscribe({
         next: (price: number) => {
           this.curPrice = price;
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notifService.error(errorResponse.error.message);
+        },
+      });
+
+    // lấy lại đợt gg
+    this.saleEventService
+      .getSaleEventOfProdDetails2(
+        this.sanPham.id,
+        this.colorsOfProduct[this.curColorIndex].id,
+        sizeId
+      )
+      .subscribe({
+        next: (saleEvent: SaleEvent) => {
+          this.curSaleEvent = saleEvent;
         },
         error: (errorResponse: HttpErrorResponse) => {
           this.notifService.error(errorResponse.error.message);
@@ -334,6 +370,7 @@ export class SanPhamChiTietComponent {
                           .getCartItemsOfLoggedCustomer(loggedCus.id)
                           .subscribe({
                             next: (newCartItems: CartItem[]) => {
+                              // get prod for prod-details
                               let getProdObservables = [];
                               for (let item of newCartItems) {
                                 getProdObservables.push(
@@ -347,6 +384,31 @@ export class SanPhamChiTietComponent {
                                 next: (products: SanPham[]) => {
                                   products.forEach((product, index) => {
                                     newCartItems[index].spct.sanPham = product;
+                                    if (index === newCartItems.length - 1) {
+                                      this.cartService.updateCartItemsOfLoggedUser(
+                                        newCartItems
+                                      );
+                                      this.cartService.updateCartItemsQuantityOfLoggedUser(
+                                        newCartItems.length
+                                      );
+                                    }
+                                  });
+                                },
+                              });
+
+                              // get sale events for prod-details
+                              let observables2 = [];
+                              for (let item of newCartItems) {
+                                observables2.push(
+                                  this.saleEventService.getSaleEventOfProdDetails(
+                                    item.spct.id
+                                  )
+                                );
+                              }
+                              forkJoin(observables2).subscribe({
+                                next: (values: SaleEvent[]) => {
+                                  values.forEach((v, index) => {
+                                    newCartItems[index].spct.saleEvent = v;
                                     if (index === newCartItems.length - 1) {
                                       this.cartService.updateCartItemsOfLoggedUser(
                                         newCartItems
@@ -452,15 +514,14 @@ export class SanPhamChiTietComponent {
   // private functions
   // 1
   private getProductById(): void {
+    // 1
     this.activatedRoute.params.subscribe((params) => {
       let productId = params["id"];
 
-      // get product
+      // 1.1 get product
       this.productService.getOneById(productId).subscribe({
         next: (response: SanPham) => {
           this.sanPham = response;
-
-          // lấy chất liệu
           this.assignProperties();
         },
         error: (errorResponse: HttpErrorResponse) => {
@@ -468,19 +529,19 @@ export class SanPhamChiTietComponent {
         },
       });
 
-      // get colors of this product
+      // 1.2 get colors of this product
       this.colorService.getAllColorOf1Product(productId).subscribe({
         next: (colorResponse: MauSac[]) => {
           this.colorsOfProduct = colorResponse;
 
-          // lấy danh sách kích thước của màu thứ 1 và sản phẩm
+          // 1.2.1 lấy danh sách kích thước của màu thứ 1 và sản phẩm
           this.sizeService
             .getAllByProductAndColor(productId, colorResponse[0].id)
             .subscribe({
               next: (sizeResponse: KichCo[]) => {
                 this.curSizesOfProduct = sizeResponse;
 
-                // lấy số lượng
+                // 1.2.1.1 lấy số lượng
                 this.productDetailsService
                   .getQuantityOfOne(
                     productId,
@@ -496,7 +557,7 @@ export class SanPhamChiTietComponent {
                     },
                   });
 
-                // lấy giá
+                // 1.2.1.2 lấy giá
                 this.productDetailsService
                   .getPriceOfOne(
                     productId,
@@ -511,13 +572,30 @@ export class SanPhamChiTietComponent {
                       this.notifService.error(errorResponse.error.message);
                     },
                   });
+
+                // 1.2.1.3 lấy đợt giảm giá bằng (productId, colorId, sizeId)
+                this.saleEventService
+                  .getSaleEventOfProdDetails2(
+                    productId,
+                    colorResponse[0].id,
+                    sizeResponse[0].id
+                  )
+                  .subscribe({
+                    next: (saleEvent: SaleEvent) => {
+                      this.curSaleEvent = saleEvent;
+                      console.log("sale: ", this.curSaleEvent);
+                    },
+                    error: (errorResponse: HttpErrorResponse) => {
+                      this.notifService.error(errorResponse.error.message);
+                    },
+                  });
               },
               error: (errorResponse: HttpErrorResponse) => {
                 this.notifService.error(errorResponse.error.message);
               },
             });
 
-          // lấy danh sách các ảnh của màu thứ nhất và sản phẩm
+          // 1.2.2 lấy danh sách các ảnh của màu thứ nhất và sản phẩm
           this.productImgService
             .getAllUrlBySanPhamAndMauSac(productId, colorResponse[0].id)
             .subscribe({

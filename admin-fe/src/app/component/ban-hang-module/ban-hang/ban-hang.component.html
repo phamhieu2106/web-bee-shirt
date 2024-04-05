@@ -9,7 +9,7 @@
     <!-- Taskbar -->
     <div class="row taskbar">
       <!-- Search Product taskbar -->
-      <div class="p-1 col-6">
+      <div class="p-1 col-5 align-content-center">
         <div class="dropdown d-flex input-group">
           <div
             class="input-group-prepend"
@@ -114,9 +114,9 @@
       </div>
       <!-- End search product taskbar -->
       <!-- Order taskbar -->
-      <div class="col-6 row">
+      <div class="col-7 row">
         <div
-          class="col-2 order-number"
+          class="col-2 order-number justify-content-between"
           [class.order-number-active]="
             order != null ? order.orderNameTemp == o.orderNameTemp : false
           "
@@ -124,6 +124,13 @@
           *ngFor="let o of orders; index as i"
         >
           <span class="fs-6">{{ o.orderNameTemp }}</span>
+          <span class="fs-5 cart-icon">
+            <i class="fa-solid fa-cart-shopping" style="color: #ffd700"></i>
+            <div class="cart-quantity">
+              {{ getSoLuongSanPham(o) }}
+            </div>
+          </span>
+
           <button class="btn p-1" (click)="deleteOrder(i)">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
@@ -219,9 +226,9 @@
       </tbody>
     </table>
   </div>
-  <!--  -->
+  <!-- Sidebar -->
   <div class="card col-3">
-    <!-- Sidebar -->
+    <!-- Khách hàng -->
     <div class="">
       <div class="user-choose" *ngIf="order != null && order.khachHang != null">
         <div
@@ -301,30 +308,32 @@
           />
         </span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold">Số lượng sản phẩm:</span>
-        <span class="ml-auto">{{ getSoLuongSanPham() }}</span>
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Số lượng sản phẩm:</span>
+        <span class="sidebar-money-part-right">{{
+          getSoLuongSanPham(order)
+        }}</span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold">Tổng tiền:</span>
-        <span class="ml-auto">{{
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Tổng tiền:</span>
+        <span class="sidebar-money-part-right">{{
           getTongTien() | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
       </div>
 
       <div
-        class="d-flex justify-content-between m-1 align-items-center"
+        class="sidebar-money-part m-1 align-items-center"
         *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
       >
         <!-- Show on selected Giao hàng -->
-        <span class="mr-auto fw-bold">Phí vận chuyển:</span>
-        <span class="ml-auto">
+        <span class="sidebar-money-part-left">Phí vận chuyển:</span>
+        <span class="sidebar-money-part-right">
           <app-input-number [(value)]="order.phiVanChuyen"></app-input-number>
         </span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold">Tiền giảm:</span>
-        <span class="ml-auto">{{
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Tiền giảm:</span>
+        <span class="sidebar-money-part-right">{{
           (order != null ? order.tienGiam : 0)
             | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
@@ -339,37 +348,37 @@
           disabled
         /> -->
       </div>
-      <div class="d-flex justify-content-between m-1 h5">
-        <span class="mr-auto fw-bold">Khách phải trả:</span>
-        <span class="ml-auto">{{
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Khách phải trả:</span>
+        <span class="sidebar-money-part-right">{{
           getMustPay() | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold"
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left"
           >Khách thanh toán:
           <button
             type="button"
-            class="btn btn-success pl-3 pr-3 pt-1 pb-1 rounded-2"
+            class="btn btn-success pl-1 pr-1 pt-1 pb-1 rounded-2"
             data-toggle="modal"
             data-target="#thanhToanModal"
           >
             <i class="fa-solid fa-credit-card"></i>
           </button>
         </span>
-        <span class="ml-auto">{{
+        <span class="sidebar-money-part-right">{{
           getTienKhachThanhToan() | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <span class="mr-auto fw-bold">Khách còn thiếu:</span>
-        <span class="ml-auto">{{
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Khách còn thiếu:</span>
+        <span class="sidebar-money-part-right">{{
           getTienKhachConThieu() | currency : "đ " : "symbol" : "1.0-0"
         }}</span>
       </div>
-      <div class="d-flex justify-content-between m-1">
-        <div class="mr-auto fw-bold">Phiếu giảm giá:</div>
-        <span class="ml-auto">
+      <div class="sidebar-money-part m-1">
+        <div class="sidebar-money-part-left">Phiếu giảm giá:</div>
+        <span class="sidebar-money-part-right">
           <div class="d-flex">
             <select
               class="form-select form-control custom-select"
@@ -427,27 +436,27 @@
       </div>
       <!-- Giao hàng  -->
       <div *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
-        <div class="d-flex justify-content-between m-1 align-items-center">
-          <span class="mr-auto fw-bold">Tên người nhận: </span>
-          <span class="ml-auto"
+        <div class="sidebar-money-part m-1 align-items-center">
+          <span class="sidebar-money-part-left">Tên người nhận: </span>
+          <span class="sidebar-money-part-right"
             ><input
               type="text"
               class="form-control"
               [(ngModel)]="order.tenNguoiNhan"
           /></span>
         </div>
-        <div class="d-flex justify-content-between m-1 align-items-center">
-          <span class="mr-auto fw-bold">Số điện thoại:</span>
-          <span class="ml-auto"
+        <div class="sidebar-money-part m-1 align-items-center">
+          <span class="sidebar-money-part-left">Số điện thoại:</span>
+          <span class="sidebar-money-part-right"
             ><input
               type="text"
               class="form-control"
               [(ngModel)]="order.sdtNguoiNhan"
           /></span>
         </div>
-        <div class="d-flex justify-content-between m-1">
-          <span class="mr-auto fw-bold">Địa chỉ:</span>
-          <span class="ml-auto"
+        <div class="sidebar-money-part m-1">
+          <span class="sidebar-money-part-left">Địa chỉ:</span>
+          <span class="sidebar-money-part-right"
             ><button
               type="button"
               class="btn btn-primary rounded-2 p-1"
@@ -461,7 +470,7 @@
       </div>
 
       <div class="justify-content-between m-1">
-        <span class="mr-auto fw-bold">Ghi chú: </span>
+        <span class="sidebar-money-part-left">Ghi chú: </span>
         <div>
           <textarea rows="1" class="form-control input-default"></textarea>
         </div>

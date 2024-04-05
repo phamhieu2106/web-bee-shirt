@@ -212,7 +212,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     private HoaDon createHoaDonTaiQuay(PlaceOrderRequest placeOrderRequest) {
         NhanVien nhanVien = nhanVienRepo.findById(placeOrderRequest.getNhanVienId()).orElse(null);
         KhachHang khachHang = placeOrderRequest.getKhachHangId() != null ? khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null) : null;
-        KhachHang khachHang2 = khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null);
+//        KhachHang khachHang2 = khachHangRepo.findById(placeOrderRequest.getKhachHangId()).orElse(null);
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(placeOrderRequest.getPhieuGiamGiaId());
 
         HoaDon hoaDon = HoaDon
@@ -368,7 +368,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         // end check
 
         NhanVien nhanVien = nhanVienRepo.findById(request.getNhanVienId()).orElse(null);
-        KhachHang khachHang = khachHangRepo.findById(request.getKhachHangId()).orElse(null);
+        KhachHang khachHang = request.getKhachHangId() != null ? khachHangRepo.findById(request.getKhachHangId()).orElse(null) : null;
+//        KhachHang khachHang = khachHangRepo.findById(request.getKhachHangId()).orElse(null);
         PhieuGiamGia phieuGiamGia = this.validPhieuGiamGia(request.getPhieuGiamGiaId());
 
         HoaDon hoaDon = HoaDon

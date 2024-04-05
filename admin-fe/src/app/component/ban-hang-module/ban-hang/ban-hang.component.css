@@ -8,7 +8,7 @@
 }
 
 .product-suggestions {
-    width: 125%;
+    width: 150%;
     max-height: 350px;
     overflow-y: auto
 }
@@ -32,11 +32,10 @@
     background-color: #11398a;
     color: white;
     border-radius: 5px;
-    margin: 5px;
+    margin: 3px;
     display: flex;
     align-items: center;
-    justify-content: center;
-
+    height: 40px;
 }
 
 .order-number-active {
@@ -193,4 +192,39 @@ input[type=number] {
 .qr-code {
     color: black;
     cursor: pointer;
+}
+
+.cart-icon {
+    position: relative;
+    display: inline-block;
+
+}
+
+.cart-quantity {
+    position: absolute;
+    top: -0.3em;
+    right: -0.4em;
+    color: white;
+    font-weight: bold;
+    background-color: #ff0000;
+    font-size: 13px;
+    border-radius: 100%;
+    width: 17px;
+    height: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-money-part {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar-money-part-left {
+    margin-left: 0;
+}
+
+.sidebar-money-part-right {
+    margin-right: 0;
 }

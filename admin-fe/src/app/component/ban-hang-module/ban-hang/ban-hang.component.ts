@@ -313,9 +313,9 @@ export class BanHangComponent implements OnInit, OnDestroy {
     return 0; // hoặc giá trị mặc định khác
   }
 
-  getSoLuongSanPham(): number {
-    return this.order != null
-      ? this.banHangService.getSoLuongSanPham(this.order.hoaDonChiTiets)
+  getSoLuongSanPham(order: HoaDon): number {
+    return order != null
+      ? this.banHangService.getSoLuongSanPham(order.hoaDonChiTiets)
       : 0;
   }
   getMustPay(): number {

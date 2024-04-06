@@ -18,6 +18,13 @@ import { DiaChi } from "src/app/model/class/dia-chi.class";
 })
 export class GiaoHangComponent implements OnInit, OnChanges {
   @Input() khachHang: KhachHang; // từ khách hàng lấy ra được danh sách địa chỉ
+
+  @Input({ required: true }) tenNguoiNhan: string;
+  @Output() tenNguoiNhanChange = new EventEmitter<string>();
+
+  @Input({ required: true }) sdtNguoiNhan: string;
+  @Output() sdtNguoiNhanChange = new EventEmitter<string>();
+
   @Output() phiVanChuyen = new EventEmitter<number>();
   @Output() diaChi = new EventEmitter<string>();
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
@@ -25,16 +32,19 @@ export class GiaoHangComponent implements OnInit, OnChanges {
   // @Output() diaChiVaPhiVanChuyenChange =
   //   new EventEmitter<DiaChiVaPhiVanChuyen>();
   constructor() {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {
     }
   }
+
   ngOnInit(): void {}
+
   updatePhiVanChuyen(soTien: number) {
     this.phiVanChuyen.emit(soTien);
     this.diaChi.emit(
       `${
-        this.diaChiVaPhiVanChuyen.cuThe == null
+        this.diaChiVaPhiVanChuyen.cuThe == null || undefined
           ? ""
           : this.diaChiVaPhiVanChuyen.cuThe
       },${this.diaChiVaPhiVanChuyen.xa},${this.diaChiVaPhiVanChuyen.huyen},${
@@ -48,5 +58,13 @@ export class GiaoHangComponent implements OnInit, OnChanges {
     this.diaChiVaPhiVanChuyen.huyen = diaChi.huyen;
     this.diaChiVaPhiVanChuyen.xa = diaChi.xa;
     this.diaChiVaPhiVanChuyen.cuThe = diaChi.duong;
+  }
+
+  onTenNguoiNhanChange() {
+    this.tenNguoiNhanChange.emit(this.tenNguoiNhan);
+  }
+
+  onSdtNguoiNhanChange() {
+    this.sdtNguoiNhanChange.emit(this.sdtNguoiNhan);
   }
 }

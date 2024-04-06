@@ -228,3 +228,15 @@ input[type=number] {
 .sidebar-money-part-right {
     margin-right: 0;
 }
+
+.container-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Đảm bảo container có chiều cao 100% của parent */
+}
+
+.container-sidebar-mua-hang {
+    margin-top: auto;
+    /* Đảm bảo rằng phần tử cuối cùng sẽ luôn nằm ở cuối cùng */
+}

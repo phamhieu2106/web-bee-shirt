@@ -297,7 +297,7 @@
     </div>
 
     <!-- Tiền nong -->
-    <div class="">
+    <div class="container-sidebar pr-2">
       <div class="d-flex justify-content-between m-1">
         <span class="ml-auto fw-bold"
           >Giao hàng:
@@ -308,16 +308,16 @@
           />
         </span>
       </div>
-      <div class="sidebar-money-part m-1">
+      <!-- <div class="sidebar-money-part m-1">
         <span class="sidebar-money-part-left">Số lượng sản phẩm:</span>
         <span class="sidebar-money-part-right">{{
           getSoLuongSanPham(order)
         }}</span>
-      </div>
+      </div> -->
       <div class="sidebar-money-part m-1">
         <span class="sidebar-money-part-left">Tổng tiền:</span>
         <span class="sidebar-money-part-right">{{
-          getTongTien() | currency : "đ " : "symbol" : "1.0-0"
+          getTongTien() | currency : " " : "symbol" : "1.0-0"
         }}</span>
       </div>
 
@@ -335,7 +335,7 @@
         <span class="sidebar-money-part-left">Tiền giảm:</span>
         <span class="sidebar-money-part-right">{{
           (order != null ? order.tienGiam : 0)
-            | currency : "đ " : "symbol" : "1.0-0"
+            | currency : " " : "symbol" : "1.0-0"
         }}</span>
         <!-- <input
           class="form-control"
@@ -351,7 +351,13 @@
       <div class="sidebar-money-part m-1">
         <span class="sidebar-money-part-left">Khách phải trả:</span>
         <span class="sidebar-money-part-right">{{
-          getMustPay() | currency : "đ " : "symbol" : "1.0-0"
+          getMustPay() | currency : " " : "symbol" : "1.0-0"
+        }}</span>
+      </div>
+      <div class="sidebar-money-part m-1">
+        <span class="sidebar-money-part-left">Khách còn thiếu:</span>
+        <span class="sidebar-money-part-right">{{
+          getTienKhachConThieu() | currency : " " : "symbol" : "1.0-0"
         }}</span>
       </div>
       <div class="sidebar-money-part m-1">
@@ -367,15 +373,10 @@
           </button>
         </span>
         <span class="sidebar-money-part-right">{{
-          getTienKhachThanhToan() | currency : "đ " : "symbol" : "1.0-0"
+          getTienKhachThanhToan() | currency : " " : "symbol" : "1.0-0"
         }}</span>
       </div>
-      <div class="sidebar-money-part m-1">
-        <span class="sidebar-money-part-left">Khách còn thiếu:</span>
-        <span class="sidebar-money-part-right">{{
-          getTienKhachConThieu() | currency : "đ " : "symbol" : "1.0-0"
-        }}</span>
-      </div>
+
       <div class="sidebar-money-part m-1">
         <div class="sidebar-money-part-left">Phiếu giảm giá:</div>
         <span class="sidebar-money-part-right">
@@ -436,24 +437,6 @@
       </div>
       <!-- Giao hàng  -->
       <div *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
-        <div class="sidebar-money-part m-1 align-items-center">
-          <span class="sidebar-money-part-left">Tên người nhận: </span>
-          <span class="sidebar-money-part-right"
-            ><input
-              type="text"
-              class="form-control"
-              [(ngModel)]="order.tenNguoiNhan"
-          /></span>
-        </div>
-        <div class="sidebar-money-part m-1 align-items-center">
-          <span class="sidebar-money-part-left">Số điện thoại:</span>
-          <span class="sidebar-money-part-right"
-            ><input
-              type="text"
-              class="form-control"
-              [(ngModel)]="order.sdtNguoiNhan"
-          /></span>
-        </div>
         <div class="sidebar-money-part m-1">
           <span class="sidebar-money-part-left">Địa chỉ:</span>
           <span class="sidebar-money-part-right"
@@ -479,7 +462,7 @@
         style="height: 180px"
         *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'"
       ></div>
-      <div class="mb-3 h4">
+      <div class="h4 container-sidebar-mua-hang">
         <button
           class="btn btn-success btn-lg w-100 h-100"
           (click)="muaHang()"
@@ -550,6 +533,7 @@
             class="close"
             data-dismiss="modal"
             aria-label="Close"
+            id="closeModalChonDiaChi"
           >
             <span aria-hidden="true">×</span>
           </button>
@@ -561,10 +545,16 @@
             [khachHang]="order.khachHang"
             (phiVanChuyen)="caculatePhiVanChuyen($event)"
             (diaChi)="getDiaChiNguoiNhan($event)"
+            [(tenNguoiNhan)]="order.tenNguoiNhan"
+            [(sdtNguoiNhan)]="order.sdtNguoiNhan"
           ></app-giao-hang>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="validateThongTinNhanHang()"
+          >
             Xác nhận
           </button>
         </div>
@@ -633,6 +623,7 @@
       </div>
     </div>
   </div>
+  <!-- QR code modal -->
   <div
     class="modal fade product-modal"
     id="quetQrModal"

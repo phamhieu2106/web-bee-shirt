@@ -48,7 +48,10 @@ export class ThanhToanComponent implements OnChanges, OnInit {
   // tạo form
   createThanhToanForm(): void {
     this.thanhToanForm = this.fb.group({
-      tienKhachDua: [0, [Validators.required, Validators.max(this.tongTien)]],
+      tienKhachDua: [
+        this.getTienConThieu(),
+        [Validators.required, Validators.max(this.tongTien)],
+      ],
       moTa: [""],
       phuongThucThanhToan: ["TIEN_MAT"],
       maGiaoDich: [""],
@@ -123,5 +126,11 @@ export class ThanhToanComponent implements OnChanges, OnInit {
         this.thanhToans.splice(index, 1);
       }
     });
+  }
+
+  patchTienKhachDua(value: number) {
+    // console.log(value);
+
+    this.thanhToanForm.get("tienKhachDua").patchValue(value);
   }
 }

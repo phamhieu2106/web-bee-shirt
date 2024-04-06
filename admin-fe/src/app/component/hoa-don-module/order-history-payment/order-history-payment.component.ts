@@ -24,12 +24,6 @@ import Swal from "sweetalert2";
   styleUrls: ["./order-history-payment.component.css"],
 })
 export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
-  // @Input({ required: true }) thanhToans: ThanhToan[]; // danh sách lịch sử thanh toán
-  // @Input({ required: true }) loaiHoaDon: string; // check disable chức năng thanh toán
-  // @Input({ required: true }) tongTien: number; // check disable chức năng thanh toán
-  // @Input({ required: true }) tienGiam: number; // check disable chức năng thanh toán
-  // @Input({ required: true }) phiVanChuyen: number; // check disable chức năng thanh toán
-  // @Input({ required: true }) idHoaDon: number; // id hóa đơn cần tạo thanh toán
   @Input({ required: true }) hoaDon: HoaDon; // id hóa đơn cần tạo thanh toán
   @Output() hoaDonChange = new EventEmitter<HoaDon>(); // id hóa đơn cần tạo thanh toán
   thanhToanForm: FormGroup; // thanh toán modal
@@ -157,5 +151,9 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
         });
       }
     });
+  }
+
+  patchTienKhachDua(value: number) {
+    this.thanhToanForm.get("tienKhachDua").patchValue(value);
   }
 }

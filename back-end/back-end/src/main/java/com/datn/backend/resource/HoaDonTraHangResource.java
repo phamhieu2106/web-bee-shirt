@@ -1,8 +1,11 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.ChangeOrderStatusRequest;
+import com.datn.backend.dto.request.HoaDonTraHangRequest;
+import com.datn.backend.dto.request.PlaceOrderRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.SpctResponse;
+import com.datn.backend.model.hoa_don.HoaDonTraHang;
 import com.datn.backend.service.HoaDonTraHangService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +50,22 @@ public class HoaDonTraHangResource {
     @PostMapping
     public ResponseEntity<HoaDonResponse> traHang(@Valid @RequestBody ChangeOrderStatusRequest changeOrderStatus) {
         return ResponseEntity.ok(hoaDonTraHangService.traHang(changeOrderStatus));
+    }
+
+    @PostMapping("/tao-hoa-don-tra-hang")
+    public ResponseEntity<HoaDonTraHang> taoHoaDonTraHang(@Valid @RequestBody HoaDonTraHangRequest hoaDonTraHangRequest) {
+        return ResponseEntity.ok(hoaDonTraHangService.add(hoaDonTraHangRequest));
+    }
+
+    @PostMapping("/place-order-tra-hang")
+    public ResponseEntity<HoaDonResponse> placeOrderTraHang(@Valid @RequestBody PlaceOrderRequest placeOrderRequest) {
+
+        try {
+            HoaDonResponse hoaDonResponse = hoaDonTraHangService.placeOrderTraHang(placeOrderRequest);
+            return ResponseEntity.ok(hoaDonResponse);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

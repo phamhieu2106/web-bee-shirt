@@ -296,7 +296,7 @@
                         nzType="rollback"
                         style="margin-right: 5px"
                       ></i>
-                      <strong> Số lượng trả: </strong>
+                      <strong> Số lượng sản phẩm trả: </strong>
                     </kbd>
                   </span>
                   <strong
@@ -377,6 +377,26 @@
                     "
                   >
                     {{ discountMoney | currency : "VND" }}
+                  </strong>
+                </nz-list-item>
+                <nz-list-item>
+                  <span nz nz-typography>
+                    <kbd
+                      style="color: #080808; display: flex; align-items: center"
+                    >
+                      <i nz-icon nzType="euro" style="margin-right: 5px"></i>
+                      <strong> Tổng tiền hoá đơn: </strong>
+                    </kbd>
+                  </span>
+                  <strong
+                    style="
+                      color: #f6e559;
+                      max-width: 200px;
+                      overflow: auto;
+                      white-space: nowrap;
+                    "
+                  >
+                    {{ this.newAmount - this.discountMoney | currency : "VND" }}
                   </strong>
                 </nz-list-item>
                 <nz-list-item

@@ -9,10 +9,12 @@
     <nz-result
       nzStatus="success"
       nzTitle="Trả Hàng Thành Công!"
-      nzSubTitle="Bạn đừng quên thông báo khách hàng rằng là khách hàng sẽ nhận được Phiếu Giảm Giá của cửa hàng nhé"
+      nzSubTitle="Bạn đừng quên xin lỗi khách hàng về sản phẩm của cửa hàng nhé. Đừng quên giới thiệu các chương trình ưu đãi của cửa hàng chúng ta nhé!"
     >
       <div nz-result-extra>
-        <button nz-button>Về trang chủ</button>
+        <button [routerLink]="'/hoa-don/ql-hoa-don'" nz-button>
+          Về quản lý hoá đơn
+        </button>
       </div>
     </nz-result>
   </div>

@@ -8,10 +8,17 @@
           [(ngModel)]="diaChiVaPhiVanChuyen.tinhId"
           (change)="getAllHuyenByTinh()"
         >
+          <option value="-1">
+            {{
+              diaChiVaPhiVanChuyen.tinh
+                ? diaChiVaPhiVanChuyen.tinh
+                : "Chọn tỉnh thành"
+            }}
+          </option>
           <option
             *ngFor="let t of tinhs"
             [value]="t.ProvinceID"
-            [selected]="diaChiVaPhiVanChuyen.tinhId == t.ProvinceID"
+            [selected]="t.ProvinceID == diaChiVaPhiVanChuyen.tinhId"
           >
             {{ t.ProvinceName }}
           </option>
@@ -28,11 +35,10 @@
           [(ngModel)]="diaChiVaPhiVanChuyen.huyenId"
           (change)="getAllXaByHuyen()"
         >
-          <option
-            *ngFor="let h of huyens"
-            value="{{ h.DistrictID }}"
-            [selected]="diaChiVaPhiVanChuyen.huyenId == h.DistrictID"
-          >
+          <option value="-1">Chọn quận huyện</option>
+          <option *ngFor="let h of huyens" value="{{ h.DistrictID }}">
+            <!-- [selected]="diaChiVaPhiVanChuyen.huyenId == h.DistrictID" -->
+
             {{ h.DistrictName }}
           </option>
         </select>
@@ -48,11 +54,8 @@
           (change)="onFinishChooseDiaChi()"
           [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
         >
-          <option
-            *ngFor="let x of xas"
-            [value]="x.WardCode"
-            [selected]="diaChiVaPhiVanChuyen.xaCode == x.WardCode"
-          >
+          <option value="">Chọn phường xã</option>
+          <option *ngFor="let x of xas" value="{{ x.WardCode }}">
             {{ x.WardName }}
           </option>
         </select>

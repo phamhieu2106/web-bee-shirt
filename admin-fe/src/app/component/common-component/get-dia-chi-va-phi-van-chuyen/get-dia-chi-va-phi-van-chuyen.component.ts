@@ -1,6 +1,7 @@
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { DiaChiVaPhiVanChuyen } from "./../../../model/class/dia-chi-va-phi-van-chuyen.class";
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -25,6 +26,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   xas: any[];
   constructor(private ghnService: GiaoHangNhanhService) {}
   ngOnChanges(changes: SimpleChanges): void {
+    this.getAllTinh();
     if (
       changes["diaChiVaPhiVanChuyen"] &&
       !this.diaChiVaPhiVanChuyenIsEmpty()
@@ -33,15 +35,10 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
       this.fillData();
     }
   }
-  ngOnInit(): void {
-    if (this.diaChiVaPhiVanChuyenIsEmpty()) {
-      this.getAllTinh();
-    }
-  }
+  ngOnInit(): void {}
   fillData() {
     // get all tỉnh => lọc ds tìm tinhId
-    this.getAllTinh();
-    setTimeout(() => this.findTinhId(), 100);
+    setTimeout(() => this.findTinhId(), 10);
 
     // get all huyện => lọc danh sách tìm xaId
     setTimeout(() => this.getAllHuyenByTinh(), 200);
@@ -105,6 +102,11 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
     this.ghnService.getAllProvince().subscribe({
       next: (resp) => {
         this.tinhs = resp.data;
+        if (this.diaChiVaPhiVanChuyen.tinh) {
+          setTimeout(() => {
+            this.findTinhId();
+          }, 100);
+        }
       },
       error: (err) => {
         console.log(err);
@@ -212,12 +214,5 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
           console.log(err);
         },
       });
-  }
-
-  clear() {
-    this.tinhs = [];
-    this.xas = [];
-    this.huyens = [];
-    this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
   }
 }

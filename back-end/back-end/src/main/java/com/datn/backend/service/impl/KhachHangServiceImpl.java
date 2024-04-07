@@ -126,14 +126,20 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHangRepository.save(khachHang);
 
         // dia chi
-        DiaChi diaChi = new DiaChi();
-        diaChi.setKhachHang(khachHang);
-        diaChi.setTinh(kh.getTinh());
-        diaChi.setHuyen(kh.getHuyen());
-        diaChi.setXa(kh.getXa());
-        diaChi.setDuong(kh.getDuong().trim());
-        diaChi.setMacDinh(true);
-        diaChiRepository.save(diaChi);
+        if (!UtilityFunction.isNullOrEmpty(kh.getTinh()) &&
+                !UtilityFunction.isNullOrEmpty(kh.getHuyen()) &&
+                !UtilityFunction.isNullOrEmpty(kh.getXa()) &&
+                !UtilityFunction.isNullOrEmpty(kh.getDuong())
+        ) {
+            DiaChi diaChi = new DiaChi();
+            diaChi.setKhachHang(khachHang);
+            diaChi.setTinh(kh.getTinh());
+            diaChi.setHuyen(kh.getHuyen());
+            diaChi.setXa(kh.getXa());
+            diaChi.setDuong(kh.getDuong().trim());
+            diaChi.setMacDinh(true);
+            diaChiRepository.save(diaChi);
+        }
 
         return khachHang;
     }

@@ -35,6 +35,7 @@ export class GiaoHangComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {
+      this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
     }
   }
 
@@ -53,11 +54,15 @@ export class GiaoHangComponent implements OnInit, OnChanges {
     );
   }
   changeDiaChi(diaChi: DiaChi) {
-    this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-    this.diaChiVaPhiVanChuyen.tinh = diaChi.tinh;
-    this.diaChiVaPhiVanChuyen.huyen = diaChi.huyen;
-    this.diaChiVaPhiVanChuyen.xa = diaChi.xa;
-    this.diaChiVaPhiVanChuyen.cuThe = diaChi.duong;
+    let newDCVPVC = new DiaChiVaPhiVanChuyen();
+    newDCVPVC.tinh = diaChi.tinh.trim();
+    newDCVPVC.huyen = diaChi.huyen.trim();
+    newDCVPVC.xa = diaChi.xa.trim();
+    newDCVPVC.cuThe = diaChi.duong.trim();
+
+    this.diaChiVaPhiVanChuyen = newDCVPVC;
+
+    // console.log(diaChi);
   }
 
   onTenNguoiNhanChange() {

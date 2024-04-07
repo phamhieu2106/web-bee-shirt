@@ -473,7 +473,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   validateThongTinNhanHang() {
-    let regex = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
+    let regexSdt = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
+    let regexHoTen = /^[\p{L}\s]*$/u;
 
     if (
       this.order.tenNguoiNhan == null ||
@@ -481,6 +482,12 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.order.tenNguoiNhan.trim() == ""
     ) {
       this.notification.warning("Bạn chưa nhập tên người nhận");
+      return;
+    }
+    if (!regexHoTen.test(this.order.tenNguoiNhan)) {
+      console.log(this.order.tenNguoiNhan);
+
+      this.notification.warning("Tên người nhận không hợp lệ");
       return;
     }
     if (
@@ -491,7 +498,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.notification.warning("Bạn chưa nhập số điện thoại người nhận");
       return;
     }
-    if (!regex.test(this.order.sdtNguoiNhan)) {
+    if (!regexSdt.test(this.order.sdtNguoiNhan)) {
       this.notification.warning("Số điện thoại người nhận không hợp lệ");
       return;
     }

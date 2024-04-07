@@ -3,40 +3,76 @@
     <div class="wrapperChucNang col-md-3">
       <app-profile-sidebar></app-profile-sidebar>
     </div>
+    <div class="wrapperTaiKhoan col-md-8">
+      <p>my-account works!</p>
+    </div>
+  </div>
 
-    <div class="wrapperTaiKhoan col-md-8 p-3">
-      <div data-v-52ea8532="">
-        <div data-v-77b14e8b="" data-v-52ea8532="">
-          <div data-v-77b14e8b="" class="account-setting-form">
-            <div data-v-77b14e8b="" class="account-page-title">
-              <h1 data-v-77b14e8b="" class="title">Thông tin tài khoản</h1>
+  <div class="wrapperTaiKhoan col-md-8 p-3">
+    <div>
+      <div>
+        <div class="account-setting-form">
+          <div class="account-page-title">
+            <h1 class="title">Thông tin tài khoản</h1>
+          </div>
+          <div class="form-group form-gender">
+            <div class="label">Giới tính</div>
+            <div class="control">
+              <label for="radio1"
+                ><input
+                  type="radio"
+                  name="radio"
+                  id="radio1"
+                  value="1"
+                  checked="checked"
+                />
+                <span>Nam</span></label
+              >
+              <label for="radio2"
+                ><input type="radio" name="radio" id="radio2" value="2" />
+                <span>Nữ</span></label
+              >
+              <label for="radio3"
+                ><input type="radio" name="radio" id="radio3" value="3" />
+                <span>Khác</span></label
+              >
             </div>
-            <div data-v-77b14e8b="" class="form-group form-gender">
-              <div data-v-77b14e8b="" class="label">Giới tính</div>
-              <div data-v-77b14e8b="" class="control"><label data-v-77b14e8b="" for="radio1"><input data-v-77b14e8b=""
-                    type="radio" name="radio" id="radio1" value="1" checked="checked"> <span
-                    data-v-77b14e8b="">Nam</span></label> <label data-v-77b14e8b="" for="radio2"><input
-                    data-v-77b14e8b="" type="radio" name="radio" id="radio2" value="2"> <span
-                    data-v-77b14e8b="">Nữ</span></label> <label data-v-77b14e8b="" for="radio3"><input
-                    data-v-77b14e8b="" type="radio" name="radio" id="radio3" value="3"> <span
-                    data-v-77b14e8b="">Khác</span></label></div>
-            </div>
-            <div data-v-77b14e8b="" class="form-group active"><label data-v-77b14e8b="">Họ tên</label> <input
-                data-v-77b14e8b="" type="text" name="firstName" class="form-control "></div>
-            <div data-v-77b14e8b="" class="form-group active"><label data-v-77b14e8b="">Số điện thoại</label> <input
-                data-v-77b14e8b="" disabled="disabled" type="text" name="phone" class="form-control "></div>
-            <div data-v-77b14e8b="" class="form-group active"><label data-v-77b14e8b="">Email</label> <input
-                data-v-77b14e8b="" type="text" name="email" class="form-control "></div>
-            <div data-v-77b14e8b="" class="form-group active"><label data-v-77b14e8b="">Sinh nhật</label> <input
-                data-v-77b14e8b="" type="date" data-date-format="DD MMMM YYYY" name="" min="01-01-1971" id="birthday"
-                class="form-control"></div>
-            <div data-v-77b14e8b="" class="form-button"><button data-v-77b14e8b="" disabled="disabled"
-                class="btn btn-primary ">Lưu thay đổi</button> <!----> <!----></div>
+          </div>
+          <div class="form-group active">
+            <label>Họ tên</label>
+            <input type="text" name="firstName" class="form-control" />
+          </div>
+          <div class="form-group active">
+            <label>Số điện thoại</label>
+            <input
+              disabled="disabled"
+              type="text"
+              name="phone"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group active">
+            <label>Email</label>
+            <input type="text" name="email" class="form-control" />
+          </div>
+          <div class="form-group active">
+            <label>Sinh nhật</label>
+            <input
+              type="date"
+              data-date-format="DD MMMM YYYY"
+              name=""
+              min="01-01-1971"
+              id="birthday"
+              class="form-control"
+            />
+          </div>
+          <div class="form-button">
+            <button disabled="disabled" class="btn btn-primary">
+              Lưu thay đổi
+            </button>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </div>

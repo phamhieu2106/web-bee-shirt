@@ -130,4 +130,11 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    """, nativeQuery = true)
     boolean checkPrivateDiscountUsedOrNot(@Param("discountId") int discountId,
                                           @Param("customerId") int customerId);
+    @Query("""
+            select CASE WHEN COUNT(hd) > 0 THEN true ELSE false END
+            from HoaDon hd
+            where hd.phieuGiamGia.id = :discountId
+            and hd.khachHang.id = :customerId
+            """)
+    Boolean isDiscountUsedByCustomerId(Integer discountId,Integer customerId);
 }

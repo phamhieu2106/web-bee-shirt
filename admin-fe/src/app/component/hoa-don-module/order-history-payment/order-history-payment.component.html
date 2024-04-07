@@ -10,7 +10,11 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#createLichSuThanhToan"
-            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
+            [disabled]="
+              hoaDon.loaiHoaDon == 'TAI_QUAY' ||
+              hoaDon.trangThai == 'HOAN_THANH' ||
+              hoaDon.trangThai == 'HUY'
+            "
           >
             <i class="fa-solid fa-plus"></i>
             Thanh toán
@@ -56,6 +60,10 @@
                   <button
                     type="button"
                     class="btn btn-outline-light btn-rounded"
+                    [disabled]="
+                      hoaDon.trangThai == 'HOAN_THANH' ||
+                      hoaDon.trangThai == 'HUY'
+                    "
                     (click)="deleteThanhToan(lstt)"
                   >
                     <i class="fa-solid fa-trash text-danger"></i>

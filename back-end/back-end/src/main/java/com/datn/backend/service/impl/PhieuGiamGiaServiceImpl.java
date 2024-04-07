@@ -266,10 +266,26 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
         if (discountValidRequest.getKhachHangId() != null) {
             // danh sac phieu giam gia goi y hop le cua khach hang
             List<PhieuGiamGia> phieuGiamGiaByCustomerId = pggRepo.getDiscountValidByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+
+            // loai bo phieu giam gia ma khach hang da dung
+            phieuGiamGiaByCustomerId = phieuGiamGiaByCustomerId.stream().filter(
+                    (pgg) -> !pggRepo.isDiscountUsedByCustomerId(pgg.getId(), discountValidRequest.getKhachHangId())
+            ).toList();
+
+            // gop danh sach phieu giam gia hop le
             phieuGiamGias.addAll(phieuGiamGiaByCustomerId);
 
-            // danh sac phieu giam gia goi y voi khach hang
+//            -----------------------------------------------
+
+            // danh sach phieu giam gia goi y voi khach hang
             List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = pggRepo.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+
+            // loai bo phieu giam gia ma khach hang da dung
+            phieuGiamGiaSuggestByCustomerId = phieuGiamGiaSuggestByCustomerId.stream().filter(
+                    (pgg) -> !pggRepo.isDiscountUsedByCustomerId(pgg.getId(), discountValidRequest.getKhachHangId())
+            ).toList();
+
+            // gop vao danh sach phieu giam gia goi y
             pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
         }
 

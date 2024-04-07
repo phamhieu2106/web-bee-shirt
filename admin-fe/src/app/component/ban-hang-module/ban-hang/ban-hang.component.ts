@@ -360,6 +360,47 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   async datHang() {
+    let regexSdt = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
+    let regexHoTen = /^[\p{L}\s]*$/u;
+
+    if (
+      this.order.tenNguoiNhan == null ||
+      this.order.tenNguoiNhan == undefined ||
+      this.order.tenNguoiNhan.trim() == ""
+    ) {
+      this.notification.warning("Bạn chưa nhập tên người nhận");
+      return;
+    }
+    if (!regexHoTen.test(this.order.tenNguoiNhan)) {
+      console.log(this.order.tenNguoiNhan);
+
+      this.notification.warning("Tên người nhận không hợp lệ");
+      return;
+    }
+    if (
+      this.order.sdtNguoiNhan == null ||
+      this.order.sdtNguoiNhan == undefined ||
+      this.order.sdtNguoiNhan.trim() == ""
+    ) {
+      this.notification.warning("Bạn chưa nhập số điện thoại người nhận");
+      return;
+    }
+    if (!regexSdt.test(this.order.sdtNguoiNhan)) {
+      this.notification.warning("Số điện thoại người nhận không hợp lệ");
+      return;
+    }
+    if (
+      this.order.diaChiNguoiNhan == null ||
+      this.order.diaChiNguoiNhan == undefined
+    ) {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    let diaChis = this.order.diaChiNguoiNhan.split(",");
+    if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
+      this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
+      return;
+    }
     if (this.getTienKhachThanhToan() > this.getMustPay()) {
       this.notification.error("Tiền khách thanh toán không hợp lệ");
       return;

@@ -11,30 +11,32 @@
   </div>
 
   <!-- Price range -->
-  <div class="col-6 row d-flex pr-2 w-75">
-    <div class="col-6 text-left">
-      {{ minValue | currency : "đ " : "symbol" : "1.0-0" }}
-    </div>
-    <div class="col-6 text-right">
-      {{ maxValue | currency : "đ " : "symbol" : "1.0-0" }}
-    </div>
-    <section class="range-slider">
-      <input
-        [(ngModel)]="minValue"
-        [min]="minPrice"
-        [max]="maxPrice"
-        [step]="step"
-        type="range"
-        (change)="validateRanger()"
-      />
-      <input
-        [(ngModel)]="maxValue"
-        [min]="minPrice"
-        [max]="maxPrice"
-        [step]="step"
-        type="range"
-        (change)="validateRanger()"
-      />
+  <div class="col-6 d-flex">
+    <section class="range-slider row ml-5 mr-5">
+      <div class="col-6 text-left">
+        {{ minValue | currency : "đ " : "symbol" : "1.0-0" }}
+      </div>
+      <div class="col-6 text-right">
+        {{ maxValue | currency : "đ " : "symbol" : "1.0-0" }}
+      </div>
+      <div class="col-12">
+        <input
+          [(ngModel)]="minValue"
+          [min]="minPrice"
+          [max]="maxPrice"
+          [step]="step"
+          type="range"
+          (change)="validateRanger()"
+        />
+        <input
+          [(ngModel)]="maxValue"
+          [min]="minPrice"
+          [max]="maxPrice"
+          [step]="step"
+          type="range"
+          (change)="validateRanger()"
+        />
+      </div>
     </section>
   </div>
 

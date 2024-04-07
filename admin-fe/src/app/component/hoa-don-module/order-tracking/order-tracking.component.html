@@ -135,7 +135,10 @@
               <tbody>
                 <tr
                   class=""
-                  *ngFor="let lshd of hoaDon.lichSuHoaDons; index as i"
+                  *ngFor="
+                    let lshd of getLichSuHoaDonsOrderByCreatedDate();
+                    index as i
+                  "
                 >
                   <td>{{ i + 1 }}</td>
                   <td>{{ lshd.tieuDe }}</td>

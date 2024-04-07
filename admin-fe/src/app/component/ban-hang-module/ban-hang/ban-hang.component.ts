@@ -114,7 +114,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   deleteOrder(index: number) {
     if (this.order.hoaDonChiTiets.length > 0) {
       Swal.fire({
-        text: "Bạn có muốn xóa đơn hàng này không ?",
+        text: "Đơn hàng này đã có sản phẩm. Bạn có muốn xóa không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -188,7 +188,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   getAllSpct() {
-    this.spctService.getAll(1, 15, this.searchProduct).subscribe({
+    this.spctService.getAll(1, 15, this.searchProduct.trim()).subscribe({
       next: (resp) => {
         this.spcts = resp.data;
       },
@@ -198,12 +198,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
     });
   }
   getAllKhachHang() {
-    this.khachHangService.getAllActive(1, 10, this.searchKhachHang).subscribe({
-      next: (resp: PagedResponse<KhachHang>) => {
-        this.khachHangs = resp.data;
-      },
-      error: (err) => console.log(err),
-    });
+    this.khachHangService
+      .getAllActive(1, 10, this.searchKhachHang.trim())
+      .subscribe({
+        next: (resp: PagedResponse<KhachHang>) => {
+          this.khachHangs = resp.data;
+        },
+        error: (err) => console.log(err),
+      });
   }
 
   getPhieuGiamGia() {
@@ -319,6 +321,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
       : 0;
   }
   getMustPay(): number {
+    // tiền khách phải trả
     // let total = this.banHangService.getMustPay(this.order);
     return this.banHangService.getMustPay(this.order);
   }
@@ -326,7 +329,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   muaHang() {
     if (this.order.loaiHoaDon == "TAI_QUAY") {
       // kiểm tra khach thanh toán đủ chưa
-      if (this.getTienKhachConThieu() == 0) {
+      if (this.getTienKhachThanhToan() == this.getMustPay()) {
         // xác thanh toán
         let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(
           this.order,
@@ -357,45 +360,17 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
 
   async datHang() {
-    console.log(this.order);
+    if (this.getTienKhachThanhToan() > this.getMustPay()) {
+      this.notification.error("Tiền khách thanh toán không hợp lệ");
+      return;
+    }
 
     if (this.order.loaiHoaDon == "GIAO_HANG") {
-      let regex = new RegExp("^(0[3|5|7|8|9])+([0-9]{8})\\b$");
-
-      if (
-        this.order.tenNguoiNhan == null ||
-        this.order.tenNguoiNhan == undefined
-      ) {
-        this.notification.warning("Bạn chưa nhập tên người nhận");
-        return;
-      }
-      if (
-        this.order.sdtNguoiNhan == null ||
-        this.order.sdtNguoiNhan == undefined
-      ) {
-        this.notification.warning("Bạn chưa nhập số điện thoại người nhận");
-        return;
-      }
-      if (!regex.test(this.order.sdtNguoiNhan)) {
-        this.notification.warning("Số điện thoại người nhận không hợp lệ");
-        return;
-      }
-      if (
-        this.order.diaChiNguoiNhan == null ||
-        this.order.diaChiNguoiNhan == undefined
-      ) {
-        this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
-        return;
-      }
-      let diaChis = this.order.diaChiNguoiNhan.split(",");
-      if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
-        this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
-        return;
-      }
       let hoaDonRequest = this.hoaDonService.mapToHoaDonRequest(
         this.order,
         this.diaChiVaPhiVanChuyen
       );
+
       this.hoaDonService.placeOrder(hoaDonRequest).subscribe({
         next: (resp: HoaDon) => {
           // console.log(resp);
@@ -412,7 +387,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
           this.notification.error(err.error.message);
         },
       });
-      // console.log(hoaDonRequest);
     }
   }
 
@@ -496,5 +470,44 @@ export class BanHangComponent implements OnInit, OnDestroy {
   // Để đóng modal
   closeModal(idModal: string): void {
     document.getElementById(idModal).click();
+  }
+
+  validateThongTinNhanHang() {
+    let regex = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
+
+    if (
+      this.order.tenNguoiNhan == null ||
+      this.order.tenNguoiNhan == undefined ||
+      this.order.tenNguoiNhan.trim() == ""
+    ) {
+      this.notification.warning("Bạn chưa nhập tên người nhận");
+      return;
+    }
+    if (
+      this.order.sdtNguoiNhan == null ||
+      this.order.sdtNguoiNhan == undefined ||
+      this.order.sdtNguoiNhan.trim() == ""
+    ) {
+      this.notification.warning("Bạn chưa nhập số điện thoại người nhận");
+      return;
+    }
+    if (!regex.test(this.order.sdtNguoiNhan)) {
+      this.notification.warning("Số điện thoại người nhận không hợp lệ");
+      return;
+    }
+    if (
+      this.order.diaChiNguoiNhan == null ||
+      this.order.diaChiNguoiNhan == undefined
+    ) {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    let diaChis = this.order.diaChiNguoiNhan.split(",");
+    if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
+      this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
+      return;
+    }
+    let idModal = "closeModalChonDiaChi";
+    this.closeModal(idModal);
   }
 }

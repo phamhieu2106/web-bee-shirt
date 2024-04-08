@@ -129,4 +129,9 @@ public class PhieuGiamGiaResource {
                                                                       @PathVariable("custId") int custId) {
         return ResponseEntity.ok(pggService.getDiscountsForCheckOut(dieuKien, custId));
     }
+
+    @GetMapping("/discount-by-cust/{custId}")
+    public ResponseEntity<List<PhieuGiamGia>> getAllDiscountsOf1Cust(@PathVariable("custId") int custId) {
+        return ResponseEntity.ok(pggService.getAllDiscountsOf1Cust(custId));
+    }
 }

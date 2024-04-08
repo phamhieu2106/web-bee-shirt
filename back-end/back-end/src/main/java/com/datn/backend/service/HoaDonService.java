@@ -12,12 +12,13 @@ import com.datn.backend.model.hoa_don.HoaDon;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author HungDV
  */
 public interface HoaDonService {
-    PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao,String trangThai);
+    PagedResponse<HoaDonResponse> getAll(Pageable pageable, String search, String loaiHoaDon, String ngayTao, String trangThai);
 
     HoaDonResponse getById(Integer id);
 
@@ -34,4 +35,6 @@ public interface HoaDonService {
     String placeOrderOnline(OnlineOrderRequest req);
 
     HoaDonResponse getByCode(String code);
+
+    List<HoaDonResponse> getOrdersForClient(int custId, String orderStatus);
 }

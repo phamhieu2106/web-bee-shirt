@@ -82,6 +82,7 @@ export class CheckoutComponent {
         this.salePrice = this.getSalePrice();
         this.discountPrice = this.getDiscountPrice();
         this.finalPrice = this.getFinalPrice();
+        this.getAllDiscounts();
       }
     );
 
@@ -173,22 +174,21 @@ export class CheckoutComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.addressService
-          .addAddress(this.loggedCust.id, this.addAddressForm.value)
-          .subscribe({
-            next: () => {
-              this.initAddAddressForm();
-              this.notifService.success("Thêm địa chỉ thành công!");
-              this.getAllAddressOfLoggedCust();
-
-              // open/close modal
-              this.isAddAddressModalOpen = false;
-              this.isAddressesModalOpen = true;
-            },
-            error: (errRes: HttpErrorResponse) => {
-              this.notifService.error(errRes.error.message);
-            },
-          });
+        // this.addressService
+        //   .addAddress(this.loggedCust.id, this.addAddressForm.value)
+        //   .subscribe({
+        //     next: () => {
+        //       this.initAddAddressForm();
+        //       this.notifService.success("Thêm địa chỉ thành công!");
+        //       this.getAllAddressOfLoggedCust();
+        //       // open/close modal
+        //       this.isAddAddressModalOpen = false;
+        //       this.isAddressesModalOpen = true;
+        //     },
+        //     error: (errRes: HttpErrorResponse) => {
+        //       this.notifService.error(errRes.error.message);
+        //     },
+        //   });
       }
     });
   }
@@ -350,7 +350,7 @@ export class CheckoutComponent {
     } else {
       return ` Giảm ${this.formatPrice(
         discount?.giaTri
-      )}k cho đơn  từ ${this.formatPrice(discount?.dieuKienGiam)}`;
+      )} cho đơn  từ ${this.formatPrice(discount?.dieuKienGiam)}`;
     }
   }
 

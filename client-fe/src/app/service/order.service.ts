@@ -25,4 +25,14 @@ export class OrderService {
   public getByCode(code: number): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/get-by-code/${code}`);
   }
+
+  // 3
+  public getOrdersForClient(
+    custId: number,
+    status: string
+  ): Observable<Order[]> {
+    return this.http.get<Order[]>(
+      `${this.apiUrl}/all-orders/${custId}/${status}`
+    );
+  }
 }

@@ -542,4 +542,15 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Hóa đơn mã: " + code + " không tồn tại."));
         return mapToHoaDonResponse(order);
     }
+
+    @Override
+    public List<HoaDonResponse> getOrdersForClient(int custId, String orderStatus) {
+        orderStatus = orderStatus.equals("ALL") ? "" : orderStatus;
+        List<HoaDon> hoaDonList = hoaDonRepo.getOrdersForClient(custId, orderStatus);
+        List<HoaDonResponse> result = new ArrayList<>();
+        for (HoaDon hd : hoaDonList) {
+            result.add(mapToHoaDonResponse(hd));
+        }
+        return result;
+    }
 }

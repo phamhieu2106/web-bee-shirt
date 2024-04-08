@@ -1,5 +1,6 @@
 package com.datn.backend.resource;
 
+import com.datn.backend.dto.request.AddAddressReq;
 import com.datn.backend.dto.request.DiaChiRequest;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
@@ -84,8 +85,15 @@ public class DiaChiResource {
     public ResponseEntity<DiaChi> deleteDC(@PathVariable("id") int id) {
         return ResponseEntity.ok(diaChiService.deleteDC(id));
     }
+
+    // client resources
     @PostMapping("/set-default/{id}")
     public ResponseEntity<DiaChi> setDefaultAddress(@PathVariable int id) {
         return ResponseEntity.ok(diaChiService.setDefault(id));
+    }
+
+    @PostMapping("/client/add")
+    public ResponseEntity<DiaChi> addAddress(@RequestBody AddAddressReq req) {
+        return ResponseEntity.ok(diaChiService.addAddress(req));
     }
 }

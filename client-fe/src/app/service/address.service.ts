@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { Address } from "../model/class/address.class";
+import { AddAddressReq } from "../model/interface/add-address-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -28,7 +29,7 @@ export class AddressService {
   }
 
   // 3
-  public addAddress(idKh: number, dc: Address): Observable<Address> {
-    return this.http.post<Address>(`${this.apiUrl}/add/${idKh}`, dc);
+  public addAddress(req: AddAddressReq): Observable<Address> {
+    return this.http.post<Address>(`${this.apiUrl}/client/add`, req);
   }
 }

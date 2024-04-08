@@ -1,10 +1,10 @@
 export class DiaChiVaPhiVanChuyen {
   tinh: string = null;
-  tinhId: number;
+  tinhId: number = -1;
   huyen: string = null;
-  huyenId: number;
+  huyenId: number = -1;
   xa: string = null;
-  xaCode: string;
+  xaCode: string = "";
   cuThe: string;
   duKien: Date;
   phiVanChuyen: number = 0;

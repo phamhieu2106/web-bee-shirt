@@ -1,5 +1,6 @@
 package com.datn.backend.service;
 
+import com.datn.backend.dto.request.AddAddressReq;
 import com.datn.backend.model.khach_hang.DiaChi;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface DiaChiService {
     DiaChi deleteDC(int id);
 
     DiaChi setDefault(int id);
+
+    DiaChi addAddress(AddAddressReq req);
 }

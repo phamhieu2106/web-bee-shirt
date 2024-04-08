@@ -2,7 +2,6 @@ package com.datn.backend.model.khach_hang;
 
 import com.datn.backend.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,13 +11,15 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
 public class DiaChi extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String hoTen;
+    private String sdt;
     private String tinh;
     private String huyen;
     private String xa;

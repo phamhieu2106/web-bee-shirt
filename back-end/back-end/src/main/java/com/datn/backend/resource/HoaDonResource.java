@@ -9,7 +9,6 @@ import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
-import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author HungDV
@@ -101,5 +102,11 @@ public class HoaDonResource {
     @GetMapping("/get-by-code/{code}")
     public ResponseEntity<HoaDonResponse> getByCode(@PathVariable("code") String code) {
         return ResponseEntity.ok(hoaDonService.getByCode(code));
+    }
+
+    @GetMapping("/all-orders/{custId}/{orderStatus}")
+    public ResponseEntity<List<HoaDonResponse>> getOrdersForClient(@PathVariable("custId") int custId,
+                                                                   @PathVariable("orderStatus") String orderStatus) {
+        return ResponseEntity.ok(hoaDonService.getOrdersForClient(custId, orderStatus));
     }
 }

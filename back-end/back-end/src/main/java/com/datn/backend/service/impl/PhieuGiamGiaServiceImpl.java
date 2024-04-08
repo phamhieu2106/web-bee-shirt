@@ -379,4 +379,9 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
     public List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal priceCondition, int customerId) {
         return pggRepo.getDiscountsForCheckOut(priceCondition, customerId);
     }
+
+    @Override
+    public List<PhieuGiamGia> getAllDiscountsOf1Cust(int custId) {
+        return pggRepo.getAllDiscountsOf1Cust(custId);
+    }
 }

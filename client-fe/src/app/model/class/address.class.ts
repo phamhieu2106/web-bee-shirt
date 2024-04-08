@@ -2,6 +2,8 @@ import { Customer } from "./customer.class";
 
 export class Address {
   id: number;
+  hoTen: string;
+  sdt: string;
   tinh: number;
   huyen: string;
   xa: string;

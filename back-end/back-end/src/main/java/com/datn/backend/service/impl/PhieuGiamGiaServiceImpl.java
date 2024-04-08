@@ -202,7 +202,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
 
     @Override
     public List<PhieuGiamGia> getAll() {
-        return pggRepo.findAll();
+        return pggRepo.findAllBySoLuongGreaterThanAndTrangThaiIs(0,"Đang diễn ra");
     }
 
 

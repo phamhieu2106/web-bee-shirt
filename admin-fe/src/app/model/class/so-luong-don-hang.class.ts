@@ -5,4 +5,5 @@ export class SoLuongDonHang {
   dangGiaoQuantity: number;
   hoanThanhQuantity: number;
   huyQuantity: number;
+  traHangQuantity: number;
 }

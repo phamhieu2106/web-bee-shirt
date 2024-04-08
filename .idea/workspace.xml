@@ -11,13 +11,31 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
+<<<<<<< HEAD
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2bUoRZAUkXeRqLNsuATTJM1aLeN" />
+=======
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2emWVEc0FcLox7WlLQjHj8MXFBe" />
+>>>>>>> master
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "phamhieu",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Workspaces/DATN-FPTPoly/bee-shirt/back-end",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -27,6 +45,7 @@
     &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep/bee-shirt&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+>>>>>>> master
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -36,9 +55,15 @@
       <created>1712510255859</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
+<<<<<<< HEAD
+      <updated>1706279011408</updated>
+      <workItem from="1706279012975" duration="1000" />
+      <workItem from="1712382488543" duration="17000" />
+=======
       <updated>1712510255859</updated>
       <workItem from="1712510256978" duration="4000" />
       <workItem from="1712510272570" duration="3000" />
+>>>>>>> master
     </task>
     <servers />
   </component>

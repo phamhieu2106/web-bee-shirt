@@ -33,4 +33,11 @@ public interface SanPhamRepository2 extends JpaRepository<SanPham, Integer> {
                  AND sp.id = :id ;
             """, nativeQuery = true)
     List<ProductDiscountSummaryResponse> getProductDiscountSummary(@Param("id") Integer id);
+
+    @Query("""
+       SELECT sp FROM SanPhamChiTiet spct
+       LEFT JOIN SanPham sp ON sp.id = spct.sanPham.id
+       WHERE spct.id = :id
+""")
+    SanPham getNameBuySanPhamChiTietId(int id);
 }

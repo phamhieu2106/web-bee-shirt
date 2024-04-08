@@ -189,12 +189,13 @@ export class FormComponent implements OnInit {
   public handleSubmit = async () => {
     if (this.typeForm === "add") {
       Swal.fire({
-        toast: true,
-        title: "Bạn có chắc chắn muốn thêm Đợt Giảm Giá Mới?",
+        title: "Bạn có chắc chắn thêm Đợt Giảm Giá mới?",
+        cancelButtonText: "Hủy",
         icon: "info",
-        position: "top",
         showCancelButton: true,
         confirmButtonColor: "#32ba7c",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Thêm",
       }).then((result) => {
         if (result.isConfirmed) {
           this.setDotGiamGiaRequest();
@@ -239,12 +240,13 @@ export class FormComponent implements OnInit {
       });
     } else if (this.typeForm === "update") {
       Swal.fire({
-        toast: true,
         title: "Bạn có chắc chắn muốn cập nhật Đợt Giảm Giá này?",
+        cancelButtonText: "Hủy",
         icon: "info",
-        position: "top",
         showCancelButton: true,
         confirmButtonColor: "#32ba7c",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Cập nhật",
       }).then((result) => {
         if (result.isConfirmed) {
           this.setDotGiamGiaRequest();

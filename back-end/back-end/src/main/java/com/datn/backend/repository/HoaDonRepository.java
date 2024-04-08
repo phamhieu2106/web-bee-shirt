@@ -47,7 +47,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
               COUNT(CASE WHEN hd.trangThai = 'CHO_GIAO' THEN 1 END),
                COUNT(CASE WHEN hd.trangThai = 'DANG_GIAO' THEN 1 END),
               COUNT(CASE WHEN hd.trangThai = 'HOAN_THANH' THEN 1 END),
-               COUNT(CASE WHEN hd.trangThai = 'HUY' THEN 1 END))
+               COUNT(CASE WHEN hd.trangThai = 'HUY' THEN 1 END),
+               COUNT(CASE WHEN hd.trangThai = 'TRA_HANG' THEN 1 END))
             FROM
               HoaDon hd
             """)

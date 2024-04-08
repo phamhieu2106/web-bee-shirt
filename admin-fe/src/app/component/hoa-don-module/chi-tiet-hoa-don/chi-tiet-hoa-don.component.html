@@ -17,10 +17,18 @@
     </button>
     <button
       type="button"
+      class="btn btn-primary btn-lg mr-3 border-1"
+      (click)="printHoaDonTraHang()"
+      *ngIf="hoaDon.trangThai == 'TRA_HANG'"
+    >
+      In Hoá Đơn Trả Hàng
+    </button>
+    <button
+      type="button"
       class="btn btn-primary btn-lg mr-1 border-1"
       (click)="printHoaDon()"
     >
-      In hóa đơn
+      In Hoá Đơn
     </button>
   </div>
 </div>

@@ -6,13 +6,14 @@ import { HoaDon } from "../model/class/hoa-don.class";
 import { HoaDonTraHangRequest } from "../model/class/hoa-don-tra-hang-request";
 import { HoaDonTraHang } from "../model/class/hoa-don-tra-hang";
 import { HoaDonRequest } from "../model/class/hoa-don-request.class";
+import { SanPham } from "../model/class/san-pham.class";
 
 @Injectable({
   providedIn: "root",
 })
 export class TraHangService {
   private readonly apiUrl = "http://localhost:8080/tra-hang";
-
+  private readonly apiSPUrl = "http://localhost:8080/san-pham";
   constructor(private https: HttpClient) {}
 
   public getHoaDon(ma: string): Observable<HoaDon> {
@@ -54,6 +55,16 @@ export class TraHangService {
     return this.https.post<HoaDon>(
       this.apiUrl + "/place-order-tra-hang",
       hoaDonRequest
+    );
+  }
+
+  public getName(id: number): Observable<SanPham> {
+    return this.https.get<SanPham>(`${this.apiSPUrl}/nameItem?id=${id}`);
+  }
+
+  public getHoaDonTraHang(id: number): Observable<HoaDonTraHang> {
+    return this.https.get<HoaDonTraHang>(
+      `${this.apiUrl}/tim-hoa-don-tra-hang?id=${id}`
     );
   }
 }

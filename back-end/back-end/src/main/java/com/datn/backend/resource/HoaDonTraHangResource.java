@@ -4,6 +4,7 @@ import com.datn.backend.dto.request.ChangeOrderStatusRequest;
 import com.datn.backend.dto.request.HoaDonTraHangRequest;
 import com.datn.backend.dto.request.PlaceOrderRequest;
 import com.datn.backend.dto.response.HoaDonResponse;
+import com.datn.backend.dto.response.HoaDonTraHangResponse;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.hoa_don.HoaDonTraHang;
 import com.datn.backend.service.HoaDonTraHangService;
@@ -33,6 +34,13 @@ public class HoaDonTraHangResource {
         return ResponseEntity.ok(hoaDonTraHangService.getHoaDonByMa(ma.trim()));
     }
 
+    @GetMapping("/tim-hoa-don-tra-hang")
+    public ResponseEntity<HoaDonTraHangResponse> timHoaDon(
+            @RequestParam("id") Integer id
+    ) {
+        return ResponseEntity.ok(hoaDonTraHangService.getByIdHoaDon(id));
+    }
+
     @GetMapping("/danh-sach-san-pham")
     public ResponseEntity<List<SpctResponse>> getDanhSachSanPham(
             @RequestParam("id") Integer idHoaDon
@@ -53,19 +61,14 @@ public class HoaDonTraHangResource {
     }
 
     @PostMapping("/tao-hoa-don-tra-hang")
-    public ResponseEntity<HoaDonTraHang> taoHoaDonTraHang(@Valid @RequestBody HoaDonTraHangRequest hoaDonTraHangRequest) {
-        return ResponseEntity.ok(hoaDonTraHangService.add(hoaDonTraHangRequest));
+    public ResponseEntity<HoaDonTraHangResponse> taoHoaDonTraHang(@Valid @RequestBody HoaDonTraHangRequest hoaDonTraHangRequest) {
+        HoaDonTraHangResponse hoaDonTraHangResponse = hoaDonTraHangService.add(hoaDonTraHangRequest);
+        return ResponseEntity.ok(hoaDonTraHangResponse);
     }
 
     @PostMapping("/place-order-tra-hang")
     public ResponseEntity<HoaDonResponse> placeOrderTraHang(@Valid @RequestBody PlaceOrderRequest placeOrderRequest) {
-
-        try {
             HoaDonResponse hoaDonResponse = hoaDonTraHangService.placeOrderTraHang(placeOrderRequest);
             return ResponseEntity.ok(hoaDonResponse);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 }

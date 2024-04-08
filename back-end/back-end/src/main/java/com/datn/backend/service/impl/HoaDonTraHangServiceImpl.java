@@ -2,6 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.*;
 import com.datn.backend.dto.response.HoaDonResponse;
+import com.datn.backend.dto.response.HoaDonTraHangResponse;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.enumeration.LoaiHinhThuc;
 import com.datn.backend.enumeration.LoaiHoaDon;
@@ -67,7 +68,7 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
     }
 
     @Override
-    public HoaDonTraHang add(HoaDonTraHangRequest hoaDonTraHangRequest) {
+    public HoaDonTraHangResponse add(HoaDonTraHangRequest hoaDonTraHangRequest) {
 
         HoaDonTraHang hoaDon = HoaDonTraHang.builder()
                 .ma(generateMaHoaDonTraHang())
@@ -81,7 +82,8 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                 .build();
         HoaDonTraHang newHoaDonTraHang = hoaDonTraHangModelRepository.save(hoaDon);
         newHoaDonTraHang.setHoaDonChiTiets(this.mapToHoaDonChiTietTraHang(hoaDonTraHangRequest.getHoaDonChiTiets(), newHoaDonTraHang));
-        return newHoaDonTraHang;
+
+        return modelMapper.map(newHoaDonTraHang,HoaDonTraHangResponse.class);
     }
 
     @Override
@@ -155,6 +157,16 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                 .build();
         lichSuHoaDonRepository.save(lichSuHoaDon);
         return modelMapper.map(hoaDonUpdate, HoaDonResponse.class);
+    }
+
+    @Override
+    public HoaDonTraHangResponse getByIdHoaDon(Integer id) {
+        Optional<HoaDonTraHang> optional = hoaDonTraHangModelRepository.findByHoaDonId(id);
+        if(optional.isPresent()){
+            HoaDonTraHang hoaDonTraHang = optional.get();
+            return modelMapper.map(hoaDonTraHang,HoaDonTraHangResponse.class);
+        }
+        return null;
     }
 
     private HoaDon createHoaDonTraHangTaiQuay(PlaceOrderRequest placeOrderRequest) {

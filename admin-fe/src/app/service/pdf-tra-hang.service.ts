@@ -3,11 +3,13 @@ import { TDocumentDefinitions } from "pdfmake/interfaces";
 import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
 import * as pdfMake from "pdfmake/build/pdfmake";
 import { HoaDonTraHang } from "../model/class/hoa-don-tra-hang";
+import { TraHangService } from "./tra-hang.service";
+import { firstValueFrom } from "rxjs";
 @Injectable({
   providedIn: "root",
 })
 export class PdfTraHangService {
-  constructor() {}
+  constructor(private traHangService: TraHangService) {}
   storeInfo = {
     name: "Bee-Shirt",
     sdt: "0123456789",
@@ -15,17 +17,20 @@ export class PdfTraHangService {
     address:
       "Tòa nhà FPT Polytechnic, Phố Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội",
   };
-  public generatePDFHoaDon(hoaDon: HoaDonTraHang) {
-    let hdcts = hoaDon?.hoaDonChiTiets?.map((hdct, index) => {
-      let hdctNew = [
-        index + 1 + "",
-        `${hdct.sanPhamChiTiet?.sanPham?.ten} \n ${hdct.sanPhamChiTiet?.kichCo?.ten} - ${hdct.sanPhamChiTiet?.mauSac?.ten}`,
-        hdct.soLuong.toString(),
-        this.convertToVND(hdct.giaBan),
-        this.convertToVND(hdct.giaBan * hdct.soLuong),
-      ];
-      return hdctNew;
-    });
+  public async generatePDFHoaDon(hoaDon: HoaDonTraHang) {
+    let hdcts = await Promise.all(
+      hoaDon?.hoaDonChiTiets?.map(async (hdct, index) => {
+        const nameSP: string = await this.getNameSP(hdct.sanPhamChiTiet.id);
+        let hdctNew = [
+          index + 1 + "",
+          `${nameSP} \n ${hdct.sanPhamChiTiet?.kichCo?.ten} - ${hdct.sanPhamChiTiet?.mauSac?.ten}`,
+          hdct.soLuong.toString(),
+          this.convertToVND(hdct.giaBan),
+          this.convertToVND(hdct.giaBan * hdct.soLuong),
+        ];
+        return hdctNew;
+      })
+    );
     let dd: TDocumentDefinitions = {
       content: [
         {
@@ -162,7 +167,7 @@ export class PdfTraHangService {
           columns: [
             { qr: `${hoaDon.ma}`, alignment: "center" }, // QR code
             {
-              text: "Chữ ký người nhận\n(Xác nhận hàng nguyên vẹn, không móp/méo)",
+              text: "Chữ ký người nhận",
               alignment: "center",
             }, // Chữ ký
           ],
@@ -208,5 +213,19 @@ export class PdfTraHangService {
     });
     // console.log(body);
     return body;
+  }
+
+  private async getNameSP(id: number): Promise<string> {
+    let name = null;
+    const value = await firstValueFrom(this.traHangService.getName(id));
+    name = value.ten;
+    return name;
+  }
+
+  public async getHoaDonTraHang(id: number): Promise<void> {
+    const value = await firstValueFrom(
+      this.traHangService.getHoaDonTraHang(id)
+    );
+    this.generatePDFHoaDon(value);
   }
 }

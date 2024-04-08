@@ -78,6 +78,10 @@ export class ChiTietHoaDonComponent {
       this.hoaDon.hoaDonChiTiets.forEach((item) => this.listOfData.push(item));
       this.cdr.detectChanges();
     }
+
+    if (this.newAmount) {
+      this.getPhieuGiamGiaTotNhat();
+    }
   }
   // End Constructor Component
 
@@ -305,7 +309,10 @@ export class ChiTietHoaDonComponent {
         // best voucher
         if (this.bestVoucher) {
           this.discountMoney = maxDiscount;
-          this.amountOfMoneyReturn = this.oldAmount - this.newAmount;
+          this.amountOfMoneyReturn =
+            this.oldAmount - this.newAmount === 0
+              ? 0
+              : this.oldAmount - this.newAmount;
         }
       },
       error: (error) => {
@@ -504,10 +511,9 @@ export class ChiTietHoaDonComponent {
     return true;
   }
   private handleCreateHoaDonTraHang(): boolean {
-    console.log(this.hoaDonTraHangRequest);
     this.traHangService.handleTaoHoaDon(this.hoaDonTraHangRequest).subscribe({
-      next: async (resp) => {
-        await this.pdfTraHangService.generatePDFHoaDon(resp);
+      next: (resp) => {
+        this.pdfTraHangService.generatePDFHoaDon(resp);
       },
       error: (err) => {
         console.log(err.message);

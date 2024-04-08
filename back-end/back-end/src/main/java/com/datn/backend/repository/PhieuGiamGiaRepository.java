@@ -130,4 +130,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    """, nativeQuery = true)
     boolean checkPrivateDiscountUsedOrNot(@Param("discountId") int discountId,
                                           @Param("customerId") int customerId);
+
+
+    List<PhieuGiamGia> findAllBySoLuongGreaterThanAndTrangThaiIs(int soLuong,String trangThai);
 }

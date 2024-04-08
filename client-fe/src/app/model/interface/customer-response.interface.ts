@@ -1,4 +1,4 @@
-export interface KhachHangResponse {
+export interface CustomerResponse {
   id: number;
   gioiTinh: boolean;
   trangThai: number;

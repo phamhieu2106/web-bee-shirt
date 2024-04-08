@@ -1,0 +1,107 @@
+.wrapperChucNang {
+  border: 1px solid #b9b9b9;
+  border-radius: 5px;
+}
+
+.imgCustomer {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border: 3px solid #ffc700;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.info {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgCustomer img {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+
+.nameCustomer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nameCustomer span {
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.listChucNang {
+  list-style: none;
+  padding: 0;
+}
+
+.itemChucNang {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding-left: 5px;
+}
+
+/* .itemChucNang:hover {
+  background-color: rgb(214, 214, 214);
+  border-radius: 5px;
+} */
+
+.itemChucNang  {
+ 
+  color: black;
+ 
+  font-size: 16px;
+}
+
+
+.itemChucNang i {
+  font-size: 25px;
+  margin-right: 5px;
+}
+
+.chiTieu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: black;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 80px;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 15px 0;
+}
+
+.chiTieu div {
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+}
+.daMua,
+.spDaMua {
+  text-align: end;
+}
+
+.wrapperTaiKhoan {
+  border: 1px solid #b9b9b9;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.active {
+  background-color: #000000;
+ color: white;
+}
+

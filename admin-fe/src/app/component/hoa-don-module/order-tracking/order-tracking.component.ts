@@ -134,4 +134,8 @@ export class OrderTrackingComponent {
     }
     return this.hoaDon.lichSuHoaDons.filter((lshd) => lshd.trangThai != null);
   }
+
+  getLichSuHoaDonsOrderByCreatedDate() {
+    return this.hoaDon.lichSuHoaDons.reverse();
+  }
 }

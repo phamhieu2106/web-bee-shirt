@@ -1,7 +1,7 @@
 import { Customer } from "./customer.class";
 import { Discount } from "./discount.class";
 import { OrderDetails } from "./order-details.class";
-import { OrderHistory } from "../interface/response/order-history-resp.interface";
+import { OrderHistory } from "./order-history.class";
 
 export class Order {
   id: number;

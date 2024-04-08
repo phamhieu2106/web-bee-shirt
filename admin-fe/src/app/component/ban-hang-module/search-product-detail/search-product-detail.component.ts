@@ -151,7 +151,7 @@ export class SearchProductDetailComponent {
     this.spctService
       .getAllDetail(
         this.pageNumber,
-        this.search,
+        this.search.trim(),
         this.mauSac,
         this.kichCo,
         this.kieuDang,

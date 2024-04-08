@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 })
 export class InputNumberComponent {
   @Input({ required: true }) value: number;
+  @Output() change = new EventEmitter();
   @Output() valueChange: EventEmitter<number> = new EventEmitter<number>();
 
   inputValue: number;

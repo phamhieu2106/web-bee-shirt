@@ -70,7 +70,8 @@ export class OrderProductComponent {
     );
   }
 
-  onPhiVanChuyenChange() {
+  onPhiVanChuyenChange(value: number) {
+    this.hoaDon.phiVanChuyen = value;
     this.hoaDonChange.emit(this.hoaDon);
   }
   plus(hdct: any) {

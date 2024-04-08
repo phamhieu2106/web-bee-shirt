@@ -130,6 +130,26 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    """, nativeQuery = true)
     boolean checkPrivateDiscountUsedOrNot(@Param("discountId") int discountId,
                                           @Param("customerId") int customerId);
+    @Query("""
+            select CASE WHEN COUNT(hd) > 0 THEN true ELSE false END
+            from HoaDon hd
+            where hd.phieuGiamGia.id = :discountId
+            and hd.khachHang.id = :customerId
+            """)
+    Boolean isDiscountUsedByCustomerId(Integer discountId,Integer customerId);
+
+    @Query(value = """
+                   SELECT pgg.id, pgg.ma_phieu_giam_gia, pgg.ten_phieu_giam_gia, pgg.kieu, pgg.loai, pgg.gia_tri,
+                          pgg.gia_tri_max, pgg.dieu_kien_giam, pgg.so_luong, pgg.thoi_gian_bat_dau, pgg.thoi_gian_ket_thuc, pgg.trang_thai,
+                          pgg.created_at, pgg.created_by, pgg.updated_at, pgg.last_updated_by
+                   FROM phieu_giam_gia pgg
+                   LEFT JOIN phieu_giam_gia_kh pgg_kh ON pgg.id = pgg_kh.phieu_giam_gia_id
+                   AND (pgg_kh.khach_hang_id IS NULL OR pgg_kh.khach_hang_id = :custId)
+                   AND (CURRENT_TIMESTAMP() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc)
+                   AND pgg.so_luong > 0
+                   AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)
+                   """, nativeQuery = true)
+    List<PhieuGiamGia> getAllDiscountsOf1Cust(@Param("custId") int custId);
 
 
     List<PhieuGiamGia> findAllBySoLuongGreaterThanAndTrangThaiIs(int soLuong,String trangThai);

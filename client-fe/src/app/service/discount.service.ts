@@ -23,4 +23,11 @@ export class DiscountService {
       `${this.apiUrl}/discount-for-checkout/${priceCondition}/${custId}`
     );
   }
+
+  // 2
+  public getAllDiscountsOf1Cust(custId: number): Observable<Discount[]> {
+    return this.http.get<Discount[]>(
+      `${this.apiUrl}/discount-by-cust/${custId}`
+    );
+  }
 }

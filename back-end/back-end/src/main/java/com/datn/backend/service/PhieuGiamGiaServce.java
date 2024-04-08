@@ -32,4 +32,6 @@ public interface PhieuGiamGiaServce {
     DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest);
 
     List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId);
+
+    List<PhieuGiamGia> getAllDiscountsOf1Cust(int custId);
 }

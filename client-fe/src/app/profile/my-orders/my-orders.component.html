@@ -1,2 +1,105 @@
-<app-profile-sidebar></app-profile-sidebar>
-<p>my-orders works!</p>
+<div class="container mb-5 mt-5">
+  <div class="row">
+    <div class="wrapperChucNang col-md-3">
+      <app-profile-sidebar></app-profile-sidebar>
+    </div>
+
+    <div class="wrapperTaiKhoan col-md-8">
+     
+      <div class="tab mt-3 rounded row mx-1">
+        
+        <button
+          [ngClass]="orderStatus === 'ALL' ? 'col btn btn-success' : 'col btn'"
+          (click)="getOrdersByStatus('ALL')"
+        >
+          Tất cả
+        </button>
+        <button
+          [ngClass]="
+            orderStatus === 'CHO_XAC_NHAN' ? 'col btn btn-success' : 'col btn'
+          "
+          (click)="getOrdersByStatus('CHO_XAC_NHAN')"
+        >
+          Chờ xác nhận
+        </button>
+        <button
+          [ngClass]="
+            orderStatus === 'DA_XAC_NHAN' ? 'col btn btn-success' : 'col btn'
+          "
+          (click)="getOrdersByStatus('DA_XAC_NHAN')"
+        >
+          Đã xác nhận
+        </button>
+        <button
+          [ngClass]="
+            orderStatus === 'CHO_GIAO' ? 'col btn btn-success' : 'col btn'
+          "
+          (click)="getOrdersByStatus('CHO_GIAO')"
+        >
+          Chờ giao
+        </button>
+        <button
+          [ngClass]="
+            orderStatus === 'DANG_GIAO' ? 'col btn btn-success' : 'col btn'
+          "
+          (click)="getOrdersByStatus('DANG_GIAO')"
+        >
+          Đang giao
+        </button>
+        <button
+          [ngClass]="
+            orderStatus === 'HOAN_THANH' ? 'col btn btn-success' : 'col btn'
+          "
+          (click)="getOrdersByStatus('HOAN_THANH')"
+        >
+          Hoàn Thành
+        </button>
+        <button
+          [ngClass]="orderStatus === 'HUY' ? 'col btn btn-success' : 'col btn'"
+          (click)="getOrdersByStatus('HUY')"
+        >
+          Đã hủy
+        </button>
+      </div>
+
+      <div *ngIf="orders.length > 0">
+        <div class="order-items" *ngFor="let o of orders">
+          <div class="order-item">
+            <div class="order-item-row">
+              <div class="label">Mã đơn</div>
+              <div class="value">{{ o.ma }}</div>
+            </div>
+            <div class="order-item-row">
+              <div class="label">Ngày đặt hàng</div>
+              <div class="value">
+                {{ o.createdAt | date : "HH:mm dd-MM-yyyy" }}
+              </div>
+            </div>
+            <div class="order-item-row">
+              <div class="label">Số lượng</div>
+              <div class="value">{{ o.hoaDonChiTiets.length }}</div>
+            </div>
+            <div class="order-item-row">
+              <div class="label">Tổng tiền</div>
+              <div class="value">{{ formatPrice(o.tongTien) }}</div>
+            </div>
+            <div class="order-item-bottom">
+              <button [ngClass]="getClassByOrderStatus(o.trangThai)">
+                {{ formatOrderStatus(o.trangThai) }}
+              </button>
+              <div class="viewmore">
+                <a [routerLink]="'/profile/order-tracking/' + o.ma">
+                  Chi tiết
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center pt-5" *ngIf="orders.length === 0">
+        <i>Không có dữ liệu</i>
+      </div>
+    </div>
+  </div>
+</div>

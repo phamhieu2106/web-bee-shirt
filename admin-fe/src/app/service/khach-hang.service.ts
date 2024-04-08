@@ -47,6 +47,7 @@ export class KhachHangService {
     return this.http.post<KhachHangResponse>(`${this.apiUrl}/add-kh`, formData);
   }
   public addQuick(khachHang: KhachHangResponse): Observable<KhachHang> {
+    khachHang.hoTen = khachHang.hoTen.trim();
     return this.http.post<KhachHang>(`${this.apiUrl}/add-quick`, khachHang);
   }
 

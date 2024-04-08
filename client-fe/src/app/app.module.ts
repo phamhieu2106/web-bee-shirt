@@ -17,8 +17,6 @@ import { PhieuGiamGiaComponent } from "./component/phieu-giam-gia/phieu-giam-gia
 import { DotGiamGiaComponent } from "./component/dot-giam-gia/dot-giam-gia.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
-import { TaiKhoanComponent } from "./component/tai-khoan/tai-khoan.component";
-import { KhachHangComponent } from "./component/tai-khoan/khach-hang/khach-hang.component";
 import { LoginComponent } from "./components/log-in/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
@@ -38,8 +36,6 @@ import { ProfileModule } from "./profile/profile.module";
     DotGiamGiaComponent,
     SanPhamChiTietComponent,
     SanPhamComponent,
-    TaiKhoanComponent,
-    KhachHangComponent,
     LoginComponent,
     CheckoutComponent,
     SignUpComponent,

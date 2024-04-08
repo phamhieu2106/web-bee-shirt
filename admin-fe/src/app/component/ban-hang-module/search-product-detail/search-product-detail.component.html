@@ -12,29 +12,31 @@
 
   <!-- Price range -->
   <div class="col-6 d-flex">
-    <section class="range-slider row">
+    <section class="range-slider row ml-5 mr-5">
       <div class="col-6 text-left">
         {{ minValue | currency : "đ " : "symbol" : "1.0-0" }}
       </div>
       <div class="col-6 text-right">
         {{ maxValue | currency : "đ " : "symbol" : "1.0-0" }}
       </div>
-      <input
-        [(ngModel)]="minValue"
-        [min]="minPrice"
-        [max]="maxPrice"
-        [step]="step"
-        type="range"
-        (change)="validateRanger()"
-      />
-      <input
-        [(ngModel)]="maxValue"
-        [min]="minPrice"
-        [max]="maxPrice"
-        [step]="step"
-        type="range"
-        (change)="validateRanger()"
-      />
+      <div class="col-12">
+        <input
+          [(ngModel)]="minValue"
+          [min]="minPrice"
+          [max]="maxPrice"
+          [step]="step"
+          type="range"
+          (change)="validateRanger()"
+        />
+        <input
+          [(ngModel)]="maxValue"
+          [min]="minPrice"
+          [max]="maxPrice"
+          [step]="step"
+          type="range"
+          (change)="validateRanger()"
+        />
+      </div>
     </section>
   </div>
 
@@ -51,11 +53,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let ms of mauSacs"
-          [value]="ms.ten"
-          selected="{{ ms.ten === mauSac }}"
-        >
+        <option *ngFor="let ms of mauSacs" [value]="ms.ten">
           {{ ms.ten }}
         </option>
       </select>
@@ -70,11 +68,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let kc of kichCos"
-          [value]="kc.ten"
-          selected="{{ kc.ten === kichCo }}"
-        >
+        <option *ngFor="let kc of kichCos" [value]="kc.ten">
           {{ kc.ten }}
         </option>
       </select>
@@ -89,11 +83,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let kd of kieuDangs"
-          [value]="kd.ten"
-          selected="{{ kd.ten === kieuDang }}"
-        >
+        <option *ngFor="let kd of kieuDangs" [value]="kd.ten">
           {{ kd.ten }}
         </option>
       </select>
@@ -108,11 +98,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let tk of thietKes"
-          [value]="tk.ten"
-          selected="{{ tk.ten === thietKe }}"
-        >
+        <option *ngFor="let tk of thietKes" [value]="tk.ten">
           {{ tk.ten }}
         </option>
       </select>
@@ -127,11 +113,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let ta of tayAos"
-          [value]="ta.ten"
-          selected="{{ ta.ten === tayAo }}"
-        >
+        <option *ngFor="let ta of tayAos" [value]="ta.ten">
           {{ ta.ten }}
         </option>
       </select>
@@ -146,11 +128,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let ca of coAos"
-          [value]="ca.ten"
-          selected="{{ ca.ten === coAo }}"
-        >
+        <option *ngFor="let ca of coAos" [value]="ca.ten">
           {{ ca.ten }}
         </option>
       </select>
@@ -165,11 +143,7 @@
         (ngModelChange)="getAllSpct()"
       >
         <option value="">Tất cả</option>
-        <option
-          *ngFor="let cl of chatLieus"
-          [value]="cl.ten"
-          selected="{{ cl.ten === chatLieu }}"
-        >
+        <option *ngFor="let cl of chatLieus" [value]="cl.ten">
           {{ cl.ten }}
         </option>
       </select>

@@ -1,2 +1,83 @@
-<app-profile-sidebar></app-profile-sidebar>
-<p>my-account works!</p>
+<div class="container mb-5 mt-5">
+  <div class="row">
+    <div class="wrapperChucNang col-md-3">
+      <app-profile-sidebar></app-profile-sidebar>
+    </div>
+    <div class="wrapperTaiKhoan col-md-8 p-3">
+      <div>
+        <div>
+          <div class="account-setting-form">
+            <div class="account-page-title">
+              <h1 class="title">Thông tin tài khoản</h1>
+            </div>
+            <form [formGroup]="form">
+              <div class="form-group form-gender">
+                <div class="label">Giới tính</div>
+                <div class="control">
+                  <label for="radio1"
+                    ><input
+                      type="radio"
+                      name="gioiTinh"
+                      id="radio1"
+                      [value]="true"
+                      formControlName="gioiTinh"
+                    />
+                    <span>Nam</span></label
+                  >
+                  <label for="radio2"
+                    ><input
+                      type="radio"
+                      name="gioiTinh"
+                      id="radio2"
+                      [value]="false"
+                      formControlName="gioiTinh"
+                    />
+                    <span>Nữ</span></label
+                  >
+                </div>
+              </div>
+
+              <div class="form-group active">
+                <label>Họ tên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="hoTen"
+                />
+              </div>
+
+              <div class="form-group active">
+                <label>Số điện thoại</label>
+                <input type="text" class="form-control" formControlName="sdt" />
+              </div>
+
+              <div class="form-group active">
+                <label>Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="email"
+                />
+              </div>
+
+              <div class="form-group active">
+                <label>Ngày sinh</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="ngaySinh"
+                />
+              </div>
+
+              <div class="form-button">
+                <button class="btn btn-primary" (click)="updateInfor()">
+                  Lưu thay đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

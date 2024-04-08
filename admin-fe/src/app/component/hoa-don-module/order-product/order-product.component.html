@@ -170,13 +170,18 @@
                           }}</strong>
                         </p>
                         <p class="">
-                          <input
+                          <!-- <input
                             type="number"
                             class="form-control"
                             [(ngModel)]="hoaDon.phiVanChuyen"
                             (change)="onPhiVanChuyenChange()"
                             [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
-                          />
+                          /> -->
+                          <app-input-number
+                            *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
+                            [value]="hoaDon.phiVanChuyen"
+                            (valueChange)="onPhiVanChuyenChange($event)"
+                          ></app-input-number>
                         </p>
                         <hr
                           style="border: 0; height: 2px; background-color: #000"

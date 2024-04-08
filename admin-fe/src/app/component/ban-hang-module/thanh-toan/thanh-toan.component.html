@@ -17,12 +17,16 @@
   <!-- Tiền khách đưa -->
   <div class="d-flex justify-content-between m-1">
     <span class="mr-auto fw-bold">Tiền khách đưa:</span>
-    <span class="ml-auto"
-      ><input
+    <span class="ml-auto">
+      <!-- <input
         type="number"
         formControlName="tienKhachDua"
         class="form-control"
-      />
+      /> -->
+      <app-input-number
+        [value]="thanhToanForm.get('tienKhachDua').value"
+        (valueChange)="patchTienKhachDua($event)"
+      ></app-input-number>
     </span>
   </div>
 

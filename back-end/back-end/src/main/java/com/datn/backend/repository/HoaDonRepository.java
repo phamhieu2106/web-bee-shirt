@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,4 +57,13 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     boolean existsByMa(String ma);
 
     Optional<HoaDon> getByMa(String ma);
+
+    @Query(value = """
+                   SELECT *
+                   FROM hoa_don hd
+                   WHERE hd.id_khach_hang = :custId
+                   AND hd.trang_thai LIKE %:orderStatus%
+                   """, nativeQuery = true)
+    List<HoaDon> getOrdersForClient(@Param("custId") int custId,
+                                    @Param("orderStatus") String orderStatus);
 }

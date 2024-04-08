@@ -18,6 +18,7 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
+import { el } from "date-fns/locale";
 @Component({
   selector: "app-them-khach-hang",
   templateUrl: "./them-khach-hang.component.html",
@@ -66,19 +67,23 @@ export class ThemKhachHangComponent {
       confirmButtonColor: "#F5B16D",
     }).then((result) => {
       if (result.isConfirmed) {
-        this.khachHangService.addQuick(this.formAddKh.value).subscribe({
-          next: (resp: KhachHang) => {
-            this.initFormAddKh();
+        if (this.formAddKh.get("hoTen").value.trim() != "") {
+          this.khachHangService.addQuick(this.formAddKh.value).subscribe({
+            next: (resp: KhachHang) => {
+              this.initFormAddKh();
 
-            // console.log(resp);
-            this.createSuccess.emit(resp);
-            this.closeModal.emit(this.idModal);
-            this.notify.success("Thêm khách hàng thành công ");
-          },
-          error: (error: HttpErrorResponse) => {
-            this.notify.error(error.error.message);
-          },
-        });
+              // console.log(resp);
+              this.createSuccess.emit(resp);
+              this.closeModal.emit(this.idModal);
+              this.notify.success("Thêm khách hàng thành công ");
+            },
+            error: (error: HttpErrorResponse) => {
+              this.notify.error(error.error.message);
+            },
+          });
+        } else {
+          this.notify.warning("Tên khách hàng không hợp lệ");
+        }
       }
     });
   }
@@ -95,7 +100,10 @@ export class ThemKhachHangComponent {
 
   public initFormAddKh(): void {
     this.formAddKh = new FormGroup({
-      hoTen: new FormControl("", [Validators.required]),
+      hoTen: new FormControl("", [
+        Validators.required,
+        Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
+      ]),
       gioiTinh: new FormControl("true"),
       sdt: new FormControl("", [
         Validators.required,

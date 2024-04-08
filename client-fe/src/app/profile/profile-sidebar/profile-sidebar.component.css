@@ -49,26 +49,28 @@
   padding-left: 5px;
 }
 
-.itemChucNang:hover {
+/* .itemChucNang:hover {
   background-color: rgb(214, 214, 214);
   border-radius: 5px;
-}
+} */
 
-.itemChucNang a {
-  text-decoration: none;
+.itemChucNang  {
+ 
   color: black;
-  margin-left: 5px;
+ 
   font-size: 16px;
 }
 
+
 .itemChucNang i {
   font-size: 25px;
+  margin-right: 5px;
 }
 
 .chiTieu {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background-image: url("https://i.imgur.com/QtI1S7t.png");
+  background-color: black;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -99,5 +101,7 @@
 }
 
 .active {
-  background-color: rgb(100, 200, 118);
+  background-color: #000000;
+ color: white;
 }
+

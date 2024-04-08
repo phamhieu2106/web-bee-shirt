@@ -29,6 +29,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+  
 }
 
 .voucher-item {
@@ -36,6 +40,7 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 1.33;
+   
 }
 
 .voucher-items-list .voucher-item {

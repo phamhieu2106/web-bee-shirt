@@ -12,23 +12,23 @@
 /* Style the tab */
 .tab {
   overflow: hidden;
-  /* border: 1px solid #ccc; */
-  /* background-color: #f1f1f1; */
+padding-bottom: 20px;
 }
 
 /* Style the buttons that are used to open the tab content */
-/* .tab button {
-  background-color: #2e90fa;
+.tab button {
   float: left;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
   transition: 0.3s;
-} */
+  white-space: nowrap;
+  margin-left: 5px;
+}
 
 .order-cho-xac-nhan {
   background-color: #2678cf;
+  color: white;
 }
 
 .order-da-xac-nhan {
@@ -52,9 +52,9 @@
 }
 
 /* Change background color of buttons on hover */
-.tab button:hover {
+/* .tab button:hover {
   background-color: #ddd;
-}
+} */
 
 /* Create an active/current tablink class */
 .tab button.active {
@@ -578,3 +578,11 @@ img {
   height: auto;
   width: auto;
 }
+
+
+.btn-success{
+  background: #000000 !important;
+ 
+}
+
+

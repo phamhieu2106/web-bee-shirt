@@ -119,7 +119,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)
                    """, nativeQuery = true)
     List<PhieuGiamGia> getDiscountsForCheckOut(@Param("priceCondition") BigDecimal priceCondition,
-                                               @Param("customerId") int customerId);
+                                                   @Param("customerId") int customerId);
 
     @Query(value = """
                    SELECT t2.is_used
@@ -150,4 +150,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)
                    """, nativeQuery = true)
     List<PhieuGiamGia> getAllDiscountsOf1Cust(@Param("custId") int custId);
+
+
+    List<PhieuGiamGia> findAllBySoLuongGreaterThanAndTrangThaiIs(int soLuong,String trangThai);
 }

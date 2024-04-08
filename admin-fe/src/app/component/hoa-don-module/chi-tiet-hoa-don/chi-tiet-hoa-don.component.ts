@@ -6,6 +6,7 @@ import { PdfService } from "src/app/service/pdf.service";
 import { ToastrService } from "ngx-toastr";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { NotificationService } from "src/app/service/notification.service";
+import { PdfTraHangService } from "src/app/service/pdf-tra-hang.service";
 
 @Component({
   selector: "app-chi-tiet-hoa-don",
@@ -23,6 +24,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private hoaDonService: HoaDonService,
     private pdfService: PdfService,
+    private pdfTraHangService: PdfTraHangService,
     private toastr: ToastrService,
     private notifycation: NotificationService
   ) {}
@@ -72,7 +74,9 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   printHoaDon() {
     this.pdfService.generatePDFHoaDon(this.hoaDon);
   }
-
+  printHoaDonTraHang() {
+    this.pdfTraHangService.getHoaDonTraHang(this.hoaDon.id);
+  }
   changeDiaChi() {
     const orderPhoneNumberRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b/;
     if (!orderPhoneNumberRegex.test(this.orderPhoneNumberTemp)) {

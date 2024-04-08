@@ -11,7 +11,9 @@ import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
 import { HoaDonRequest } from "src/app/model/class/hoa-don-request.class";
 import Swal from "sweetalert2";
 import { HoaDonChiTietRequest } from "src/app/model/class/hoa-don-chi-tiet-request.class";
-import { config } from "rxjs";
+import { PdfService } from "src/app/service/pdf.service";
+import { HoaDonTraHangRequest } from "src/app/model/class/hoa-don-tra-hang-request";
+import { PdfTraHangService } from "src/app/service/pdf-tra-hang.service";
 @Component({
   selector: "app-chi-tiet-hoa-don",
   templateUrl: "./chi-tiet-hoa-don.component.html",
@@ -47,16 +49,19 @@ export class ChiTietHoaDonComponent {
   // Object properties
   isVisible = false;
   hoaDonRequest?: HoaDonRequest = {};
+  hoaDonTraHangRequest?: HoaDonTraHangRequest = {};
   radioValue = "A";
   text: string;
 
-  // Constructors
+  // Constructors Component
   constructor(
     private traHangService: TraHangService,
     private phieuGiamGiaService: PhieuGiamGiaService,
     private router: Router,
     private modal: NzModalService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private pdfService: PdfService,
+    private pdfTraHangService: PdfTraHangService
   ) {}
   ngOnInit(): void {}
 
@@ -73,7 +78,14 @@ export class ChiTietHoaDonComponent {
       this.hoaDon.hoaDonChiTiets.forEach((item) => this.listOfData.push(item));
       this.cdr.detectChanges();
     }
+
+    if (this.newAmount) {
+      this.getPhieuGiamGiaTotNhat();
+    }
   }
+  // End Constructor Component
+
+  // Functions Tables
   onCurrentPageDataChange($event: readonly HoaDonChiTiet[]): void {
     this.listOfCurrentPageData = $event;
     this.refreshCheckedStatus();
@@ -94,7 +106,6 @@ export class ChiTietHoaDonComponent {
     });
   }
 
-  // Functions Tables
   updateCheckedSet(id: number, checked: boolean): void {
     if (checked) {
       this.setOfCheckedId.add(id);
@@ -172,6 +183,9 @@ export class ChiTietHoaDonComponent {
     this.handleCountReturnMoney();
     this.refreshCheckedStatus();
   }
+
+  // End Funtion Tables
+
   // ON Quantity Of Products
   confirmModal?: NzModalRef; // For testing by now
   showConfirmOfQuantity(id: number, quantity: number, checked: boolean): void {
@@ -226,6 +240,7 @@ export class ChiTietHoaDonComponent {
   }
   // END Quantity Of Products
 
+  // Return Information
   async handleCountReturnMoney() {
     if (!this.listReturnItems || this.listReturnItems.length === 0) {
       this.amountOfMoneyReturn = 0;
@@ -295,7 +310,9 @@ export class ChiTietHoaDonComponent {
         if (this.bestVoucher) {
           this.discountMoney = maxDiscount;
           this.amountOfMoneyReturn =
-            this.oldAmount - this.newAmount + this.discountMoney;
+            this.oldAmount - this.newAmount === 0
+              ? 0
+              : this.oldAmount - this.newAmount;
         }
       },
       error: (error) => {
@@ -309,10 +326,7 @@ export class ChiTietHoaDonComponent {
     }, 0);
   }
   // End Return Information
-  // ON Submit
-  showModal(): void {
-    this.isVisible = true;
-  }
+
   // Object Functions
   private validation(): boolean {
     if (this.radioValue === "A") {
@@ -322,6 +336,25 @@ export class ChiTietHoaDonComponent {
     } else if (this.radioValue === "C") {
       this.text = "Sản phẩm bị lỗi (rách, mất cúc áo, cúc tay, mốc, v.v)";
     }
+    if (this.text?.trim().length < 10) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: "Lý do phải có ít nhất 10 kí tự",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      return false;
+    }
+    return true;
+  }
+  private validationHoaDonTraHang(): boolean {
     if (this.text?.trim().length < 10) {
       Swal.fire({
         toast: true,
@@ -379,14 +412,24 @@ export class ChiTietHoaDonComponent {
         : "";
       this.hoaDonRequest.emailNguoiNhan = this.hoaDon.emailNguoiNhan;
       this.hoaDonRequest.loaiHoaDon = "TAI_QUAY";
-      this.hoaDonRequest.ghiChu = this.text;
+      this.hoaDonRequest.ghiChu = "";
       this.hoaDonRequest.phieuGiamGiaId = this.bestVoucher?.id;
       this.hoaDonRequest.nhanVienId = JSON.parse(
         localStorage.getItem("nhanVien")
       ).id;
+      this.hoaDonRequest.khachHangId = this.hoaDon.khachHang?.id;
       // Money
       this.hoaDonRequest.tongTien = this.newAmount;
       this.hoaDonRequest.tienGiam = this.discountMoney;
+
+      this.hoaDonRequest.thanhToans = [
+        {
+          hinhThucThanhToan: "TIEN_MAT",
+          moTa: undefined,
+          maGiaoDich: undefined,
+          soTien: undefined,
+        },
+      ];
       this.hoaDonRequest.phiVanChuyen = 0;
       // Hoa Don Chi Tiet
       this.hoaDonRequest.hoaDonChiTiets = this.returnBuyItems().map((hdct) => {
@@ -397,8 +440,6 @@ export class ChiTietHoaDonComponent {
         hdctRequest.sanPhamChiTietId = hdct.sanPhamChiTiet.id;
         return hdctRequest;
       });
-
-      console.log(this.hoaDonRequest);
     } else {
       Swal.fire({
         toast: true,
@@ -415,11 +456,150 @@ export class ChiTietHoaDonComponent {
       });
     }
   }
-  handleOk(): void {
+  private setHoaDonTraHangRequest() {
+    if (this.validationHoaDonTraHang) {
+      this.hoaDonTraHangRequest.hoaDonId = this.hoaDon?.id;
+      this.hoaDonTraHangRequest.tenNguoiNhan = this.hoaDon?.tenNguoiNhan
+        ? this.hoaDon?.tenNguoiNhan
+        : this.hoaDon?.khachHang?.hoTen
+        ? this.hoaDon?.khachHang?.hoTen
+        : null;
+      this.hoaDonTraHangRequest.nhanVienId = JSON.parse(
+        localStorage.getItem("nhanVien")
+      ).id;
+      this.hoaDonTraHangRequest.khachHangId = this.hoaDon?.khachHang?.id;
+      this.hoaDonTraHangRequest.sdtNguoiNhan = this.hoaDon?.sdtNguoiNhan
+        ? this.hoaDon?.sdtNguoiNhan
+        : this.hoaDon?.khachHang?.sdt
+        ? this.hoaDon?.khachHang?.sdt
+        : null;
+      this.hoaDonTraHangRequest.diaChiNguoiNhan = this.hoaDon?.diaChiNguoiNhan;
+      this.hoaDonTraHangRequest.emailNguoiNhan = this.hoaDon?.emailNguoiNhan
+        ? this.hoaDon?.emailNguoiNhan
+        : this.hoaDon?.khachHang?.email
+        ? this.hoaDon?.khachHang?.email
+        : null;
+      this.hoaDonTraHangRequest.tongTien = this.amountOfMoneyReturn;
+      this.hoaDonTraHangRequest.ghiChu = this.text;
+      this.hoaDonTraHangRequest.hoaDonChiTiets = this.listReturnItems.map(
+        (hdct) => {
+          let hdctRequest = new HoaDonChiTietRequest();
+          hdctRequest.soLuong = hdct.soLuong;
+          hdctRequest.giaBan = hdct.giaBan;
+          hdctRequest.giaNhap = hdct.giaNhap;
+          hdctRequest.sanPhamChiTietId = hdct.sanPhamChiTiet.id;
+          return hdctRequest;
+        }
+      );
+    }
+  }
+  private handleSetTrangThaiHoaDon(): boolean {
+    this.traHangService
+      .handleTraHang(this.hoaDon?.id, this.text, true)
+      .subscribe({
+        error: (err) => {
+          console.log(err.error.message);
+          Swal.fire({
+            icon: "error",
+            title: `Thay đổi trạng thái hoá đơn thất bại''!`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          return false;
+        },
+      });
+    return true;
+  }
+  private handleCreateHoaDonTraHang(): boolean {
+    this.traHangService.handleTaoHoaDon(this.hoaDonTraHangRequest).subscribe({
+      next: (resp) => {
+        this.pdfTraHangService.generatePDFHoaDon(resp);
+      },
+      error: (err) => {
+        console.log(err.message);
+        Swal.fire({
+          icon: "error",
+          title: `Tạo hoá đơn trả hàng thất bại''!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      },
+    });
+    return true;
+  }
+
+  // ON Submit
+  public handleOk(): void {
     this.setHoaDonRequest();
+    // nếu hoá đơn còn sản phẩm thì in hoá đơn mới
+    if (this.hoaDonRequest.hoaDonChiTiets.length > 0) {
+      this.traHangService.placeOrderTraHang(this.hoaDonRequest).subscribe({
+        next: async (resp: HoaDon) => {
+          this.setHoaDonTraHangRequest();
+          // Handle return Tra Hang
+          if (
+            this.handleSetTrangThaiHoaDon() &&
+            this.handleCreateHoaDonTraHang()
+          ) {
+            // Generate PDF Invoice
+            await this.pdfService.generatePDFHoaDon(resp);
+            Swal.fire({
+              icon: "success",
+              title: `Trả hàng thành công''!`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.redirect();
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: `Có lỗi khi cố gắng tạo hoá đơn trả hàng''!`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        },
+        error: (err: any) => {
+          console.log(err.error.message);
+          Swal.fire({
+            icon: "error",
+            title: `Trả hàng thất bại''!`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        },
+      });
+    } else {
+      // nếu không còn sản phẩm sẽ chỉ thay đổi trạng thái và in hoá đơn trả hàng
+      this.setHoaDonTraHangRequest();
+      // Handle return Tra Hang
+      if (this.handleSetTrangThaiHoaDon() && this.handleCreateHoaDonTraHang()) {
+        Swal.fire({
+          icon: "success",
+          title: `Trả hàng thành công''!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.redirect();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: `Có lỗi khi cố gắng tạo hoá đơn trả hàng''!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    }
     this.isVisible = false;
   }
 
+  private redirect(): void {
+    this.router.navigate(["/tra-hang-thanh-cong"]);
+  }
+  showModal(): void {
+    this.isVisible = true;
+  }
   handleCancel(): void {
     this.isVisible = false;
   }

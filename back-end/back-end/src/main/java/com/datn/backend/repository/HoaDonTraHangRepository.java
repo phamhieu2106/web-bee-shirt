@@ -36,10 +36,4 @@ public interface HoaDonTraHangRepository extends JpaRepository<HoaDon, Integer> 
                 """)
     List<Integer> getAllIdSanPhamChiTietInDotGiamGiaByHoaDonId(Integer idHoaDon);
 
-    @Query("""
-                SELECT pgg FROM PhieuGiamGia pgg
-                LEFT JOIN HoaDon hd ON hd.phieuGiamGia.id = pgg.id
-                WHERE hd.id = :idHoaDon
-            """)
-    PhieuGiamGia getPhieuGiamGia(Integer idHoaDon);
 }

@@ -1,6 +1,7 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.dto.response.ProductDiscountSummaryResponse;
+import com.datn.backend.dto.response.SanPhamResponse;
 import com.datn.backend.service.SanPhamService2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,12 @@ public class SanPhamResource2 {
             @RequestParam("id") Integer id
     ) {
         return ResponseEntity.ok(sanPhamService.getProductInDiscount(id));
+    }
+
+    @GetMapping("/nameItem")
+    public ResponseEntity<SanPhamResponse> getItemName(
+            @RequestParam("id") Integer id
+    ) {
+        return ResponseEntity.ok(sanPhamService.getNameSanPhamBySanPhamChiTietId(id));
     }
 }

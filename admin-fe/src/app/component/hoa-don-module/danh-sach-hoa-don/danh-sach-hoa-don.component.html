@@ -208,6 +208,26 @@
               role="tab"
               aria-controls="home"
               aria-selected="true"
+              (click)="changeStatus('TRA_HANG')"
+            >
+              Trả hàng
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.traHangQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.traHangQuantity
+              }}</span>
+              <!-- Số thông báo -->
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link position-relative"
+              id="home-tab"
+              data-toggle="tab"
+              href="#home"
+              role="tab"
+              aria-controls="home"
+              aria-selected="true"
               (click)="changeStatus('HUY')"
             >
               Hủy

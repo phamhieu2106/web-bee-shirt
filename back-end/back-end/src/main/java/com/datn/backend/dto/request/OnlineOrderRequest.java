@@ -13,6 +13,7 @@ public class OnlineOrderRequest {
     private BigDecimal tongTien;
     private BigDecimal tienGiam;
     private BigDecimal phiVanChuyen;
+    private boolean paymentMethod;
     private List<OrderDetailsReq> hoaDonChiTiets;
     private Integer khachHangId;
     private Integer phieuGiamGiaId;

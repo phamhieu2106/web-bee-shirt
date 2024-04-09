@@ -452,6 +452,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         updateDiscount(discount, req.getKhachHangId());
         updateProductDetailsQuantity(req.getHoaDonChiTiets());
 
+        // payment by vnpay
+        if (!req.isPaymentMethod()) {
+        }
+
         return savedOrder.getMa();
     }
 

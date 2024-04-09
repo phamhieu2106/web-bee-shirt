@@ -1,8 +1,12 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { Customer } from "src/app/model/class/customer.class";
+import { CustomerResponse } from "src/app/model/interface/customer-response.interface";
 import { AuthenticationService } from "src/app/service/authentication.service";
+import { CustomerService } from "src/app/service/customer.service";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-my-account",
@@ -14,7 +18,11 @@ export class MyAccountComponent {
   private loggedCust: Customer;
 
   // constructor, ngOn
-  constructor(private authService: AuthenticationService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private customerService: CustomerService,
+    private notifService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -22,25 +30,35 @@ export class MyAccountComponent {
 
   // public functions
   //
-  public updateInfor(): void {
-    console.log(this.form.value);
-  }
+  public updateInfor(): void {}
 
   // private functions
   private initForm(): void {
+    this.form = new FormGroup({
+      email: new FormControl("", [Validators.required]),
+      gioiTinh: new FormControl("", [Validators.required]),
+      hoTen: new FormControl("", [Validators.required]),
+      ngaySinh: new FormControl("", [Validators.required]),
+      sdt: new FormControl("", [Validators.required]),
+    });
+
     this.loggedCust = this.authService.getCustomerFromStorage();
 
-    this.form = new FormGroup({
-      email: new FormControl(this.loggedCust.email, [Validators.required]),
-      gioiTinh: new FormControl(this.loggedCust.gioiTinh, [
-        Validators.required,
-      ]),
-      hoTen: new FormControl(this.loggedCust.hoTen, [Validators.required]),
-      ngaySinh: new FormControl(
-        new Date(this.loggedCust.ngaySinh).toISOString().slice(0, -1),
-        [Validators.required]
-      ),
-      sdt: new FormControl(this.loggedCust.sdt, [Validators.required]),
+    this.customerService.getById(this.loggedCust.id).subscribe({
+      next: (custRes: CustomerResponse) => {
+        console.log(custRes);
+
+        this.form = new FormGroup({
+          email: new FormControl(custRes.email, [Validators.required]),
+          gioiTinh: new FormControl(custRes.gioiTinh, [Validators.required]),
+          hoTen: new FormControl(custRes.hoTen, [Validators.required]),
+          ngaySinh: new FormControl(custRes.ngaySinh, [Validators.required]),
+          sdt: new FormControl(custRes.sdt, [Validators.required]),
+        });
+      },
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 }

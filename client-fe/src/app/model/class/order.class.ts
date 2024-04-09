@@ -2,6 +2,7 @@ import { Customer } from "./customer.class";
 import { Discount } from "./discount.class";
 import { OrderDetails } from "./order-details.class";
 import { OrderHistory } from "./order-history.class";
+import { Payment } from "./payment.class";
 
 export class Order {
   id: number;
@@ -24,7 +25,6 @@ export class Order {
   phieuGiamGia: Discount;
   hoaDonChiTiets: OrderDetails[];
   lichSuHoaDons: OrderHistory[];
-
-  //   thanhToans: ThanhToan[];
+  thanhToans: Payment[];
   //   orderNameTemp: string; // để lưu STT hóa đơn chờ
 }

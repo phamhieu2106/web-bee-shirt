@@ -144,7 +144,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                           pgg.created_at, pgg.created_by, pgg.updated_at, pgg.last_updated_by
                    FROM phieu_giam_gia pgg
                    LEFT JOIN phieu_giam_gia_kh pgg_kh ON pgg.id = pgg_kh.phieu_giam_gia_id
-                   AND (pgg_kh.khach_hang_id IS NULL OR pgg_kh.khach_hang_id = :custId)
+                   WHERE (pgg_kh.khach_hang_id IS NULL OR pgg_kh.khach_hang_id = :custId)
                    AND (CURRENT_TIMESTAMP() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc)
                    AND pgg.so_luong > 0
                    AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)

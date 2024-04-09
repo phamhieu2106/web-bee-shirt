@@ -26,20 +26,23 @@ import java.util.List;
 public class KhachHangResource {
     private final KhachHangService khachHangService;
     private final ObjectMapper objectMapper;
+
     @GetMapping("/get-all")
     public ResponseEntity<PagedResponse<KhachHangResponse>> getKhachHangList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                              @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                              @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(khachHangService.getAll(pageNumber, pageSize, search));
     }
+
     @GetMapping("/getById/{id}")
-    public  ResponseEntity<KhachHangResponse> getKHById(@PathVariable("id")int id){
+    public ResponseEntity<KhachHangResponse> getKHById(@PathVariable("id") int id) {
         return ResponseEntity.ok(khachHangService.getById(id));
     }
+
     @PostMapping("/add-kh")
-    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh,@RequestParam("khachHangImage") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh, @RequestParam("khachHangImage") MultipartFile multipartFile) throws IOException {
         KhachHangRequest khachHang = objectMapper.readValue(kh, KhachHangRequest.class);
-        return ResponseEntity.ok(khachHangService.add(khachHang,multipartFile));
+        return ResponseEntity.ok(khachHangService.add(khachHang, multipartFile));
     }
 
     @PutMapping("/update-kh/{id}")
@@ -49,30 +52,31 @@ public class KhachHangResource {
                                               MultipartFile multipartFile)
             throws IOException {
         KhachHangRequest khachHang = objectMapper.readValue(kh, KhachHangRequest.class);
-        return ResponseEntity.ok(khachHangService.update(khachHang,multipartFile));
+        return ResponseEntity.ok(khachHangService.update(khachHang, multipartFile));
     }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<KhachHang> deleta(@PathVariable("id")Integer id){
+    public ResponseEntity<KhachHang> deleta(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
+
     @GetMapping("/filter")
     public ResponseEntity<PagedResponse<KhachHangResponse>> filter(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                  @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                  @RequestParam(value = "gioiTinhFilter", defaultValue = "0,1", required = false) List<Integer> gioiTinhFilter,
-                                                                  @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter) {
+                                                                   @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                   @RequestParam(value = "gioiTinhFilter", defaultValue = "0,1", required = false) List<Integer> gioiTinhFilter,
+                                                                   @RequestParam(value = "trangThaiFilter", defaultValue = "0,1", required = false) List<Integer> trangThaiFilter) {
         return ResponseEntity.ok(khachHangService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter));
     }
 
     @GetMapping("/get-all-avtive")
     public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                             @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                                                             @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+                                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(khachHangService.getAllActive(pageNumber, pageSize, search));
     }
 
     @PostMapping("/add-quick")
     public ResponseEntity<KhachHang> addKH(@RequestBody KhachHangRequest khachHangRequest) {
-//        System.out.println(khachHangRequest);
         return ResponseEntity.ok(khachHangService.add(khachHangRequest));
     }
 }

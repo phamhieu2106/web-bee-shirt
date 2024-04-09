@@ -84,7 +84,7 @@ export class NavigationComponent {
         this.authenticationService.logout();
         this.isLoggedIn = false;
         this.loggedCustomer = null;
-        this.router.navigate(["/login"]);
+        this.router.navigate(["/log-in"]);
         this.notifService.success("Đăng xuất thành công!");
       }
     });

@@ -24,6 +24,7 @@ import { DiscountService } from "src/app/service/discount.service";
 import { Discount } from "src/app/model/class/discount.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
+import { AddAddressReq } from "src/app/model/interface/add-address-req.interface";
 
 @Component({
   selector: "app-checkout",
@@ -58,6 +59,8 @@ export class CheckoutComponent {
   public shipPrice: number = 0;
   public finalPrice: number = 0;
 
+  public paymentMethod = true;
+
   // constructor, ngOn
   constructor(
     private router: Router,
@@ -74,6 +77,8 @@ export class CheckoutComponent {
   ) {}
 
   ngOnInit(): void {
+    this.loggedCust = this.authService.getCustomerFromStorage();
+
     this.cartService.cartItemsOfLoggedUser.subscribe(
       (cartItems: CartItem[]) => {
         this.cartItems2 = cartItems;
@@ -90,13 +95,12 @@ export class CheckoutComponent {
       this.cartItemQuantity2 = data;
     });
 
-    this.loggedCust = this.authService.getCustomerFromStorage();
-
-    this.checkLoggedIn();
-    this.getAllAddressOfLoggedCust();
-    this.getCartItemsFromLoggedCustomer();
-    this.initAddAddressForm();
-    this.getAllProvinces();
+    if (this.loggedCust) {
+      this.getAllAddressOfLoggedCust();
+      this.getCartItemsFromLoggedCustomer();
+      this.initAddAddressForm();
+      this.getAllProvinces();
+    }
   }
 
   // public functions
@@ -174,27 +178,36 @@ export class CheckoutComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        // this.addressService
-        //   .addAddress(this.loggedCust.id, this.addAddressForm.value)
-        //   .subscribe({
-        //     next: () => {
-        //       this.initAddAddressForm();
-        //       this.notifService.success("Thêm địa chỉ thành công!");
-        //       this.getAllAddressOfLoggedCust();
-        //       // open/close modal
-        //       this.isAddAddressModalOpen = false;
-        //       this.isAddressesModalOpen = true;
-        //     },
-        //     error: (errRes: HttpErrorResponse) => {
-        //       this.notifService.error(errRes.error.message);
-        //     },
-        //   });
+        const req: AddAddressReq = {
+          hoTen: this.addAddressForm.get("hoTen").value,
+          sdt: this.addAddressForm.get("sdt").value,
+          tinh: this.addAddressForm.get("tinh").value,
+          huyen: this.addAddressForm.get("huyen").value,
+          xa: this.addAddressForm.get("xa").value,
+          duong: this.addAddressForm.get("duong").value,
+          macDinh: this.addAddressForm.get("macDinh").value,
+          custId: this.loggedCust.id,
+        };
+
+        this.addressService.addAddress(req).subscribe({
+          next: () => {
+            this.initAddAddressForm();
+            this.notifService.success("Thêm địa chỉ thành công!");
+            this.getAllAddressOfLoggedCust();
+            // open/close modal
+            this.isAddAddressModalOpen = false;
+            this.isAddressesModalOpen = true;
+          },
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
+          },
+        });
       }
     });
   }
 
   // select address event functions
-  // get districts by province
+  // 8. get districts by province
   public getAllDistrictsByProvince(): void {
     this.wards = [];
     this.getProvinceId();
@@ -232,7 +245,7 @@ export class CheckoutComponent {
     return provinceName;
   }
 
-  // get wards by district
+  // 9. get wards by district
   public getAllWardsByDistrict(): void {
     this.getDistrictId();
     this.giaoHangNhanhService
@@ -267,6 +280,7 @@ export class CheckoutComponent {
     return districtName;
   }
 
+  // 10
   public checkProvinceSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn tỉnh/thành phố trước!");
@@ -274,6 +288,7 @@ export class CheckoutComponent {
     }
   }
 
+  // 11
   public checkDistrictSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn quận/huyện trước!");
@@ -282,7 +297,7 @@ export class CheckoutComponent {
   }
   // end: select address event functions
 
-  //
+  // 12
   public checkOut(): void {
     Swal.fire({
       title: "Xác nhận thanh toán?",
@@ -341,7 +356,7 @@ export class CheckoutComponent {
     return result;
   }
 
-  //
+  // 13
   public getDiscountTitle(discount: Discount): string {
     if (discount?.kieu === 0) {
       return ` Giảm ${discount?.giaTri}% cho đơn  từ ${this.formatPrice(
@@ -354,7 +369,7 @@ export class CheckoutComponent {
     }
   }
 
-  //
+  // 14
   public changeDiscount(discountId: number): void {
     this.discounts = this.discounts.map((d: Discount) => {
       if (d.id === discountId) {
@@ -369,7 +384,7 @@ export class CheckoutComponent {
     this.finalPrice = this.getFinalPrice();
   }
 
-  //
+  // 15
   public checkBestDiscount(): boolean {
     for (let d of this.discounts) {
       let reduceInFor = 0;
@@ -390,14 +405,6 @@ export class CheckoutComponent {
 
   // private functions
   // 1
-  private checkLoggedIn(): void {
-    const isLoggedIn: boolean = this.authService.isLoggedIn();
-    if (!isLoggedIn) {
-      this.notifService.warning("Bạn cần đăng nhập để vào được trang này!");
-      this.router.navigate(["/log-in"]);
-    }
-  }
-  // 2
   private getAllAddressOfLoggedCust(): void {
     this.addressService.getAllAddressOf1Customer(this.loggedCust.id).subscribe({
       next: (addresses: Address[]) => {
@@ -412,7 +419,7 @@ export class CheckoutComponent {
     });
   }
 
-  // 3
+  // 2
   private getCartItemsFromLoggedCustomer(): void {
     const loggedCus = this.authService.getCustomerFromStorage();
     this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
@@ -478,7 +485,7 @@ export class CheckoutComponent {
     });
   }
 
-  // 3.1
+  // 2.1
   private getAllDiscounts(): void {
     this.discountService
       .getDiscountsForCheckOut(
@@ -496,7 +503,7 @@ export class CheckoutComponent {
       });
   }
 
-  // 3.2
+  // 2.2
   private initSelectedDiscounts(): void {
     if (this.discounts.length === 1) {
       this.selectedDiscount = this.discounts[0];
@@ -525,9 +532,11 @@ export class CheckoutComponent {
     this.finalPrice = this.getFinalPrice();
   }
 
-  // 4
+  // 3
   private initAddAddressForm(): void {
     this.addAddressForm = new FormGroup({
+      hoTen: new FormControl("", [Validators.required]),
+      sdt: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
@@ -536,7 +545,7 @@ export class CheckoutComponent {
     });
   }
 
-  // 5
+  // 4
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
@@ -551,6 +560,7 @@ export class CheckoutComponent {
   }
 
   // calculate prices
+  // 5
   private getRealPrice(): number {
     let result: number = 0;
     for (const item of this.cartItems2) {
@@ -559,6 +569,7 @@ export class CheckoutComponent {
     return result;
   }
 
+  // 6
   private getSalePrice(): number {
     let result: number = 0;
     for (const item of this.cartItems2) {
@@ -573,6 +584,7 @@ export class CheckoutComponent {
     return result;
   }
 
+  // 7
   private getDiscountPrice(): number {
     if (this.selectedDiscount) {
       if (this.selectedDiscount.kieu === 0) {
@@ -591,10 +603,12 @@ export class CheckoutComponent {
     return 0;
   }
 
+  // 8
   private getShipPrice(): number {
     return 0;
   }
 
+  // 9
   private getFinalPrice(): number {
     return (
       this.realPrice - this.salePrice - this.discountPrice + this.shipPrice

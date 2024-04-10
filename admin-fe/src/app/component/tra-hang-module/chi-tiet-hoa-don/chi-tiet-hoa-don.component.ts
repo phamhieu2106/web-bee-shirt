@@ -221,7 +221,7 @@ export class ChiTietHoaDonComponent {
     const hoaDonChiTiet = this.listReturnItems.find((item) => item.id === id);
     if (hoaDonChiTiet) {
       hoaDonChiTiet.soLuong = hoaDonChiTiet.soLuong - 1;
-      if (hoaDonChiTiet.soLuong === 0) {
+      if (hoaDonChiTiet.soLuong <= 0) {
         hoaDonChiTiet.soLuong = 1;
       }
     }

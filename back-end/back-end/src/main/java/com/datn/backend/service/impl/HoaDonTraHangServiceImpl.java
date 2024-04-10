@@ -88,13 +88,19 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
 
     @Override
     public HoaDonResponse getHoaDonByMa(String ma) {
+        if(ma.trim().isEmpty()){
+            throw new ResourceNotFoundException("Mã hoá đơn không được trống");
+        }
 //        Tìm Hoá Đơn Theo Mã
         Optional<HoaDon> optionalHoaDon
-                = repository.findHoaDonByTrangThaiAndMa(TrangThaiHoaDon.HOAN_THANH, ma);
+                = repository.findHoaDonByMa(ma);
         if (optionalHoaDon.isEmpty()) {
             throw new ResourceNotFoundException("Không tìm thấy hoá đơn có mã: " + ma);
         } else {
             HoaDon hoaDon = optionalHoaDon.get();
+            if(hoaDon.getTrangThai() != TrangThaiHoaDon.HOAN_THANH){
+                throw new ResourceInvalidException("Đơn hàng chưa hoàn thành");
+            }
             if (hoaDon.getUpdatedAt() == null) {
                 throw new ResourceInvalidException("Đơn hàng chưa được cập nhật");
             }

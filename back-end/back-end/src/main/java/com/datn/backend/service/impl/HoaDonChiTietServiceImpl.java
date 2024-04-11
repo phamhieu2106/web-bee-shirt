@@ -78,7 +78,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
             // tao lich su hoa don
             LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
                     .tieuDe("Thêm sản phẩm")
-                    .moTa("Thêm 1 sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " màu " + sanPhamChiTiet.getMauSac().getTen() + " size " + sanPhamChiTiet.getMauSac().getTen())
+                    .moTa("Thêm 1 sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " màu " + sanPhamChiTiet.getMauSac().getTen() + " ,size " + sanPhamChiTiet.getKichCo().getTen())
                     .hoaDon(hoaDon)
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
@@ -159,8 +159,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .tieuDe("Cập nhật sản phẩm")
                     .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                             " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                            " size " + sanPhamChiTiet.getMauSac().getTen() +
-                            " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                            " size " + sanPhamChiTiet.getKichCo().getTen() +
+                            " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
                     )
                     .hoaDon(hoaDon)
                     .build();
@@ -191,7 +191,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                         .tieuDe("Thêm mới sản phẩm")
                         .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                                 " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+                                " size " + sanPhamChiTiet.getKichCo().getTen() +
                                 " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
                         )
                         .hoaDon(hoaDon)
@@ -213,8 +213,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                         .tieuDe("Cập nhật sản phẩm")
                         .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                                 " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                                " size " + sanPhamChiTiet.getMauSac().getTen() +
-                                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                                " size " + sanPhamChiTiet.getKichCo().getTen() +
+                                " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
                         )
                         .hoaDon(hoaDon)
                         .build();
@@ -241,6 +241,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.get().getSanPhamChiTiet();
         sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() + hoaDonChiTiet.get().getSoLuong());
         sanPhamChiTietRepo.save(sanPhamChiTiet);
+
+        // update phieu giam gia
 
         hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
         return modelMapper.map(hoaDonChiTiet.get(), HoaDonChiTietResponse.class);

@@ -55,8 +55,10 @@
           class="btn btn-primary mr-5"
           data-toggle="modal"
           data-target="#chageStatusModal"
-          *ngIf="
-            !(hoaDon.trangThai == 'HOAN_THANH' || hoaDon.trangThai == 'HUY')
+          [disabled]="
+            hoaDon.trangThai == 'HOAN_THANH' ||
+            hoaDon.trangThai == 'HUY' ||
+            hoaDon.trangThai == 'TRA_HANG'
           "
           (click)="setIsNext(true)"
         >
@@ -74,6 +76,7 @@
               hoaDon.trangThai == 'TAO_DON'
             )
           "
+          [disabled]="hoaDon.trangThai == 'TRA_HANG'"
           (click)="setIsNext(false)"
         >
           Quay lại
@@ -83,8 +86,10 @@
           class="btn btn-danger mr-5"
           data-toggle="modal"
           data-target="#cancelOrderModal"
-          *ngIf="
-            !(hoaDon.trangThai == 'DANG_GIAO' || hoaDon.trangThai == 'HUY')
+          [disabled]="
+            hoaDon.trangThai == 'DANG_GIAO' ||
+            hoaDon.trangThai == 'HUY' ||
+            hoaDon.trangThai == 'TRA_HANG'
           "
         >
           Hủy

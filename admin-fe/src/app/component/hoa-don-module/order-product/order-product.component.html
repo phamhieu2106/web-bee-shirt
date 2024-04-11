@@ -11,7 +11,9 @@
             [disabled]="
               hoaDon.loaiHoaDon == 'TAI_QUAY' ||
               hoaDon.trangThai == 'HOAN_THANH' ||
-              hoaDon.trangThai == 'DANG_GIAO'
+              hoaDon.trangThai == 'TRA_HANG' ||
+              hoaDon.trangThai == 'DANG_GIAO' ||
+              isGiaoHangAndChuyenKhoan(hoaDon)
             "
             data-toggle="modal"
             data-target="#addProductModal"
@@ -69,7 +71,9 @@
                         [disabled]="
                           hoaDon.trangThai == 'HOAN_THANH' ||
                           hoaDon.trangThai == 'HUY' ||
-                          hoaDon.trangThai == 'DANG_GIAO'
+                          hoaDon.trangThai == 'TRA_HANG' ||
+                          hoaDon.trangThai == 'DANG_GIAO' ||
+                          isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       >
                         <i class="fa-solid fa-minus"></i>
@@ -87,7 +91,9 @@
                           hoaDon.loaiHoaDon == 'TAI_QUAY' ||
                           hoaDon.trangThai == 'HOAN_THANH' ||
                           hoaDon.trangThai == 'HUY' ||
-                          hoaDon.trangThai == 'DANG_GIAO'
+                          hoaDon.trangThai == 'TRA_HANG' ||
+                          hoaDon.trangThai == 'DANG_GIAO' ||
+                          isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       />
                       <button
@@ -97,7 +103,9 @@
                         [disabled]="
                           hoaDon.trangThai == 'HOAN_THANH' ||
                           hoaDon.trangThai == 'HUY' ||
-                          hoaDon.trangThai == 'DANG_GIAO'
+                          hoaDon.trangThai == 'TRA_HANG' ||
+                          hoaDon.trangThai == 'DANG_GIAO' ||
+                          isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       >
                         <i class="fa-solid fa-plus"></i>
@@ -115,7 +123,14 @@
                     <button
                       class="btn btn-outline-light btn-rounded"
                       *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
-                      [disabled]="hoaDon.hoaDonChiTiets.length <= 1"
+                      [disabled]="
+                        hoaDon.hoaDonChiTiets.length <= 1 ||
+                        hoaDon.trangThai == 'HOAN_THANH' ||
+                        hoaDon.trangThai == 'HUY' ||
+                        hoaDon.trangThai == 'TRA_HANG' ||
+                        hoaDon.trangThai == 'DANG_GIAO' ||
+                        isGiaoHangAndChuyenKhoan(hoaDon)
+                      "
                       (click)="deleteHDCT(hdct.id)"
                     >
                       <i class="fa-solid fa-trash text-danger"></i>
@@ -169,17 +184,11 @@
                               | currency : "đ " : "symbol" : "1.0-0"
                           }}</strong>
                         </p>
-                        <p class="">
-                          <!-- <input
-                            type="number"
-                            class="form-control"
-                            [(ngModel)]="hoaDon.phiVanChuyen"
-                            (change)="onPhiVanChuyenChange()"
-                            [disabled]="hoaDon.loaiHoaDon == 'TAI_QUAY'"
-                          /> -->
+                        <p class="w-25 ml-auto">
                           <app-input-number
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
                             [value]="hoaDon.phiVanChuyen"
+                            [disabled]="isGiaoHangAndChuyenKhoan(hoaDon)"
                             (valueChange)="onPhiVanChuyenChange($event)"
                           ></app-input-number>
                         </p>

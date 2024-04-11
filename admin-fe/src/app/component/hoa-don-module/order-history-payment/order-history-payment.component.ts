@@ -1,4 +1,3 @@
-import { error } from "highcharts";
 import { HoaDon } from "./../../../model/class/hoa-don.class";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
@@ -13,7 +12,6 @@ import {
 
 import { ThanhToan } from "src/app/model/class/thanh-toan";
 import { ThanhToanService } from "src/app/service/thanh-toan.service";
-import { ToastrService } from "ngx-toastr";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { NotificationService } from "src/app/service/notification.service";
 import Swal from "sweetalert2";
@@ -155,5 +153,8 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
 
   patchTienKhachDua(value: number) {
     this.thanhToanForm.get("tienKhachDua").patchValue(value);
+  }
+  isGiaoHangAndChuyenKhoan(hoaDon: HoaDon): boolean {
+    return this.hoaDonService.isGiaoHangAndChuyenKhoan(hoaDon);
   }
 }

@@ -28,19 +28,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private notifycation: NotificationService
   ) {}
-  ngOnDestroy(): void {
-    // console.log(this.hoaDon);
-    // this.updateHoaDon(this.hoaDon);
-    // this.hoaDonService.putHoaDon(this.hoaDon).subscribe({
-    //   next: (resp) => {
-    //     this.toastr.success("Cập nhật hóa đơn thành công", "Thành công");
-    //     // console.log(resp);
-    //   },
-    //   error: (err) => {
-    //     this.toastr.error(err.error.message, "Thất bại");
-    //   },
-    // });
-  }
+  ngOnDestroy(): void {}
   updateHoaDon(hoaDon: HoaDon) {
     this.hoaDonService.putHoaDon(hoaDon).subscribe({
       next: (resp) => {
@@ -78,7 +66,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     this.pdfTraHangService.getHoaDonTraHang(this.hoaDon.id);
   }
   changeDiaChi() {
-    const orderPhoneNumberRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b/;
+    const orderPhoneNumberRegex = /^(0[0-9])+([0-9]{8})\b/;
     if (!orderPhoneNumberRegex.test(this.orderPhoneNumberTemp)) {
       this.toastr.error("Số điện thoại không hợp lệ");
       return;
@@ -113,19 +101,8 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   putHoaDon(hoaDon: HoaDon) {
     this.updateHoaDon(hoaDon);
   }
-  // private mapToDiaChiVaPhiVanChuyen(diaChi: string): DiaChiVaPhiVanChuyen {
-  //   let dcvpvn = new DiaChiVaPhiVanChuyen();
-  //   if (diaChi != null && diaChi != undefined) {
-  //     const diaChis: string[] = diaChi.split(",");
-  //     dcvpvn.cuThe = diaChis[0];
-  //     dcvpvn.xa = diaChis[1];
-  //     dcvpvn.huyen = diaChis[2];
-  //     dcvpvn.tinh = diaChis[3];
-  //   }
 
-  //   return dcvpvn;
-  // }
-  // doiDiaChi() {
-  //   this.mapToDiaChiVaPhiVanChuyen(this.hoaDon.diaChiNguoiNhan);
-  // }
+  isGiaoHangAndChuyenKhoan(hoaDon: HoaDon): boolean {
+    return this.hoaDonService.isGiaoHangAndChuyenKhoan(hoaDon);
+  }
 }

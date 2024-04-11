@@ -127,4 +127,16 @@ export class HoaDonService {
     }
     return 0;
   }
+
+  isGiaoHangAndChuyenKhoan(hoaDon: HoaDon) {
+    let isChuyenKhoan =
+      hoaDon.thanhToans.length > 0 &&
+      hoaDon.thanhToans[0].hinhThucThanhToan.hinhThuc == "CHUYEN_KHOAN"
+        ? true
+        : false;
+    if (hoaDon.loaiHoaDon == "GIAO_HANG" && isChuyenKhoan) {
+      return true;
+    }
+    return false;
+  }
 }

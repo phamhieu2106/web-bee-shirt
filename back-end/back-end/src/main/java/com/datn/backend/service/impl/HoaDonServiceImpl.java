@@ -345,7 +345,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     private HoaDon createHoaDonGiaoHang(PlaceOrderRequest request) {
         // check so dien thoai
-        if (request.getSdtNguoiNhan() == null || !request.getSdtNguoiNhan().matches("^(0[3|5|7|8|9])+([0-9]{8})\\b$")) {
+        if (request.getSdtNguoiNhan() == null || !request.getSdtNguoiNhan().matches("^(0[0-9])+([0-9]{8})\\b$")) {
             throw new PlaceOrderException("Số điện thoại người nhận không hợp lệ");
         }
 

@@ -26,6 +26,7 @@ import { HoaDonService } from "src/app/service/hoa-don.service";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { NotificationService } from "src/app/service/notification.service";
 import { el } from "date-fns/locale";
+import { ThanhToan } from "src/app/model/class/thanh-toan";
 
 @Component({
   selector: "app-ban-hang",
@@ -66,7 +67,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.localStorageService.saveData(this.key, this.orders);
   }
   ngOnInit(): void {
-    this.orders = this.localStorageService.getData(this.key);
+    this.getOrdersFromLocalStorage();
+
     setTimeout(() => {
       if (this.orders == null || this.orders.length == 0) {
         this.orders = new Array<HoaDon>();
@@ -77,6 +79,25 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.getAllSpct();
       this.getAllKhachHang();
     }, 200);
+  }
+  getOrdersFromLocalStorage() {
+    this.orders = this.localStorageService.getData(this.key);
+
+    if (this.orders != null && this.orders.length > 0) {
+      this.orders.forEach((order) => {
+        if (order.hoaDonChiTiets.length > 0) {
+          order.hoaDonChiTiets.forEach((hdct) => {
+            this.spctService.getById(hdct.sanPhamChiTiet.id).subscribe({
+              next: (resp) => {
+                hdct.sanPhamChiTiet = resp;
+                hdct.giaBan = this.getGiaBan(resp);
+              },
+              error: (err) => console.log(err),
+            });
+          });
+        }
+      });
+    }
   }
   clearSpcts() {
     this.spcts = [];
@@ -93,7 +114,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }
     let hoaDon = new HoaDon();
     let orderNameTemp =
-      this.orders.length == 0 ? "Đơn 1" : this.newOrderNameTemp();
+      this.orders?.length == 0 ? "Đơn 1" : this.newOrderNameTemp();
     // set default value
     hoaDon.orderNameTemp = orderNameTemp;
     hoaDon.tongTien = 0;
@@ -107,6 +128,9 @@ export class BanHangComponent implements OnInit, OnDestroy {
     // hoaDon.phieuGiamGia = new PhieuGiamGia();
     hoaDon.thanhToans = [];
 
+    if (this.orders == null) {
+      this.orders = [];
+    }
     this.orders.push(hoaDon);
     this.order = hoaDon;
   }
@@ -144,8 +168,9 @@ export class BanHangComponent implements OnInit, OnDestroy {
   }
   newOrderNameTemp(): string {
     // Lấy ra đối tượng cuối cùng của key
-    const lastOrder = this.orders[this.orders.length - 1];
-    if (lastOrder === undefined) {
+    const lastOrder =
+      this.orders != null ? this.orders[this.orders.length - 1] : undefined;
+    if (lastOrder == undefined) {
       return "Đơn 1";
     }
     // Lấy ra key của đối tượng đã lấy
@@ -401,8 +426,11 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
       return;
     }
-    if (this.getTienKhachThanhToan() > this.getMustPay()) {
-      this.notification.error("Tiền khách thanh toán không hợp lệ");
+
+    if (!this.validKhachThanhToannVaGiaoHang(this.order)) {
+      this.notification.modal(
+        "Bạn chỉ có thể thanh toán toàn bộ hoặc thanh toán khi nhận hàng"
+      );
       return;
     }
 
@@ -429,6 +457,21 @@ export class BanHangComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+  validKhachThanhToannVaGiaoHang(hoaDon: HoaDon): boolean {
+    // neu chuyen khoan thì phải chuyển khoản toàn bộ hoặc 0
+    let check = false;
+    if (hoaDon.thanhToans.length > 1) {
+      return false;
+    } else {
+      if (
+        this.getTienKhachThanhToan() == this.getMustPay() ||
+        this.getTienKhachThanhToan() == 0
+      ) {
+        return true;
+      }
+    }
+    return check;
   }
 
   phiVanChuyenChange($event: any) {

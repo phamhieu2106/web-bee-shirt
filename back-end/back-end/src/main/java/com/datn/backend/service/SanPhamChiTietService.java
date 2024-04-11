@@ -55,4 +55,6 @@ public interface SanPhamChiTietService {
             String coAo,String chatLieu,
             BigDecimal giaMin,BigDecimal giaMax
     );
+
+    SpctResponse getById(Integer id);
 }

@@ -62,7 +62,7 @@ export class OrderTrackingComponent implements OnChanges {
         this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans)
     ) {
       // kiem tra thanh toan cua khach
-      Swal.fire("Vui lòng thanh toán đầy đủ trước khi Hoàn Thành .");
+      Swal.fire("Số tiền thanh toán không hợp lệ.");
       return;
     }
     this.hoaDonService

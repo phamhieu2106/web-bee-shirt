@@ -52,4 +52,8 @@ export class NotificationService {
       },
     });
   }
+
+  public modal(title: string): void {
+    Swal.fire(title);
+  }
 }

@@ -11,5 +11,5 @@ export class ThanhToan {
   soTien: number;
   trangThai: boolean;
   hinhThucThanhToan: HinhThucThanhToan;
-  tenHinhThucThanhToan: string;
+  tenHinhThucThanhToan: string; // CHUYEN_KHOAN , TIEN_MAT
 }

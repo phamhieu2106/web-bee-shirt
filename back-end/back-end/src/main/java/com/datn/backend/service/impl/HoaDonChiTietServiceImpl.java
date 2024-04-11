@@ -283,6 +283,14 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
     private BigDecimal getTienGiam(BigDecimal tongTien, PhieuGiamGia phieuGiamGia) {
         long tienGiam = 0;
+//        if (phieuGiamGia.get)
+        if (phieuGiamGia.getKieu() == 0) {
+            // giảm theo %
+            tienGiam = tongTien.longValue() * phieuGiamGia.getGiaTri().intValue() / 100;
+        } else if (phieuGiamGia.getKieu() == 1) {
+            // giảm theo giá trị
+            tienGiam = phieuGiamGia.getGiaTri().longValue();
+        }
         return BigDecimal.valueOf(tienGiam);
     }
 

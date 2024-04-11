@@ -3,12 +3,13 @@ package com.datn.backend.resource;
 import com.datn.backend.dto.request.AddHoaDonChiTietRequest;
 import com.datn.backend.dto.request.HoaDonChiTietRequest;
 import com.datn.backend.dto.response.HoaDonChiTietResponse;
-import com.datn.backend.dto.response.MessageResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonChiTietService;
+import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,8 @@ public class HoaDonChiTietResouce {
     // update
     @PutMapping("/update")
     public ResponseEntity<HoaDonChiTietResponse> updateHoaDonChiTiet(@Valid @RequestBody HoaDonChiTietRequest hoaDonChiTietRequest) {
-        return ResponseEntity.ok(hoaDonChiTietService.updateHoaDonCT(hoaDonChiTietRequest));
+        HoaDonChiTietResponse hoaDonChiTietResponse = hoaDonChiTietService.updateHoaDonCT(hoaDonChiTietRequest);
+        return ResponseEntity.ok(hoaDonChiTietResponse);
     }
 
     // delete
@@ -44,6 +46,7 @@ public class HoaDonChiTietResouce {
         if (id.describeConstable().isEmpty()) {
             throw new IdNotFoundException("ID không hợp lệ");
         }
-        return ResponseEntity.ok(hoaDonChiTietService.deleteHoaDonCT(id));
+        HoaDonChiTietResponse hoaDonChiTietResponse = hoaDonChiTietService.deleteHoaDonCT(id);
+        return ResponseEntity.ok(hoaDonChiTietResponse);
     }
 }

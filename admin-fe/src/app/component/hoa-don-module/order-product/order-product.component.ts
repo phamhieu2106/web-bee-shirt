@@ -103,7 +103,8 @@ export class OrderProductComponent {
         // this.tongTienChange.emit(this.tongTien);
         this.notification.success("Cập nhật thành công");
         setTimeout(() => {
-          this.hoaDonChange.emit(this.hoaDon);
+          this.getHoaDon.emit(this.hoaDon.id);
+          console.log("getHoaDon");
         }, 50);
       },
       error: (err) => {
@@ -138,7 +139,7 @@ export class OrderProductComponent {
             );
             this.notification.success("Xóa thành công");
             setTimeout(() => {
-              this.hoaDonChange.emit(this.hoaDon);
+              this.getHoaDon.emit(this.hoaDon.id);
             }, 50);
           },
           error: (err) => {

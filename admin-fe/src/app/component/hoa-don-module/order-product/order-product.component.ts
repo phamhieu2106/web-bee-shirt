@@ -6,6 +6,7 @@ import { NotificationService } from "src/app/service/notification.service";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
 import Swal from "sweetalert2";
+import { HoaDonService } from "src/app/service/hoa-don.service";
 
 @Component({
   selector: "app-order-product",
@@ -15,10 +16,12 @@ import Swal from "sweetalert2";
 export class OrderProductComponent {
   @Input({ required: true }) hoaDon: HoaDon;
   @Output() hoaDonChange = new EventEmitter<HoaDon>();
+  @Output() getHoaDon = new EventEmitter<number>();
 
   constructor(
     private hdctService: HoaDonChiTietService,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private hoaDonService: HoaDonService
   ) {}
 
   addHDCT(spct: SanPhamChiTiet) {
@@ -100,7 +103,8 @@ export class OrderProductComponent {
         // this.tongTienChange.emit(this.tongTien);
         this.notification.success("Cập nhật thành công");
         setTimeout(() => {
-          this.hoaDonChange.emit(this.hoaDon);
+          this.getHoaDon.emit(this.hoaDon.id);
+          console.log("getHoaDon");
         }, 50);
       },
       error: (err) => {
@@ -135,7 +139,7 @@ export class OrderProductComponent {
             );
             this.notification.success("Xóa thành công");
             setTimeout(() => {
-              this.hoaDonChange.emit(this.hoaDon);
+              this.getHoaDon.emit(this.hoaDon.id);
             }, 50);
           },
           error: (err) => {
@@ -145,5 +149,9 @@ export class OrderProductComponent {
         });
       }
     });
+  }
+
+  isGiaoHangAndChuyenKhoan(arg0: HoaDon): boolean {
+    return this.hoaDonService.isGiaoHangAndChuyenKhoan(arg0);
   }
 }

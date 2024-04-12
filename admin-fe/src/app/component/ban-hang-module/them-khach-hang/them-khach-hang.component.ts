@@ -1,7 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,7 +7,6 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ToastrService } from "ngx-toastr";
 import emailjs from "@emailjs/browser";
 
 import { KhachHangService } from "src/app/service/khach-hang.service";
@@ -18,7 +15,6 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
-import { el } from "date-fns/locale";
 @Component({
   selector: "app-them-khach-hang",
   templateUrl: "./them-khach-hang.component.html",

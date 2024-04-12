@@ -12,4 +12,6 @@ public interface HoaDonChiTietService {
     HoaDonChiTietResponse addHoaDonCT(AddHoaDonChiTietRequest hoaDonChiTietRequest);
     HoaDonChiTietResponse updateHoaDonCT(HoaDonChiTietRequest hoaDonChiTietRequest);
     HoaDonChiTietResponse deleteHoaDonCT(Integer id);
+
+    void updateHoaDonAfterUpdateHDCT(Integer idHoaDon);
 }

@@ -154,4 +154,7 @@ export class SanPhamChiTietService {
       `${this.apiUrl}/get-all-detail` + params
     );
   }
+  public getById(id: number): Observable<SanPhamChiTiet> {
+    return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-by-id/` + id);
+  }
 }

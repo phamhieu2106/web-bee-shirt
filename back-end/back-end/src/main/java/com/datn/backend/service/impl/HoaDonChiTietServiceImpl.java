@@ -1,7 +1,9 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddHoaDonChiTietRequest;
+import com.datn.backend.dto.request.DiscountValidRequest;
 import com.datn.backend.dto.request.HoaDonChiTietRequest;
+import com.datn.backend.dto.response.DiscountValidResponse;
 import com.datn.backend.dto.response.HoaDonChiTietResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.exception.custom_exception.PlaceOrderException;
@@ -9,9 +11,11 @@ import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.model.hoa_don.HoaDonChiTiet;
 import com.datn.backend.model.hoa_don.LichSuHoaDon;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonChiTietService;
+import com.datn.backend.service.PhieuGiamGiaServce;
 import com.datn.backend.utility.UtilityFunction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -33,6 +38,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private final SanPhamChiTietRepository sanPhamChiTietRepo;
     private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepo;
     private final LichSuHoaDonRepository lichSuHoaDonRepo;
+    private final PhieuGiamGiaServce phieuGiamGiaServce;
 
     @Override
     @Transactional
@@ -78,7 +84,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
             // tao lich su hoa don
             LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
                     .tieuDe("Thêm sản phẩm")
-                    .moTa("Thêm 1 sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " màu " + sanPhamChiTiet.getMauSac().getTen() + " size " + sanPhamChiTiet.getMauSac().getTen())
+                    .moTa("Thêm 1 sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " màu " + sanPhamChiTiet.getMauSac().getTen() + " ,size " + sanPhamChiTiet.getKichCo().getTen())
                     .hoaDon(hoaDon)
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
@@ -159,8 +165,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .tieuDe("Cập nhật sản phẩm")
                     .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                             " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                            " size " + sanPhamChiTiet.getMauSac().getTen() +
-                            " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                            " size " + sanPhamChiTiet.getKichCo().getTen() +
+                            " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
                     )
                     .hoaDon(hoaDon)
                     .build();
@@ -191,7 +197,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                         .tieuDe("Thêm mới sản phẩm")
                         .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                                 " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                                " size " + sanPhamChiTiet.getMauSac().getTen() +
+                                " size " + sanPhamChiTiet.getKichCo().getTen() +
                                 " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
                         )
                         .hoaDon(hoaDon)
@@ -213,8 +219,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                         .tieuDe("Cập nhật sản phẩm")
                         .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                                 " màu " + sanPhamChiTiet.getMauSac().getTen() +
-                                " size " + sanPhamChiTiet.getMauSac().getTen() +
-                                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
+                                " size " + sanPhamChiTiet.getKichCo().getTen() +
+                                " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
                         )
                         .hoaDon(hoaDon)
                         .build();
@@ -226,9 +232,10 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
             }
 
         }
-
+        hoaDonChiTietRepository.save(hoaDonChiTiet);
+        updateHoaDonAfterUpdateHDCT(hoaDonChiTiet.getHoaDon().getId());
         // cap nhat hdct
-        return modelMapper.map(hoaDonChiTietRepository.save(hoaDonChiTiet), HoaDonChiTietResponse.class);
+        return modelMapper.map(hoaDonChiTiet, HoaDonChiTietResponse.class);
     }
 
     @Override
@@ -243,194 +250,58 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         sanPhamChiTietRepo.save(sanPhamChiTiet);
 
         hoaDonChiTietRepository.delete(hoaDonChiTiet.get());
+
+        updateHoaDonAfterUpdateHDCT(hoaDonChiTiet.get().getHoaDon().getId());
         return modelMapper.map(hoaDonChiTiet.get(), HoaDonChiTietResponse.class);
     }
+
+    @Override
+    public void updateHoaDonAfterUpdateHDCT(Integer idHoaDon) {
+        if (idHoaDon == null) {
+            throw new IdNotFoundException("Hóa đơn không tồn tại");
+        }
+        // update tong tien
+        HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+        hoaDon.setTongTien(this.getTongTien(hoaDon.getHoaDonChiTiets()));
+
+        // update phieu giam gia
+        DiscountValidRequest discountValidRequest = DiscountValidRequest.builder()
+                .giaDangGiam(hoaDon.getTienGiam().longValue())
+                .giaTriDonHang(hoaDon.getTongTien())
+                .khachHangId(hoaDon.getKhachHang() == null ? null : hoaDon.getKhachHang().getId())
+                .build();
+        DiscountValidResponse discountValid = phieuGiamGiaServce.getDiscountValid(discountValidRequest);
+        hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
+        // update tien giam
+
+        BigDecimal tienGiam = this.getTienGiam(hoaDon.getTongTien(), hoaDon.getPhieuGiamGia());
+        hoaDon.setTienGiam(tienGiam);
+
+        //roll so luong phieu giam gia cu
+        hoaDonRepository.save(hoaDon);
+    }
+
+    private BigDecimal getTienGiam(BigDecimal tongTien, PhieuGiamGia phieuGiamGia) {
+        long tienGiam = 0;
+//        if (phieuGiamGia.get)
+        if (phieuGiamGia.getKieu() == 0) {
+            // giảm theo %
+            tienGiam = tongTien.longValue() * phieuGiamGia.getGiaTri().intValue() / 100;
+        } else if (phieuGiamGia.getKieu() == 1) {
+            // giảm theo giá trị
+            tienGiam = phieuGiamGia.getGiaTri().longValue();
+        }
+        return BigDecimal.valueOf(tienGiam);
+    }
+
+    private BigDecimal getTongTien(List<HoaDonChiTiet> hoaDonChiTiets) {
+        long total = 0;
+
+        for (int i = 0; i < hoaDonChiTiets.size(); i++) {
+            long giaBan = hoaDonChiTiets.get(i).getGiaBan().longValue();
+            total += (giaBan * hoaDonChiTiets.get(i).getSoLuong());
+        }
+
+        return BigDecimal.valueOf(total);
+    }
 }
-
-//// kiem tra gia ban co bi thay doi hay k
-//        if (hoaDonChiTiet.getGiaBan().compareTo(giaBanHienTai) == 0) {
-//// neu khong  thi cap nhat lai sl
-//
-//// tinh so luong bien dong
-//int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - hoaDonChiTiet.getSoLuong();
-//
-//// cap nhat so luong
-//            hoaDonChiTiet.setSoLuong(hoaDonChiTietRequest.getSoLuong());
-//
-//// tao lich su hoa don
-//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//        .tieuDe("Cập nhật sản phẩm")
-//        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                " số lượng " + hoaDonChiTiet + soLuongBienDong
-//        )
-//        .hoaDon(hoaDonChiTiet.getHoaDon())
-//        .build();
-//            lichSuHoaDonRepo.save(lichSuHoaDon);
-//
-//// cap nhat so luong ton
-//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
-//        sanPhamChiTietRepo.save(sanPhamChiTiet);
-//        } else {
-//
-//// lay ra so luong ban dau cua hdct
-//int soLuongTemp = hoaDonChiTiet.getSoLuong();
-//
-//hoaDonChiTiet = hoaDonChiTietRepository
-//        .findByHoaDonAndSanPhamChiTietAndGiaBan(hoaDon, sanPhamChiTiet, giaBanHienTai)
-//                    .orElse(null);
-//
-//// chua co hoa don chi tiet voi gia ban moi se tao 1 hdct moi
-//            if (hoaDonChiTiet == null) {
-//// tao moi hdct
-//hoaDonChiTiet = HoaDonChiTiet.builder()
-//                        .soLuong(1)
-//                        .giaBan(giaBanHienTai)// gia ban hien tai
-//                        .giaNhap(sanPhamChiTiet.getGiaNhap())
-//        .hoaDon(hoaDonChiTiet.getHoaDon())
-//        .sanPhamChiTiet(sanPhamChiTiet)
-//                        .build();
-//
-//// tao lich su hoa don
-//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//        .tieuDe("Thêm mới sản phẩm")
-//        .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
-//        )
-//        .hoaDon(hoaDonChiTiet.getHoaDon())
-//        .build();
-//
-//// cap nhat so luong ton
-//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
-//        sanPhamChiTietRepo.save(sanPhamChiTiet);
-//            } else {
-//// da co hdct voi gia ban nay => cap nhat sl
-//
-//
-//// tinh so luong bien dong
-//int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - soLuongTemp;
-//
-//// cap nhat so luong
-//                hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + soLuongBienDong);
-//
-//// tao lich su hoa don
-//LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//        .tieuDe("Cập nhật sản phẩm")
-//        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
-//        )
-//        .hoaDon(hoaDonChiTiet.getHoaDon())
-//        .build();
-//                lichSuHoaDonRepo.save(lichSuHoaDon);
-//
-//// cap nhat so luong ton
-//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
-//        sanPhamChiTietRepo.save(sanPhamChiTiet);
-//            }
-//
-//                    }
-
-//// neu cong them thi cap nhat thang voi gia hien tai
-//            if (soLuongBienDong>0){
-//                // cap nhat so luong
-//                hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong()+soLuongBienDong);
-//
-//                // tao lich su hoa don
-//                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//                        .tieuDe("Cập nhật sản phẩm")
-//                        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                                " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                                " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
-//                        )
-//                        .hoaDon(hoaDon)
-//                        .build();
-//                lichSuHoaDonRepo.save(lichSuHoaDon);
-//
-//                // cap nhat so luong ton
-//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
-//                sanPhamChiTietRepo.save(sanPhamChiTiet);
-//            }else {
-//                // neu tru di thi tru di thi cap nhat thang cu
-//                hoaDonChiTiet = hoaDonChiTietRepository.findById(hoaDonChiTietRequest.getId()).get();
-//                // tao lich su hoa don
-//                LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//                        .tieuDe("Cập nhật sản phẩm")
-//                        .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                                " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                                " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                                " số lượng " + hoaDonChiTiet.getSoLuong()
-//                        )
-//                        .hoaDon(hoaDon)
-//                        .build();
-//                lichSuHoaDonRepo.save(lichSuHoaDon);
-//
-//                // cap nhat so luong ton
-//                sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
-//                sanPhamChiTietRepo.save(sanPhamChiTiet);
-//            }
-
-
-//// lay ra hdct voi gia ban hien tai
-//        // tinh so luong bien dong
-//        int soLuongBienDong = hoaDonChiTietRequest.getSoLuong() - hoaDonChiTiet.getSoLuong();
-//        hoaDonChiTiet = hoaDon.getHoaDonChiTiets().stream().filter(
-//                        (hdct) -> hdct.getGiaBan().compareTo(giaBanHienTai) == 0)
-//                .findFirst().orElse(null);
-//
-//        // chua co hdct voi gia ban hien tai
-//        if (hoaDonChiTiet == null) {
-//            // tao moi hdct
-//            hoaDonChiTiet = HoaDonChiTiet.builder()
-//                    .soLuong(1)
-//                    .giaBan(giaBanHienTai)// gia ban hien tai
-//                    .giaNhap(sanPhamChiTiet.getGiaNhap())
-//                    .hoaDon(hoaDon)
-//                    .sanPhamChiTiet(sanPhamChiTiet)
-//                    .build();
-//
-//            // tao lich su hoa don
-//            LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//                    .tieuDe("Thêm mới sản phẩm")
-//                    .moTa("Thêm mới sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                            " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                            " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                            " giá bán " + UtilityFunction.convertToCurrency(giaBanHienTai.doubleValue())
-//                    )
-//                    .hoaDon(hoaDon)
-//                    .build();
-//            lichSuHoaDonRepo.save(lichSuHoaDon);
-//            // cap nhat so luong ton
-//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - 1);
-//            sanPhamChiTietRepo.save(sanPhamChiTiet);
-//        } else {
-//            int soLuongCapNhat = hoaDonChiTiet.getSoLuong() + soLuongBienDong;
-//            // cap nhat so luong
-//
-//            hoaDonChiTiet.setSoLuong(soLuongCapNhat);
-//            if (hoaDonChiTiet.getSoLuong()<=0) {
-//                throw new RuntimeException("Số lượng sản phẩm không hợp lệ");
-//            }
-//            // tao lich su hoa don
-//            LichSuHoaDon lichSuHoaDon = LichSuHoaDon.builder()
-//                    .tieuDe("Cập nhật sản phẩm")
-//                    .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
-//                            " màu " + sanPhamChiTiet.getMauSac().getTen() +
-//                            " size " + sanPhamChiTiet.getMauSac().getTen() +
-//                            " số lượng " + hoaDonChiTiet.getSoLuong() + soLuongBienDong
-//                    )
-//                    .hoaDon(hoaDon)
-//                    .build();
-//            lichSuHoaDonRepo.save(lichSuHoaDon);
-//
-//            // cap nhat so luong ton
-//            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - soLuongBienDong);
-//            sanPhamChiTietRepo.save(sanPhamChiTiet);
-//
-//
-//        }

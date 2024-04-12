@@ -243,6 +243,24 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return spctResponses;
     }
 
+    private SpctResponse mapToSpctResponse(SanPhamChiTiet spct) {
+            // map spct sang spctResponse
+            SpctResponse spctResp = modelMapper.map(spct, SpctResponse.class);
+
+            // lấy danh sách các đợt giảm giá đang hiệu lực voi spct nay
+            DotGiamGia dotGiamGia =
+                    dggspRepo.findDotGiamGiaSanPhamActiveBySanPhamChiTietId(spct.getId());
+
+            //gán gia tri
+            if (dotGiamGia != null) {
+                spctResp.setDotGiamGia(
+                        modelMapper.map(dotGiamGia, DotGiamGiaResponse2.class)
+                );
+            }
+
+            return spctResp;
+    }
+
     @Override
     public BigDecimal[] getMinAndMaxPrice(int productId) {
         BigDecimal[] result = new BigDecimal[2];
@@ -428,5 +446,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         spctResponsePagedResponse.setSearch(search);
         spctResponsePagedResponse.setPageNumberArr(UtilityFunction.getPageNumberArr(sanPhamChiTietPage.getTotalPages()));
         return spctResponsePagedResponse;
+    }
+
+    @Override
+    public SpctResponse getById(Integer id) {
+        SanPhamChiTiet sanPhamChiTiet = spctRepo.findById(id).get();
+        return mapToSpctResponse(sanPhamChiTiet);
     }
 }

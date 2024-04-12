@@ -12,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -37,6 +34,17 @@ public class HungTestResource {
         return ResponseEntity.ok( sanPhamChiTietService.getAll(pageNumber,pageSize,search));
     }
 
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<SpctResponse> getById(
+            @PathVariable Integer id
+    ) {
+        return ResponseEntity.ok( sanPhamChiTietService.getById(id));
+    }
+    @GetMapping("/min-max-price")
+    public ResponseEntity<?> getMinMaxPrice() {
+        long[][] minMaxPrice= sanPhamChiTietService.minMaxPrice();
+        return ResponseEntity.ok(minMaxPrice[0]);
+    }
     @GetMapping("/get-all-detail")
     public ResponseEntity<PagedResponse<SpctResponse>> getDetail(
             @RequestParam(defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE) int pageSize,
@@ -54,12 +62,6 @@ public class HungTestResource {
     ) {
         return ResponseEntity.ok( sanPhamChiTietService.getDetailSpct(pageSize,pageNumber,search.trim(),mauSac,kichCo,kieuDang,thietKe,tayAo,coAo,chatLieu,giaMin,giaMax));
     }
-    @GetMapping("/min-max-price")
-    public ResponseEntity<?> getMinMaxPrice() {
-        long[][] minMaxPrice= sanPhamChiTietService.minMaxPrice();
-        return ResponseEntity.ok(minMaxPrice[0]);
-    }
-
 
 //    private PagedResponse<SpctResponse> getDetailSpct(
 //            int pageSize, int pageNumber,

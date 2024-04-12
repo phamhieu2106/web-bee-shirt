@@ -13,7 +13,9 @@
             [disabled]="
               hoaDon.loaiHoaDon == 'TAI_QUAY' ||
               hoaDon.trangThai == 'HOAN_THANH' ||
-              hoaDon.trangThai == 'HUY'
+              hoaDon.trangThai == 'HUY' ||
+              hoaDon.trangThai == 'TRA_HANG' ||
+              isGiaoHangAndChuyenKhoan(hoaDon)
             "
           >
             <i class="fa-solid fa-plus"></i>
@@ -62,8 +64,10 @@
                     class="btn btn-outline-light btn-rounded"
                     [disabled]="
                       hoaDon.trangThai == 'HOAN_THANH' ||
-                      hoaDon.trangThai == 'HUY'
+                      hoaDon.trangThai == 'HUY' ||
+                      isGiaoHangAndChuyenKhoan(hoaDon)
                     "
+                    *ngIf="!(hoaDon.trangThai == 'TRA_HANG')"
                     (click)="deleteThanhToan(lstt)"
                   >
                     <i class="fa-solid fa-trash text-danger"></i>

@@ -78,6 +78,20 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     }
 
     @Override
+    public List<KhachHang> getPhieuKhachHang( String id,Boolean check) {
+
+        List<KhachHang> khachHangPhieu;
+        if(check == true){
+            khachHangPhieu = khachHangRepository.getCoPhieu(id);
+        }else{
+            khachHangPhieu = khachHangRepository.getkhongPhieu(id);
+        }
+
+        return khachHangPhieu;
+
+    }
+
+    @Override
     public PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<KhachHang> page = khachHangRepository.getAllActive(pageable, search);

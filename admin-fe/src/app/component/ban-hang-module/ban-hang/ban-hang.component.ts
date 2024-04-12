@@ -1,19 +1,10 @@
+import { MauSac } from "./../../../model/class/mau-sac.class";
 import { PdfService } from "./../../../service/pdf.service";
 import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
-import { ToastrService } from "ngx-toastr";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
 import { SanPhamChiTiet } from "src/app/model/class/san-pham-chi-tiet.class";
@@ -25,8 +16,6 @@ import { DiscountValid } from "src/app/model/class/discount-valid.class";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { DiaChi } from "src/app/model/class/dia-chi.class";
 import { NotificationService } from "src/app/service/notification.service";
-import { el } from "date-fns/locale";
-import { ThanhToan } from "src/app/model/class/thanh-toan";
 
 @Component({
   selector: "app-ban-hang",
@@ -87,13 +76,14 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.orders.forEach((order) => {
         if (order.hoaDonChiTiets.length > 0) {
           order.hoaDonChiTiets.forEach((hdct) => {
-            this.spctService.getById(hdct.sanPhamChiTiet.id).subscribe({
-              next: (resp) => {
-                hdct.sanPhamChiTiet = resp;
-                hdct.giaBan = this.getGiaBan(resp);
-              },
-              error: (err) => console.log(err),
-            });
+            // this.spctService.getById(hdct.sanPhamChiTiet.id).subscribe({
+            //   next: (resp) => {
+            //     hdct.sanPhamChiTiet = resp;
+            //     hdct.giaBan = this.getGiaBan(resp);
+            //   },
+            //   error: (err) => console.log(err),
+            // });
+            this.updateHDCT(hdct);
           });
         }
       });
@@ -280,6 +270,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   minusQuantity(hdct: HoaDonChiTiet) {
     if (hdct.soLuong > 1) {
       hdct.soLuong -= 1;
+      this.updateHDCT(hdct);
     }
     this.getTongTien();
     setTimeout(() => {
@@ -290,11 +281,17 @@ export class BanHangComponent implements OnInit, OnDestroy {
 
   plusQuantity(hdct: HoaDonChiTiet) {
     hdct.soLuong += 1;
+    this.updateHDCT(hdct);
     this.getTongTien();
     setTimeout(() => {
       this.getPhieuGiamGia();
       this.getTienGiam();
     }, 100);
+  }
+
+  changeSoLuongHDCT(hdct: HoaDonChiTiet) {
+    this.updateHDCT(hdct);
+    this.updateHoaDon();
   }
   async chooseProduct(spct: SanPhamChiTiet) {
     let newHdct = null;
@@ -538,10 +535,6 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  insertSLSP() {
-    this.updateHoaDon();
-  }
-
   getDiaChiMacDinh(diaChis: DiaChi[]): DiaChi {
     for (let i = 0; i < diaChis.length; i++) {
       if (diaChis[i].macDinh == true) {
@@ -600,5 +593,20 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }
     let idModal = "closeModalChonDiaChi";
     this.closeModal(idModal);
+  }
+
+  updateHDCT(hdct: HoaDonChiTiet) {
+    this.spctService.getById(hdct.sanPhamChiTiet.id).subscribe({
+      next: (resp) => {
+        hdct.sanPhamChiTiet = resp;
+        if (hdct.giaBan != this.getGiaBan(resp)) {
+          hdct.giaBan = this.getGiaBan(resp);
+          this.notification.warning(
+            `Giá sản phẩm ${resp.sanPham.ten} [${resp.kichCo.ten} | ${resp.mauSac.ten}] đã bị thay đổi`
+          );
+        }
+      },
+      error: (err) => console.log(err),
+    });
   }
 }

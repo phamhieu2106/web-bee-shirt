@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
-import { ToastrService } from "ngx-toastr";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { NotificationService } from "src/app/service/notification.service";
 import { PdfTraHangService } from "src/app/service/pdf-tra-hang.service";
@@ -25,7 +24,6 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private hoaDonService: HoaDonService,
     private pdfService: PdfService,
     private pdfTraHangService: PdfTraHangService,
-    private toastr: ToastrService,
     private notifycation: NotificationService
   ) {}
   ngOnDestroy(): void {}
@@ -68,13 +66,15 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   changeDiaChi() {
     const orderPhoneNumberRegex = /^(0[0-9])+([0-9]{8})\b/;
     if (!orderPhoneNumberRegex.test(this.orderPhoneNumberTemp)) {
-      this.toastr.error("Số điện thoại không hợp lệ");
+      this.notifycation.error("Số điện thoại không hợp lệ");
       return;
     } else {
       if (
         this.diaChiVaPhiVanChuyen.tinh &&
         this.diaChiVaPhiVanChuyen.huyen &&
-        this.diaChiVaPhiVanChuyen.xa
+        this.diaChiVaPhiVanChuyen.xa &&
+        this.diaChiVaPhiVanChuyen.cuThe &&
+        this.diaChiVaPhiVanChuyen.cuThe.trim() != ""
       ) {
         this.hoaDon.diaChiNguoiNhan = `${
           this.diaChiVaPhiVanChuyen.cuThe == undefined
@@ -87,9 +87,10 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
         this.hoaDon.tenNguoiNhan = this.orderNameTemp;
         this.hoaDon.sdtNguoiNhan = this.orderPhoneNumberTemp;
         this.hoaDon.ghiChu = this.orderNoteTemp;
+        this.closeModal("btnCloseChangeDiaChi");
         this.updateHoaDon(this.hoaDon);
       } else {
-        this.toastr.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
+        this.notifycation.warning("Bạn vui lòng chọn đầy đủ địa chỉ");
       }
     }
   }
@@ -104,5 +105,9 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
 
   isGiaoHangAndChuyenKhoan(hoaDon: HoaDon): boolean {
     return this.hoaDonService.isGiaoHangAndChuyenKhoan(hoaDon);
+  }
+
+  closeModal(idModal: string): void {
+    document.getElementById(idModal).click();
   }
 }

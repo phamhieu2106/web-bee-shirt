@@ -20,7 +20,15 @@
         <button class="btn btn-primary rounded ml-2" (click)="submitForm()">
           <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
         </button>
-        <button class="btn btn-primary rounded ml-2">Quét Mã QR</button>
+        <button
+          class="btn btn-primary rounded ml-2"
+          id="add-button"
+          data-toggle="modal"
+          data-target="#formQRCode"
+          data-whatever="@mdo"
+        >
+          <i class="fa-solid fa-qrcode"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -35,3 +43,45 @@
     (click)="maHoaDon = null"
   ></span>
 </ng-template>
+
+<div
+  class="modal fade"
+  id="formQRCode"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="formQR"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          id="closeFormQRCode"
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ngx-scanner-qrcode
+          #action="scanner"
+          (event)="onEvent($event, action)"
+        ></ngx-scanner-qrcode>
+        <div class="text-center">
+          <p *ngIf="action.isLoading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+          </p>
+          <button
+            class="btn btn-primary btn-rounded"
+            (click)="action.isStart ? action.stop() : action.start()"
+          >
+            {{ action.isStart ? "Stop" : "Start" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

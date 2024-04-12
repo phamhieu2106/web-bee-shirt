@@ -26,6 +26,10 @@ import { NzGridModule } from "ng-zorro-antd/grid";
 import { NzDescriptionsModule } from "ng-zorro-antd/descriptions";
 import { NzBadgeModule } from "ng-zorro-antd/badge";
 import { NzToolTipModule } from "ng-zorro-antd/tooltip";
+import { NgxScannerQrcodeModule, LOAD_WASM } from "ngx-scanner-qrcode";
+
+// Necessary to solve the problem of losing internet connection
+LOAD_WASM().subscribe();
 
 @NgModule({
   declarations: [
@@ -57,6 +61,7 @@ import { NzToolTipModule } from "ng-zorro-antd/tooltip";
     NzDescriptionsModule,
     NzBadgeModule,
     NzToolTipModule,
+    NgxScannerQrcodeModule,
   ],
 })
 export class TraHangModule {}

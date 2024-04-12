@@ -9,11 +9,7 @@
           (change)="getAllHuyenByTinh()"
         >
           <option value="-1">
-            {{
-              diaChiVaPhiVanChuyen.tinh
-                ? diaChiVaPhiVanChuyen.tinh
-                : "Chọn tỉnh thành"
-            }}
+            {{ "Chọn tỉnh thành" }}
           </option>
           <option
             *ngFor="let t of tinhs"
@@ -84,3 +80,4 @@
     </p>
   </div>
 </div>
+<app-overlay [text]="overlayText" *ngIf="isLoadding"></app-overlay>

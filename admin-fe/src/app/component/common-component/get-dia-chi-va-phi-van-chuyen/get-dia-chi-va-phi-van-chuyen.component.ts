@@ -1,7 +1,6 @@
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { DiaChiVaPhiVanChuyen } from "./../../../model/class/dia-chi-va-phi-van-chuyen.class";
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -24,37 +23,43 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   tinhs: any[];
   huyens: any[];
   xas: any[];
-  constructor(private ghnService: GiaoHangNhanhService) {}
-  ngOnChanges(changes: SimpleChanges): void {
+
+  public isLoadding = false;
+  public overlayText = "Đang tính toán";
+  constructor(private ghnService: GiaoHangNhanhService) {
     this.getAllTinh();
-    if (
-      changes["diaChiVaPhiVanChuyen"] &&
-      !this.diaChiVaPhiVanChuyenIsEmpty()
-    ) {
-      // Fill data khi có dữ liệu
-      this.fillData();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["diaChiVaPhiVanChuyen"]) {
+      if (!this.diaChiVaPhiVanChuyenIsEmpty()) {
+        // Fill data khi truyền dữ liệu
+        this.fillData();
+      }
     }
   }
   ngOnInit(): void {}
   fillData() {
+    this.turnOnOverlay("Vui lòng chờ vài giây ...");
+
     // get all tỉnh => lọc ds tìm tinhId
-    setTimeout(() => this.findTinhId(), 10);
+    setTimeout(() => this.findTinhId(), 0);
 
     // get all huyện => lọc danh sách tìm xaId
     setTimeout(() => this.getAllHuyenByTinh(), 200);
-    setTimeout(() => this.findHuyenId(), 400);
+    setTimeout(() => this.findHuyenId(), 700);
 
     // get all xã
-    setTimeout(() => this.getAllXaByHuyen(), 600);
-    setTimeout(() => this.findXaId(), 800);
+    setTimeout(() => this.getAllXaByHuyen(), 900);
+    setTimeout(() => this.findXaId(), 1200);
 
     // Get phi van chuyen va thoi gian du kien giao
-    setTimeout(() => this.onFinishChooseDiaChi(), 1000);
+    setTimeout(() => this.onFinishChooseDiaChi(), 1500);
+    setTimeout(() => this.turnOffOverlay(""), 1800);
   }
   findXaId() {
     for (let i = 0; i < this.xas.length; i++) {
       const element = this.xas[i];
-      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.xa)) {
+      if (element.WardName == this.diaChiVaPhiVanChuyen.xa) {
         this.diaChiVaPhiVanChuyen.xaCode = element.WardCode;
         break;
       }
@@ -63,7 +68,7 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   findHuyenId() {
     for (let i = 0; i < this.huyens.length; i++) {
       const element = this.huyens[i];
-      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.huyen)) {
+      if (element.DistrictName == this.diaChiVaPhiVanChuyen.huyen) {
         this.diaChiVaPhiVanChuyen.huyenId = element.DistrictID;
         break;
       }
@@ -72,11 +77,8 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
   findTinhId() {
     for (let i = 0; i < this.tinhs.length; i++) {
       const element = this.tinhs[i];
-      if (element.NameExtension.includes(this.diaChiVaPhiVanChuyen.tinh)) {
-        console.log(element);
-
+      if (element.ProvinceName == this.diaChiVaPhiVanChuyen.tinh) {
         this.diaChiVaPhiVanChuyen.tinhId = element.ProvinceID;
-        // this.diaChiVaPhiVanChuyen.tinh = element.ProvinceID;
         break;
       }
     }
@@ -214,5 +216,17 @@ export class GetDiaChiVaPhiVanChuyenComponent implements OnInit, OnChanges {
           console.log(err);
         },
       });
+  }
+
+  // 14
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 15
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

@@ -244,7 +244,7 @@ export class ChiTietHoaDonComponent {
   private async handleCountReturnMoney() {
     if (!this.listReturnItems || this.listReturnItems.length === 0) {
       this.amountOfMoneyReturn = 0;
-      this.newAmount = this.hoaDon.tongTien;
+      this.newAmount = this.hoaDon?.tongTien;
       return;
     }
     const voucher = this.hoaDon?.phieuGiamGia

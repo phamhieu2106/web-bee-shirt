@@ -18,6 +18,8 @@ export class QuantityInputComponent {
       this.quantity = 1;
     } else if (quantiy > this.maxQuantity) {
       this.quantity = this.maxQuantity;
+    } else if (quantiy <= 0) {
+      this.quantity = this.maxQuantity;
     }
   }
 }

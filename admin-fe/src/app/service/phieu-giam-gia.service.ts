@@ -177,4 +177,16 @@ const formattedThoiGianKetThuc = format(thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm')
       `${this.apiUrl}/ds-khach-tang${param}`
     );
   }
+
+  public getKhach(
+    id: number,
+    check: boolean
+  ): Observable<KhachHang[]> {
+    const param = `?id=${id}&check=${check}`;
+    return this.http.get<KhachHang[]>(
+      `${this.apiUrl}/ds-tang${param}`
+    );
+  }
+
+
 }

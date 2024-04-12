@@ -380,7 +380,9 @@
                       <td>
                         <input
                           type="checkbox"
-                          checked="isCustomerSelected(kh.id)"
+                          [checked]="
+                          selectedIds.length > 0 && isCustomerSelected(kh.id)
+                        "
                           (change)="onCheckboxChange(kh.id)"
                           [disabled]="!isTableDisabled"
                         />
@@ -410,13 +412,10 @@
                 <div class="row">
                   <div class="col col-md-12 d-flex justify-content-between">
                     <div class="col-md-3">
-                      <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-                        >Số lượng:
-                      </label>
+                      <label class="my-1 mr-2">Số lượng: </label>
                       <select
                         class="custom-select my-1 mr-sm-2 col-md-5"
-                        id="inlineFormCustomSelectPref"
-                        (change)="onChangePageSize($event)"
+                        (change)="changePageSize($event)"
                       >
                         >
                         <option value="5">5</option>
@@ -429,43 +428,52 @@
                         <ul class="pagination">
                           <li
                             class="page-item"
-                            [ngClass]="
-                              pagedResponse?.pageNumber == 1 ? 'disabled' : ''
-                            "
+                            [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
                           >
                             <a
                               class="page-link pointer"
-                              (click)="goToPage(pagedResponse?.pageNumber - 1)"
+                              (click)="
+                                goToPage(
+                                  pagedResponse?.pageNumber - 1,
+                                  pagedResponse?.pageSize
+                                  
+                                )
+                              "
                               >Previous</a
                             >
                           </li>
                           <li
                             class="page-item"
-                            *ngFor="let page of pagedResponse?.pageNumberArr"
+                            *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
                           >
                             <a
                               class="page-link pointer"
                               [ngClass]="
-                                pagedResponse?.pageNumber == page
-                                  ? 'active'
-                                  : ''
+                                pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                               "
-                              (click)="goToPage(page)"
-                              >{{ page }}</a
+                              (click)="
+                                goToPage(pageNumber, pagedResponse?.pageSize)
+                              "
+                              >{{ pageNumber }}</a
                             >
                           </li>
                           <li
                             class="page-item"
                             [ngClass]="
-                              pagedResponse?.pageNumber ==
-                              pagedResponse?.totalPages
+                              pagedResponse?.pageNumber == pagedResponse?.totalPages
                                 ? 'disabled'
                                 : ''
                             "
                           >
                             <a
                               class="page-link pointer"
-                              (click)="goToPage(pagedResponse?.pageNumber + 1)"
+                              (click)="
+                                goToPage(
+                                  pagedResponse?.pageNumber + 1,
+                                  pagedResponse?.pageSize
+                                  
+                                )
+                              "
                               >Next</a
                             >
                           </li>
@@ -473,7 +481,13 @@
                       </nav>
                     </div>
                   </div>
+    
+    
+    
                 </div>
+
+
+
               </div>
               <div class="col-md-12 mt-5">
                 <h3>Danh sách khách hàng không có phiếu giảm giá</h3>
@@ -497,6 +511,9 @@
                           type="checkbox"
                           (change)="onCheckboxChange(kh.id)"
                           [disabled]="!isTableDisabled"
+                          [checked]="
+                          selectedIds.length > 0 && isCustomerSelected(kh.id)
+                        "
                         />
                       </td>
 
@@ -522,13 +539,10 @@
                 <div class="row">
                   <div class="col col-md-12 d-flex justify-content-between">
                     <div class="col-md-3">
-                      <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-                        >Số lượng:
-                      </label>
+                      <label class="my-1 mr-2">Số lượng: </label>
                       <select
                         class="custom-select my-1 mr-sm-2 col-md-5"
-                        id="inlineFormCustomSelectPref"
-                        (change)="onChangePageSize($event)"
+                        (change)="changePageSize1($event)"
                       >
                         >
                         <option value="5">5</option>
@@ -541,38 +555,39 @@
                         <ul class="pagination">
                           <li
                             class="page-item"
-                            [ngClass]="
-                              pagedResponse2?.pageNumber == 1 ? 'disabled' : ''
-                            "
+                            [ngClass]="pagedResponse2?.pageNumber == 1 ? 'disabled' : ''"
                           >
                             <a
                               class="page-link pointer"
                               (click)="
-                                goToPage2(pagedResponse2?.pageNumber - 1)
+                                goToPage2(
+                                  pagedResponse2?.pageNumber - 1,
+                                  pagedResponse2?.pageSize
+                                  
+                                )
                               "
                               >Previous</a
                             >
                           </li>
                           <li
                             class="page-item"
-                            *ngFor="let page of pagedResponse2?.pageNumberArr"
+                            *ngFor="let pageNumber of pagedResponse2?.pageNumberArr"
                           >
                             <a
                               class="page-link pointer"
                               [ngClass]="
-                                pagedResponse2?.pageNumber == page
-                                  ? 'active'
-                                  : ''
+                                pagedResponse2?.pageNumber == pageNumber ? 'active' : ''
                               "
-                              (click)="goToPage2(page)"
-                              >{{ page }}</a
+                              (click)="
+                                goToPage2(pageNumber, pagedResponse2?.pageSize)
+                              "
+                              >{{ pageNumber }}</a
                             >
                           </li>
                           <li
                             class="page-item"
                             [ngClass]="
-                              pagedResponse2?.pageNumber ==
-                              pagedResponse2?.totalPages
+                              pagedResponse2?.pageNumber == pagedResponse2?.totalPages
                                 ? 'disabled'
                                 : ''
                             "
@@ -580,7 +595,11 @@
                             <a
                               class="page-link pointer"
                               (click)="
-                                goToPage2(pagedResponse2?.pageNumber + 1)
+                                goToPage2(
+                                  pagedResponse2?.pageNumber + 1,
+                                  pagedResponse2?.pageSize
+                                  
+                                )
                               "
                               >Next</a
                             >
@@ -589,7 +608,10 @@
                       </nav>
                     </div>
                   </div>
-                </div>
+
+
+
+
               </div>
             </div>
           </div>

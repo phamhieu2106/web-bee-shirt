@@ -12,7 +12,7 @@
 /* Style the tab */
 .tab {
   overflow: hidden;
-padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -27,24 +27,28 @@ padding-bottom: 20px;
 }
 
 .order-cho-xac-nhan {
-  background-color: #2678cf;
+  background-color: #2b7ace;
   color: white;
 }
 
 .order-da-xac-nhan {
-  background-color: #2e90fa;
+  background-color: darkgoldenrod;
+  color: white;
 }
 
 .order-cho-giao {
-  background-color: #2e90fa;
+  background-color: darkblue;
+  color: white;
 }
 
 .order-dang-giao {
-  background-color: #7a7dc4;
+  background-color: darkgreen;
+  color: white;
 }
 
 .order-hoan-thanh {
   background-color: #2efa5e;
+  color: white;
 }
 
 .order-huy {
@@ -579,10 +583,6 @@ img {
   width: auto;
 }
 
-
-.btn-success{
+.btn-success {
   background: #000000 !important;
- 
 }
-
-

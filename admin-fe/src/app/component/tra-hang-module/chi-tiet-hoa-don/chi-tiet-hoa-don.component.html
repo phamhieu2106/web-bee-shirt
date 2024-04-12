@@ -67,8 +67,9 @@
                   this.hoaDon?.phiVanChuyen | currency : "VND"
                 }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Tổng Thanh Toán">{{
-                  this.hoaDon?.tongTien - this.hoaDon?.tienGiam
-                    | currency : "VND"
+                  this.hoaDon?.tongTien -
+                    this.hoaDon?.tienGiam +
+                    this.hoaDon?.phiVanChuyen | currency : "VND"
                 }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Ghi chú">
                   {{ this.hoaDon?.ghiChu ? this.hoaDon?.ghiChu : "-" }}
@@ -359,7 +360,7 @@
                         style="margin-right: 5px"
                       ></i>
                       <strong>
-                        Phiếu giảm giá mới:
+                        Phiếu giảm giá:
                         <strong style="color: #32ba7c">{{
                           this.bestVoucher?.maPhieuGiamGia
                         }}</strong>
@@ -379,32 +380,7 @@
                     {{ discountMoney | currency : "VND" }}
                   </strong>
                 </nz-list-item>
-                <nz-list-item>
-                  <span nz nz-typography>
-                    <kbd
-                      style="color: #080808; display: flex; align-items: center"
-                    >
-                      <i nz-icon nzType="euro" style="margin-right: 5px"></i>
-                      <strong> Tổng tiền hoá đơn mới: </strong>
-                    </kbd>
-                  </span>
-                  <strong
-                    style="
-                      color: #95d240;
-                      max-width: 200px;
-                      overflow: auto;
-                      white-space: nowrap;
-                    "
-                  >
-                    {{ this.newAmount - this.discountMoney | currency : "VND" }}
-                  </strong>
-                </nz-list-item>
-                <nz-list-item
-                  nzTooltipTitle="Tổng tiền trả = (tổng hoá đơn ban đầu - tổng hoá đơn hiện tại) + phiếu giảm giá mới"
-                  nzTooltipPlacement="top"
-                  nz-button
-                  nz-tooltip
-                >
+                <nz-list-item nzTooltipPlacement="top" nz-button nz-tooltip>
                   <span nz nz-typography>
                     <kbd
                       style="color: #080808; display: flex; align-items: center"
@@ -441,12 +417,51 @@
                 </nz-list-item>
               </nz-list>
             </div>
+            <div class="card-footer">
+              <span nz-typography
+                ><strong>Hóa đơn không có phiếu giảm giá:</strong></span
+              >
+              <div>Tổng tiền trả = giá sản phẩm * số lượng</div>
+              <span nz-typography
+                ><strong>Hóa đơn có phiếu giảm giá:</strong></span
+              >
+              <br />
+              <span nz-typography
+                ><u>Được áp dụng phiếu giảm giá mới loại %</u></span
+              >
+              <div>
+                Tổng tiền trả = Tổng đơn hàng trả mua thực tế - tiền đơn được
+                giảm + tiền phiếu giảm giá mới
+              </div>
+              <br />
+              <span nz-typography
+                ><u>Được áp dụng phiếu giảm giá mới loại tiền mặt</u></span
+              >
+              <div>
+                Tổng tiền trả = Tổng đơn hàng trả mua thực tế - tiền đơn được
+                giảm + tiền phiếu giảm giá mới
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </ng-container>
   </div>
 </div>
+
+<ng-template #congThucTinhTien>
+  <ng-container [ngSwitch]="this.hoaDon">
+    <span *ngSwitchCase="!this.hoaDon?.phieuGiamGia">
+      Tổng tiền trả = giá sản phẩm * số lượng
+    </span>
+    <span
+      *ngSwitchCase="this.hoaDon?.phieuGiamGia && this.bestVoucher?.kieu === 0"
+    >
+      Tổng tiền trả = Tổng đơn hàng trả mua thực tế - tiền đơn được giảm + tiền
+      phiếu giảm giá mới
+    </span>
+  </ng-container>
+</ng-template>
 
 <ng-template #noData>
   <nz-empty></nz-empty>

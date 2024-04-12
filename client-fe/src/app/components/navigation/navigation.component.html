@@ -79,9 +79,6 @@
                     <li class="actionItem">
                       <a routerLink="profile/my-orders">Theo dõi đơn hàng</a>
                     </li>
-                    <!-- <li class="actionItem">
-                      <a href="">Sản phẩm yêu thích</a>
-                    </li> -->
                     <li class="actionItem">
                       <a routerLink="profile/my-discounts">Ưu đãi của bạn</a>
                     </li>
@@ -93,13 +90,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="yeuThich">
-              <div class="iconnav">
-                <i class="iconyeuThich bi bi-heart"></i>
-                <span class="quantity">{{ 0 }}</span>
-              </div>
-            </div> -->
 
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
@@ -162,14 +152,6 @@
       <i class="bi bi-x-circle"></i>
     </div>
   </div>
-
-  <!-- Điều kiện để nhận mã miễn phí vận chuyển -->
-  <!-- <div class="dieuKien" style="background-color: #c0f794b0; padding: 10px">
-    <img src="https://i.imgur.com/uoqTCt1.png" style="width: 30px" />
-    <span style="font-size: 14px; margin-left: 5px"
-      >Bạn đủ điều kiện nhận miễn phí vận chuyển</span
-    >
-  </div> -->
 
   <!-- not log in -->
   <ul class="listCart" style="padding: 0" *ngIf="!isLoggedIn">
@@ -239,22 +221,8 @@
   </ul>
 
   <div class="checkOut" *ngIf="cartItems1.length > 0 && !isLoggedIn">
-    <div class="TinhTien">
-      <div>Giá trị đơn hàng</div>
-      <div class="giaGoc">{{ calculateTotalMoney(cartItems1) }}</div>
-
-      <!-- <div>Chiết khấu</div>
-      <div class="chietKhau">-179.000đ</div> -->
-
-      <div class="tamTinh">Phải trả</div>
-      <div class="total">419.300đ</div>
-
-      <!-- <div></div>
-      <div class="save">(Tiết kiệm 179.000đ)</div> -->
-    </div>
-
     <div class="thanhToan">
-      <button class="btnThanhToan">Thanh Toán</button>
+      <button class="btnThanhToan" routerLink="/check-out">Thanh toán</button>
     </div>
   </div>
 

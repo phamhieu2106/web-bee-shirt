@@ -28,7 +28,9 @@
                           <div class="cart-item-photo">
                             <a
                               class="cart-image-container"
-                              [routerLink]="'/san-pham/' + item.spct.sanPham.id"
+                              [routerLink]="
+                                '/san-pham/' + item?.spct?.sanPham?.id
+                              "
                               ><img
                                 class="rounded"
                                 [src]="item.spct.hinhAnhs[0].imageUrl"
@@ -38,11 +40,11 @@
                             <strong class="cart-item-name"
                               ><a
                                 [routerLink]="
-                                  '/san-pham/' + item.spct.sanPham.id
+                                  '/san-pham/' + item?.spct?.sanPham?.id
                                 "
                                 class="cart-image-container"
                               >
-                                {{ item.spct.sanPham.ten }}
+                                {{ item?.spct?.sanPham?.ten }}
                               </a></strong
                             >
                             <div class="cart-item-options">
@@ -63,7 +65,7 @@
                                   ><span class="swatch-option text"
                                     >Size:
                                     {{
-                                      item.spct.kichCo.ten.split("-")[0]
+                                      item?.spct?.kichCo?.ten.split("-")[0]
                                     }}</span
                                   ></span
                                 >
@@ -262,7 +264,7 @@
                                 </div>
                               </div>
                               <div class="action-edit" *ngIf="!addr.macDinh">
-                                <span (click)="setDefaultAddress(addr.id)"
+                                <span (click)="setDefaultAddress(addr?.id)"
                                   >Đặt</span
                                 >
                               </div>
@@ -303,6 +305,27 @@
                           <div class="checkout-shipping">
                             <form [formGroup]="addAddressForm">
                               <div class="checkout-shipping-form">
+                                <div class="row mb-3">
+                                  <div class="form-group col-sm-6">
+                                    <label class="mb-1">Họ tên:</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Nhập họ tên"
+                                      formControlName="hoTen"
+                                    />
+                                  </div>
+                                  <div class="form-group col-sm-6">
+                                    <label class="mb-1">Số điện thoại:</label>
+                                    <input
+                                      type="text"
+                                      placeholder="Nhập số điện thoại"
+                                      class="form-control"
+                                      formControlName="sdt"
+                                    />
+                                  </div>
+                                </div>
+
                                 <!-- Tỉnh/Thành phố -->
                                 <div class="row">
                                   <div class="form-group col-sm-6 mb-3">
@@ -379,8 +402,10 @@
                                   <input
                                     type="checkbox"
                                     formControlName="macDinh"
+                                    id="checkbox1"
+                                    value="true"
                                   />
-                                  <label
+                                  <label for="checkbox1"
                                     ><span
                                       >Đặt làm địa chỉ mặc định</span
                                     ></label
@@ -420,8 +445,9 @@
                 ><input
                   id="cashondelivery"
                   type="radio"
-                  value="cashondelivery"
-                  name="thanhToan" />
+                  [value]="true"
+                  name="thanhToan"
+                  [(ngModel)]="paymentMethod" />
                 <span
                   ><b>Thanh toán khi nhận hàng (COD)</b>
                   <img src="https://canifa.com/assets/images/cod.svg" /></span
@@ -432,8 +458,9 @@
                 ><input
                   id="vnpay"
                   type="radio"
-                  value="vnpay"
-                  name="thanhToan" />
+                  [value]="false"
+                  name="thanhToan"
+                  [(ngModel)]="paymentMethod" />
                 <span
                   ><b>Thanh toán bằng VNPAY</b>
                   <img src="https://canifa.com/assets/images/vnpay.svg" /></span
@@ -550,7 +577,7 @@
                             [title]="
                               !d.isSelected ? 'Chọn mã này' : 'Đang sử dụng'
                             "
-                            (click)="changeDiscount(d.id)"
+                            (click)="changeDiscount(d?.id)"
                             *ngFor="let d of discounts"
                           >
                             <div class="voucher-item-info">

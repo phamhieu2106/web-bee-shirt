@@ -86,8 +86,6 @@ export class SuaKhachHangComponent {
       this.khachHangService.getById(this.id).subscribe({
         next: (kr: KhachHangResponse) => {
           this.khDetail = kr;
-          console.log("this.khDetail.ngaySinh: ", this.khDetail.ngaySinh);
-
           this.formUpdateKH = new FormGroup({
             id: new FormControl(kr.id, [Validators.required]),
             hoTen: new FormControl(kr.hoTen, [Validators.required]),

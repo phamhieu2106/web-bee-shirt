@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 @ToString
 @Builder
 public class ThanhToan extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

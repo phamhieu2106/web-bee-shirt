@@ -18,11 +18,10 @@ import { DotGiamGiaComponent } from "./component/dot-giam-gia/dot-giam-gia.compo
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { LoginComponent } from "./components/log-in/login.component";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
-import { TrackingComponent } from "./components/tracking/tracking.component";
 import { ProfileModule } from "./profile/profile.module";
 
 @NgModule({
@@ -39,7 +38,6 @@ import { ProfileModule } from "./profile/profile.module";
     LoginComponent,
     CheckoutComponent,
     SignUpComponent,
-    TrackingComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +48,7 @@ import { ProfileModule } from "./profile/profile.module";
     ToastrModule.forRoot(),
     CarouselModule,
     ProfileModule,
+    FormsModule,
   ],
   providers: [
     {

@@ -13,17 +13,14 @@
       <div class="account-page-title">
         <h1 class="title">Chi tiết đơn hàng</h1>
       </div>
-
       <div>
-        <div class="card mb-3">
+        <!-- timeline -->
+        <div class="card mb-5">
           <div class="card-body">
             <div
               class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
             >
-              <div
-                class="step completed"
-            
-              >
+              <!-- <div class="step completed">
                 <div class="step-icon-wrap">
                   <div class="step-icon">
                     <i class="fa-solid fa-cart-plus"></i>
@@ -31,184 +28,199 @@
                 </div>
                 <h4 class="step-title">Đặt hàng</h4>
                 <span>06:21 Thứ Ba 02/4/2024</span>
-              </div>
+              </div> -->
 
               <div
-              class="step completed"
-          
-            >
-              <div class="step-icon-wrap">
-                <div class="step-icon">
-                  <i class="fa-solid fa-exclamation"></i>
+                class="step completed"
+                *ngFor="let oh of order?.lichSuHoaDons"
+              >
+                <div class="step-icon-wrap">
+                  <div class="step-icon">
+                    <i [ngClass]="getOrderStatusIcon(oh)"></i>
+                  </div>
                 </div>
-              </div>
-              <h4 class="step-title">Chờ xác nhận</h4>
-              <span>06:21 Thứ Ba 02/4/2024</span>
-            </div>
-
-            <div
-            class="step completed"
-        
-          >
-            <div class="step-icon-wrap">
-              <div class="step-icon">
-                <i class="fa-solid fa-truck-fast"></i>
+                <h4 class="step-title">{{ oh.tieuDe }}</h4>
+                <span>{{ oh.createdAt | date : "HH:mm dd-MM-yyyy" }}</span>
               </div>
             </div>
-            <h4 class="step-title">Đang giao</h4>
-            <span>06:21 Thứ Ba 02/4/2024</span>
           </div>
-
-          <div
-          class="step completed"
-      
-        >
-          <div class="step-icon-wrap">
-            <div class="step-icon">
-              <i class="fa-solid fa-credit-card"></i>
-            </div>
-          </div>
-          <h4 class="step-title">Hoàn thành</h4>
-          <span>06:21 Thứ Ba 02/4/2024</span>
         </div>
 
-        
+        <ul class="order-details-view">
+          <li>
+            <label>Mã đơn</label>
+            <div class="value">
+              <b>{{ order?.ma }}</b>
+              <div class="action-copy">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_3850_11339)">
+                    <path
+                      d="M10.6668 5.33301V3.46634C10.6668 2.7196 10.6668 2.34624 10.5215 2.06102C10.3937 1.81014 10.1897 1.60616 9.93882 1.47833C9.6536 1.33301 9.28023 1.33301 8.5335 1.33301H3.46683C2.72009 1.33301 2.34672 1.33301 2.06151 1.47833C1.81063 1.60616 1.60665 1.81014 1.47882 2.06102C1.3335 2.34624 1.3335 2.7196 1.3335 3.46634V8.53301C1.3335 9.27974 1.3335 9.65311 1.47882 9.93833C1.60665 10.1892 1.81063 10.3932 2.06151 10.521C2.34672 10.6663 2.72009 10.6663 3.46683 10.6663H5.3335M7.46683 14.6663H12.5335C13.2802 14.6663 13.6536 14.6663 13.9388 14.521C14.1897 14.3932 14.3937 14.1892 14.5215 13.9383C14.6668 13.6531 14.6668 13.2797 14.6668 12.533V7.46634C14.6668 6.7196 14.6668 6.34624 14.5215 6.06102C14.3937 5.81014 14.1897 5.60616 13.9388 5.47833C13.6536 5.33301 13.2802 5.33301 12.5335 5.33301H7.46683C6.72009 5.33301 6.34672 5.33301 6.06151 5.47833C5.81063 5.60616 5.60665 5.81014 5.47882 6.06102C5.3335 6.34624 5.3335 6.7196 5.3335 7.46634V12.533C5.3335 13.2797 5.3335 13.6531 5.47882 13.9383C5.60665 14.1892 5.81063 14.3932 6.06151 14.521C6.34672 14.6663 6.72009 14.6663 7.46683 14.6663Z"
+                      stroke="#63B1BC"
+                      stroke-width="1.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3850_11339">
+                      <rect width="16" height="16" fill="white"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
             </div>
-          </div>
-      </div>
-      <ul class="order-details-view">
-        <li>
-          <label>Mã đơn</label>
-          <div class="value">
-            <b>CNF1000084099</b>
-            <div class="action-copy">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_3850_11339)">
-                  <path
-                    d="M10.6668 5.33301V3.46634C10.6668 2.7196 10.6668 2.34624 10.5215 2.06102C10.3937 1.81014 10.1897 1.60616 9.93882 1.47833C9.6536 1.33301 9.28023 1.33301 8.5335 1.33301H3.46683C2.72009 1.33301 2.34672 1.33301 2.06151 1.47833C1.81063 1.60616 1.60665 1.81014 1.47882 2.06102C1.3335 2.34624 1.3335 2.7196 1.3335 3.46634V8.53301C1.3335 9.27974 1.3335 9.65311 1.47882 9.93833C1.60665 10.1892 1.81063 10.3932 2.06151 10.521C2.34672 10.6663 2.72009 10.6663 3.46683 10.6663H5.3335M7.46683 14.6663H12.5335C13.2802 14.6663 13.6536 14.6663 13.9388 14.521C14.1897 14.3932 14.3937 14.1892 14.5215 13.9383C14.6668 13.6531 14.6668 13.2797 14.6668 12.533V7.46634C14.6668 6.7196 14.6668 6.34624 14.5215 6.06102C14.3937 5.81014 14.1897 5.60616 13.9388 5.47833C13.6536 5.33301 13.2802 5.33301 12.5335 5.33301H7.46683C6.72009 5.33301 6.34672 5.33301 6.06151 5.47833C5.81063 5.60616 5.60665 5.81014 5.47882 6.06102C5.3335 6.34624 5.3335 6.7196 5.3335 7.46634V12.533C5.3335 13.2797 5.3335 13.6531 5.47882 13.9383C5.60665 14.1892 5.81063 14.3932 6.06151 14.521C6.34672 14.6663 6.72009 14.6663 7.46683 14.6663Z"
-                    stroke="#63B1BC"
-                    stroke-width="1.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </g>
-                <defs>
-                  <clipPath id="clip0_3850_11339">
-                    <rect width="16" height="16" fill="white"></rect>
-                  </clipPath>
-                </defs>
-              </svg>
+          </li>
+
+          <li>
+            <label>Ngày mua hàng:</label>
+            <div class="value">
+              {{ order?.createdAt | date : "dd-MM-yyyy" }}
             </div>
-            
+          </li>
+          <li>
+            <label>Người nhận:</label>
+            <div class="value">{{ order?.tenNguoiNhan }}</div>
+          </li>
+          <li>
+            <label>Số điện thoại:</label>
+            <div class="value">{{ order?.sdtNguoiNhan }}</div>
+          </li>
+          <li>
+            <label>Địa chỉ nhận:</label>
+            <div class="value">{{ order?.diaChiNguoiNhan }}</div>
+          </li>
+          <li>
+            <label>Hình thức thanh toán:</label>
+            <div class="value" *ngIf="order.thanhToans.length === 0">
+              Thanh toán khi nhận hàng (COD)
+            </div>
+            <div class="value" *ngIf="order.thanhToans.length > 0">VN Pay</div>
+          </li>
+          <li>
+            <label>Trạng thái: </label>
+            <div class="value">
+              <span class="status cancel">{{ order?.trangThai }}</span>
+            </div>
+          </li>
+        </ul>
 
-
-          </div>
-        </li>
-
-        <li>
-          <label>Ngày mua hàng:</label>
-          <div class="value">00:57 2/4/2024</div>
-        </li>
-        <li>
-          <label>Người nhận:</label>
-          <div class="value">Bình Phạm</div>
-        </li>
-        <li>
-          <label>Số điện thoại:</label>
-          <div class="value">0345262229</div>
-        </li>
-        <li>
-          <label>Địa chỉ:</label>
-          <div class="value">fgfg, Huyện An Phú, An Giang</div>
-        </li>
-        <li>
-          <label>Thanh toán:</label>
-          <div class="value">Thanh toán khi nhận hàng (COD)</div>
-        </li>
-        <li>
-          <label>Trạng thái: </label>
-          <div class="value">
-            <span class="status cancel">Huỷ đơn hàng</span>
-          </div>
-        </li>
-      </ul>
-
-      <div class="order-details-items">
-        <h2 class="title">Sản phẩm <span>(1)</span></h2>
-        <table class="table-order-items">
-          <tbody>
-            <tr>
-              <td class="col name">
-                <div class="order-product">
-                  <div class="order-product-photo">
-                    <img
-                      src="https://canifa.com/img/100/142/resize/8/t/8th23w003-cb337-1-thumb.webp"
-                      alt="Áo sơ mi nam cotton flannel họa tiết kẻ"
-                    />
-                  </div>
-                  <div class="order-product-details">
-                    <div class="order-product-name">
-                      Áo sơ mi nam cotton flannel họa tiết kẻ
+        <!-- order details -->
+        <div class="order-details-items">
+          <h2 class="title">
+            Sản phẩm <span>({{ order?.hoaDonChiTiets.length }})</span>
+          </h2>
+          <table class="table-order-items">
+            <tbody>
+              <tr *ngFor="let od of order?.hoaDonChiTiets">
+                <td class="col name">
+                  <div class="order-product">
+                    <div class="order-product-photo">
+                      <img
+                        class="rounded"
+                        [src]="od.sanPhamChiTiet.hinhAnhs[0].imageUrl"
+                      />
                     </div>
-                    <div class="order-product-sku">8TH23W003-CB337-L</div>
-                    <div class="order-product-options">
-                      <div class="order-product-option">
-                        <span
-                          style="
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                          "
-                          ><span
-                            class="swatch-option color"
+                    <div class="order-product-details">
+                      <div class="order-product-name">
+                        {{
+                          od.sanPhamChiTiet.sanPham.ten +
+                            " - " +
+                            od.sanPhamChiTiet.id
+                        }}
+                      </div>
+                      <!-- <div class="order-product-sku">8TH23W003-CB337-L</div> -->
+                      <div class="order-product-options">
+                        <div class="order-product-option">
+                          <span
                             style="
-                              background-image: url('https://media.canifa.com/attribute/swatch/images/cb337.png');
+                              display: flex;
+                              flex-direction: row;
+                              align-items: center;
                             "
-                          ></span>
-                          <span>CB337</span></span
-                        >
-                      </div>
-                      <div class="order-product-option">
-                        <span> L </span>
+                            ><span
+                              class="swatch-option color"
+                              style="
+                                background-image: url('https://media.canifa.com/attribute/swatch/images/cb337.png');
+                              "
+                            ></span>
+                            <span>{{
+                              od.sanPhamChiTiet.mauSac.ten
+                            }}</span></span
+                          >
+                        </div>
+                        <div class="order-product-option">
+                          <span>{{
+                            od.sanPhamChiTiet.kichCo.ten.split("-")[0]
+                          }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </td>
-              <td class="col qty">2</td>
-              <td class="col price">
-                <span class="price">838.600 ₫</span>
-                <span class="old-price">1.198.000 ₫</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="order-details-totals">
-        <table>
-          <tbody>
-            <tr class="sub-totals">
-              <th>Giá trị đơn hàng</th>
-              <td>1.198.000 ₫</td>
-            </tr>
-            <tr class="sub-totals">
-              <th>Chiết khấu</th>
-              <td style="color: rgb(218, 41, 28)">359.400 ₫</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr class="grand-totals">
-              <th style="color: rgb(51, 63, 72)">Tổng tiền thanh toán</th>
-              <td>838.600 ₫</td>
-            </tr>
-          </tfoot>
-        </table>
+                </td>
+                <td class="col qty">{{ od.soLuong }}</td>
+                <td class="col price">
+                  <span
+                    class="price"
+                    *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                    >{{ formatPrice(od.giaBan) }}</span
+                  >
+                  <span
+                    class="old-price"
+                    *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                    >{{ formatPrice(od.sanPhamChiTiet.giaBan) }}</span
+                  >
+                  <span
+                    class="price"
+                    *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                    >{{ formatPrice(od.giaBan) }}</span
+                  >
+                </td>
+                <td class="col price">
+                  <span class="price">{{
+                    formatPrice(od.giaBan * od.soLuong)
+                  }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- money -->
+        <div class="order-details-totals">
+          <table>
+            <tbody>
+              <tr class="sub-totals">
+                <th>Giá gốc đơn hàng</th>
+                <td>{{ formatPrice(order?.tongTien + order?.tienGiam) }}</td>
+              </tr>
+              <tr class="sub-totals">
+                <th>Giảm giá từ đợt</th>
+                <td style="color: rgb(218, 41, 28)">
+                  {{ formatPrice(totalSalePrice) }}
+                </td>
+              </tr>
+              <tr class="sub-totals">
+                <th>Giảm giá từ phiếu</th>
+                <td style="color: rgb(218, 41, 28)">
+                  {{ formatPrice(order?.tienGiam - totalSalePrice) }}
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="grand-totals">
+                <th style="color: rgb(51, 63, 72)">Tổng tiền thanh toán</th>
+                <td>{{ formatPrice(order?.tongTien) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
   </div>

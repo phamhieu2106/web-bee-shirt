@@ -1,24 +1,32 @@
 <div class="info">
   <div class="imgCustomer">
-    <img src="https://i.imgur.com/uVZbUxh.jpeg" />
+    <img [src]="loggedCust.image.imageUrl" />
   </div>
 </div>
 
 <div class="nameCustomer">
   <div>
-    <span>Phạm Văn Bình</span>
+    <span>{{ loggedCust.hoTen }}</span>
     <a href="profile/my-account/"><i class="bi bi-pencil-square"></i></a>
   </div>
 </div>
 
-<div class="chiTieu">
+<!-- <div class="chiTieu">
   <div>Số tiền đã mua:</div>
   <div class="daMua">0</div>
   <div>Số sản phẩm:</div>
   <div class="spDaMua">0</div>
-</div>
+</div> -->
 
 <ul class="listChucNang">
+  <li
+    class="itemChucNang pointer rounded"
+    routerLink="/profile/my-account"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-credit-card-2-back"></i>
+    Thông tin tài khoản
+  </li>
   <li
     class="itemChucNang pointer rounded"
     routerLink="/profile/my-discounts"

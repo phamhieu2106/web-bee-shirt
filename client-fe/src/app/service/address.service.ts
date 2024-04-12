@@ -32,4 +32,6 @@ export class AddressService {
   public addAddress(req: AddAddressReq): Observable<Address> {
     return this.http.post<Address>(`${this.apiUrl}/client/add`, req);
   }
+
+  // 4
 }

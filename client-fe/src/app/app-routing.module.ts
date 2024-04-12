@@ -7,7 +7,6 @@ import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { LoginComponent } from "./components/log-in/login.component";
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
-import { TrackingComponent } from "./components/tracking/tracking.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -26,8 +25,7 @@ const routes: Routes = [
   {
     path: "log-in",
     component: LoginComponent,
-  }
-  ,
+  },
   {
     path: "check-out",
     component: CheckoutComponent,
@@ -35,10 +33,6 @@ const routes: Routes = [
   {
     path: "sign-up",
     component: SignUpComponent,
-  },
-  {
-    path: "tracking-order/:orderCode",
-    component: TrackingComponent,
   },
 ];
 

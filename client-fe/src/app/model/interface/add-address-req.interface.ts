@@ -6,5 +6,5 @@ export interface AddAddressReq {
   xa: string;
   duong: string;
   macDinh: string;
-  custId: string;
+  custId: number;
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface HoaDonTraHangRepository extends JpaRepository<HoaDon, Integer> {
 
-    Optional<HoaDon> findHoaDonByTrangThaiAndMa(TrangThaiHoaDon trangThai, String ma);
+    Optional<HoaDon> findHoaDonByMa(String ma);
 
     @Query("""
                     SELECT hdct.sanPhamChiTiet FROM HoaDonChiTiet hdct

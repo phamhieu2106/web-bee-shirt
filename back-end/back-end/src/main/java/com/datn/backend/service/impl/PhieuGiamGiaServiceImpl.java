@@ -76,15 +76,11 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
         }
 
         // Xác định trạng thái dựa trên thời gian
-        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
-            phieuGiamGia.setTrangThai("Đã kết thúc");
-        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
-            phieuGiamGia.setTrangThai("Sắp diễn ra");
+       if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+           pgg.setTrangThai("Sắp diễn ra");
         } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
                 currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
-            phieuGiamGia.setTrangThai("Đang diễn ra");
-        } else {
-            phieuGiamGia.setTrangThai("Đã hủy");
+           pgg.setTrangThai("Đang diễn ra");
         }
 
         // Lưu phiếu giảm giá vào cơ sở dữ liệu

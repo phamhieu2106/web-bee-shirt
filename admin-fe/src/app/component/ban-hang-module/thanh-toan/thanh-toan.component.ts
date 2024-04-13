@@ -10,6 +10,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import { ThanhToan } from "src/app/model/class/thanh-toan";
+import { NotificationService } from "src/app/service/notification.service";
 import Swal from "sweetalert2";
 
 @Component({
@@ -25,7 +26,10 @@ export class ThanhToanComponent implements OnChanges, OnInit {
   @Output() thanhToansChange = new EventEmitter<ThanhToan[]>();
   thanhToanForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private toast: ToastrService) {}
+  constructor(
+    private fb: FormBuilder,
+    private notification: NotificationService
+  ) {}
   ngOnInit(): void {
     // this.tongTien = this.tongTien = this.phiVanChuyen - this.tienGiam;
   }
@@ -80,7 +84,7 @@ export class ThanhToanComponent implements OnChanges, OnInit {
       this.thanhToanForm.value.tienKhachDua <= 0 ||
       this.thanhToanForm.value.tienKhachDua > this.getTienConThieu()
     ) {
-      this.toast.warning("Tiền khách đưa không hợp lệ");
+      this.notification.warning("Tiền khách đưa không hợp lệ");
       return;
     }
     // xử lý thêm hóa đơn

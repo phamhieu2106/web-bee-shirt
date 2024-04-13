@@ -1,5 +1,11 @@
-import { ToastrService } from "ngx-toastr";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { NotificationService } from "src/app/service/notification.service";
@@ -7,14 +13,13 @@ import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
 import Swal from "sweetalert2";
-import { is } from "date-fns/locale";
 
 @Component({
   selector: "app-order-tracking",
   templateUrl: "./order-tracking.component.html",
   styleUrls: ["./order-tracking.component.css"],
 })
-export class OrderTrackingComponent {
+export class OrderTrackingComponent implements OnChanges {
   @Input({ required: true }) hoaDon: HoaDon;
   @Output() hoaDonChange = new EventEmitter<HoaDon>();
   public isNext = true; // check trạng thái đơn hàng (Next or Prev)
@@ -32,6 +37,11 @@ export class OrderTrackingComponent {
     private notifycation: NotificationService,
     private pdfService: PdfService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["hoaDon"]) {
+      this.chageTitleButton();
+    }
+  }
 
   ngOnInit() {
     // console.log(this.lichSuHoaDons);
@@ -52,7 +62,7 @@ export class OrderTrackingComponent {
         this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans)
     ) {
       // kiem tra thanh toan cua khach
-      Swal.fire("Vui lòng thanh toán đầy đủ trước khi Hoàn Thành .");
+      Swal.fire("Số tiền thanh toán không hợp lệ.");
       return;
     }
     this.hoaDonService

@@ -13,6 +13,7 @@
       (click)="inPhieuGiao()"
       *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
     >
+      <i class="fa-solid fa-print"></i>
       In Phiếu Giao
     </button>
     <button
@@ -21,6 +22,7 @@
       (click)="printHoaDonTraHang()"
       *ngIf="hoaDon.trangThai == 'TRA_HANG'"
     >
+      <i class="fa-solid fa-print"></i>
       In Hoá Đơn Trả Hàng
     </button>
     <button
@@ -28,6 +30,7 @@
       class="btn btn-primary btn-lg mr-1 border-1"
       (click)="printHoaDon()"
     >
+      <i class="fa-solid fa-print"></i>
       In Hoá Đơn
     </button>
   </div>
@@ -62,7 +65,9 @@
             [disabled]="
               hoaDon.trangThai == 'DANG_GIAO' ||
               hoaDon.trangThai == 'HOAN_THANH' ||
-              hoaDon.trangThai == 'HUY'
+              hoaDon.trangThai == 'HUY' ||
+              hoaDon.trangThai == 'TRA_HANG' ||
+              isGiaoHangAndChuyenKhoan(hoaDon)
             "
           >
             Đổi địa chỉ
@@ -94,7 +99,7 @@
                 <!-- Main modal -->
                 <div class="modal-body">
                   <!-- Control button -->
-                  <div>
+                  <!-- <div>
                     <button
                       type="button"
                       class="btn btn-primary"
@@ -102,7 +107,7 @@
                     >
                       Chọn địa chỉ
                     </button>
-                  </div>
+                  </div> -->
                   <!-- Form -->
                   <div class="row">
                     <div class="col-md-6">
@@ -141,7 +146,6 @@
                   <button
                     type="button"
                     class="btn btn-primary"
-                    data-dismiss="modal"
                     (click)="changeDiaChi()"
                   >
                     Xác nhận
@@ -150,6 +154,7 @@
                     type="button"
                     class="btn btn-danger"
                     data-dismiss="modal"
+                    id="btnCloseChangeDiaChi"
                   >
                     Hủy
                   </button>
@@ -168,7 +173,7 @@
           ></app-trang-thai-hoa-don>
         </div>
         <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Loại HD: </span>
+          <span class="font-weight-bold">Loại hóa đơn: </span>
           <app-loai-hoa-don [loaiHoaDon]="hoaDon.loaiHoaDon"></app-loai-hoa-don>
         </div>
         <div class="col-md-6 mb-3">
@@ -200,11 +205,11 @@
           <span>{{ hoaDon.createdBy }}</span>
         </div>
         <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Ngày update cuối: </span>
+          <span class="font-weight-bold">Ngày cập nhật cuối: </span>
           <span>{{ hoaDon.updatedAt }}</span>
         </div>
         <div class="col-md-6 mb-3">
-          <span class="font-weight-bold">Người update cuối: </span>
+          <span class="font-weight-bold">Người cập nhật cuối: </span>
           <span>{{ hoaDon.lastUpdatedBy }}</span>
         </div>
       </div>
@@ -216,4 +221,5 @@
 <app-order-product
   [hoaDon]="hoaDon"
   (hoaDonChange)="putHoaDon($event)"
+  (getHoaDon)="getHoaDonById($event)"
 ></app-order-product>

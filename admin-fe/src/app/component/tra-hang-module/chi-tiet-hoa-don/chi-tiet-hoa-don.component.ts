@@ -80,7 +80,7 @@ export class ChiTietHoaDonComponent {
     }
 
     if (this.newAmount) {
-      this.getPhieuGiamGiaTotNhat();
+      this.handleCountReturnMoney();
     }
   }
   // End Constructor Component
@@ -221,7 +221,7 @@ export class ChiTietHoaDonComponent {
     const hoaDonChiTiet = this.listReturnItems.find((item) => item.id === id);
     if (hoaDonChiTiet) {
       hoaDonChiTiet.soLuong = hoaDonChiTiet.soLuong - 1;
-      if (hoaDonChiTiet.soLuong === 0) {
+      if (hoaDonChiTiet.soLuong <= 0) {
         hoaDonChiTiet.soLuong = 1;
       }
     }
@@ -241,12 +241,15 @@ export class ChiTietHoaDonComponent {
   // END Quantity Of Products
 
   // Return Information
-  async handleCountReturnMoney() {
+  private async handleCountReturnMoney() {
     if (!this.listReturnItems || this.listReturnItems.length === 0) {
       this.amountOfMoneyReturn = 0;
-      this.newAmount = this.hoaDon.tongTien;
+      this.newAmount = this.hoaDon?.tongTien;
       return;
     }
+    const voucher = this.hoaDon?.phieuGiamGia
+      ? this.hoaDon?.phieuGiamGia
+      : null;
     // Sử dụng reduce để tính tổng số tiền trả lại từ các mặt hàng trong listReturnItems
     this.amountOfMoneyReturn = this.listReturnItems.reduce((sum, item) => {
       if (
@@ -274,45 +277,111 @@ export class ChiTietHoaDonComponent {
       }
     }, 0);
     this.newAmount = tongTienHoaDonCu;
-    this.getPhieuGiamGiaTotNhat();
-  }
-  private getPhieuGiamGiaTotNhat(): void {
-    let maxDiscount = 0;
 
+    // Kiểm tra xem đơn có voucher hay không
+    if (voucher) {
+      if (this.newAmount >= voucher.dieuKienGiam) {
+        // Nếu có thì kiểm tra xem liệu tổng tiền mới có đủ áp dụng cho voucher ban đầu
+        this.setTienHoanTraVoiPhieuGiamGiaCu(voucher);
+      } else {
+        // Nếu không áp dụng được
+        this.setTienHoanTraVoiPhieuGiamGiaMoi();
+      }
+    }
+  }
+  private setTienHoanTraKhongCoPhieuGiamGiaMoi() {
+    this.amountOfMoneyReturn =
+      this.hoaDon?.tongTien - this.newAmount - this.hoaDon?.tienGiam;
+  }
+  private setTienHoanTraVoiPhieuGiamGiaCu(voucher: PhieuGiamGia): void {
+    let discount = 0;
+    if (voucher.kieu === 0) {
+      // Kiểu phần trăm
+      const totalPrice = this.newAmount;
+      discount = Math.min(
+        voucher.giaTriMax,
+        (totalPrice * voucher.giaTri) / 100
+      );
+    } else if (voucher.kieu === 1) {
+      // Kiểu tiền mặt
+      discount = Math.min(voucher.giaTri /* Tổng giá trị hóa đơn */);
+    }
+
+    this.discountMoney = discount;
+    this.bestVoucher = voucher;
+
+    this.amountOfMoneyReturn =
+      this.oldAmount - this.newAmount - this.discountMoney <= 0
+        ? 0
+        : this.oldAmount - this.newAmount - this.discountMoney;
+  }
+  private setTienHoanTraVoiPhieuGiamGiaMoi(): void {
+    let maxDiscount = 0;
+    let guestOwedMoney = 0;
+    let shopLoss = 0;
     this.phieuGiamGiaService.getPhieuGiamGiaList().subscribe({
       next: (data) => {
-        this.listPhieuGiamGia = data;
-
         // dùng vòng lặp để kiểm tra voucher nào là tốt nhất
-        this.listPhieuGiamGia.forEach((voucher) => {
-          let discount = 0;
+        data
+          .filter(
+            (voucher) =>
+              voucher.soLuong > 0 && this.newAmount >= voucher.dieuKienGiam
+          )
+          .forEach((voucher) => {
+            let discount = 0;
 
-          // Tính toán giá trị giảm giá từ mỗi voucher
-          if (voucher.kieu === 0) {
-            // Kiểu phần trăm
-            const totalPrice = this.newAmount;
-            discount = Math.min(
-              voucher.giaTriMax,
-              (totalPrice * voucher.giaTri) / 100
-            );
-          } else if (voucher.kieu === 1) {
-            // Kiểu tiền mặt
-            discount = Math.min(voucher.giaTri /* Tổng giá trị hóa đơn */);
-          }
+            // Tính toán giá trị giảm giá từ mỗi voucher
+            if (voucher.kieu === 0) {
+              // Kiểu phần trăm
+              const totalPrice = this.newAmount;
+              discount = Math.min(
+                voucher.giaTriMax,
+                (totalPrice * voucher.giaTri) / 100
+              );
+            } else if (voucher.kieu === 1) {
+              // Kiểu tiền mặt
+              discount = Math.min(voucher.giaTri /* Tổng giá trị hóa đơn */);
+            }
 
-          // So sánh giá trị giảm giá của voucher với maxDiscount
-          if (discount > maxDiscount) {
-            maxDiscount = discount;
-            this.bestVoucher = voucher;
-          }
-        });
-        // best voucher
+            // So sánh giá trị giảm giá của voucher với maxDiscount
+            if (discount > maxDiscount) {
+              maxDiscount = discount;
+              this.bestVoucher = voucher;
+            }
+          });
+
         if (this.bestVoucher) {
-          this.discountMoney = maxDiscount;
-          this.amountOfMoneyReturn =
-            this.oldAmount - this.newAmount === 0
-              ? 0
-              : this.oldAmount - this.newAmount;
+          // Khi tìm được voucher tốt nhất sẽ kiểm tra kiểu voucher
+          if (this.bestVoucher.kieu === 0) {
+            // Kiểu phần trăm
+            // Tính tiền khách nợ và cửa hàng lỗ
+            guestOwedMoney =
+              this.newAmount * (this.hoaDon?.phieuGiamGia?.giaTri / 100);
+            shopLoss = this.newAmount * (this.bestVoucher?.giaTri / 100);
+            // Gán voucher
+            this.discountMoney = shopLoss;
+            // Tính tiền trả lại
+            const tongTienTraThucTe =
+              this.amountOfMoneyReturn -
+              (this.amountOfMoneyReturn * this.hoaDon?.phieuGiamGia?.giaTri) /
+                100;
+            this.amountOfMoneyReturn =
+              tongTienTraThucTe - guestOwedMoney + shopLoss;
+          } else {
+            // Kiểu tiền mặt
+            guestOwedMoney = this.hoaDon?.phieuGiamGia?.giaTri;
+            shopLoss = this.bestVoucher?.giaTri;
+            // Gán voucher
+            this.discountMoney = shopLoss;
+            // Tính tiền trả lại
+            const tongTienTraThucTe =
+              this.amountOfMoneyReturn - this.hoaDon?.phieuGiamGia?.giaTri;
+
+            this.amountOfMoneyReturn =
+              tongTienTraThucTe - guestOwedMoney + shopLoss;
+          }
+        } else {
+          this.setTienHoanTraKhongCoPhieuGiamGiaMoi();
         }
       },
       error: (error) => {

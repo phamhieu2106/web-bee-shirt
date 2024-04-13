@@ -3,5 +3,6 @@
   class="form-control"
   [value]="formatNumber(inputValue)"
   (input)="onInputChange($event.target)"
+  [disabled]="disabled"
   pattern="[0-9]*"
 />

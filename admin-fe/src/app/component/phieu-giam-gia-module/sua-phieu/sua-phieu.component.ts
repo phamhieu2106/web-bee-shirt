@@ -11,6 +11,7 @@ import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { Router } from '@angular/router';
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-sua-phieu",
@@ -21,6 +22,9 @@ export class SuaPhieuComponent implements OnInit {
   phieuGiamGiaForm: FormGroup;
   public pagedResponse: PagedResponse<KhachHang>;
   public pagedResponse2: PagedResponse<KhachHang>;
+
+  public listKhachHang: KhachHang[] = [];
+
 
 
   public idPhieu: number
@@ -50,7 +54,8 @@ export class SuaPhieuComponent implements OnInit {
     private phieuGiamGia: PhieuGiamGiaService,
     private khachHangService: KhachHangService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notifService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -87,16 +92,19 @@ export class SuaPhieuComponent implements OnInit {
 
 
 
-        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, true).subscribe({
-          next: (response: PagedResponse<KhachHang>) => {
+        this.phieuGiamGia.getKhach(this.idPhieu, true).subscribe({
+          next: (response: KhachHang[]) => {
             if (response) {
-              this.pagedResponse = response;
-              response.data.forEach(khach => {
-                this.selectedIds.push(khach.id);
+              this.listKhachHang = response;
+            
+              
+              // Lặp qua từng đối tượng KhachHang
+              response.forEach(khach => {
                 this.soLuongCheck++;
+                this.selectedIds.push(khach.id); // Đưa id vào mảng selectedIds
               });
-           
-
+          
+             
             } else {
               console.error('Dữ liệu phản hồi không hợp lệ:', response);
             }
@@ -106,8 +114,24 @@ export class SuaPhieuComponent implements OnInit {
           }
         });
 
+        
+        this.phieuGiamGia.getPhieuKhach(1,5, this.idPhieu, true).subscribe({
+          next: (response: PagedResponse<KhachHang>) => {
+            if (response) {
+              this.pagedResponse = response;
+
+            } else {
+              console.error('Dữ liệu phản hồi không hợp lệ:', response);
+            }
+          },
+          error: (error) => {
+            console.error('Lỗi khi truy xuất dữ liệu:', error);
+          }
+        });
+        
+
        
-        this.phieuGiamGia.getPhieuKhach(1, 5, this.idPhieu, false).subscribe({
+        this.phieuGiamGia.getPhieuKhach(1,5, this.idPhieu, false).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
             if (response) {
               this.pagedResponse2 = response;
@@ -128,6 +152,43 @@ export class SuaPhieuComponent implements OnInit {
     });
 
   }
+
+
+  onCheckboxChange(id: number): void {
+    const index = this.selectedIds.indexOf(id);
+    console.log(index)
+
+    const soLuongControl = this.updateForm.get("soLuong");
+    if (index === -1) {
+      // Nếu ID không tồn tại trong danh sách, thêm vào
+      this.selectedIds.push(id);
+      // Tăng số lượng
+      this.soLuongCheck++;
+      soLuongControl.setValue(this.soLuongCheck);
+    } else {
+      // Nếu ID đã tồn tại trong danh sách, loại bỏ nó
+      this.selectedIds.splice(index, 1);
+      // Giảm số lượng
+      if (this.soLuongCheck > 0) {
+        this.soLuongCheck--;
+        soLuongControl.setValue(this.soLuongCheck);
+      }
+    }
+   
+
+  }
+
+  isCustomerSelected(id: number): boolean {
+    for (const selectedId of this.selectedIds) {
+      if (selectedId === id) {
+       
+        return true; // ID được tìm thấy trong danh sách
+      }
+    }
+    return false; // ID không được tìm thấy trong danh sách
+  }
+
+
 
   public initUpdateForm(phieu?: PhieuGiamGia): void {
     this.updateForm = new FormGroup({
@@ -413,7 +474,7 @@ export class SuaPhieuComponent implements OnInit {
 
   // Khách Hàng co
 
-  public goToPage(
+  public goToPageOld(
     page: number = 1,
     pageSize: number = 5,
     id: number = this.idKhach
@@ -428,6 +489,21 @@ export class SuaPhieuComponent implements OnInit {
     });
   }
 
+  public goToPage(
+    page: number = 1,
+    pageSize: number = 5,
+    id: number = this.idKhach
+  ): void {
+    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, true).subscribe({
+      next: (response: PagedResponse<KhachHang>) => {
+        this.pagedResponse = response;
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notifService.error(errorResponse.error.message);
+      },
+    });
+  }
+
   // Khách Hàng kho co
 
   public goToPage2(
@@ -437,7 +513,7 @@ export class SuaPhieuComponent implements OnInit {
   ): void {
     this.phieuGiamGia.getPhieuKhach(page, pageSize, id, false).subscribe({
       next: (response: PagedResponse<KhachHang>) => {
-        this.pagedResponse = response;
+        this.pagedResponse2 = response;
 
 
       },
@@ -451,45 +527,14 @@ export class SuaPhieuComponent implements OnInit {
 
 
 
-  public onChangePageSize(e: any): void {
-    console.log(this.idKhach)
+  public changePageSize(e: any): void {
     this.goToPage(1, e.target.value, this.idKhach);
   }
 
-
-
-
-  onCheckboxChange(id: number): void {
-    const index = this.selectedIds.indexOf(id);
-
-    const soLuongControl = this.updateForm.get("soLuong");
-    if (index === -1) {
-      // Nếu ID không tồn tại trong danh sách, thêm vào
-      this.selectedIds.push(id);
-      // Tăng số lượng
-      this.soLuongCheck++;
-      soLuongControl.setValue(this.soLuongCheck);
-    } else {
-      // Nếu ID đã tồn tại trong danh sách, loại bỏ nó
-      this.selectedIds.splice(index, 1);
-      // Giảm số lượng
-      if (this.soLuongCheck > 0) {
-        this.soLuongCheck--;
-        soLuongControl.setValue(this.soLuongCheck);
-      }
-    }
-
+  public changePageSize1(e: any): void {
+    this.goToPage2(1, e.target.value, this.idKhach);
   }
 
-  isCustomerSelected(id: number): boolean {
-    for (const selectedId of this.selectedIds) {
-      if (selectedId === id) {
-        console.log("Tìm thấy")
-        return true; // ID được tìm thấy trong danh sách
-      }
-    }
-    return false; // ID không được tìm thấy trong danh sách
-  }
 
   giaTriMaxNew: any
   dieuKienGiamNew: any

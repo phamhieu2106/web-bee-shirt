@@ -1,7 +1,12 @@
 package com.datn.backend.model.khach_hang;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class KhachHangImage {
 
     @Id
@@ -25,5 +31,15 @@ public class KhachHangImage {
         this.imageName = imageName;
         this.imageUrl = imageUrl;
         this.imageId = imageId;
+    }
+
+    @Override
+    public String toString() {
+        return "KhachHangImage{" +
+                "id=" + id +
+                ", imageName='" + imageName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageId='" + imageId + '\'' +
+                '}';
     }
 }

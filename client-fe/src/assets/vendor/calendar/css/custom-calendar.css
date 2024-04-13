@@ -1,0 +1,237 @@
+.fc-event.fc-draggable, .fc-event[href] {
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+	background: #eaf5ff;
+}
+
+.fc-calendar {
+  background: #ffffff;
+}
+
+.fc-calendar .fc-toolbar {
+	padding: 10px 5px 30px 5px;
+	margin: 0;
+	position: relative;
+	border-bottom: 0;
+	background: transparent;
+}
+.fc-unthemed .fc-today {
+	background: #0079e1;
+}
+.fc-unthemed .fc-divider, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead{
+	border-color: #e0e4ee;
+}
+.fc-unthemed .fc-popover {
+	background: #e0e4ee;
+}
+.fc-icon-x:after {
+	color: #E84234;
+}
+.fc-popover .fc-header .fc-title {
+	font-size: 15px;
+}
+
+.fc-toolbar .fc-center {
+	float: left;
+}
+@media(max-width:767px) {
+	.fc-toolbar .fc-center {
+		float: none;
+		margin: 50px auto 20px auto;
+	}
+}
+.fc-calendar .fc-toolbar .fc-center h2 {
+	font-size: 2em;
+	padding: 12px 0;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+	color: #2a394c;
+}
+
+.fc-calendar .fc-toolbar .fc-prev-button, .fc-calendar .fc-toolbar .fc-next-button {
+	position: absolute;
+	background: #0079e1;
+	border: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-shadow: none;
+	color: #ffffff;
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+.fc-calendar .fc-toolbar .fc-next-button {
+	right: 5px;
+}
+
+.fc-calendar .fc-toolbar .fc-prev-button {
+	right: 60px;
+}
+
+.fc-calendar .fc-toolbar .fc-right {
+	position: absolute;
+	bottom: 15px;
+	right: 0px;
+}
+
+.fc-calendar .fc-toolbar .fc-right button {
+	background: transparent;
+	border: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-shadow: none;
+	font-size: 13px;
+	text-transform: uppercase;
+	color: #2a394c;
+}
+.fc-today-button {
+	color: #333333;
+}
+.fc-month-button {
+	color: #E84234
+}
+.fc-agendaWeek-button {
+	color: #32AB52;
+}
+.fc-agendaDay-button {
+	color: #f5656c;
+}
+
+.fc-calendar .fc-day-header {
+	text-transform: uppercase;
+	font-weight: 500;
+	padding: 10px 5px;
+	font-size: 14px;
+	text-align: right;
+	font-style: normal;
+}
+@media (max-width: 767px) {
+	.fc-calendar .fc-day-header {
+    padding: 5px;
+    font-size: 12px;
+	}
+}
+.fc table {
+	font-size: 18px;
+	color: #353535;
+	font-style: italic;
+}
+@media (max-width: 767px) {
+	.fc table {
+	font-size: 14px;
+	font-weight: 600;
+	}
+}
+.fc-basic-view td.fc-day-number, .fc-basic-view td.fc-week-number span {
+	padding: 6px;
+}
+@media (max-width: 767px) {
+	.fc-basic-view td.fc-day-number, .fc-basic-view td.fc-week-number span {
+		padding: 2px;
+	}
+}
+.fc-basic-view .fc-day-number, .fc-basic-view .fc-week-number {
+	padding: 6px;
+}
+.fc-event {
+	border: 0;
+	padding: 5px 10px;
+	font-size: 12px;
+	margin: 2px 5px;
+	border-radius: 0;
+	cursor: move;
+	font-weight: 400;
+	font-style: normal;
+}
+@media (max-width: 767px) {
+	.fc-event {
+		padding: 2px 10px;
+	}
+}
+.external-events form .form-group {
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+.external-events form .input-group {
+	width: 100%;
+}
+
+.external-events form .input-group input {
+	border-right: 0;
+}
+
+.external-events form .input-group input:focus {
+	border-color: #f5656c;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.external-events form .input-group-addon {
+	background: #fff;
+}
+
+.external-events .remove-event {
+	float: right;
+	cursor: pointer;
+}
+
+
+.fc-toolbar button:focus {
+	outline: none;
+}
+.fc-unthemed .fc-divider, .fc-unthemed .fc-popover .fc-header {
+	background: #FFFFFF;
+}
+.fc-popover .fc-header {
+	padding: 7px 14px;
+}
+
+a.fc-more {
+	position: relative;
+	display: block;
+	font-size: 12px;
+}
+@media (max-width: 767px) {
+	a.fc-more {
+		display: none;
+	}
+}
+a.fc-more:after {
+	content: "";
+	position: absolute;
+	vertical-align: middle;
+	width: 11px;
+	height: 20px;
+	background: url("../../img/sprite.png");
+	background-position: -6px -2px;
+}
+
+.ui-draggable {
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+
+
+.fc-view, .fc-view > table {
+	padding: 10px 5px;
+}
+.fc td.fc-today {
+	color: #fff;
+}
+.fc-day-grid-event .fc-time {
+	color: #0079e1;
+}
+.fc-day-grid-event .fc-title {
+	color: #0079e1;
+}

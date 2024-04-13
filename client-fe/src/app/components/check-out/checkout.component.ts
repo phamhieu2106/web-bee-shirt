@@ -290,7 +290,7 @@ export class CheckoutComponent {
 
   // 11
   public checkDistrictSelection(): void {
-    if (!this.provinceId) {
+    if (!this.provinceId || !this.districtId) {
       this.notifService.warning("Vui lòng chọn quận/huyện trước!");
       return;
     }
@@ -535,7 +535,10 @@ export class CheckoutComponent {
   // 3
   private initAddAddressForm(): void {
     this.addAddressForm = new FormGroup({
-      hoTen: new FormControl("", [Validators.required]),
+      hoTen: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+      ]),
       sdt: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),

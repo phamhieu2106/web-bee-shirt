@@ -1,11 +1,41 @@
 <div class="info">
   <div class="imgCustomer">
-    <img [src]="loggedCust.image.imageUrl" />
+    <img
+      id="avatar"
+      class="pointer"
+      [src]="loggedCust.image.imageUrl"
+      (click)="openFileInput()"
+      title="Nhấp để thay ảnh đại diện"
+    />
+
+    <input
+      id="fileInput"
+      type="file"
+      hidden
+      accept="image/*"
+      (change)="imageChange($event, 'avatar')"
+    />
   </div>
 </div>
 
 <div class="nameCustomer">
-  <div>
+  <div class="text-center">
+    <div>
+      <button
+        class="btn btn-primary me-1"
+        *ngIf="selectFile"
+        (click)="updateAvatar()"
+      >
+        Cập nhật ảnh đại diện
+      </button>
+      <button
+        class="btn btn-danger"
+        *ngIf="selectFile"
+        (click)="cancelUpdateAvatar()"
+      >
+        Hủy
+      </button>
+    </div>
     <span>{{ loggedCust.hoTen }}</span>
     <a href="profile/my-account/"><i class="bi bi-pencil-square"></i></a>
   </div>

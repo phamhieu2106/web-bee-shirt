@@ -1,6 +1,7 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.KhachHangRequest;
+import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
@@ -11,10 +12,12 @@ import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
+import com.datn.backend.model.san_pham.MauSacImage;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.DiaChiRepository;
 import com.datn.backend.repository.FavouriteListRepository;
+import com.datn.backend.repository.KhachHangImageRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
@@ -40,21 +43,22 @@ import java.util.Optional;
 public class KhachHangServiceImpl implements KhachHangService {
 
     private final PasswordEncoder passwordEncoder;
-    private final KhachHangRepository khachHangRepository;
-    private final DiaChiRepository diaChiRepository;
+    private final KhachHangRepository khachHangRepo;
+    private final DiaChiRepository diaChiRepo;
     private final AccountRepository accountRepo;
     private final CartRepository cartRepo;
     private final FavouriteListRepository favouriteListRepo;
     private final CloudinaryService cloudinaryService;
+    private final KhachHangImageRepository khachHangImageRepo;
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
-        if (khachHangRepository.existsByEmail(kh.getEmail().trim().toLowerCase())) {
+        if (khachHangRepo.existsByEmail(kh.getEmail().trim().toLowerCase())) {
             throw new ResourceExistsException("Email: " + kh.getEmail() + " đã tồn tại.");
         }
 
         // check exist sdt
-        if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
+        if (khachHangRepo.existsBySdt(kh.getSdt().trim())) {
             throw new ResourceExistsException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
         }
         BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
@@ -82,7 +86,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(image);
         khachHang.setAccount(account);
-        KhachHang savedCus = khachHangRepository.save(khachHang);
+        KhachHang savedCus = khachHangRepo.save(khachHang);
 
         DiaChi diaChi = new DiaChi();
         diaChi.setKhachHang(khachHang);
@@ -91,7 +95,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setXa(kh.getXa());
         diaChi.setDuong(kh.getDuong());
         diaChi.setMacDinh(true);
-        diaChiRepository.save(diaChi);
+        diaChiRepo.save(diaChi);
 
         // Thêm giỏ hàng và danh sách yêu thích cho khách hàng vừa tạo
         cartRepo.save(new Cart(savedCus));
@@ -104,7 +108,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Transactional
     public KhachHang add(KhachHangRequest kh) {
         // check exist sdt
-        if (khachHangRepository.existsBySdt(kh.getSdt().trim())) {
+        if (khachHangRepo.existsBySdt(kh.getSdt().trim())) {
             throw new RuntimeException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
         }
 
@@ -123,7 +127,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setTrangThai(1);
         khachHang.setAccount(account);
-        khachHangRepository.save(khachHang);
+        khachHangRepo.save(khachHang);
 
         // dia chi
         if (!UtilityFunction.isNullOrEmpty(kh.getTinh()) &&
@@ -138,7 +142,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChi.setXa(kh.getXa());
             diaChi.setDuong(kh.getDuong().trim());
             diaChi.setMacDinh(true);
-            diaChiRepository.save(diaChi);
+            diaChiRepo.save(diaChi);
         }
 
         return khachHang;
@@ -147,7 +151,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public PagedResponse<KhachHangResponse> getAll(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<KhachHangResponse> page = khachHangRepository.getAll(pageable, search);
+        Page<KhachHangResponse> page = khachHangRepo.getAll(pageable, search);
 
         PagedResponse<KhachHangResponse> pagedResponse = new PagedResponse<>();
         pagedResponse.setPageNumber(pageNumber);
@@ -163,7 +167,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public PagedResponse<KhachHang> getAllActive(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<KhachHang> page = khachHangRepository.getAllActive(pageable, search);
+        Page<KhachHang> page = khachHangRepo.getAllActive(pageable, search);
 
         return UtilityFunction.mapToPagedResponse(page, KhachHang.class, search);
     }
@@ -178,7 +182,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (bi != null) {
             result = cloudinaryService.upload(multipartFile);
         }
-        KhachHang khInDB = khachHangRepository.findById(kh.getId()).get();
+        KhachHang khInDB = khachHangRepo.findById(kh.getId()).get();
         KhachHangImage image = khInDB.getImage();
         if (bi != null) {
             // xóa ảnh cũ
@@ -198,27 +202,27 @@ public class KhachHangServiceImpl implements KhachHangService {
         khInDB.setTrangThai(kh.getTrangThai());
         khInDB.setEmail(kh.getEmail());
         khInDB.setAccount(account);
-        return khachHangRepository.save(khInDB);
+        return khachHangRepo.save(khInDB);
     }
 
     @Override
     public KhachHang delete(Integer id) {
-        Optional<KhachHang> kh = khachHangRepository.findById(id);
+        Optional<KhachHang> kh = khachHangRepo.findById(id);
 
-        khachHangRepository.deleteById(id);
+        khachHangRepo.deleteById(id);
         return null;
     }
 
     @Override
     public KhachHangResponse getById(int id) {
-        return khachHangRepository.getKHById(id);
+        return khachHangRepo.getKHById(id);
     }
 
     @Override
     public PagedResponse<KhachHangResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        Page<KhachHangResponse> page = khachHangRepository.filter(pageable, gioiTinhFilter, trangThaiFilter);
+        Page<KhachHangResponse> page = khachHangRepo.filter(pageable, gioiTinhFilter, trangThaiFilter);
 
         PagedResponse<KhachHangResponse> pagedResponse = new PagedResponse<>();
 
@@ -231,5 +235,67 @@ public class KhachHangServiceImpl implements KhachHangService {
         pagedResponse.setSearch("");
 
         return pagedResponse;
+    }
+
+    @Override
+    public KhachHang signUp(SignUpReq req) {
+        Account account = Account.builder()
+                .tenDangNhap(req.getTenDangNhap())
+                .matKhau(passwordEncoder.encode(req.getMatKhau()))
+                .trangThai(true)
+                .role("ROLE_CUSTOMER")
+                .build();
+
+        KhachHangImage custImg = KhachHangImage.builder()
+                .imageName("default-user-img")
+                .imageUrl("https://res.cloudinary.com/dpsryzyev/image/upload/v1712851456/default-user-img_ri7fap.webp")
+                .build();
+        khachHangImageRepo.save(custImg);
+        DiaChi address = DiaChi.builder()
+                .hoTen(req.getHoTen())
+                .sdt(req.getSdt())
+                .tinh(req.getTinh())
+                .huyen(req.getHuyen())
+                .xa(req.getXa())
+                .duong(req.getDuong())
+                .macDinh(true)
+                .build();
+
+        KhachHang customer = KhachHang.builder()
+                .hoTen(req.getHoTen())
+                .ngaySinh(req.getNgaySinh())
+                .sdt(req.getSdt())
+                .email(req.getEmail())
+                .gioiTinh(req.isGioiTinh())
+                .trangThai(1)
+                .account(account)
+                .image(custImg)
+                .diaChis(List.of(address))
+                .build();
+        KhachHang savedCust = khachHangRepo.save(customer);
+        accountRepo.save(account);
+        address.setKhachHang(customer);
+        diaChiRepo.save(address);
+
+        return savedCust;
+    }
+
+    @Override
+    public String updateAvatar(MultipartFile multipartFile, int custId) throws IOException {
+        // save image to cloud
+        Map result = cloudinaryService.upload(multipartFile);
+
+        //
+        KhachHang custById = khachHangRepo.findById(custId).get();
+        KhachHangImage image = custById.getImage();
+        System.out.println(image);
+        cloudinaryService.delete(image.getImageId());
+
+        image.setImageName((String) result.get("original_filename"));
+        image.setImageUrl((String) result.get("url"));
+        image.setImageId((String) result.get("public_id"));
+
+        khachHangRepo.save(custById);
+        return khachHangImageRepo.save(image).getImageUrl();
     }
 }

@@ -67,20 +67,26 @@ export class LoginComponent {
               );
             }
 
-            forkJoin(getProdObservables).subscribe({
-              next: (products: SanPham[]) => {
-                products.forEach((product, index) => {
-                  newCartItems[index].spct.sanPham = product;
-                  if (index === newCartItems.length - 1) {
-                    this.cartService.updateCartItemsOfLoggedUser(newCartItems);
-                    this.cartService.updateCartItemsQuantityOfLoggedUser(
-                      newCartItems.length
-                    );
-                    this.router.navigate(["/"]);
-                  }
-                });
-              },
-            });
+            if (getProdObservables.length > 0) {
+              forkJoin(getProdObservables).subscribe({
+                next: (products: SanPham[]) => {
+                  products.forEach((product, index) => {
+                    newCartItems[index].spct.sanPham = product;
+                    if (index === newCartItems.length - 1) {
+                      this.cartService.updateCartItemsOfLoggedUser(
+                        newCartItems
+                      );
+                      this.cartService.updateCartItemsQuantityOfLoggedUser(
+                        newCartItems.length
+                      );
+                      this.router.navigate(["/"]);
+                    }
+                  });
+                },
+              });
+            } else {
+              this.router.navigate(["/"]);
+            }
           },
         });
       },

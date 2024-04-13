@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoginRequest } from "../model/interface/login-request.interface";
 import { Customer } from "../model/class/customer.class";
+import { SignUpReq } from "../model/interface/sign-up-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -91,5 +92,13 @@ export class AuthenticationService {
     } else {
       return false;
     }
+  }
+
+  // 9
+  public signUp(req: SignUpReq): Observable<Customer> {
+    return this.http.post<Customer>(
+      `${this.apiUrl}/auth/customer/sign-up`,
+      req
+    );
   }
 }

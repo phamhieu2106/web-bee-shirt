@@ -273,6 +273,9 @@ export class NavigationComponent {
   // 3
   private getCartItemsFromLoggedCustomer(): void {
     const loggedCus = this.authenticationService.getCustomerFromStorage();
+    if (!loggedCus) {
+      return;
+    }
     this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
       next: (response: CartItem[]) => {
         // get prod for prod-details

@@ -46,7 +46,7 @@ export class MyAccountComponent {
 
     this.customerService.getById(this.loggedCust.id).subscribe({
       next: (custRes: CustomerResponse) => {
-        console.log(custRes);
+        console.log("custRes: ", custRes);
 
         this.form = new FormGroup({
           email: new FormControl(custRes.email, [Validators.required]),

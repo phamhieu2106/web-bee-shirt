@@ -49,12 +49,11 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
     @Query(value =
             """         
-
-                    select kh.id, kh.ho_ten as hoTen, kh.sdt, kh.ngay_sinh as ngaySinh, kh.gioi_tinh as gioiTinh,
+            select kh.id, kh.ho_ten as hoTen, kh.sdt, kh.ngay_sinh as ngaySinh, kh.gioi_tinh as gioiTinh,
             kh.email, kh.trang_thai as trangThai,
             dc.tinh, dc.huyen, dc.xa, dc.duong,
             acc.ten_dang_nhap as tenDangNhap, acc.mat_khau as matKhau,
-            khach_hang_image.image_url as anhUrl\s
+            khach_hang_image.image_url as anhUrl
             from khach_hang kh
             join account acc on kh.account_id = acc.id
             join dia_chi dc on kh.id = dc.khach_hang_id

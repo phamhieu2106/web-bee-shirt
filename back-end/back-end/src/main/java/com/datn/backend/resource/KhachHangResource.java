@@ -2,6 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.KhachHangRequest;
+import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -78,5 +79,12 @@ public class KhachHangResource {
     @PostMapping("/add-quick")
     public ResponseEntity<KhachHang> addKH(@RequestBody KhachHangRequest khachHangRequest) {
         return ResponseEntity.ok(khachHangService.add(khachHangRequest));
+    }
+
+    // client
+    @PostMapping("/update-avatar/{custId}")
+    public ResponseEntity<String> updateAvatar(@RequestParam("file") MultipartFile file,
+                                          @PathVariable("custId") int custId) throws IOException {
+        return ResponseEntity.ok(khachHangService.updateAvatar(file, custId));
     }
 }

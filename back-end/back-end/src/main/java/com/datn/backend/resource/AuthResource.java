@@ -2,6 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.constant.SecurityConstant;
 import com.datn.backend.dto.request.LoginRequest;
+import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.NhanVien;
@@ -11,6 +12,7 @@ import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.security.JwtTokenProvider;
 import com.datn.backend.security.MyUserDetails;
+import com.datn.backend.service.KhachHangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,7 @@ public class AuthResource {
     private final AccountRepository accountRepo;
     private final NhanVienRepository nhanVienRepo;
     private final KhachHangRepository khachHangRepo;
+    private final KhachHangService khachHangService;
 
     @PostMapping("/staff/login")
     public ResponseEntity<NhanVien> staffLogin(@RequestBody LoginRequest request) throws AccessDeniedException {
@@ -56,6 +59,7 @@ public class AuthResource {
         return new ResponseEntity<>(nhanVien, headers, HttpStatus.OK);
     }
 
+    // client
     @PostMapping("/customer/login")
     public ResponseEntity<KhachHang> customerLogin(@RequestBody LoginRequest request) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
@@ -71,5 +75,10 @@ public class AuthResource {
 
         KhachHang khachHang = khachHangRepo.findByAccountId(account.getId());
         return new ResponseEntity<>(khachHang, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/customer/sign-up")
+    public ResponseEntity<KhachHang> signUp(@RequestBody SignUpReq req) {
+        return ResponseEntity.ok(khachHangService.signUp(req));
     }
 }

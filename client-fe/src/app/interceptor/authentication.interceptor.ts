@@ -39,7 +39,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // Ignore requests that don't need authentication (e.g., login)
-    const loginUrl = `http://localhost:8080/auth/customer/login`;
+    const loginUrl = `http://localhost:8080/auth/customer`;
     const productUrl = `http://localhost:8080/san-pham`;
     const imageUrl = `http://localhost:8080/hinh-anh-sp`;
     const spct = `http://localhost:8080/spct`;

@@ -18,6 +18,7 @@ export class PdfTraHangService {
       "Tòa nhà FPT Polytechnic, Phố Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội",
   };
   public async generatePDFHoaDon(hoaDon: HoaDonTraHang) {
+    console.log(hoaDon);
     let hdcts = await Promise.all(
       hoaDon?.hoaDonChiTiets?.map(async (hdct, index) => {
         const nameSP: string = await this.getNameSP(hdct.sanPhamChiTiet.id);
@@ -49,9 +50,7 @@ export class PdfTraHangService {
             {
               width: "50%",
               text: `Tên khách hàng:${
-                hoaDon.hoaDon?.khachHang != null
-                  ? hoaDon.hoaDon?.khachHang.hoTen
-                  : ""
+                hoaDon.hoaDon?.khachHang != null ? hoaDon.tenNguoiNhan : ""
               } `,
             },
             {
@@ -73,7 +72,9 @@ export class PdfTraHangService {
             {
               width: "50%",
               text: `Ngày tạo: ${
-                hoaDon.createdAt == null ? "" : hoaDon.createdAt
+                hoaDon.createdAt == null
+                  ? ""
+                  : this.formatDate(new Date(hoaDon.createdAt))
               }`,
             },
           ],
@@ -138,7 +139,39 @@ export class PdfTraHangService {
                   },
                   {
                     width: "50%",
-                    text: `${this.convertToVND(hoaDon.tongTien)}`,
+                    text: `${this.convertToVND(hoaDon?.tongTien)}`,
+                  },
+                ],
+                // optional space between columns
+                columnGap: 10,
+              },
+              {
+                columns: [
+                  {
+                    width: "50%",
+                    text: `Tiền phiếu giảm giá cũ:`,
+                  },
+                  {
+                    width: "50%",
+                    text: `${this.convertToVND(
+                      hoaDon?.tongTienPhieuGiamGiaCu
+                    )}`,
+                  },
+                ],
+                // optional space between columns
+                columnGap: 10,
+              },
+              {
+                columns: [
+                  {
+                    width: "50%",
+                    text: `Tiền phiếu giảm giá mới:`,
+                  },
+                  {
+                    width: "50%",
+                    text: `${this.convertToVND(
+                      hoaDon?.tongTienPhieuGiamGiaMoi
+                    )}`,
                   },
                 ],
                 // optional space between columns
@@ -152,7 +185,7 @@ export class PdfTraHangService {
                   },
                   {
                     width: "50%",
-                    text: `${this.convertToVND(hoaDon.tongTien)}`,
+                    text: `${this.convertToVND(hoaDon?.tongTienTraKhach)}`,
                   },
                 ],
                 // optional space between columns
@@ -186,6 +219,9 @@ export class PdfTraHangService {
   }
 
   public convertToVND(number: number) {
+    if (!number) {
+      return "-";
+    }
     return number.toLocaleString("en-US", {
       style: "currency",
       currency: "VND",
@@ -222,6 +258,19 @@ export class PdfTraHangService {
     return name;
   }
 
+  private formatDate(date: Date): string {
+    return `${date.getDate().toString().padStart(2, "0")}-${(
+      date.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${date.getFullYear()} ${date
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+  }
   public async getHoaDonTraHang(id: number): Promise<void> {
     const value = await firstValueFrom(
       this.traHangService.getHoaDonTraHang(id)

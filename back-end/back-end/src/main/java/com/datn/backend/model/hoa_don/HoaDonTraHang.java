@@ -1,5 +1,6 @@
 package com.datn.backend.model.hoa_don;
 
+import com.datn.backend.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HoaDonTraHang {
+public class HoaDonTraHang extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,9 @@ public class HoaDonTraHang {
     private String emailNguoiNhan;
     private String diaChiNguoiNhan;
     private BigDecimal tongTien;
+    private BigDecimal tongTienPhieuGiamGiaCu;
+    private BigDecimal tongTienPhieuGiamGiaMoi;
+    private BigDecimal tongTienTraKhach;
     private String ghiChu;
 
     @OneToMany(mappedBy = "hoaDonTraHang", cascade = CascadeType.ALL)

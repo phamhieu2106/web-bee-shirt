@@ -8,6 +8,9 @@ export class HoaDonTraHang {
   emailNguoiNhan: string;
   diaChiNguoiNhan: string;
   tongTien: number;
+  tongTienPhieuGiamGiaCu: number;
+  tongTienPhieuGiamGiaMoi: number;
+  tongTienTraKhach: number;
   ghiChu: string;
   hoaDonChiTiets: HoaDonChiTiet[];
   hoaDon: HoaDon;

@@ -77,6 +77,9 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                 .emailNguoiNhan(hoaDonTraHangRequest.getEmailNguoiNhan())
                 .diaChiNguoiNhan(hoaDonTraHangRequest.getDiaChiNguoiNhan())
                 .tongTien(hoaDonTraHangRequest.getTongTien())
+                .tongTienPhieuGiamGiaMoi(hoaDonTraHangRequest.getTongTienPhieuGiamGiaMoi())
+                .tongTienPhieuGiamGiaCu(hoaDonTraHangRequest.getTongTienPhieuGiamGiaCu())
+                .tongTienTraKhach(hoaDonTraHangRequest.getTongTienTraKhach())
                 .ghiChu(hoaDonTraHangRequest.getGhiChu())
                 .hoaDon(HoaDon.builder().id(hoaDonTraHangRequest.getHoaDonId()).build())
                 .build();
@@ -222,14 +225,6 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                 throw new PlaceOrderException("Phiếu giảm giá đã hết số lượng sử dụng");
             }
             // check thoi han su dung
-            LocalDateTime now = LocalDateTime.now();
-//            if (!(now.isBefore(phieuGiamGia.getThoiGianBatDau()) && now.isAfter(phieuGiamGia.getThoiGianKetThuc()))){
-//                System.out.println(now.toString());
-//                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
-//            }
-            if (!this.isWithinInterval(now, phieuGiamGia.getThoiGianBatDau(), phieuGiamGia.getThoiGianKetThuc())) {
-                throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng");
-            }
             // tru so luong
             if (phieuGiamGia.getSoLuong() >= 1) {
                 phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
@@ -283,17 +278,8 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
         return hoaDonChiTiets.stream().map((hdct) -> {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             SanPhamChiTiet sanPhamChiTiet = spctRepo.findById(hdct.getSanPhamChiTietId()).orElse(null);
-            if (sanPhamChiTiet == null || !sanPhamChiTiet.isTrangThai()) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " đã dừng bán vui lòng xóa khỏi đơn !");
-            }
             if (hdct.getSoLuong() <= 0) {
                 throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " số lượng không hợp lệ !");
-            }
-            if (sanPhamChiTiet.getSoLuongTon() <= 0) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " đã hết hàng");
-            }
-            if (hdct.getSoLuong() > sanPhamChiTiet.getSoLuongTon()) {
-                throw new PlaceOrderException("Sản phẩm " + sanPhamChiTiet.getSanPham().getTen() + " chỉ có thể mua tối đa " + sanPhamChiTiet.getSoLuongTon() + " sản phẩm !");
             }
             hoaDonChiTiet.setSoLuong(hdct.getSoLuong());
             hoaDonChiTiet.setGiaBan(hdct.getGiaBan());

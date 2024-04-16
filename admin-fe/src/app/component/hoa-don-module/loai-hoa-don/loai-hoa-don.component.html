@@ -1,5 +1,9 @@
 <span [ngSwitch]="loaiHoaDon">
-  <span *ngSwitchCase="'GIAO_HANG'" class="badge badge-primary">Giao hàng</span>
-  <span *ngSwitchCase="'TAI_QUAY'" class="badge badge-success">Tại quầy</span>
-  <span *ngSwitchDefault>ERROR</span>
+  <button *ngSwitchCase="'GIAO_HANG'" class="btn btn-primary btn-rounded">
+    Giao hàng
+  </button>
+  <button *ngSwitchCase="'TAI_QUAY'" class="btn btn-success btn-rounded">
+    Tại quầy
+  </button>
+  <button *ngSwitchDefault>ERROR</button>
 </span>

@@ -45,8 +45,7 @@ export class FormComponent implements OnInit {
     this.form = new FormGroup({
       tenDotGiamGia: new FormControl(null, [
         Validators.required,
-        Validators.pattern(/^(?=.*[\p{L}0-9])[\p{L}0-9\s]*$/u),
-        ,
+        Validators.pattern(/^(?=.*[\p{L}0-9])[\p{L}0-9\s\/]*$/u),
       ]),
       giaTriPhanTram: new FormControl(null, [
         Validators.required,

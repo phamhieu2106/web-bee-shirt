@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface HoaDonTraHangModelRepository extends JpaRepository<HoaDonTraHang, Integer> {
 
     Optional<HoaDonTraHang> findByHoaDonId(Integer id);
+
+    boolean existsByMa(String maHD);
 }

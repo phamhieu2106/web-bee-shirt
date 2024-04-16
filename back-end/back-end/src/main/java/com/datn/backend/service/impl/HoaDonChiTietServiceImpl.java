@@ -23,6 +23,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +42,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepo;
     private final LichSuHoaDonRepository lichSuHoaDonRepo;
     private final PhieuGiamGiaServce phieuGiamGiaServce;
+    private final PhieuGiamGiaRepository phieuGiamGiaRepo;
 
     @Override
     @Transactional
@@ -104,7 +108,9 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
         }
-        return modelMapper.map(hoaDonChiTietRepository.save(hoaDonChiTiet), HoaDonChiTietResponse.class);
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.save(hoaDonChiTiet);
+        updateHoaDonAfterUpdateHDCT(hdct.getHoaDon().getId());
+        return modelMapper.map(hdct, HoaDonChiTietResponse.class);
     }
 
     private BigDecimal getGiaBanSpctHienTai(Integer sanPhamChiTietId) {
@@ -235,6 +241,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         }
         hoaDonChiTietRepository.save(hoaDonChiTiet);
         updateHoaDonAfterUpdateHDCT(hoaDonChiTiet.getHoaDon().getId());
+
         // cap nhat hdct
         return modelMapper.map(hoaDonChiTiet, HoaDonChiTietResponse.class);
     }
@@ -257,40 +264,106 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
-    public void updateHoaDonAfterUpdateHDCT(Integer idHoaDon) {
+    public HoaDon updateHoaDonAfterUpdateHDCT(Integer idHoaDon) {
         if (idHoaDon == null) {
             throw new IdNotFoundException("Hóa đơn không tồn tại");
         }
         // update tong tien
         HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
         hoaDon.setTongTien(this.getTongTien(hoaDon.getHoaDonChiTiets()));
-
-        // update phieu giam gia
+        // lay phieu giam gia giam nhieu nhat
         DiscountValidRequest discountValidRequest = DiscountValidRequest.builder()
                 .giaDangGiam(hoaDon.getTienGiam().longValue())
                 .giaTriDonHang(hoaDon.getTongTien())
                 .khachHangId(hoaDon.getKhachHang() == null ? null : hoaDon.getKhachHang().getId())
                 .build();
-        DiscountValidResponse discountValid = phieuGiamGiaServce.getDiscountValid(discountValidRequest);
-        hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
-        // update tien giam
+        DiscountValidResponse discountValid = phieuGiamGiaServce.getDiscountValidUpdateHDCT(hoaDon.getId(), discountValidRequest);
 
+        // update so luong phieu giam gia
+        if (hoaDon.getPhieuGiamGia() == null && discountValid.getPhieuGiamGia() != null) {
+            // ap phieu giam gia moi
+            PhieuGiamGia pggNew = discountValid.getPhieuGiamGia();
+            pggNew.setSoLuong(pggNew.getSoLuong() - 1);
+            phieuGiamGiaRepo.save(pggNew);
+            hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
+
+        } else if (hoaDon.getPhieuGiamGia() != null && discountValid.getPhieuGiamGia() == null) {
+            // khong tim dc phieu giam gia phu hop hon
+            // kiem tra phieu giam gia hien tai co con phu hop khong
+            if (this.isPhieuGiamGiaValid(hoaDon.getPhieuGiamGia(), hoaDon.getTongTien()) == null) {
+                // khong phu hop nua -> detach va rollback so luong
+
+                PhieuGiamGia pgg = hoaDon.getPhieuGiamGia();
+                pgg.setSoLuong(pgg.getSoLuong() + 1);
+                phieuGiamGiaRepo.save(pgg);
+                hoaDon.setPhieuGiamGia(null);
+            }
+
+        } else if (discountValid.getPhieuGiamGia() != null && hoaDon.getPhieuGiamGia().getId() != null) {
+
+            if (this.isPhieuGiamGiaValid(hoaDon.getPhieuGiamGia(), hoaDon.getTongTien()) == null) {
+                // khong phu hop nua -> detach va rollback so luong
+                PhieuGiamGia pgg = hoaDon.getPhieuGiamGia();
+                pgg.setSoLuong(pgg.getSoLuong() + 1);
+                phieuGiamGiaRepo.save(pgg);
+                hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
+
+                // tru so luong phieu giam gia moi
+                PhieuGiamGia pggNew = discountValid.getPhieuGiamGia();
+                pggNew.setSoLuong(pggNew.getSoLuong() - 1);
+                phieuGiamGiaRepo.save(pggNew);
+            } else {
+                List<PhieuGiamGia> phieuGiamGias
+                        = Arrays.asList(discountValid.getPhieuGiamGia(), hoaDon.getPhieuGiamGia());
+
+                PhieuGiamGia discountMax = phieuGiamGiaServce.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
+                if (!discountMax.getId().equals(hoaDon.getPhieuGiamGia().getId())) {
+
+                    // hoán dôi 2 phiêu giảm gia
+                    PhieuGiamGia pggOld = hoaDon.getPhieuGiamGia();
+                    pggOld.setSoLuong(pggOld.getSoLuong() + 1);
+                    phieuGiamGiaRepo.save(pggOld);
+
+                    PhieuGiamGia pggNew = discountMax;
+                    pggNew.setSoLuong(pggNew.getSoLuong() - 1);
+                    phieuGiamGiaRepo.save(pggNew);
+                    hoaDon.setPhieuGiamGia(discountMax);
+                }
+            }
+        }
+
+
+        // update tien giam
         BigDecimal tienGiam = this.getTienGiam(hoaDon.getTongTien(), hoaDon.getPhieuGiamGia());
         hoaDon.setTienGiam(tienGiam);
+        return hoaDonRepository.save(hoaDon);
+    }
 
-        //roll so luong phieu giam gia cu
-        hoaDonRepository.save(hoaDon);
+    private PhieuGiamGia isPhieuGiamGiaValid(PhieuGiamGia phieuGiamGia, BigDecimal tongTien) {
+        if (phieuGiamGia == null) {
+            return null;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startTime = phieuGiamGia.getThoiGianBatDau();
+        LocalDateTime endTime = phieuGiamGia.getThoiGianKetThuc();
+        if ((now.isAfter(startTime) && now.isBefore(endTime)) &&
+                tongTien.longValue() >= phieuGiamGia.getDieuKienGiam().longValue()
+        ) {
+            return phieuGiamGia;
+        }
+        return null;
     }
 
     private BigDecimal getTienGiam(BigDecimal tongTien, PhieuGiamGia phieuGiamGia) {
         long tienGiam = 0;
-//        if (phieuGiamGia.get)
-        if (UtilityFunction.isNullOrEmpty(phieuGiamGia) ){
+        if (UtilityFunction.isNullOrEmpty(phieuGiamGia)) {
             return BigDecimal.valueOf(tienGiam);
         }
         if (phieuGiamGia.getKieu() == 0) {
             // giảm theo %
-            tienGiam = tongTien.longValue() * phieuGiamGia.getGiaTri().intValue() / 100;
+            tienGiam = tongTien.longValue() * phieuGiamGia.getGiaTri().longValue() / 100;
+            tienGiam = tienGiam < phieuGiamGia.getGiaTriMax().longValue() ? tienGiam : phieuGiamGia.getGiaTriMax().longValue();
+
         } else if (phieuGiamGia.getKieu() == 1) {
             // giảm theo giá trị
             tienGiam = phieuGiamGia.getGiaTri().longValue();
@@ -304,8 +377,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         for (int i = 0; i < hoaDonChiTiets.size(); i++) {
             long giaBan = hoaDonChiTiets.get(i).getGiaBan().longValue();
             total += (giaBan * hoaDonChiTiets.get(i).getSoLuong());
-        }
 
+        }
         return BigDecimal.valueOf(total);
     }
 }

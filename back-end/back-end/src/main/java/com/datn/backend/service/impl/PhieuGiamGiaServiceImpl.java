@@ -76,11 +76,11 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
         }
 
         // Xác định trạng thái dựa trên thời gian
-       if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
-           pgg.setTrangThai("Sắp diễn ra");
+        if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+            pgg.setTrangThai("Sắp diễn ra");
         } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
                 currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
-           pgg.setTrangThai("Đang diễn ra");
+            pgg.setTrangThai("Đang diễn ra");
         }
 
         // Lưu phiếu giảm giá vào cơ sở dữ liệu
@@ -198,7 +198,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
 
     @Override
     public List<PhieuGiamGia> getAll() {
-        return pggRepo.findAllBySoLuongGreaterThanAndTrangThaiIs(0,"Đang diễn ra");
+        return pggRepo.findAllBySoLuongGreaterThanAndTrangThaiIs(0, "Đang diễn ra");
     }
 
 
@@ -314,6 +314,75 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
                 .build();
     }
 
+
+    @Override
+    public DiscountValidResponse getDiscountValidUpdateHDCT(Integer hoaDonId, DiscountValidRequest discountValidRequest) {
+        String message = null;
+
+//        PhieuGiamGia phieuGiamGiaDangHoatDong = this.isPhieuGiamGiaDangHoatDong(phieuGiamGia);
+
+        // pgg valid
+        List<PhieuGiamGia> phieuGiamGias = pggRepo.getDiscountValidNotCustomer(discountValidRequest.getGiaTriDonHang());
+
+        // pgg suggest
+        List<PhieuGiamGia> pggSuggests = pggRepo.getDiscountSuggestNotCustomer(discountValidRequest.getGiaTriDonHang());
+
+        // neu co khach hang lay tat ca phieu cu khach hang do
+        if (discountValidRequest.getKhachHangId() != null) {
+            // danh sac phieu giam gia goi y hop le cua khach hang
+            List<PhieuGiamGia> phieuGiamGiaByCustomerId = pggRepo.getDiscountValidByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+
+            // loai bo phieu giam gia ma khach hang da dung
+            phieuGiamGiaByCustomerId = phieuGiamGiaByCustomerId.stream().filter(
+                    (pgg) -> !pggRepo.isDiscountUsedByCustomerId(pgg.getId(), discountValidRequest.getKhachHangId(), hoaDonId)
+            ).toList();
+
+            // gop danh sach phieu giam gia hop le
+            phieuGiamGias.addAll(phieuGiamGiaByCustomerId);
+
+//            -----------------------------------------------
+
+            // danh sach phieu giam gia goi y voi khach hang
+            List<PhieuGiamGia> phieuGiamGiaSuggestByCustomerId = pggRepo.getDiscountSuggestByCustomer(discountValidRequest.getGiaTriDonHang(), discountValidRequest.getKhachHangId());
+
+            // loai bo phieu giam gia ma khach hang da dung
+            phieuGiamGiaSuggestByCustomerId = phieuGiamGiaSuggestByCustomerId.stream().filter(
+                    (pgg) -> !pggRepo.isDiscountUsedByCustomerId(pgg.getId(), discountValidRequest.getKhachHangId())
+            ).toList();
+
+            // gop vao danh sach phieu giam gia goi y
+            pggSuggests.addAll(phieuGiamGiaSuggestByCustomerId);
+        }
+
+        // phieu giam gia giam nhieu nhat
+        PhieuGiamGia pgg = this.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
+
+        // pgg goi y
+        if (pggSuggests.isEmpty()) {
+            message = null;
+        } else {
+            // lay ra phieu giam gia co dieu kien giam gan nhat so voi gia tri don hang
+            pggSuggests.sort((pgg1, pgg2) -> {
+                int compareValue = pgg1.getDieuKienGiam().compareTo(pgg2.getDieuKienGiam());
+                if (compareValue != 0) {
+                    return compareValue;
+                }
+                return -(pgg1.getGiaTriMax().compareTo(pgg2.getGiaTriMax()));
+            });
+            PhieuGiamGia pggSuggest = pggSuggests.get(0);
+
+            if (getDiscountValue(pggSuggest) > discountValidRequest.getGiaDangGiam()) {
+                // neu gia tri giam cua phieu giam gia goi y lon hon gia tri dang giam se goji y pgg day
+                message = this.getMessage(pggSuggests, discountValidRequest.getGiaTriDonHang());
+            }
+        }
+        return DiscountValidResponse
+                .builder()
+                .message(message)
+                .phieuGiamGia(pgg)
+                .build();
+    }
+
     private String getMessage(List<PhieuGiamGia> pggSuggests, BigDecimal giaTriDonHang) {
         String message = null;
 
@@ -321,12 +390,13 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
             return message;
         }
         PhieuGiamGia pgg = pggSuggests.get(0);
-        message = "Mua thêm " + (UtilityFunction.convertToCurrency(pgg.getDieuKienGiam().longValue() - giaTriDonHang.longValue())) + " để giảm " + UtilityFunction.convertToCurrency(getDiscountValue(pgg));
+        message = "Mua thêm " + (UtilityFunction.convertToCurrency(pgg.getDieuKienGiam().longValue() - giaTriDonHang.longValue())) + " để giảm đến" + UtilityFunction.convertToCurrency(getDiscountValue(pgg));
         return message;
 
     }
 
-    private PhieuGiamGia getDiscountMax(List<PhieuGiamGia> phieuGiamGias, BigDecimal giaTriDonHang) {
+    @Override
+    public PhieuGiamGia getDiscountMax(List<PhieuGiamGia> phieuGiamGias, BigDecimal giaTriDonHang) {
         PhieuGiamGia pgg = null;
         String message = null;
         if (phieuGiamGias.isEmpty()) {
@@ -343,7 +413,8 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
         return pgg;
     }
 
-    private long getDiscountValue(PhieuGiamGia pgg, BigDecimal giaTriDonHang) {
+    @Override
+    public long getDiscountValue(PhieuGiamGia pgg, BigDecimal giaTriDonHang) {
         long value = 0;
         if (pgg.getKieu().equals(1)) {
             // neu kieu la tien mat

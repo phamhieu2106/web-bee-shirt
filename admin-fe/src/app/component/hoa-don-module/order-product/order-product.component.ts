@@ -31,7 +31,7 @@ export class OrderProductComponent {
 
         this.addOrUpdateHdct(resp);
         this.notification.success("Thêm thành công");
-        this.hoaDonChange.emit(this.hoaDon);
+        this.getHoaDon.emit(this.hoaDon.id);
       },
       error: (err) => {
         this.notification.error(err.error.message);

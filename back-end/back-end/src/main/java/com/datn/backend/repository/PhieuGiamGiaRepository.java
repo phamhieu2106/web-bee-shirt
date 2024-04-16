@@ -1,6 +1,7 @@
 package com.datn.backend.repository;
 
 import com.datn.backend.dto.response.PhieuGiamGiaResponse;
+import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -137,6 +138,15 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
             and hd.khachHang.id = :customerId
             """)
     Boolean isDiscountUsedByCustomerId(Integer discountId,Integer customerId);
+
+    @Query("""
+            select CASE WHEN COUNT(hd) > 0 THEN true ELSE false END
+            from HoaDon hd
+            where hd.phieuGiamGia.id = :discountId
+            and hd.khachHang.id = :customerId
+            and hd.id != :hoaDonId
+            """)
+    Boolean isDiscountUsedByCustomerId(Integer discountId, Integer customerId, Integer hoaDonId);
 
     @Query(value = """
                    SELECT pgg.id, pgg.ma_phieu_giam_gia, pgg.ten_phieu_giam_gia, pgg.kieu, pgg.loai, pgg.gia_tri,

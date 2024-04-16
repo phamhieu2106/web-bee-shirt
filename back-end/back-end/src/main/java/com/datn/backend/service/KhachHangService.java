@@ -2,6 +2,7 @@ package com.datn.backend.service;
 
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
+import com.datn.backend.dto.request.UpdateCustInfoReq;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -30,5 +31,7 @@ public interface KhachHangService {
 
     KhachHang signUp(SignUpReq req);
 
-    String updateAvatar(MultipartFile multipartFile, int custId) throws IOException;
+    KhachHang updateAvatar(MultipartFile multipartFile, int custId) throws IOException;
+
+    KhachHang updateInfo(UpdateCustInfoReq req);
 }

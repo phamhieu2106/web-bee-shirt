@@ -15,19 +15,28 @@ export class DiscountService {
 
   // public functions
   // 1
-  public getDiscountsForCheckOut(
+  public getDiscountsForLoggedCheckOut(
     priceCondition: number,
     custId: number
   ): Observable<Discount[]> {
     return this.http.get<Discount[]>(
-      `${this.apiUrl}/discount-for-checkout/${priceCondition}/${custId}`
+      `${this.apiUrl}/discounts-for-logged-checkout/${priceCondition}/${custId}`
     );
   }
 
   // 2
+  public getDiscountsForNoneLoggedCheckOut(
+    priceCondition: number
+  ): Observable<Discount[]> {
+    return this.http.get<Discount[]>(
+      `${this.apiUrl}/discounts-for-none-logged-checkout/${priceCondition}`
+    );
+  }
+
+  // 3
   public getAllDiscountsOf1Cust(custId: number): Observable<Discount[]> {
     return this.http.get<Discount[]>(
-      `${this.apiUrl}/discount-by-cust/${custId}`
+      `${this.apiUrl}/discounts-by-cust/${custId}`
     );
   }
 }

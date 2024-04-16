@@ -14,6 +14,8 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./profile-sidebar.component.css"],
 })
 export class ProfileSidebarComponent {
+  public isLoadding = false;
+  public overlayText: string = "";
   public loggedCust: Customer;
   public selectFile: File;
 
@@ -38,7 +40,7 @@ export class ProfileSidebarComponent {
     this.selectFile = event.target["files"][0];
     this.showImageThumbnail(this.selectFile, thumnailId);
     this.notifService.success(
-      "Bạn vừa chọn ảnh diện mới! Nhấn lưu để cập nhật."
+      "Bạn vừa chọn ảnh diện mới! Nhấn cập nhật để lưu thay đổi."
     );
   }
 
@@ -62,18 +64,21 @@ export class ProfileSidebarComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.customerService.updateAvatar(this.selectFile).subscribe({
-          next: (res: any) => {
-            // this.loggedCust.image.imageUrl = res.imageUrl;
-            // (document.getElementById("avatar") as HTMLImageElement)[
-            //   "src"
-            // ] = res.imageUrl;
-            // this.notifService.success("Cập nhật ảnh đại diện thành công!");
-          },
-          error: (errRes: HttpErrorResponse) => {
-            this.notifService.error(errRes.error.message);
-          },
-        });
+        this.turnOnOverlay("Đang cập nhật...");
+        this.customerService
+          .updateAvatar(this.loggedCust.id, this.selectFile)
+          .subscribe({
+            next: (cust: Customer) => {
+              this.authService.saveCustomerToStorage(cust);
+              this.selectFile = null;
+              this.notifService.success("Cập nhật ảnh đại diện thành công!");
+              this.turnOffOverlay("");
+            },
+            error: (errRes: HttpErrorResponse) => {
+              this.notifService.error(errRes.error.message);
+              this.turnOffOverlay("");
+            },
+          });
       }
     });
   }
@@ -87,5 +92,17 @@ export class ProfileSidebarComponent {
         .target.result as string;
     };
     reader.readAsDataURL(file);
+  }
+
+  //
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 15
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

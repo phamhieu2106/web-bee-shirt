@@ -118,8 +118,20 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                    AND pgg.so_luong > 0
                    AND (pgg_kh.is_used = 0 OR pgg_kh.is_used IS NULL)
                    """, nativeQuery = true)
-    List<PhieuGiamGia> getDiscountsForCheckOut(@Param("priceCondition") BigDecimal priceCondition,
-                                                   @Param("customerId") int customerId);
+    List<PhieuGiamGia> getDiscountsForLoggedCheckOut(@Param("priceCondition") BigDecimal priceCondition,
+                                               @Param("customerId") int customerId);
+
+    @Query(value = """
+                   SELECT pgg.id, pgg.ma_phieu_giam_gia, pgg.ten_phieu_giam_gia, pgg.kieu, pgg.loai, pgg.gia_tri,
+                          pgg.gia_tri_max, pgg.dieu_kien_giam, pgg.so_luong, pgg.thoi_gian_bat_dau, pgg.thoi_gian_ket_thuc, pgg.trang_thai,
+                          pgg.created_at, pgg.created_by, pgg.updated_at, pgg.last_updated_by
+                   FROM phieu_giam_gia pgg
+                   WHERE pgg.dieu_kien_giam <= :priceCondition
+                   AND (CURRENT_TIMESTAMP() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc)
+                   AND pgg.so_luong > 0
+                   AND pgg.loai = 1
+                   """, nativeQuery = true)
+    List<PhieuGiamGia> getDiscountsForNoneLoggedCheckOut(@Param("priceCondition") BigDecimal priceCondition);
 
     @Query(value = """
                    SELECT t2.is_used

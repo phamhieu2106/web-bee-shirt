@@ -50,6 +50,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     const collarUrls = `http://localhost:8080/co-ao`;
     const sleeveUrls = `http://localhost:8080/tay-ao`;
     const materialUrls = `http://localhost:8080/chat-lieu`;
+    const saleEventlUrls = `http://localhost:8080/dot-giam-gia`;
+    const discountUrls = `http://localhost:8080/phieu-giam-gia`;
 
     // if (request.url.includes(loginUrl)) {
     //   return next.handle(request);
@@ -66,7 +68,9 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       request.url.startsWith(designUrls) ||
       request.url.startsWith(collarUrls) ||
       request.url.startsWith(sleeveUrls) ||
-      request.url.startsWith(materialUrls)
+      request.url.startsWith(materialUrls) ||
+      request.url.startsWith(saleEventlUrls) ||
+      request.url.startsWith(discountUrls)
     ) {
       return next.handle(request);
     }

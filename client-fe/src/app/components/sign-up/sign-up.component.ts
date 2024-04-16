@@ -191,8 +191,6 @@ export class SignUpComponent {
     const currentDate = new Date();
 
     if (selectedDate >= currentDate) {
-      console.log("selectedDate >= currentDate, ", selectedDate >= currentDate);
-
       return { invalidDate: true };
     }
     return null;

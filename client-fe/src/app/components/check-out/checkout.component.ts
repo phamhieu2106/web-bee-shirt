@@ -35,8 +35,9 @@ export class CheckoutComponent {
   public addresses: Address[] = [];
   public defaultAddr: Address;
   public loggedCust: Customer;
-  public cartItems2: CartItem[] = [];
-  public cartItemQuantity2: number;
+
+  public cartItems: CartItem[] = [];
+  public cartItemQuantity: number;
 
   public isAddressesModalOpen: boolean = false;
   public isAddAddressModalOpen: boolean = false;
@@ -81,26 +82,24 @@ export class CheckoutComponent {
 
     this.cartService.cartItemsOfLoggedUser.subscribe(
       (cartItems: CartItem[]) => {
-        this.cartItems2 = cartItems;
+        this.cartItems = cartItems;
 
         this.realPrice = this.getRealPrice();
         this.salePrice = this.getSalePrice();
-        this.discountPrice = this.getDiscountPrice();
-        this.finalPrice = this.getFinalPrice();
-        this.getAllDiscounts();
+        this.getDiscountsForLoggedCheckOut();
       }
     );
 
-    this.cartService.cartItemsQuantityOfLoggedUser.subscribe((data: number) => {
-      this.cartItemQuantity2 = data;
-    });
+    this.cartService.cartItemsQuantityOfLoggedUser.subscribe(
+      (quantity: number) => {
+        this.cartItemQuantity = quantity;
+      }
+    );
 
-    if (this.loggedCust) {
-      this.getAllAddressOfLoggedCust();
-      this.getCartItemsFromLoggedCustomer();
-      this.initAddAddressForm();
-      this.getAllProvinces();
-    }
+    this.getAllAddressOfLoggedCust();
+    this.getCartItemsFromLoggedCustomer();
+    this.initAddAddressForm();
+    this.getAllProvinces();
   }
 
   // public functions
@@ -147,7 +146,10 @@ export class CheckoutComponent {
       if (result.isConfirmed) {
         this.addressService.setDefaultAddress(addressId).subscribe({
           next: (defaultAddr: Address) => {
+            // gán địa chỉ mặc định mới
             this.defaultAddr = defaultAddr;
+
+            // cập nhật lại thuộc tính 'macDinh' cho các address trong list
             this.addresses = this.addresses.map((addr: Address) => {
               if (addr.id === defaultAddr.id) {
                 addr.macDinh = true;
@@ -167,7 +169,7 @@ export class CheckoutComponent {
   }
 
   // 7
-  public addAddress(): void {
+  public addNewAddress(): void {
     Swal.fire({
       title: "Thêm mới địa chỉ?",
       cancelButtonText: "Hủy",
@@ -178,6 +180,11 @@ export class CheckoutComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        if (this.addAddressForm.invalid) {
+          this.notifService.error("Vui lòng nhập đầy đủ thông tin!");
+          return;
+        }
+
         const req: AddAddressReq = {
           hoTen: this.addAddressForm.get("hoTen").value,
           sdt: this.addAddressForm.get("sdt").value,
@@ -192,9 +199,10 @@ export class CheckoutComponent {
         this.addressService.addAddress(req).subscribe({
           next: () => {
             this.initAddAddressForm();
-            this.notifService.success("Thêm địa chỉ thành công!");
             this.getAllAddressOfLoggedCust();
-            // open/close modal
+            this.notifService.success("Thêm địa chỉ mới thành công!");
+
+            // open/close modals
             this.isAddAddressModalOpen = false;
             this.isAddressesModalOpen = true;
           },
@@ -207,7 +215,7 @@ export class CheckoutComponent {
   }
 
   // select address event functions
-  // 8. get districts by province
+  // 8. get districts by select province
   public getAllDistrictsByProvince(): void {
     this.wards = [];
     this.getProvinceId();
@@ -221,6 +229,7 @@ export class CheckoutComponent {
       });
   }
 
+  // 8.1
   private getProvinceId(): void {
     for (let i = 0; i < this.provinces.length; i++) {
       const element = this.provinces[i];
@@ -233,6 +242,7 @@ export class CheckoutComponent {
     }
   }
 
+  // 8.3
   private getProvinceName(): string {
     let provinceName = this.addAddressForm.get("tinh").value;
     if (provinceName == null || provinceName == "") {
@@ -245,7 +255,7 @@ export class CheckoutComponent {
     return provinceName;
   }
 
-  // 9. get wards by district
+  // 9. get wards by select district
   public getAllWardsByDistrict(): void {
     this.getDistrictId();
     this.giaoHangNhanhService
@@ -258,6 +268,7 @@ export class CheckoutComponent {
       });
   }
 
+  // 9.1
   private getDistrictId(): void {
     for (let i = 0; i < this.districts.length; i++) {
       const element = this.districts[i];
@@ -270,6 +281,7 @@ export class CheckoutComponent {
     }
   }
 
+  // 9.2
   private getDistrictName(): string {
     let districtName = this.addAddressForm.get("huyen").value;
     this.districts.forEach((d) => {
@@ -329,7 +341,7 @@ export class CheckoutComponent {
         this.orderService.placeOrderOnline(req).subscribe({
           next: (orderCode: string) => {
             this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/tracking-order/${orderCode}`]);
+            this.router.navigate([`/profile/my-orders/${orderCode}`]);
             this.cartService.updateCartItemsOfLoggedUser([]);
             this.cartService.updateCartItemsQuantityOfLoggedUser(0);
           },
@@ -341,9 +353,10 @@ export class CheckoutComponent {
     });
   }
 
+  // 12.1
   private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
     let result: OrderDetailsReq[] = [];
-    for (let item of this.cartItems2) {
+    for (let item of this.cartItems) {
       let orderDetails: OrderDetailsReq = {
         id: null,
         soLuong: item.soLuong,
@@ -361,7 +374,7 @@ export class CheckoutComponent {
     if (discount?.kieu === 0) {
       return ` Giảm ${discount?.giaTri}% cho đơn  từ ${this.formatPrice(
         discount?.dieuKienGiam
-      )}`;
+      )} Tối đa ${this.formatPrice(discount.giaTriMax)}`;
     } else {
       return ` Giảm ${this.formatPrice(
         discount?.giaTri
@@ -421,81 +434,64 @@ export class CheckoutComponent {
 
   // 2
   private getCartItemsFromLoggedCustomer(): void {
-    const loggedCus = this.authService.getCustomerFromStorage();
-    this.cartService.getCartItemsOfLoggedCustomer(loggedCus.id).subscribe({
-      next: (cartItems: CartItem[]) => {
-        // calculate prices
-        this.realPrice = this.getRealPrice();
-        this.salePrice = this.getSalePrice();
-        this.discountPrice = this.getDiscountPrice();
-        this.finalPrice = this.getFinalPrice();
-
-        // get product for prod-details
-        let observables = [];
-        for (let item of cartItems) {
-          observables.push(
-            this.productService.getProductByProductDetails(item.spct.id)
-          );
-        }
-        forkJoin(observables).subscribe({
-          next: (productsRes: SanPham[]) => {
-            productsRes.forEach((productRes, index) => {
-              cartItems[index].spct.sanPham = productRes;
-              if (index === cartItems.length - 1) {
-                this.cartItems2 = cartItems;
-                this.cartItemQuantity2 = cartItems.length;
-                this.cartService.updateCartItemsOfLoggedUser(cartItems);
-                this.cartService.updateCartItemsQuantityOfLoggedUser(
-                  cartItems.length
-                );
-              }
-            });
-          },
-        });
-
-        // get sale events for prod-details
-        let observables2 = [];
-        for (let item of cartItems) {
-          observables2.push(
-            this.saleEventService.getSaleEventOfProdDetails(item.spct.id)
-          );
-        }
-        forkJoin(observables2).subscribe({
-          next: (values: SaleEvent[]) => {
-            values.forEach((v, index) => {
-              cartItems[index].spct.saleEvent = v;
-              if (index === cartItems.length - 1) {
-                this.cartItems2 = cartItems;
-                this.cartItemQuantity2 = cartItems.length;
-
-                this.cartService.updateCartItemsOfLoggedUser(cartItems);
-                this.cartService.updateCartItemsQuantityOfLoggedUser(
-                  cartItems.length
-                );
-                this.salePrice = this.getSalePrice();
-                this.getAllDiscounts();
-              }
-            });
-          },
-        });
-      },
-      error: (errorRes: HttpErrorResponse) => {
-        this.notifService.error(errorRes.error.message);
-      },
-    });
-  }
-
-  // 2.1
-  private getAllDiscounts(): void {
-    this.discountService
-      .getDiscountsForCheckOut(
-        this.realPrice - this.salePrice,
-        this.loggedCust.id
-      )
+    this.cartService
+      .getCartItemsOfLoggedCustomer(this.loggedCust.id)
       .subscribe({
-        next: (discounts: Discount[]) => {
-          this.discounts = discounts;
-          this.initSelectedDiscounts();
+        next: (cartItems: CartItem[]) => {
+          // calculate prices
+          this.realPrice = this.getRealPrice();
+          this.salePrice = this.getSalePrice();
+          this.discountPrice = this.getDiscountPrice();
+          this.finalPrice = this.getFinalPrice();
+
+          // get product for prod-details
+          let observables = [];
+          for (let item of cartItems) {
+            observables.push(
+              this.productService.getProductByProductDetails(item.spct.id)
+            );
+          }
+          forkJoin(observables).subscribe({
+            next: (productsRes: SanPham[]) => {
+              productsRes.forEach((productRes, index) => {
+                cartItems[index].spct.sanPham = productRes;
+                if (index === cartItems.length - 1) {
+                  this.cartItems = cartItems;
+                  this.cartItemQuantity = cartItems.length;
+                  this.cartService.updateCartItemsOfLoggedUser(cartItems);
+                  this.cartService.updateCartItemsQuantityOfLoggedUser(
+                    cartItems.length
+                  );
+                }
+              });
+            },
+          });
+
+          // get sale events for prod-details
+          let observables2 = [];
+          for (let item of cartItems) {
+            observables2.push(
+              this.saleEventService.getSaleEventOfProdDetails(item.spct.id)
+            );
+          }
+          forkJoin(observables2).subscribe({
+            next: (values: SaleEvent[]) => {
+              values.forEach((v, index) => {
+                cartItems[index].spct.saleEvent = v;
+                if (index === cartItems.length - 1) {
+                  this.cartItems = cartItems;
+                  this.cartItemQuantity = cartItems.length;
+
+                  this.cartService.updateCartItemsOfLoggedUser(cartItems);
+                  this.cartService.updateCartItemsQuantityOfLoggedUser(
+                    cartItems.length
+                  );
+                  this.salePrice = this.getSalePrice();
+                  this.getDiscountsForLoggedCheckOut();
+                }
+              });
+            },
+          });
         },
         error: (errorRes: HttpErrorResponse) => {
           this.notifService.error(errorRes.error.message);
@@ -503,52 +499,112 @@ export class CheckoutComponent {
       });
   }
 
-  // 2.2
+  // 3
+  private getDiscountsForLoggedCheckOut(): void {
+    this.discountService
+      .getDiscountsForLoggedCheckOut(
+        this.realPrice - this.salePrice,
+        this.loggedCust.id
+      )
+      .subscribe({
+        next: (discounts: Discount[]) => {
+          this.discounts = discounts;
+          if (this.discounts.length > 0) {
+            this.initSelectedDiscounts();
+          } else {
+            this.selectedDiscount = null;
+          }
+          this.discountPrice = this.getDiscountPrice();
+          this.finalPrice = this.getFinalPrice();
+        },
+        error: (errorRes: HttpErrorResponse) => {
+          this.notifService.error(errorRes.error.message);
+        },
+      });
+  }
+
+  // 4
   private initSelectedDiscounts(): void {
     if (this.discounts.length === 1) {
+      // khi danh sách phiếu gg chỉ có 1
       this.selectedDiscount = this.discounts[0];
-      this.selectedDiscount.isSelected = true;
+      if (this.selectedDiscount) {
+        this.selectedDiscount.isSelected = true;
+      }
     } else {
-      let reducedPrice = 0;
+      // khi số lượng phiếu giảm giá cho lớn hơn 1 => đi tìm phiếu giảm giá tốt nhất
+      let reducePrice = 0;
       for (let d of this.discounts) {
-        let reduceInFor = 0;
+        let reduceInForLoop = 0;
         if (d.kieu === 0) {
           let temp = Math.round(
             (d.giaTri * (this.realPrice - this.salePrice)) / 100
           );
-          reduceInFor = temp > d.giaTriMax ? d.giaTriMax : temp;
+          reduceInForLoop = temp > d.giaTriMax ? d.giaTriMax : temp;
         } else if (d.kieu === 1) {
-          reduceInFor = d.giaTri;
+          reduceInForLoop = d.giaTri;
         }
 
-        if (reducedPrice < reduceInFor) {
-          reducedPrice = reduceInFor;
+        if (reducePrice < reduceInForLoop) {
+          reducePrice = reduceInForLoop;
           this.selectedDiscount = d;
         }
       }
-      this.selectedDiscount.isSelected = true;
+      if (this.selectedDiscount) {
+        this.selectedDiscount.isSelected = true;
+      }
     }
     this.discountPrice = this.getDiscountPrice();
     this.finalPrice = this.getFinalPrice();
   }
 
-  // 3
+  // 5
   private initAddAddressForm(): void {
     this.addAddressForm = new FormGroup({
       hoTen: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+        this.customNotBlankValidator,
       ]),
-      sdt: new FormControl("", [Validators.required]),
-      tinh: new FormControl("", [Validators.required]),
-      huyen: new FormControl("", [Validators.required]),
-      xa: new FormControl("", [Validators.required]),
-      duong: new FormControl("", [Validators.required]),
+      sdt: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^(0[1-9][0-9]{8})$"),
+        this.customNotBlankValidator,
+      ]),
+      tinh: new FormControl("", [
+        Validators.required,
+        this.customNotBlankValidator,
+      ]),
+      huyen: new FormControl("", [
+        Validators.required,
+        this.customNotBlankValidator,
+      ]),
+      xa: new FormControl("", [
+        Validators.required,
+        this.customNotBlankValidator,
+      ]),
+      duong: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
       macDinh: new FormControl(false),
     });
   }
 
-  // 4
+  // 6
+  private customNotBlankValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
+  }
+
+  // 7
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
@@ -563,19 +619,19 @@ export class CheckoutComponent {
   }
 
   // calculate prices
-  // 5
+  //
   private getRealPrice(): number {
     let result: number = 0;
-    for (const item of this.cartItems2) {
+    for (const item of this.cartItems) {
       result += item.spct.giaBan * item.soLuong;
     }
     return result;
   }
 
-  // 6
+  //
   private getSalePrice(): number {
     let result: number = 0;
-    for (const item of this.cartItems2) {
+    for (const item of this.cartItems) {
       if (item.spct.saleEvent) {
         result +=
           (item.spct.giaBan *
@@ -587,7 +643,7 @@ export class CheckoutComponent {
     return result;
   }
 
-  // 7
+  //
   private getDiscountPrice(): number {
     if (this.selectedDiscount) {
       if (this.selectedDiscount.kieu === 0) {
@@ -606,12 +662,12 @@ export class CheckoutComponent {
     return 0;
   }
 
-  // 8
+  //
   private getShipPrice(): number {
     return 0;
   }
 
-  // 9
+  //
   private getFinalPrice(): number {
     return (
       this.realPrice - this.salePrice - this.discountPrice + this.shipPrice

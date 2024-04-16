@@ -17,7 +17,9 @@ import Swal, { SweetAlertResult } from "sweetalert2";
 export class MyAddressesComponent {
   public addresses: Address[] = [];
   public isAddAddressModalShow = false;
+  public isUpdateAddressModalShow = false;
   public addAddressForm: FormGroup;
+  public updateAddressForm: FormGroup;
   public provinces: any[];
   public districts: any[];
   public wards: any[];
@@ -37,19 +39,35 @@ export class MyAddressesComponent {
     this.getAllAddresses();
     this.getAllProvinces();
     this.initAddAddressForm();
+    this.initUpdateAddressForm();
   }
 
   // public functions
+  // 1
   public toggleAddAddressesModal(value: boolean): void {
     this.isAddAddressModalShow = value;
+    if (!value) {
+      this.initAddAddressForm();
+      this.districts = [];
+      this.wards = [];
+    }
   }
 
   //
+  public toggleUpdateAddressesModal(value: boolean): void {
+    this.isUpdateAddressModalShow = value;
+    if (value) {
+      this.districts = [];
+      this.wards = [];
+    }
+  }
+
+  // 2
   public formatAddress(address: Address): string {
     return `${address.duong}, ${address.xa}, ${address.huyen}, ${address.tinh}`;
   }
 
-  //
+  // 3
   public addAddress(): void {
     Swal.fire({
       title: "Thêm địa chỉ?",
@@ -79,6 +97,7 @@ export class MyAddressesComponent {
     });
   }
 
+  // 4
   public setDefaultAddress(addrId: number): void {
     Swal.fire({
       title: "Đặt địa chỉ này thành mặc định?",
@@ -112,24 +131,39 @@ export class MyAddressesComponent {
 
   // select address event functions
   // get districts by province
-  public getAllDistrictsByProvince(): void {
+  // 5
+  public getAllDistrictsByProvince(formType: string): void {
     this.wards = [];
-    this.getProvinceId();
+    this.getProvinceId(formType);
     this.giaoHangNhanhService
       .getAllDistrictByProvinceID(this.provinceId)
       .subscribe({
         next: (resp: any) => {
           this.districts = resp.data;
-          this.addAddressForm.get("tinh").setValue(this.getProvinceName());
+          formType === "add"
+            ? this.addAddressForm
+                .get("tinh")
+                .setValue(this.getProvinceName(formType))
+            : this.updateAddressForm
+                .get("tinh")
+                .setValue(this.getProvinceName(formType));
         },
       });
   }
 
-  private getProvinceId(): void {
+  // 5.1
+  private getProvinceId(formType: string): void {
     for (let i = 0; i < this.provinces.length; i++) {
       const element = this.provinces[i];
       if (
+        formType === "add" &&
         element.NameExtension.includes(this.addAddressForm.get("tinh").value)
+      ) {
+        this.provinceId = element.ProvinceID;
+        break;
+      } else if (
+        formType === "update" &&
+        element.NameExtension.includes(this.updateAddressForm.get("tinh").value)
       ) {
         this.provinceId = element.ProvinceID;
         break;
@@ -137,8 +171,12 @@ export class MyAddressesComponent {
     }
   }
 
-  private getProvinceName(): string {
-    let provinceName = this.addAddressForm.get("tinh").value;
+  // 5.2
+  private getProvinceName(formType: string): string {
+    let provinceName =
+      formType === "add"
+        ? this.addAddressForm.get("tinh").value
+        : this.updateAddressForm.get("tinh").value;
     if (provinceName == null || provinceName == "") {
       this.provinces.forEach((p) => {
         if (p.ProvinceID == this.provinceId) {
@@ -149,23 +187,40 @@ export class MyAddressesComponent {
     return provinceName;
   }
 
-  public getAllWardsByDistrict(): void {
-    this.getDistrictId();
+  // 6
+  public getAllWardsByDistrict(formType: string): void {
+    this.getDistrictId(formType);
     this.giaoHangNhanhService
       .getAllWardByDistrictID(this.districtId)
       .subscribe({
         next: (resp: any) => {
           this.wards = resp.data;
-          this.addAddressForm.get("huyen").setValue(this.getDistrictName());
+          formType === "add"
+            ? this.addAddressForm
+                .get("huyen")
+                .setValue(this.getDistrictName(formType))
+            : this.updateAddressForm
+                .get("huyen")
+                .setValue(this.getDistrictName(formType));
         },
       });
   }
 
-  private getDistrictId(): void {
+  // 6.1
+  private getDistrictId(formType: string): void {
     for (let i = 0; i < this.districts.length; i++) {
       const element = this.districts[i];
       if (
+        formType === "add" &&
         element.NameExtension.includes(this.addAddressForm.get("huyen").value)
+      ) {
+        this.districtId = element.DistrictID;
+        break;
+      } else if (
+        formType === "update" &&
+        element.NameExtension.includes(
+          this.updateAddressForm.get("huyen").value
+        )
       ) {
         this.districtId = element.DistrictID;
         break;
@@ -173,8 +228,12 @@ export class MyAddressesComponent {
     }
   }
 
-  private getDistrictName(): string {
-    let districtName = this.addAddressForm.get("huyen").value;
+  // 6.2
+  private getDistrictName(formType: string): string {
+    let districtName =
+      formType === "add"
+        ? this.addAddressForm.get("huyen").value
+        : this.updateAddressForm.get("huyen").value;
     this.districts.forEach((d) => {
       if (d.DistrictID == this.districtId) {
         districtName = d.DistrictName;
@@ -183,6 +242,7 @@ export class MyAddressesComponent {
     return districtName;
   }
 
+  // 7
   public checkProvinceSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn tỉnh/thành phố trước!");
@@ -190,6 +250,7 @@ export class MyAddressesComponent {
     }
   }
 
+  // 8
   public checkDistrictSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn quận/huyện trước!");
@@ -198,8 +259,41 @@ export class MyAddressesComponent {
   }
   // end: select address event functions
 
-  // private functions
   //
+  public openUpdateModal(addrId: number): void {
+    this.toggleUpdateAddressesModal(true);
+    this.addressService.getById(addrId).subscribe({
+      next: (addrRes: Address) => {
+        this.updateAddressForm = new FormGroup({
+          id: new FormControl(addrId, []),
+          hoTen: new FormControl(addrRes.hoTen, [
+            Validators.required,
+            Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+            this.customNotBlankValidator,
+          ]),
+          sdt: new FormControl(addrRes.sdt, [
+            Validators.required,
+            Validators.pattern("^(0[1-9][0-9]{8})$"),
+            this.customNotBlankValidator,
+          ]),
+          tinh: new FormControl(addrRes.tinh, [Validators.required]),
+          huyen: new FormControl(addrRes.huyen, [Validators.required]),
+          xa: new FormControl(addrRes.xa, [Validators.required]),
+          duong: new FormControl(addrRes.duong, [
+            Validators.required,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
+            this.customNotBlankValidator,
+          ]),
+        });
+        this.getAllDistrictsByProvince("update");
+        this.getAllWardsByDistrict("update");
+      },
+      error: (err: any) => {},
+    });
+  }
+
+  // private functions
+  // 1
   private getAllAddresses(): void {
     const loggedCust = this.authService.getCustomerFromStorage();
     this.addressService.getAllAddressOf1Customer(loggedCust.id).subscribe({
@@ -212,21 +306,33 @@ export class MyAddressesComponent {
     });
   }
 
-  //
+  // 2
   private initAddAddressForm(): void {
     this.addAddressForm = new FormGroup({
-      hoTen: new FormControl("", [Validators.required]),
-      sdt: new FormControl("", [Validators.required]),
+      hoTen: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
+      sdt: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^(0[1-9][0-9]{8})$"),
+        this.customNotBlankValidator,
+      ]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
-      duong: new FormControl("", [Validators.required]),
+      duong: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
       macDinh: new FormControl(false),
       custId: new FormControl("", [Validators.required]),
     });
   }
 
-  //
+  // 3
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
@@ -237,6 +343,43 @@ export class MyAddressesComponent {
       error: (errorRes: HttpErrorResponse) => {
         this.notifService.error(errorRes.error.message);
       },
+    });
+  }
+
+  // 4
+  private customNotBlankValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
+  }
+
+  // 5
+  private initUpdateAddressForm(): void {
+    this.updateAddressForm = new FormGroup({
+      id: new FormControl("", []),
+      hoTen: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
+      sdt: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^(0[1-9][0-9]{8})$"),
+        this.customNotBlankValidator,
+      ]),
+      tinh: new FormControl("", [Validators.required]),
+      huyen: new FormControl("", [Validators.required]),
+      xa: new FormControl("", [Validators.required]),
+      duong: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
     });
   }
 }

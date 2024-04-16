@@ -5,9 +5,7 @@
     </div>
 
     <div class="wrapperTaiKhoan col-md-8">
-     
       <div class="tab mt-3 rounded row mx-1">
-        
         <button
           [ngClass]="orderStatus === 'ALL' ? 'col btn btn-success' : 'col btn'"
           (click)="getOrdersByStatus('ALL')"
@@ -72,7 +70,7 @@
             <div class="order-item-row">
               <div class="label">Ngày đặt hàng</div>
               <div class="value">
-                {{ o.createdAt | date : "HH:mm dd-MM-yyyy" }}
+                {{ o.createdAt }}
               </div>
             </div>
             <div class="order-item-row">

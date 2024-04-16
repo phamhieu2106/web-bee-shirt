@@ -15,12 +15,17 @@ export class AuthenticationService {
   public readonly apiUrl = "http://localhost:8080";
 
   private token: string;
-  private loggedInUsername: string;
+  // private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
   public isLoggedInSubj = new BehaviorSubject<boolean>(false);
+  public loggedCust = new BehaviorSubject<Customer>(null);
 
-  public updateisLoggedInSubj(value: boolean): void {
+  public updateIsLoggedInSubj(value: boolean): void {
     this.isLoggedInSubj.next(value);
+  }
+
+  public updateLoggedCust(newCust: Customer): void {
+    this.loggedCust.next(newCust);
   }
 
   // constructor, ngOn
@@ -40,7 +45,7 @@ export class AuthenticationService {
   // 2
   public logout(): void {
     this.token = null;
-    this.loggedInUsername = null;
+    // this.loggedInUsername = null;
     localStorage.removeItem("customer");
     localStorage.removeItem("token");
     this.router.navigate(["/login"]);
@@ -83,7 +88,7 @@ export class AuthenticationService {
       let subject = this.jwtHelper.decodeToken(this.token).sub;
       if (subject != null && this.token != "") {
         if (!this.jwtHelper.isTokenExpired(this.token)) {
-          this.loggedInUsername = subject;
+          // this.loggedInUsername = subject;
           return true;
         }
         return false;

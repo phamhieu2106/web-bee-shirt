@@ -1,0 +1,596 @@
+<section class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="col-md-12">
+        <div class="checkout-step checkout-shipping">
+          <div class="col-md-12">
+            <div class="checkout-step checkout-review">
+              <div class="checkout-step-title">
+                <h2>Sản phẩm ({{ cartItemQuantity }})</h2>
+              </div>
+              <div
+                class="checkout-step-content"
+                style="height: 500px; overflow-y: auto"
+              >
+                <table class="checkout-cart-items">
+                  <thead>
+                    <tr>
+                      <td class="text-center">Sản phẩm</td>
+                      <td>Đơn giá</td>
+                      <td>Số lượng</td>
+                      <td>Tổng</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- khách hàng đăng nhập -->
+                    <tr class="cart-item" *ngFor="let item of cartItems">
+                      <td data-th="Sản phẩm" class="col item">
+                        <div class="cart-item-info">
+                          <div class="cart-item-photo">
+                            <a
+                              class="cart-image-container"
+                              [routerLink]="
+                                '/san-pham/' + item?.spct?.sanPham?.id
+                              "
+                              ><img
+                                class="rounded"
+                                [src]="item.spct.hinhAnhs[0].imageUrl"
+                            /></a>
+                          </div>
+                          <div class="cart-item-details">
+                            <strong class="cart-item-name"
+                              ><a
+                                [routerLink]="
+                                  '/san-pham/' + item?.spct?.sanPham?.id
+                                "
+                                class="cart-image-container"
+                              >
+                                {{ item?.spct?.sanPham?.ten }}
+                              </a></strong
+                            >
+                            <div class="cart-item-options">
+                              <div class="cart-item-option">
+                                Màu:
+                                <img
+                                  class="ms-1"
+                                  [src]="item.spct.mauSac.image.imageUrl"
+                                  style="
+                                    height: 20px;
+                                    width: 20px;
+                                    border-radius: 50%;
+                                  "
+                                />
+                              </div>
+                              <div class="cart-item-option">
+                                <span
+                                  ><span class="swatch-option text"
+                                    >Size:
+                                    {{
+                                      item?.spct?.kichCo?.ten.split("-")[0]
+                                    }}</span
+                                  ></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td data-th="Giá tiền" class="col price">
+                        <span *ngIf="item.spct.saleEvent"
+                          ><s>{{ formatPrice(item.spct.giaBan) }}</s></span
+                        >
+                        <div class="text-danger" *ngIf="item.spct.saleEvent">
+                          {{
+                            formatPrice(
+                              (item.spct.giaBan *
+                                (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                                100
+                            )
+                          }}
+                        </div>
+                        <div *ngIf="!item.spct.saleEvent">
+                          {{ formatPrice(item.spct.giaBan) }}
+                        </div>
+                      </td>
+                      <td data-th="Số lượng" class="col qty">
+                        <span>{{ item.soLuong }}</span>
+                      </td>
+                      <td data-th="Số lượng" class="col qty">
+                        <span *ngIf="item.spct.saleEvent"
+                          ><s>{{
+                            formatPrice(item.spct.giaBan * item.soLuong)
+                          }}</s></span
+                        >
+                        <div class="text-danger" *ngIf="item.spct.saleEvent">
+                          {{
+                            formatPrice(
+                              ((item.spct.giaBan *
+                                (100 - item.spct.saleEvent.giaTriPhanTram)) /
+                                100) *
+                                item.soLuong
+                            )
+                          }}
+                        </div>
+                        <div *ngIf="!item.spct.saleEvent">
+                          {{ formatPrice(item.spct.giaBan * item.soLuong) }}
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <div class="checkout-step-title">
+                <h2>Thông tin giao hàng</h2>
+              </div>
+              <div>
+                <div class="checkout-step-content">
+                  <div class="shipping-address-items">
+                    <!-- khách hàng đăng nhập -->
+                    <div class="shipping-address-item">
+                      <form [formGroup]="addressForm">
+                        <div class="addressNot">
+                          <!-- Họ tên người nhận -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Họ tên người nhận:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Họ tên người nhận"
+                              formControlName="hoTen"
+                              [ngClass]="
+                                addressForm.get('hoTen').invalid &&
+                                addressForm.get('hoTen').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('hoTen')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              Họ tên không được bỏ trống.
+                            </div>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm.get('hoTen').hasError('pattern')
+                              "
+                            >
+                              Họ tên chỉ được gồm chữ cái.
+                            </div>
+                          </div>
+
+                          <!-- Số điện thoại -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Số điện thoại:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Số điện thoại"
+                              formControlName="sdt"
+                              [ngClass]="
+                                addressForm.get('sdt').invalid &&
+                                addressForm.get('sdt').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('sdt')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              SĐT không được bỏ trống.
+                            </div>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="addressForm.get('sdt').hasError('pattern')"
+                            >
+                              SĐT không hợp lệ
+                            </div>
+                          </div>
+
+                          <!-- Email -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Email:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Email"
+                              formControlName="email"
+                              [ngClass]="
+                                addressForm.get('email').invalid &&
+                                addressForm.get('email').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('email')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              Email không được bỏ trống.
+                            </div>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm.get('email').hasError('pattern')
+                              "
+                            >
+                              Email không hợp lệ
+                            </div>
+                          </div>
+
+                          <!-- Tỉnh/Thành phố -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Tỉnh/Thành phố:</label>
+                            <select
+                              class="form-control"
+                              (change)="getAllDistrictsByProvince()"
+                              formControlName="tinh"
+                              [ngClass]="
+                                addressForm.get('tinh').invalid &&
+                                addressForm.get('tinh').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            >
+                              <option value="">Chọn Tỉnh/Thành phố</option>
+                              <option
+                                *ngFor="let p of provinces"
+                                [value]="p.ProvinceName"
+                              >
+                                {{ p.ProvinceName }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('tinh')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              Tỉnh/Thành phố không được bỏ trống
+                            </div>
+                          </div>
+
+                          <!-- Quận/Huyện -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Quận/Huyện:</label>
+                            <select
+                              class="form-control"
+                              (change)="getAllWardsByDistrict()"
+                              (click)="checkProvinceSelection()"
+                              formControlName="huyen"
+                              [ngClass]="
+                                addressForm.get('huyen').invalid &&
+                                addressForm.get('huyen').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            >
+                              <option value="" selected>Chọn quận huyện</option>
+                              <option
+                                *ngFor="let d of districts"
+                                value="{{ d.DistrictName }}"
+                              >
+                                {{ d.DistrictName }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('huyen')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              Quận/Huyện không được bỏ trống
+                            </div>
+                          </div>
+
+                          <!-- Phường/Xã -->
+                          <div class="wraperInfo">
+                            <label class="mb-1">Phường/Xã:</label>
+                            <select
+                              class="form-control"
+                              (click)="checkDistrictSelection()"
+                              formControlName="xa"
+                              [ngClass]="
+                                addressForm.get('xa').invalid &&
+                                addressForm.get('xa').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            >
+                              <option value="" selected>Chọn phường xã</option>
+                              <option
+                                *ngFor="let w of wards"
+                                [value]="w.WardName"
+                              >
+                                {{ w.WardName }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm.get('xa').hasError('customRequired')
+                              "
+                            >
+                              Phường/Xã không được bỏ trống
+                            </div>
+                          </div>
+
+                          <div class="wraperInfo">
+                            <label class="mb-1">Đường:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              formControlName="duong"
+                              [ngClass]="
+                                addressForm.get('duong').invalid &&
+                                addressForm.get('duong').touched
+                                  ? 'is-invalid'
+                                  : ''
+                              "
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm
+                                  .get('duong')
+                                  .hasError('customRequired')
+                              "
+                            >
+                              Số nhà - Đường/Địa chỉ chi tiết không được bỏ
+                              trống
+                            </div>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                addressForm.get('duong').hasError('pattern')
+                              "
+                            >
+                              Số nhà - Đường/Địa chỉ chi tiết không được hợp lệ
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phương thức thanh toán -->
+      <div class="col-md-12">
+        <div class="checkout-step checkout-payment-method" isactive="true">
+          <div class="checkout-step-title">
+            <h2>Phương thức thanh toán</h2>
+          </div>
+          <div class="checkout-step-content">
+            <div class="checkout-payment-method-section">
+              <label for="cashondelivery"
+                ><input
+                  id="cashondelivery"
+                  type="radio"
+                  [value]="true"
+                  name="thanhToan"
+                  [(ngModel)]="paymentMethod" />
+                <span
+                  ><b>Thanh toán khi nhận hàng (COD)</b>
+                  <img src="https://canifa.com/assets/images/cod.svg" /></span
+              ></label>
+            </div>
+            <div class="checkout-payment-method-section">
+              <label for="vnpay"
+                ><input
+                  id="vnpay"
+                  type="radio"
+                  [value]="false"
+                  name="thanhToan"
+                  [(ngModel)]="paymentMethod" />
+                <span
+                  ><b>Thanh toán bằng VNPAY</b>
+                  <img src="https://canifa.com/assets/images/vnpay.svg" /></span
+              ></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bên phải -->
+    <div class="col-md-4">
+      <div class="col-md-12">
+        <div class="checkout-step checkout-coupon-wrapper">
+          <div>
+            <div class="checkout-coupon" *ngIf="discounts.length > 0">
+              <div class="checkout-step-title">
+                <h2>Mã ưu đãi</h2>
+                <div class="action-show" (click)="toggleDiscountsModal(true)">
+                  <span>Thay đổi mã giảm giá</span>
+                </div>
+              </div>
+              <div class="checkout-step-content">
+                <div class="coupon-list slick-slider slick-initialized mb-3">
+                  <div class="slick-list">
+                    <div
+                      class="slick-track"
+                      style="
+                        opacity: 1;
+                        transform: translate3d(0px, 0px, 0px);
+                        width: 349px;
+                      "
+                    >
+                      <div
+                        class="slick-slide slick-active slick-current"
+                        style="outline: none"
+                      >
+                        <div>
+                          <div
+                            class="item"
+                            style="width: 100%; display: inline-block"
+                          >
+                            <div class="coupon">
+                              {{ selectedDiscount?.tenPhieuGiamGia }}
+                            </div>
+                            <div class="des">
+                              {{ getDiscountTitle(selectedDiscount) }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="checkBestDiscount() && this.discounts.length > 1">
+                  <i class="text-danger"
+                    >* Đang áp dụng mã giảm giá tốt nhất bạn đang có!</i
+                  >
+                </div>
+                <div *ngIf="!checkBestDiscount() && this.discounts.length > 1">
+                  <i class="text-danger"
+                    >* Bạn chưa sử dụng mã tốt nhất bạn đang có!</i
+                  >
+                </div>
+                <div *ngIf="this.discounts.length === 1">
+                  <i class="text-danger">* Mã giảm giá duy nhất bạn đang có!</i>
+                </div>
+
+                <div
+                  [ngClass]="
+                    isDiscountModalOpen
+                      ? 'modal modal-coupon active in'
+                      : 'modal modal-coupon active'
+                  "
+                >
+                  <div class="modal-backdrop"></div>
+                  <div class="modal-container">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div
+                          class="modal-close"
+                          (click)="toggleDiscountsModal(false)"
+                        >
+                          <span class="screen-reader-text">close</span>
+                        </div>
+                        <h4 class="modal-title">Mã ưu đãi</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="voucher-items">
+                          <div
+                            [ngClass]="
+                              d.isSelected
+                                ? 'voucher-item active'
+                                : 'voucher-item'
+                            "
+                            [title]="
+                              !d.isSelected ? 'Chọn mã này' : 'Đang sử dụng'
+                            "
+                            (click)="changeDiscount(d?.id)"
+                            *ngFor="let d of discounts"
+                          >
+                            <div class="voucher-item-info">
+                              <div class="voucher-item-detail">
+                                <div class="voucher-item-title">
+                                  {{ getDiscountTitle(d) }}
+                                </div>
+                                <div class="voucher-item-code">
+                                  {{ d?.tenPhieuGiamGia }}
+                                </div>
+                                <div class="voucher-item-date">
+                                  HSD: {{ d.thoiGianKetThuc }}
+                                </div>
+                              </div>
+                              <div class="voucher-item-action">
+                                <div class="action">
+                                  <span>Sử dụng</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          class="btn btn-primary"
+                          (click)="toggleDiscountsModal(false)"
+                        >
+                          Tiếp tục
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="checkout-step checkout-summary">
+          <div>
+            <div class="checkout-step-title1 mb-3">
+              <h2>Chi tiết đơn hàng</h2>
+            </div>
+            <div class="checkout-totals">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Giá gốc</th>
+                    <td>{{ formatPrice(realPrice) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Giá giảm từ đợt</th>
+                    <td>{{ formatPrice(salePrice) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Giá giảm từ mã</th>
+                    <td>{{ formatPrice(discountPrice) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Phí vận chuyển</th>
+                    <td>{{ formatPrice(shipPrice) }}</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="grand-totals">
+                    <th>Tổng tiền thanh toán</th>
+                    <td>{{ formatPrice(finalPrice) }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <div class="checkout-proceed-checkout">
+            <button class="btn-place-order rounded" (click)="checkOut()">
+              Thanh toán
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

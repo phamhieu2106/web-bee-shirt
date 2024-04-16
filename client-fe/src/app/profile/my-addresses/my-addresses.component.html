@@ -7,7 +7,7 @@
     <div class="wrapperTaiKhoan col-md-8">
       <div>
         <div>
-          <!-- modal -->
+          <!-- modal: add address -->
           <div
             [ngClass]="
               isAddAddressModalShow
@@ -30,33 +30,91 @@
                   <div class="checkout-shipping-form">
                     <form [formGroup]="addAddressForm">
                       <div class="row">
+                        <!-- Họ tên người nhận -->
                         <div class="form-group col-sm-6">
-                          <label>Họ tên</label>
+                          <label>Họ tên người nhận:</label>
                           <input
                             type="text"
                             class="form-control"
                             placeholder="Nhập họ tên"
                             formControlName="hoTen"
+                            [ngClass]="
+                              addAddressForm.get('hoTen').invalid &&
+                              addAddressForm.get('hoTen').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
                           />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm
+                                .get('hoTen')
+                                .hasError('customRequired')
+                            "
+                          >
+                            Họ tên không được bỏ trống
+                          </div>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('hoTen').hasError('pattern')
+                            "
+                          >
+                            Họ tên chỉ được gồm các chữ cái
+                          </div>
                         </div>
+
+                        <!-- Số điện thoại -->
                         <div class="form-group col-sm-6">
-                          <label>Số điện thoại</label>
+                          <label>Số điện thoại:</label>
                           <input
                             type="text"
                             placeholder="Nhập số điện thoại"
                             class="form-control"
                             formControlName="sdt"
+                            [ngClass]="
+                              addAddressForm.get('sdt').invalid &&
+                              addAddressForm.get('sdt').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
                           />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm
+                                .get('sdt')
+                                .hasError('customRequired')
+                            "
+                          >
+                            SĐT không được bỏ trống.
+                          </div>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('sdt').hasError('pattern')
+                            "
+                          >
+                            SĐT không hợp lệ
+                          </div>
                         </div>
                       </div>
 
                       <div class="row">
+                        <!-- Tỉnh/Thành phố -->
                         <div class="form-group col-sm-6">
-                          <label>Tỉnh/Thành phố</label>
+                          <label>Tỉnh/Thành phố:</label>
                           <select
                             class="form-control"
-                            (change)="getAllDistrictsByProvince()"
+                            (change)="getAllDistrictsByProvince('add')"
                             formControlName="tinh"
+                            [ngClass]="
+                              addAddressForm.get('tinh').invalid &&
+                              addAddressForm.get('tinh').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
                           >
                             <option value="">Chọn Tỉnh/Thành phố</option>
                             <option
@@ -66,15 +124,30 @@
                               {{ p.ProvinceName }}
                             </option>
                           </select>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('tinh').hasError('required')
+                            "
+                          >
+                            Tỉnh/Thành phố không được bỏ trống
+                          </div>
                         </div>
 
+                        <!-- Quận/Huyện -->
                         <div class="form-group col-sm-6">
                           <label>Quận/Huyện</label>
                           <select
                             class="form-control"
-                            (change)="getAllWardsByDistrict()"
+                            (change)="getAllWardsByDistrict('add')"
                             formControlName="huyen"
                             (click)="checkProvinceSelection()"
+                            [ngClass]="
+                              addAddressForm.get('huyen').invalid &&
+                              addAddressForm.get('huyen').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
                           >
                             <option value="" selected>Chọn Quận/Huyện</option>
                             <option
@@ -84,30 +157,76 @@
                               {{ d.DistrictName }}
                             </option>
                           </select>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('huyen').hasError('required')
+                            "
+                          >
+                            Quận/Huyện không được bỏ trống
+                          </div>
                         </div>
                       </div>
 
+                      <!-- Phường/Xã -->
                       <div class="form-group">
                         <label>Phường/Xã</label>
                         <select
                           class="form-control"
                           formControlName="xa"
                           (click)="checkDistrictSelection()"
+                          [ngClass]="
+                            addAddressForm.get('xa').invalid &&
+                            addAddressForm.get('xa').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
                         >
                           <option value="" selected>Chọn Phường/Xã</option>
                           <option *ngFor="let w of wards" [value]="w.WardName">
                             {{ w.WardName }}
                           </option>
                         </select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="addAddressForm.get('xa').hasError('required')"
+                        >
+                          Phường/Xã không được bỏ trống
+                        </div>
                       </div>
 
+                      <!--  -->
                       <div class="form-group">
                         <label for="dia-chi">Địa chỉ chi tiết</label>
                         <input
                           type="text"
                           class="form-control"
                           formControlName="duong"
+                          [ngClass]="
+                            addAddressForm.get('duong').invalid &&
+                            addAddressForm.get('duong').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
                         />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            addAddressForm
+                              .get('duong')
+                              .hasError('customRequired')
+                          "
+                        >
+                          Số nhà - Đường/Địa chỉ chi tiết không được bỏ trống
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            addAddressForm.get('duong').hasError('pattern')
+                          "
+                        >
+                          Số nhà - Đường/Địa chỉ chi tiết không được hợp lệ
+                        </div>
                       </div>
 
                       <div class="form-checkbox active">
@@ -121,6 +240,251 @@
                           ><span>Đặt làm địa chỉ mặc định</span></label
                         >
                       </div>
+                    </form>
+                    <div class="button">
+                      <button class="btn-save round" (click)="addAddress()">
+                        Lưu địa chỉ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- modal: update address -->
+          <div
+            [ngClass]="
+              isUpdateAddressModalShow
+                ? 'modal-new-address modal in'
+                : 'modal-new-address modal'
+            "
+          >
+            <div class="modal-container">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <div
+                    class="modal-close"
+                    (click)="toggleUpdateAddressesModal(false)"
+                  >
+                    <span class="screen-reader-text">close</span>
+                  </div>
+                  <h4 class="modal-title">Cập nhật địa chỉ</h4>
+                </div>
+                <div class="checkout-shipping">
+                  <div class="checkout-shipping-form">
+                    <form [formGroup]="updateAddressForm">
+                      <div class="row">
+                        <!-- Họ tên người nhận -->
+                        <div class="form-group col-sm-6">
+                          <label>Họ tên người nhận:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Nhập họ tên"
+                            formControlName="hoTen"
+                            [ngClass]="
+                              updateAddressForm.get('hoTen').invalid &&
+                              updateAddressForm.get('hoTen').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              updateAddressForm
+                                .get('hoTen')
+                                .hasError('customRequired')
+                            "
+                          >
+                            Họ tên không được bỏ trống
+                          </div>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              updateAddressForm.get('hoTen').hasError('pattern')
+                            "
+                          >
+                            Họ tên chỉ được gồm các chữ cái
+                          </div>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="form-group col-sm-6">
+                          <label>Số điện thoại:</label>
+                          <input
+                            type="text"
+                            placeholder="Nhập số điện thoại"
+                            class="form-control"
+                            formControlName="sdt"
+                            [ngClass]="
+                              addAddressForm.get('sdt').invalid &&
+                              addAddressForm.get('sdt').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm
+                                .get('sdt')
+                                .hasError('customRequired')
+                            "
+                          >
+                            SĐT không được bỏ trống.
+                          </div>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('sdt').hasError('pattern')
+                            "
+                          >
+                            SĐT không hợp lệ
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <!-- Tỉnh/Thành phố -->
+                        <div class="form-group col-sm-6">
+                          <label>Tỉnh/Thành phố:</label>
+                          <select
+                            class="form-control"
+                            (change)="getAllDistrictsByProvince('update')"
+                            formControlName="tinh"
+                            [ngClass]="
+                              addAddressForm.get('tinh').invalid &&
+                              addAddressForm.get('tinh').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          >
+                            <option value="">Chọn Tỉnh/Thành phố</option>
+                            <option
+                              *ngFor="let p of provinces"
+                              [value]="p.ProvinceName"
+                            >
+                              {{ p.ProvinceName }}
+                            </option>
+                          </select>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('tinh').hasError('required')
+                            "
+                          >
+                            Tỉnh/Thành phố không được bỏ trống
+                          </div>
+                        </div>
+
+                        <!-- Quận/Huyện -->
+                        <div class="form-group col-sm-6">
+                          <label>Quận/Huyện</label>
+                          <select
+                            class="form-control"
+                            (change)="getAllWardsByDistrict('update')"
+                            formControlName="huyen"
+                            (click)="checkProvinceSelection()"
+                            [ngClass]="
+                              addAddressForm.get('huyen').invalid &&
+                              addAddressForm.get('huyen').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          >
+                            <option value="" selected>Chọn Quận/Huyện</option>
+                            <option
+                              *ngFor="let d of districts"
+                              value="{{ d.DistrictName }}"
+                            >
+                              {{ d.DistrictName }}
+                            </option>
+                          </select>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addAddressForm.get('huyen').hasError('required')
+                            "
+                          >
+                            Quận/Huyện không được bỏ trống
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Phường/Xã -->
+                      <div class="form-group">
+                        <label>Phường/Xã</label>
+                        <select
+                          class="form-control"
+                          formControlName="xa"
+                          (click)="checkDistrictSelection()"
+                          [ngClass]="
+                            addAddressForm.get('xa').invalid &&
+                            addAddressForm.get('xa').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
+                        >
+                          <option value="" selected>Chọn Phường/Xã</option>
+                          <option *ngFor="let w of wards" [value]="w.WardName">
+                            {{ w.WardName }}
+                          </option>
+                        </select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="addAddressForm.get('xa').hasError('required')"
+                        >
+                          Phường/Xã không được bỏ trống
+                        </div>
+                      </div>
+
+                      <!--  -->
+                      <div class="form-group">
+                        <label for="dia-chi">Địa chỉ chi tiết</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="duong"
+                          [ngClass]="
+                            addAddressForm.get('duong').invalid &&
+                            addAddressForm.get('duong').touched
+                              ? 'is-invalid'
+                              : ''
+                          "
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            addAddressForm
+                              .get('duong')
+                              .hasError('customRequired')
+                          "
+                        >
+                          Số nhà - Đường/Địa chỉ chi tiết không được bỏ trống
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            addAddressForm.get('duong').hasError('pattern')
+                          "
+                        >
+                          Số nhà - Đường/Địa chỉ chi tiết không được hợp lệ
+                        </div>
+                      </div>
+
+                      <!-- <div class="form-checkbox active">
+                        <input
+                          type="checkbox"
+                          id="checkbox1"
+                          value="true"
+                          formControlName="macDinh"
+                        />
+                        <label for="checkbox1"
+                          ><span>Đặt làm địa chỉ mặc định</span></label
+                        >
+                      </div> -->
                     </form>
                     <div class="button">
                       <button class="btn-save round" (click)="addAddress()">
@@ -177,7 +541,7 @@
                   </div>
                 </div>
                 <div class="action-edit">
-                  <span>Sửa</span>
+                  <span (click)="openUpdateModal(a.id)">Sửa</span>
                 </div>
               </div>
             </div>

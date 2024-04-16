@@ -31,7 +31,9 @@ public interface PhieuGiamGiaServce {
 
     DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest);
 
-    List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId);
+    List<PhieuGiamGia> getDiscountsForLoggedCheckOut(BigDecimal dieuKien, int custId);
+
+    List<PhieuGiamGia> getDiscountsForNoneLoggedCheckOut(BigDecimal priceCondition);
 
     List<PhieuGiamGia> getAllDiscountsOf1Cust(int custId);
 }

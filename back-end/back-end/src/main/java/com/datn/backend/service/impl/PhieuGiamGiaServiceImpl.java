@@ -372,8 +372,13 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal priceCondition, int customerId) {
-        return pggRepo.getDiscountsForCheckOut(priceCondition, customerId);
+    public List<PhieuGiamGia> getDiscountsForLoggedCheckOut(BigDecimal priceCondition, int customerId) {
+        return pggRepo.getDiscountsForLoggedCheckOut(priceCondition, customerId);
+    }
+
+    @Override
+    public List<PhieuGiamGia> getDiscountsForNoneLoggedCheckOut(BigDecimal priceCondition) {
+        return pggRepo.getDiscountsForNoneLoggedCheckOut(priceCondition);
     }
 
     @Override

@@ -4,9 +4,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { Customer } from "src/app/model/class/customer.class";
 import { CustomerResponse } from "src/app/model/interface/customer-response.interface";
+import { UpdateCustInfoReq } from "src/app/model/interface/update-cust-info-req.interface";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { CustomerService } from "src/app/service/customer.service";
 import { NotificationService } from "src/app/service/notification.service";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-my-account",
@@ -30,9 +32,43 @@ export class MyAccountComponent {
 
   // public functions
   //
-  public updateInfor(): void {}
+  public updateInfor(): void {
+    Swal.fire({
+      title: "Thay đổi thông tin tài khoản?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Lưu",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        const req: UpdateCustInfoReq = {
+          custId: this.loggedCust.id,
+          fullName: this.form.get("hoTen").value,
+          phone: this.form.get("sdt").value,
+          birthday: this.form.get("ngaySinh").value,
+          gender: this.form.get("gioiTinh").value,
+        };
+
+        this.customerService.updateInfo(req).subscribe({
+          next: (custRes: Customer) => {
+            this.notifService.success(
+              "Cập nhật thông tin tài khoản thành công!"
+            );
+            this.authService.saveCustomerToStorage(custRes);
+            this.initForm();
+          },
+          error: (errorRes: HttpErrorResponse) => {
+            this.notifService.error(errorRes.error.message);
+          },
+        });
+      }
+    });
+  }
 
   // private functions
+  // 1
   private initForm(): void {
     this.form = new FormGroup({
       email: new FormControl("", [Validators.required]),
@@ -40,25 +76,47 @@ export class MyAccountComponent {
       hoTen: new FormControl("", [Validators.required]),
       ngaySinh: new FormControl("", [Validators.required]),
       sdt: new FormControl("", [Validators.required]),
+      tenDangNhap: new FormControl("", [Validators.required]),
     });
 
     this.loggedCust = this.authService.getCustomerFromStorage();
 
     this.customerService.getById(this.loggedCust.id).subscribe({
       next: (custRes: CustomerResponse) => {
-        console.log("custRes: ", custRes);
-
         this.form = new FormGroup({
-          email: new FormControl(custRes.email, [Validators.required]),
+          email: new FormControl(custRes.email),
           gioiTinh: new FormControl(custRes.gioiTinh, [Validators.required]),
-          hoTen: new FormControl(custRes.hoTen, [Validators.required]),
-          ngaySinh: new FormControl(custRes.ngaySinh, [Validators.required]),
-          sdt: new FormControl(custRes.sdt, [Validators.required]),
+          hoTen: new FormControl(custRes.hoTen, [
+            Validators.required,
+            Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+          ]),
+          ngaySinh: new FormControl(custRes.ngaySinh, [
+            Validators.required,
+            this.pastDateValidator,
+          ]),
+          sdt: new FormControl(custRes.sdt, [
+            Validators.required,
+            Validators.pattern("^(0[1-9][0-9]{8})$"),
+          ]),
+          tenDangNhap: new FormControl(custRes.tenDangNhap),
         });
       },
       error: (errRes: HttpErrorResponse) => {
         this.notifService.error(errRes.error.message);
       },
     });
+  }
+
+  // 1.1
+  private pastDateValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+
+    if (selectedDate >= currentDate) {
+      return { invalidDate: true };
+    }
+    return null;
   }
 }

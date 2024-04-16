@@ -3,8 +3,8 @@ import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { forkJoin } from "rxjs";
-import { CartItem } from "src/app/model/class/cart-item.class";
 
+import { CartItem } from "src/app/model/class/cart-item.class";
 import { Customer } from "src/app/model/class/customer.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { AuthenticationService } from "src/app/service/authentication.service";
@@ -49,12 +49,13 @@ export class LoginComponent {
       next: (response: HttpResponse<Customer>) => {
         const token = response.headers.get("Jwt-Token");
         const loggedCust = response.body;
+        this.authenticationService.updateLoggedCust(response.body);
 
         this.authenticationService.saveTokenToStorage(token);
         this.authenticationService.saveCustomerToStorage(loggedCust);
 
         this.notifService.success("Đăng nhập thành công!");
-        this.authenticationService.updateisLoggedInSubj(true);
+        this.authenticationService.updateIsLoggedInSubj(true);
 
         // lấy lại danh sách cart-item
         this.cartService.getCartItemsOfLoggedCustomer(loggedCust.id).subscribe({

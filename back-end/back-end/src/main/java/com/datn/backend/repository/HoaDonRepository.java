@@ -63,6 +63,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
                    FROM hoa_don hd
                    WHERE hd.id_khach_hang = :custId
                    AND hd.trang_thai LIKE %:orderStatus%
+                   ORDER BY hd.trang_thai
                    """, nativeQuery = true)
     List<HoaDon> getOrdersForClient(@Param("custId") int custId,
                                     @Param("orderStatus") String orderStatus);

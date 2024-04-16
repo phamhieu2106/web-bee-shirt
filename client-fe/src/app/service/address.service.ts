@@ -34,4 +34,7 @@ export class AddressService {
   }
 
   // 4
+  public getById(id: number): Observable<Address> {
+    return this.http.get<Address>(`${this.apiUrl}/get-by-id/${id}`);
+  }
 }

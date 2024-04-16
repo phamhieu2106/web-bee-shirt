@@ -68,24 +68,30 @@
                 <div>
                   <div class="headerPopup">
                     <span class="nameCustomer"
-                      >Xin chào {{ loggedCustomer?.hoTen }}</span
+                      ><span class="fw-normal">Xin chào</span>
+                      {{ loggedCustomer?.hoTen }}</span
                     >
                   </div>
 
                   <ul class="listAction">
                     <li class="actionItem">
-                      <a routerLink="profile/my-account">Tài Khoản</a>
-                    </li>
-                    <li class="actionItem">
-                      <a routerLink="profile/my-orders">Theo dõi đơn hàng</a>
+                      <a routerLink="profile/my-account">Thông tin tài khoản</a>
                     </li>
                     <li class="actionItem">
                       <a routerLink="profile/my-discounts">Ưu đãi của bạn</a>
                     </li>
+                    <li class="actionItem">
+                      <a routerLink="profile/my-orders">Đơn hàng của tôi</a>
+                    </li>
+                    <li class="actionItem">
+                      <a routerLink="profile/my-addresses">Sổ địa chỉ</a>
+                    </li>
                   </ul>
 
                   <div class="footerPopup">
-                    <span (click)="logout()">Đăng Xuất</span>
+                    <button class="btn btn-outline-danger" (click)="logout()">
+                      Đăng Xuất
+                    </button>
                   </div>
                 </div>
               </div>
@@ -222,7 +228,12 @@
 
   <div class="checkOut" *ngIf="cartItems1.length > 0 && !isLoggedIn">
     <div class="thanhToan">
-      <button class="btnThanhToan" routerLink="/check-out">Thanh toán</button>
+      <button class="btnThanhToan" routerLink="/check-out" *ngIf="isLoggedIn">
+        Thanh toán
+      </button>
+      <button class="btnThanhToan" routerLink="/check-out2" *ngIf="!isLoggedIn">
+        Thanh toán
+      </button>
     </div>
   </div>
 

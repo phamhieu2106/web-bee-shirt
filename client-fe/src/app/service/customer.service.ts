@@ -1,7 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+
 import { CustomerResponse } from "../model/interface/customer-response.interface";
+import { Customer } from "../model/class/customer.class";
+import { UpdateCustInfoReq } from "../model/interface/update-cust-info-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -18,10 +21,18 @@ export class CustomerService {
     return this.http.get<CustomerResponse>(`${this.apiUrl}/getById/${id}`);
   }
 
-  //
-  public updateAvatar(file: File): Observable<any> {
+  // 2
+  public updateAvatar(custId: number, file: File): Observable<Customer> {
     const formData = new FormData();
     formData.append("file", file);
-    return this.http.post<any>(`${this.apiUrl}/update-avatar`, formData);
+    return this.http.post<Customer>(
+      `${this.apiUrl}/update-avatar/${custId}`,
+      formData
+    );
+  }
+
+  // 3
+  public updateInfo(req: UpdateCustInfoReq): Observable<Customer> {
+    return this.http.post<Customer>(`${this.apiUrl}/update-info`, req);
   }
 }

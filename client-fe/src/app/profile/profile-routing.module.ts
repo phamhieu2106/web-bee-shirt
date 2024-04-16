@@ -6,6 +6,7 @@ import { MyAddressesComponent } from "./my-addresses/my-addresses.component";
 import { MyOrdersComponent } from "./my-orders/my-orders.component";
 import { MyDiscountsComponent } from "./my-discounts/my-discounts.component";
 import { OrderTrackingComponent } from "./order-tracking/order-tracking.component";
+import { OverlayComponent } from "./overlay/overlay.component";
 
 const routes: Routes = [
   {

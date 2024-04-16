@@ -18,7 +18,6 @@ export class PdfTraHangService {
       "Tòa nhà FPT Polytechnic, Phố Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội",
   };
   public async generatePDFHoaDon(hoaDon: HoaDonTraHang) {
-    console.log(hoaDon);
     let hdcts = await Promise.all(
       hoaDon?.hoaDonChiTiets?.map(async (hdct, index) => {
         const nameSP: string = await this.getNameSP(hdct.sanPhamChiTiet.id);
@@ -50,7 +49,7 @@ export class PdfTraHangService {
             {
               width: "50%",
               text: `Tên khách hàng:${
-                hoaDon.hoaDon?.khachHang != null ? hoaDon.tenNguoiNhan : ""
+                hoaDon?.tenNguoiNhan ? hoaDon.tenNguoiNhan : ""
               } `,
             },
             {

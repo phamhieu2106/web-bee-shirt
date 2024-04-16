@@ -172,7 +172,7 @@ export class ThemDotGiamGiaComponent implements OnInit {
   onAllChecked(value: boolean): void {
     if (value) {
       // Đặt tất cả các phần tử trên trang hiện tại vào setOfCheckedId
-      this.listOfCurrentPageData.forEach((item) => {
+      this.listOfData.forEach((item) => {
         this.setOfCheckedId.add(item.id);
       });
     } else {

@@ -36,6 +36,8 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
     private final NhanVienRepository nhanVienRepo;
     private final KhachHangRepository khachHangRepo;
     private final PhieuGiamGiaRepository phieuGiamGiaRepo;
+
+    private final PhieuGiamGiaKhachHangRepository phieuGiamGiaKhachHangRepository;
     private final ModelMapper modelMapper;
     private final LichSuHoaDonRepository lichSuHoaDonRepository;
     private final SanPhamChiTietRepository spctRepo;
@@ -52,7 +54,8 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                                     HoaDonChiTietRepository hoaDonChiTietRepository,
                                     LichSuHoaDonRepository lichSuHoaDonRepository,
                                     HinhThucThanhToanRepository hinhThucThanhToanRepo,
-                                    HoaDonRepository hoaDonRepository) {
+                                    HoaDonRepository hoaDonRepository,
+                                    PhieuGiamGiaKhachHangRepository phieuGiamGiaKhachHangRepository) {
         super();
         this.repository = repository;
         this.modelMapper = modelMapper;
@@ -65,6 +68,7 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
         this.phieuGiamGiaRepo = phieuGiamGiaRepo;
         this.hinhThucThanhToanRepo = hinhThucThanhToanRepo;
         this.hoaDonRepository = hoaDonRepository;
+        this.phieuGiamGiaKhachHangRepository = phieuGiamGiaKhachHangRepository;
     }
 
     @Override
@@ -221,21 +225,19 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
                     () -> new PlaceOrderException("Phiếu giảm giá không hợp lệ")
             );
             // check so luong
-            if (phieuGiamGia.getSoLuong() <= 0) {
+            if (phieuGiamGia.getSoLuong() <= 0 && phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaId(phieuGiamGia.getId()).isEmpty()) {
                 throw new PlaceOrderException("Phiếu giảm giá đã hết số lượng sử dụng");
             }
             // check thoi han su dung
-            // tru so luong
-            if (phieuGiamGia.getSoLuong() >= 1) {
+            // tru so luong neu phieu giam gia la cong khai
+            if (phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaId(phieuGiamGia.getId()).isEmpty()) {
                 phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
             }
 
         }
         return phieuGiamGia;
     }
-    public boolean isWithinInterval(LocalDateTime time, LocalDateTime startTime, LocalDateTime endTime) {
-        return !time.isBefore(startTime) && !time.isAfter(endTime);
-    }
+
     private List<LichSuHoaDon> createLichSuHoaDonTaiQuay(HoaDon hoaDon) {
         List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
         LichSuHoaDon lichSuHoaDon =
@@ -306,9 +308,21 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
         }).toList());
     }
     public String generateMaHD() {
-        return "HD" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        long count = hoaDonRepository.count();
+        String maHD = "HD" + count;
+        while (hoaDonRepository.existsByMa(maHD)) {
+            count += 1;
+            maHD = "HD" + count;
+        }
+        return maHD;
     }
     private String generateMaHoaDonTraHang() {
-        return "HDTH" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        long count = hoaDonTraHangModelRepository.count();
+        String maHD = "HDTH" + count;
+        while (hoaDonTraHangModelRepository.existsByMa(maHD)) {
+            count += 1;
+            maHD = "HDTH" + count;
+        }
+        return maHD;
     }
 }

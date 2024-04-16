@@ -52,7 +52,7 @@
       <div class="p-2 d-flex">
         <button
           type="button"
-          class="btn btn-primary mr-5"
+          class="btn btn-primary mr-5 btn-rounded"
           data-toggle="modal"
           data-target="#chageStatusModal"
           [disabled]="
@@ -66,7 +66,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-warning mr-5"
+          class="btn btn-warning mr-5 btn-rounded"
           data-toggle="modal"
           data-target="#chageStatusModal"
           *ngIf="
@@ -83,7 +83,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-danger mr-5"
+          class="btn btn-danger mr-5 btn-rounded"
           data-toggle="modal"
           data-target="#cancelOrderModal"
           [disabled]="
@@ -97,7 +97,7 @@
 
         <button
           type="button"
-          class="btn btn-success ml-auto"
+          class="btn btn-success ml-auto btn-rounded"
           data-toggle="modal"
           data-target="#orderHistoryModal"
         >
@@ -162,7 +162,11 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-primary btn-rounded"
+            data-dismiss="modal"
+          >
             OK
           </button>
         </div>
@@ -212,12 +216,16 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-danger btn-rounded"
+            data-dismiss="modal"
+          >
             Hủy
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary btn-rounded"
             data-dismiss="modal"
             [disabled]="changeStatusForm.invalid"
             (click)="changeOrderStatus()"
@@ -269,12 +277,16 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-danger btn-rounded"
+            data-dismiss="modal"
+          >
             Hủy
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary btn-rounded"
             data-dismiss="modal"
             [disabled]="changeStatusForm.invalid"
             (click)="cancelOrder()"

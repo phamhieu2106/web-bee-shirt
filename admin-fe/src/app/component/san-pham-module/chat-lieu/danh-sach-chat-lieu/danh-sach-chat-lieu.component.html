@@ -63,8 +63,8 @@
                     class="pointer"
                     [ngClass]="
                       cl.trangThai
-                        ? 'badge rounded-pill text-bg-success'
-                        : 'badge rounded-pill text-bg-danger'
+                        ? 'btn btn-success btn-rounded'
+                        : 'btn btn-danger btn-rounded'
                     "
                     (click)="changeStatus(cl.id)"
                     >{{ cl.trangThai ? "Khả dụng" : "Không khả dụng" }}</span

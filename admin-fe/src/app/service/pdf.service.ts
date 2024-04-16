@@ -157,7 +157,7 @@ export class PdfService {
             {
               width: "50%",
               text: `Địa chỉ nhận hàng:${
-                hoaDon.diaChiNguoiNhan == null ? "" : hoaDon.diaChiNguoiNhan
+                hoaDon?.diaChiNguoiNhan ? hoaDon.diaChiNguoiNhan : ""
               } `,
             },
             {
@@ -175,13 +175,21 @@ export class PdfService {
             {
               width: "50%",
               text: `Số điện thoại: ${
-                hoaDon.sdtNguoiNhan == null ? "" : hoaDon.sdtNguoiNhan
+                hoaDon?.khachHang?.sdt
+                  ? hoaDon.khachHang.sdt
+                  : hoaDon?.sdtNguoiNhan
+                  ? hoaDon.sdtNguoiNhan
+                  : ""
               } `,
             },
             {
               width: "50%",
               text: `Email: ${
-                hoaDon.emailNguoiNhan == null ? "" : hoaDon.emailNguoiNhan
+                hoaDon?.khachHang?.email
+                  ? hoaDon.khachHang.email
+                  : hoaDon?.emailNguoiNhan
+                  ? hoaDon.emailNguoiNhan
+                  : ""
               }`,
             },
           ],
@@ -292,6 +300,23 @@ export class PdfService {
             }, // Chữ ký
           ],
           margin: [0, 20, 0, 0],
+        },
+        {
+          columns: [
+            {
+              text: "*Hóa đơn trong vòng 7 ngày từ thời điểm mua hàng/nhận hàng có thể được trả hàng nếu khách hàng muốn trả sản phẩm nếu có bất kì dấu hiệu sản phẩm bị lỗi",
+              alignment: "left",
+              marginTop: 40,
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              text: "*Các sản phẩm được giảm giá sẽ không được trả hàng theo quy định của cửa hàng",
+              alignment: "left",
+            },
+          ],
         },
       ],
     };

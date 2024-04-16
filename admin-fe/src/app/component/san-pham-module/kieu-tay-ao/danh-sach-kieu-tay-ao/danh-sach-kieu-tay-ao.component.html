@@ -62,8 +62,8 @@
                     class="pointer"
                     [ngClass]="
                       ta.trangThai
-                        ? 'badge rounded-pill text-bg-success'
-                        : 'badge rounded-pill text-bg-danger'
+                        ? 'btn btn-success btn-rounded'
+                        : 'btn btn-danger btn-rounded'
                     "
                     (click)="changeStatus(ta.id)"
                     >{{ ta.trangThai ? "Khả dụng" : "Không khả dụng" }}</span

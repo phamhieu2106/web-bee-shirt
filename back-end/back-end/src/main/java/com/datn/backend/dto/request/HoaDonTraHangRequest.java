@@ -20,6 +20,12 @@ public class HoaDonTraHangRequest {
     @NotNull(message = "Tổng tiền không hợp lệ")
     private BigDecimal tongTien;
 
+    private BigDecimal tongTienPhieuGiamGiaCu;
+
+    private BigDecimal tongTienPhieuGiamGiaMoi;
+
+    private BigDecimal tongTienTraKhach;
+
     private Integer hoaDonId;
 
     private Integer nhanVienId;

@@ -7,6 +7,9 @@ export class HoaDonTraHangRequest {
   emailNguoiNhan?: string;
   diaChiNguoiNhan?: string;
   tongTien?: number;
+  tongTienPhieuGiamGiaCu?: number;
+  tongTienPhieuGiamGiaMoi?: number;
+  tongTienTraKhach?: number;
   ghiChu?: string;
   hoaDonChiTiets?: HoaDonChiTietRequest[];
   hoaDonId?: number;

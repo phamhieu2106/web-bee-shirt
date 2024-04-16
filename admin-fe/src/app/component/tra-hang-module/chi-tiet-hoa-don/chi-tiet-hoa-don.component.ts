@@ -38,8 +38,6 @@ export class ChiTietHoaDonComponent {
   public listReturnItems: HoaDonChiTiet[] = [];
   public listIdDotGiamGiaSanPham: number[] = [];
 
-  // Return Information
-  private listPhieuGiamGia: PhieuGiamGia[] = [];
   public discountMoney: number = 0;
   public oldAmount: number = 0;
   public newAmount: number = 0;
@@ -52,7 +50,6 @@ export class ChiTietHoaDonComponent {
   hoaDonTraHangRequest?: HoaDonTraHangRequest = {};
   radioValue = "A";
   text: string;
-
   // Constructors Component
   constructor(
     private traHangService: TraHangService,
@@ -175,7 +172,7 @@ export class ChiTietHoaDonComponent {
       this.listReturnItems = [];
       this.setOfCheckedId.clear();
     } else {
-      this.listOfCurrentPageData.forEach((item) => {
+      this.listOfData.forEach((item) => {
         this.handleReturnItems(item.id, item.soLuong);
         this.updateCheckedSet(item.id, value);
       });
@@ -290,6 +287,8 @@ export class ChiTietHoaDonComponent {
     }
   }
   private setTienHoanTraKhongCoPhieuGiamGiaMoi() {
+    this.bestVoucher = null;
+    this.discountMoney = 0;
     this.amountOfMoneyReturn =
       this.hoaDon?.tongTien - this.newAmount - this.hoaDon?.tienGiam;
   }
@@ -352,7 +351,10 @@ export class ChiTietHoaDonComponent {
 
         if (this.bestVoucher) {
           // Khi tìm được voucher tốt nhất sẽ kiểm tra kiểu voucher
-          if (this.bestVoucher.kieu === 0) {
+          if (
+            this.bestVoucher.kieu === 0 &&
+            this.newAmount > this.bestVoucher.dieuKienGiam
+          ) {
             // Kiểu phần trăm
             // Tính tiền khách nợ và cửa hàng lỗ
             guestOwedMoney =
@@ -367,7 +369,10 @@ export class ChiTietHoaDonComponent {
                 100;
             this.amountOfMoneyReturn =
               tongTienTraThucTe - guestOwedMoney + shopLoss;
-          } else {
+          } else if (
+            this.bestVoucher.kieu === 1 &&
+            this.newAmount > this.bestVoucher.dieuKienGiam
+          ) {
             // Kiểu tiền mặt
             guestOwedMoney = this.hoaDon?.phieuGiamGia?.giaTri;
             shopLoss = this.bestVoucher?.giaTri;
@@ -379,6 +384,8 @@ export class ChiTietHoaDonComponent {
 
             this.amountOfMoneyReturn =
               tongTienTraThucTe - guestOwedMoney + shopLoss;
+          } else {
+            this.setTienHoanTraKhongCoPhieuGiamGiaMoi();
           }
         } else {
           this.setTienHoanTraKhongCoPhieuGiamGiaMoi();
@@ -481,7 +488,7 @@ export class ChiTietHoaDonComponent {
         : "";
       this.hoaDonRequest.emailNguoiNhan = this.hoaDon.emailNguoiNhan;
       this.hoaDonRequest.loaiHoaDon = "TAI_QUAY";
-      this.hoaDonRequest.ghiChu = "";
+      this.hoaDonRequest.ghiChu = "Hóa đơn mới của hóa đơn trả hàng";
       this.hoaDonRequest.phieuGiamGiaId = this.bestVoucher?.id;
       this.hoaDonRequest.nhanVienId = JSON.parse(
         localStorage.getItem("nhanVien")
@@ -529,9 +536,9 @@ export class ChiTietHoaDonComponent {
     if (this.validationHoaDonTraHang) {
       this.hoaDonTraHangRequest.hoaDonId = this.hoaDon?.id;
       this.hoaDonTraHangRequest.tenNguoiNhan = this.hoaDon?.tenNguoiNhan
-        ? this.hoaDon?.tenNguoiNhan
+        ? this.hoaDon.tenNguoiNhan
         : this.hoaDon?.khachHang?.hoTen
-        ? this.hoaDon?.khachHang?.hoTen
+        ? this.hoaDon.khachHang.hoTen
         : null;
       this.hoaDonTraHangRequest.nhanVienId = JSON.parse(
         localStorage.getItem("nhanVien")
@@ -548,7 +555,10 @@ export class ChiTietHoaDonComponent {
         : this.hoaDon?.khachHang?.email
         ? this.hoaDon?.khachHang?.email
         : null;
-      this.hoaDonTraHangRequest.tongTien = this.amountOfMoneyReturn;
+      this.hoaDonTraHangRequest.tongTien = this.oldAmount - this.newAmount;
+      this.hoaDonTraHangRequest.tongTienPhieuGiamGiaCu = this.hoaDon?.tienGiam;
+      this.hoaDonTraHangRequest.tongTienPhieuGiamGiaMoi = this.discountMoney;
+      this.hoaDonTraHangRequest.tongTienTraKhach = this.amountOfMoneyReturn;
       this.hoaDonTraHangRequest.ghiChu = this.text;
       this.hoaDonTraHangRequest.hoaDonChiTiets = this.listReturnItems.map(
         (hdct) => {

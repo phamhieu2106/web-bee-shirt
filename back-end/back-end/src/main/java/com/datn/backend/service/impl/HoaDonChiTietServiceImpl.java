@@ -166,8 +166,9 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                             " màu " + sanPhamChiTiet.getMauSac().getTen() +
                             " size " + sanPhamChiTiet.getKichCo().getTen() +
-                            " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
+                            " số lượng " + (soLuongCapNhat)
                     )
+//            (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
                     .hoaDon(hoaDon)
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDon);
@@ -220,7 +221,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                         .moTa("Cập nhật sản phẩm " + sanPhamChiTiet.getSanPham().getTen() +
                                 " màu " + sanPhamChiTiet.getMauSac().getTen() +
                                 " size " + sanPhamChiTiet.getKichCo().getTen() +
-                                " số lượng " + (hoaDonChiTiet.getSoLuong() + soLuongBienDong)
+                                " số lượng " + (soLuongCapNhat)
                         )
                         .hoaDon(hoaDon)
                         .build();
@@ -284,6 +285,9 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private BigDecimal getTienGiam(BigDecimal tongTien, PhieuGiamGia phieuGiamGia) {
         long tienGiam = 0;
 //        if (phieuGiamGia.get)
+        if (UtilityFunction.isNullOrEmpty(phieuGiamGia) ){
+            return BigDecimal.valueOf(tienGiam);
+        }
         if (phieuGiamGia.getKieu() == 0) {
             // giảm theo %
             tienGiam = tongTien.longValue() * phieuGiamGia.getGiaTri().intValue() / 100;

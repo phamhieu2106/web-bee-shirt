@@ -1,17 +1,25 @@
 <span [ngSwitch]="trangThai">
-  <span *ngSwitchCase="'TAO_DON'" class="badge badge-primary">Tạo đơn</span>
-  <span *ngSwitchCase="'HOAN_THANH'" class="badge badge-success"
-    >Hoàn thành</span
-  >
-  <span *ngSwitchCase="'HUY'" class="badge badge-danger">Hủy</span>
-  <span *ngSwitchCase="'DANG_GIAO'" class="badge badge-warning">Đang giao</span>
-  <span *ngSwitchCase="'CHO_XAC_NHAN'" class="badge badge-info"
-    >Chờ xác nhận</span
-  >
-  <span *ngSwitchCase="'CHO_GIAO'" class="badge badge-light">Chờ giao</span>
-  <span *ngSwitchCase="'DA_XAC_NHAN'" class="badge badge-dark"
-    >Đã xác nhận</span
-  >
-  <span *ngSwitchCase="'TRA_HANG'" class="badge badge-warning">Trả Hàng</span>
-  <span *ngSwitchDefault>ERROR</span>
+  <button *ngSwitchCase="'TAO_DON'" class="btn btn-primary btn-rounded">
+    Tạo đơn
+  </button>
+  <button *ngSwitchCase="'HOAN_THANH'" class="btn btn-success btn-rounded">
+    Hoàn thành
+  </button>
+  <button *ngSwitchCase="'HUY'" class="btn btn-danger btn-rounded">Hủy</button>
+  <button *ngSwitchCase="'DANG_GIAO'" class="btn btn-warning btn-rounded">
+    Đang giao
+  </button>
+  <button *ngSwitchCase="'CHO_XAC_NHAN'" class="btn btn-info btn-rounded">
+    Chờ xác nhận
+  </button>
+  <button *ngSwitchCase="'CHO_GIAO'" class="btn btn-light btn-rounded">
+    Chờ giao
+  </button>
+  <button *ngSwitchCase="'DA_XAC_NHAN'" class="btn btn-dark btn-rounded">
+    Đã xác nhận
+  </button>
+  <button *ngSwitchCase="'TRA_HANG'" class="btn btn-warning btn-rounded">
+    Trả Hàng
+  </button>
+  <button *ngSwitchDefault>ERROR</button>
 </span>

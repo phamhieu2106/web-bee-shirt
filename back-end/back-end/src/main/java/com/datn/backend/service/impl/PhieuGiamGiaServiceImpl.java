@@ -314,6 +314,11 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
                 .build();
     }
 
+//    @Override
+//    public List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId) {
+//        return null;
+//    }
+
 
     @Override
     public DiscountValidResponse getDiscountValidUpdateHDCT(Integer hoaDonId, DiscountValidRequest discountValidRequest) {

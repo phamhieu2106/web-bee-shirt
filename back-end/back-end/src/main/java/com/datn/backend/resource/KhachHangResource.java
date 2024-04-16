@@ -2,13 +2,10 @@ package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.request.KhachHangRequest;
-import com.datn.backend.dto.request.SignUpReq;
+import com.datn.backend.dto.request.UpdateCustInfoReq;
 import com.datn.backend.dto.response.KhachHangResponse;
-import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
-import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.KhachHang;
-import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.service.KhachHangService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/khach-hang")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class KhachHangResource {
+
     private final KhachHangService khachHangService;
     private final ObjectMapper objectMapper;
 
@@ -41,23 +37,21 @@ public class KhachHangResource {
     }
 
     @PostMapping("/add-kh")
-    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh, @RequestParam("khachHangImage") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<KhachHang> addKH(@RequestParam("request") String kh,
+                                           @RequestParam("khachHangImage") MultipartFile multipartFile) throws IOException {
         KhachHangRequest khachHang = objectMapper.readValue(kh, KhachHangRequest.class);
         return ResponseEntity.ok(khachHangService.add(khachHang, multipartFile));
     }
 
     @PutMapping("/update-kh/{id}")
     public ResponseEntity<KhachHang> updateKH(@RequestParam("request") String kh,
-                                              @RequestParam(value = "khachHangImage",
-                                                      required = false)
-                                              MultipartFile multipartFile)
-            throws IOException {
+                                              @RequestParam(value = "khachHangImage", required = false) MultipartFile multipartFile) throws IOException {
         KhachHangRequest khachHang = objectMapper.readValue(kh, KhachHangRequest.class);
         return ResponseEntity.ok(khachHangService.update(khachHang, multipartFile));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<KhachHang> deleta(@PathVariable("id") Integer id) {
+    public ResponseEntity<KhachHang> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
 
@@ -83,8 +77,13 @@ public class KhachHangResource {
 
     // client
     @PostMapping("/update-avatar/{custId}")
-    public ResponseEntity<String> updateAvatar(@RequestParam("file") MultipartFile file,
-                                          @PathVariable("custId") int custId) throws IOException {
+    public ResponseEntity<KhachHang> updateAvatar(@RequestParam("file") MultipartFile file,
+                                                  @PathVariable("custId") int custId) throws IOException {
         return ResponseEntity.ok(khachHangService.updateAvatar(file, custId));
+    }
+
+    @PostMapping("/update-info")
+    public ResponseEntity<KhachHang> updateInfo(@RequestBody UpdateCustInfoReq req) {
+        return ResponseEntity.ok(khachHangService.updateInfo(req));
     }
 }

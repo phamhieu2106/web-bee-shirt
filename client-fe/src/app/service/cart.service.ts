@@ -22,14 +22,6 @@ export class CartService {
 
   ngOnInit(): void {}
 
-  public updateCartItemsOfLoggedUser(cartItems: CartItem[]): void {
-    this.cartItemsOfLoggedUser.next(cartItems);
-  }
-
-  public updateCartItemsQuantityOfLoggedUser(quantity: number): void {
-    this.cartItemsQuantityOfLoggedUser.next(quantity);
-  }
-
   // public functions
   // 1
   public addCartItemToLocalStorage(cartItem: CartItem): void {
@@ -91,8 +83,18 @@ export class CartService {
     );
   }
 
-  //
+  // 8
   public deleteItemFromCart(cartItemId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/items/delete/${cartItemId}`);
+  }
+
+  // 9
+  public updateCartItemsOfLoggedUser(cartItems: CartItem[]): void {
+    this.cartItemsOfLoggedUser.next(cartItems);
+  }
+
+  // 10
+  public updateCartItemsQuantityOfLoggedUser(quantity: number): void {
+    this.cartItemsQuantityOfLoggedUser.next(quantity);
   }
 }

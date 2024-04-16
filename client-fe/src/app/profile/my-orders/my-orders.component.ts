@@ -29,12 +29,12 @@ export class MyOrdersComponent {
   }
 
   // public functions
-  //
+  // 1
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  //
+  // 2
   public formatOrderStatus(orderStatus: string): string {
     if (orderStatus === "CHO_XAC_NHAN") {
       return "Chờ xác nhận";
@@ -52,7 +52,7 @@ export class MyOrdersComponent {
     return "";
   }
 
-  //
+  // 3
   public getClassByOrderStatus(orderStatus: string): string {
     if (orderStatus === "CHO_XAC_NHAN") {
       return "btn rounded order-cho-xac-nhan";
@@ -79,7 +79,6 @@ export class MyOrdersComponent {
       .subscribe({
         next: (orders: Order[]) => {
           this.orders = orders;
-          console.log(orders.length);
         },
         error: (errRes: HttpErrorResponse) => {
           this.notifService.error(errRes.error.message);

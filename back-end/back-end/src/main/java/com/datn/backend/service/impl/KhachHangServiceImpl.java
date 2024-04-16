@@ -2,10 +2,12 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
+import com.datn.backend.dto.request.UpdateCustInfoReq;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
+import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.danh_sach.Cart;
 import com.datn.backend.model.danh_sach.FavouriteList;
@@ -281,21 +283,31 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public String updateAvatar(MultipartFile multipartFile, int custId) throws IOException {
-        // save image to cloud
+    public KhachHang updateAvatar(MultipartFile multipartFile, int custId) throws IOException {
+        // lưu ảnh mới lên cloudinary
         Map result = cloudinaryService.upload(multipartFile);
 
-        //
+        // xóa ảnh cũ
         KhachHang custById = khachHangRepo.findById(custId).get();
         KhachHangImage image = custById.getImage();
-        System.out.println(image);
         cloudinaryService.delete(image.getImageId());
 
+        // cập nhật thuộc tính cho ảnh trong DB
         image.setImageName((String) result.get("original_filename"));
         image.setImageUrl((String) result.get("url"));
         image.setImageId((String) result.get("public_id"));
 
-        khachHangRepo.save(custById);
-        return khachHangImageRepo.save(image).getImageUrl();
+        return khachHangRepo.save(custById); // image tự động được lưu do cascade
+    }
+
+    @Override
+    public KhachHang updateInfo(UpdateCustInfoReq req) {
+        KhachHang cust = khachHangRepo.findById(req.getCustId())
+                .orElseThrow(() -> new ResourceNotFoundException("Khách hàng ID: " + req.getCustId() + " không tồn tai!"));
+        cust.setHoTen(req.getFullName());
+        cust.setGioiTinh(req.isGender());
+        cust.setNgaySinh(req.getBirthday());
+        cust.setSdt(req.getPhone());
+        return khachHangRepo.save(cust);
     }
 }

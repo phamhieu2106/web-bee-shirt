@@ -37,35 +37,104 @@
                 </div>
               </div>
 
+              <!-- Họ tên -->
               <div class="form-group active">
-                <label>Họ tên</label>
+                <label>Họ tên:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="hoTen"
+                  [ngClass]="
+                    form.get('hoTen').invalid && form.get('hoTen').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
                 />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('hoTen').hasError('required')"
+                >
+                  Họ tên không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('hoTen').hasError('pattern')"
+                >
+                  Họ tên không đúng định dạng
+                </div>
               </div>
 
+              <!-- SĐT -->
               <div class="form-group active">
-                <label>Số điện thoại</label>
-                <input type="text" class="form-control" formControlName="sdt" />
-              </div>
-
-              <div class="form-group active">
-                <label>Email</label>
+                <label>Số điện thoại:</label>
                 <input
+                  type="text"
+                  class="form-control"
+                  formControlName="sdt"
+                  [ngClass]="
+                    form.get('sdt').invalid && form.get('sdt').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('sdt').hasError('required')"
+                >
+                  SĐT không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('sdt').hasError('pattern')"
+                >
+                  SĐT không đúng định dạng
+                </div>
+              </div>
+
+              <div class="form-group active">
+                <label>Email (readonly):</label>
+                <input
+                  readonly
                   type="text"
                   class="form-control"
                   formControlName="email"
                 />
               </div>
 
+              <!-- Ngày sinh -->
               <div class="form-group active">
-                <label>Ngày sinh</label>
+                <label>Ngày sinh:</label>
                 <input
                   type="date"
                   class="form-control"
                   formControlName="ngaySinh"
+                  [ngClass]="
+                    form.get('ngaySinh').invalid && form.get('ngaySinh').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('ngaySinh').hasError('required')"
+                >
+                  Ngày sinh không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form.get('ngaySinh').hasError('invalidDate')"
+                >
+                  Ngày sinh phải sau ngày hiện tại
+                </div>
+              </div>
+
+              <div class="form-group active">
+                <label>Tên đăng nhập (readonly):</label>
+                <input
+                  readonly
+                  type="text"
+                  class="form-control"
+                  formControlName="tenDangNhap"
                 />
               </div>
 
@@ -74,6 +143,7 @@
                   class="btn btn-primary"
                   (click)="updateInfor()"
                   style="width: 200px"
+                  [disabled]="form.invalid"
                 >
                   Lưu thay đổi
                 </button>

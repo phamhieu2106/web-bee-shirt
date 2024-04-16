@@ -134,14 +134,19 @@ public class PhieuGiamGiaResource {
     }
 
     // client resources
-    @GetMapping("/discount-for-checkout/{priceCond}/{custId}")
-    public ResponseEntity<List<PhieuGiamGia>> getDiscountsForCheckOut(@PathVariable("priceCond") BigDecimal dieuKien,
-                                                                      @PathVariable("custId") int custId) {
-        return ResponseEntity.ok(pggService.getDiscountsForCheckOut(dieuKien, custId));
+    @GetMapping("/discounts-for-logged-checkout/{priceCond}/{custId}")
+    public ResponseEntity<List<PhieuGiamGia>> getDiscountsForLoggedCheckOut(@PathVariable("priceCond") BigDecimal priceCondition,
+                                                                            @PathVariable("custId") int custId) {
+        return ResponseEntity.ok(pggService.getDiscountsForLoggedCheckOut(priceCondition, custId));
     }
 
-    @GetMapping("/discount-by-cust/{custId}")
-    public ResponseEntity<List<PhieuGiamGia>> getAllDiscountsOf1Cust(@PathVariable("custId") int custId) {
+    @GetMapping("/discounts-for-none-logged-checkout/{priceCond}")
+    public ResponseEntity<List<PhieuGiamGia>> getDiscountsForNoneLoggedCheckOut(@PathVariable("priceCond") BigDecimal priceCondition) {
+        return ResponseEntity.ok(pggService.getDiscountsForNoneLoggedCheckOut(priceCondition));
+    }
+
+    @GetMapping("/discounts-by-cust/{custId}")
+    public ResponseEntity<List<PhieuGiamGia>> getAllDiscounts1Cust(@PathVariable("custId") int custId) {
         return ResponseEntity.ok(pggService.getAllDiscountsOf1Cust(custId));
     }
 }

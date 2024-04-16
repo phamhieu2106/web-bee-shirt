@@ -48,6 +48,10 @@ export class NavigationComponent {
       this.isLoggedIn = value;
     });
 
+    this.authenticationService.loggedCust.subscribe((value: Customer) => {
+      this.loggedCustomer = value;
+    });
+
     this.cartService.cartItemsOfLoggedUser.subscribe(
       (cartItems: CartItem[]) => {
         this.cartItems2 = cartItems;

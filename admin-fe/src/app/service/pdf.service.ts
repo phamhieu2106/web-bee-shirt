@@ -157,7 +157,7 @@ export class PdfService {
             {
               width: "50%",
               text: `Địa chỉ nhận hàng:${
-                hoaDon.diaChiNguoiNhan == null ? "" : hoaDon.diaChiNguoiNhan
+                hoaDon?.diaChiNguoiNhan ? hoaDon.diaChiNguoiNhan : ""
               } `,
             },
             {
@@ -175,13 +175,21 @@ export class PdfService {
             {
               width: "50%",
               text: `Số điện thoại: ${
-                hoaDon.sdtNguoiNhan == null ? "" : hoaDon.sdtNguoiNhan
+                hoaDon?.khachHang?.sdt
+                  ? hoaDon.khachHang.sdt
+                  : hoaDon?.sdtNguoiNhan
+                  ? hoaDon.sdtNguoiNhan
+                  : ""
               } `,
             },
             {
               width: "50%",
               text: `Email: ${
-                hoaDon.emailNguoiNhan == null ? "" : hoaDon.emailNguoiNhan
+                hoaDon?.khachHang?.email
+                  ? hoaDon.khachHang.email
+                  : hoaDon?.emailNguoiNhan
+                  ? hoaDon.emailNguoiNhan
+                  : ""
               }`,
             },
           ],

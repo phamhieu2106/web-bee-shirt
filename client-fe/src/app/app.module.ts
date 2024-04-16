@@ -23,6 +23,8 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
 import { ProfileModule } from "./profile/profile.module";
+import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
+import { CheckOut2Component } from './components/check-out2/check-out2.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { ProfileModule } from "./profile/profile.module";
     LoginComponent,
     CheckoutComponent,
     SignUpComponent,
+    ForgetPasswordComponent,
+    CheckOut2Component,
   ],
   imports: [
     BrowserModule,

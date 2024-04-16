@@ -93,27 +93,29 @@ export class DanhSachSanPhamComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        let trimmedTen = this.addForm.get("ten").value.trim();
-        this.addForm.get("ten")?.setValue(trimmedTen);
+        // let trimmedTen = this.addForm.get("ten").value.trim();
+        // this.addForm.get("ten")?.setValue(trimmedTen);
 
-        let trimmedMa = this.addForm.get("ma").value.trim();
-        this.addForm.get("ma")?.setValue(trimmedMa);
+        // let trimmedMa = this.addForm.get("ma").value.trim();
+        // this.addForm.get("ma")?.setValue(trimmedMa);
 
-        this.sanPhamService.add(this.addForm.value).subscribe({
-          next: (response: SanPham) => {
-            this.goToPage(
-              this.pagedResponse.pageNumber,
-              this.pagedResponse.pageSize,
-              this.pagedResponse.search
-            );
-            this.initAddForm();
-            document.getElementById("closeAddBtn").click();
-            this.notifService.success("Thêm sản phẩm thành công!");
-          },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
-          },
-        });
+        console.log(this.addForm.value);
+
+        // this.sanPhamService.add(this.addForm.value).subscribe({
+        //   next: (response: SanPham) => {
+        //     this.goToPage(
+        //       this.pagedResponse.pageNumber,
+        //       this.pagedResponse.pageSize,
+        //       this.pagedResponse.search
+        //     );
+        //     this.initAddForm();
+        //     document.getElementById("closeAddBtn").click();
+        //     this.notifService.success("Thêm sản phẩm thành công!");
+        //   },
+        //   error: (errorResponse: HttpErrorResponse) => {
+        //     this.notifService.error(errorResponse.error.message);
+        //   },
+        // });
       }
     });
   }
@@ -121,9 +123,19 @@ export class DanhSachSanPhamComponent {
   // 2
   public initAddForm(): void {
     this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
-      ma: new FormControl("", [Validators.required]),
-      moTa: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+        this.customNotBlankValidator,
+      ]),
+      ma: new FormControl("", [
+        Validators.required,
+        this.customNotBlankValidator,
+      ]),
+      moTa: new FormControl("", [
+        Validators.required,
+        this.customNotBlankValidator,
+      ]),
     });
   }
 
@@ -161,7 +173,7 @@ export class DanhSachSanPhamComponent {
     );
   }
 
-  //
+  // 6
   public searchByStatus(e: any): void {
     if (e.target.value === "Tất cả trạng thái") {
       this.statusFilter = [0, 1];
@@ -178,12 +190,12 @@ export class DanhSachSanPhamComponent {
     );
   }
 
-  // 6
+  // 7
   public onClearSearchInput(): void {
     this.goToPage();
   }
 
-  // 7
+  // 8
   public openDetailsForm(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
@@ -195,15 +207,25 @@ export class DanhSachSanPhamComponent {
     });
   }
 
-  // 8
+  // 9
   public openUpdateForm(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
-          ten: new FormControl(response.ten, [Validators.required]),
-          ma: new FormControl(response.ma, [Validators.required]),
-          moTa: new FormControl(response.moTa, [Validators.required]),
+          ten: new FormControl(response.ten, [
+            Validators.required,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+            this.customNotBlankValidator,
+          ]),
+          ma: new FormControl(response.ma, [
+            Validators.required,
+            this.customNotBlankValidator,
+          ]),
+          moTa: new FormControl(response.moTa, [
+            Validators.required,
+            this.customNotBlankValidator,
+          ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
@@ -213,7 +235,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
-  // 9
+  // 10
   public changeStatus(id: number, value: boolean): void {
     Swal.fire({
       title:
@@ -243,7 +265,7 @@ export class DanhSachSanPhamComponent {
     });
   }
 
-  // 10
+  // 11
   public update(): void {
     Swal.fire({
       title: "Cập nhật sản phẩm?",
@@ -255,11 +277,11 @@ export class DanhSachSanPhamComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        let trimmedTen = this.addForm.get("ten").value.trim();
-        this.addForm.get("ten")?.setValue(trimmedTen);
+        // let trimmedTen = this.addForm.get("ten").value.trim();
+        // this.addForm.get("ten")?.setValue(trimmedTen);
 
-        let trimmedMa = this.addForm.get("ma").value.trim();
-        this.addForm.get("ma")?.setValue(trimmedMa);
+        // let trimmedMa = this.addForm.get("ma").value.trim();
+        // this.addForm.get("ma")?.setValue(trimmedMa);
 
         this.sanPhamService.update(this.updateForm.value).subscribe({
           next: (response: SanPham) => {
@@ -280,6 +302,17 @@ export class DanhSachSanPhamComponent {
     });
   }
 
+  // 12
+  public isDiscounted(id: number) {
+    if (
+      this.listIdSanPhamInDiscount &&
+      this.listIdSanPhamInDiscount.length > 0
+    ) {
+      return this.listIdSanPhamInDiscount.includes(id);
+    }
+    return false;
+  }
+
   // private function
   // 1
   private getProductList(): void {
@@ -294,7 +327,7 @@ export class DanhSachSanPhamComponent {
   }
 
   // 2
-  public initUpdateForm(): void {
+  private initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
       ten: new FormControl("", [Validators.required]),
@@ -304,8 +337,8 @@ export class DanhSachSanPhamComponent {
     });
   }
 
-  //
-  public listIdSanPhamInDiscount: number[];
+  // 3 (Hiếu)
+  private listIdSanPhamInDiscount: number[];
   private getListIdSanPhamInDiscount() {
     this.sanPhamService.getListIdSanPhamInDiscount().subscribe({
       next: (data) => {
@@ -317,13 +350,15 @@ export class DanhSachSanPhamComponent {
     });
   }
 
-  public isDiscounted(id: number) {
-    if (
-      this.listIdSanPhamInDiscount &&
-      this.listIdSanPhamInDiscount.length > 0
-    ) {
-      return this.listIdSanPhamInDiscount.includes(id);
+  // 4
+  private customNotBlankValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
     }
-    return false;
+    return null;
   }
 }

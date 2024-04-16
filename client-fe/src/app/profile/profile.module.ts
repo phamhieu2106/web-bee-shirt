@@ -10,6 +10,7 @@ import { MyOrdersComponent } from "./my-orders/my-orders.component";
 import { OrderTrackingComponent } from "./order-tracking/order-tracking.component";
 import { MyDiscountsComponent } from "./my-discounts/my-discounts.component";
 import { PasswordComponent } from "./password/password.component";
+import { OverlayComponent } from "./overlay/overlay.component";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PasswordComponent } from "./password/password.component";
     OrderTrackingComponent,
     MyDiscountsComponent,
     PasswordComponent,
+    OverlayComponent,
   ],
   imports: [CommonModule, ProfileRoutingModule, ReactiveFormsModule],
 })

@@ -50,7 +50,6 @@ export class ChiTietHoaDonComponent {
   hoaDonTraHangRequest?: HoaDonTraHangRequest = {};
   radioValue = "A";
   text: string;
-
   // Constructors Component
   constructor(
     private traHangService: TraHangService,
@@ -173,7 +172,7 @@ export class ChiTietHoaDonComponent {
       this.listReturnItems = [];
       this.setOfCheckedId.clear();
     } else {
-      this.listOfCurrentPageData.forEach((item) => {
+      this.listOfData.forEach((item) => {
         this.handleReturnItems(item.id, item.soLuong);
         this.updateCheckedSet(item.id, value);
       });

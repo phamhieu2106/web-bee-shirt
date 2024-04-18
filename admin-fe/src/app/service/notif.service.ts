@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class NotifService {
-  private readonly apiUrl = "http://localhost:8080/notification";
+  private readonly apiUrl = "http://localhost:8080/api/notification";
 
   constructor(private http: HttpClient) {}
 

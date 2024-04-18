@@ -100,8 +100,7 @@
             <div class="thongBao" (click)="toggleNotice()">
               <div class="iconnav">
                 <i class="iconThongBao fa-solid fa-bell"></i>
-                <span class="quantity1" *ngIf="!isLoggedIn">{{ 1 }}</span>
-                <span class="quantity1" *ngIf="isLoggedIn">{{ 1 }}</span>
+                <span class="quantity1">{{ notifications.length }}</span>
               </div>
 
               <div class="popUpThongBao" *ngIf="isPopupThongBao && isLoggedIn">
@@ -114,19 +113,17 @@
 
                   <a
                     class="notification notification-flush notification-unread"
-                    href="#!"
+                    *ngFor="let n of notifications"
                   >
                     <div class="notification-avatar">
                       <div class="avatar avatar-2xl mr-3">
                         <div class="avatar-name rounded-circle">
-                          <span>AD</span>
+                          <span>Admin</span>
                         </div>
                       </div>
                     </div>
                     <div class="notification-body">
-                      <p class="mb-1">
-                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
-                      </p>
+                      <p class="mb-1"><strong>Admin</strong> {{ n.content }}</p>
                       <span class="notification-time"
                         ><span class="mr-1" role="img" aria-label="Emoji"
                           >💬</span
@@ -134,73 +131,6 @@
                       >
                     </div>
                   </a>
-                  <a
-                    class="notification notification-flush notification-unread"
-                    href="#!"
-                  >
-                    <div class="notification-avatar">
-                      <div class="avatar avatar-2xl mr-3">
-                        <div class="avatar-name rounded-circle">
-                          <span>AD</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="notification-body">
-                      <p class="mb-1">
-                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
-                      </p>
-                      <span class="notification-time"
-                        ><span class="mr-1" role="img" aria-label="Emoji"
-                          >💬</span
-                        >Just now</span
-                      >
-                    </div>
-                  </a>
-                  <a
-                    class="notification notification-flush notification-unread"
-                    href="#!"
-                  >
-                    <div class="notification-avatar">
-                      <div class="avatar avatar-2xl mr-3">
-                        <div class="avatar-name rounded-circle">
-                          <span>AD</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="notification-body">
-                      <p class="mb-1">
-                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
-                      </p>
-                      <span class="notification-time"
-                        ><span class="mr-1" role="img" aria-label="Emoji"
-                          >💬</span
-                        >Just now</span
-                      >
-                    </div>
-                  </a>
-                  <a
-                    class="notification notification-flush notification-unread"
-                    href="#!"
-                  >
-                    <div class="notification-avatar">
-                      <div class="avatar avatar-2xl mr-3">
-                        <div class="avatar-name rounded-circle">
-                          <span>AD</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="notification-body">
-                      <p class="mb-1">
-                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
-                      </p>
-                      <span class="notification-time"
-                        ><span class="mr-1" role="img" aria-label="Emoji"
-                          >💬</span
-                        >Just now</span
-                      >
-                    </div>
-                  </a>
-
                   <div class="card-footer text-center border-top">
                     <a class="card-link d-block" href="#">Close</a>
                   </div>

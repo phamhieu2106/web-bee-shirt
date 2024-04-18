@@ -36,7 +36,7 @@ export class NavigationComponent {
   public cartItems2: CartItem[] = [];
   public cartItemQuantity2: number;
 
-  webSocket!: WebSocket;
+  private webSocket!: WebSocket;
   public notifications: Notification[] = [];
 
   // constructor, ngOn
@@ -74,19 +74,16 @@ export class NavigationComponent {
     this.getIsLoggedInValue();
     this.getCartItemsFromLocalStorage();
     this.getCartItemsFromLoggedCustomer();
-    this.getAllByCust();
+    this.getAllNotificationsByCust();
   }
 
-  openWebSocket() {
+  private openWebSocket(): void {
     this.webSocket = new WebSocket("ws://localhost:8080/notification");
     this.webSocket.onopen = (event) => {};
     this.webSocket.onmessage = (event) => {
-      const chatMessageDto = JSON.parse(event.data);
-      let mess: ChatMessage = chatMessageDto as ChatMessage;
-      this.notifService.success("Khách hàng " + mess.user + " " + mess.message);
-      // this.getAllNotification();
-      // this.getNotificationFalse();
-      // this.chatMessages.push(chatMessageDto);
+      let data = JSON.parse(event.data) as string;
+      this.notifService.success(data);
+      this.getAllNotificationsByCust();
     };
     this.webSocket.onclose = (event) => {};
   }
@@ -99,7 +96,7 @@ export class NavigationComponent {
 
   public toggleNotice(): void {
     this.isPopupThongBao = !this.isPopupThongBao;
-    console.log(this.isPopupThongBao)
+    console.log(this.isPopupThongBao);
   }
 
   // 2
@@ -366,7 +363,7 @@ export class NavigationComponent {
   }
 
   //
-  private getAllByCust(): void {
+  private getAllNotificationsByCust(): void {
     this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
       next: (notifications: Notification[]) => {
         this.notifications = notifications;

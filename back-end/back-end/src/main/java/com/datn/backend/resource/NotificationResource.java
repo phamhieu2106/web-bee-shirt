@@ -2,7 +2,6 @@ package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.AddNotificationReq;
 import com.datn.backend.model.Notification;
-import com.datn.backend.repository.NotificationRepository;
 import com.datn.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notification")
+@RequestMapping("api/notification")
 @RequiredArgsConstructor
 public class NotificationResource {
 
-    private final NotificationRepository notificationRepo;
     private final NotificationService notificationService;
 
     // 1
@@ -33,27 +31,5 @@ public class NotificationResource {
     @GetMapping("/all-by-cust/{custId}")
     public ResponseEntity<List<Notification>> getAllByCust(@PathVariable("custId") int custId) {
         return ResponseEntity.ok(notificationService.getAllByCust(custId));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Notification>> getAll() {
-        return ResponseEntity.ok(notificationRepo.findByOrderByIdDesc());
-    }
-
-    @GetMapping("/readed/{id}")
-    public ResponseEntity<Notification> put(@PathVariable("id") Long id) {
-//        if (!notificationRepo.existsById(id)) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        Notification no = notificationRepo.getById(id);
-//        no.setStatus(true);
-//        return ResponseEntity.ok(notificationRepo.save(no));
-        return null;
-    }
-
-    @GetMapping("/read-all")
-    public ResponseEntity<Void> readAll() {
-        notificationRepo.readAll();
-        return ResponseEntity.ok().build();
     }
 }

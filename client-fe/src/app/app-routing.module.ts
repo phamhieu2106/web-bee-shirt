@@ -10,6 +10,8 @@ import { SignUpComponent } from "./components/sign-up/sign-up.component";
 import { ForgetPasswordComponent } from "./components/forget-password/forget-password.component";
 import { CheckOut2Component } from "./components/check-out2/check-out2.component";
 import { TrackingComponent } from "./components/tracking/tracking.component";
+import { LienHeComponent } from "./components/lien-he/lien-he.component";
+import { VeChungToiComponent } from "./components/ve-chung-toi/ve-chung-toi.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -48,6 +50,14 @@ const routes: Routes = [
   {
     path: "tracking",
     component: TrackingComponent,
+  },
+  {
+    path: "lien-he",
+    component: LienHeComponent,
+  },
+   {
+    path: "ve-chung-toi",
+    component: VeChungToiComponent,
   },
 ];
 

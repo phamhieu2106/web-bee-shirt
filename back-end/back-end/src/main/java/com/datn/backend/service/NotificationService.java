@@ -10,4 +10,6 @@ public interface NotificationService {
     Notification create(AddNotificationReq req);
 
     List<Notification> getAllByCust(int custId);
+
+    Notification setIsRead(int notifId);
 }

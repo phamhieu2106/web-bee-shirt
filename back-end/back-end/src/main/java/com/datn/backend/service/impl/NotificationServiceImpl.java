@@ -10,6 +10,7 @@ import com.datn.backend.repository.NotificationRepository;
 import com.datn.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,5 +40,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<Notification> getAllByCust(int custId) {
         return notificationRepo.findAllByCustomerIdOrderByIdDesc(custId);
+    }
+
+    @Override
+    @Transactional
+    public Notification setIsRead(int notifId) {
+        notificationRepo.setIsRead(notifId);
+        return notificationRepo.findById(notifId).get();
     }
 }

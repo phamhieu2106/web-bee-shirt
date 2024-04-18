@@ -15,7 +15,6 @@ import { forkJoin } from "rxjs";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
-import { ChatMessage } from "src/app/model/class/chat-message.class";
 import { NotifService } from "src/app/service/notif.service";
 import { Notification } from "src/app/model/class/notification.class";
 
@@ -26,7 +25,7 @@ import { Notification } from "src/app/model/class/notification.class";
 })
 export class NavigationComponent {
   public isPopupShow: boolean = false;
-  public isPopupThongBao: boolean = false;
+  public isNoticesShow: boolean = false;
   public isCartShow: boolean = false;
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
@@ -38,6 +37,7 @@ export class NavigationComponent {
 
   private webSocket!: WebSocket;
   public notifications: Notification[] = [];
+  public unreadQuantity: number;
 
   // constructor, ngOn
   constructor(
@@ -92,14 +92,25 @@ export class NavigationComponent {
   // 1
   public togglePopup(): void {
     this.isPopupShow = !this.isPopupShow;
-  }
-
-  public toggleNotice(): void {
-    this.isPopupThongBao = !this.isPopupThongBao;
-    console.log(this.isPopupThongBao);
+    this.isCartShow = false;
+    this.isNoticesShow = false;
   }
 
   // 2
+  public toggleNotices(): void {
+    this.isNoticesShow = !this.isNoticesShow;
+    this.isCartShow = false;
+    this.isPopupShow = false;
+  }
+
+  // 3
+  public toggleCart(): void {
+    this.isCartShow = !this.isCartShow;
+    this.isPopupShow = false;
+    this.isNoticesShow = false;
+  }
+
+  //
   public logout(): void {
     Swal.fire({
       title: "Bạn muốn đăng xuất?",
@@ -120,13 +131,7 @@ export class NavigationComponent {
     });
   }
 
-  // 3
-  public toggleCart(): void {
-    this.isCartShow = !this.isCartShow;
-    // this.getCartItemsFromLoggedCustomer();
-  }
-
-  // 4
+  //
   public getProductNameByProductDetails(id: number): string {
     this.productService.getProductNameByProductDetails(id).subscribe({
       next: (response: string) => {
@@ -139,12 +144,12 @@ export class NavigationComponent {
     return "";
   }
 
-  // 5
+  //
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  // 6
+  //
   public updateQuantity1(cartItem: CartItem, type: string): void {
     // kiểm tra trước khi tăng/giảm
     if (type === "minus" && cartItem.soLuong === 1) {
@@ -171,7 +176,7 @@ export class NavigationComponent {
     this.cartService.updateCartItemsInStorage(cartItemsInstorage);
   }
 
-  // 7
+  //
   public deleteItemFromCart(cartItem: CartItem, type: number): void {
     Swal.fire({
       title: "Xóa sản phẩm này khỏi giỏ hàng?",
@@ -222,7 +227,7 @@ export class NavigationComponent {
     });
   }
 
-  // 8
+  //
   public calculateTotalMoney(cartItems: CartItem[]): string {
     let totalMoney: number = 0;
 
@@ -232,7 +237,7 @@ export class NavigationComponent {
     return this.formatPrice(totalMoney);
   }
 
-  // 9
+  //
   public updateQuantityOfLoggedCust(cartItem: CartItem, type: string): void {
     // kiểm tra trước khi tăng/giảm
     if (type === "minus" && cartItem.soLuong === 1) {
@@ -256,6 +261,25 @@ export class NavigationComponent {
           return item;
         });
         this.cartService.updateCartItemsOfLoggedUser(this.cartItems2);
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
+  }
+
+  //
+  public setIsRead(notifId: number): void {
+    this.notifService2.setIsRead(notifId).subscribe({
+      next: (notif: Notification) => {
+        this.notifications = this.notifications.map((item: Notification) => {
+          if (item.id === notif.id) {
+            item.read = notif.read;
+            return item;
+          }
+          return item;
+        });
+        this.getAllNotificationsByCust();
       },
       error: (errorRes: HttpErrorResponse) => {
         this.notifService.error(errorRes.error.message);
@@ -367,10 +391,22 @@ export class NavigationComponent {
     this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
       next: (notifications: Notification[]) => {
         this.notifications = notifications;
+        this.countUnreadNotifications(this.notifications);
       },
       error: (errorRes: HttpErrorResponse) => {
         this.notifService.error(errorRes.error.message);
       },
     });
+  }
+
+  //
+  private countUnreadNotifications(notifications: Notification[]): void {
+    let count = 0;
+    for (const notification of notifications) {
+      if (!notification.read) {
+        count += 1;
+      }
+    }
+    this.unreadQuantity = count;
   }
 }

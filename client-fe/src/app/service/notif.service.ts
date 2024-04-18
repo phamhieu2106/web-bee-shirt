@@ -19,4 +19,9 @@ export class NotifService {
       `${this.apiUrl}/all-by-cust/${custId}`
     );
   }
+
+  // 2
+  public setIsRead(notifId: number): Observable<Notification> {
+    return this.http.get<Notification>(`${this.apiUrl}/set-read/${notifId}`);
+  }
 }

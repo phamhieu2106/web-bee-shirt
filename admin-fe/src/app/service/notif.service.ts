@@ -1,0 +1,18 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Notification } from "../model/class/notification.class";
+import { Observable } from "rxjs";
+
+@Injectable({
+  providedIn: "root",
+})
+export class NotifService {
+  private readonly apiUrl = "http://localhost:8080/notification";
+
+  constructor(private http: HttpClient) {}
+
+  // 1
+  public createNewNotification(notification: Notification): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/create`, notification);
+  }
+}

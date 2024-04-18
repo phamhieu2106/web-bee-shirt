@@ -10,7 +10,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { NotificationService } from "src/app/service/notification.service";
 import { WebSocketService } from "src/app/service/web-socket.service";
 import { ChatMessage } from "src/app/model/class/chat-message.class";
-import { NotificationService2 } from "src/app/service/notification2.service";
+import { NotifService } from "src/app/service/notif.service";
 import { Notification } from "src/app/model/class/notification.class";
 
 @Component({
@@ -30,7 +30,7 @@ export class DanhSachKieuTayAoComponent {
     private tayAoService: KieuTayAoService,
     private notifService: NotificationService,
     private webSocketService: WebSocketService,
-    private notifService2: NotificationService2
+    private notifService2: NotifService
   ) {}
 
   ngOnInit(): void {
@@ -38,15 +38,6 @@ export class DanhSachKieuTayAoComponent {
     this.initAddForm();
     this.initUpdateForm();
     this.webSocketService.openWebSocket();
-  }
-
-  sendMessage(id: number) {
-    let chatMessage = new ChatMessage("username", " đã them 1 kieu tay ao");
-    this.notifService2
-      .post(new Notification(0, " đã them 1 kieu tay ao (" + id + ")"))
-      .subscribe((data) => {
-        this.webSocketService.sendMessage(chatMessage);
-      });
   }
 
   // public function
@@ -208,11 +199,30 @@ export class DanhSachKieuTayAoComponent {
   }
 
   //
-  public initUpdateForm(): void {
+  private initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
       ten: new FormControl("", [Validators.required]),
       trangThai: new FormControl(false),
+    });
+  }
+
+  //
+  private sendMessage(id: number): void {
+    const newNotif = new Notification(
+      "ORDER_STATUS_UPDATED",
+      "Hóa đơn đã được cập nhật trạng thái",
+      "",
+      1
+    );
+    let chatMessage = new ChatMessage("nhan vien", " đã them 1 kieu tay ao");
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage(chatMessage);
+      },
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 }

@@ -16,6 +16,8 @@ import { SanPham } from "src/app/model/class/san-pham.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { ChatMessage } from "src/app/model/class/chat-message.class";
+import { NotifService } from "src/app/service/notif.service";
+import { Notification } from "src/app/model/class/notification.class";
 
 @Component({
   selector: "app-navigation",
@@ -34,6 +36,7 @@ export class NavigationComponent {
   public cartItemQuantity2: number;
 
   webSocket!: WebSocket;
+  public notifications: Notification[] = [];
 
   // constructor, ngOn
   constructor(
@@ -43,7 +46,8 @@ export class NavigationComponent {
     private notifService: NotificationService,
     private cartService: CartService,
     private productService: ProductService,
-    private saleEventService: SaleEventService
+    private saleEventService: SaleEventService,
+    private notifService2: NotifService
   ) {}
 
   ngOnInit(): void {
@@ -69,13 +73,12 @@ export class NavigationComponent {
     this.getIsLoggedInValue();
     this.getCartItemsFromLocalStorage();
     this.getCartItemsFromLoggedCustomer();
+    this.getAllByCust();
   }
 
   openWebSocket() {
     this.webSocket = new WebSocket("ws://localhost:8080/notification");
-
     this.webSocket.onopen = (event) => {};
-
     this.webSocket.onmessage = (event) => {
       const chatMessageDto = JSON.parse(event.data);
       let mess: ChatMessage = chatMessageDto as ChatMessage;
@@ -84,7 +87,6 @@ export class NavigationComponent {
       // this.getNotificationFalse();
       // this.chatMessages.push(chatMessageDto);
     };
-
     this.webSocket.onclose = (event) => {};
   }
 
@@ -350,6 +352,18 @@ export class NavigationComponent {
             });
           },
         });
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
+  }
+
+  //
+  private getAllByCust(): void {
+    this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
+      next: (notifications: Notification[]) => {
+        this.notifications = notifications;
       },
       error: (errorRes: HttpErrorResponse) => {
         this.notifService.error(errorRes.error.message);

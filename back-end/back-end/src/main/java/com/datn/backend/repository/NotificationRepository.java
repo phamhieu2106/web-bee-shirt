@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 
     List<Notification> findByOrderByIdDesc();
+
+    List<Notification> findAllByCustomerIdOrderById(int custId);
 
     @Modifying
     @Query(value = """

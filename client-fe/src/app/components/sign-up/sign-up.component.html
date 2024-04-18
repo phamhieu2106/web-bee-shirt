@@ -51,35 +51,6 @@
                 </div>
               </div>
 
-              <!-- Số điện thoại -->
-              <div class="form-group col-6">
-                <label>Số điện thoại:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [ngClass]="
-                    signUpForm.get('sdt').invalid &&
-                    signUpForm.get('sdt').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  placeholder="Số điện thoại"
-                  formControlName="sdt"
-                />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="signUpForm.get('sdt').hasError('required')"
-                >
-                  SĐT không được bỏ trống
-                </div>
-                <div
-                  class="invalid-feedback"
-                  *ngIf="signUpForm.get('sdt').hasError('pattern')"
-                >
-                  SĐT không đúng định dạng
-                </div>
-              </div>
-
               <!-- Email -->
               <div class="form-group col-6">
                 <label>Email:</label>
@@ -147,38 +118,37 @@
                 </select>
               </div>
 
-              <!-- Tên đăng nhập -->
+              <!-- Số điện thoại -->
               <div class="form-group col-6">
-                <label>Tên đăng nhập:</label>
+                <label>Số điện thoại:</label>
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Tên đăng nhập"
-                  formControlName="tenDangNhap"
                   [ngClass]="
-                    signUpForm.get('tenDangNhap').invalid &&
-                    signUpForm.get('tenDangNhap').touched
+                    signUpForm.get('sdt').invalid &&
+                    signUpForm.get('sdt').touched
                       ? 'is-invalid'
                       : ''
                   "
+                  placeholder="Số điện thoại"
+                  formControlName="sdt"
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="signUpForm.get('tenDangNhap').hasError('required')"
+                  *ngIf="signUpForm.get('sdt').hasError('required')"
                 >
-                  Tên đăng nhập không được bỏ trống
+                  SĐT không được bỏ trống
                 </div>
                 <div
                   class="invalid-feedback"
-                  *ngIf="signUpForm.get('tenDangNhap').hasError('pattern')"
+                  *ngIf="signUpForm.get('sdt').hasError('pattern')"
                 >
-                  Tên đăng nhập chỉ được phép có các chữ cái, chữ số, các ký tự
-                  (.-_)
+                  SĐT không đúng định dạng
                 </div>
               </div>
 
               <!-- Mật khẩu -->
-              <div class="form-group">
+              <div class="form-group col-6">
                 <label>Mật khẩu:</label>
                 <input
                   type="password"

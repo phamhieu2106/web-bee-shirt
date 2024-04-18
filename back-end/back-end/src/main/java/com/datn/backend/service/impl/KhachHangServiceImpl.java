@@ -25,6 +25,8 @@ import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -242,7 +244,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang signUp(SignUpReq req) {
         Account account = Account.builder()
-                .tenDangNhap(req.getTenDangNhap())
+                .tenDangNhap(req.getSdt())
                 .matKhau(passwordEncoder.encode(req.getMatKhau()))
                 .trangThai(true)
                 .role("ROLE_CUSTOMER")

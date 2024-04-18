@@ -168,10 +168,6 @@ export class SignUpComponent {
         this.pastDateValidator,
       ]),
       gioiTinh: new FormControl(true, [Validators.required]),
-      tenDangNhap: new FormControl("", [
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*$"),
-      ]),
       matKhau: new FormControl("", [Validators.required]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),

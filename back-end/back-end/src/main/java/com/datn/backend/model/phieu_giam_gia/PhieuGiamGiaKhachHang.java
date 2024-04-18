@@ -27,6 +27,9 @@ public class PhieuGiamGiaKhachHang {
 
     private boolean isUsed;
 
+    private Integer trangThai;
+
+
     @ManyToOne
     @JoinColumn(name = "khach_hang_id")
     private KhachHang khachHang;

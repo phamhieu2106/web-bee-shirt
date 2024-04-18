@@ -6,6 +6,7 @@ import { PdfService } from "src/app/service/pdf.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
 import { NotificationService } from "src/app/service/notification.service";
 import { PdfTraHangService } from "src/app/service/pdf-tra-hang.service";
+import { DiaChi } from "src/app/model/class/dia-chi.class";
 
 @Component({
   selector: "app-chi-tiet-hoa-don",
@@ -109,5 +110,17 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
 
   closeModal(idModal: string): void {
     document.getElementById(idModal).click();
+  }
+
+  changeDiaChiVaPhiVanChuyen(diaChi: DiaChi) {
+    let newDCVPVC = new DiaChiVaPhiVanChuyen();
+    newDCVPVC.tinh = diaChi.tinh.trim();
+    newDCVPVC.huyen = diaChi.huyen.trim();
+    newDCVPVC.xa = diaChi.xa.trim();
+    newDCVPVC.cuThe = diaChi.duong.trim();
+
+    this.diaChiVaPhiVanChuyen = newDCVPVC;
+
+    // console.log(diaChi);
   }
 }

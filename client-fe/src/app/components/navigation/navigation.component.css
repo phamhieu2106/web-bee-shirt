@@ -78,24 +78,32 @@ img {
   color: white;
   margin-right: 15px;
 }
-.iconyeuThich {
-  font-size: 31px;
-  color: white;
-  margin-right: 15px;
-}
+
 .icongioHang {
   font-size: 30px;
   color: white;
+  
+}
+
+.iconThongBao {
+  font-size: 30px;
+  color: white;
+  
+}
+.thongBao{
+  margin-right: 15px;
 }
 
 .taiKhoan,
-.gioHang {
+.gioHang ,
+.thongBao {
   display: flex;
 }
 
 .nav-account {
   display: flex;
   align-items: center;
+ 
 }
 
 .hiddenMobile {
@@ -241,6 +249,18 @@ img {
   right: -10px;
 }
 
+.quantity1 {
+  background-color: #f50000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -7px;
+  right: -10px;
+}
 .iconnav {
   position: relative;
 }
@@ -416,7 +436,6 @@ img {
 .actionItem a {
   text-decoration: none;
   color: #000;
-
   margin: 0;
   padding: 6px 0;
   font-size: 15px;

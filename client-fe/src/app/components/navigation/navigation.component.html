@@ -16,7 +16,7 @@
     </div>
 
     <div class="navMain1">
-      <header class="container">
+      <div class="container">
         <div class="mainHeader">
           <label for="nav_check" class="hamburger c">
             <div></div>
@@ -24,7 +24,7 @@
             <div></div>
           </label>
 
-          <div class="logo c">
+          <div class="logo c" style="margin: 0;">
             <img src="https://i.imgur.com/XlMdwHa.png" />
           </div>
 
@@ -59,7 +59,7 @@
                     <a [routerLink]="'/sign-up'">Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
-                    <a>Theo dõi đơn hàng</a>
+                    <a [routerLink]="'/tracking'">Theo dõi đơn hàng</a>
                   </span>
                 </div>
               </div>
@@ -97,6 +97,18 @@
               </div>
             </div>
 
+            <div class="thongBao" (click)="toggleCart()">
+              <div class="iconnav">
+                <i class=" iconThongBao fa-solid fa-bell"></i>
+                <span class="quantity1" *ngIf="!isLoggedIn">{{
+                  cartItemQuantity1
+                }}</span>
+                <span class="quantity1" *ngIf="isLoggedIn">{{
+                  cartItemQuantity2
+                }}</span>
+              </div>
+            </div>
+
             <div class="gioHang" (click)="toggleCart()">
               <div class="iconnav">
                 <i class="icongioHang bi bi-bag"></i>
@@ -108,9 +120,15 @@
                 }}</span>
               </div>
             </div>
+            
+           
           </div>
         </div>
-      </header>
+        
+      </div>
+
+
+
     </div>
   </div>
 

@@ -1,13 +1,6 @@
 package com.datn.backend.dto.response;
 
-import com.datn.backend.model.khach_hang.DiaChi;
 import lombok.*;
-
-import java.util.List;
-
-/**
- * @author HungDV
- */
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,10 +8,14 @@ import java.util.List;
 @Setter
 @ToString
 @Builder
-public class KhachHangHoaDonResponse {
+public class DiaChiResponse {
     private Integer id;
+
     private String hoTen;
     private String sdt;
-    private String email;
-    private List<DiaChi> diaChis;
+    private String tinh;
+    private String huyen;
+    private String xa;
+    private String duong;
+    private boolean macDinh;
 }

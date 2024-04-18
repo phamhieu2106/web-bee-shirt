@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 
-    List<Notification> findByOrderByIdDesc();
-
-    List<Notification> findAllByCustomerIdOrderById(int custId);
+    List<Notification> findAllByCustomerIdOrderByIdDesc(int custId);
 
     @Modifying
     @Query(value = """

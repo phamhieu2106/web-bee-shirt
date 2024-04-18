@@ -13,6 +13,11 @@ import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
 import Swal from "sweetalert2";
+import { Notification } from "src/app/model/class/notification.class";
+import { ChatMessage } from "src/app/model/class/chat-message.class";
+import { NotifService } from "src/app/service/notif.service";
+import { WebSocketService } from "src/app/service/web-socket.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-order-tracking",
@@ -35,8 +40,12 @@ export class OrderTrackingComponent implements OnChanges {
     private fb: FormBuilder,
     private hoaDonService: HoaDonService,
     private notifycation: NotificationService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private notifService2: NotifService,
+    private notifService: NotificationService,
+    private webSocketService: WebSocketService
   ) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["hoaDon"]) {
       this.chageTitleButton();
@@ -44,17 +53,16 @@ export class OrderTrackingComponent implements OnChanges {
   }
 
   ngOnInit() {
-    // console.log(this.lichSuHoaDons);
     this.chageTitleButton();
+    this.webSocketService.openWebSocket();
   }
+
   // Bắt sự kiện next or previous
   setIsNext(value: boolean) {
     this.isNext = value;
   }
   // Thay đổi trạng thái
-  changeOrderStatus() {
-    console.log(this.hoaDon.trangThai);
-
+  public changeOrderStatus(): void {
     if (
       this.hoaDon.trangThai == "DANG_GIAO" &&
       this.isNext &&
@@ -83,12 +91,16 @@ export class OrderTrackingComponent implements OnChanges {
             this.pdfService.generatePDFPhieuGiao(this.hoaDon);
           }
           this.hoaDonChange.emit(this.hoaDon);
+
+          // thông báo cho khách hàng (Hạ)
+          this.sendMessage(this.hoaDon);
         },
         error: (err) => {
           this.notifycation.error(err.error.message);
         },
       });
   }
+
   // Xử lý khi hủy đơn
   cancelOrder() {
     this.hoaDonService
@@ -106,6 +118,7 @@ export class OrderTrackingComponent implements OnChanges {
         },
       });
   }
+
   // Thay đổi title button
   chageTitleButton() {
     switch (this.hoaDon.trangThai) {
@@ -147,5 +160,25 @@ export class OrderTrackingComponent implements OnChanges {
 
   getLichSuHoaDonsOrderByCreatedDate() {
     return this.hoaDon.lichSuHoaDons.reverse();
+  }
+
+  // private functions
+  private sendMessage(order: HoaDon): void {
+    const newNotif = new Notification(
+      "ORDER_STATUS_UPDATED",
+      `Hóa đơn ${order.ma} đã được cập nhật trạng thái`,
+      "",
+      order.khachHang.id
+    );
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage(
+          `Hóa đơn ${order.ma} đã được cập nhật trạng thái`
+        );
+      },
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
+    });
   }
 }

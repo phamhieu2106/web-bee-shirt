@@ -209,20 +209,20 @@ export class DanhSachKieuTayAoComponent {
 
   //
   private sendMessage(id: number): void {
-    const newNotif = new Notification(
-      "ORDER_STATUS_UPDATED",
-      "Hóa đơn đã được cập nhật trạng thái",
-      "",
-      1
-    );
-    let chatMessage = new ChatMessage("nhan vien", " đã them 1 kieu tay ao");
-    this.notifService2.createNewNotification(newNotif).subscribe({
-      next: (data) => {
-        this.webSocketService.sendMessage(chatMessage);
-      },
-      error: (errRes: HttpErrorResponse) => {
-        this.notifService.error(errRes.error.message);
-      },
-    });
+    // let chatMessage = new ChatMessage("nhan vien", " đã them 1 kieu tay ao");
+    // this.webSocketService.sendMessage(chatMessage);
+    // const newNotif = new Notification(
+    //   "ORDER_STATUS_UPDATED",
+    //   "Hóa đơn đã được cập nhật trạng thái",
+    //   "",
+    //   1
+    // );
+    // this.notifService2.createNewNotification(newNotif).subscribe({
+    //   next: (data) => {
+    //   },
+    //   error: (errRes: HttpErrorResponse) => {
+    //     this.notifService.error(errRes.error.message);
+    //   },
+    // });
   }
 }

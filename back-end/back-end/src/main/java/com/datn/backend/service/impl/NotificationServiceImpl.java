@@ -38,6 +38,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<Notification> getAllByCust(int custId) {
-        return notificationRepo.findAllByCustomerIdOrderById(custId);
+        return notificationRepo.findAllByCustomerIdOrderByIdDesc(custId);
     }
 }

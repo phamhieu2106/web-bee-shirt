@@ -97,11 +97,114 @@
               </div>
             </div>
 
-            <div class="thongBao" (click)="toggleCart()">
+            <div class="thongBao" (click)="toggleNotice()">
               <div class="iconnav">
                 <i class="iconThongBao fa-solid fa-bell"></i>
                 <span class="quantity1" *ngIf="!isLoggedIn">{{ 1 }}</span>
                 <span class="quantity1" *ngIf="isLoggedIn">{{ 1 }}</span>
+              </div>
+
+              <div class="popUpThongBao" *ngIf="isPopupThongBao && isLoggedIn">
+                <div>
+                  <div class="headerPopup">
+                    <span style="color: black; font-weight: bold"
+                      >Thông Báo</span
+                    >
+                  </div>
+
+                  <a
+                    class="notification notification-flush notification-unread"
+                    href="#!"
+                  >
+                    <div class="notification-avatar">
+                      <div class="avatar avatar-2xl mr-3">
+                        <div class="avatar-name rounded-circle">
+                          <span>AD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="notification-body">
+                      <p class="mb-1">
+                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
+                      </p>
+                      <span class="notification-time"
+                        ><span class="mr-1" role="img" aria-label="Emoji"
+                          >💬</span
+                        >Just now</span
+                      >
+                    </div>
+                  </a>
+                  <a
+                    class="notification notification-flush notification-unread"
+                    href="#!"
+                  >
+                    <div class="notification-avatar">
+                      <div class="avatar avatar-2xl mr-3">
+                        <div class="avatar-name rounded-circle">
+                          <span>AD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="notification-body">
+                      <p class="mb-1">
+                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
+                      </p>
+                      <span class="notification-time"
+                        ><span class="mr-1" role="img" aria-label="Emoji"
+                          >💬</span
+                        >Just now</span
+                      >
+                    </div>
+                  </a>
+                  <a
+                    class="notification notification-flush notification-unread"
+                    href="#!"
+                  >
+                    <div class="notification-avatar">
+                      <div class="avatar avatar-2xl mr-3">
+                        <div class="avatar-name rounded-circle">
+                          <span>AD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="notification-body">
+                      <p class="mb-1">
+                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
+                      </p>
+                      <span class="notification-time"
+                        ><span class="mr-1" role="img" aria-label="Emoji"
+                          >💬</span
+                        >Just now</span
+                      >
+                    </div>
+                  </a>
+                  <a
+                    class="notification notification-flush notification-unread"
+                    href="#!"
+                  >
+                    <div class="notification-avatar">
+                      <div class="avatar avatar-2xl mr-3">
+                        <div class="avatar-name rounded-circle">
+                          <span>AD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="notification-body">
+                      <p class="mb-1">
+                        <strong>Admin</strong> Cảm ơn đã tin tưởng 😍
+                      </p>
+                      <span class="notification-time"
+                        ><span class="mr-1" role="img" aria-label="Emoji"
+                          >💬</span
+                        >Just now</span
+                      >
+                    </div>
+                  </a>
+
+                  <div class="card-footer text-center border-top">
+                    <a class="card-link d-block" href="#">Close</a>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -121,38 +224,38 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="header-botton">
-    <input type="checkbox" id="nav_check" hidden />
+<div class="header-botton">
+  <input type="checkbox" id="nav_check" hidden />
 
-    <nav class="mainNav">
-      <div class="logo">
-        <img src="https://i.imgur.com/XlMdwHa.png" />
-      </div>
+  <nav class="mainNav">
+    <div class="logo">
+      <img src="https://i.imgur.com/XlMdwHa.png" />
+    </div>
 
-      <ul style="margin: 0">
-        <li>
-          <a [routerLink]="'/homepage'">Trang Chủ</a>
-        </li>
-        <li>
-          <a [routerLink]="'/trang-san-pham'">Sản Phẩm</a>
-          <span class="header_new">New</span>
-        </li>
-        <li>
-          <a href="/ve-chung-toi">Về Chúng Tôi</a>
-        </li>
-        <li>
-          <a href="/lien-he">Liên Hệ</a>
-        </li>
-        <li *ngIf="!isLoggedIn">
-          <a routerLink="/log-in">Đăng Nhập</a>
-        </li>
-        <li *ngIf="!isLoggedIn">
-          <a routerLink="/sign-up">Đăng Kí</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+    <ul style="margin: 0">
+      <li>
+        <a [routerLink]="'/homepage'">Trang Chủ</a>
+      </li>
+      <li>
+        <a [routerLink]="'/trang-san-pham'">Sản Phẩm</a>
+        <span class="header_new">New</span>
+      </li>
+      <li>
+        <a href="/ve-chung-toi">Về Chúng Tôi</a>
+      </li>
+      <li>
+        <a href="/lien-he">Liên Hệ</a>
+      </li>
+      <li *ngIf="!isLoggedIn">
+        <a routerLink="/log-in">Đăng Nhập</a>
+      </li>
+      <li *ngIf="!isLoggedIn">
+        <a routerLink="/sign-up">Đăng Kí</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 
 <!-- cart -->

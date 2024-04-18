@@ -26,6 +26,7 @@ import { Notification } from "src/app/model/class/notification.class";
 })
 export class NavigationComponent {
   public isPopupShow: boolean = false;
+  public isPopupThongBao: boolean = false;
   public isCartShow: boolean = false;
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
@@ -94,6 +95,11 @@ export class NavigationComponent {
   // 1
   public togglePopup(): void {
     this.isPopupShow = !this.isPopupShow;
+  }
+
+  public toggleNotice(): void {
+    this.isPopupThongBao = !this.isPopupThongBao;
+    console.log(this.isPopupThongBao)
   }
 
   // 2

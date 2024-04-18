@@ -15,6 +15,7 @@ import { forkJoin } from "rxjs";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
+import { ChatMessage } from "src/app/model/class/chat-message.class";
 
 @Component({
   selector: "app-navigation",
@@ -31,6 +32,8 @@ export class NavigationComponent {
   public cartItemQuantity1: number;
   public cartItems2: CartItem[] = [];
   public cartItemQuantity2: number;
+
+  webSocket!: WebSocket;
 
   // constructor, ngOn
   constructor(
@@ -62,9 +65,27 @@ export class NavigationComponent {
       this.cartItemQuantity2 = data;
     });
 
+    this.openWebSocket();
     this.getIsLoggedInValue();
     this.getCartItemsFromLocalStorage();
     this.getCartItemsFromLoggedCustomer();
+  }
+
+  openWebSocket() {
+    this.webSocket = new WebSocket("ws://localhost:8080/notification");
+
+    this.webSocket.onopen = (event) => {};
+
+    this.webSocket.onmessage = (event) => {
+      const chatMessageDto = JSON.parse(event.data);
+      let mess: ChatMessage = chatMessageDto as ChatMessage;
+      this.notifService.success("Khách hàng " + mess.user + " " + mess.message);
+      // this.getAllNotification();
+      // this.getNotificationFalse();
+      // this.chatMessages.push(chatMessageDto);
+    };
+
+    this.webSocket.onclose = (event) => {};
   }
 
   // public functions

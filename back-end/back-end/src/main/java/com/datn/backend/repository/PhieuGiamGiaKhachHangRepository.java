@@ -24,7 +24,7 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
                    UPDATE phieu_giam_gia_kh
                    SET is_used = 1
                    WHERE khach_hang_id = :custId
-                   AND phieu_giam_gia_id = :discountId 
+                   AND phieu_giam_gia_id = :discountId
                    """, nativeQuery = true)
     void updateIsUsed(@Param("custId") int custId,
                       @Param("discountId") int discountId);

@@ -8,6 +8,10 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NotificationService } from "src/app/service/notification.service";
+import { WebSocketService } from "src/app/service/web-socket.service";
+import { ChatMessage } from "src/app/model/class/chat-message.class";
+import { NotificationService2 } from "src/app/service/notification2.service";
+import { Notification } from "src/app/model/class/notification.class";
 
 @Component({
   selector: "app-danh-sach-kieu-tay-ao",
@@ -24,13 +28,25 @@ export class DanhSachKieuTayAoComponent {
   // constructor, ngOn
   constructor(
     private tayAoService: KieuTayAoService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private webSocketService: WebSocketService,
+    private notifService2: NotificationService2
   ) {}
 
   ngOnInit(): void {
     this.getCoAoList();
     this.initAddForm();
     this.initUpdateForm();
+    this.webSocketService.openWebSocket();
+  }
+
+  sendMessage(id: number) {
+    let chatMessage = new ChatMessage("username", " đã them 1 kieu tay ao");
+    this.notifService2
+      .post(new Notification(0, " đã them 1 kieu tay ao (" + id + ")"))
+      .subscribe((data) => {
+        this.webSocketService.sendMessage(chatMessage);
+      });
   }
 
   // public function
@@ -59,6 +75,7 @@ export class DanhSachKieuTayAoComponent {
             this.initAddForm();
             document.getElementById("closeBtn").click();
             this.notifService.success("Thêm thành công!");
+            this.sendMessage(response.id);
           },
           error: (errorResponse: HttpErrorResponse) => {
             this.notifService.error(errorResponse.error.message);

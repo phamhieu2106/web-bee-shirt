@@ -24,5 +24,6 @@ import { OverlayComponent } from "./overlay/overlay.component";
     OverlayComponent,
   ],
   imports: [CommonModule, ProfileRoutingModule, ReactiveFormsModule],
+  exports: [OverlayComponent],
 })
 export class ProfileModule {}

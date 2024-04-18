@@ -419,7 +419,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Transactional
     @Override
     public String placeOrderOnline(OnlineOrderRequest req) {
-        KhachHang customer = khachHangRepo.findById(req.getKhachHangId()).orElse(null);
+        KhachHang customer = req.getKhachHangId() != null ?
+                             khachHangRepo.findById(req.getKhachHangId()).orElse(null) : null;
         PhieuGiamGia discount = checkAndGetDiscount(req.getPhieuGiamGiaId(), req.getKhachHangId());
         List<HoaDonChiTiet> orderDetails = checkAndGetOrderDetails(req.getHoaDonChiTiets());
 
@@ -455,7 +456,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         // payment by vnpay
         if (!req.isPaymentMethod()) {
         }
-
         return savedOrder.getMa();
     }
 
@@ -524,7 +524,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
         // 2. private
         if (discount.getLoai() == 0) {
-            pggKhRepo.updateIsUsed(discount.getId(), custId);
+            discount.setSoLuong(discount.getSoLuong() - 1);
+            pggKhRepo.updateIsUsed(custId, discount.getId());
         }
     }
 

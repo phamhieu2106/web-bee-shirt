@@ -159,7 +159,7 @@
     </div>
   </div>
 
-  <!-- not log in -->
+  <!-- none log in -->
   <ul class="listCart" style="padding: 0" *ngIf="!isLoggedIn">
     <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
@@ -228,10 +228,11 @@
 
   <div class="checkOut" *ngIf="cartItems1.length > 0 && !isLoggedIn">
     <div class="thanhToan">
-      <button class="btnThanhToan" routerLink="/check-out" *ngIf="isLoggedIn">
-        Thanh toán
-      </button>
-      <button class="btnThanhToan" routerLink="/check-out2" *ngIf="!isLoggedIn">
+      <button
+        class="btnThanhToan"
+        routerLink="/check-out2"
+        (click)="toggleCart()"
+      >
         Thanh toán
       </button>
     </div>
@@ -329,20 +330,6 @@
   </ul>
 
   <div class="checkOut" *ngIf="cartItems2.length > 0 && isLoggedIn">
-    <!-- <div class="TinhTien">
-      <div>Giá trị đơn hàng</div>
-      <div class="giaGoc">{{ calculateTotalMoney(cartItems2) }}</div>
-
-      <div>Chiết khấu</div>
-      <div class="chietKhau">-179.000đ</div>
-
-      <div class="tamTinh">Phải trả</div>
-      <div class="total">419.300đ</div>
-
-      <div></div>
-      <div class="save">(Tiết kiệm 179.000đ)</div>
-    </div> -->
-
     <div class="thanhToan">
       <button
         class="btnThanhToan"

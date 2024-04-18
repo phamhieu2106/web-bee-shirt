@@ -61,6 +61,10 @@ export class CheckoutComponent {
   public finalPrice: number = 0;
 
   public paymentMethod = true;
+  public note: string;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -321,6 +325,7 @@ export class CheckoutComponent {
       confirmButtonText: "Xác nhận",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        this.turnOnOverlay("Hệ thống đang xử lý...");
         const hoaDonChiTiets: OrderDetailsReq[] =
           this.mapCartItemsToOrderDetails();
 
@@ -331,22 +336,24 @@ export class CheckoutComponent {
           hoaDonChiTiets: hoaDonChiTiets,
           khachHangId: this.loggedCust?.id,
           phieuGiamGiaId: this.selectedDiscount?.id,
-          tenNguoiNhan: this.loggedCust?.hoTen,
-          sdtNguoiNhan: this.loggedCust?.sdt,
-          emailNguoiNhan: this.loggedCust?.email,
+          tenNguoiNhan: this.defaultAddr.hoTen,
+          sdtNguoiNhan: this.defaultAddr.sdt,
+          emailNguoiNhan: this.loggedCust.email,
           diaChiNguoiNhan: this.formatAddress(this.defaultAddr),
-          ghiChu: "ghiChu",
+          ghiChu: this.note,
         };
 
         this.orderService.placeOrderOnline(req).subscribe({
           next: (orderCode: string) => {
             this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/profile/my-orders/${orderCode}`]);
+            this.router.navigate([`/profile/order-tracking/${orderCode}`]);
             this.cartService.updateCartItemsOfLoggedUser([]);
             this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+            this.turnOffOverlay("");
           },
           error: (errRes: HttpErrorResponse) => {
             this.notifService.error(errRes.error.message);
+            this.turnOffOverlay("");
           },
         });
       }
@@ -674,4 +681,15 @@ export class CheckoutComponent {
     );
   }
   // end: calculate prices
+
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 15
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
+  }
 }

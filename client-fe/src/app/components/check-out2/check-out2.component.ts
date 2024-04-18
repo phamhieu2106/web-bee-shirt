@@ -2,14 +2,19 @@ import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import { Address } from "src/app/model/class/address.class";
 import { CartItem } from "src/app/model/class/cart-item.class";
 import { Customer } from "src/app/model/class/customer.class";
 import { Discount } from "src/app/model/class/discount.class";
+import { OnlineOrderRequest } from "src/app/model/interface/online-order-request.interface";
+import { OrderDetailsReq } from "src/app/model/interface/order-details-req.interface";
 import { CartService } from "src/app/service/cart.service";
 import { DiscountService } from "src/app/service/discount.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
+import { OrderService } from "src/app/service/order.service";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-check-out2",
@@ -19,7 +24,6 @@ import { NotificationService } from "src/app/service/notification.service";
 export class CheckOut2Component {
   public addresses: Address[] = [];
   public defaultAddr: Address;
-  public loggedCust: Customer;
 
   public cartItems: CartItem[] = [];
   public cartItemQuantity: number;
@@ -49,11 +53,13 @@ export class CheckOut2Component {
 
   // constructor, ngOn
   constructor(
+    private router: Router,
     private currencyPipe: CurrencyPipe,
     private cartService: CartService,
     private giaoHangNhanhService: GiaoHangNhanhService,
     private notifService: NotificationService,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
@@ -136,7 +142,78 @@ export class CheckOut2Component {
   }
 
   //
-  public checkOut(): void {}
+  public checkOut(): void {
+    Swal.fire({
+      title: "Xác nhận thanh toán?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xác nhận",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        if (this.addressForm.invalid) {
+          this.notifService.warning(
+            "Vui lòng điền đầy đủ thông tin nhận hàng!"
+          );
+          return;
+        }
+
+        const hoaDonChiTiets: OrderDetailsReq[] =
+          this.mapCartItemsToOrderDetails();
+        let req: OnlineOrderRequest = {
+          tongTien: this.finalPrice,
+          tienGiam: this.salePrice + this.discountPrice,
+          phiVanChuyen: this.shipPrice,
+          hoaDonChiTiets: hoaDonChiTiets,
+          khachHangId: null,
+          phieuGiamGiaId: this.selectedDiscount?.id,
+          tenNguoiNhan: this.addressForm.get("hoTen")?.value,
+          sdtNguoiNhan: this.addressForm.get("sdt")?.value,
+          emailNguoiNhan: this.addressForm.get("email")?.value,
+          diaChiNguoiNhan: this.formatAddress(),
+          ghiChu: "ghiChu",
+        };
+        this.orderService.placeOrderOnline(req).subscribe({
+          next: (orderCode: string) => {
+            this.notifService.success("Đặt hàng thành công!");
+            this.router.navigate([`/profile/my-orders/${orderCode}`]);
+            this.cartService.updateCartItemsOfLoggedUser([]);
+            this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+          },
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
+          },
+        });
+      }
+    });
+  }
+
+  // 7.1
+  private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
+    let result: OrderDetailsReq[] = [];
+    for (let item of this.cartItems) {
+      let orderDetails: OrderDetailsReq = {
+        id: null,
+        soLuong: item.soLuong,
+        giaBan: item.spct.giaBan,
+        giaNhap: item.spct.giaNhap,
+        sanPhamChiTietId: item.spct.id,
+      };
+      result.push(orderDetails);
+    }
+    return result;
+  }
+
+  // 7.2
+  private formatAddress(): string {
+    const duong = this.addressForm.get("duong")?.value;
+    const xa = this.addressForm.get("xa")?.value;
+    const huyen = this.addressForm.get("huyen")?.value;
+    const tinh = this.addressForm.get("tinh")?.value;
+    return `${duong}, ${xa}, ${huyen}, ${tinh}`;
+  }
 
   // select address event functions
   // 8. get districts by select province

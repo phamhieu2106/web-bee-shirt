@@ -11,7 +11,6 @@ import {
   FormBuilder,
 } from "@angular/forms";
 import { PhieuGiamGia } from "src/app/model/class/phieu-giam-gia.class";
-import { KhachHangResponse } from "src/app/model/interface/khach-hang-response.interface";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KhachHangService } from "src/app/service/khach-hang.service";
 import { PhieuGiamGiaService } from "src/app/service/phieu-giam-gia.service";
@@ -66,21 +65,23 @@ export class ThemPhieuComponent implements OnInit {
         this.phieuGiamGiaId = response.id;
 
         this.phieuGiamGia
-          .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
+          .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds,1)
           .subscribe();
-
+ 
         if (this.sendMailChecked) {
           this.selectedIds.forEach((id) => {
             // Gọi service để lấy thông tin của khách hàng dựa trên id
             this.khachHangService.getById(id).subscribe({
               next: (khachHang: any) => {
                 // Gửi email cho khách hàng
-                console.log(response.maPhieuGiamGia);
+                
+               if(khachHang.email){
                 this.send(
                   response.maPhieuGiamGia,
                   khachHang.email,
                   response.thoiGianKetThuc
                 );
+               }
               },
               error: (error: any) => {
                 console.error("Error getting customer information:", error);
@@ -516,98 +517,6 @@ public changePageSize(e: any): void {
   this.goToPage(1, e.target.value, this.search);
 }
 
-
-
-
-
-
-
-  // filterObject: any = null;
-  // pageSize: number = 5;
-  // pageNumber: number = 1;
-  // onChangeFilter() {
-  //   this.filterObject = {
-  //     pageNumber: this.pageNumber,
-  //     pageSize: this.pageSize,
-  //     search: this.search
-     
-  //   };
-  //   this.goToPage(
-  //     this.filterObject.pageNumber,
-  //     this.filterObject.pageSize,
-  //     this.filterObject.search
-  //   );
-  // }
-
-  // public onChangePageSize(): void {
-
-  //   this.filterObject = {
-  //     pageNumber: this.pageNumber,
-  //     pageSize: this.pageSize,
-  //     search: this.search
-     
-  //   };
-  //   console.log(this.filterObject.search)
-
-  //   this.goToPage(
-  //     this.filterObject.pageNumber,
-  //     this.filterObject.pageSize,
-  //     this.filterObject.search
-  //   );
-  // }
-
-
-  // public goToPage(page: number, pageSize: number, keyword: string): void {
-  //   console.log(this.filterObject)
-  //   if (this.filterObject) {
-  //     this.phieuGiamGia.getAllActive(
-  //         page,
-  //         pageSize,
-  //         keyword
-  //       )
-  //       .subscribe({
-  //         next: (response: PagedResponse<KhachHang>) => {
-  //           this.pagedResponse = response;
-  //         },
-  //         error: (error: HttpErrorResponse) => {
-  //           console.log(error);
-  //         },
-  //       });
-  //   } else {
-  //     this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
-  //       next: (response: PagedResponse<KhachHang>) => {
-  //         this.pagedResponse = response;
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.log(error);
-  //       },
-  //       complete: () => {
-  //         // console.log(this.pagedResponse);
-  //       },
-  //     });
-  //   }
-  // }
-
-
-
-
-
-
-
-  // public goToPage(
-  //   page: number = 1,
-  //   pageSize: number = 5,
-  //   keyword: string = ""
-  // ): void {
-  //   this.phieuGiamGia.getAllActive(page, pageSize, keyword).subscribe({
-  //     next: (response: PagedResponse<KhachHang>) => {
-  //       this.pagedResponse = response;
-  //     },
-  //     error: (error: HttpErrorResponse) => {
-  //       console.log(error);
-  //     },
-  //   });
-  // }
 
   private getKhachHangList(): void {
     this.phieuGiamGia.getAllActive().subscribe({

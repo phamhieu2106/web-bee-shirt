@@ -595,7 +595,7 @@ export class SuaPhieuComponent implements OnInit {
        
 
         this.phieuGiamGia
-          .addPhieuKhachHang(this.idPhieu, this.selectedIds)
+          .addPhieuKhachHang(this.idPhieu, this.selectedIds,0)
           .subscribe();
 
         if (this.sendMailChecked) {

@@ -11,7 +11,7 @@
       <!-- Search Product taskbar -->
       <div class="p-1 col-5 align-content-center">
         <div class="dropdown d-flex input-group">
-          <div
+          <!-- <div
             class="input-group-prepend"
             data-toggle="modal"
             data-target="#quetQrModal"
@@ -21,10 +21,10 @@
               id="basic-addon1"
               ><i class="fa-solid fa-qrcode fs-5"></i
             ></span>
-          </div>
+          </div> -->
           <input
             type="text"
-            class="form-control dropdown-toggle rounded-right"
+            class="form-control dropdown-toggle rounded"
             id="dropdownProduct"
             data-toggle="dropdown"
             aria-haspopup="true"
@@ -625,7 +625,7 @@
     </div>
   </div>
   <!-- QR code modal -->
-  <div
+  <!-- <div
     class="modal fade product-modal"
     id="quetQrModal"
     tabindex="-1"
@@ -645,11 +645,10 @@
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <!-- Main modal -->
         <div class="m-3">
           <app-qr-code (closeModal)="closeModal($event)"></app-qr-code>
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

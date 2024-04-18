@@ -152,8 +152,20 @@
                         <p class="text-left fw-bold">
                           {{ hoaDon.phieuGiamGia.maPhieuGiamGia }}
                         </p>
-                        <p class="text-left fw-bold">
+                        <p
+                          class="text-left fw-bold"
+                          *ngIf="hoaDon.phieuGiamGia.kieu == 0"
+                        >
                           {{ hoaDon.phieuGiamGia.giaTri + "%" }}
+                        </p>
+                        <p
+                          class="text-left fw-bold"
+                          *ngIf="hoaDon.phieuGiamGia.kieu == 1"
+                        >
+                          {{
+                            hoaDon.phieuGiamGia.giaTri
+                              | currency : "đ " : "symbol" : "1.0-0"
+                          }}
                         </p>
                       </td>
                     </tr>

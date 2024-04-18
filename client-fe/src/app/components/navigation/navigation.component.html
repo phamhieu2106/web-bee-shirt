@@ -31,15 +31,8 @@
           <div class="search">
             <form action="/search" class="wanda-mxm-search">
               <div class="search-inner">
-                <input
-                  name="q"
-                  autocomplete="off"
-                  class="searchinput"
-                  type="text"
-                  size="20"
-                  placeholder="Bạn đang tìm gì..."
-                  aria-label="Search"
-                />
+                <input name="q" autocomplete="off" class="searchinput" type="text" size="20"
+                  placeholder="Bạn đang tìm gì..." aria-label="Search" />
               </div>
             </form>
           </div>
@@ -67,10 +60,8 @@
               <div class="popUpLogindone" *ngIf="isPopupShow && isLoggedIn">
                 <div>
                   <div class="headerPopup">
-                    <span class="nameCustomer"
-                      ><span class="fw-normal">Xin chào</span>
-                      {{ loggedCustomer?.hoTen }}</span
-                    >
+                    <span class="nameCustomer"><span class="fw-normal">Xin chào</span>
+                      {{ loggedCustomer?.hoTen }}</span>
                   </div>
 
                   <ul class="listAction">
@@ -106,31 +97,158 @@
               <div class="popUpThongBao" *ngIf="isPopupThongBao && isLoggedIn">
                 <div>
                   <div class="headerPopup">
-                    <span style="color: black; font-weight: bold"
-                      >Thông Báo</span
-                    >
+                    <span style="color: black; font-weight: bold">Thông Báo</span>
                   </div>
 
-                  <a
-                    class="notification notification-flush notification-unread"
-                    *ngFor="let n of notifications"
-                  >
-                    <div class="notification-avatar">
-                      <div class="avatar avatar-2xl mr-3">
-                        <div class="avatar-name rounded-circle">
-                          <span>Admin</span>
+                  <div class="container-noti">
+                    <!-- <a class="notification notification-flush notification-unread" *ngFor="let n of notifications">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="notification-body">
-                      <p class="mb-1"><strong>Admin</strong> {{ n.content }}</p>
-                      <span class="notification-time"
-                        ><span class="mr-1" role="img" aria-label="Emoji"
-                          >💬</span
-                        >Just now</span
-                      >
-                    </div>
-                  </a>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin</strong> {{ n.content }}</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+                    </a> -->
+
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai in"></div>
+                      </div>
+                    </a>
+
+
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai in"></div>
+                      </div>
+                    </a>
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai "></div>
+                      </div>
+                    </a>
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai in"></div>
+                      </div>
+                    </a>
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai "></div>
+                      </div>
+                    </a>
+
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai "></div>
+                      </div>
+                    </a>
+                    <a class="notification notification-flush notification-unread">
+                      <div class="notification-avatar">
+                        <div class="avatar avatar-2xl mr-3">
+                          <div class="avatar-name rounded-circle">
+                            <span>Admin</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="notification-body">
+                        <p class="mb-1"><strong>Admin: </strong>Hello các bạn</p>
+                        <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just
+                          now</span>
+                      </div>
+
+                      <div>
+                        <div class="trangThai in"></div>
+                      </div>
+                    </a>
+
+                  </div>
+
+
                   <div class="card-footer text-center border-top">
                     <a class="card-link d-block" href="#">Close</a>
                   </div>
@@ -143,10 +261,10 @@
                 <i class="icongioHang bi bi-bag"></i>
                 <span class="quantity" *ngIf="!isLoggedIn">{{
                   cartItemQuantity1
-                }}</span>
+                  }}</span>
                 <span class="quantity" *ngIf="isLoggedIn">{{
                   cartItemQuantity2
-                }}</span>
+                  }}</span>
               </div>
             </div>
           </div>
@@ -205,15 +323,8 @@
     <li class="cartItem" *ngFor="let ci of cartItems1">
       <div class="row">
         <div class="col-md-3 imgProductCart">
-          <img
-            [src]="ci.spct.hinhAnhs[0].imageUrl"
-            style="height: 150px; object-fit: cover"
-          />
-          <div
-            class="DeleteCart pointer"
-            title="Xóa sản phẩm này khỏ giỏ hàng"
-            (click)="deleteItemFromCart(ci, 1)"
-          >
+          <img [src]="ci.spct.hinhAnhs[0].imageUrl" style="height: 150px; object-fit: cover" />
+          <div class="DeleteCart pointer" title="Xóa sản phẩm này khỏ giỏ hàng" (click)="deleteItemFromCart(ci, 1)">
             <i class="bi bi-x-lg"></i>
           </div>
         </div>
@@ -229,8 +340,7 @@
             </div>
             <span class="line-info">|</span>
             <span class="sizeCart">
-              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span
-            >
+              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span>
           </div>
 
           <div class="wrapperPrice mb-3">
@@ -238,20 +348,12 @@
               <b> {{ formatPrice(ci.spct.giaBan * ci.soLuong) }}</b>
             </div>
             <div class="wrapper">
-              <span class="minus pointer" (click)="updateQuantity1(ci, 'minus')"
-                >-</span
-              >
-              <span
-                class="num"
-                style="
+              <span class="minus pointer" (click)="updateQuantity1(ci, 'minus')">-</span>
+              <span class="num" style="
                   border-right: 2px solid rgba(0, 0, 0, 0.2);
                   border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >{{ ci.soLuong }}</span
-              >
-              <span class="plus pointer" (click)="updateQuantity1(ci, 'plus')"
-                >+</span
-              >
+                ">{{ ci.soLuong }}</span>
+              <span class="plus pointer" (click)="updateQuantity1(ci, 'plus')">+</span>
             </div>
           </div>
 
@@ -269,11 +371,7 @@
 
   <div class="checkOut" *ngIf="cartItems1.length > 0 && !isLoggedIn">
     <div class="thanhToan">
-      <button
-        class="btnThanhToan"
-        routerLink="/check-out2"
-        (click)="toggleCart()"
-      >
+      <button class="btnThanhToan" routerLink="/check-out2" (click)="toggleCart()">
         Thanh toán
       </button>
     </div>
@@ -284,15 +382,8 @@
     <li class="cartItem" *ngFor="let ci of cartItems2">
       <div class="row">
         <div class="col-md-3 imgProductCart">
-          <img
-            [src]="ci.spct.hinhAnhs[0].imageUrl"
-            style="height: 200px; object-fit: cover"
-          />
-          <div
-            class="DeleteCart pointer"
-            title="Xóa sản phẩm này khỏ giỏ hàng"
-            (click)="deleteItemFromCart(ci, 2)"
-          >
+          <img [src]="ci.spct.hinhAnhs[0].imageUrl" style="height: 200px; object-fit: cover" />
+          <div class="DeleteCart pointer" title="Xóa sản phẩm này khỏ giỏ hàng" (click)="deleteItemFromCart(ci, 2)">
             <i class="bi bi-x-lg"></i>
           </div>
         </div>
@@ -308,8 +399,7 @@
             </div>
             <span class="line-info">|</span>
             <span class="sizeCart">
-              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span
-            >
+              Size: {{ ci.spct.kichCo.ten.split("-")[0] }}</span>
           </div>
 
           <div class="wrapperPrice mb-3">
@@ -321,14 +411,13 @@
                 <p>
                   <b>
                     {{
-                      formatPrice(
-                        ((ci.spct.giaBan *
-                          (100 - ci.spct.saleEvent.giaTriPhanTram)) /
-                          100) *
-                          ci.soLuong
-                      )
-                    }}</b
-                  >
+                    formatPrice(
+                    ((ci.spct.giaBan *
+                    (100 - ci.spct.saleEvent.giaTriPhanTram)) /
+                    100) *
+                    ci.soLuong
+                    )
+                    }}</b>
                 </p>
               </div>
 
@@ -337,24 +426,12 @@
               </div>
             </div>
             <div class="wrapper">
-              <span
-                class="minus pointer"
-                (click)="updateQuantityOfLoggedCust(ci, 'minus')"
-                >-</span
-              >
-              <span
-                class="num"
-                style="
+              <span class="minus pointer" (click)="updateQuantityOfLoggedCust(ci, 'minus')">-</span>
+              <span class="num" style="
                   border-right: 2px solid rgba(0, 0, 0, 0.2);
                   border-left: 2px solid rgba(0, 0, 0, 0.2);
-                "
-                >{{ ci.soLuong }}</span
-              >
-              <span
-                class="plus pointer"
-                (click)="updateQuantityOfLoggedCust(ci, 'plus')"
-                >+</span
-              >
+                ">{{ ci.soLuong }}</span>
+              <span class="plus pointer" (click)="updateQuantityOfLoggedCust(ci, 'plus')">+</span>
             </div>
           </div>
 
@@ -372,11 +449,7 @@
 
   <div class="checkOut" *ngIf="cartItems2.length > 0 && isLoggedIn">
     <div class="thanhToan">
-      <button
-        class="btnThanhToan"
-        routerLink="/check-out"
-        (click)="toggleCart()"
-      >
+      <button class="btnThanhToan" routerLink="/check-out" (click)="toggleCart()">
         Thanh Toán
       </button>
     </div>

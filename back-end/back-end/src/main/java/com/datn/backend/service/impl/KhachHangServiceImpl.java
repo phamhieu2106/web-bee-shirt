@@ -1,5 +1,6 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.dto.request.ChangePasswordReq;
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.request.UpdateCustInfoReq;
@@ -14,7 +15,6 @@ import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
-import com.datn.backend.model.san_pham.MauSacImage;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.DiaChiRepository;
@@ -25,8 +25,6 @@ import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -311,5 +309,17 @@ public class KhachHangServiceImpl implements KhachHangService {
         cust.setNgaySinh(req.getBirthday());
         cust.setSdt(req.getPhone());
         return khachHangRepo.save(cust);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordReq req) {
+        Account account = accountRepo.findById(req.getAccId()).get();
+        boolean isMatch = passwordEncoder.matches(req.getOldPassword(), account.getMatKhau());
+
+        if (!isMatch) {
+            throw new RuntimeException("Mật khẩu cũ không đúng!");
+        }
+        account.setMatKhau(passwordEncoder.encode(req.getNewPassword()));
+        accountRepo.save(account);
     }
 }

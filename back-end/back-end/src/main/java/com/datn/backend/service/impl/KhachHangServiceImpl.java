@@ -1,6 +1,7 @@
 package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.ChangePasswordReq;
+import com.datn.backend.dto.request.ChangePasswordReq2;
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.request.UpdateCustInfoReq;
@@ -21,6 +22,7 @@ import com.datn.backend.repository.DiaChiRepository;
 import com.datn.backend.repository.FavouriteListRepository;
 import com.datn.backend.repository.KhachHangImageRepository;
 import com.datn.backend.repository.KhachHangRepository;
+import com.datn.backend.service.EmailService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;

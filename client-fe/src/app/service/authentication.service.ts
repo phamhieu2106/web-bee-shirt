@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { LoginRequest } from "../model/interface/login-request.interface";
 import { Customer } from "../model/class/customer.class";
 import { SignUpReq } from "../model/interface/sign-up-req.interface";
+import { ChangePwdReq2 } from "../model/interface/change-pwd-req2.interface";
 
 @Injectable({
   providedIn: "root",
@@ -105,5 +106,15 @@ export class AuthenticationService {
       `${this.apiUrl}/auth/customer/sign-up`,
       req
     );
+  }
+
+  // 10
+  public checkEmailForForgetPassword(email: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/auth/send-verify-code/${email}`);
+  }
+
+  // 11
+  public changePassword2(req: ChangePwdReq2): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/change-pwd2`, req);
   }
 }

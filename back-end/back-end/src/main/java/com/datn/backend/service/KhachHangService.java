@@ -1,6 +1,7 @@
 package com.datn.backend.service;
 
 import com.datn.backend.dto.request.ChangePasswordReq;
+import com.datn.backend.dto.request.ChangePasswordReq2;
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.request.UpdateCustInfoReq;
@@ -37,4 +38,5 @@ public interface KhachHangService {
     KhachHang updateInfo(UpdateCustInfoReq req);
 
     void changePassword(ChangePasswordReq req);
+
 }

@@ -7,6 +7,7 @@ import { MyOrdersComponent } from "./my-orders/my-orders.component";
 import { MyDiscountsComponent } from "./my-discounts/my-discounts.component";
 import { OrderTrackingComponent } from "./order-tracking/order-tracking.component";
 import { OverlayComponent } from "./overlay/overlay.component";
+import { PasswordComponent } from "./password/password.component";
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: "profile/my-discounts",
     component: MyDiscountsComponent,
+  },
+  {
+    path: "profile/my-password",
+    component: PasswordComponent,
   },
 ];
 

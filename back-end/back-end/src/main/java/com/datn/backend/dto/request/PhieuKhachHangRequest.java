@@ -15,5 +15,5 @@ public class PhieuKhachHangRequest {
 
     private List<Integer> selectedIds;
     private Integer phieuGiamGiaId;
-    private Integer moTa;
+    private Integer trangThai;
 }

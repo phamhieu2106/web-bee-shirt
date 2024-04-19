@@ -42,7 +42,7 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     public void addPhieu(PhieuKhachHangRequest request) {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findById(request.getPhieuGiamGiaId()).get();
         List<Integer> listIdKhachHang= request.getSelectedIds();
-        Integer trangThai = request.getMoTa();
+        Integer trangThai = request.getTrangThai();
         for (Integer idKhach: listIdKhachHang ) {
             KhachHang kh = khachHangRepository.findById(idKhach).get();
             PhieuGiamGiaKhachHang phieuKH = new PhieuGiamGiaKhachHang();

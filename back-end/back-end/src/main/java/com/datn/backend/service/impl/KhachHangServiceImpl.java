@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -123,6 +124,12 @@ public class KhachHangServiceImpl implements KhachHangService {
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
 
+        KhachHangImage custImg = KhachHangImage.builder()
+                .imageId(UUID.randomUUID().toString())
+                .imageName("default-user-img")
+                .imageUrl("https://res.cloudinary.com/dpsryzyev/image/upload/v1712851456/default-user-img_ri7fap.webp")
+                .build();
+        khachHangImageRepo.save(custImg);
         // khach hang
         KhachHang khachHang = new KhachHang();
         khachHang.setHoTen(kh.getHoTen().trim());
@@ -130,6 +137,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setTrangThai(1);
+        khachHang.setImage(custImg);
         khachHang.setAccount(account);
         khachHangRepo.save(khachHang);
 

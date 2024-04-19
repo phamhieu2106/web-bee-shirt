@@ -23,37 +23,21 @@
                 <label>Tài Khoản</label>
                 <input
                   class="form-control"
-                  [ngClass]="
-                    loginForm.get('tenDangNhap').invalid &&
-                    loginForm.get('tenDangNhap').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                  placeholder="Tên đăng nhập/Số điện thoại"
+                  placeholder="Số điện thoại"
                   type="text"
                   formControlName="tenDangNhap"
                 />
-              </div>
-              <div class="invalid-feedback">
-                Tên đăng nhập không được bỏ trống
               </div>
 
               <div class="mt-3 mb-3">
                 <label>Mật Khẩu</label>
                 <input
                   class="form-control"
-                  [ngClass]="
-                    loginForm.get('matKhau').invalid &&
-                    loginForm.get('matKhau').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
                   placeholder="Mật khẩu"
                   [type]="isPassInputHidden ? 'password' : 'text'"
                   formControlName="matKhau"
                 />
               </div>
-              <div class="invalid-feedback">Mật khẩu không được bỏ trống</div>
 
               <div class="check-terms">
                 <input

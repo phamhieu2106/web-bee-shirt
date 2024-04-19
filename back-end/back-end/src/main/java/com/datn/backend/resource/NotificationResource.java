@@ -32,4 +32,10 @@ public class NotificationResource {
     public ResponseEntity<List<Notification>> getAllByCust(@PathVariable("custId") int custId) {
         return ResponseEntity.ok(notificationService.getAllByCust(custId));
     }
+
+    // 3
+    @GetMapping("/set-read/{notifId}")
+    public ResponseEntity<Notification> setIsRead(@PathVariable("notifId") int notifId) {
+        return ResponseEntity.ok(notificationService.setIsRead(notifId));
+    }
 }

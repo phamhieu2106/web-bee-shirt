@@ -12,7 +12,6 @@ public class SignUpReq {
     private String email;
     private LocalDate ngaySinh;
     private boolean gioiTinh;
-    private String tenDangNhap;
     private String matKhau;
     private String tinh;
     private String huyen;

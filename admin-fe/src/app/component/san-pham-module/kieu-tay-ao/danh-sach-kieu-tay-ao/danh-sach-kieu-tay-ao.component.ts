@@ -8,10 +8,6 @@ import { PagedResponse } from "src/app/model/interface/paged-response.interface"
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NotificationService } from "src/app/service/notification.service";
-import { WebSocketService } from "src/app/service/web-socket.service";
-import { ChatMessage } from "src/app/model/class/chat-message.class";
-import { NotifService } from "src/app/service/notif.service";
-import { Notification } from "src/app/model/class/notification.class";
 
 @Component({
   selector: "app-danh-sach-kieu-tay-ao",
@@ -28,16 +24,13 @@ export class DanhSachKieuTayAoComponent {
   // constructor, ngOn
   constructor(
     private tayAoService: KieuTayAoService,
-    private notifService: NotificationService,
-    private webSocketService: WebSocketService,
-    private notifService2: NotifService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.getCoAoList();
     this.initAddForm();
     this.initUpdateForm();
-    this.webSocketService.openWebSocket();
   }
 
   // public function
@@ -66,7 +59,6 @@ export class DanhSachKieuTayAoComponent {
             this.initAddForm();
             document.getElementById("closeBtn").click();
             this.notifService.success("Thêm thành công!");
-            this.sendMessage(response.id);
           },
           error: (errorResponse: HttpErrorResponse) => {
             this.notifService.error(errorResponse.error.message);
@@ -205,24 +197,5 @@ export class DanhSachKieuTayAoComponent {
       ten: new FormControl("", [Validators.required]),
       trangThai: new FormControl(false),
     });
-  }
-
-  //
-  private sendMessage(id: number): void {
-    // let chatMessage = new ChatMessage("nhan vien", " đã them 1 kieu tay ao");
-    // this.webSocketService.sendMessage(chatMessage);
-    // const newNotif = new Notification(
-    //   "ORDER_STATUS_UPDATED",
-    //   "Hóa đơn đã được cập nhật trạng thái",
-    //   "",
-    //   1
-    // );
-    // this.notifService2.createNewNotification(newNotif).subscribe({
-    //   next: (data) => {
-    //   },
-    //   error: (errRes: HttpErrorResponse) => {
-    //     this.notifService.error(errRes.error.message);
-    //   },
-    // });
   }
 }

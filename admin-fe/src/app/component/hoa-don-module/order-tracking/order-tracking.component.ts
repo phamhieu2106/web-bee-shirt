@@ -167,7 +167,7 @@ export class OrderTrackingComponent implements OnChanges {
     const newNotif = new Notification(
       "ORDER_STATUS_UPDATED",
       `Hóa đơn ${order.ma} đã được cập nhật trạng thái`,
-      "",
+      `/profile/order-tracking/${order.ma}`,
       order.khachHang.id
     );
     this.notifService2.createNewNotification(newNotif).subscribe({

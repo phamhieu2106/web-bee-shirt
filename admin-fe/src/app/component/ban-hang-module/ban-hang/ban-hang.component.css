@@ -179,10 +179,8 @@ input[type=number] {
     /* Màu chữ của tooltip */
     border-radius: 4px;
     /* Bo tròn góc của tooltip */
-    font-size: 18px;
+    font-size: 15px;
     /* Cỡ chữ của tooltip */
-    padding: 8px 12px;
-    /* Khoảng cách giữa nội dung và biên của tooltip */
 }
 
 .custom-select::-ms-expand {

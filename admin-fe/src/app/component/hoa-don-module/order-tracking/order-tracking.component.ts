@@ -146,6 +146,6 @@ export class OrderTrackingComponent implements OnChanges {
   }
 
   getLichSuHoaDonsOrderByCreatedDate() {
-    return this.hoaDon.lichSuHoaDons.reverse();
+    return this?.hoaDon?.lichSuHoaDons?.reverse();
   }
 }

@@ -1,0 +1,59 @@
+.btn-purple {
+    background-color: darkviolet;
+    /* Màu nền tím */
+    color: white;
+    /* Màu chữ trắng */
+}
+
+.btn-purple:hover {
+    background-color: purple;
+    /* Màu nền tím đậm khi hover */
+}
+
+.btn-orange {
+    background-color: orange;
+    /* Màu nền cam */
+    color: white;
+    /* Màu chữ trắng */
+}
+
+.btn-orange:hover {
+    background-color: darkorange;
+    /* Màu nền cam đậm khi hover */
+}
+
+.btn-teal {
+    background-color: teal;
+    /* Màu nền xanh lục */
+    color: white;
+    /* Màu chữ trắng */
+}
+
+.btn-teal:hover {
+    background-color: darkcyan;
+    /* Màu nền xanh lục đậm khi hover */
+}
+
+.btn-pink {
+    background-color: deeppink;
+    /* Màu nền hồng */
+    color: white;
+    /* Màu chữ trắng */
+}
+
+.btn-pink:hover {
+    /* background-color: pink; */
+    /* Màu nền hồng đậm khi hover */
+}
+
+.btn-olive {
+    background-color: olive;
+    /* Màu nền xanh ô liu */
+    color: white;
+    /* Màu chữ trắng */
+}
+
+.btn-olive:hover {
+    background-color: darkolivegreen;
+    /* Màu nền xanh ô liu đậm khi hover */
+}

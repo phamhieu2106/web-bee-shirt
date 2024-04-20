@@ -1,7 +1,6 @@
 import { SoLuongDonHang } from "./../../../model/class/so-luong-don-hang.class";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 
@@ -88,5 +87,9 @@ export class DanhSachHoaDonComponent {
     this.trangThai = status;
     this.hoaDons.data = [];
     this.getHoaDons();
+  }
+
+  updateTrangThai($event: HoaDon, index: number) {
+    this.hoaDons.data[index].trangThai = $event.trangThai;
   }
 }

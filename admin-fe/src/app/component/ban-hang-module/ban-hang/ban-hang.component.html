@@ -297,7 +297,7 @@
     </div>
 
     <!-- Tiền nong -->
-    <div class="container-sidebar pr-2">
+    <div class="container-sidebar pr-2 fw-bold fs-6">
       <div class="d-flex justify-content-between m-1">
         <span class="ml-auto fw-bold"
           >Giao hàng:
@@ -378,31 +378,24 @@
       </div>
 
       <div class="sidebar-money-part m-1">
-        <div class="sidebar-money-part-left">Phiếu giảm giá:</div>
-        <span class="sidebar-money-part-right">
+        <div class="sidebar-money-part-left d-flex">
+          <span class="mr-2">Phiếu giảm giá:</span>
           <div class="d-flex">
-            <select
-              class="form-select form-control custom-select"
-              style="width: 100px"
-            >
-              <!-- data-toggle="tooltip"
-              data-placement="left"
-              title="{{
-                order == null || order.phieuGiamGia == null
-                  ? ''
-                  : 'Giảm ' +
-                    (order.phieuGiamGia.kieu == 0
-                      ? order.phieuGiamGia.giaTri + '%'
-                      : (order.phieuGiamGia.giaTri
-                        | currency : ' ' : 'symbol' : '1.0-0')) +
-                    'tối đa ' +
-                    (order.phieuGiamGia.giaTriMax
-                      | currency : ' ' : 'symbol' : '1.0-0')
-              }}" -->
-              <option class="custom-tooltip" selected>
+            <div *ngIf="order?.phieuGiamGia" class="dropdown">
+              <button
+                class="btn btn-primary dropdown-toggle btn-sm"
+                type="button"
+                id="dropdownMenuButtonPGG"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 {{ order?.phieuGiamGia?.maPhieuGiamGia }}
-              </option>
-              <option class="custom-tooltip">
+              </button>
+              <div
+                class="dropdown-menu custom-tooltip"
+                aria-labelledby="dropdownMenuButtonPGG"
+              >
                 {{
                   order == null || order.phieuGiamGia == null
                     ? ""
@@ -411,27 +404,43 @@
                         ? order.phieuGiamGia.giaTri + "%"
                         : (order.phieuGiamGia.giaTri
                           | currency : " " : "symbol" : "1.0-0")) +
-                      "tối đa " +
-                      (order.phieuGiamGia.giaTriMax
-                        | currency : " " : "symbol" : "1.0-0")
+                      " tối đa " +
+                      (order.phieuGiamGia.giaTriMax == null
+                        ? 0
+                        : (order.phieuGiamGia.giaTriMax
+                          | currency : " " : "symbol" : "1.0-0"))
                 }}
-              </option>
-            </select>
+              </div>
+            </div>
+
+            <!-- Message -->
             <div
-              class="p-2"
+              class=""
               *ngIf="
                 messagePgg != null &&
                 messagePgg != '' &&
                 messagePgg != undefined
               "
-              data-toggle="tooltip"
-              data-placement="left"
-              [title]="messagePgg"
             >
-              <i class="fa-solid fa-lightbulb fs-5" style="color: #ffd43b"></i>
+              <button
+                class="btn btn-warning dropdown-toggle btn-sm"
+                type="button"
+                id="dropdownMenuButtonPGGMessage"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-lightbulb"></i>
+              </button>
+              <div
+                class="dropdown-menu custom-tooltip"
+                aria-labelledby="dropdownMenuButtonPGGMessage"
+              >
+                {{ messagePgg }}
+              </div>
             </div>
           </div>
-        </span>
+        </div>
 
         <!-- Tự fill PGG -->
       </div>

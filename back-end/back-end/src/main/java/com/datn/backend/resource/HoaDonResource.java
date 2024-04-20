@@ -1,10 +1,7 @@
 package com.datn.backend.resource;
 
 import com.datn.backend.constant.ApplicationConstant;
-import com.datn.backend.dto.request.ChangeOrderStatusRequest;
-import com.datn.backend.dto.request.HoaDonRequest;
-import com.datn.backend.dto.request.OnlineOrderRequest;
-import com.datn.backend.dto.request.PlaceOrderRequest;
+import com.datn.backend.dto.request.*;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -70,6 +67,13 @@ public class HoaDonResource {
     public ResponseEntity<LichSuHoaDonResponse> onCancelOrder(@Valid @RequestBody ChangeOrderStatusRequest changeOrderStatus) {
         LichSuHoaDonResponse lichSuHoaDonResponse = hoaDonService.cancelOrder(changeOrderStatus);
         return ResponseEntity.ok(lichSuHoaDonResponse);
+    }
+
+    // Refund money
+    @PostMapping("/change-status/refund")
+    public ResponseEntity<HoaDonResponse> onRefund(@Valid @RequestBody ThanhToanRequest thanhToanRequest) {
+        HoaDonResponse hoaDonResponse = hoaDonService.refundMoney(thanhToanRequest);
+        return ResponseEntity.ok(hoaDonResponse);
     }
 
     // update

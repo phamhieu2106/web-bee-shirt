@@ -17,7 +17,10 @@ public enum TrangThaiHoaDon {
     DANG_GIAO("Đang giao hàng", "HOAN_THANH", "CHO_GIAO"), // đang giao hàng
     HOAN_THANH("Hoàn thành", "TRA_HANG", "DANG_GIAO"), // hoàn thành
     HUY("Hủy", "HUY", "CHO_XAC_NHAN"), // Hủy
-    TRA_HANG("Trả hàng", "TRA_HANG", "HOAN_THANH"); // Trả Hàng
+    TRA_HANG("Trả hàng", "TRA_HANG", "HOAN_THANH"), // Trả Hàng
+    HOAN_TIEN("Hoàn tiền", "", ""),
+    CHO_HOAN_TIEN("Chờ hoàn tiền", "", ""),
+    DA_HOAN_TIEN("Đã hoàn tiền", "", "");
 
     private String title;
     private String next;

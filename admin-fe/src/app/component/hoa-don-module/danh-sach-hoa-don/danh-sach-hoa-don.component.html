@@ -95,7 +95,7 @@
 
       <div class="card-body">
         <!-- Tab header -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs fw-bold" id="myTab" role="tablist">
           <li class="nav-item">
             <a
               class="nav-link active"
@@ -239,6 +239,46 @@
               <!-- Số thông báo -->
             </a>
           </li>
+          <li class="nav-item">
+            <a
+              class="nav-link position-relative"
+              id="home-tab"
+              data-toggle="tab"
+              href="#home"
+              role="tab"
+              aria-controls="home"
+              aria-selected="true"
+              (click)="changeStatus('CHO_HOAN_TIEN')"
+            >
+              Chờ hoàn tiền
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.huyQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.choHoanTienQuantity
+              }}</span>
+              <!-- Số thông báo -->
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link position-relative"
+              id="home-tab"
+              data-toggle="tab"
+              href="#home"
+              role="tab"
+              aria-controls="home"
+              aria-selected="true"
+              (click)="changeStatus('DA_HOAN_TIEN')"
+            >
+              Đã hoàn tiền
+              <span class="badge-number text-danger">{{
+                soLuongDonHang.huyQuantity > 99
+                  ? "99+"
+                  : soLuongDonHang.daHoanTienQuantity
+              }}</span>
+              <!-- Số thông báo -->
+            </a>
+          </li>
         </ul>
         <!--End Tab header -->
         <!-- Tab Table Data -->
@@ -296,16 +336,28 @@
                         [trangThai]="hd.trangThai"
                       ></app-trang-thai-hoa-don>
                     </td>
-                    <td>
+                    <td class="d-flex">
                       <a
-                        class="btn btn-outline-light btn-rounded"
+                        class="btn btn-outline-warning btn-rounded mr-2"
                         routerLink="/hoa-don/chi-tiet-hoa-don/{{ hd.id }}"
                       >
-                        <i
-                          class="fa-solid fa-pen-to-square"
-                          style="color: #ffd43b"
-                        ></i>
+                        <i class="fa-solid fa-pen-to-square"></i>
                       </a>
+
+                      <div
+                        *ngIf="
+                          hd.trangThai == 'CHO_HOAN_TIEN' ||
+                          hd.trangThai == 'DA_HOAN_TIEN'
+                        "
+                      >
+                        <app-hoan-tien
+                          [tienThanhToan]="
+                            hd.tongTien - hd.tienGiam + hd.phiVanChuyen
+                          "
+                          [hoaDonId]="hd?.id"
+                          (hoaDonChange)="updateTrangThai($event, i)"
+                        ></app-hoan-tien>
+                      </div>
                     </td>
                   </tr>
                 </tbody>

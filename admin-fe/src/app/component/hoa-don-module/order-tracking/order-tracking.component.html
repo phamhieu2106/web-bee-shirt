@@ -37,6 +37,15 @@
                   *ngSwitchCase="'TRA_HANG'"
                   class="fa-solid fa-rotate-left"
                 ></i>
+
+                <i
+                  *ngSwitchCase="'CHO_HOAN_TIEN'"
+                  class="fa-solid fa-comment-dollar"
+                ></i>
+                <i
+                  *ngSwitchCase="'DA_HOAN_TIEN'"
+                  class="fa-solid fa-money-bill-transfer"
+                ></i>
                 <i *ngSwitchDefault class="fa-solid fa-shop"></i>
               </div>
             </div>
@@ -58,6 +67,8 @@
           [disabled]="
             hoaDon.trangThai == 'HOAN_THANH' ||
             hoaDon.trangThai == 'HUY' ||
+            hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+            hoaDon.trangThai == 'DA_HOAN_TIEN' ||
             hoaDon.trangThai == 'TRA_HANG'
           "
           (click)="setIsNext(true)"
@@ -73,10 +84,15 @@
             !(
               hoaDon.loaiHoaDon == 'TAI_QUAY' ||
               hoaDon.trangThai == 'CHO_XAC_NHAN' ||
-              hoaDon.trangThai == 'TAO_DON'
+              hoaDon.trangThai == 'TAO_DON' ||
+              hoaDon.trangThai == 'HUY'
             )
           "
-          [disabled]="hoaDon.trangThai == 'TRA_HANG'"
+          [disabled]="
+            hoaDon.trangThai == 'TRA_HANG' ||
+            hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+            hoaDon.trangThai == 'DA_HOAN_TIEN'
+          "
           (click)="setIsNext(false)"
         >
           Quay lại
@@ -89,6 +105,8 @@
           [disabled]="
             hoaDon.trangThai == 'DANG_GIAO' ||
             hoaDon.trangThai == 'HUY' ||
+            hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+            hoaDon.trangThai == 'DA_HOAN_TIEN' ||
             hoaDon.trangThai == 'TRA_HANG'
           "
         >
@@ -138,7 +156,7 @@
                   <th scope="col">Trạng thái</th>
                   <th scope="col">Thời gian</th>
                   <th scope="col">Ghi chú</th>
-                  <th scope="col">Người xác nhận</th>
+                  <th scope="col">Người tạo</th>
                 </tr>
               </thead>
               <tbody>

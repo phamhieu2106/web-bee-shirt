@@ -28,6 +28,7 @@ import { CheckOut2Component } from './components/check-out2/check-out2.component
 import { TrackingComponent } from './components/tracking/tracking.component';
 import { LienHeComponent } from './components/lien-he/lien-he.component';
 import { VeChungToiComponent } from './components/ve-chung-toi/ve-chung-toi.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { VeChungToiComponent } from './components/ve-chung-toi/ve-chung-toi.comp
     TrackingComponent,
     LienHeComponent,
     VeChungToiComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

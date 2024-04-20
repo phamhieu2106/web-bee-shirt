@@ -43,7 +43,7 @@ export class NavigationComponent {
   constructor(
     private router: Router,
     private currencyPipe: CurrencyPipe,
-    private authenticationService: AuthenticationService,
+    private authService: AuthenticationService,
     private notifService: NotificationService,
     private cartService: CartService,
     private productService: ProductService,
@@ -52,11 +52,11 @@ export class NavigationComponent {
   ) {}
 
   ngOnInit(): void {
-    this.authenticationService.isLoggedInSubj.subscribe((value: boolean) => {
+    this.authService.isLoggedInSubj.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     });
 
-    this.authenticationService.loggedCust.subscribe((value: Customer) => {
+    this.authService.loggedCust.subscribe((value: Customer) => {
       this.loggedCustomer = value;
     });
 
@@ -110,7 +110,7 @@ export class NavigationComponent {
     this.isNoticesShow = false;
   }
 
-  //
+  // 4
   public logout(): void {
     Swal.fire({
       title: "Bạn muốn đăng xuất?",
@@ -122,7 +122,7 @@ export class NavigationComponent {
       confirmButtonText: "Đăng xuất",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.authenticationService.logout();
+        this.authService.logout();
         this.isLoggedIn = false;
         this.loggedCustomer = null;
         this.router.navigate(["/log-in"]);
@@ -131,7 +131,7 @@ export class NavigationComponent {
     });
   }
 
-  //
+  // 5
   public getProductNameByProductDetails(id: number): string {
     this.productService.getProductNameByProductDetails(id).subscribe({
       next: (response: string) => {
@@ -290,9 +290,9 @@ export class NavigationComponent {
   // private functions
   // 1
   private getIsLoggedInValue(): void {
-    this.isLoggedIn = this.authenticationService.isLoggedIn();
+    this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.loggedCustomer = this.authenticationService.getCustomerFromStorage();
+      this.loggedCustomer = this.authService.getCustomerFromStorage();
     }
   }
 
@@ -326,7 +326,7 @@ export class NavigationComponent {
 
   // 3
   private getCartItemsFromLoggedCustomer(): void {
-    const loggedCus = this.authenticationService.getCustomerFromStorage();
+    const loggedCus = this.authService.getCustomerFromStorage();
     if (!loggedCus) {
       return;
     }
@@ -388,6 +388,7 @@ export class NavigationComponent {
 
   //
   private getAllNotificationsByCust(): void {
+    this.loggedCustomer = this.authService.getCustomerFromStorage();
     this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
       next: (notifications: Notification[]) => {
         this.notifications = notifications;

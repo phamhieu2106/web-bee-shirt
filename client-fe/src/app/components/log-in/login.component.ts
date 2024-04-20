@@ -118,7 +118,7 @@ export class LoginComponent {
   private initFormLogin(): void {
     this.loginForm = new FormGroup({
       tenDangNhap: new FormControl("0807760922", [Validators.required]),
-      matKhau: new FormControl("fjJgF", [Validators.required]),
+      matKhau: new FormControl("123456", [Validators.required]),
     });
   }
 }

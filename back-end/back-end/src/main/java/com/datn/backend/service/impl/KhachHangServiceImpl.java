@@ -1,5 +1,7 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.dto.request.ChangePasswordReq;
+import com.datn.backend.dto.request.ChangePasswordReq2;
 import com.datn.backend.dto.request.KhachHangRequest;
 import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.request.UpdateCustInfoReq;
@@ -14,13 +16,13 @@ import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.KhachHangImage;
-import com.datn.backend.model.san_pham.MauSacImage;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.DiaChiRepository;
 import com.datn.backend.repository.FavouriteListRepository;
 import com.datn.backend.repository.KhachHangImageRepository;
 import com.datn.backend.repository.KhachHangRepository;
+import com.datn.backend.service.EmailService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -121,6 +124,12 @@ public class KhachHangServiceImpl implements KhachHangService {
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
 
+        KhachHangImage custImg = KhachHangImage.builder()
+                .imageId(UUID.randomUUID().toString())
+                .imageName("default-user-img")
+                .imageUrl("https://res.cloudinary.com/dpsryzyev/image/upload/v1712851456/default-user-img_ri7fap.webp")
+                .build();
+        khachHangImageRepo.save(custImg);
         // khach hang
         KhachHang khachHang = new KhachHang();
         khachHang.setHoTen(kh.getHoTen().trim());
@@ -128,6 +137,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setSdt(kh.getSdt());
         khachHang.setGioiTinh(kh.isGioiTinh());
         khachHang.setTrangThai(1);
+        khachHang.setImage(custImg);
         khachHang.setAccount(account);
         khachHangRepo.save(khachHang);
 
@@ -242,7 +252,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang signUp(SignUpReq req) {
         Account account = Account.builder()
-                .tenDangNhap(req.getTenDangNhap())
+                .tenDangNhap(req.getSdt())
                 .matKhau(passwordEncoder.encode(req.getMatKhau()))
                 .trangThai(true)
                 .role("ROLE_CUSTOMER")
@@ -309,5 +319,17 @@ public class KhachHangServiceImpl implements KhachHangService {
         cust.setNgaySinh(req.getBirthday());
         cust.setSdt(req.getPhone());
         return khachHangRepo.save(cust);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordReq req) {
+        Account account = accountRepo.findById(req.getAccId()).get();
+        boolean isMatch = passwordEncoder.matches(req.getOldPassword(), account.getMatKhau());
+
+        if (!isMatch) {
+            throw new RuntimeException("Mật khẩu cũ không đúng!");
+        }
+        account.setMatKhau(passwordEncoder.encode(req.getNewPassword()));
+        accountRepo.save(account);
     }
 }

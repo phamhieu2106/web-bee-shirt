@@ -84,11 +84,13 @@ export class PhieuGiamGiaService {
 
   public addPhieuKhachHang(
     phieuGiamGiaId: number,
-    selectedIds: number[]
+    selectedIds: number[],
+    moTa:number
   ): Observable<PhieuGiamGia> {
     const request = {
       phieuGiamGiaId,
       selectedIds,
+      moTa
     };
     return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
   }

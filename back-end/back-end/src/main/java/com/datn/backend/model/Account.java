@@ -32,5 +32,7 @@ public class Account {
 
     private String role;
 
+    private String forgetPwdVerifyCode;
+
     // private String[] authorities;
 }

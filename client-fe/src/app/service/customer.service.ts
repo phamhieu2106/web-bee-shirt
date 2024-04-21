@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { CustomerResponse } from "../model/interface/customer-response.interface";
 import { Customer } from "../model/class/customer.class";
 import { UpdateCustInfoReq } from "../model/interface/update-cust-info-req.interface";
+import { ChangePwdReq } from "../model/interface/change-pwd-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -34,5 +35,10 @@ export class CustomerService {
   // 3
   public updateInfo(req: UpdateCustInfoReq): Observable<Customer> {
     return this.http.post<Customer>(`${this.apiUrl}/update-info`, req);
+  }
+
+  // 4
+  public changePassword(req: ChangePwdReq): Observable<any> {
+    return this.http.post<any>(`http://localhost:8080/auth/change-pwd`, req);
   }
 }

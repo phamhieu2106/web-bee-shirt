@@ -92,7 +92,15 @@ export class LoginComponent {
         });
       },
       error: (errRes: HttpErrorResponse) => {
-        this.notifService.error(errRes.error.message);
+        if (errRes.error.message === "Bad credentials") {
+          this.notifService.error(
+            "Số điện thoại hoặc mật khẩu của bạn không đúng hoặc chưa tồn tại trong hệ thống!"
+          );
+        } else if (errRes.error.message === "User is disabled") {
+          this.notifService.error(
+            "Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt!"
+          );
+        }
       },
     });
   }
@@ -110,7 +118,7 @@ export class LoginComponent {
   private initFormLogin(): void {
     this.loginForm = new FormGroup({
       tenDangNhap: new FormControl("0807760922", [Validators.required]),
-      matKhau: new FormControl("fjJgF", [Validators.required]),
+      matKhau: new FormControl("123456", [Validators.required]),
     });
   }
 }

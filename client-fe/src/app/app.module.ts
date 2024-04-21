@@ -26,6 +26,9 @@ import { ProfileModule } from "./profile/profile.module";
 import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
 import { CheckOut2Component } from './components/check-out2/check-out2.component';
 import { TrackingComponent } from './components/tracking/tracking.component';
+import { LienHeComponent } from './components/lien-he/lien-he.component';
+import { VeChungToiComponent } from './components/ve-chung-toi/ve-chung-toi.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +47,9 @@ import { TrackingComponent } from './components/tracking/tracking.component';
     ForgetPasswordComponent,
     CheckOut2Component,
     TrackingComponent,
+    LienHeComponent,
+    VeChungToiComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

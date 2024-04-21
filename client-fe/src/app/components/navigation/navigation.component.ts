@@ -15,7 +15,8 @@ import { forkJoin } from "rxjs";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
-import { ChatMessage } from "src/app/model/class/chat-message.class";
+import { NotifService } from "src/app/service/notif.service";
+import { Notification } from "src/app/model/class/notification.class";
 
 @Component({
   selector: "app-navigation",
@@ -24,6 +25,7 @@ import { ChatMessage } from "src/app/model/class/chat-message.class";
 })
 export class NavigationComponent {
   public isPopupShow: boolean = false;
+  public isNoticesShow: boolean = false;
   public isCartShow: boolean = false;
   public isLoggedIn: boolean = false;
   public loggedCustomer: Customer;
@@ -33,25 +35,28 @@ export class NavigationComponent {
   public cartItems2: CartItem[] = [];
   public cartItemQuantity2: number;
 
-  webSocket!: WebSocket;
+  private webSocket!: WebSocket;
+  public notifications: Notification[] = [];
+  public unreadQuantity: number;
 
   // constructor, ngOn
   constructor(
     private router: Router,
     private currencyPipe: CurrencyPipe,
-    private authenticationService: AuthenticationService,
+    private authService: AuthenticationService,
     private notifService: NotificationService,
     private cartService: CartService,
     private productService: ProductService,
-    private saleEventService: SaleEventService
+    private saleEventService: SaleEventService,
+    private notifService2: NotifService
   ) {}
 
   ngOnInit(): void {
-    this.authenticationService.isLoggedInSubj.subscribe((value: boolean) => {
+    this.authService.isLoggedInSubj.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     });
 
-    this.authenticationService.loggedCust.subscribe((value: Customer) => {
+    this.authService.loggedCust.subscribe((value: Customer) => {
       this.loggedCustomer = value;
     });
 
@@ -69,22 +74,17 @@ export class NavigationComponent {
     this.getIsLoggedInValue();
     this.getCartItemsFromLocalStorage();
     this.getCartItemsFromLoggedCustomer();
+    this.getAllNotificationsByCust();
   }
 
-  openWebSocket() {
+  private openWebSocket(): void {
     this.webSocket = new WebSocket("ws://localhost:8080/notification");
-
     this.webSocket.onopen = (event) => {};
-
     this.webSocket.onmessage = (event) => {
-      const chatMessageDto = JSON.parse(event.data);
-      let mess: ChatMessage = chatMessageDto as ChatMessage;
-      this.notifService.success("Khách hàng " + mess.user + " " + mess.message);
-      // this.getAllNotification();
-      // this.getNotificationFalse();
-      // this.chatMessages.push(chatMessageDto);
+      let data = JSON.parse(event.data) as string;
+      this.notifService.success(data);
+      this.getAllNotificationsByCust();
     };
-
     this.webSocket.onclose = (event) => {};
   }
 
@@ -92,9 +92,25 @@ export class NavigationComponent {
   // 1
   public togglePopup(): void {
     this.isPopupShow = !this.isPopupShow;
+    this.isCartShow = false;
+    this.isNoticesShow = false;
   }
 
   // 2
+  public toggleNotices(): void {
+    this.isNoticesShow = !this.isNoticesShow;
+    this.isCartShow = false;
+    this.isPopupShow = false;
+  }
+
+  // 3
+  public toggleCart(): void {
+    this.isCartShow = !this.isCartShow;
+    this.isPopupShow = false;
+    this.isNoticesShow = false;
+  }
+
+  // 4
   public logout(): void {
     Swal.fire({
       title: "Bạn muốn đăng xuất?",
@@ -106,7 +122,7 @@ export class NavigationComponent {
       confirmButtonText: "Đăng xuất",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.authenticationService.logout();
+        this.authService.logout();
         this.isLoggedIn = false;
         this.loggedCustomer = null;
         this.router.navigate(["/log-in"]);
@@ -115,13 +131,7 @@ export class NavigationComponent {
     });
   }
 
-  // 3
-  public toggleCart(): void {
-    this.isCartShow = !this.isCartShow;
-    // this.getCartItemsFromLoggedCustomer();
-  }
-
-  // 4
+  // 5
   public getProductNameByProductDetails(id: number): string {
     this.productService.getProductNameByProductDetails(id).subscribe({
       next: (response: string) => {
@@ -134,12 +144,12 @@ export class NavigationComponent {
     return "";
   }
 
-  // 5
+  //
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  // 6
+  //
   public updateQuantity1(cartItem: CartItem, type: string): void {
     // kiểm tra trước khi tăng/giảm
     if (type === "minus" && cartItem.soLuong === 1) {
@@ -166,7 +176,7 @@ export class NavigationComponent {
     this.cartService.updateCartItemsInStorage(cartItemsInstorage);
   }
 
-  // 7
+  //
   public deleteItemFromCart(cartItem: CartItem, type: number): void {
     Swal.fire({
       title: "Xóa sản phẩm này khỏi giỏ hàng?",
@@ -217,7 +227,7 @@ export class NavigationComponent {
     });
   }
 
-  // 8
+  //
   public calculateTotalMoney(cartItems: CartItem[]): string {
     let totalMoney: number = 0;
 
@@ -227,7 +237,7 @@ export class NavigationComponent {
     return this.formatPrice(totalMoney);
   }
 
-  // 9
+  //
   public updateQuantityOfLoggedCust(cartItem: CartItem, type: string): void {
     // kiểm tra trước khi tăng/giảm
     if (type === "minus" && cartItem.soLuong === 1) {
@@ -258,12 +268,31 @@ export class NavigationComponent {
     });
   }
 
+  //
+  public setIsRead(notifId: number): void {
+    this.notifService2.setIsRead(notifId).subscribe({
+      next: (notif: Notification) => {
+        this.notifications = this.notifications.map((item: Notification) => {
+          if (item.id === notif.id) {
+            item.read = notif.read;
+            return item;
+          }
+          return item;
+        });
+        this.getAllNotificationsByCust();
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
+  }
+
   // private functions
   // 1
   private getIsLoggedInValue(): void {
-    this.isLoggedIn = this.authenticationService.isLoggedIn();
+    this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.loggedCustomer = this.authenticationService.getCustomerFromStorage();
+      this.loggedCustomer = this.authService.getCustomerFromStorage();
     }
   }
 
@@ -297,7 +326,7 @@ export class NavigationComponent {
 
   // 3
   private getCartItemsFromLoggedCustomer(): void {
-    const loggedCus = this.authenticationService.getCustomerFromStorage();
+    const loggedCus = this.authService.getCustomerFromStorage();
     if (!loggedCus) {
       return;
     }
@@ -355,5 +384,30 @@ export class NavigationComponent {
         this.notifService.error(errorRes.error.message);
       },
     });
+  }
+
+  //
+  private getAllNotificationsByCust(): void {
+    this.loggedCustomer = this.authService.getCustomerFromStorage();
+    this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
+      next: (notifications: Notification[]) => {
+        this.notifications = notifications;
+        this.countUnreadNotifications(this.notifications);
+      },
+      error: (errorRes: HttpErrorResponse) => {
+        this.notifService.error(errorRes.error.message);
+      },
+    });
+  }
+
+  //
+  private countUnreadNotifications(notifications: Notification[]): void {
+    let count = 0;
+    for (const notification of notifications) {
+      if (!notification.read) {
+        count += 1;
+      }
+    }
+    this.unreadQuantity = count;
   }
 }

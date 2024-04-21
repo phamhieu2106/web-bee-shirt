@@ -17,6 +17,7 @@ import { OrderService } from "src/app/service/order.service";
 export class OrderTrackingComponent {
   public order: Order;
   public totalSalePrice: number = 0;
+  private webSocket!: WebSocket;
 
   // constructor, ngON
   constructor(
@@ -27,7 +28,17 @@ export class OrderTrackingComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getProductByCode();
+    this.getOrderByCode();
+    this.openWebSocket();
+  }
+
+  private openWebSocket(): void {
+    this.webSocket = new WebSocket("ws://localhost:8080/notification");
+    this.webSocket.onopen = (event) => {};
+    this.webSocket.onmessage = (event) => {
+      this.getOrderByCode();
+    };
+    this.webSocket.onclose = (event) => {};
   }
 
   // public functions
@@ -52,11 +63,9 @@ export class OrderTrackingComponent {
     return "";
   }
 
-  //
-
   // private functions
   //
-  private getProductByCode(): void {
+  private getOrderByCode(): void {
     this.activatedRoute.params.subscribe((params) => {
       let orderCode = params["orderCode"];
 

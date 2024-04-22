@@ -25,4 +25,6 @@ public class SoLuongDonHangResponse {
     private long hoanThanhQuantity;
     private long huyQuantity;
     private long traHangQuantity;
+    private long choHoanTienQuantity;
+    private long daHoanTienQuantity;
 }

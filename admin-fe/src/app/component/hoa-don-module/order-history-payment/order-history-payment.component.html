@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-header d-flex">
         <h4>Lịch sử thanh toán</h4>
-        <div class="ml-auto">
+        <div class="ml-auto d-flex">
           <button
             type="button"
             class="btn btn-primary btn-rounded"
@@ -21,6 +21,13 @@
             <i class="fa-solid fa-plus"></i>
             Thanh toán
           </button>
+          <app-hoan-tien
+            [title]="'Hoàn tiền'"
+            [tienThanhToan]="
+              hoaDon.tongTien - hoaDon.tienGiam + hoaDon.phiVanChuyen
+            "
+            [hoaDonId]="hoaDon.id"
+          ></app-hoan-tien>
         </div>
       </div>
 
@@ -35,7 +42,7 @@
                 <th>Trạng thái</th>
                 <th>Thời gian</th>
                 <th>Phương thức thanh toán</th>
-                <th>Người xác nhận</th>
+                <th>Người tạo</th>
                 <th>Ghi chú</th>
                 <th></th>
               </tr>
@@ -134,7 +141,7 @@
             </div>
             <!-- Tiền khách đưa -->
             <div class="mb-3">
-              <label class="form-label">Tiền còn thiếu:</label>
+              <label class="form-label">Số tiền:</label>
               <!-- <input
                 type="number"
                 class="form-control"
@@ -152,16 +159,6 @@
               >
             </div>
 
-            <!-- Ghi chú -->
-            <div class="mb-3">
-              <label class="form-label">Số tiền:</label>
-              <br />
-              <input
-                type="text"
-                class="form-control"
-                formControlName="ghiChu"
-              />
-            </div>
             <!-- Hình thức thanh toán -->
             <div class="mb-3">
               <label class="form-label">Hình thức: </label>
@@ -200,6 +197,12 @@
                 *ngIf="thanhToanForm.controls['maGiaoDich'].invalid"
                 >Mã giao dịch không được trống</small
               >
+            </div>
+            <!-- Mô tả -->
+            <div class="mb-3">
+              <label class="form-label">Ghi chú:</label>
+              <br />
+              <input type="text" class="form-control" formControlName="moTa" />
             </div>
           </form>
         </div>

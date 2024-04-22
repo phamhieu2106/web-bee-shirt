@@ -1,5 +1,6 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,4 +32,10 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
                       @Param("discountId") int discountId);
 
     Optional<PhieuGiamGiaKhachHang> findByPhieuGiamGiaId(Integer id);
+
+    @Query("""
+            select pggkh.khachHang from PhieuGiamGiaKhachHang pggkh
+            where pggkh.phieuGiamGia.id = :phieuGiamGiaId
+            """)
+    List<KhachHang> getKhachHangsByPhieuGiamGiaId(Integer phieuGiamGiaId);
 }

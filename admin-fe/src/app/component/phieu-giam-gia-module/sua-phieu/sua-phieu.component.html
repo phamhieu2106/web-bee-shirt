@@ -381,18 +381,18 @@
                         <input
                           type="checkbox"
                           [checked]="
-                          selectedIds.length > 0 && isCustomerSelected(kh.id)
+                          selectedIds.length > 0 && isCustomerSelected(kh.khachHang.id)
                         "
-                          (change)="onCheckboxChange(kh.id)"
-                          [disabled]="!isTableDisabled"
+                          (change)="onCheckboxChange(kh.khachHang.id)"
+                          disabled
                         />
                       </td>
 
-                      <td>{{ kh.hoTen }}</td>
-                      <td>{{ kh.sdt }}</td>
-                      <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>
-                      <td>{{ kh.email }}</td>
-                      <td>{{ kh.ngaySinh }}</td>
+                      <td>{{ kh.khachHang.hoTen }}</td>
+                      <td>{{ kh.khachHang.sdt }}</td>
+                      <td>{{ kh.khachHang.gioiTinh }}</td>
+                      <td>{{ kh.khachHang.email }}</td>
+                      <td>{{ kh.khachHang.ngaySinh }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -522,6 +522,7 @@
                       <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>
                       <td>{{ kh.email }}</td>
                       <td>{{ kh.ngaySinh }}</td>
+                      
                     </tr>
                   </tbody>
                 </table>

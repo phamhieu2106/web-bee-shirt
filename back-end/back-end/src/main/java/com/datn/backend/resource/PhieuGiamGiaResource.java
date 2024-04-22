@@ -105,10 +105,19 @@ public class PhieuGiamGiaResource {
     @GetMapping("/ds-khach-tang")
     public ResponseEntity<?> getPhieuTangKhach(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                               @RequestParam(value = "id", defaultValue = "", required = false) String id,
-                                               @RequestParam(value = "check", defaultValue = "", required = false) Boolean check
+                                               @RequestParam(value = "id", defaultValue = "", required = false) String id
+
     ) {
-        return ResponseEntity.ok(pggKhService.getPagination(pageNumber, pageSize, id, check));
+        return ResponseEntity.ok(pggKhService.getPagination(pageNumber, pageSize, id));
+    }
+
+    @GetMapping("/ds-khach-tang-co")
+    public ResponseEntity<?> getPhieuTangKhachCo(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                               @RequestParam(value = "id", defaultValue = "", required = false) String id
+
+    ) {
+        return ResponseEntity.ok(pggKhService.getPhieuCo(pageNumber, pageSize, id));
     }
 
     @GetMapping("/ds-tang")

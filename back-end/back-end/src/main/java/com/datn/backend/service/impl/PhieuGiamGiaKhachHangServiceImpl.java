@@ -28,6 +28,9 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     private PhieuGiamGiaRepository phieuGiamGiaRepository;
 
     @Autowired
+    private PhieuGiamGiaKhachHangRepository phieuGiamGiaKhachHangRepository;
+
+    @Autowired
     private PhieuGiamGiaKhachHangRepository repository;
 
     @Autowired
@@ -42,16 +45,18 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     public void addPhieu(PhieuKhachHangRequest request) {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findById(request.getPhieuGiamGiaId()).get();
         List<Integer> listIdKhachHang= request.getSelectedIds();
-        Integer trangThai = request.getTrangThai();
+
         for (Integer idKhach: listIdKhachHang ) {
             KhachHang kh = khachHangRepository.findById(idKhach).get();
             PhieuGiamGiaKhachHang phieuKH = new PhieuGiamGiaKhachHang();
             phieuKH.setKhachHang(kh);
             phieuKH.setPhieuGiamGia(phieuGiamGia);
-            phieuKH.setTrangThai(trangThai);
+            phieuKH.setTrangThai(1);
             repository.save(phieuKH);
         }
     }
+
+
 
     @Override
     public void deletePhieu(Integer id) {
@@ -59,14 +64,10 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     }
 
     @Override
-    public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id,Boolean check) {
+    public PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<KhachHang> khachHangPhieu;
-       if(check == true){
-           khachHangPhieu = khachHangRepository.getKHCoPhieu(pageable, id);
-       }else{
-           khachHangPhieu = khachHangRepository.getKHkhongPhieu(pageable, id);
-       }
+        khachHangPhieu = khachHangRepository.getKHkhongPhieu(pageable, id);
         PagedResponse<KhachHang> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
         paged.setPageSize(pageSize);
@@ -74,8 +75,22 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
         paged.setTotalPages(khachHangPhieu.getTotalPages());
         paged.setPageNumberArr(UtilityFunction.getPageNumberArr(khachHangPhieu.getTotalPages()));
         paged.setData(khachHangPhieu.getContent());
+        return paged;
+    }
 
+    @Override
+    public PagedResponse<PhieuGiamGiaKhachHang> getPhieuCo(int pageNumber, int pageSize, String id) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<PhieuGiamGiaKhachHang> khachHangPhieu;
+        khachHangPhieu = phieuGiamGiaKhachHangRepository.getCoPhieu(pageable, id);
 
+        PagedResponse<PhieuGiamGiaKhachHang> paged = new PagedResponse<>();
+        paged.setPageNumber(pageNumber);
+        paged.setPageSize(pageSize);
+        paged.setTotalElements((int) khachHangPhieu.getTotalElements());
+        paged.setTotalPages(khachHangPhieu.getTotalPages());
+        paged.setPageNumberArr(UtilityFunction.getPageNumberArr(khachHangPhieu.getTotalPages()));
+        paged.setData(khachHangPhieu.getContent());
         return paged;
     }
 
@@ -83,6 +98,7 @@ public class PhieuGiamGiaKhachHangServiceImpl implements PhieuGiamGiaKhachHangSe
     public List<KhachHang> getPhieuKhachHang( String id,Boolean check) {
 
         List<KhachHang> khachHangPhieu;
+
         if(check == true){
             khachHangPhieu = khachHangRepository.getCoPhieu(id);
         }else{

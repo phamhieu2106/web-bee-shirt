@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import Swal from "sweetalert2";
 import emailjs from "@emailjs/browser";
 import { NotificationService } from "src/app/service/notification.service";
+import { PhieuGiamGiaKhachHang } from "src/app/model/class/phieu-giam-gia-khach-hang.class";
 
 @Component({
   selector: "app-sua-phieu",
@@ -20,7 +21,7 @@ import { NotificationService } from "src/app/service/notification.service";
 })
 export class SuaPhieuComponent implements OnInit {
   phieuGiamGiaForm: FormGroup;
-  public pagedResponse: PagedResponse<KhachHang>;
+  public pagedResponse: PagedResponse<PhieuGiamGiaKhachHang>;
   public pagedResponse2: PagedResponse<KhachHang>;
 
   public listKhachHang: KhachHang[] = [];
@@ -115,10 +116,11 @@ export class SuaPhieuComponent implements OnInit {
         });
 
         
-        this.phieuGiamGia.getPhieuKhach(1,5, this.idPhieu, true).subscribe({
-          next: (response: PagedResponse<KhachHang>) => {
+        this.phieuGiamGia.getPhieuKhachCo(1,5, this.idPhieu).subscribe({
+          next: (response: PagedResponse<PhieuGiamGiaKhachHang>) => {
             if (response) {
               this.pagedResponse = response;
+               console.log( this.pagedResponse?.data)
 
             } else {
               console.error('Dữ liệu phản hồi không hợp lệ:', response);
@@ -131,7 +133,7 @@ export class SuaPhieuComponent implements OnInit {
         
 
        
-        this.phieuGiamGia.getPhieuKhach(1,5, this.idPhieu, false).subscribe({
+        this.phieuGiamGia.getPhieuKhachKhongCo(1,5, this.idPhieu).subscribe({
           next: (response: PagedResponse<KhachHang>) => {
             if (response) {
               this.pagedResponse2 = response;
@@ -179,12 +181,14 @@ export class SuaPhieuComponent implements OnInit {
   }
 
   isCustomerSelected(id: number): boolean {
+
     for (const selectedId of this.selectedIds) {
       if (selectedId === id) {
-       
         return true; // ID được tìm thấy trong danh sách
       }
     }
+    
+    
     return false; // ID không được tìm thấy trong danh sách
   }
 
@@ -446,16 +450,18 @@ export class SuaPhieuComponent implements OnInit {
 
 
   public checkSoLuong: boolean = false
+  valueTam: number[] =  this.selectedIds
   onLoaiChange() {
     const loaiValue = this.updateForm.get("loai").value;
     const soLuong = this.updateForm.get("soLuong")
 
+    console.log(this.selectedIds)
     if (loaiValue == 0) {
      
       this.isTableDisabled = true;
-      
+      this.selectedIds = this.valueTam;
       this.checkMail = false
-     this.checkSoLuong = false
+      this.checkSoLuong = false
       soLuong.setValue(this.soLuongCheck)
     
      
@@ -466,8 +472,6 @@ export class SuaPhieuComponent implements OnInit {
       this.checkMail = true
       this.checkSoLuong = true
       soLuong.setValue("0")
-
-    
     }
   }
 
@@ -479,8 +483,8 @@ export class SuaPhieuComponent implements OnInit {
     pageSize: number = 5,
     id: number = this.idKhach
   ): void {
-    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, true).subscribe({
-      next: (response: PagedResponse<KhachHang>) => {
+    this.phieuGiamGia.getPhieuKhachCo(page, pageSize, id).subscribe({
+      next: (response: PagedResponse<PhieuGiamGiaKhachHang>) => {
         this.pagedResponse = response;
       },
       error: (error: HttpErrorResponse) => {
@@ -494,9 +498,10 @@ export class SuaPhieuComponent implements OnInit {
     pageSize: number = 5,
     id: number = this.idKhach
   ): void {
-    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, true).subscribe({
-      next: (response: PagedResponse<KhachHang>) => {
+    this.phieuGiamGia.getPhieuKhachCo(page, pageSize, id).subscribe({
+      next: (response: PagedResponse<PhieuGiamGiaKhachHang>) => {
         this.pagedResponse = response;
+        console.log(response)
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -511,7 +516,7 @@ export class SuaPhieuComponent implements OnInit {
     pageSize: number = 5,
     id: number = this.idKhach
   ): void {
-    this.phieuGiamGia.getPhieuKhach(page, pageSize, id, false).subscribe({
+    this.phieuGiamGia.getPhieuKhachKhongCo(page, pageSize, id).subscribe({
       next: (response: PagedResponse<KhachHang>) => {
         this.pagedResponse2 = response;
 
@@ -544,58 +549,16 @@ export class SuaPhieuComponent implements OnInit {
     this.giaTriMaxNew = this.updateForm.get("giaTriMax").value
     this.dieuKienGiamNew = this.updateForm.get("dieuKienGiam").value
     this.giaTriNewNew = this.updateForm.get("giaTri").value
-    const loaiValue = this.updateForm.get("loai").value;
 
-    if (typeof this.giaTriMaxNew === "string") {
+   
 
-      const containsComma = /,/g.test(this.giaTriMaxNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
-      if (containsComma) {
-
-        const giaTriMaxFormatted = parseFloat(
-          this.updateForm.value.giaTriMax.replace(",", "")
-        );
-
-        this.updateForm.patchValue({ giaTriMax: giaTriMaxFormatted });
-      }
-
-    }
-
-
-    if (typeof this.dieuKienGiamNew === "string") {
-
-      const containsComma = /,/g.test(this.dieuKienGiamNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
-      if (containsComma) {
-
-        const dieuKienGiamFormatted = parseFloat(
-          this.updateForm.value.dieuKienGiam.replace(",", "")
-        );
-
-        this.updateForm.patchValue({ dieuKienGiam: dieuKienGiamFormatted });
-      }
-
-    }
-
-    if (typeof this.giaTriNewNew === "string") {
-
-      const containsComma = /,/g.test(this.giaTriNewNew); // Kiểm tra xem chuỗi có chứa dấu phẩy không
-      if (containsComma) {
-
-        const giaTriFormatted = parseFloat(
-          this.updateForm.value.giaTri.replace(",", "")
-        );
-
-
-        this.updateForm.patchValue({ giaTri: giaTriFormatted });
-      }
-
-    }
 
     this.phieuGiamGia.update(this.idPhieu, this.updateForm.value).subscribe({
       next: (response: PhieuGiamGia) => {
        
 
         this.phieuGiamGia
-          .addPhieuKhachHang(this.idPhieu, this.selectedIds,0)
+          .addPhieuKhachHang(this.idPhieu, this.selectedIds)
           .subscribe();
 
         if (this.sendMailChecked) {
@@ -605,7 +568,9 @@ export class SuaPhieuComponent implements OnInit {
               next: (khachHang: any) => {
                 // Gửi email cho khách hàng
                
+               if(khachHang.email){
                 this.send(response.maPhieuGiamGia, khachHang.email, response.thoiGianKetThuc);
+               }
               },
               error: (error: any) => {
                 console.error('Error getting customer information:', error);

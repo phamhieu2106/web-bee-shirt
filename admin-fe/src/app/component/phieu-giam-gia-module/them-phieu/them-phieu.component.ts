@@ -65,7 +65,7 @@ export class ThemPhieuComponent implements OnInit {
         this.phieuGiamGiaId = response.id;
 
         this.phieuGiamGia
-          .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds,1)
+          .addPhieuKhachHang(this.phieuGiamGiaId, this.selectedIds)
           .subscribe();
  
         if (this.sendMailChecked) {
@@ -265,8 +265,6 @@ export class ThemPhieuComponent implements OnInit {
 
        // Lấy ngày hiện tại
        const currentDate = new Date();
-       console.log(currentDate)
-       console.log(ngayBatDau)
 
        // Kiểm tra nếu ngày bắt đầu sau ngày hiện tại
        if (ngayBatDau <= currentDate) {
@@ -415,7 +413,7 @@ export class ThemPhieuComponent implements OnInit {
 
 
   public checkSoLuong: boolean = false;
-
+  valueTam: number[] =  this.selectedIds
   onLoaiChange() {
     const loaiValue = this.addForm.get("loai").value;
     const soLuong = this.addForm.get("soLuong")
@@ -423,9 +421,10 @@ export class ThemPhieuComponent implements OnInit {
     if (loaiValue == 0) {
 
       this.isTableDisabled = true;
+      this.selectedIds = this.valueTam;
       this.checkMail = false
      this.checkSoLuong = false
-      soLuong.setValue("0")
+     soLuong.setValue(this.soLuongCheck)
 
 
     } else {

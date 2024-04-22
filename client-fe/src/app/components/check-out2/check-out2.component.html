@@ -372,6 +372,32 @@
                             </div>
                           </div>
                         </div>
+                        <div class="form-floating mt-5">
+                          <textarea
+                            class="form-control"
+                            placeholder="Ghi chú"
+                            id="note"
+                            style="height: 100px"
+                            formControlName="ghiChu"
+                            [ngClass]="
+                              addressForm.get('ghiChu').invalid &&
+                              addressForm.get('ghiChu').touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          ></textarea>
+                          <label for="note">Ghi chú</label>
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              addressForm
+                                .get('ghiChu')
+                                .hasError('customRequired')
+                            "
+                          >
+                            Ghi chú không được bỏ trống
+                          </div>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -598,3 +624,4 @@
     </div>
   </div>
 </section>
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

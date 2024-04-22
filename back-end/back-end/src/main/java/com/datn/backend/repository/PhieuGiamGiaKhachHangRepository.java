@@ -36,6 +36,7 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
     Optional<PhieuGiamGiaKhachHang> findByPhieuGiamGiaId(Integer id);
 
 
+
     @Query(value = """
     select pgg from PhieuGiamGiaKhachHang pgg join KhachHang kh on pgg.khachHang.id = kh.id
     where kh.trangThai !=0 and pgg.phieuGiamGia.id=:id and pgg.trangThai !=0
@@ -43,5 +44,10 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
     Page<PhieuGiamGiaKhachHang> getCoPhieu(Pageable pageable, @Param("id") String id);
 
 
+    @Query("""
+            select pggkh.khachHang from PhieuGiamGiaKhachHang pggkh
+            where pggkh.phieuGiamGia.id = :phieuGiamGiaId
+            """)
+    List<KhachHang> getKhachHangsByPhieuGiamGiaId(Integer phieuGiamGiaId);
 
 }

@@ -78,7 +78,7 @@ export class OrderHistoryPaymentComponent implements OnInit, OnChanges {
             this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans),
         [Validators.required],
       ],
-      ghiChu: [""],
+      moTa: [""],
       hinhThucThanhToan: ["TIEN_MAT"],
       maGiaoDich: [""],
     });

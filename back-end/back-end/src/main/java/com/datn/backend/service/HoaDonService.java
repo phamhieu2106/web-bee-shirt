@@ -1,9 +1,6 @@
 package com.datn.backend.service;
 
-import com.datn.backend.dto.request.ChangeOrderStatusRequest;
-import com.datn.backend.dto.request.HoaDonRequest;
-import com.datn.backend.dto.request.OnlineOrderRequest;
-import com.datn.backend.dto.request.PlaceOrderRequest;
+import com.datn.backend.dto.request.*;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -37,4 +34,6 @@ public interface HoaDonService {
     HoaDonResponse getByCode(String code);
 
     List<HoaDonResponse> getOrdersForClient(int custId, String orderStatus);
+
+    HoaDonResponse refundMoney(ThanhToanRequest thanhToanRequest);
 }

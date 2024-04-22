@@ -6,4 +6,6 @@ export class SoLuongDonHang {
   hoanThanhQuantity: number;
   huyQuantity: number;
   traHangQuantity: number;
+  choHoanTienQuantity: number;
+  daHoanTienQuantity: number;
 }

@@ -16,6 +16,7 @@ import { PhuongThucThanhToanComponent } from "./phuong-thuc-thanh-toan/phuong-th
 import { CommonComponentModule } from "../common-component/common-component.module";
 import { AuthModule } from "../auth-module/auth.module";
 import { SearchProductDetailComponent } from "./search-product-detail/search-product-detail.component";
+import { HoanTienComponent } from './hoan-tien/hoan-tien.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { SearchProductDetailComponent } from "./search-product-detail/search-pro
     LoaiHoaDonComponent,
     PhuongThucThanhToanComponent,
     SearchProductDetailComponent,
+    HoanTienComponent,
   ],
   imports: [
     HoaDonRoutingModule,

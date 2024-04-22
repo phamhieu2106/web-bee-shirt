@@ -130,13 +130,23 @@ export class HoaDonService {
 
   isGiaoHangAndChuyenKhoan(hoaDon: HoaDon) {
     let isChuyenKhoan =
-      hoaDon.thanhToans.length > 0 &&
-      hoaDon.thanhToans[0].hinhThucThanhToan.hinhThuc == "CHUYEN_KHOAN"
+      hoaDon?.thanhToans?.length > 0 &&
+      hoaDon?.thanhToans[0]?.hinhThucThanhToan.hinhThuc == "CHUYEN_KHOAN"
         ? true
         : false;
     if (hoaDon.loaiHoaDon == "GIAO_HANG" && isChuyenKhoan) {
       return true;
     }
     return false;
+  }
+
+  refundMoney(thanhToan: ThanhToan, idHoaDon: number): Observable<HoaDon> {
+    return this.http.post<HoaDon>(this.baseUrl + "/change-status/refund", {
+      idHoaDon: idHoaDon,
+      hinhThucThanhToan: thanhToan.tenHinhThucThanhToan,
+      moTa: thanhToan.moTa,
+      maGiaoDich: thanhToan.maGiaoDich,
+      soTien: thanhToan.soTien,
+    });
   }
 }

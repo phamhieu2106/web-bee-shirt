@@ -15,7 +15,7 @@ import { KhachHang } from "../model/class/KhachHang.class";
 })
 export class PhieuGiamGiaService {
   private readonly apiUrl = "http://localhost:8080/phieu-giam-gia";
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   //public function
 
@@ -84,13 +84,11 @@ export class PhieuGiamGiaService {
 
   public addPhieuKhachHang(
     phieuGiamGiaId: number,
-    selectedIds: number[],
-    moTa:number
+    selectedIds: number[]
   ): Observable<PhieuGiamGia> {
     const request = {
       phieuGiamGiaId,
-      selectedIds,
-      moTa
+      selectedIds
     };
     return this.http.post<PhieuGiamGia>(`${this.apiUrl}/add-phieu`, request);
   }
@@ -120,7 +118,7 @@ export class PhieuGiamGiaService {
     const thoiGianKetThuc = new Date(phieu.thoiGianKetThuc); // Chuyển đổi thành kiểu Date
 
     const formattedThoiGianBatDau = format(thoiGianBatDau, 'yyyy-MM-dd\'T\'HH:mm');
-const formattedThoiGianKetThuc = format(thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm');
+    const formattedThoiGianKetThuc = format(thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm');
 
     const phieuUpdate: PhieuGiamGiaUpdate = {
       id: phieu.id,
@@ -168,15 +166,25 @@ const formattedThoiGianKetThuc = format(thoiGianKetThuc, 'yyyy-MM-dd\'T\'HH:mm')
     }
   }
 
-  public getPhieuKhach(
+  public getPhieuKhachKhongCo(
     pageNumber: number = 1,
     pageSize: number = 5,
     id: number,
-    check: boolean
   ): Observable<PagedResponse<KhachHang>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}&check=${check}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}`;
     return this.http.get<PagedResponse<KhachHang>>(
       `${this.apiUrl}/ds-khach-tang${param}`
+    );
+  }
+
+  public getPhieuKhachCo(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    id: number,
+  ): Observable<PagedResponse<PhieuGiamGiaKhachHang>> {
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&id=${id}`;
+    return this.http.get<PagedResponse<PhieuGiamGiaKhachHang>>(
+      `${this.apiUrl}/ds-khach-tang-co${param}`
     );
   }
 

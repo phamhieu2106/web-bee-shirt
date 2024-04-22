@@ -8,7 +8,7 @@
 
                 <!-- /ko -->
             </div>
-           
+
             <div class="orders-tracking-wrapper">
                 <form class="form-orders-tracking" novalidate="novalidate">
                     <div class="fieldset">
@@ -16,16 +16,13 @@
                         <legend class="legend"><span> Nhập thông tin để theo dõi đơn hàng của bạn</span></legend>
                         <div class="field required"><label class="label"><span> Mã đơn hàng không thành công:
                                 </span></label>
-                            <div class="control"><input type="text" class="input-text"
-                                    placeholder="Mã đơn hàng" value="" ></div>
+                            <div class="control"><input type="text" class="input-text" placeholder="Mã đơn hàng"
+                                    value=""></div>
                         </div>
                         <div class="field required"><label class="label"><span> Số điện sthoại đặt hàng</span></label>
                             <div class="control required"><input type="tel" class="input-text mage-error"
-                                 
-                                    id="telephone-track-order" placeholder="Số điện thoại" value="" 
-                                     >
-                                <div class="mage-error"
-                                    style="display: block; color: red;">Đây là trường bắt buộc.
+                                    id="telephone-track-order" placeholder="Số điện thoại" value="">
+                                <div class="mage-error" style="display: block; color: red;">Đây là trường bắt buộc.
                                 </div>
                             </div>
                         </div>
@@ -34,7 +31,7 @@
                     </div>
                 </form>
                 <div class="orders-tracking-results">
-                    <div class="content-empty" style="display: block;"><svg width="32" height="32" viewBox="0 0 32 32"
+                    <!-- <div class="content-empty" style="display: block;"><svg width="32" height="32" viewBox="0 0 32 32"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M29.414 26.586L23.77 20.942C25.168 18.98 26 16.588 26 14C26 7.383 20.617 2 14 2C7.383 2 2 7.383 2 14C2 20.617 7.383 26 14 26C16.588 26 18.98 25.169 20.942 23.77L26.586 29.414C27.366 30.195 28.634 30.195 29.414 29.414C30.195 28.633 30.195 27.367 29.414 26.586ZM4 14C4 8.486 8.486 4 14 4C19.514 4 24 8.486 24 14C24 19.514 19.514 24 14 24C8.486 24 4 19.514 4 14Z"
@@ -46,15 +43,199 @@
                                 fill="#A9A9A9"></path>
                             <path d="M22 10.656V17C22 17.4 21.762 17.762 21.394 17.919L15 20.659V13.659L22 10.656Z"
                                 fill="#A9A9A9"></path>
-                        </svg></div>
+                        </svg></div> -->
+
+                    <div class="donHang">
+                        <!-- Thêm in vào dưới -->
+                        <div class="" style="display: none;">
+                            <div class="account-page-title">
+                                <h1 class="title">Đơn hàng</h1>
+                            </div>
+
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="order-item-row">
+                                        <div class="label">Mã đơn</div>
+                                        <div class="value">CNF1000084099</div>
+                                    </div>
+                                    <div class="order-item-row">
+                                        <div class="label">Ngày đặt hàng</div>
+                                        <div class="value">00:57 2/4/2024</div>
+                                    </div>
+                                    <div class="order-item-row">
+                                        <div class="label">Số lượng</div>
+                                        <div class="value">1</div>
+                                    </div>
+                                    <div class="order-item-row">
+                                        <div class="label">Tổng tiền</div>
+                                        <div class="value">838.600 ₫</div>
+                                    </div>
+                                    <div class="order-item-bottom">
+                                        <div class="status delivered cancel">Hủy đơn hàng</div>
+                                        <div class="viewmore">Chi tiết</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div data-v-2eb1b4be="">
+                            <div data-v-2eb1b4be="" class="order-back-page">Quay lại</div>
+                            <div data-v-2eb1b4be="" class="account-page-title">
+                                <h1 data-v-2eb1b4be="" class="title">Chi tiết đơn hàng</h1>
+                            </div>
+                            <!-- <div class="card mb-5">
+                                <div class="card-body">
+                                    <div
+                                        class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                        <div class="step completed">
+                                            <div class="step-icon-wrap">
+                                                <div class="step-icon">
+                                                    <i class="fa-solid fa-cart-plus"></i>
+                                                </div>
+                                            </div>
+                                            <h4 class="step-title">Đặt hàng</h4>
+                                            <span>{{ order?.createdAt }}</span>
+                                        </div>
+
+                                        <div class="step completed" *ngFor="let oh of order?.lichSuHoaDons">
+                                            <div class="step-icon-wrap">
+                                                <div class="step-icon">
+                                                    <i [ngClass]="getOrderStatusIcon(oh)"></i>
+                                                </div>
+                                            </div>
+                                            <h4 class="step-title">{{ oh.tieuDe }}</h4>
+                                            <span>{{ oh?.createdAt }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <ul data-v-2eb1b4be="" class="order-details-view">
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="" for="">Mã đơn</label>
+                                    <div data-v-2eb1b4be="" class="value"><b data-v-2eb1b4be="">CNF1000084099</b>
+                                        <div data-v-2eb1b4be="" class="action-copy"><svg data-v-2eb1b4be="" width="16"
+                                                height="16" viewBox="0 0 16 16" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g data-v-2eb1b4be="" clip-path="url(#clip0_3850_11339)">
+                                                    <path data-v-2eb1b4be=""
+                                                        d="M10.6668 5.33301V3.46634C10.6668 2.7196 10.6668 2.34624 10.5215 2.06102C10.3937 1.81014 10.1897 1.60616 9.93882 1.47833C9.6536 1.33301 9.28023 1.33301 8.5335 1.33301H3.46683C2.72009 1.33301 2.34672 1.33301 2.06151 1.47833C1.81063 1.60616 1.60665 1.81014 1.47882 2.06102C1.3335 2.34624 1.3335 2.7196 1.3335 3.46634V8.53301C1.3335 9.27974 1.3335 9.65311 1.47882 9.93833C1.60665 10.1892 1.81063 10.3932 2.06151 10.521C2.34672 10.6663 2.72009 10.6663 3.46683 10.6663H5.3335M7.46683 14.6663H12.5335C13.2802 14.6663 13.6536 14.6663 13.9388 14.521C14.1897 14.3932 14.3937 14.1892 14.5215 13.9383C14.6668 13.6531 14.6668 13.2797 14.6668 12.533V7.46634C14.6668 6.7196 14.6668 6.34624 14.5215 6.06102C14.3937 5.81014 14.1897 5.60616 13.9388 5.47833C13.6536 5.33301 13.2802 5.33301 12.5335 5.33301H7.46683C6.72009 5.33301 6.34672 5.33301 6.06151 5.47833C5.81063 5.60616 5.60665 5.81014 5.47882 6.06102C5.3335 6.34624 5.3335 6.7196 5.3335 7.46634V12.533C5.3335 13.2797 5.3335 13.6531 5.47882 13.9383C5.60665 14.1892 5.81063 14.3932 6.06151 14.521C6.34672 14.6663 6.72009 14.6663 7.46683 14.6663Z"
+                                                        stroke="#63B1BC" stroke-width="1.2" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </g>
+                                                <defs data-v-2eb1b4be="">
+                                                    <clipPath data-v-2eb1b4be="" id="clip0_3850_11339">
+                                                        <rect data-v-2eb1b4be="" width="16" height="16" fill="white">
+                                                        </rect>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg></div>
+
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Ngày mua hàng:</label>
+                                    <div data-v-2eb1b4be="" class="value">
+                                        00:57 2/4/2024
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Người nhận:</label>
+                                    <div data-v-2eb1b4be="" class="value">
+                                        Bình Phạm
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Số điện thoại:</label>
+                                    <div data-v-2eb1b4be="" class="value">
+                                        0345262229
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Địa chỉ:</label>
+                                    <div data-v-2eb1b4be="" class="value">
+                                        fgfg, Huyện An Phú,
+                                        An Giang
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Thanh toán:</label>
+                                    <div data-v-2eb1b4be="" class="value">
+                                        Thanh toán khi nhận hàng (COD)
+                                    </div>
+                                </li>
+                                <li data-v-2eb1b4be=""><label data-v-2eb1b4be="">Trạng thái: </label>
+                                    <div data-v-2eb1b4be="" class="value"><span data-v-2eb1b4be=""
+                                            class="status   cancel">Huỷ đơn hàng</span></div>
+                                </li>
+                            </ul>
+                            <div data-v-2eb1b4be="" class="order-details-items">
+                                <h2 data-v-2eb1b4be="" class="title">Sản phẩm <span data-v-2eb1b4be="">(1)</span></h2>
+                                <table data-v-2eb1b4be="" class="table-order-items">
+                                    <tbody data-v-2eb1b4be="">
+                                        <tr data-v-2eb1b4be="">
+                                            <td data-v-2eb1b4be="" class="col name">
+                                                <div data-v-2eb1b4be="" class="order-product">
+                                                    <div data-v-2eb1b4be="" class="order-product-photo"><img
+                                                            data-v-2eb1b4be=""
+                                                            src="https://canifa.com/img/100/142/resize/8/t/8th23w003-cb337-1-thumb.webp"
+                                                            alt="Áo sơ mi nam cotton flannel họa tiết kẻ"></div>
+                                                    <div data-v-2eb1b4be="" class="order-product-details">
+                                                        <div data-v-2eb1b4be="" class="order-product-name">
+                                                            Áo sơ mi nam cotton flannel họa tiết kẻ
+                                                        </div>
+                                                        <div data-v-2eb1b4be="" class="order-product-sku">
+                                                            8TH23W003-CB337-L
+                                                        </div>
+                                                        <div data-v-2eb1b4be="" class="order-product-options">
+                                                            <div data-v-2eb1b4be="" class="order-product-option"><span
+                                                                    data-v-2eb1b4be=""
+                                                                    style="display: flex; flex-direction: row; align-items: center;"><span
+                                                                        data-v-2eb1b4be="" class="swatch-option color"
+                                                                        style="background-image: url(&quot;https://media.canifa.com/attribute/swatch/images/cb337.png&quot;);"></span>
+                                                                    <span data-v-2eb1b4be="">CB337</span></span></div>
+                                                            <div data-v-2eb1b4be="" class="order-product-option"><span
+                                                                    data-v-2eb1b4be="">
+                                                                    L
+                                                                </span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td data-v-2eb1b4be="" class="col qty">2</td>
+                                            <td data-v-2eb1b4be="" class="col price"><span data-v-2eb1b4be=""
+                                                    class="price">838.600 ₫</span> <span data-v-2eb1b4be=""
+                                                    class="old-price">1.198.000 ₫</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div data-v-2eb1b4be="" class="order-details-totals">
+                                <table data-v-2eb1b4be="">
+                                    <tbody data-v-2eb1b4be="">
+                                        <tr data-v-2eb1b4be="" class="sub-totals">
+                                            <th data-v-2eb1b4be="">Giá trị đơn hàng</th>
+                                            <td data-v-2eb1b4be="">1.198.000 ₫</td>
+                                        </tr>
+                                        <tr data-v-2eb1b4be="" class="sub-totals">
+                                            <th data-v-2eb1b4be="">Chiết khấu</th>
+                                            <td data-v-2eb1b4be="" style="color: rgb(218, 41, 28);">359.400 ₫</td>
+                                        </tr> <!----> <!----> <!----> <!----> <!---->
+                                    </tbody>
+                                    <tfoot data-v-2eb1b4be="">
+                                        <tr data-v-2eb1b4be="" class="grand-totals">
+                                            <th data-v-2eb1b4be="" style="color: rgb(51, 63, 72);">Tổng tiền thanh toán
+                                            </th>
+                                            <td data-v-2eb1b4be="">838.600 ₫</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            
-   
-           
-   
-            
-           
+
+
+
+
+
+
         </div>
     </div>
 

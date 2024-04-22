@@ -52,10 +52,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     const materialUrls = `http://localhost:8080/chat-lieu`;
     const saleEventlUrls = `http://localhost:8080/dot-giam-gia`;
     const discountUrls = `http://localhost:8080/phieu-giam-gia`;
-
-    // if (request.url.includes(loginUrl)) {
-    //   return next.handle(request);
-    // }
+    const notificationUrls = `http://localhost:8080/api/notification`;
 
     if (
       request.url.startsWith(loginUrl) ||
@@ -70,7 +67,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       request.url.startsWith(sleeveUrls) ||
       request.url.startsWith(materialUrls) ||
       request.url.startsWith(saleEventlUrls) ||
-      request.url.startsWith(discountUrls)
+      request.url.startsWith(discountUrls) ||
+      request.url.startsWith(notificationUrls)
     ) {
       return next.handle(request);
     }

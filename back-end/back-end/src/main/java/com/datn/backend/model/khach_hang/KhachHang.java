@@ -49,8 +49,8 @@ public class KhachHang extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
-    private KhachHangImage image;
+    private CustomerImage image;
 
-    @OneToMany(mappedBy = "khachHang")
+    @OneToMany(mappedBy = "khachHang", cascade = CascadeType.ALL)
     private List<DiaChi> diaChis;
 }

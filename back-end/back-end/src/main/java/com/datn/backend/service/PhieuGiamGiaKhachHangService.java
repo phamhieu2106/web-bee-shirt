@@ -15,10 +15,14 @@ public interface PhieuGiamGiaKhachHangService {
 
     void addPhieu(PhieuKhachHangRequest request);
 
+
+
     void deletePhieu(Integer id);
 
 
-    PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id ,Boolean check);
+    PagedResponse<KhachHang> getPagination(int pageNumber, int pageSize, String id );
+
+    PagedResponse<PhieuGiamGiaKhachHang> getPhieuCo(int pageNumber, int pageSize, String id );
 
     List<KhachHang> getPhieuKhachHang( String id ,Boolean check);
 

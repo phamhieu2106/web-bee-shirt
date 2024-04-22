@@ -3,7 +3,7 @@ package com.datn.backend.service;
 import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

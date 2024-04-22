@@ -343,6 +343,7 @@ export class CheckoutComponent {
           ghiChu: this.note,
         };
 
+        // call api
         this.orderService.placeOrderOnline(req).subscribe({
           next: (orderCode: string) => {
             this.notifService.success("Đặt hàng thành công!");

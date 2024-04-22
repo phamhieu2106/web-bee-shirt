@@ -520,7 +520,11 @@
                                   {{ d?.tenPhieuGiamGia }}
                                 </div>
                                 <div class="voucher-item-date">
-                                  HSD: {{ d.thoiGianKetThuc }}
+                                  HSD:
+                                  {{
+                                    d.thoiGianKetThuc
+                                      | date : "HH:mm dd-MM-yyyy"
+                                  }}
                                 </div>
                               </div>
                               <div class="voucher-item-action">

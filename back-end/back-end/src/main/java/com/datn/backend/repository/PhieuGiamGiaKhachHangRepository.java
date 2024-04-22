@@ -2,6 +2,8 @@ package com.datn.backend.repository;
 
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,9 +35,19 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
 
     Optional<PhieuGiamGiaKhachHang> findByPhieuGiamGiaId(Integer id);
 
+
+
+    @Query(value = """
+    select pgg from PhieuGiamGiaKhachHang pgg join KhachHang kh on pgg.khachHang.id = kh.id
+    where kh.trangThai !=0 and pgg.phieuGiamGia.id=:id and pgg.trangThai !=0
+""")
+    Page<PhieuGiamGiaKhachHang> getCoPhieu(Pageable pageable, @Param("id") String id);
+
+
     @Query("""
             select pggkh.khachHang from PhieuGiamGiaKhachHang pggkh
             where pggkh.phieuGiamGia.id = :phieuGiamGiaId
             """)
     List<KhachHang> getKhachHangsByPhieuGiamGiaId(Integer phieuGiamGiaId);
+
 }

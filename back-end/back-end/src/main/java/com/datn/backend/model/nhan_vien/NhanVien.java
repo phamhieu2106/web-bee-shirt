@@ -1,17 +1,18 @@
-package com.datn.backend.model;
+package com.datn.backend.model.nhan_vien;
 
-import com.datn.backend.model.khach_hang.KhachHangImage;
+import com.datn.backend.model.Account;
+import com.datn.backend.model.BaseEntity;
+import com.datn.backend.model.khach_hang.CustomerImage;
+import com.datn.backend.model.nhan_vien.StaffImage;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,7 +50,7 @@ public class NhanVien extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
-    private KhachHangImage image;
+    private StaffImage image;
 }

@@ -3,7 +3,7 @@ package com.datn.backend.resource;
 import com.datn.backend.dto.request.AddNhanVienRequest;
 import com.datn.backend.dto.response.NhanVienResponse;
 import com.datn.backend.dto.response.PagedResponse;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.service.NhanVienService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;

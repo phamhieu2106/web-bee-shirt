@@ -106,7 +106,9 @@
           <li>
             <label>Trạng thái: </label>
             <div class="value">
-              <span class="status cancel">{{ order?.trangThai }}</span>
+              <span class="status cancel">{{
+                getOrderStatus(order?.trangThai)
+              }}</span>
             </div>
           </li>
         </ul>
@@ -183,9 +185,26 @@
                   >
                 </td>
                 <td class="col price">
-                  <span class="price">{{
+                  <!-- <span class="price">{{
                     formatPrice(od.giaBan * od.soLuong)
-                  }}</span>
+                  }}</span> -->
+                  <span
+                    class="price"
+                    *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                    >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                  >
+                  <span
+                    class="old-price"
+                    *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                    >{{
+                      formatPrice(od.sanPhamChiTiet.giaBan * od.soLuong)
+                    }}</span
+                  >
+                  <span
+                    class="price"
+                    *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                    >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                  >
                 </td>
               </tr>
             </tbody>

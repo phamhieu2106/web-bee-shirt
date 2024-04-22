@@ -8,7 +8,7 @@ import com.datn.backend.enumeration.LoaiHinhThuc;
 import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.exception.custom_exception.*;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.model.hoa_don.*;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {

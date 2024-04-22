@@ -3,7 +3,7 @@ package com.datn.backend.model.hoa_don;
 import com.datn.backend.enumeration.LoaiHoaDon;
 import com.datn.backend.enumeration.TrangThaiHoaDon;
 import com.datn.backend.model.BaseEntity;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import jakarta.persistence.*;
@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -4,7 +4,7 @@ import com.datn.backend.dto.request.AddAddressReq;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
-import com.datn.backend.repository.DiaChiRepository;
+import com.datn.backend.repository.AddressRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiaChiServiceImpl implements DiaChiService {
 
-    private final DiaChiRepository diaChiRepo;
+    private final AddressRepository diaChiRepo;
     private final KhachHangRepository khachHangRepo;
 
     @Override

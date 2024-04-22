@@ -44,18 +44,31 @@ export class LoginComponent {
 
   // 2
   public login(): void {
+    if (
+      this.loginForm.get("phone").hasError("required") ||
+      this.loginForm.get("password").hasError("required")
+    ) {
+      this.notifService.error("Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
+    if (this.loginForm.get("phone").hasError("pattern")) {
+      this.notifService.error("Số điện thoại không hợp lệ!");
+      return;
+    }
+
     this.authenticationService.login(this.loginForm.value).subscribe({
       // - login succeed => lấy token từ server, lưu token và object: customer vào localStorage
       next: (response: HttpResponse<Customer>) => {
         const token = response.headers.get("Jwt-Token");
         const loggedCust = response.body;
+
+        this.notifService.success("Đăng nhập thành công!");
+        this.authenticationService.updateIsLoggedInSubj(true);
         this.authenticationService.updateLoggedCust(response.body);
 
         this.authenticationService.saveTokenToStorage(token);
         this.authenticationService.saveCustomerToStorage(loggedCust);
-
-        this.notifService.success("Đăng nhập thành công!");
-        this.authenticationService.updateIsLoggedInSubj(true);
 
         // lấy lại danh sách cart-item
         this.cartService.getCartItemsOfLoggedCustomer(loggedCust.id).subscribe({
@@ -97,9 +110,7 @@ export class LoginComponent {
             "Số điện thoại hoặc mật khẩu của bạn không đúng hoặc chưa tồn tại trong hệ thống!"
           );
         } else if (errRes.error.message === "User is disabled") {
-          this.notifService.error(
-            "Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt!"
-          );
+          this.notifService.error("Tài khoản của bạn đã bị khóa!");
         }
       },
     });
@@ -117,8 +128,11 @@ export class LoginComponent {
   // 2
   private initFormLogin(): void {
     this.loginForm = new FormGroup({
-      tenDangNhap: new FormControl("0807760922", [Validators.required]),
-      matKhau: new FormControl("123456", [Validators.required]),
+      phone: new FormControl("0807760922", [
+        Validators.required,
+        Validators.pattern("^(0[1-9][0-9]{8})$"),
+      ]),
+      password: new FormControl("123456", [Validators.required]),
     });
   }
 }

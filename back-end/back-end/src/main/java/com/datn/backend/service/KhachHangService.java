@@ -31,12 +31,7 @@ public interface KhachHangService {
 
     PagedResponse<KhachHangResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter);
 
-    KhachHang signUp(SignUpReq req);
-
     KhachHang updateAvatar(MultipartFile multipartFile, int custId) throws IOException;
 
     KhachHang updateInfo(UpdateCustInfoReq req);
-
-    void changePassword(ChangePasswordReq req);
-
 }

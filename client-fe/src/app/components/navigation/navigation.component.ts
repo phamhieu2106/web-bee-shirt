@@ -58,6 +58,7 @@ export class NavigationComponent {
 
     this.authService.loggedCust.subscribe((value: Customer) => {
       this.loggedCustomer = value;
+      this.getAllNotificationsByCust();
     });
 
     this.cartService.cartItemsOfLoggedUser.subscribe(
@@ -388,16 +389,17 @@ export class NavigationComponent {
 
   //
   private getAllNotificationsByCust(): void {
-    this.loggedCustomer = this.authService.getCustomerFromStorage();
-    this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
-      next: (notifications: Notification[]) => {
-        this.notifications = notifications;
-        this.countUnreadNotifications(this.notifications);
-      },
-      error: (errorRes: HttpErrorResponse) => {
-        this.notifService.error(errorRes.error.message);
-      },
-    });
+    if (this.loggedCustomer) {
+      this.notifService2.getAllByCust(this.loggedCustomer.id).subscribe({
+        next: (notifications: Notification[]) => {
+          this.notifications = notifications;
+          this.countUnreadNotifications(this.notifications);
+        },
+        error: (errorRes: HttpErrorResponse) => {
+          this.notifService.error(errorRes.error.message);
+        },
+      });
+    }
   }
 
   //

@@ -1,4 +1,4 @@
-package com.datn.backend.model.khach_hang;
+package com.datn.backend.model.nhan_vien;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "khach_hang_image")
+@Table(name = "staff_image")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class KhachHangImage {
+public class StaffImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +27,9 @@ public class KhachHangImage {
     private String imageUrl;
     private String imageId;
 
-    public KhachHangImage(String imageName, String imageUrl, String imageId) {
+    public StaffImage(String imageName, String imageUrl, String imageId) {
         this.imageName = imageName;
         this.imageUrl = imageUrl;
         this.imageId = imageId;
-    }
-
-    @Override
-    public String toString() {
-        return "KhachHangImage{" +
-                "id=" + id +
-                ", imageName='" + imageName + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", imageId='" + imageId + '\'' +
-                '}';
     }
 }

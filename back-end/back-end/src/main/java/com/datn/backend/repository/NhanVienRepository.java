@@ -1,7 +1,7 @@
 package com.datn.backend.repository;
 
 import com.datn.backend.dto.response.NhanVienResponse;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -32,22 +32,13 @@ export class OrderTrackingComponent {
     this.openWebSocket();
   }
 
-  private openWebSocket(): void {
-    this.webSocket = new WebSocket("ws://localhost:8080/notification");
-    this.webSocket.onopen = (event) => {};
-    this.webSocket.onmessage = (event) => {
-      this.getOrderByCode();
-    };
-    this.webSocket.onclose = (event) => {};
-  }
-
   // public functions
-  //
+  // 1
   public formatPrice(price: number): any {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  //
+  // 2
   public getOrderStatusIcon(orderHistory: OrderHistory): string {
     if (orderHistory.trangThai === "CHO_XAC_NHAN") {
       return "fa-solid fa-exclamation";
@@ -63,8 +54,24 @@ export class OrderTrackingComponent {
     return "";
   }
 
+  // 3
+  public getOrderStatus(orderStatus: string): string {
+    if (orderStatus === "CHO_XAC_NHAN") {
+      return "Chờ xác nhận";
+    } else if (orderStatus === "DA_XAC_NHAN") {
+      return "Đã xác nhận";
+    } else if (orderStatus === "CHO_GIAO") {
+      return "Chờ giao";
+    } else if (orderStatus === "DANG_GIAO") {
+      return "Đang giao";
+    } else if (orderStatus === "HOAN_THANH") {
+      return "Hoàn thành";
+    }
+    return "";
+  }
+
   // private functions
-  //
+  // 1
   private getOrderByCode(): void {
     this.activatedRoute.params.subscribe((params) => {
       let orderCode = params["orderCode"];
@@ -87,5 +94,15 @@ export class OrderTrackingComponent {
         },
       });
     });
+  }
+
+  // 2
+  private openWebSocket(): void {
+    this.webSocket = new WebSocket("ws://localhost:8080/notification");
+    this.webSocket.onopen = (event) => {};
+    this.webSocket.onmessage = (event) => {
+      this.getOrderByCode();
+    };
+    this.webSocket.onclose = (event) => {};
   }
 }

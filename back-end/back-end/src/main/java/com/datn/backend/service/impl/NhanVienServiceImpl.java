@@ -7,9 +7,8 @@ import com.datn.backend.enumeration.Role;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.Account;
-import com.datn.backend.model.NhanVien;
-import com.datn.backend.model.khach_hang.KhachHangImage;
-import com.datn.backend.repository.AccountRepository;
+import com.datn.backend.model.nhan_vien.NhanVien;
+import com.datn.backend.model.nhan_vien.StaffImage;
 import com.datn.backend.repository.NhanVienRepository;
 import com.datn.backend.service.NhanVienService;
 import com.datn.backend.utility.CloudinaryService;
@@ -35,7 +34,6 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     private final NhanVienRepository nhanVienRepo;
     private final PasswordEncoder passwordEncoder;
-    private final AccountRepository accountRepo;
     private final CloudinaryService cloudinaryService;
 
     @Override
@@ -56,7 +54,7 @@ public class NhanVienServiceImpl implements NhanVienService {
             throw new RuntimeException("Ảnh không hợp lệ");
         }
         Map result = cloudinaryService.upload(multipartFile);
-        KhachHangImage image = new KhachHangImage((String)
+        StaffImage image = new StaffImage((String)
                 result.get("original_filename"),
                 (String) result.get("url"),
                 (String) result.get("public_id"));
@@ -102,7 +100,6 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public NhanVienResponse getOneById(Integer id) {
-
         if (nhanVienRepo.existsById(id) == false) {
             throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
         }
@@ -130,7 +127,6 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public PagedResponse<NhanVienResponse> filter(int pageNumber, int pageSize, List<Integer> gioiTinhFilter, List<Integer> trangThaiFilter, String search) {
-
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         Page<NhanVienResponse> page = nhanVienRepo.filter(pageable, gioiTinhFilter, trangThaiFilter, search);
@@ -185,7 +181,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 if (bi != null) {
                     result = cloudinaryService.upload(multipartFile);
                 }
-                KhachHangImage image = nv.getImage();
+                StaffImage image = nv.getImage();
                 if (bi != null) {
                     if (image.getImageId() != null) {
                         // xóa ảnh cũ
@@ -207,7 +203,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 nv.setDiaChi(request.getDiaChi().trim());
 
                 Account acc = optionalNhanVien.get().getAccount();
-//            acc.setTenDangNhap(request.getTenDangNhap());
+                // acc.setTenDangNhap(request.getTenDangNhap());
                 acc.setTenDangNhap(request.getEmail().trim());
                 acc.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
                 nv.setAccount(acc);
@@ -218,7 +214,6 @@ public class NhanVienServiceImpl implements NhanVienService {
                 e.printStackTrace();
                 return null;
             }
-
         }).get();
         return nhanVien;
     }

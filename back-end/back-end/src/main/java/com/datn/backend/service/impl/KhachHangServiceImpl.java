@@ -1,9 +1,6 @@
 package com.datn.backend.service.impl;
 
-import com.datn.backend.dto.request.ChangePasswordReq;
-import com.datn.backend.dto.request.ChangePasswordReq2;
 import com.datn.backend.dto.request.KhachHangRequest;
-import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.dto.request.UpdateCustInfoReq;
 import com.datn.backend.dto.response.KhachHangResponse;
 import com.datn.backend.dto.response.PagedResponse;
@@ -15,14 +12,13 @@ import com.datn.backend.model.danh_sach.Cart;
 import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
-import com.datn.backend.model.khach_hang.KhachHangImage;
+import com.datn.backend.model.khach_hang.CustomerImage;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
-import com.datn.backend.repository.DiaChiRepository;
+import com.datn.backend.repository.AddressRepository;
 import com.datn.backend.repository.FavouriteListRepository;
-import com.datn.backend.repository.KhachHangImageRepository;
+import com.datn.backend.repository.CustomerImageRepository;
 import com.datn.backend.repository.KhachHangRepository;
-import com.datn.backend.service.EmailService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
@@ -49,12 +45,12 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     private final PasswordEncoder passwordEncoder;
     private final KhachHangRepository khachHangRepo;
-    private final DiaChiRepository diaChiRepo;
+    private final AddressRepository diaChiRepo;
     private final AccountRepository accountRepo;
     private final CartRepository cartRepo;
     private final FavouriteListRepository favouriteListRepo;
     private final CloudinaryService cloudinaryService;
-    private final KhachHangImageRepository khachHangImageRepo;
+    private final CustomerImageRepository khachHangImageRepo;
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
@@ -71,7 +67,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             throw new RuntimeException("Ảnh không hợp lệ");
         }
         Map result = cloudinaryService.upload(multipartFile);
-        KhachHangImage image = new KhachHangImage((String)
+        CustomerImage image = new CustomerImage((String)
                 result.get("original_filename"),
                 (String) result.get("url"),
                 (String) result.get("public_id"));
@@ -124,7 +120,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
 
-        KhachHangImage custImg = KhachHangImage.builder()
+        CustomerImage custImg = CustomerImage.builder()
                 .imageId(UUID.randomUUID().toString())
                 .imageName("default-user-img")
                 .imageUrl("https://res.cloudinary.com/dpsryzyev/image/upload/v1712851456/default-user-img_ri7fap.webp")
@@ -195,7 +191,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             result = cloudinaryService.upload(multipartFile);
         }
         KhachHang khInDB = khachHangRepo.findById(kh.getId()).get();
-        KhachHangImage image = khInDB.getImage();
+        CustomerImage image = khInDB.getImage();
         if (bi != null) {
             // xóa ảnh cũ
             cloudinaryService.delete(image.getImageId());
@@ -249,48 +245,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         return pagedResponse;
     }
 
-    @Override
-    public KhachHang signUp(SignUpReq req) {
-        Account account = Account.builder()
-                .tenDangNhap(req.getSdt())
-                .matKhau(passwordEncoder.encode(req.getMatKhau()))
-                .trangThai(true)
-                .role("ROLE_CUSTOMER")
-                .build();
 
-        KhachHangImage custImg = KhachHangImage.builder()
-                .imageName("default-user-img")
-                .imageUrl("https://res.cloudinary.com/dpsryzyev/image/upload/v1712851456/default-user-img_ri7fap.webp")
-                .build();
-        khachHangImageRepo.save(custImg);
-        DiaChi address = DiaChi.builder()
-                .hoTen(req.getHoTen())
-                .sdt(req.getSdt())
-                .tinh(req.getTinh())
-                .huyen(req.getHuyen())
-                .xa(req.getXa())
-                .duong(req.getDuong())
-                .macDinh(true)
-                .build();
-
-        KhachHang customer = KhachHang.builder()
-                .hoTen(req.getHoTen())
-                .ngaySinh(req.getNgaySinh())
-                .sdt(req.getSdt())
-                .email(req.getEmail())
-                .gioiTinh(req.isGioiTinh())
-                .trangThai(1)
-                .account(account)
-                .image(custImg)
-                .diaChis(List.of(address))
-                .build();
-        KhachHang savedCust = khachHangRepo.save(customer);
-        accountRepo.save(account);
-        address.setKhachHang(customer);
-        diaChiRepo.save(address);
-
-        return savedCust;
-    }
 
     @Override
     public KhachHang updateAvatar(MultipartFile multipartFile, int custId) throws IOException {
@@ -299,7 +254,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         // xóa ảnh cũ
         KhachHang custById = khachHangRepo.findById(custId).get();
-        KhachHangImage image = custById.getImage();
+        CustomerImage image = custById.getImage();
         cloudinaryService.delete(image.getImageId());
 
         // cập nhật thuộc tính cho ảnh trong DB
@@ -321,15 +276,5 @@ public class KhachHangServiceImpl implements KhachHangService {
         return khachHangRepo.save(cust);
     }
 
-    @Override
-    public void changePassword(ChangePasswordReq req) {
-        Account account = accountRepo.findById(req.getAccId()).get();
-        boolean isMatch = passwordEncoder.matches(req.getOldPassword(), account.getMatKhau());
 
-        if (!isMatch) {
-            throw new RuntimeException("Mật khẩu cũ không đúng!");
-        }
-        account.setMatKhau(passwordEncoder.encode(req.getNewPassword()));
-        accountRepo.save(account);
-    }
 }

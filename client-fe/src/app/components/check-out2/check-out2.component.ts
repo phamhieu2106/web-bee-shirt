@@ -3,9 +3,11 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+
+import Swal, { SweetAlertResult } from "sweetalert2";
+
 import { Address } from "src/app/model/class/address.class";
 import { CartItem } from "src/app/model/class/cart-item.class";
-import { Customer } from "src/app/model/class/customer.class";
 import { Discount } from "src/app/model/class/discount.class";
 import { OnlineOrderRequest } from "src/app/model/interface/online-order-request.interface";
 import { OrderDetailsReq } from "src/app/model/interface/order-details-req.interface";
@@ -14,7 +16,6 @@ import { DiscountService } from "src/app/service/discount.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
-import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-check-out2",
@@ -89,12 +90,12 @@ export class CheckOut2Component {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  //
+  // 2
   public toggleDiscountsModal(value: boolean): void {
     this.isDiscountModalOpen = value;
   }
 
-  //
+  // 3
   public getDiscountTitle(discount: Discount): string {
     if (discount?.kieu === 0) {
       return ` Giảm ${discount?.giaTri}% cho đơn  từ ${this.formatPrice(
@@ -107,7 +108,7 @@ export class CheckOut2Component {
     }
   }
 
-  //
+  // 4
   public checkBestDiscount(): boolean {
     for (let d of this.discounts) {
       let reduceInFor = 0;
@@ -126,7 +127,7 @@ export class CheckOut2Component {
     return true;
   }
 
-  //
+  // 5
   public changeDiscount(discountId: number): void {
     this.discounts = this.discounts.map((d: Discount) => {
       if (d.id === discountId) {
@@ -141,7 +142,7 @@ export class CheckOut2Component {
     this.finalPrice = this.getFinalPrice();
   }
 
-  //
+  // 6
   public checkOut(): void {
     Swal.fire({
       title: "Xác nhận thanh toán?",
@@ -175,12 +176,13 @@ export class CheckOut2Component {
           diaChiNguoiNhan: this.formatAddress(),
           ghiChu: "ghiChu",
         };
+
+        // call api
         this.orderService.placeOrderOnline(req).subscribe({
           next: (orderCode: string) => {
             this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/profile/my-orders/${orderCode}`]);
-            this.cartService.updateCartItemsOfLoggedUser([]);
-            this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+            this.router.navigate([`/profile/order-tracking/${orderCode}`]);
+            this.cartService.updateCartItemsInStorage([]);
           },
           error: (errRes: HttpErrorResponse) => {
             this.notifService.error(errRes.error.message);
@@ -364,7 +366,7 @@ export class CheckOut2Component {
   }
   // end: calculate prices
 
-  //
+  // 6
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
@@ -378,6 +380,7 @@ export class CheckOut2Component {
     });
   }
 
+  // 7
   private getDiscountsForNoneLoggedCheckOut(): void {
     this.discountService
       .getDiscountsForNoneLoggedCheckOut(this.realPrice - this.salePrice)
@@ -398,6 +401,7 @@ export class CheckOut2Component {
       });
   }
 
+  // 8
   private initSelectedDiscounts(): void {
     if (this.discounts.length === 1) {
       // khi danh sách phiếu gg chỉ có 1
@@ -432,6 +436,7 @@ export class CheckOut2Component {
     this.finalPrice = this.getFinalPrice();
   }
 
+  // 9
   private initAddAddressForm(): void {
     this.addressForm = new FormGroup({
       hoTen: new FormControl("", [
@@ -469,6 +474,7 @@ export class CheckOut2Component {
     });
   }
 
+  // 9.1
   private customNotBlankValidator(
     control: FormControl
   ): { [key: string]: boolean } | null {

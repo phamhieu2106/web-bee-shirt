@@ -7,7 +7,7 @@ import com.datn.backend.dto.request.LoginRequest;
 import com.datn.backend.dto.request.SignUpReq;
 import com.datn.backend.enumeration.Role;
 import com.datn.backend.model.Account;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.KhachHangRepository;
@@ -47,11 +47,11 @@ public class AuthResource {
 
     @PostMapping("/staff/login")
     public ResponseEntity<NhanVien> staffLogin(@RequestBody LoginRequest request) throws AccessDeniedException {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword());
         authManager.authenticate(authentication);
 
         // if credentials right, code continue
-        Account account = accountRepo.findByTenDangNhap(request.getTenDangNhap()).get();
+        Account account = accountRepo.findByTenDangNhap(request.getPhone()).get();
         if (!account.getRole().equals(Role.ROLE_ADMIN.name())) {
             throw new AccessDeniedException("Bạn không có quyền truy cập vào trang web này!");
         }
@@ -68,11 +68,11 @@ public class AuthResource {
     // client
     @PostMapping("/customer/login")
     public ResponseEntity<KhachHang> customerLogin(@RequestBody LoginRequest request) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword());
         authManager.authenticate(authentication);
 
         // if credentials right, code continue
-        Account account = accountRepo.findByTenDangNhap(request.getTenDangNhap()).get();
+        Account account = accountRepo.findByTenDangNhap(request.getPhone()).get();
         MyUserDetails userDetails = new MyUserDetails(account);
         String token = jwtTokenProvider.generateToken(userDetails);
 
@@ -85,12 +85,12 @@ public class AuthResource {
 
     @PostMapping("/customer/sign-up")
     public ResponseEntity<KhachHang> signUp(@RequestBody SignUpReq req) {
-        return ResponseEntity.ok(khachHangService.signUp(req));
+        return ResponseEntity.ok(authService.signUp(req));
     }
 
     @PostMapping("/change-pwd")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq req) {
-        khachHangService.changePassword(req);
+        authService.changePassword(req);
         return ResponseEntity.ok().build();
     }
 

@@ -4,7 +4,7 @@ import com.datn.backend.dto.request.AddAddressReq;
 import com.datn.backend.dto.request.DiaChiRequest;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
-import com.datn.backend.repository.DiaChiRepository;
+import com.datn.backend.repository.AddressRepository;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.DiaChiService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DiaChiResource {
 
     private final DiaChiService diaChiService;
-    private final DiaChiRepository diaChiRepository;
+    private final AddressRepository addressRepository;
     private final KhachHangRepository khachHangRepository;
 
     @GetMapping("/get-all/{custId}")
@@ -60,7 +60,7 @@ public class DiaChiResource {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<DiaChiRequest> updateDC(@PathVariable("id") int id, @RequestBody DiaChiRequest dc) {
-        KhachHang kh = diaChiRepository.findById(id).get().getKhachHang();
+        KhachHang kh = addressRepository.findById(id).get().getKhachHang();
         DiaChi diaChi = new DiaChi();
         diaChi.setId(id);
         diaChi.setTinh(dc.getTinh());

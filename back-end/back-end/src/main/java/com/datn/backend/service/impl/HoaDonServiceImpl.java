@@ -12,7 +12,7 @@ import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.exception.custom_exception.OrderStatusException;
 import com.datn.backend.exception.custom_exception.PlaceOrderException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
-import com.datn.backend.model.NhanVien;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.model.hoa_don.*;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;

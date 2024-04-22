@@ -25,7 +25,7 @@
                   class="form-control"
                   placeholder="Số điện thoại"
                   type="text"
-                  formControlName="tenDangNhap"
+                  formControlName="phone"
                 />
               </div>
 
@@ -35,7 +35,7 @@
                   class="form-control"
                   placeholder="Mật khẩu"
                   [type]="isPassInputHidden ? 'password' : 'text'"
-                  formControlName="matKhau"
+                  formControlName="password"
                 />
               </div>
 
@@ -55,12 +55,7 @@
                 >Bạn quên mật khẩu?
                 <a routerLink="/forget-password">Quên mật khẩu?</a></span
               >
-              <button
-                class="btn signup"
-                type="submit"
-                (click)="login()"
-                [disabled]="loginForm.invalid"
-              >
+              <button class="btn signup" type="submit" (click)="login()">
                 Đăng Nhập
                 <i *ngIf="isLoading" class="fa-solid fa-spin fa-spinner"></i>
               </button>

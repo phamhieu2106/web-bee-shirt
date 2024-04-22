@@ -13,12 +13,12 @@
         </div>
       </div>
 
-      <div class="iconnav">
+      <div class="iconnav" (click)="toggleNotices()">
         <i class="iconThongBao fa-solid fa-bell"></i>
         <span class="quantity1">0</span>
 
 
-        <div class="popUpThongBao">
+        <div class="popUpThongBao"  *ngIf="isNoticesShow">
           <div>
             <div class="headerPopup">
               <span style="color: black; font-weight: bold">Thông Báo</span>

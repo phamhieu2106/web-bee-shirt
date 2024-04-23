@@ -487,13 +487,15 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .hoaDonChiTiets(orderDetails)
                 .build();
 
-        // save order, order details
+        // save order, order details, order history
         HoaDon savedOrder = hoaDonRepo.save(hoaDon);
         saveOrderDetails(orderDetails, savedOrder);
         initOrderHistory(savedOrder);
 
-        // update discount, product details
-        deleteAllItemsOf1Cart(req.getKhachHangId());
+        // update discount, product details, cart details
+        if (req.getKhachHangId() != null) {
+            deleteAllItemsOf1Cart(req.getKhachHangId());
+        }
         updateDiscount(discount, req.getKhachHangId());
         updateProductDetailsQuantity(req.getHoaDonChiTiets());
 
@@ -503,9 +505,13 @@ public class HoaDonServiceImpl implements HoaDonService {
         return savedOrder.getMa();
     }
 
-    private PhieuGiamGia checkAndGetDiscount(int discountId, int custId) {
-        PhieuGiamGia discount = phieuGiamGiaRepo.findById(discountId)
-                .orElseThrow(() -> new PlaceOrderException("Phiếu giảm giá ID: " + discountId + " không tồn tại."));
+    private PhieuGiamGia checkAndGetDiscount(Integer discountId, Integer custId) {
+        // Chú ý: discountId và custId đều có thể null
+        PhieuGiamGia discount = discountId != null ? phieuGiamGiaRepo.findById(discountId).orElse(null) : null;
+        if (discount == null) {
+            return null;
+        }
+
         // check time
         if (!isWithinInterval(LocalDateTime.now(), discount.getThoiGianBatDau(), discount.getThoiGianKetThuc())) {
             throw new PlaceOrderException("Phiếu giảm giá đã hết hạn sử dụng.");
@@ -517,7 +523,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new PlaceOrderException("Phiếu giảm giá công khai đã hết số lượng sử dụng.");
         }
         // 2. private
-        if (discount.getLoai() == 0 && phieuGiamGiaRepo.checkPrivateDiscountUsedOrNot(discountId, custId)) {
+        if (custId != null && discount.getLoai() == 0 && phieuGiamGiaRepo.checkPrivateDiscountUsedOrNot(discountId, custId)) {
             throw new PlaceOrderException("Phiếu giảm giá cá nhân đã được sử dụng.");
         }
         return discount;
@@ -560,14 +566,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDonRepo.save(history);
     }
 
-    private void updateDiscount(PhieuGiamGia discount, int custId) {
+    private void updateDiscount(PhieuGiamGia discount, Integer custId) {
         // public
         if (discount.getLoai() == 1) {
             discount.setSoLuong(discount.getSoLuong() - 1);
             phieuGiamGiaRepo.save(discount);
         }
         // 2. private
-        if (discount.getLoai() == 0) {
+        if (custId != null && discount.getLoai() == 0) {
             discount.setSoLuong(discount.getSoLuong() - 1);
             pggKhRepo.updateIsUsed(custId, discount.getId());
         }

@@ -9,4 +9,10 @@ export class MainHeadingComponent {
   @Input() mainHeading: string;
   @Input() title: string;
   @Input() icon: string;
+  public isNoticesShow: boolean = false;
+
+  public toggleNotices(): void {
+    this.isNoticesShow = !this.isNoticesShow;
+   
+  }
 }

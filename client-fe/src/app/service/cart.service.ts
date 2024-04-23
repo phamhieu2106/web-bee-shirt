@@ -36,9 +36,11 @@ export class CartService {
   // 2
   public updateCartItemsInStorage(cartItems: CartItem[]): void {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
     this.cartItemsInLocalStorage.next(cartItems);
-    this.cartItemsQuantityInLocalStorage.next(cartItems.length);
+  }
+
+  public updateCartItemsQuantityInStorage(quantity: number): void {
+    this.cartItemsQuantityInLocalStorage.next(quantity);
   }
 
   // 4

@@ -185,9 +185,6 @@
                   >
                 </td>
                 <td class="col price">
-                  <!-- <span class="price">{{
-                    formatPrice(od.giaBan * od.soLuong)
-                  }}</span> -->
                   <span
                     class="price"
                     *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
@@ -216,21 +213,21 @@
           <table>
             <tbody>
               <tr class="sub-totals">
-                <th>Giá gốc đơn hàng</th>
+                <th>Giá trị đơn hàng:</th>
                 <td>{{ formatPrice(order?.tongTien + order?.tienGiam) }}</td>
               </tr>
               <tr class="sub-totals">
-                <th>Giảm giá từ đợt</th>
+                <th>Giảm giá:</th>
                 <td style="color: rgb(218, 41, 28)">
-                  {{ formatPrice(totalSalePrice) }}
+                  {{ formatPrice(order?.tienGiam) }}
                 </td>
               </tr>
-              <tr class="sub-totals">
+              <!-- <tr class="sub-totals">
                 <th>Giảm giá từ phiếu</th>
                 <td style="color: rgb(218, 41, 28)">
                   {{ formatPrice(order?.tienGiam - totalSalePrice) }}
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
             <tfoot>
               <tr class="grand-totals">

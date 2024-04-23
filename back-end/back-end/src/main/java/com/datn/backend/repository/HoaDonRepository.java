@@ -70,4 +70,12 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
                    """, nativeQuery = true)
     List<HoaDon> getOrdersForClient(@Param("custId") int custId,
                                     @Param("orderStatus") String orderStatus);
+
+    @Query(value = """
+                   SELECT *
+                   FROM hoa_don
+                   WHERE id_khach_hang IS NULL
+                   AND sdt_nguoi_nhan = :phone
+                   """, nativeQuery = true)
+    List<HoaDon> getNoneLoggedOrdersByPhone(@Param("phone") String phone);
 }

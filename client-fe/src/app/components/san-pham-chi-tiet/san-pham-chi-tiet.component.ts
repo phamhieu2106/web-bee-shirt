@@ -268,6 +268,11 @@ export class SanPhamChiTietComponent {
       )
       .subscribe({
         next: (response: SanPhamChiTiet) => {
+          if (response.soLuongTon === 0) {
+            this.notifService.warning("Sản phẩm này đã hết hàng!");
+            return;
+          }
+
           // kiểm tra sp này có trong giỏ hay chưa
           let cartItemsInstorage: CartItem[] = JSON.parse(
             localStorage.getItem("cartItems")
@@ -345,6 +350,11 @@ export class SanPhamChiTietComponent {
       )
       .subscribe({
         next: (response: SanPhamChiTiet) => {
+          if (response.soLuongTon === 0) {
+            this.notifService.warning("Sản phẩm này đã hết hàng!");
+            return;
+          }
+
           // kiểm tra sp này có trong giỏ hay chưa
           this.cartService
             .getCartItemByCustomerAndProductDetails(loggedCus.id, response.id)
@@ -583,7 +593,6 @@ export class SanPhamChiTietComponent {
                   .subscribe({
                     next: (saleEvent: SaleEvent) => {
                       this.curSaleEvent = saleEvent;
-                      console.log("sale: ", this.curSaleEvent);
                     },
                     error: (errorResponse: HttpErrorResponse) => {
                       this.notifService.error(errorResponse.error.message);

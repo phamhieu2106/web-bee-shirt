@@ -11,18 +11,23 @@
                   <!-- tên đăng nhập -->
                   <div class="form-group">
                     <input
-                      class="form-control"
+                      class="form-control rounded"
                       [ngClass]="
-                        loginForm.get('tenDangNhap').invalid &&
-                        loginForm.get('tenDangNhap').touched
+                        loginForm.get('username').invalid &&
+                        loginForm.get('username').touched
                           ? 'is-invalid'
                           : ''
                       "
                       placeholder="Tên đăng nhập"
                       type="text"
-                      formControlName="tenDangNhap"
+                      formControlName="username"
                     />
-                    <div class="invalid-feedback">
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        loginForm.get('username').hasError('customRequired')
+                      "
+                    >
                       Tên đăng nhập không được bỏ trống
                     </div>
                   </div>
@@ -30,53 +35,53 @@
                   <!-- mật khẩu -->
                   <div class="form-group">
                     <input
-                      class="form-control"
+                      class="form-control rounded"
                       [ngClass]="
-                        loginForm.get('matKhau').invalid &&
-                        loginForm.get('matKhau').touched
+                        loginForm.get('password').invalid &&
+                        loginForm.get('password').touched
                           ? 'is-invalid'
                           : ''
                       "
                       placeholder="Mật khẩu"
-                      [type]="passwordInputType ? 'password' : 'text'"
-                      formControlName="matKhau"
+                      [type]="pwdInputType ? 'password' : 'text'"
+                      formControlName="password"
                     />
-                    <div class="invalid-feedback">
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        loginForm.get('password').hasError('customRequired')
+                      "
+                    >
                       Mật khẩu không được bỏ trống
                     </div>
                     <div class="mt-2">
                       <button
                         class="btn bg-white text-muted"
                         type="button"
-                        (click)="togglePasswordInputType()"
+                        (click)="togglePwdInputType()"
                       >
                         <span class="far fa-eye-slash"> </span>
                       </button>
                       <span>Hiển thị mật khẩu</span>
                     </div>
                   </div>
+
                   <div class="actions clearfix">
-                    <a href="forgot-pwd.html">Quên mật khẩu?</a>
+                    <!-- <a href="forgot-pwd.html">Quên mật khẩu?</a> -->
                     <button
                       type="submit"
                       class="btn btn-primary"
-                      (click)="loginSubmit()"
+                      (click)="login()"
                       [disabled]="loginForm.invalid"
                     >
                       Đăng nhập
                       <i
-                        *ngIf="loading"
+                        *ngIf="isLoading"
                         class="fa-solid fa-spin fa-spinner"
                       ></i>
                     </button>
                   </div>
                 </form>
-                <!-- <div class="or"></div>
-                <div class="mt-4">
-                  <a href="signup.html" class="additional-link"
-                    >Don't have an Account? <span>Create Now</span></a
-                  >
-                </div> -->
               </div>
             </div>
             <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">

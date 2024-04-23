@@ -465,7 +465,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     public String placeOrderOnline(OnlineOrderRequest req) {
         KhachHang customer = req.getKhachHangId() != null ?
                 khachHangRepo.findById(req.getKhachHangId()).orElse(null) : null;
-        PhieuGiamGia discount = checkAndGetDiscount(req.getPhieuGiamGiaId(), req.getKhachHangId());
+        PhieuGiamGia discount = req.getPhieuGiamGiaId() != null ?
+                checkAndGetDiscount(req.getPhieuGiamGiaId(), req.getKhachHangId()) : null;
         List<HoaDonChiTiet> orderDetails = checkAndGetOrderDetails(req.getHoaDonChiTiets());
 
         HoaDon hoaDon = HoaDon
@@ -496,7 +497,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (req.getKhachHangId() != null) {
             deleteAllItemsOf1Cart(req.getKhachHangId());
         }
-        updateDiscount(discount, req.getKhachHangId());
+        if (req.getPhieuGiamGiaId() != null) {
+            updateDiscount(discount, req.getKhachHangId());
+        }
         updateProductDetailsQuantity(req.getHoaDonChiTiets());
 
         // payment by vnpay
@@ -507,10 +510,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     private PhieuGiamGia checkAndGetDiscount(Integer discountId, Integer custId) {
         // Chú ý: discountId và custId đều có thể null
-        PhieuGiamGia discount = discountId != null ? phieuGiamGiaRepo.findById(discountId).orElse(null) : null;
-        if (discount == null) {
-            return null;
-        }
+        PhieuGiamGia discount = phieuGiamGiaRepo.findById(discountId).orElse(null);
 
         // check time
         if (!isWithinInterval(LocalDateTime.now(), discount.getThoiGianBatDau(), discount.getThoiGianKetThuc())) {
@@ -604,6 +604,16 @@ public class HoaDonServiceImpl implements HoaDonService {
         List<HoaDon> hoaDonList = hoaDonRepo.getOrdersForClient(custId, orderStatus);
         List<HoaDonResponse> result = new ArrayList<>();
         for (HoaDon hd : hoaDonList) {
+            result.add(mapToHoaDonResponse(hd));
+        }
+        return result;
+    }
+
+    @Override
+    public List<HoaDonResponse> getNoneLoggedOrdersByPhone(String phone) {
+        List<HoaDon> orderList = hoaDonRepo.getNoneLoggedOrdersByPhone(phone);
+        List<HoaDonResponse> result = new ArrayList<>();
+        for (HoaDon hd : orderList) {
             result.add(mapToHoaDonResponse(hd));
         }
         return result;

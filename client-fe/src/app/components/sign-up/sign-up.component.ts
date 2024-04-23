@@ -23,6 +23,7 @@ export class SignUpComponent {
   public wardId: number;
 
   public acceptPolicy: boolean = false;
+  public pwdInputType = false;
 
   // constructor, ngOn
   constructor(
@@ -38,6 +39,11 @@ export class SignUpComponent {
   }
 
   // public functions
+  //
+  public togglePwdInputType(): void {
+    this.pwdInputType = !this.pwdInputType;
+  }
+
   //
   public getAllDistrictsByProvince(): void {
     this.wards = [];
@@ -153,6 +159,7 @@ export class SignUpComponent {
     this.signUpForm = new FormGroup({
       hoTen: new FormControl("", [
         Validators.required,
+        this.customRequiredValidator,
         Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
       ]),
       sdt: new FormControl("", [
@@ -161,6 +168,7 @@ export class SignUpComponent {
       ]),
       email: new FormControl("", [
         Validators.required,
+        this.customRequiredValidator,
         Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"),
       ]),
       ngaySinh: new FormControl("", [
@@ -168,7 +176,10 @@ export class SignUpComponent {
         this.pastDateValidator,
       ]),
       gioiTinh: new FormControl(true, [Validators.required]),
-      matKhau: new FormControl("", [Validators.required]),
+      matKhau: new FormControl("", [
+        Validators.required,
+        this.pwdPaternValidator,
+      ]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
       xa: new FormControl("", [Validators.required]),
@@ -190,6 +201,54 @@ export class SignUpComponent {
       return { invalidDate: true };
     }
     return null;
+  }
+
+  // 1.2
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
+  }
+
+  // 1.3
+  private pwdPaternValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const pattern = /^[a-zA-Z0-9]{8,}$/;
+    const value = control.value.trim();
+    const array = value.split("");
+
+    // check has uppercase
+    let hasUpperCase = false;
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] >= "A" && array[i] <= "Z") {
+        hasUpperCase = true;
+        break;
+      }
+    }
+
+    // check has number
+    let hasNumber = false;
+    for (let i = 0; i < array.length; i++) {
+      if (
+        !Number.isNaN(parseInt(array[i])) &&
+        parseInt(array[i]) >= 0 &&
+        parseInt(array[i]) <= 9
+      ) {
+        hasNumber = true;
+        break;
+      }
+    }
+
+    if (value.match(pattern) && hasUpperCase) {
+      return null;
+    }
+    return { pwdPattern: true };
   }
 
   //

@@ -22,7 +22,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <!-- khách hàng đăng nhập -->
                     <tr class="cart-item" *ngFor="let item of cartItems">
                       <td data-th="Sản phẩm" class="col item">
                         <div class="cart-item-info">
@@ -134,7 +133,6 @@
               <div>
                 <div class="checkout-step-content">
                   <div class="shipping-address-items">
-                    <!-- khách hàng đăng nhập -->
                     <div class="shipping-address-item">
                       <div class="addressNot">
                         <div class="wraperInfo">
@@ -733,7 +731,11 @@
                                   {{ d?.tenPhieuGiamGia }}
                                 </div>
                                 <div class="voucher-item-date">
-                                  HSD: {{ d.thoiGianKetThuc }}
+                                  HSD:
+                                  {{
+                                    d.thoiGianKetThuc
+                                      | date : "dd-MM-yyyy HH:mm"
+                                  }}
                                 </div>
                               </div>
                               <div class="voucher-item-action">

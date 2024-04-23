@@ -113,4 +113,9 @@ public class HoaDonResource {
                                                                    @PathVariable("orderStatus") String orderStatus) {
         return ResponseEntity.ok(hoaDonService.getOrdersForClient(custId, orderStatus));
     }
+
+    @GetMapping("/none-logged-orders/{phone}")
+    public ResponseEntity<List<HoaDonResponse>> getNoneLoggedOrdersByPhone(@PathVariable("phone") String phone) {
+        return ResponseEntity.ok(hoaDonService.getNoneLoggedOrdersByPhone(phone));
+    }
 }

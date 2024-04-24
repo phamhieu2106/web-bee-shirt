@@ -197,7 +197,11 @@
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Tên người nhận: </span>
-          <span>{{ hoaDon.tenNguoiNhan }}</span>
+          <span>{{
+            hoaDon.tenNguoiNhan == "anonymousUser"
+              ? "Khách lẻ"
+              : hoaDon.tenNguoiNhan
+          }}</span>
         </div>
         <div class="col-md-6 mb-3">
           <span class="font-weight-bold">Số điện thoại: </span

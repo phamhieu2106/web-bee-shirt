@@ -1,8 +1,12 @@
 FROM node:18-alpine as build
 
-WORKDIR /app
+WORKDIR /app/admin-fe
+
+COPY ./node_modules /app/admin-fe
 
 COPY ./ /app/admin-fe
+
+RUN npm install -g @angular/cli@16.1.8
 
 RUN npm install
 

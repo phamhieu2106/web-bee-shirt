@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 
 import { JwtHelperService } from "@auth0/angular-jwt";
 
-import { LoginRequest } from "../model/interface/login-request.interface";
+import { AdminLoginReq } from "../model/interface/admin-login-req.interface";
 import { NhanVien } from "../model/class/nhan-vien.class";
 
 @Injectable({
@@ -22,9 +22,11 @@ export class AuthenticationService {
 
   // public functions
   // 1
-  public login(loginRequest: LoginRequest): Observable<HttpResponse<NhanVien>> {
+  public login(
+    loginRequest: AdminLoginReq
+  ): Observable<HttpResponse<NhanVien>> {
     return this.http.post<NhanVien>(
-      `${this.apiUrl}/auth/staff/login`,
+      `${this.apiUrl}/auth/admin/login`,
       loginRequest,
       {
         observe: "response",

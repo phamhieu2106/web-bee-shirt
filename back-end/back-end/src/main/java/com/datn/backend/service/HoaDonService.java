@@ -35,5 +35,7 @@ public interface HoaDonService {
 
     List<HoaDonResponse> getOrdersForClient(int custId, String orderStatus);
 
+    List<HoaDonResponse> getNoneLoggedOrdersByPhone(String phone);
+
     HoaDonResponse refundMoney(ThanhToanRequest thanhToanRequest);
 }

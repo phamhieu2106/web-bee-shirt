@@ -78,6 +78,11 @@ export class MyAddressesComponent {
       cancelButtonColor: "#d33",
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
+      if (this.addAddressForm.invalid) {
+        this.notifService.warning("Vui lòng điền đầy đủ thông tin!");
+        return;
+      }
+
       if (result.isConfirmed) {
         this.addAddressForm
           .get("custId")

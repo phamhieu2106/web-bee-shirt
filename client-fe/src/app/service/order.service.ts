@@ -22,7 +22,7 @@ export class OrderService {
   }
 
   // 2
-  public getByCode(code: number): Observable<Order> {
+  public getByCode(code: string): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/get-by-code/${code}`);
   }
 
@@ -34,5 +34,10 @@ export class OrderService {
     return this.http.get<Order[]>(
       `${this.apiUrl}/all-orders/${custId}/${status}`
     );
+  }
+
+  // 4
+  public getNoneLoggedOrdersByPhone(phone: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/none-logged-orders/${phone}`);
   }
 }

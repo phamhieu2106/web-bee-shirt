@@ -16,6 +16,7 @@ export class ChangePasswordComponent {
   public form: FormGroup;
   public pwdMatch = true;
   private custEmail: string;
+  public pwdInputType = false;
 
   // constructor, ngOn
   constructor(
@@ -34,6 +35,11 @@ export class ChangePasswordComponent {
   }
 
   // public functions
+  //
+  public togglePwdInputType(): void {
+    this.pwdInputType = !this.pwdInputType;
+  }
+
   //
   public checkMatch(): void {
     const newPwd = this.form.get("newPwd").value;
@@ -85,6 +91,7 @@ export class ChangePasswordComponent {
       newPwd: new FormControl("", [
         Validators.required,
         this.customNotBlankValidator,
+        this.pwdPaternValidator,
       ]),
       confirmNewPwd: new FormControl("", [
         Validators.required,
@@ -107,5 +114,40 @@ export class ChangePasswordComponent {
       return { customRequired: true };
     }
     return null;
+  }
+
+  private pwdPaternValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const pattern = /^[a-zA-Z0-9]{8,}$/;
+    const value = control.value.trim();
+    const array = value.split("");
+
+    // check has uppercase
+    let hasUpperCase = false;
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] >= "A" && array[i] <= "Z") {
+        hasUpperCase = true;
+        break;
+      }
+    }
+
+    // check has number
+    let hasNumber = false;
+    for (let i = 0; i < array.length; i++) {
+      if (
+        !Number.isNaN(parseInt(array[i])) &&
+        parseInt(array[i]) >= 0 &&
+        parseInt(array[i]) <= 9
+      ) {
+        hasNumber = true;
+        break;
+      }
+    }
+
+    if (value.match(pattern) && hasUpperCase) {
+      return null;
+    }
+    return { pwdPattern: true };
   }
 }

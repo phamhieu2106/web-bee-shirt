@@ -58,7 +58,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // Ignore requests that don't need authentication (e.g., login)
-    const loginUrl = `http://localhost:8080/auth/staff/login`;
+    const loginUrl = `http://localhost:8080/auth/admin/login`;
 
     if (request.url.includes(loginUrl)) {
       return next.handle(request);

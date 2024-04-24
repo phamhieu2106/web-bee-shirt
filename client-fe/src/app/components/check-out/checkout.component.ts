@@ -330,8 +330,8 @@ export class CheckoutComponent {
           this.mapCartItemsToOrderDetails();
 
         let req: OnlineOrderRequest = {
-          tongTien: this.finalPrice,
-          tienGiam: this.salePrice + this.discountPrice,
+          tongTien: this.realPrice - this.salePrice,
+          tienGiam: this.discountPrice,
           phiVanChuyen: this.shipPrice,
           hoaDonChiTiets: hoaDonChiTiets,
           khachHangId: this.loggedCust?.id,
@@ -365,10 +365,15 @@ export class CheckoutComponent {
   private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
     let result: OrderDetailsReq[] = [];
     for (let item of this.cartItems) {
+      let price = item.spct.giaBan;
+      if (item.spct.saleEvent) {
+        price =
+          (item.spct.giaBan * (100 - item.spct.saleEvent.giaTriPhanTram)) / 100;
+      }
       let orderDetails: OrderDetailsReq = {
         id: null,
         soLuong: item.soLuong,
-        giaBan: item.spct.giaBan,
+        giaBan: price,
         giaNhap: item.spct.giaNhap,
         sanPhamChiTietId: item.spct.id,
       };

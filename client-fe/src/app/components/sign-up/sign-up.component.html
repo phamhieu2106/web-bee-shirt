@@ -39,7 +39,7 @@
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="signUpForm.get('hoTen').hasError('required')"
+                  *ngIf="signUpForm.get('hoTen').hasError('customRequired')"
                 >
                   Họ tên không được bỏ trống
                 </div>
@@ -68,7 +68,7 @@
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="signUpForm.get('email').hasError('required')"
+                  *ngIf="signUpForm.get('email').hasError('customRequired')"
                 >
                   Email không được bỏ trống
                 </div>
@@ -76,7 +76,7 @@
                   class="invalid-feedback"
                   *ngIf="signUpForm.get('email').hasError('pattern')"
                 >
-                  Email không đúng định dạng
+                  Email không hợp lệ
                 </div>
               </div>
 
@@ -143,7 +143,7 @@
                   class="invalid-feedback"
                   *ngIf="signUpForm.get('sdt').hasError('pattern')"
                 >
-                  SĐT không đúng định dạng
+                  SĐT không hợp lệ
                 </div>
               </div>
 
@@ -151,7 +151,7 @@
               <div class="form-group col-6">
                 <label>Mật khẩu:</label>
                 <input
-                  type="password"
+                  [type]="pwdInputType ? 'text' : 'password'"
                   class="form-control"
                   placeholder="Mật khẩu"
                   formControlName="matKhau"
@@ -162,11 +162,29 @@
                       : ''
                   "
                 />
+                <span
+                  class="badge text-bg-secondary pointer mt-2"
+                  (click)="togglePwdInputType()"
+                  >{{
+                    pwdInputType ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
+                  }}</span
+                >
                 <div
                   class="invalid-feedback"
                   *ngIf="signUpForm.get('matKhau').hasError('required')"
                 >
                   Mật khẩu không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    signUpForm.get('matKhau').hasError('pwdPattern') &&
+                    !signUpForm.get('matKhau').hasError('required')
+                  "
+                >
+                  Mật khẩu phải dài ít nhất 8 ký tự, chỉ gồm chữ cái không dấu
+                  và chữ số, phải có ít nhất 1 chữ cái hoa và 1 chữ số, không ký
+                  tự đặc biệt
                 </div>
               </div>
 
@@ -287,13 +305,14 @@
 
               <div class="check-terms">
                 <input
+                  id="acceptPolicy"
                   type="checkbox"
                   class="checkbox me-1"
-                  [(ngModel)]="acceptPolicy"
+                  name="acceptPolicy"
                 />
-                <span class="check-label"
+                <label class="check-label" for="acceptPolicy"
                   >Tôi chấp nhận điều khoản quyền riêng tư và bảo mật
-                </span>
+                </label>
               </div>
 
               <span class="signin-link mt-3"

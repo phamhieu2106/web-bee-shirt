@@ -81,7 +81,7 @@ export class TableComponent implements OnInit {
   public onRemove(id: number) {
     Swal.fire({
       title:
-        "Bạn có chắc chắn muốn xoá? Hành động này sẽ không thể được hoàn tác nếu bạn bấm đồng ý!",
+        "Bạn có chắc chắn muốn hủy Đợt Giảm Giá? Hành động này sẽ không thể được hoàn tác nếu bạn bấm đồng ý!",
       cancelButtonText: "Hủy",
       icon: "warning",
       showCancelButton: true,

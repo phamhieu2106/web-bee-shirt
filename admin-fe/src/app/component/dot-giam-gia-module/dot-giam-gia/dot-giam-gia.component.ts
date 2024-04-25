@@ -4,7 +4,7 @@ import { interval, switchMap } from "rxjs";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
-import Swal from "sweetalert2";
+import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
   selector: "app-dot-giam-gia",
@@ -41,7 +41,7 @@ export class DotGiamGiaComponent implements OnInit {
 
   constructor(
     private service: DotGiamGiaService,
-    private toast: ToastrService
+    private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class DotGiamGiaComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.toast.error("Lỗi khi tải danh sách đợt giảm giá");
+        this.notifService.error("Lỗi khi tải danh sách đợt giảm giá");
       },
     });
   }
@@ -85,7 +85,7 @@ export class DotGiamGiaComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          this.toast.error(
+          this.notifService.error(
             "Lỗi khi tải danh sách đợt giảm giá khi sử dụng lọc"
           );
         },
@@ -116,7 +116,7 @@ export class DotGiamGiaComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            this.toast.error(
+            this.notifService.error(
               "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
             );
           },
@@ -128,7 +128,7 @@ export class DotGiamGiaComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          this.toast.error(
+          this.notifService.error(
             "Lỗi khi tải danh sách đợt giảm giá khi chọn số phần tử hiển thị"
           );
         },
@@ -152,7 +152,7 @@ export class DotGiamGiaComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            this.toast.error(
+            this.notifService.error(
               "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
             );
           },
@@ -164,7 +164,7 @@ export class DotGiamGiaComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          this.toast.error(
+          this.notifService.error(
             "Lỗi khi tải danh sách đợt giảm giá khi chọn trang đợt giảm giá"
           );
         },
@@ -178,7 +178,7 @@ export class DotGiamGiaComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.toast.error(
+        this.notifService.error(
           "Lỗi khi tải danh sách đợt giảm giá khi tìm kiếm đợt giảm giá"
         );
       },
@@ -188,26 +188,14 @@ export class DotGiamGiaComponent implements OnInit {
   public handleRemoveDGG(id: any) {
     this.service.deleteDotGiamGiaRequest(id).subscribe({
       complete: () => {
-        Swal.fire({
-          icon: "success",
-          title: `Xoá thành công '${id}'!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.turnOffOverlay("");
-        this.toast.success("Xoá đợt giảm giá thành công");
+        this.notifService.success("Hủy đợt giảm giá thành công");
         this.getAllDotGiamGia();
       },
       error: (err) => {
-        this.toast.error(`Xoá Thất Bại Do ${err.error.message}!`);
+        this.notifService.error(`Xoá Thất Bại Do ${err.error.message}!`);
         console.log(err.message);
       },
     });
   }
   // END DOT GIAM GIA TABLE HANDLING
-
-  private turnOffOverlay(text: string): void {
-    this.overlayText = text;
-    this.isLoadding = false;
-  }
 }

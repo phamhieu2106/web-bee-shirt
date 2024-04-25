@@ -104,6 +104,9 @@ public class HoaDonTraHangServiceImpl implements HoaDonTraHangService {
             throw new ResourceNotFoundException("Không tìm thấy hoá đơn có mã: " + ma);
         } else {
             HoaDon hoaDon = optionalHoaDon.get();
+            if(hoaDon.getTrangThai() == TrangThaiHoaDon.TRA_HANG){
+                throw new ResourceInvalidException("Đơn hàng đã trả hàng");
+            }
             if(hoaDon.getTrangThai() != TrangThaiHoaDon.HOAN_THANH){
                 throw new ResourceInvalidException("Đơn hàng chưa hoàn thành");
             }

@@ -110,6 +110,7 @@
     <td>{{ object.soLuongSanPham }}</td>
     <td>
       <button
+        (click)="object.trangThai != 0 ? onSelectRemove(object.id) : null"
         class="{{
           object.trangThai == 1
             ? 'btn btn-success btn-rounded'
@@ -143,13 +144,6 @@
         [hidden]="object.trangThai == 0"
       >
         <i class="fa-solid fa-pen-to-square" style="color: #ffd43b"></i>
-      </button>
-      <button
-        class="btn btn-outline btn-rounded"
-        [hidden]="object.trangThai == 0"
-        (click)="onSelectRemove(object.id)"
-      >
-        <i class="fa-solid fa-trash fa-xl" style="color: #f20101"></i>
       </button>
     </td>
   </tr>

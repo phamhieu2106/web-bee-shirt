@@ -11,7 +11,9 @@ import com.datn.backend.model.dot_giam_gia.DotGiamGia;
 import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.model.hoa_don.HoaDonChiTiet;
 import com.datn.backend.model.hoa_don.LichSuHoaDon;
+import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonChiTietService;
@@ -43,6 +45,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private final LichSuHoaDonRepository lichSuHoaDonRepo;
     private final PhieuGiamGiaServce phieuGiamGiaServce;
     private final PhieuGiamGiaRepository phieuGiamGiaRepo;
+    private final PhieuGiamGiaKhachHangRepository phieuGiamGiaKhachHangRepository;
 
     @Override
     @Transactional
@@ -270,6 +273,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         }
         // update tong tien
         HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+        KhachHang khachHang = hoaDon.getKhachHang();
         hoaDon.setTongTien(this.getTongTien(hoaDon.getHoaDonChiTiets()));
         // lay phieu giam gia giam nhieu nhat
         DiscountValidRequest discountValidRequest = DiscountValidRequest.builder()
@@ -287,16 +291,34 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
             phieuGiamGiaRepo.save(pggNew);
             hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
 
+            if (khachHang != null && pggNew.getLoai() == 0 &&  khachHang.getId() != null) {
+                //chuyen trang thai cua khach hang trong phieu giam gia
+                PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                        pggNew.getId(),khachHang.getId());
+                phieuGiamGiaKhachHang.setTrangThai(1); //unUsed
+                phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+                System.out.println(phieuGiamGiaKhachHang);
+            }
+
         } else if (hoaDon.getPhieuGiamGia() != null && discountValid.getPhieuGiamGia() == null) {
             // khong tim dc phieu giam gia phu hop hon
             // kiem tra phieu giam gia hien tai co con phu hop khong
             if (this.isPhieuGiamGiaValid(hoaDon.getPhieuGiamGia(), hoaDon.getTongTien()) == null) {
                 // khong phu hop nua -> detach va rollback so luong
-
                 PhieuGiamGia pgg = hoaDon.getPhieuGiamGia();
                 pgg.setSoLuong(pgg.getSoLuong() + 1);
                 phieuGiamGiaRepo.save(pgg);
                 hoaDon.setPhieuGiamGia(null);
+                // rollback pgg khach hang
+
+                if (khachHang != null && pgg.getLoai() == 0 &&  khachHang.getId() != null) {
+                    //chuyen trang thai cua khach hang trong phieu giam gia
+                    PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                            pgg.getId(),khachHang.getId());
+                    phieuGiamGiaKhachHang.setTrangThai(1); //unUsed
+                    phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+                    System.out.println(phieuGiamGiaKhachHang);
+                }
             }
 
         } else if (discountValid.getPhieuGiamGia() != null && hoaDon.getPhieuGiamGia().getId() != null) {
@@ -307,11 +329,30 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                 pgg.setSoLuong(pgg.getSoLuong() + 1);
                 phieuGiamGiaRepo.save(pgg);
                 hoaDon.setPhieuGiamGia(discountValid.getPhieuGiamGia());
+                // sua trang thai phieu giam gia khach hang cu
+                if (khachHang != null && pgg.getLoai() == 0 &&  khachHang.getId() != null) {
+                    //chuyen trang thai cua khach hang trong phieu giam gia
+                    PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                            pgg.getId(),khachHang.getId());
+                    phieuGiamGiaKhachHang.setTrangThai(1); // unUsed
+                    phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+                    System.out.println(phieuGiamGiaKhachHang);
+                }
 
                 // tru so luong phieu giam gia moi
                 PhieuGiamGia pggNew = discountValid.getPhieuGiamGia();
                 pggNew.setSoLuong(pggNew.getSoLuong() - 1);
                 phieuGiamGiaRepo.save(pggNew);
+
+                // sua trang thai phieu giam gia khach hang moi
+                if (khachHang != null && pggNew.getLoai() == 0 &&  khachHang.getId() != null) {
+                    //chuyen trang thai cua khach hang trong phieu giam gia
+                    PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                            pggNew.getId(),khachHang.getId());
+                    phieuGiamGiaKhachHang.setTrangThai(0); // unUsed
+                    phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+                    System.out.println(phieuGiamGiaKhachHang.toString());
+                }
             } else {
                 List<PhieuGiamGia> phieuGiamGias
                         = Arrays.asList(discountValid.getPhieuGiamGia(), hoaDon.getPhieuGiamGia());
@@ -323,10 +364,28 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                     PhieuGiamGia pggOld = hoaDon.getPhieuGiamGia();
                     pggOld.setSoLuong(pggOld.getSoLuong() + 1);
                     phieuGiamGiaRepo.save(pggOld);
+                    // sua trang thai phieu giam gia khach hang cu
+                    if (khachHang != null && pggOld.getLoai() == 0 &&  khachHang.getId() != null) {
+                        //chuyen trang thai cua khach hang trong phieu giam gia
+                        PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                                pggOld.getId(),khachHang.getId());
+                        phieuGiamGiaKhachHang.setTrangThai(1); // unUsed
+                        phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+//                        System.out.println(phieuGiamGiaKhachHang);
+                    }
 
                     PhieuGiamGia pggNew = discountMax;
                     pggNew.setSoLuong(pggNew.getSoLuong() - 1);
                     phieuGiamGiaRepo.save(pggNew);
+                    // sua trang thai phieu giam gia khach hang moi
+                    if (khachHang != null && pggNew.getLoai() == 0 &&  khachHang.getId() != null) {
+                        //chuyen trang thai cua khach hang trong phieu giam gia
+                        PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = phieuGiamGiaKhachHangRepository.findByPhieuGiamGiaIdAndKhachHangId(
+                                pggNew.getId(),khachHang.getId());
+                        phieuGiamGiaKhachHang.setTrangThai(0); // unUsed
+                        phieuGiamGiaKhachHangRepository.save(phieuGiamGiaKhachHang);
+                        System.out.println(phieuGiamGiaKhachHang.toString());
+                    }
                     hoaDon.setPhieuGiamGia(discountMax);
                 }
             }

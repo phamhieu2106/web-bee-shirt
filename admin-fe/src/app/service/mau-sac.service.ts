@@ -48,10 +48,8 @@ export class MauSacService {
   }
 
   // 5
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}`, {
-      responseType: "text",
-    });
+  public changeStatus(id: number): Observable<void> {
+    return this.http.get<void>(`${this.apiUrl}/status/${id}`);
   }
 
   // 6

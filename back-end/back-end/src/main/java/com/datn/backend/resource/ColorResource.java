@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mau-sac")
 @RequiredArgsConstructor
-public class MauSacResource {
+public class ColorResource {
 
     private final MauSacService mauSacService;
     private final ObjectMapper objectMapper;
@@ -56,9 +56,9 @@ public class MauSacResource {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+    public ResponseEntity<Void> changeStatus(@PathVariable("id") int id) {
         mauSacService.changeStatus(id);
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")

@@ -18,8 +18,11 @@ export class DanhSachKieuCoAoComponent {
   public pagedResponse: PagedResponse<CoAo>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
-  public search = "";
+  public searchKeyword = "";
   public selectedDetails: CoAo;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -28,12 +31,17 @@ export class DanhSachKieuCoAoComponent {
   ) {}
 
   ngOnInit(): void {
+    this.turnOnOverlay("Đang tải");
     this.getCoAoList();
     this.initAddForm();
     this.initUpdateForm();
+
+    setTimeout(() => {
+      this.turnOffOverlay("");
+    }, 500);
   }
 
-  // public function
+  // public functions
   // 1
   public add(): void {
     Swal.fire({
@@ -67,7 +75,11 @@ export class DanhSachKieuCoAoComponent {
   // 2
   public initAddForm(): void {
     this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
     });
   }
 
@@ -89,12 +101,12 @@ export class DanhSachKieuCoAoComponent {
 
   //
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.goToPage(1, e.target.value, this.searchKeyword);
   }
 
   //
   public searchByName(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+    this.goToPage(1, this.pagedResponse.pageSize, this.searchKeyword);
   }
 
   //
@@ -115,7 +127,11 @@ export class DanhSachKieuCoAoComponent {
       next: (response: CoAo) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
-          ten: new FormControl(response.ten, [Validators.required]),
+          ten: new FormControl(response.ten, [
+            Validators.required,
+            this.customRequiredValidator,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+          ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
@@ -175,7 +191,7 @@ export class DanhSachKieuCoAoComponent {
     });
   }
 
-  // private function
+  // private functions
   //
   private getCoAoList(): void {
     this.coAoService.getByPage().subscribe({
@@ -190,8 +206,36 @@ export class DanhSachKieuCoAoComponent {
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
       trangThai: new FormControl(false),
     });
+  }
+
+  //
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
+  }
+
+  //
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  //
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

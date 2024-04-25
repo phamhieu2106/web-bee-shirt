@@ -14,7 +14,7 @@ import { NhanVien } from "../model/class/nhan-vien.class";
 export class AuthenticationService {
   public apiUrl = "http://localhost:8080";
   private token: string;
-  private loggedInUsername: string;
+  // private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
   public isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
 
@@ -37,7 +37,7 @@ export class AuthenticationService {
   // 2
   public logout(): void {
     this.token = null;
-    this.loggedInUsername = null;
+    // this.loggedInUsername = null;
     localStorage.removeItem("nhanVien");
     localStorage.removeItem("token");
     this.isLoggedInSubject.next(false);
@@ -81,7 +81,7 @@ export class AuthenticationService {
       let subject = this.jwtHelper.decodeToken(this.token).sub;
       if (subject != null && this.token != "") {
         if (!this.jwtHelper.isTokenExpired(this.token)) {
-          this.loggedInUsername = subject;
+          // this.loggedInUsername = subject;
           return true;
         }
         return false;

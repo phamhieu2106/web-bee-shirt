@@ -17,7 +17,7 @@ export class SanPhamChiTietService {
 
   constructor(private http: HttpClient) {}
 
-  //
+  // 1
   public add(request: AddSPCTRequest, files: File[]): Observable<string> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(request));
@@ -29,7 +29,7 @@ export class SanPhamChiTietService {
     });
   }
 
-  //
+  // 2
   public getAll(
     pageNumber: number = 1,
     pageSize: number = 5,
@@ -41,7 +41,7 @@ export class SanPhamChiTietService {
     );
   }
 
-  //
+  // 3
   public filterSPCTByPage(
     params: FilterSPCTParams
   ): Observable<PagedResponse<SanPhamChiTiet>> {
@@ -51,59 +51,61 @@ export class SanPhamChiTietService {
     );
   }
 
-  //
+  // 4
   public getByPage(spId: number): Observable<PagedResponse<SanPhamChiTiet>> {
     return this.http.get<PagedResponse<SanPhamChiTiet>>(
       `${this.apiUrl}/get-by-page/${spId}`
     );
   }
 
-  //
+  // 5
   public getOneById(spctId: number): Observable<SanPhamChiTiet> {
     return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-one/${spctId}`);
   }
 
-  //
+  // 6
   public getGiaBan(spct: SanPhamChiTiet): number {
     if (spct.dotGiamGia == null) {
       return spct.giaBan;
     } else {
       return (spct.giaBan * (100 - spct.dotGiamGia.giaTriPhanTram)) / 100;
     }
-    // return null;
   }
 
+  // 7
   public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
     return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
       responseType: "text",
     });
   }
 
-  //
+  // 8
   public update(updateSpctReq: UpdateSpctReq): Observable<string> {
     return this.http.post(`${this.apiUrl}/update`, updateSpctReq, {
       responseType: "text",
     });
   }
 
-  //
+  // 9
   public getMinAndMaxPrice(productId: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/min-max-price/${productId}`);
   }
 
-  //
+  // 10
   public changeStatus(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/status/${id}`, {
       responseType: "text",
     });
   }
 
+  // 11
   public getAnySpctBySanPhamId(sanPhamId: number): Observable<SanPhamChiTiet> {
     return this.http.get<SanPhamChiTiet>(
       `${this.apiUrl}/get-any-by-spid/${sanPhamId}`
     );
   }
 
+  // 12
   public checkSpctExists(
     spId: number,
     mauSacId: number,
@@ -113,10 +115,12 @@ export class SanPhamChiTietService {
     return this.http.get<boolean>(`${this.apiUrl}/check-exist${params}`);
   }
 
+  // 13
   public getMinMaxPrice(): Observable<any> {
     return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/min-max-price`);
   }
 
+  // 14
   public updateImages(
     files: File[],
     spId: number,
@@ -135,6 +139,7 @@ export class SanPhamChiTietService {
     );
   }
 
+  // 15
   public getAllDetail(
     pageNumber: number,
     search: string,

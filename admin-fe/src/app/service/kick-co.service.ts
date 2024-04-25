@@ -47,10 +47,8 @@ export class KichCoService {
   }
 
   // 4
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}`, {
-      responseType: "text",
-    });
+  public changeStatus(id: number): Observable<void> {
+    return this.http.get<void>(`${this.apiUrl}/status/${id}`);
   }
 
   // 5

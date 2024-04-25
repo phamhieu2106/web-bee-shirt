@@ -4,7 +4,7 @@ import { LoginComponent } from "./login/login.component";
 
 const authRoutes: Routes = [
   {
-    path: "login",
+    path: "log-in",
     component: LoginComponent,
   },
 ];

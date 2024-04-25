@@ -5,7 +5,6 @@ import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.san_pham.MauSac;
 import com.datn.backend.model.san_pham.MauSacImage;
-import com.datn.backend.repository.MauSacImageRepository;
 import com.datn.backend.repository.MauSacRepository;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.service.MauSacService;

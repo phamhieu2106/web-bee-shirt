@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,21 +18,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KichCoServiceImpl implements KichCoService {
 
-    private final KichCoRepository kichCoRepo;
+    private final KichCoRepository sizeRepo;
 
     @Override
     public KichCo add(KichCo kichCo) {
-        if (kichCoRepo.existsByTen(kichCo.getTen().toLowerCase())) {
-            throw new ResourceExistsException("Tên kích cỡ '" + kichCo.getTen() + "' đã tồn tại.");
+        if (sizeRepo.existsByTen(kichCo.getTen().toLowerCase())) {
+            throw new ResourceExistsException(kichCo.getTen() + "' đã tồn tại.");
         }
         kichCo.setTrangThai(true);
-        return kichCoRepo.save(kichCo);
+        return sizeRepo.save(kichCo);
     }
 
     @Override
     public PagedResponse<KichCo> getByPage(int pageNumber, int pageSize, String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<KichCo> kichCoPage = kichCoRepo.getAll(pageable, search);
+        Page<KichCo> kichCoPage = sizeRepo.getAll(pageable, search);
 
         PagedResponse<KichCo> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);
@@ -49,30 +48,30 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public List<KichCo> getAll() {
-        return kichCoRepo.findAll();
+        return sizeRepo.findAll();
     }
 
     @Override
     public KichCo getById(int id) {
-        return kichCoRepo.findById(id).get();
+        return sizeRepo.findById(id).get();
     }
 
     @Override
     public void changeStatus(int id) {
-        KichCo kichCo = kichCoRepo.findById(id).get();
+        KichCo kichCo = sizeRepo.findById(id).get();
         kichCo.setTrangThai(!kichCo.isTrangThai());
-        kichCoRepo.save(kichCo);
+        sizeRepo.save(kichCo);
     }
 
     @Override
     public KichCo update(KichCo kichCo) {
         checkExistForUpdate(kichCo);
-        return kichCoRepo.save(kichCo);
+        return sizeRepo.save(kichCo);
     }
 
     private void checkExistForUpdate(KichCo kichCo) {
-        KichCo kichCoInDB = kichCoRepo.findById(kichCo.getId()).get();
-        KichCo kichCoByTen = kichCoRepo.getKichCoByTen(kichCo.getTen());
+        KichCo kichCoInDB = sizeRepo.findById(kichCo.getId()).get();
+        KichCo kichCoByTen = sizeRepo.getKichCoByTen(kichCo.getTen());
 
         if (kichCoByTen != null && kichCoByTen.getId() != kichCoInDB.getId()) {
             throw new ResourceExistsException("Tên kiểu dáng '" + kichCo.getTen() + "' đã tồn tại.");
@@ -81,6 +80,6 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public List<KichCo> getAllByProductAndColor(int productId, int colorId) {
-        return kichCoRepo.getAllByProductAndColor(productId, colorId);
+        return sizeRepo.getAllByProductAndColor(productId, colorId);
     }
 }

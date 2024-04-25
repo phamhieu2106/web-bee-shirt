@@ -18,8 +18,11 @@ export class DanhSachKieuDangComponent {
   public pagedResponse: PagedResponse<KieuDang>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
-  public search = "";
+  public searchKeyword = "";
   public selectedDetails: KieuDang;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -28,9 +31,14 @@ export class DanhSachKieuDangComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getKieuDangList();
+    this.turnOnOverlay("Đang tải");
+    this.getFormList();
     this.initAddForm();
     this.initUpdateForm();
+
+    setTimeout(() => {
+      this.turnOffOverlay("");
+    }, 500);
   }
 
   // public function
@@ -71,7 +79,11 @@ export class DanhSachKieuDangComponent {
   //
   public initAddForm(): void {
     this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
     });
   }
 
@@ -93,12 +105,12 @@ export class DanhSachKieuDangComponent {
 
   //
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.goToPage(1, e.target.value, this.searchKeyword);
   }
 
   //
   public searchByName(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+    this.goToPage(1, this.pagedResponse.pageSize, this.searchKeyword);
   }
 
   //
@@ -124,7 +136,11 @@ export class DanhSachKieuDangComponent {
       next: (response: KieuDang) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
-          ten: new FormControl(response.ten, [Validators.required]),
+          ten: new FormControl(response.ten, [
+            Validators.required,
+            this.customRequiredValidator,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+          ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
@@ -177,33 +193,57 @@ export class DanhSachKieuDangComponent {
             document.getElementById("closeUpdateBtn").click();
             this.notifService.success("Cập nhật thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
           },
         });
       }
     });
   }
 
-  // private function
-  //
-  private getKieuDangList(): void {
+  // private functions
+  // 1
+  private getFormList(): void {
     this.kieuDangService.getByPage().subscribe({
       next: (response: PagedResponse<KieuDang>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
       },
     });
   }
 
-  //
+  // 2
   public initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
       ten: new FormControl("", [Validators.required]),
       trangThai: new FormControl(false),
     });
+  }
+
+  // 3
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 4
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
+  }
+
+  // 5
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
   }
 }

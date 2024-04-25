@@ -93,29 +93,27 @@ export class DanhSachSanPhamComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        // let trimmedTen = this.addForm.get("ten").value.trim();
-        // this.addForm.get("ten")?.setValue(trimmedTen);
+        let trimmedTen = this.addForm.get("ten").value.trim();
+        this.addForm.get("ten")?.setValue(trimmedTen);
 
-        // let trimmedMa = this.addForm.get("ma").value.trim();
-        // this.addForm.get("ma")?.setValue(trimmedMa);
+        let trimmedMa = this.addForm.get("ma").value.trim();
+        this.addForm.get("ma")?.setValue(trimmedMa);
 
-        console.log(this.addForm.value);
-
-        // this.sanPhamService.add(this.addForm.value).subscribe({
-        //   next: (response: SanPham) => {
-        //     this.goToPage(
-        //       this.pagedResponse.pageNumber,
-        //       this.pagedResponse.pageSize,
-        //       this.pagedResponse.search
-        //     );
-        //     this.initAddForm();
-        //     document.getElementById("closeAddBtn").click();
-        //     this.notifService.success("Thêm sản phẩm thành công!");
-        //   },
-        //   error: (errorResponse: HttpErrorResponse) => {
-        //     this.notifService.error(errorResponse.error.message);
-        //   },
-        // });
+        this.sanPhamService.add(this.addForm.value).subscribe({
+          next: (response: SanPham) => {
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+            this.initAddForm();
+            document.getElementById("closeAddBtn").click();
+            this.notifService.success("Thêm sản phẩm thành công!");
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
+        });
       }
     });
   }

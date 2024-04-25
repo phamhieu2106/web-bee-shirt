@@ -18,8 +18,11 @@ export class DanhSachChatLieuComponent {
   public pagedResponse: PagedResponse<ChatLieu>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
-  public search = "";
+  public searchKeyword = "";
   public selectedDetails: ChatLieu;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -28,9 +31,14 @@ export class DanhSachChatLieuComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getChatLieuList();
+    this.turnOnOverlay("Đang tải");
+    this.getMaterialList();
     this.initAddForm();
     this.initUpdateForm();
+
+    setTimeout(() => {
+      this.turnOffOverlay("");
+    }, 500);
   }
 
   // public function
@@ -57,11 +65,11 @@ export class DanhSachChatLieuComponent {
               this.pagedResponse.search
             );
             this.initAddForm();
-            document.getElementById("closeBtn").click();
+            document.getElementById("closeAddModalBtn").click();
             this.notifService.success("Thêm thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
           },
         });
       }
@@ -71,7 +79,11 @@ export class DanhSachChatLieuComponent {
   // 2
   public initAddForm(): void {
     this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
     });
   }
 
@@ -85,18 +97,20 @@ export class DanhSachChatLieuComponent {
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 
   // 4
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.goToPage(1, e.target.value, this.searchKeyword);
   }
 
   //
   public searchByName(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+    this.goToPage(1, this.pagedResponse.pageSize, this.searchKeyword);
   }
 
   //
@@ -110,7 +124,9 @@ export class DanhSachChatLieuComponent {
       next: (response: ChatLieu) => {
         this.selectedDetails = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 
@@ -120,11 +136,17 @@ export class DanhSachChatLieuComponent {
       next: (response: ChatLieu) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
-          ten: new FormControl(response.ten, [Validators.required]),
+          ten: new FormControl(response.ten, [
+            Validators.required,
+            this.customRequiredValidator,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+          ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 
@@ -139,7 +161,9 @@ export class DanhSachChatLieuComponent {
         );
         this.notifService.success(response);
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 
@@ -169,29 +193,61 @@ export class DanhSachChatLieuComponent {
             document.getElementById("updateCloseBtn").click();
             this.notifService.success("Cập nhật thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {},
+          error: (errRes: HttpErrorResponse) => {
+            this.notifService.error(errRes.error.message);
+          },
         });
       }
     });
   }
 
   // private function
-  //
-  private getChatLieuList(): void {
+  // 1
+  private getMaterialList(): void {
     this.chatLieuService.getByPage().subscribe({
       next: (response: PagedResponse<ChatLieu>) => {
         this.pagedResponse = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {},
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
     });
   }
 
-  //
-  public initUpdateForm(): void {
+  // 2
+  private initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
       trangThai: new FormControl(false),
     });
+  }
+
+  // 3
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 4
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
+  }
+
+  // 5
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
   }
 }

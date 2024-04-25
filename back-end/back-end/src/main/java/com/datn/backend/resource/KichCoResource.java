@@ -3,7 +3,6 @@ package com.datn.backend.resource;
 import com.datn.backend.constant.ApplicationConstant;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.KichCo;
-import com.datn.backend.model.san_pham.KieuDang;
 import com.datn.backend.service.KichCoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +52,9 @@ public class KichCoResource {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+    public ResponseEntity<Void> changeStatus(@PathVariable("id") int id) {
         kichCoService.changeStatus(id);
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")

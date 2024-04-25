@@ -8,7 +8,9 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="mb-2">Danh sách kiểu thiết kế</h3>
+        <h3 class="mb-2">
+          Danh sách kiểu thiết kế ({{ pagedResponse.totalElements }})
+        </h3>
         <div>
           <div class="col col-md-12 d-flex">
             <div class="input-group form-group search-block">
@@ -16,7 +18,7 @@
                 type="search"
                 class="form-control rounded"
                 placeholder="Tìm kiểu thiết kế theo tên..."
-                [(ngModel)]="search"
+                [(ngModel)]="searchKeyword"
                 (input)="searchByName()"
               />
             </div>
@@ -28,6 +30,7 @@
                 title="Thêm mới"
                 data-bs-toggle="modal"
                 data-bs-target="#thietKeAddForm"
+                (click)="initAddForm()"
               >
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
@@ -134,7 +137,7 @@
                       goToPage(
                         pagedResponse?.pageNumber - 1,
                         pagedResponse?.pageSize,
-                        search
+                        searchKeyword
                       )
                     "
                     >Previous</a
@@ -150,7 +153,11 @@
                       pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                     "
                     (click)="
-                      goToPage(pageNumber, pagedResponse?.pageSize, search)
+                      goToPage(
+                        pageNumber,
+                        pagedResponse?.pageSize,
+                        searchKeyword
+                      )
                     "
                     >{{ pageNumber }}</a
                   >
@@ -169,7 +176,7 @@
                       goToPage(
                         pagedResponse?.pageNumber + 1,
                         pagedResponse?.pageSize,
-                        search
+                        searchKeyword
                       )
                     "
                     >Next</a
@@ -211,7 +218,18 @@
               "
               formControlName="ten"
             />
-            <div class="invalid-feedback">Không được bỏ trống</div>
+            <div
+              class="invalid-feedback"
+              *ngIf="addForm.get('ten').hasError('customRequired')"
+            >
+              Tên không được bỏ trống
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="addForm.get('ten').hasError('pattern')"
+            >
+              Tên không hợp lệ
+            </div>
           </div>
         </div>
 
@@ -220,7 +238,6 @@
             id="closeBtn"
             type="button"
             class="btn btn-secondary rounded"
-            (click)="initAddForm()"
             data-bs-dismiss="modal"
           >
             Đóng
@@ -338,7 +355,18 @@
               "
               formControlName="ten"
             />
-            <div class="invalid-feedback">Không được bỏ trống</div>
+            <div
+              class="invalid-feedback"
+              *ngIf="updateForm.get('ten').hasError('customRequired')"
+            >
+              Tên không được bỏ trống
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="updateForm.get('ten').hasError('pattern')"
+            >
+              Tên không hợp lệ
+            </div>
           </div>
         </div>
 
@@ -364,3 +392,5 @@
     </div>
   </div>
 </div>
+
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

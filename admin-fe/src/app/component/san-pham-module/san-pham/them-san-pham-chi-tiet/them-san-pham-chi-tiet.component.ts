@@ -44,7 +44,7 @@ export class ThemSanPhamChiTietComponent {
   public curWorkingImgIndex: number;
   public selectedTenMauSac: string;
   public selectedIdMauSac: number;
-  public addForm: FormGroup;
+  public propertyIdForm: FormGroup;
   public sanPham: SanPham;
 
   public selectedColorList: MauSac[] = [];
@@ -70,9 +70,7 @@ export class ThemSanPhamChiTietComponent {
 
   public commonService: any;
   public quickAddForm: FormGroup;
-  public thuocTinhNhanh = {
-    ten: "",
-  };
+  public curQuickAddProperty: string = "";
 
   private chinhSuaBtnId: number;
   private services = [
@@ -91,7 +89,7 @@ export class ThemSanPhamChiTietComponent {
     tayAoId: false,
     coAoId: false,
     chatLieuId: false,
-    giaAndSoLuong: [],
+    priceQuantity: [],
     anh: [],
   };
   public colorSizeValidations: ColorSizeValidation[] = [];
@@ -114,29 +112,29 @@ export class ThemSanPhamChiTietComponent {
   ) {}
 
   ngOnInit(): void {
-    this.initAddForm();
-    this.initQuickAddForm();
-    this.getProductByIdAndItsSpct();
+    this.initPropertyIdForm();
+    this.initQuickAddPropertyForm();
+    this.getProductByIdAndItsProdDetails();
     this.getPropertiesForSelectors();
   }
 
   // public functions
   // 1
-  public selectColor(ms: MauSac): void {
-    if (!this.selectedColorList.some((item: MauSac) => item.id === ms.id)) {
-      this.selectedColorList.push(ms);
+  public selectColor(color: MauSac): void {
+    if (!this.selectedColorList.some((item: MauSac) => item.id === color.id)) {
+      this.selectedColorList.push(color);
       this.selectedImgFileList.push([]);
       this.uploadedImgFileList.push([]);
-      this.validation.giaAndSoLuong.push(false);
-      this.addColorSizeValidation(ms.id, undefined, "color");
+      this.validation.priceQuantity.push(false);
+      this.addColorSizeValidation(color.id, undefined, "color");
     }
   }
 
   // 2
-  public selectSize(kc: KichCo): void {
-    if (!this.selectedSizeList.some((item: KichCo) => item.id === kc.id)) {
-      this.selectedSizeList.push(kc);
-      this.addColorSizeValidation(undefined, kc.id, "size");
+  public selectSize(size: KichCo): void {
+    if (!this.selectedSizeList.some((item: KichCo) => item.id === size.id)) {
+      this.selectedSizeList.push(size);
+      this.addColorSizeValidation(undefined, size.id, "size");
     }
   }
 
@@ -248,8 +246,14 @@ export class ThemSanPhamChiTietComponent {
   }
 
   // 10
-  public toggleUploadImage(chkBoxIndex: number, file: File, event: any): void {
+  public toggleUploadedImage(
+    chkBoxIndex: number,
+    file: File,
+    event: any
+  ): void {
     const isChecked = event.target.checked;
+
+    // check quantity of uploaded file
     if (this.curSelectedImgFileList.length === 5 && isChecked) {
       this.notifService.warning("Không chọn quá 5 ảnh!");
 
@@ -260,18 +264,19 @@ export class ThemSanPhamChiTietComponent {
       return;
     }
 
+    // thêm hoặc xóa file uploaded ở 'curSelectedImgFileList', rồi gán lại list đó cho 'selectedImgFileList'
     if (isChecked) {
       this.curSelectedImgFileList.push(file);
       this.selectedImgFileList[this.curWorkingImgIndex] =
         this.curSelectedImgFileList;
-      this.checkGiaSoLuongAnhSpct();
+      this.checkPriceQuantityImageOfProDetails();
     } else {
       this.curSelectedImgFileList = this.curSelectedImgFileList.filter(
         (item: File) => item.name !== file.name
       );
       this.selectedImgFileList[this.curWorkingImgIndex] =
         this.curSelectedImgFileList;
-      this.checkGiaSoLuongAnhSpct();
+      this.checkPriceQuantityImageOfProDetails();
     }
 
     // show ảnh
@@ -307,16 +312,16 @@ export class ThemSanPhamChiTietComponent {
   public formatNumber(event: any, inputName: string): void {
     let value = event.target.value;
     if (value === "") {
-      this.addForm.get(inputName).setValue("0");
+      this.propertyIdForm.get(inputName).setValue("0");
       return;
     }
     value = value.replace(/,/g, "");
     value = parseFloat(value).toLocaleString("en-US");
-    this.addForm.get(inputName).setValue(value);
+    this.propertyIdForm.get(inputName).setValue(value);
   }
 
   // 13
-  public formatNumber2(event: any, inputNameId: string): void {
+  public formatPriceQuantity(event: any, inputNameId: string): void {
     let value = event.target.value;
     if (value === "") {
       (document.getElementById(inputNameId) as HTMLInputElement).value = "0";
@@ -326,13 +331,13 @@ export class ThemSanPhamChiTietComponent {
     value = parseFloat(value).toLocaleString("en-US");
     (document.getElementById(inputNameId) as HTMLInputElement).value = value;
 
-    this.checkGiaSoLuongAnhSpct();
+    this.checkPriceQuantityImageOfProDetails();
   }
 
   // 14
   public add(): void {
     Swal.fire({
-      title: "Thêm sản phẩm?",
+      title: "Thêm các sản phẩm chi tiết trên?",
       cancelButtonText: "Hủy",
       icon: "warning",
       showCancelButton: true,
@@ -344,12 +349,11 @@ export class ThemSanPhamChiTietComponent {
 
       if (result.isConfirmed) {
         this.checkPropertyValidatonForAddForm();
-        // this.checkGiaSoLuong();
-        this.checkGiaSoLuongAnhSpct();
-        const isSpctExist = this.checkExistAndNotify();
+        this.checkPriceQuantityImageOfProDetails();
+        const isSpctExist = this.checkExistOfProdDetailsAndNotify();
 
         if (this.validation.error || isSpctExist) {
-          // this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
+          this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
           return;
         }
 
@@ -410,13 +414,13 @@ export class ThemSanPhamChiTietComponent {
             continue;
           }
           const addSpctReq: AddSPCTRequest = {
-            id: this.addForm.get("id").value,
-            sanPhamId: this.addForm.get("sanPhamId").value,
-            kieuDangId: this.addForm.get("kieuDangId").value,
-            thietKeId: this.addForm.get("thietKeId").value,
-            tayAoId: this.addForm.get("tayAoId").value,
-            coAoId: this.addForm.get("coAoId").value,
-            chatLieuId: this.addForm.get("chatLieuId").value,
+            id: this.propertyIdForm.get("id").value,
+            sanPhamId: this.propertyIdForm.get("sanPhamId").value,
+            kieuDangId: this.propertyIdForm.get("kieuDangId").value,
+            thietKeId: this.propertyIdForm.get("thietKeId").value,
+            tayAoId: this.propertyIdForm.get("tayAoId").value,
+            coAoId: this.propertyIdForm.get("coAoId").value,
+            chatLieuId: this.propertyIdForm.get("chatLieuId").value,
             requests: addSPCTSubRequest,
           };
 
@@ -436,8 +440,8 @@ export class ThemSanPhamChiTietComponent {
               }
             });
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
             this.turnOffOverlay("");
           },
         });
@@ -445,7 +449,7 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
+  // 15
   public deleteRow(rowId: string, colorId: number, sizeId: number): void {
     const selectedRow = document.getElementById(rowId);
 
@@ -455,7 +459,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  //
+  // 16
   public selectAllRows1Color(selectedColorId: number): void {
     const ckBoxAll = document.getElementById(
       `ckBoxAll${selectedColorId}`
@@ -473,7 +477,7 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  //
+  // 17
   public toggleUpdateFieldBtn(selectedColorId: number): boolean {
     const selectedCkBoxs = document.querySelectorAll(
       `.ckBoxColor${selectedColorId}`
@@ -488,7 +492,7 @@ export class ThemSanPhamChiTietComponent {
     return false;
   }
 
-  //
+  // 18
   public saveSoLuongForm(): void {
     let soLuongValue = (
       document.getElementById("soLuongInput") as HTMLInputElement
@@ -527,17 +531,17 @@ export class ThemSanPhamChiTietComponent {
 
     const chinhSuaNhanhBtn = document.getElementById("chinhSuaNhanhBtn");
     chinhSuaNhanhBtn.click();
-    this.checkGiaSoLuongAnhSpct();
+    this.checkExistOfProdDetailsAndNotify();
   }
 
-  //
+  // 19
   public assignChinhSuaBtnId(id: number): void {
     this.chinhSuaBtnId = id;
   }
 
-  //
-  public initAddForm(): void {
-    this.addForm = new FormGroup({
+  // 20
+  public initPropertyIdForm(): void {
+    this.propertyIdForm = new FormGroup({
       id: new FormControl(0),
       sanPhamId: new FormControl(0),
       kieuDangId: new FormControl(0),
@@ -548,13 +552,18 @@ export class ThemSanPhamChiTietComponent {
     });
   }
 
-  //
-  public initQuickAddForm(): void {
+  // 21
+  public initQuickAddPropertyForm(): void {
     this.quickAddForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
     });
   }
 
+  // 22
   public checkSpctExist(
     spId: number,
     mauSacId: number,
@@ -564,66 +573,79 @@ export class ThemSanPhamChiTietComponent {
       next: (response: boolean) => {
         return response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
     return false;
   }
 
+  // 23
   public checkHasRow(colorId: number): boolean {
     const rows = document.querySelectorAll(`.ckBoxColor${colorId}`);
     return rows.length > 0 ? true : false;
   }
 
   // functions cho sự kiện chọn, thêm nhanh thuộc tính
-  // lấy ID của thuộc tính đã chọn và gán vào addForm
-  public selectThuocTinh(event: any, fields: any[], formControl: string): void {
+  // 24. lấy ID của thuộc tính đã chọn và gán vào addForm
+  public selectProperty(event: any, fields: any[], formControl: string): void {
     const fieldValue = event.target.value;
     const field = fields.find((f: any) => f.ten === fieldValue);
+    console.log(field == null);
 
     if (field) {
-      this.addForm.get(`${formControl}`).setValue(field.id);
+      this.propertyIdForm.get(`${formControl}`).setValue(field.id);
       this.validation[formControl] = false;
+    } else if (!field) {
+      this.propertyIdForm.get(`${formControl}`).setValue(0);
+      this.validation[formControl] = true;
     }
   }
 
-  // mỗi khi ấn một nút thêm nhanh, lấy tên thuộc tính và tên service từ đó
-  public changeNameAndServiceForThuocTinh(
+  // 25. mỗi khi ấn một nút thêm nhanh, lấy tên thuộc tính và tên service từ đó
+  public changeNameAndServiceForProperty(
     ten: string,
     serviceName: string
   ): void {
+    this.initQuickAddPropertyForm();
     this.commonService = serviceName;
     for (let i = 0; i < this.services.length; ++i) {
       if (this.services[i].ten === serviceName) {
         this.commonService = this.services[i].service;
       }
     }
-    this.thuocTinhNhanh.ten = ten;
+    this.curQuickAddProperty = ten;
   }
 
-  //
+  // 26
   public addNhanhThuocTinh(): void {
     let trimmed = this.quickAddForm.get("ten").value.trim();
     this.quickAddForm.get("ten")?.setValue(trimmed);
 
     this.commonService.add(this.quickAddForm.value).subscribe({
       next: (response: any) => {
-        this.initQuickAddForm();
+        this.initQuickAddPropertyForm();
         this.notifService.success(`Thêm thành công '${response.ten}'!`);
         document.getElementById("closeAddNhanhBtn").click();
         this.getPropertiesForSelectors();
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
 
+  // 27
   public checkColorAndSize(colorId: number, sizeId: number): boolean {
     return this.colorSizeValidations.find(
       (v: ColorSizeValidation) => v.colorId === colorId && v.sizeId === sizeId
     )?.isExist;
+  }
+
+  // 28
+  public checkPropertyInputHasCharacters(inputId: string): boolean {
+    const input = document.getElementById(inputId) as HTMLInputElement;
+    return input.value?.trim().length > 0 ? true : false;
   }
 
   // private functions
@@ -665,22 +687,22 @@ export class ThemSanPhamChiTietComponent {
   }
 
   // 5
-  private getProductByIdAndItsSpct(): void {
+  private getProductByIdAndItsProdDetails(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.sanPhamService.getById(params["sanPhamId"]).subscribe({
-        next: (response: SanPham) => {
-          this.sanPham = response;
-          this.addForm.get("sanPhamId").setValue(response.id);
+        next: (prod: SanPham) => {
+          this.sanPham = prod;
+          this.propertyIdForm.get("sanPhamId").setValue(prod.id);
 
-          // hàm này kiểm tra xem SP hiện tại có SPCT nào chưa
-          this.spctService.getAnySpctBySanPhamId(response.id).subscribe({
+          // hàm này kiểm tra xem SP hiện tại có SPCT nào chưa, nếu có => khởi tại lại 'propertyIdForm'
+          this.spctService.getAnySpctBySanPhamId(prod.id).subscribe({
             next: (spctResponse: SanPhamChiTiet) => {
-              if (response != null) {
+              if (prod != null) {
                 this.existSpct = spctResponse;
 
-                this.addForm = new FormGroup({
+                this.propertyIdForm = new FormGroup({
                   id: new FormControl(spctResponse.id),
-                  sanPhamId: new FormControl(response.id),
+                  sanPhamId: new FormControl(prod.id),
                   chatLieuId: new FormControl(spctResponse.chatLieu.id),
                   coAoId: new FormControl(spctResponse.coAo.id),
                   kieuDangId: new FormControl(spctResponse.kieuDang.id),
@@ -689,13 +711,13 @@ export class ThemSanPhamChiTietComponent {
                 });
               }
             },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.notifService.error(errorResponse.error.message);
+            error: (errResp: HttpErrorResponse) => {
+              this.notifService.error(errResp.error.message);
             },
           });
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
         },
       });
     });
@@ -720,8 +742,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: MauSac[]) => {
         this.activeColors = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -732,8 +754,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: KichCo[]) => {
         this.activeSizes = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -744,8 +766,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: KieuDang[]) => {
         this.activeForms = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -756,8 +778,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: KieuThietKe[]) => {
         this.activeDesigns = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -768,8 +790,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: TayAo[]) => {
         this.activeSleeves = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -780,8 +802,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: CoAo[]) => {
         this.activeCollars = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -792,8 +814,8 @@ export class ThemSanPhamChiTietComponent {
       next: (response: ChatLieu[]) => {
         this.activeMaterials = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -813,38 +835,37 @@ export class ThemSanPhamChiTietComponent {
 
   // 16
   private checkPropertyValidatonForAddForm(): void {
-    if (this.addForm.get("kieuDangId").value == 0) {
+    if (this.propertyIdForm.get("kieuDangId").value == 0) {
       this.validation.error = true;
       this.validation.kieuDangId = true;
     }
 
-    if (this.addForm.get("thietKeId").value == 0) {
+    if (this.propertyIdForm.get("thietKeId").value == 0) {
       this.validation.error = true;
       this.validation.thietKeId = true;
     }
 
-    if (this.addForm.get("tayAoId").value == 0) {
+    if (this.propertyIdForm.get("tayAoId").value == 0) {
       this.validation.error = true;
       this.validation.tayAoId = true;
     }
 
-    if (this.addForm.get("coAoId").value == 0) {
+    if (this.propertyIdForm.get("coAoId").value == 0) {
       this.validation.error = true;
       this.validation.coAoId = true;
     }
 
-    if (this.addForm.get("chatLieuId").value == 0) {
+    if (this.propertyIdForm.get("chatLieuId").value == 0) {
       this.validation.error = true;
       this.validation.chatLieuId = true;
     }
   }
 
-  //
-
   // 18
-  private checkGiaSoLuongAnhSpct(): void {
+  private checkPriceQuantityImageOfProDetails(): void {
     let hasError = false;
 
+    // check image
     for (let i = 0; i < this.selectedImgFileList.length; i++) {
       if (this.selectedImgFileList[i].length === 0) {
         hasError = true;
@@ -854,6 +875,7 @@ export class ThemSanPhamChiTietComponent {
       }
     }
 
+    // check price & quantity
     for (let i = 0; i < this.selectedColorList.length; i++) {
       const color = this.selectedColorList[i];
 
@@ -876,9 +898,9 @@ export class ThemSanPhamChiTietComponent {
 
         if (giaNhap >= giaBan || giaNhap <= 0 || giaBan <= 0 || soLuong <= 0) {
           hasError = true;
-          this.validation.giaAndSoLuong[i] = true;
+          this.validation.priceQuantity[i] = true;
         } else {
-          this.validation.giaAndSoLuong[i] = false;
+          this.validation.priceQuantity[i] = false;
         }
       }
     }
@@ -914,8 +936,8 @@ export class ThemSanPhamChiTietComponent {
               };
               this.colorSizeValidations.push(colorSizeValidation);
             },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.notifService.error(errorResponse.error.message);
+            error: (errResp: HttpErrorResponse) => {
+              this.notifService.error(errResp.error.message);
             },
           });
       }
@@ -933,15 +955,15 @@ export class ThemSanPhamChiTietComponent {
               };
               this.colorSizeValidations.push(colorSizeValidation);
             },
-            error: (errorResponse: HttpErrorResponse) => {
-              this.notifService.error(errorResponse.error.message);
+            error: (errResp: HttpErrorResponse) => {
+              this.notifService.error(errResp.error.message);
             },
           });
       }
     }
   }
 
-  //
+  // 20
   private removeColorSizeValidation(
     colorId: number | undefined,
     sizeId: number | undefined,
@@ -963,8 +985,8 @@ export class ThemSanPhamChiTietComponent {
     }
   }
 
-  //
-  public checkExistAndNotify(): boolean {
+  // 21
+  private checkExistOfProdDetailsAndNotify(): boolean {
     if (this.colorSizeValidations.some((v: ColorSizeValidation) => v.isExist)) {
       const duplicatedArr: ColorSizeValidation[] =
         this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);
@@ -988,5 +1010,17 @@ export class ThemSanPhamChiTietComponent {
       return true;
     }
     return false;
+  }
+
+  // 22
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
   }
 }

@@ -67,7 +67,7 @@ export class LoginComponent {
   private checkLogin(): void {
     if (this.authenticationService.isLoggedIn()) {
       this.notifService.warning("Bạn cần đăng xuất để đến trang đăng nhập!");
-      this.router.navigate(["/admin"]);
+      this.router.navigate(["/thong-ke"]);
     }
   }
 

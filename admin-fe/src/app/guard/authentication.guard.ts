@@ -14,7 +14,7 @@ export const authenticationGuard: CanActivateFn = (route, state) => {
   if (isLoggedIn) {
     return true;
   } else {
-    router.navigate(["/login"]);
+    router.navigate(["/log-in"]);
     toastr.warning(
       "Bạn cần đăng nhập để sử dụng dịch vụ của chúng tôi",
       "Hệ thống"

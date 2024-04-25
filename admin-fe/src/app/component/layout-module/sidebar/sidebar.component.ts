@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { NhanVien } from "src/app/model/class/nhan-vien.class";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 declare var $: any;
 
@@ -16,26 +18,36 @@ export class SidebarComponent {
 
   // constructor, ngOn
   constructor(
+    private router: Router,
     private authService: AuthenticationService,
     private notifService: NotificationService
   ) {}
 
   ngOnInit(): void {
+    this.loggedUser = this.authService.getUserFromStorage();
+
     this.setInitialSidebarState();
     this.setupSidebar();
-    this.setLoggedInformation();
-  }
-
-  // private functions
-  private setLoggedInformation(): void {
-    this.loggedUser = this.authService.getUserFromStorage();
   }
 
   // public functions
   // 1
   public logout(): void {
-    this.authService.logout();
-    this.notifService.success("Đăng xuất thành công!");
+    Swal.fire({
+      title: "Bạn muốn đăng xuất?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Đăng xuất",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+        this.notifService.success("Đăng xuất thành công!");
+        this.router.navigateByUrl("/log-in");
+      }
+    });
   }
 
   // 2

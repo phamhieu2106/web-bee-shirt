@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { HttpErrorResponse } from "@angular/common/http";
 
 import Swal, { SweetAlertResult } from "sweetalert2";
 
 import { TayAo } from "src/app/model/class/tay-ao.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { KieuTayAoService } from "src/app/service/kieu-tay-ao.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import { NotificationService } from "src/app/service/notification.service";
 
 @Component({
@@ -18,8 +18,11 @@ export class DanhSachKieuTayAoComponent {
   public pagedResponse: PagedResponse<TayAo>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
-  public search = "";
+  public searchKeyword = "";
   public selectedDetails: TayAo;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -28,9 +31,14 @@ export class DanhSachKieuTayAoComponent {
   ) {}
 
   ngOnInit(): void {
+    this.turnOnOverlay("Đang tải");
     this.getCoAoList();
     this.initAddForm();
     this.initUpdateForm();
+
+    setTimeout(() => {
+      this.turnOffOverlay("");
+    }, 500);
   }
 
   // public function
@@ -71,7 +79,11 @@ export class DanhSachKieuTayAoComponent {
   //
   public initAddForm(): void {
     this.addForm = new FormGroup({
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
     });
   }
 
@@ -93,11 +105,11 @@ export class DanhSachKieuTayAoComponent {
 
   //
   public onChangePageSize(e: any): void {
-    this.goToPage(1, e.target.value, this.search);
+    this.goToPage(1, e.target.value, this.searchKeyword);
   }
 
   public searchByName(): void {
-    this.goToPage(1, this.pagedResponse.pageSize, this.search);
+    this.goToPage(1, this.pagedResponse.pageSize, this.searchKeyword);
   }
 
   //
@@ -118,7 +130,11 @@ export class DanhSachKieuTayAoComponent {
       next: (response: TayAo) => {
         this.updateForm = new FormGroup({
           id: new FormControl(response.id),
-          ten: new FormControl(response.ten, [Validators.required]),
+          ten: new FormControl(response.ten, [
+            Validators.required,
+            this.customRequiredValidator,
+            Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+          ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
@@ -177,7 +193,7 @@ export class DanhSachKieuTayAoComponent {
     });
   }
 
-  // private function
+  // private functions
   //
   private getCoAoList(): void {
     this.tayAoService.getByPage().subscribe({
@@ -194,8 +210,36 @@ export class DanhSachKieuTayAoComponent {
   private initUpdateForm(): void {
     this.updateForm = new FormGroup({
       id: new FormControl(0),
-      ten: new FormControl("", [Validators.required]),
+      ten: new FormControl("", [
+        Validators.required,
+        this.customRequiredValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+      ]),
       trangThai: new FormControl(false),
     });
+  }
+
+  // 3
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 4
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
+  }
+
+  // 5
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
+    }
+    return null;
   }
 }

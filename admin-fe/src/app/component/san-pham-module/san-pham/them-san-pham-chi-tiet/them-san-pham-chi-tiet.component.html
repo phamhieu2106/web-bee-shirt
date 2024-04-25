@@ -1,12 +1,13 @@
 <div class="row gutters pt-2">
   <div class="col-sm-12">
+    <!-- selector của 5 thuộc tính -->
     <div class="card">
       <div class="card-header">
         <h3 class="mb-2">Thêm Sản Phẩm Chi Tiết</h3>
       </div>
       <div class="card-body">
         <h4 class="text-center mt-2">Thông tin sản phẩm</h4>
-        <form class="form border p-2 rounded mb-5" [formGroup]="addForm">
+        <form class="form border p-2 rounded mb-5" [formGroup]="propertyIdForm">
           <input type="hidden" formControlName="sanPhamId" />
           <i class="text-danger" *ngIf="existSpct != null"
             >* Sản phẩm này đã có một số sản phẩm chi tiết</i
@@ -39,10 +40,11 @@
               >
               <div class="row" *ngIf="existSpct == null">
                 <input
+                  id="kieuDangId"
                   class="form-control rounded col-8 ms-3 me-2"
                   list="kieuDangList"
                   type="text"
-                  (input)="selectThuocTinh($event, activeForms, 'kieuDangId')"
+                  (input)="selectProperty($event, activeForms, 'kieuDangId')"
                   [ngClass]="validation.kieuDangId ? 'is-invalid' : ''"
                 />
                 <datalist id="kieuDangList">
@@ -54,7 +56,7 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    changeNameAndServiceForThuocTinh(
+                    changeNameAndServiceForProperty(
                       'dáng áo',
                       'kieuDangService'
                     )
@@ -65,8 +67,25 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
-              <div class="ms-2 mt-1 text-danger" *ngIf="validation.kieuDangId">
-                <i>Không được bỏ trống!</i>
+
+              <!-- error -->
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.kieuDangId &&
+                  checkPropertyInputHasCharacters('kieuDangId')
+                "
+              >
+                <i>Kiểu dáng này không tồn tại! Vui lòng chọn lại.</i>
+              </div>
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.kieuDangId &&
+                  !checkPropertyInputHasCharacters('kieuDangId')
+                "
+              >
+                <i>Kiểu dáng không được bỏ trống.</i>
               </div>
 
               <div *ngIf="existSpct != null">
@@ -91,10 +110,11 @@
               >
               <div class="row" *ngIf="existSpct == null">
                 <input
+                  id="thietKeId"
                   class="form-control rounded col-8 ms-3 me-2"
                   list="thietKeList"
                   type="text"
-                  (input)="selectThuocTinh($event, activeDesigns, 'thietKeId')"
+                  (input)="selectProperty($event, activeDesigns, 'thietKeId')"
                   [ngClass]="validation.thietKeId ? 'is-invalid' : ''"
                 />
                 <datalist id="thietKeList">
@@ -106,7 +126,7 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    changeNameAndServiceForThuocTinh(
+                    changeNameAndServiceForProperty(
                       'kiểu thiết kế',
                       'kieuThietKeService'
                     )
@@ -117,8 +137,25 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
-              <div class="ms-2 mt-1 text-danger" *ngIf="validation.thietKeId">
-                <i>Không được bỏ trống!</i>
+
+              <!-- error -->
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.thietKeId &&
+                  checkPropertyInputHasCharacters('thietKeId')
+                "
+              >
+                <i>Kiểu thiết kế này không tồn tại! Vui lòng chọn lại.</i>
+              </div>
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.thietKeId &&
+                  !checkPropertyInputHasCharacters('thietKeId')
+                "
+              >
+                <i>Kiểu thiết kế không được bỏ trống.</i>
               </div>
 
               <div *ngIf="existSpct != null">
@@ -143,10 +180,11 @@
               >
               <div class="row" *ngIf="existSpct == null">
                 <input
+                  id="tayAoId"
                   class="form-control rounded col-8 ms-3 me-2"
                   list="tayAoList"
                   type="text"
-                  (input)="selectThuocTinh($event, activeSleeves, 'tayAoId')"
+                  (input)="selectProperty($event, activeSleeves, 'tayAoId')"
                   [ngClass]="validation.tayAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="tayAoList">
@@ -158,7 +196,7 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    changeNameAndServiceForThuocTinh(
+                    changeNameAndServiceForProperty(
                       'kiểu tay áo',
                       'kieuTayAoService'
                     )
@@ -169,8 +207,25 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
-              <div class="ms-2 mt-1 text-danger" *ngIf="validation.tayAoId">
-                <i>Không được bỏ trống!</i>
+
+              <!-- error -->
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.tayAoId &&
+                  checkPropertyInputHasCharacters('tayAoId')
+                "
+              >
+                <i>Kiểu tay áo này không tồn tại! Vui lòng chọn lại.</i>
+              </div>
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.tayAoId &&
+                  !checkPropertyInputHasCharacters('tayAoId')
+                "
+              >
+                <i>Kiểu tay áo không được bỏ trống.</i>
               </div>
 
               <div *ngIf="existSpct != null">
@@ -195,10 +250,11 @@
               >
               <div class="row" *ngIf="existSpct == null">
                 <input
+                  id="coAoId"
                   class="form-control rounded col-8 ms-3 me-2"
                   list="coAoList"
                   type="text"
-                  (input)="selectThuocTinh($event, activeCollars, 'coAoId')"
+                  (input)="selectProperty($event, activeCollars, 'coAoId')"
                   [ngClass]="validation.coAoId ? 'is-invalid' : ''"
                 />
                 <datalist id="coAoList">
@@ -210,7 +266,7 @@
                 <button
                   class="btn btn-primary rounded col-2"
                   (click)="
-                    changeNameAndServiceForThuocTinh(
+                    changeNameAndServiceForProperty(
                       'kiểu cổ áo',
                       'kieuCoAoService'
                     )
@@ -221,8 +277,24 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
-              <div class="ms-2 mt-1 text-danger" *ngIf="validation.coAoId">
-                <i>Không được bỏ trống!</i>
+
+              <!-- error -->
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.coAoId && checkPropertyInputHasCharacters('coAoId')
+                "
+              >
+                <i>Kiểu cổ áo này không tồn tại! Vui lòng chọn lại.</i>
+              </div>
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.coAoId &&
+                  !checkPropertyInputHasCharacters('coAoId')
+                "
+              >
+                <i>Kiểu cổ áo không được bỏ trống.</i>
               </div>
 
               <div *ngIf="existSpct != null">
@@ -247,11 +319,12 @@
               >
               <div class="row" *ngIf="existSpct == null">
                 <input
+                  id="chatLieuId"
                   class="form-control rounded col-10 ms-3 me-2"
                   list="chatLieuList"
                   type="text"
                   (input)="
-                    selectThuocTinh($event, activeMaterials, 'chatLieuId')
+                    selectProperty($event, activeMaterials, 'chatLieuId')
                   "
                   [ngClass]="validation.chatLieuId ? 'is-invalid' : ''"
                 />
@@ -264,7 +337,7 @@
                 <button
                   class="btn btn-primary rounded col-1"
                   (click)="
-                    changeNameAndServiceForThuocTinh(
+                    changeNameAndServiceForProperty(
                       'chất liệu',
                       'chatLieuService'
                     )
@@ -275,8 +348,25 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
-              <div class="ms-2 mt-1 text-danger" *ngIf="validation.chatLieuId">
-                <i>Không được bỏ trống!</i>
+
+              <!-- error -->
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.chatLieuId &&
+                  checkPropertyInputHasCharacters('chatLieuId')
+                "
+              >
+                <i>Kiểu chất liệu này không tồn tại! Vui lòng chọn lại.</i>
+              </div>
+              <div
+                class="ms-2 mt-1 text-danger"
+                *ngIf="
+                  validation.chatLieuId &&
+                  !checkPropertyInputHasCharacters('chatLieuId')
+                "
+              >
+                <i>Kiểu chất liệu không được bỏ trống.</i>
               </div>
 
               <div *ngIf="existSpct != null">
@@ -292,6 +382,7 @@
       </div>
     </div>
 
+    <!-- selector của 2 thuộc tính -->
     <div class="card">
       <div class="card-header">
         <h4 class="text-center mt-2">Chọn Màu sắc & Kích cỡ</h4>
@@ -351,12 +442,14 @@
       </div>
     </div>
 
+    <!-- bảng hiển thị các spct theo từng màu -->
     <div *ngIf="selectedSizeList.length > 0">
       <div
         class="card"
         *ngFor="let sc of selectedColorList; let colorIndex = index"
       >
         <div class="card-header">
+          <!-- title -->
           <div class="row my-3">
             <h4 class="col-10">Danh sách sản phẩm màu {{ sc.ten }}</h4>
             <div class="col-2">
@@ -372,15 +465,16 @@
               </button>
             </div>
           </div>
-          <!--  -->
 
+          <!-- table of spct -->
           <div class="row">
+            <!-- left: price, quantity -->
             <div class="col-8">
               <i
                 class="text-danger mb-3"
-                *ngIf="validation.giaAndSoLuong[colorIndex]"
-                >Giá nhập không được lớn hơn giá bán, giá nhập && giá bán phải >
-                0, số lượng phải > 0</i
+                *ngIf="validation.priceQuantity[colorIndex]"
+                >Giá bán phải lớn hơn giá nhập, giá nhập & giá bán & số lượng
+                phải > 0</i
               >
               <table class="table" class="color-table">
                 <thead>
@@ -440,41 +534,41 @@
                     <td>{{ ss.ten.split(" ")[0] }}</td>
                     <td>
                       <input
-                        class="rounded"
+                        class="rounded border border-secondary"
                         [id]="'giaNhap' + sc.id + ss.id"
                         [class]="'giaNhap' + sc.id"
                         type="text"
                         style="width: 100px"
                         value="0"
                         (input)="
-                          formatNumber2($event, 'giaNhap' + sc.id + ss.id)
+                          formatPriceQuantity($event, 'giaNhap' + sc.id + ss.id)
                         "
                         s
                       />
                     </td>
                     <td>
                       <input
-                        class="rounded"
+                        class="rounded border border-secondary"
                         [id]="'giaBan' + sc.id + ss.id"
                         [class]="'giaBan' + sc.id"
                         type="text"
                         style="width: 100px"
                         value="0"
                         (input)="
-                          formatNumber2($event, 'giaBan' + sc.id + ss.id)
+                          formatPriceQuantity($event, 'giaBan' + sc.id + ss.id)
                         "
                       />
                     </td>
                     <td>
                       <input
-                        class="rounded"
+                        class="rounded border border-secondary"
                         [id]="'soLuong' + sc.id + ss.id"
                         [class]="'soLuong' + sc.id"
                         type="text"
                         style="width: 100px"
                         value="0"
                         (input)="
-                          formatNumber2($event, 'soLuong' + sc.id + ss.id)
+                          formatPriceQuantity($event, 'soLuong' + sc.id + ss.id)
                         "
                       />
                     </td>
@@ -489,8 +583,9 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- right: image -->
             <div class="text-center col-4">
-              <!-- ẢNH -->
               <i class="text-danger mb-3" *ngIf="validation.anh[colorIndex]"
                 >Vui lòng chọn ảnh cho sản phẩm!</i
               >
@@ -501,7 +596,6 @@
                 src="assets/img/default-image.jpg"
                 (click)="openImgModal(sc.ten, sc.id, colorIndex)"
               />
-              <!-- (click)="openHinhAnhModal(sc.ten, sc.id, sanPham?.id)" -->
               <button
                 id="triggerBtnImgModal"
                 type="button btn-primary"
@@ -544,11 +638,19 @@
   </div>
 
   <div class="text-center mb-5">
-    <button class="btn btn-success rounded" (click)="add()">Thêm</button>
+    <button
+      class="btn btn-success rounded"
+      (click)="add()"
+      [disabled]="
+        !(selectedColorList.length > 0 && selectedSizeList.length > 0)
+      "
+    >
+      Thêm
+    </button>
   </div>
 </div>
 
-<!-- modal: ảnh -->
+<!-- modal 1: ảnh -->
 <div
   class="modal fade"
   id="anhSpModal"
@@ -613,7 +715,7 @@
             [checked]="isUploadedImgChecked(file.name)"
             type="checkbox"
             class="checkbox"
-            (change)="toggleUploadImage(i, file, $event)"
+            (change)="toggleUploadedImage(i, file, $event)"
           />
         </div>
       </div>
@@ -636,7 +738,7 @@
   </div>
 </div>
 
-<!-- modal: màu sắc -->
+<!-- modal 2: màu sắc -->
 <div
   class="modal fade"
   id="mauSacBoard"
@@ -688,7 +790,7 @@
   </div>
 </div>
 
-<!-- modal: kích cỡ -->
+<!-- modal 3: kích cỡ -->
 <div
   class="modal fade"
   id="kichCoBoard"
@@ -733,7 +835,7 @@
   </div>
 </div>
 
-<!-- modal:chỉnh sửa giá nhập, giá bán, số lượng hàng loạt -->
+<!-- modal 4: chỉnh sửa giá nhập, giá bán, số lượng hàng loạt -->
 <div
   class="modal fade"
   id="updateModal"
@@ -760,7 +862,7 @@
             class="form-control"
             type="text"
             value="0"
-            (input)="formatNumber2($event, 'giaNhapInput')"
+            (input)="formatPriceQuantity($event, 'giaNhapInput')"
           />
         </div>
 
@@ -771,7 +873,7 @@
             class="form-control"
             type="text"
             value="0"
-            (input)="formatNumber2($event, 'giaBanInput')"
+            (input)="formatPriceQuantity($event, 'giaBanInput')"
           />
         </div>
 
@@ -782,7 +884,7 @@
             class="form-control"
             type="text"
             value="0"
-            (input)="formatNumber2($event, 'soLuongInput')"
+            (input)="formatPriceQuantity($event, 'soLuongInput')"
           />
         </div>
       </div>
@@ -807,7 +909,7 @@
   </div>
 </div>
 
-<!-- modal: thêm nhanh thuộc tính -->
+<!-- modal 5: thêm nhanh thuộc tính -->
 <div
   class="modal fade"
   id="addNhanhForm"
@@ -819,13 +921,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5">
-          Thêm mới nhanh '{{ thuocTinhNhanh.ten }}'
+          Thêm mới nhanh '{{ curQuickAddProperty }}'
         </h1>
       </div>
       <form [formGroup]="quickAddForm">
         <div class="modal-body">
           <div class="form-row">
-            <label>Tên {{ thuocTinhNhanh.ten }}:</label>
+            <label>Tên {{ curQuickAddProperty }}:</label>
             <input
               type="text"
               class="form-control rounded"
@@ -837,7 +939,18 @@
               "
               formControlName="ten"
             />
-            <div class="invalid-feedback">Không được bỏ trống</div>
+            <div
+              class="invalid-feedback"
+              *ngIf="quickAddForm.get('ten').hasError('customRequired')"
+            >
+              Tên không được bỏ trống
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="quickAddForm.get('ten').hasError('pattern')"
+            >
+              Tên không hợp lệ
+            </div>
           </div>
         </div>
 
@@ -846,7 +959,7 @@
             id="closeAddNhanhBtn"
             type="button"
             class="btn btn-secondary rounded"
-            (click)="initQuickAddForm()"
+            (click)="initQuickAddPropertyForm()"
             data-bs-dismiss="modal"
           >
             Đóng
@@ -854,7 +967,7 @@
           <button
             type="button"
             class="btn btn-primary rounded"
-            [disabled]="addForm.invalid"
+            [disabled]="quickAddForm.invalid"
             (click)="addNhanhThuocTinh()"
           >
             Thêm

@@ -16,6 +16,9 @@ import { DiscountService } from "src/app/service/discount.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
+import { SaleEventService } from "src/app/service/sale-event.service";
+import { forkJoin } from "rxjs";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 
 @Component({
   selector: "app-check-out2",
@@ -62,7 +65,8 @@ export class CheckOut2Component {
     private giaoHangNhanhService: GiaoHangNhanhService,
     private notifService: NotificationService,
     private discountService: DiscountService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +77,33 @@ export class CheckOut2Component {
         this.realPrice = this.getRealPrice();
         this.salePrice = this.getSalePrice();
         this.getDiscountsForNoneLoggedCheckOut();
+
+        // get sale events for prod-details
+        let observables2 = [];
+        for (let item of cartItems) {
+          observables2.push(
+            this.saleEventService.getSaleEventOfProdDetails(item.spct.id)
+          );
+        }
+        forkJoin(observables2).subscribe({
+          next: (values: SaleEvent[]) => {
+            values.forEach((v, index) => {
+              cartItems[index].spct.saleEvent = v;
+              if (index === cartItems.length - 1) {
+                this.cartItems = cartItems;
+                this.cartItemQuantity = cartItems.length;
+
+                this.cartService.updateCartItemsOfLoggedUser(cartItems);
+                this.cartService.updateCartItemsQuantityOfLoggedUser(
+                  cartItems.length
+                );
+                this.salePrice = this.getSalePrice();
+                this.discountPrice = this.getDiscountPrice();
+                this.finalPrice = this.getFinalPrice();
+              }
+            });
+          },
+        });
       }
     );
 
@@ -167,8 +198,8 @@ export class CheckOut2Component {
         const hoaDonChiTiets: OrderDetailsReq[] =
           this.mapCartItemsToOrderDetails();
         let req: OnlineOrderRequest = {
-          tongTien: this.finalPrice,
-          tienGiam: this.salePrice + this.discountPrice,
+          tongTien: this.realPrice - this.salePrice,
+          tienGiam: this.discountPrice,
           phiVanChuyen: this.shipPrice,
           hoaDonChiTiets: hoaDonChiTiets,
           khachHangId: null,

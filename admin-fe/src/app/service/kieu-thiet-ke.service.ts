@@ -14,7 +14,7 @@ export class KieuThietKeService {
   constructor(private http: HttpClient) {}
 
   // public functions
-  //
+  // 1
   public getByPage(
     pageNumber: number = 1,
     pageSize: number = 5,
@@ -26,34 +26,32 @@ export class KieuThietKeService {
     );
   }
 
-  //
+  // 2
   public getAll(): Observable<KieuThietKe[]> {
     return this.http.get<KieuThietKe[]>(`${this.apiUrl}/get-all`);
   }
 
-  //
+  // 3
   public getAllActive(): Observable<KieuThietKe[]> {
     return this.http.get<KieuThietKe[]>(`${this.apiUrl}/all-active`);
   }
 
-  //
+  // 4
   public add(chatLieu: KieuThietKe): Observable<KieuThietKe> {
     return this.http.post<KieuThietKe>(`${this.apiUrl}/add`, chatLieu);
   }
 
-  //
+  // 5
   public getById(id: number): Observable<KieuThietKe> {
     return this.http.get<KieuThietKe>(`${this.apiUrl}/get-by-id/${id}`);
   }
 
-  //
-  public changeStatus(id: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}`, {
-      responseType: "text",
-    });
+  // 6
+  public changeStatus(id: number): Observable<void> {
+    return this.http.get<void>(`${this.apiUrl}/status/${id}`);
   }
 
-  //
+  // 7
   public update(chatLieu: KieuThietKe): Observable<KieuThietKe> {
     return this.http.put<KieuThietKe>(`${this.apiUrl}/update`, chatLieu);
   }

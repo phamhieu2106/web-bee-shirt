@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DotGiamGia } from "src/app/model/class/dot-giam-gia.class";
 import { DotGiamGiaService } from "src/app/service/dot-giam-gia.service";
+import { NotificationService } from "src/app/service/notification.service";
 import Swal from "sweetalert2";
 
 @Component({
@@ -31,7 +32,8 @@ export class FormComponent implements OnInit {
   constructor(
     private service: DotGiamGiaService,
     private toast: ToastrService,
-    private router: Router
+    private router: Router,
+    private notifService: NotificationService
   ) {
     setTimeout(() => {
       this.patchForm();
@@ -188,7 +190,7 @@ export class FormComponent implements OnInit {
   public handleSubmit = async () => {
     if (this.typeForm === "add") {
       Swal.fire({
-        title: "Bạn có chắc chắn thêm Đợt Giảm Giá mới?",
+        title: "Bạn có chắc chắn muốn thêm Đợt Giảm Giá mới?",
         cancelButtonText: "Hủy",
         icon: "info",
         showCancelButton: true,
@@ -203,27 +205,16 @@ export class FormComponent implements OnInit {
               .addDotGiamGiaRequest(this.dotGiamGiaRequest)
               .subscribe({
                 next: () => {
-                  Swal.fire({
-                    icon: "success",
-                    title: `Thêm mới thành công!`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  this.turnOffOverlay("");
                   setTimeout(() => {
                     this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
                   }, 300);
-                  this.toast.success("Thêm Đợt Giảm Giá Thành Công!");
+                  this.notifService.success("Thêm Đợt Giảm Giá Thành Công!");
                 },
                 error: (err) => {
                   console.log(err);
-                  Swal.fire({
-                    icon: "error",
-                    title: `${err.error.message}`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  this.toast.error(`Thêm mới thất bại do ${err.error.message}`);
+                  this.notifService.error(
+                    `Thêm mới thất bại do ${err.error.message}`
+                  );
                 },
               });
           } else {
@@ -258,30 +249,18 @@ export class FormComponent implements OnInit {
               .updateDotGiamGiaRequest(this.dotGiamGiaRequest)
               .subscribe({
                 next: () => {
-                  Swal.fire({
-                    icon: "success",
-                    title: `Cập nhật thành công ${this.dotGiamGiaRequest.id}''!`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  this.turnOffOverlay("");
                   // Router
                   setTimeout(() => {
                     this.router.navigate(["/dot-giam-gia/ds-dot-giam-gia"]);
                   }, 300);
                   // Noti
-                  this.toast.success("Cập Nhật Đợt Giảm Giá Thành Công!");
+                  this.notifService.success(
+                    "Cập Nhật Đợt Giảm Giá Thành Công!"
+                  );
                 },
                 error: (err) => {
                   console.log(err);
-                  Swal.fire({
-                    icon: "error",
-                    title: `${err.error.message}`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  this.turnOffOverlay("");
-                  this.toast.error(
+                  this.notifService.success(
                     `Cập nhật mới thất bại do ${err.error.message}`
                   );
                 },

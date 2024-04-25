@@ -36,12 +36,20 @@ export class TimKiemHoaDonComponent implements OnInit {
             toast: true,
             icon: "error",
             position: "top-end",
-            title: `Lỗi: ${err.error.message}`,
+            title: `${err.error.message}`,
             showConfirmButton: false,
             timer: 3000,
           });
         },
         complete: () => {
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            position: "top-end",
+            title: `Tìm thấy hóa đơn có mã ${this.maHoaDon}`,
+            showConfirmButton: false,
+            timer: 3000,
+          });
           this.findHoaDon.emit(this.hoaDon);
         },
       });

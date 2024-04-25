@@ -50,4 +50,6 @@ public interface PhieuGiamGiaKhachHangRepository extends JpaRepository<PhieuGiam
             """)
     List<KhachHang> getKhachHangsByPhieuGiamGiaId(Integer phieuGiamGiaId);
 
+    PhieuGiamGiaKhachHang findByPhieuGiamGiaIdAndKhachHangId(Integer phieuGiamGia_id, Integer khachHang_id);
+
 }

@@ -16,6 +16,7 @@ import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.model.hoa_don.*;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
+import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonService;
@@ -157,13 +158,23 @@ public class HoaDonServiceImpl implements HoaDonService {
         // rollback sl sp va sl pgg
         if (hoaDonUpdate.getPhieuGiamGia() != null) {
             hoaDonUpdate.getPhieuGiamGia().setSoLuong(hoaDonUpdate.getPhieuGiamGia().getSoLuong() + 1);
-            System.out.println(hoaDonUpdate.getPhieuGiamGia());
+//            System.out.println(hoaDonUpdate.getPhieuGiamGia());
+            if ( hoaDonUpdate.getPhieuGiamGia().getLoai() == 0 &&  hoaDonUpdate.getKhachHang().getId() != null) {
+                //chuyen trang thai cua khach hang trong phieu giam gia
+                PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = pggKhRepo.findByPhieuGiamGiaIdAndKhachHangId(
+                        hoaDonUpdate.getPhieuGiamGia().getId(),hoaDonUpdate.getKhachHang().getId());
+                phieuGiamGiaKhachHang.setTrangThai(1); //unUsed
+                pggKhRepo.save(phieuGiamGiaKhachHang);
+            }
             phieuGiamGiaRepo.save(hoaDonUpdate.getPhieuGiamGia());
+
+            // huy pgg nay
+            hoaDonUpdate.setPhieuGiamGia(null);
         }
         if (hoaDonUpdate.getHoaDonChiTiets() != null && !hoaDonUpdate.getHoaDonChiTiets().isEmpty()) {
             hoaDonUpdate.getHoaDonChiTiets().forEach(hdct -> {
                 hdct.getSanPhamChiTiet().setSoLuongTon(hdct.getSanPhamChiTiet().getSoLuongTon() + hdct.getSoLuong());
-                System.out.println(hdct.getSanPhamChiTiet());
+//                System.out.println(hdct.getSanPhamChiTiet());
                 spctRepo.save(hdct.getSanPhamChiTiet());
             });
         }
@@ -327,6 +338,12 @@ public class HoaDonServiceImpl implements HoaDonService {
                 if (!isKhachTonTaiTrongPGG) {
                     throw new PlaceOrderException("Khách hàng không không còn tồn tại trong phiếu giảm giá này !");
                 }
+
+                //chuyen trang thai cua khach hang trong phieu giam gia
+                PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = pggKhRepo.findByPhieuGiamGiaIdAndKhachHangId(phieuGiamGia.getId(),khachHangId);
+                phieuGiamGiaKhachHang.setTrangThai(0); //used
+
+                pggKhRepo.save(phieuGiamGiaKhachHang);
             }
             // tru so luong
             if (phieuGiamGia.getSoLuong() >= 1) {

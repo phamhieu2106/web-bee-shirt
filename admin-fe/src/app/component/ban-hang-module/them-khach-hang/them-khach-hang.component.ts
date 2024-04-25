@@ -100,6 +100,7 @@ export class ThemKhachHangComponent {
         Validators.required,
         Validators.pattern(/^[\p{L}]+(?:\s[\p{L}]+)*$/u),
       ]),
+      email: new FormControl(""),
       gioiTinh: new FormControl("true"),
       sdt: new FormControl("", [
         Validators.required,

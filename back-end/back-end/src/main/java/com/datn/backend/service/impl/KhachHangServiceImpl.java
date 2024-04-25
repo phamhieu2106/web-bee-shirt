@@ -19,13 +19,17 @@ import com.datn.backend.repository.AddressRepository;
 import com.datn.backend.repository.FavouriteListRepository;
 import com.datn.backend.repository.CustomerImageRepository;
 import com.datn.backend.repository.KhachHangRepository;
+import com.datn.backend.service.EmailService;
 import com.datn.backend.service.KhachHangService;
 import com.datn.backend.utility.CloudinaryService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +55,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     private final FavouriteListRepository favouriteListRepo;
     private final CloudinaryService cloudinaryService;
     private final CustomerImageRepository khachHangImageRepo;
+    private final EmailService emailService;
 
     @Transactional
     public KhachHang add(KhachHangRequest kh, MultipartFile multipartFile) throws IOException {
@@ -108,15 +113,27 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     @Transactional
     public KhachHang add(KhachHangRequest kh) {
+        final String DEFAULT_PASSWORD = "123456";
         // check exist sdt
         if (khachHangRepo.existsBySdt(kh.getSdt().trim())) {
             throw new RuntimeException("Số điện thoại: " + kh.getSdt() + " đã tồn tại.");
         }
 
+        // check email
+        String email = kh.getEmail().trim();
+        if (!UtilityFunction.isNullOrEmpty(email)) {
+            if (khachHangRepo.existsByEmail(email)){
+                throw new RuntimeException("Email: " + email + " đã tồn tại.");
+            }
+
+            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")){
+                throw new RuntimeException("Email: " + email + " không hợp lệ");
+            }
+        }
+
         // account
         Account account = new Account();
         account.setTenDangNhap(kh.getSdt().trim());
-        account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
         account.setTrangThai(true);
         account.setRole(Role.ROLE_CUSTOMER.name());
 
@@ -135,8 +152,15 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(custImg);
         khachHang.setAccount(account);
-        khachHangRepo.save(khachHang);
-
+        khachHang  = khachHangRepo.save(khachHang);
+        if (UtilityFunction.isNullOrEmpty(email)){
+            // neu khong co email gui pass default sdt/DEFAULT_PASSWORD
+            account.setMatKhau(passwordEncoder.encode(DEFAULT_PASSWORD));
+        }else {
+            // neu co email tao mat khau moi va gui mail sdt/password
+            account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
+            khachHang.setEmail(email);
+        }
         // dia chi
         if (!UtilityFunction.isNullOrEmpty(kh.getTinh()) &&
                 !UtilityFunction.isNullOrEmpty(kh.getHuyen()) &&
@@ -152,7 +176,9 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChi.setMacDinh(true);
             diaChiRepo.save(diaChi);
         }
-
+        if (!UtilityFunction.isNullOrEmpty(email)){
+            emailService.sendPasswordCustomer(khachHang,kh.getMatKhau());
+        }
         return khachHang;
     }
 

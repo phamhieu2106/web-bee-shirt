@@ -11,11 +11,7 @@
           <option value="-1">
             {{ "Chọn tỉnh thành" }}
           </option>
-          <option
-            *ngFor="let t of tinhs"
-            [value]="t.ProvinceID"
-            [selected]="t.ProvinceID == diaChiVaPhiVanChuyen.tinhId"
-          >
+          <option *ngFor="let t of tinhs" [value]="t.ProvinceID">
             {{ t.ProvinceName }}
           </option>
         </select>
@@ -32,9 +28,10 @@
           (change)="getAllXaByHuyen()"
         >
           <option value="-1">Chọn quận huyện</option>
-          <option *ngFor="let h of huyens" value="{{ h.DistrictID }}">
-            <!-- [selected]="diaChiVaPhiVanChuyen.huyenId == h.DistrictID" -->
-
+          <option
+            *ngFor="let h of huyens; trackBy: trackByHuyen; index as i"
+            value="{{ h.DistrictID }}"
+          >
             {{ h.DistrictName }}
           </option>
         </select>
@@ -50,8 +47,11 @@
           (change)="onFinishChooseDiaChi()"
           [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
         >
-          <option value="">Chọn phường xã</option>
-          <option *ngFor="let x of xas" value="{{ x.WardCode }}">
+          <option value="">Chọn xã phường</option>
+          <option
+            *ngFor="let x of xas; index as i; trackBy: trackByXa"
+            value="{{ x.WardCode }}"
+          >
             {{ x.WardName }}
           </option>
         </select>

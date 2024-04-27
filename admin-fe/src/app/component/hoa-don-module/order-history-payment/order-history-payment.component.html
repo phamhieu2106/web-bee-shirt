@@ -21,13 +21,15 @@
             <i class="fa-solid fa-plus"></i>
             Thanh toán
           </button>
-          <app-hoan-tien
-            [title]="'Hoàn tiền'"
-            [tienThanhToan]="
-              hoaDon.tongTien - hoaDon.tienGiam + hoaDon.phiVanChuyen
-            "
-            [hoaDonId]="hoaDon.id"
-          ></app-hoan-tien>
+          <div *ngIf="hoaDon.trangThai == 'CHO_HOAN_TIEN'">
+            <app-hoan-tien
+              [title]="'Hoàn tiền'"
+              [tienThanhToan]="
+                hoaDon.tongTien - hoaDon.tienGiam + hoaDon.phiVanChuyen
+              "
+              [hoaDonId]="hoaDon.id"
+            ></app-hoan-tien>
+          </div>
         </div>
       </div>
 

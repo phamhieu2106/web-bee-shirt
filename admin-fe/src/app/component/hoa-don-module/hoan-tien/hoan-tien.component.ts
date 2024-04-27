@@ -111,7 +111,9 @@ export class HoanTienComponent {
       if (result.isConfirmed) {
         this.hoaDonService.refundMoney(newThanhToan, this.hoaDonId).subscribe({
           next: (resp) => {
-            this.hoaDonChange.emit(resp);
+            setTimeout(() => {
+              this.hoaDonChange.emit(resp);
+            });
             this.notification.success("Hoàn tiền thành công");
             document.getElementById("closeModalHoanTien").click();
             this.resetForm();

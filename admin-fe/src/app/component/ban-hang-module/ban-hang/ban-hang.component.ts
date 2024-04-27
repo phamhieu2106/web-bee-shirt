@@ -552,6 +552,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
   validateThongTinNhanHang() {
     let regexSdt = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
     let regexHoTen = /^[\p{L}\s]*$/u;
+    // '^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$'
+    let regexEmail = new RegExp("^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$");
 
     if (
       this.order.tenNguoiNhan == null ||
@@ -577,6 +579,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
     }
     if (!regexSdt.test(this.order.sdtNguoiNhan)) {
       this.notification.warning("Số điện thoại người nhận không hợp lệ");
+      return;
+    }
+    if (
+      this.order.emailNguoiNhan &&
+      !regexEmail.test(this.order.emailNguoiNhan)
+    ) {
+      this.notification.warning("Email người nhận không hợp lệ");
       return;
     }
     if (

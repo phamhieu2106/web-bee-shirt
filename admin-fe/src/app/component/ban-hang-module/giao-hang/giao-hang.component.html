@@ -1,7 +1,7 @@
 <!-- Danh sách địa chỉ -->
 <div class="row d-flex mt-2 mb-3">
   <div
-    class="col-6"
+    class="col-6 fw-bold"
     *ngFor="let dc of khachHang?.diaChis; index as i"
     (click)="changeDiaChi(dc)"
   >
@@ -22,7 +22,9 @@
 <!-- Component -->
 <div class="row mb-3">
   <div class="col-6">
-    <span class="sidebar-money-part-left">Tên người nhận: </span>
+    <span class="sidebar-money-part-left"
+      ><b class="fw-bold text-danger">*</b>Tên người nhận:
+    </span>
     <span class="sidebar-money-part-right"
       ><input
         type="text"
@@ -32,7 +34,9 @@
     /></span>
   </div>
   <div class="col-6">
-    <span class="sidebar-money-part-left">Số điện thoại:</span>
+    <span class="sidebar-money-part-left"
+      ><b class="fw-bold text-danger">*</b>Số điện thoại:</span
+    >
     <span class="sidebar-money-part-right"
       ><input
         type="text"
@@ -41,8 +45,20 @@
         (ngModelChange)="onSdtNguoiNhanChange()"
     /></span>
   </div>
+  <div class="col-12">
+    <span class="sidebar-money-part-left">Email:</span>
+    <span class="sidebar-money-part-right"
+      ><input
+        type="text"
+        class="form-control"
+        [(ngModel)]="emailNguoiNhan"
+        (ngModelChange)="onEmailNguoiNhanChange()"
+    /></span>
+  </div>
 </div>
-<app-get-dia-chi-va-phi-van-chuyen
-  [diaChiVaPhiVanChuyen]="diaChiVaPhiVanChuyen"
-  (changePhiVanChuyen)="updatePhiVanChuyen($event)"
-></app-get-dia-chi-va-phi-van-chuyen>
+<div class="mt-5">
+  <app-get-dia-chi-va-phi-van-chuyen
+    [diaChiVaPhiVanChuyen]="diaChiVaPhiVanChuyen"
+    (changePhiVanChuyen)="updatePhiVanChuyen($event)"
+  ></app-get-dia-chi-va-phi-van-chuyen>
+</div>

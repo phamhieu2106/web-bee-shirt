@@ -749,7 +749,7 @@ export class ThemSanPhamChiTietComponent {
 
   // 8
   private getAllActiveSizes(): void {
-    this.kichCoService.getAll().subscribe({
+    this.kichCoService.getAllActiveSizes().subscribe({
       next: (response: KichCo[]) => {
         this.activeSizes = response;
       },

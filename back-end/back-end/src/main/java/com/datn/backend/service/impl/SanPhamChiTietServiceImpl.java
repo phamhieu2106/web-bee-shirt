@@ -42,6 +42,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -202,7 +203,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search) {
-        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize,sort);
         //  Get list spct
         Page<SanPhamChiTiet> spcts = spctRepo.getAllBySearch(search, pageRequest);
         // find doi giam gia theo spct
@@ -435,8 +437,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public PagedResponse<SpctResponse> getDetailSpct(int pageSize, int pageNumber, String search, String mauSac, String kichCo, String kieuDang, String thietKe, String tayAo, String coAo, String chatLieu, BigDecimal giaMin, BigDecimal giaMax) {
+        Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
         // to page request
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize,sort);
 
         // lay danh sách sản pẩm chi tiet
         Page<SanPhamChiTiet> sanPhamChiTietPage = spctRepo.findDetailAll(pageable, search, mauSac, kichCo, kieuDang, thietKe, tayAo, coAo, chatLieu, giaMin, giaMax);

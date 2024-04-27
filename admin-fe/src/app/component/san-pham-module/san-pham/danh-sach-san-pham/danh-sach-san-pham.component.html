@@ -44,7 +44,11 @@
               </div>
             </div>
 
-            <div class="col-1 ps-3">
+            <div
+              class="col-1 ps-3"
+              title="Tải lại danh sách"
+              (click)="ngOnInit()"
+            >
               <button class="btn btn-create btn-rounded btn-reload-filter">
                 <i class="fa-solid fa-arrows-rotate"></i>
               </button>
@@ -59,13 +63,16 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="float-md-left">Danh sách sản phẩm</h4>
+          <h4 class="float-md-left">
+            Danh sách sản phẩm ({{ pagedResponse?.totalElements }})
+          </h4>
           <button
             type="button"
             class="btn btn-create btn-lg float-md-right rounded"
             title="Thêm mới"
             data-bs-toggle="modal"
             data-bs-target="#sanPhamAddForm"
+            (click)="initAddForm()"
           >
             <i class="fa-solid fa-square-plus"></i>
             Thêm mới
@@ -133,7 +140,7 @@
                       title="Xem chi tiết"
                       data-bs-toggle="modal"
                       data-bs-target="#sanPhamDetailsForm"
-                      (click)="openDetailsForm(s.id)"
+                      (click)="openDetailsModal(s.id)"
                     >
                       <i
                         class="fa-solid fa-circle-info fa-xl"
@@ -146,7 +153,7 @@
                       title="Cập nhật"
                       data-bs-toggle="modal"
                       data-bs-target="#sanPhamUpdateForm"
-                      (click)="openUpdateForm(s.id)"
+                      (click)="openUpdateModal(s.id)"
                     >
                       <i
                         class="fa-solid fa-pen-to-square"
@@ -300,6 +307,13 @@
                 >
                   Tên không được bỏ trống
                 </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="addForm.get('ten').hasError('pattern')"
+                >
+                  Tên không hợp lệ (Tên chỉ được bao gồm chữ cái, chữ số, không
+                  có ký tự đặc biệt)
+                </div>
               </div>
 
               <!-- mã -->
@@ -321,21 +335,20 @@
                 >
                   Mã không được bỏ trống
                 </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    addForm.get('ma').hasError('pattern') &&
+                    !addForm.get('ma').hasError('customRequired')
+                  "
+                >
+                  Mã không hợp lệ
+                </div>
               </div>
 
               <!-- mô tả -->
               <div class="form-row mt-3">
                 <label class="fw-semibold">Mô tả sản phẩm:</label>
-                <!-- <angular-editor
-                  class="rounded"
-                  formControlName="moTa"
-                  [config]="editorConfig"
-                  [ngClass]="
-                    addForm.get('moTa').invalid && addForm.get('moTa').touched
-                      ? 'is-invalid'
-                      : ''
-                  "
-                ></angular-editor> -->
                 <textarea
                   class="form-control rounded"
                   rows="10"
@@ -352,12 +365,19 @@
                 >
                   Mô tả không được bỏ trống
                 </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="addForm.get('moTa').hasError('pattern')"
+                >
+                  Mô tả không hợp lệ (Mô tả chỉ được bao gồm chữ cái, chữ số,
+                  không có ký tự đặc biệt)
+                </div>
               </div>
             </div>
 
             <div class="modal-footer">
               <button
-                id="closeAddBtn"
+                id="closeAddModalBtn"
                 class="btn btn-secondary rounded"
                 type="button"
                 (click)="initAddForm()"
@@ -419,11 +439,12 @@
               <!-- mô tả -->
               <div class="form-row mb-3">
                 <label>Mô tả:</label>
-                <angular-editor
-                  class="border rounded p-5 test"
+                <textarea
+                  class="form-control"
                   [innerHTML]="selectedDetails?.moTa"
-                  [config]="editorConfig"
-                ></angular-editor>
+                  style="height: 200px"
+                  disabled
+                ></textarea>
               </div>
 
               <div class="form-row">
@@ -489,8 +510,8 @@
                 <input type="hidden" formControlName="id" />
                 <input type="hidden" formControlName="trangThai" />
 
-                <!-- ten -->
-                <label for="inputEmail4">Tên sản phẩm:</label>
+                <!-- Tên sản phẩm -->
+                <label class="fw-semibold">Tên sản phẩm:</label>
                 <input
                   type="text"
                   class="form-control rounded"
@@ -504,13 +525,19 @@
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="addForm.get('ten').hasError('customRequired')"
+                  *ngIf="updateForm.get('ten').hasError('customRequired')"
                 >
                   Tên không được bỏ trống
                 </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="updateForm.get('ten').hasError('pattern')"
+                >
+                  Tên không hợp lệ
+                </div>
 
-                <!-- ma -->
-                <label class="mt-3" for="inputEmail4">Mã sản phẩm:</label>
+                <!-- Mã sản phẩm -->
+                <label class="fw-semibold mt-3">Mã sản phẩm:</label>
                 <input
                   type="text"
                   class="form-control rounded"
@@ -521,15 +548,45 @@
                   "
                   formControlName="ma"
                 />
-                <div class="invalid-feedback">Không được bỏ trống</div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="updateForm.get('ma').hasError('customRequired')"
+                >
+                  Mã không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="updateForm.get('ma').hasError('pattern')"
+                >
+                  Mã không hợp lệ
+                </div>
 
-                <!-- mo ta -->
-                <label class="mt-3" for="inputEmail4">Mô tả:</label>
-                <angular-editor
+                <!-- Mô tả sản phẩm -->
+                <label class="fw-semibold mt-3">Mô tả sản phẩm:</label>
+                <textarea
+                  class="form-control rounded"
+                  rows="10"
                   formControlName="moTa"
-                  [config]="editorConfig"
-                ></angular-editor>
-                <div class="invalid-feedback">Không được bỏ trống</div>
+                  [ngClass]="
+                    updateForm.get('moTa').invalid &&
+                    updateForm.get('moTa').touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                ></textarea>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="updateForm.get('moTa').hasError('customRequired')"
+                >
+                  Mô tả không được bỏ trống
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="updateForm.get('moTa').hasError('pattern')"
+                >
+                  Mô tả không hợp lệ (Mô tả chỉ được bao gồm chữ cái, chữ số,
+                  không có ký tự đặc biệt)
+                </div>
               </div>
             </div>
 
@@ -558,208 +615,4 @@
   </div>
 </div>
 
-<!--  -->
-<!-- <app-main-heading
-      [icon]="'fa-solid fa-shirt'"
-      [mainHeading]="'Sản phẩm'"
-      [title]="'Sản phẩm'"
-    ></app-main-heading>
-
-    <div class="row gutters pt-2">
-      <div class="col-sm-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="mb-2">Danh Sách Sản Phẩm</h3>
-            <div>
-              <div class="col col-md-12 d-flex">
-                <div class="input-group form-group search-block">
-                  <input
-                    type="search"
-                    class="form-control rounded"
-                    placeholder="Tìm sản phẩm theo tên hoặc mã..."
-                    [(ngModel)]="search"
-                    (input)="searchByName()"
-                  />
-                </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-4 text-right">
-                  <button
-                    type="button"
-                    class="btn btn-create btn-lg rounded"
-                    title="Thêm mới"
-                    data-bs-toggle="modal"
-                    data-bs-target="#sanPhamAddForm"
-                  >
-                    Thêm mới <i class="fa-solid fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
-            <table class="table">
-              <thead class="thead-default">
-                <tr>
-                  <th>STT</th>
-                  <th>Tên</th>
-                  <th>Mã</th>
-                  <th>Số lượng</th>
-                  <th>Trạng Thái</th>
-                  <th>Ngày Thêm</th>
-                  <th>Hành động</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let s of pagedResponse?.data; let i = index">
-                  <th scope="row">
-                    {{
-                      i +
-                        1 +
-                        (pagedResponse.pageNumber - 1) * pagedResponse.pageSize
-                    }}
-                  </th>
-                  <td>
-                    <ng-container *ngIf="isDiscounted(s.id); else noDiscount">
-                      <nz-ribbon nzText="Sale+" nzColor="red">
-                        <a
-                          class="link-hover"
-                          [routerLink]="'/sp/ds-sp-chi-tiet/' + s.id"
-                          >{{ s.ten }}</a
-                        >
-                      </nz-ribbon>
-                    </ng-container>
-                    <ng-template #noDiscount>
-                      <a
-                        class="link-hover"
-                        [routerLink]="'/sp/ds-sp-chi-tiet/' + s.id"
-                        >{{ s.ten }}</a
-                      >
-                    </ng-template>
-                  </td>
-                  <td>{{ s.ma }}</td>
-                  <td>{{ s.sanPhamChiTiets.length }}</td>
-                  <td>
-                    <span
-                      class="pointer"
-                      [ngClass]="
-                        s.trangThai
-                          ? 'badge rounded-pill text-bg-success'
-                          : 'badge rounded-pill text-bg-danger'
-                      "
-                      (click)="changeStatus(s.id, !s.trangThai)"
-                      >{{ s.trangThai ? "Đang bán" : "Ngừng bán" }}</span
-                    >
-                  </td>
-                  <td>{{ s.createdAt }}</td>
-                  <td>
-                    <button
-                      class="btn btn-outline-light btn-rounded me-2"
-                      title="Xem chi tiết"
-                      data-bs-toggle="modal"
-                      data-bs-target="#sanPhamDetailsForm"
-                      (click)="openDetailsForm(s.id)"
-                    >
-                      <i
-                        class="fa-solid fa-circle-info fa-xl"
-                        style="color: #74c0fc"
-                      ></i>
-                    </button>
-
-                    <button
-                      class="btn btn-outline-warning btn-rounded me-2"
-                      title="Cập nhật"
-                      data-bs-toggle="modal"
-                      data-bs-target="#sanPhamUpdateForm"
-                      (click)="openUpdateForm(s.id)"
-                    >
-                      <i
-                        class="fa-solid fa-pen-to-square"
-                        style="color: #ffd43b"
-                      ></i>
-                    </button>
-
-                    <a
-                      class="btn btn-outline-light btn-rounded"
-                      title="Thêm sản phẩm chi tiết"
-                      [routerLink]="'/sp/them-sp-chi-tiet/' + s.id"
-                    >
-                      <i
-                        class="fa-solid fa-plus"
-                        style="color: greenyellow"
-                      ></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card-footer" *ngIf="pagedResponse?.data.length > 0">
-            <div class="col col-md-12 d-flex justify-content-between">
-              <div class="col-md-3">
-                <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
-                  >Số lượng:
-                </label>
-                <select
-                  class="custom-select my-1 mr-sm-2 col-md-5"
-                  id="inlineFormCustomSelectPref"
-                  (change)="onChangePageSize($event)"
-                >
-                  >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                </select>
-              </div>
-              <div class="">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li
-                      class="page-item"
-                      [ngClass]="
-                        pagedResponse?.pageNumber == 1 ? 'disabled' : ''
-                      "
-                    >
-                      <a
-                        class="page-link pointer rounded"
-                        (click)="goToPage(pagedResponse?.pageNumber - 1)"
-                        >Previous</a
-                      >
-                    </li>
-                    <li
-                      class="page-item"
-                      *ngFor="let page of pagedResponse?.pageNumberArr"
-                    >
-                      <a
-                        class="page-link pointer rounded"
-                        [ngClass]="
-                          pagedResponse?.pageNumber == page ? 'active' : ''
-                        "
-                        (click)="goToPage(page)"
-                        >{{ page }}</a
-                      >
-                    </li>
-                    <li
-                      class="page-item"
-                      [ngClass]="
-                        pagedResponse?.pageNumber == pagedResponse?.totalPages
-                          ? 'disabled'
-                          : ''
-                      "
-                    >
-                      <a
-                        class="page-link pointer rounded"
-                        (click)="goToPage(pagedResponse?.pageNumber + 1)"
-                        >Next</a
-                      >
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div class="text-center mt-3" *ngIf="pagedResponse?.data.length == 0">
-            <h3>Không có dữ liệu!</h3>
-          </div>
-        </div>
-      </div>
-    </div> -->
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

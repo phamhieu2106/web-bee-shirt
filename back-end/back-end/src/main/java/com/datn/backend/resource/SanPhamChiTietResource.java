@@ -4,6 +4,7 @@ import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
+import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.service.SanPhamChiTietService;
@@ -65,7 +66,7 @@ public class SanPhamChiTietResource {
     @PostMapping("/quick-update")
     public ResponseEntity<?> updateSpctNhanh(@RequestBody CapNhatNhanhSpctReq req) {
         spctService.updateSpctNhanh(req);
-        return ResponseEntity.ok("Cập nhật nhanh thành công!");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/update")
@@ -96,8 +97,14 @@ public class SanPhamChiTietResource {
     public ResponseEntity<?> updateImages(@RequestParam(value = "files", required = false) MultipartFile[] files,
                                           @RequestParam("spId") int spId,
                                           @RequestParam("mauSacId") int mauSacId) throws IOException {
-        this.spctService.updateImages(files, spId, mauSacId);
+        spctService.updateImages(files, spId, mauSacId);
         return ResponseEntity.ok("Cập nhật ảnh thành công!");
+    }
+
+    @PostMapping("/update-properties")
+    public ResponseEntity<Void> updateCommonProperties(@RequestBody UpdateCommonPropertiesReq req) {
+        spctService.updateCommonProperties(req);
+        return ResponseEntity.ok().build();
     }
 
     // client resources

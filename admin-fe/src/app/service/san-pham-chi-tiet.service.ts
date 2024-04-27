@@ -8,6 +8,7 @@ import { PagedResponse } from "../model/interface/paged-response.interface";
 import { UpdateNhanhSPCT } from "../model/interface/update-nhanh-spct.interface";
 import { FilterSPCTParams } from "../model/interface/filter-spct-params.interface";
 import { UpdateSpctReq } from "../model/interface/update-spct-req.interface";
+import { UpdateCommonProperties } from "../model/interface/update-common-properties-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -42,7 +43,7 @@ export class SanPhamChiTietService {
   }
 
   // 3
-  public filterSPCTByPage(
+  public filterProDetailsByPage(
     params: FilterSPCTParams
   ): Observable<PagedResponse<SanPhamChiTiet>> {
     return this.http.post<PagedResponse<SanPhamChiTiet>>(
@@ -73,10 +74,8 @@ export class SanPhamChiTietService {
   }
 
   // 7
-  public updateNhanh(updateNhanhReq: UpdateNhanhSPCT): Observable<string> {
-    return this.http.post(`${this.apiUrl}/quick-update`, updateNhanhReq, {
-      responseType: "text",
-    });
+  public quickUpdate(updateNhanhReq: UpdateNhanhSPCT): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/quick-update`, updateNhanhReq);
   }
 
   // 8
@@ -161,5 +160,10 @@ export class SanPhamChiTietService {
   }
   public getById(id: number): Observable<SanPhamChiTiet> {
     return this.http.get<SanPhamChiTiet>(`${this.apiUrl}/get-by-id/` + id);
+  }
+
+  // 16
+  public updateCommonProperties(req: UpdateCommonProperties): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/update-properties`, req);
   }
 }

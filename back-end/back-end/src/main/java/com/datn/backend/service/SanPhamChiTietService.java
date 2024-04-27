@@ -4,6 +4,7 @@ import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
+import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SpctResponse;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
@@ -37,6 +38,8 @@ public interface SanPhamChiTietService {
     boolean checkExist(int spId, int mauSacId, int sizeId);
 
     void updateImages(MultipartFile[] files, int spId, int mauSacId) throws IOException;
+
+    void updateCommonProperties(UpdateCommonPropertiesReq req);
 
     Integer getQuantityOfOne(int productId, int colorId, int sizeId);
 

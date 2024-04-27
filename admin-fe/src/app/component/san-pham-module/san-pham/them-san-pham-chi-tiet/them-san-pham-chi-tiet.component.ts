@@ -591,7 +591,6 @@ export class ThemSanPhamChiTietComponent {
   public selectProperty(event: any, fields: any[], formControl: string): void {
     const fieldValue = event.target.value;
     const field = fields.find((f: any) => f.ten === fieldValue);
-    console.log(field == null);
 
     if (field) {
       this.propertyIdForm.get(`${formControl}`).setValue(field.id);

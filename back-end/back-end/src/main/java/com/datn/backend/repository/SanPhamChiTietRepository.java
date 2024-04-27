@@ -124,6 +124,23 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             """, nativeQuery = true)
     String getProductNameByProductDetails(@Param("productDetailsId") int productDetailsId);
 
+    @Query(value = """
+            UPDATE san_pham_chi_tiet
+            SET kieu_dang_id = :kieuDangId,
+                thiet_ke_id = :thietKeId,
+            	co_ao_id = :coAoId,
+            	tay_ao_id = :tayAoId,
+            	chat_lieu_id = :chatLieuId
+            WHERE san_pham_id = :sanPhamId
+            """, nativeQuery = true)
+    @Modifying
+    void updateCommonProperties(@Param("sanPhamId") int sanPhamId,
+                                @Param("kieuDangId") int kieuDangId,
+                                @Param("thietKeId") int thietKeId,
+                                @Param("coAoId") int coAoId,
+                                @Param("tayAoId") int tayAoId,
+                                @Param("chatLieuId") int chatLieuId);
+
     @Query("""
             select spct from SanPhamChiTiet spct
             where (spct.sanPham.ten like %:search% or spct.sanPham.ma like %:search%) and

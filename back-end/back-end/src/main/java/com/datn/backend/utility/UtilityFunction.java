@@ -5,6 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,5 +73,16 @@ public class UtilityFunction {
             return ((Map<?, ?>) obj).isEmpty();
         }
         return false;
+    }
+
+    public static String dateToString(LocalDateTime date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            // Chuyển đổi LocalDateTime sang Date
+            Date dateAsDate = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+            return dateFormat.format(dateAsDate);
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

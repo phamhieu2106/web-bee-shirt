@@ -19,6 +19,7 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
+import com.datn.backend.service.EmailService;
 import com.datn.backend.service.HoaDonService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author HungDV
@@ -53,6 +55,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     private final HinhThucThanhToanRepository hinhThucThanhToanRepo;
     private final CartItemRepository cartItemRepo;
     private final ThanhToanRepository thanhToanRepo;
+    private final EmailService emailService;
 
     /**
      * @param pageable
@@ -122,6 +125,9 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tieuDe(nextTrangThaiHD.getTitle())
                 .trangThai(nextTrangThaiHD)
                 .build();
+
+        // send email
+        emailService.sendEmailStatusOrder(hoaDonUpdate);
         return modelMapper.map(lichSuHoaDonRepo.save(lichSuHoaDon), LichSuHoaDonResponse.class);
     }
 
@@ -200,6 +206,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                     .build();
             lichSuHoaDonRepo.save(lichSuHoaDonHoanTien);
         }
+
+        emailService.sendEmailStatusOrder(hoaDonUpdate);
         return modelMapper.map(lichSuHoaDonResponse, LichSuHoaDonResponse.class);
     }
 
@@ -395,11 +403,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     public String generateMaHD() {
-        long count = hoaDonRepo.count();
-        String maHD = "HD" + count;
+        String random = UUID.randomUUID().toString().substring(0,7).toUpperCase();
+        String maHD = "HD" + random;
         while (hoaDonRepo.existsByMa(maHD)) {
-            count += 1;
-            maHD = "HD" + count;
+            random = UUID.randomUUID().toString().substring(0,7).toUpperCase();
+            maHD = "HD" + random;
         }
         return maHD;
     }
@@ -647,7 +655,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         // check trong thanh toan
         hoaDon.getThanhToans().forEach(tt -> {
             if (tt.getSoTien().longValue() < 0) {
-                throw new OrderStatusException("Trạng thái hóa đơn không hợp lệ");
+                throw new OrderStatusException("Hóa đơn này đã được hoàn tiền !");
             }
         });
 
@@ -698,6 +706,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .moTa("Hoàn tiền: " + thanhToanRequest.getMoTa())
                 .build();
         thanhToanRepo.save(thanhToan);
+
+        emailService.sendEmailStatusOrder(hoaDon);
         return modelMapper.map(hoaDon, HoaDonResponse.class);
     }
 }

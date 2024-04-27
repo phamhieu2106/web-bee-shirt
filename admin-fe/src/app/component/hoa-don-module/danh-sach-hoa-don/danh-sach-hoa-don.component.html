@@ -344,12 +344,7 @@
                         <i class="fa-solid fa-pen-to-square"></i>
                       </a>
 
-                      <div
-                        *ngIf="
-                          hd.trangThai == 'CHO_HOAN_TIEN' ||
-                          hd.trangThai == 'DA_HOAN_TIEN'
-                        "
-                      >
+                      <div *ngIf="hd.trangThai == 'CHO_HOAN_TIEN'">
                         <app-hoan-tien
                           [tienThanhToan]="
                             hd.tongTien - hd.tienGiam + hd.phiVanChuyen

@@ -25,6 +25,9 @@ export class GiaoHangComponent implements OnInit, OnChanges {
   @Input({ required: true }) sdtNguoiNhan: string;
   @Output() sdtNguoiNhanChange = new EventEmitter<string>();
 
+  @Input({ required: true }) emailNguoiNhan: string;
+  @Output() emailNguoiNhanChange = new EventEmitter<string>();
+
   @Output() phiVanChuyen = new EventEmitter<number>();
   @Output() diaChi = new EventEmitter<string>();
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
@@ -36,6 +39,9 @@ export class GiaoHangComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {
       this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
+      this.tenNguoiNhan = this.khachHang.hoTen;
+      this.sdtNguoiNhan = this.khachHang.sdt;
+      this.emailNguoiNhan = this.khachHang.email;
     }
   }
 
@@ -71,5 +77,9 @@ export class GiaoHangComponent implements OnInit, OnChanges {
 
   onSdtNguoiNhanChange() {
     this.sdtNguoiNhanChange.emit(this.sdtNguoiNhan);
+  }
+
+  onEmailNguoiNhanChange() {
+    this.emailNguoiNhanChange.emit(this.emailNguoiNhan);
   }
 }

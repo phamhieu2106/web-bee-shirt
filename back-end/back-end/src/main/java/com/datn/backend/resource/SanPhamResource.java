@@ -43,10 +43,10 @@ public class SanPhamResource {
     }
 
     @GetMapping("/status/{id}/{value}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id,
-                                               @PathVariable("value") boolean value) {
+    public ResponseEntity<Void> changeStatus(@PathVariable("id") int id,
+                                             @PathVariable("value") boolean value) {
         sanPhamService.changeStatus(id, value);
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")

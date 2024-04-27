@@ -1,11 +1,8 @@
 package com.datn.backend.model.san_pham;
 
 import com.datn.backend.model.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +29,8 @@ public class SanPham extends BaseEntity {
 
     private String ten;
     private String ma;
+
+    @Column(length = 4000)
     private String moTa;
     private boolean trangThai;
 

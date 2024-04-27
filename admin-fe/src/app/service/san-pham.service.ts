@@ -39,10 +39,8 @@ export class SanPhamService {
   }
 
   // 4
-  public changeStatus(id: number, value: boolean): Observable<string> {
-    return this.http.get(`${this.apiUrl}/status/${id}/${value}`, {
-      responseType: "text",
-    });
+  public changeStatus(id: number, value: boolean): Observable<void> {
+    return this.http.get<void>(`${this.apiUrl}/status/${id}/${value}`);
   }
 
   // 5

@@ -8,7 +8,9 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="mb-4">Danh Sách Sản Phẩm Chi Tiết</h3>
+        <h3 class="mb-4">
+          Danh sách sản phẩm chi tiết ({{ pagedResponse?.totalElements }})
+        </h3>
         <!-- <div>
           <div class="col col-md-12 d-flex">
             <div class="col-md-4"></div>
@@ -168,6 +170,58 @@
       <h5 class="m-3">{{ sanPham?.ten }}</h5>
 
       <div class="card-body" *ngIf="pagedResponse?.data.length > 0">
+        <button
+          class="btn btn-primary rounded my-3"
+          data-bs-toggle="modal"
+          data-bs-target="#updateCommonPropertyModal"
+        >
+          <i class="fa-regular fa-pen-to-square me-2"></i>Cập nhật thuộc tính
+          chung
+        </button>
+
+        <ul class="fs-5">
+          <li>
+            Kiểu dáng:
+            <span class="fw-bolder">{{
+              pagedResponse.data[0].kieuDang.ten
+            }}</span>
+          </li>
+          <li>
+            Kiểu thiết kế:
+            <span class="fw-bolder">
+              {{ pagedResponse.data[0].thietKe.ten }}
+            </span>
+          </li>
+          <li>
+            Cổ áo:
+            <span class="fw-bolder">
+              {{ pagedResponse.data[0].coAo.ten }}
+            </span>
+          </li>
+          <li>
+            Tay áo:
+            <span class="fw-bolder">
+              {{ pagedResponse.data[0].tayAo.ten }}
+            </span>
+          </li>
+          <li>
+            Chất liệu:
+            <span class="fw-bolder">{{
+              pagedResponse.data[0].chatLieu.ten
+            }}</span>
+          </li>
+        </ul>
+
+        <button
+          class="btn btn-primary rounded my-3"
+          *ngIf="isUpdateBtnHidden()"
+          (click)="quickUpdate(pagedResponse?.pageSize)"
+          data-bs-toggle="modal"
+          data-bs-target="#updateModal"
+        >
+          <i class="fa-regular fa-pen-to-square me-2"></i>Cập nhật nhanh
+        </button>
+
         <table class="table">
           <thead class="thead-default">
             <tr>
@@ -182,11 +236,6 @@
               <th>Ảnh</th>
               <th width="10%">Màu Sắc</th>
               <th width="5%">Kích Cỡ</th>
-              <th>Kiểu Dáng</th>
-              <th>Thiết Kế</th>
-              <th>Tay Áo</th>
-              <th>Cổ Áo</th>
-              <th>Chất Liệu</th>
               <th>Giá Nhập</th>
               <th>Giá Bán</th>
               <th>Số Lượng</th>
@@ -252,15 +301,13 @@
                 />
               </td>
               <td>{{ s.kichCo.ten.split(" ")[0] }}</td>
-              <td>{{ s.kieuDang.ten }}</td>
-              <td>{{ s.thietKe.ten }}</td>
-              <td>{{ s.tayAo.ten }}</td>
-              <td>{{ s.coAo.ten }}</td>
-              <td>{{ s.chatLieu.ten }}</td>
+
+              <!-- giá nhập -->
               <td>
                 <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
                   formatCurrency(s.giaNhap)
                 }}</span>
+
                 <div class="row" *ngIf="checkSelectedRow('ckBoxForUpdate' + i)">
                   <input
                     [id]="'giaNhap' + i"
@@ -268,13 +315,32 @@
                     type="text"
                     size="15"
                     [value]="s.giaNhap"
-                    (input)="formatNumber2($event, 'giaNhap' + i)"
+                    (input)="formatNumber($event, 'giaNhap' + i)"
                   />
                   <span class="col">đ</span>
                 </div>
               </td>
 
+              <!-- giá bán -->
               <td>
+                <ng-template #noDiscount>
+                  <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
+                    formatCurrency(s.giaBan)
+                  }}</span>
+                </ng-template>
+
+                <div class="row" *ngIf="checkSelectedRow('ckBoxForUpdate' + i)">
+                  <input
+                    [id]="'giaBan' + i"
+                    class="col rounded"
+                    type="text"
+                    size="15"
+                    [value]="s.giaBan"
+                    (input)="formatNumber($event, 'giaBan' + i)"
+                  />
+                  <span class="col">đ</span>
+                </div>
+
                 <ng-container *ngIf="isDiscounted(s.id); else noDiscount">
                   <span
                     ><del>
@@ -291,27 +357,9 @@
                     </strong>
                   </span>
                 </ng-container>
-                <br />
-
-                <ng-template #noDiscount>
-                  <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
-                    formatCurrency(s.giaBan)
-                  }}</span>
-                </ng-template>
-
-                <div class="row" *ngIf="checkSelectedRow('ckBoxForUpdate' + i)">
-                  <input
-                    [id]="'giaBan' + i"
-                    class="col rounded"
-                    type="text"
-                    size="15"
-                    [value]="s.giaBan"
-                    (input)="formatNumber2($event, 'giaBan' + i)"
-                  />
-                  <span class="col">đ</span>
-                </div>
               </td>
 
+              <!-- số lượng -->
               <td>
                 <span *ngIf="!checkSelectedRow('ckBoxForUpdate' + i)">{{
                   s.soLuongTon
@@ -323,9 +371,10 @@
                   type="text"
                   size="5"
                   [value]="s.soLuongTon"
-                  (input)="formatNumber2($event, 'soLuong' + i)"
+                  (input)="formatNumber($event, 'soLuong' + i)"
                 />
               </td>
+
               <td>
                 <span
                   [ngClass]="
@@ -353,15 +402,6 @@
             </tr>
           </tbody>
         </table>
-        <button
-          class="btn btn-primary rounded my-3"
-          *ngIf="isUpdateBtnHidden()"
-          (click)="quickUpdate(pagedResponse?.pageSize)"
-          data-bs-toggle="modal"
-          data-bs-target="#updateModal"
-        >
-          <i class="fa-regular fa-pen-to-square me-2"></i>Cập nhật nhanh
-        </button>
       </div>
 
       <!-- footer: pagination -->
@@ -484,6 +524,121 @@
           </div>
 
           <!-- Kiểu dáng -->
+          <!-- <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Kiểu dáng:</label>
+            <select class="form-select" formControlName="kieuDangId">
+              <option *ngFor="let kd of kieuDangs" [value]="kd.id">
+                {{ kd.ten }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Thiết kế -->
+          <!-- <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Thiết kế:</label>
+            <select class="form-select" formControlName="thietKeId">
+              <option *ngFor="let tk of thietKes" [value]="tk.id">
+                {{ tk.ten }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Tay áo -->
+          <!-- <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Tay áo:</label>
+            <select class="form-select" formControlName="tayAoId">
+              <option *ngFor="let ta of tayAos" [value]="ta.id">
+                {{ ta.ten }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Cổ áo -->
+          <!-- <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Cổ áo:</label>
+            <select class="form-select" formControlName="coAoId">
+              <option *ngFor="let ca of coAos" [value]="ca.id">
+                {{ ca.ten }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Chất liệu -->
+          <!-- <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Chất liệu:</label>
+            <select class="form-select" formControlName="chatLieuId">
+              <option *ngFor="let cl of chatLieus" [value]="cl.id">
+                {{ cl.ten }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Số lượng -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Số lượng:</label>
+            <input class="form-control rounded" formControlName="soLuong" />
+          </div>
+
+          <!-- Giá nhập -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Giá nhập:</label>
+            <input class="form-control rounded" formControlName="giaNhap" />
+          </div>
+
+          <!-- Giá bán -->
+          <div class="col-6 mt-3">
+            <label class="form-label font-weight-bold">Giá bán:</label>
+            <input class="form-control rounded" formControlName="giaBan" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="closeUpdateBtn"
+          type="button"
+          class="btn btn-secondary rounded"
+          data-bs-dismiss="modal"
+          (click)="initUpdateForm()"
+        >
+          Hủy
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary rounded"
+          (click)="updateSpct()"
+        >
+          Cập Nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal: update common property -->
+<div
+  class="modal fade"
+  id="updateCommonPropertyModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Cập nhật sản phẩm chi tiết
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <i class="text-danger">* Cập nhật thuộc tính của tất cả biến thể</i>
+        <form class="row" [formGroup]="updateCommonPropertiesForm">
+          <!-- Kiểu dáng -->
           <div class="col-6 mt-3">
             <label class="form-label font-weight-bold">Kiểu dáng:</label>
             <select class="form-select" formControlName="kieuDangId">
@@ -532,40 +687,21 @@
               </option>
             </select>
           </div>
-
-          <!-- Số lượng -->
-          <div class="col-6 mt-3">
-            <label class="form-label font-weight-bold">Số lượng:</label>
-            <input class="form-control rounded" formControlName="soLuong" />
-          </div>
-
-          <!-- Giá nhập -->
-          <div class="col-6 mt-3">
-            <label class="form-label font-weight-bold">Giá nhập:</label>
-            <input class="form-control rounded" formControlName="giaNhap" />
-          </div>
-
-          <!-- Giá bán -->
-          <div class="col-6 mt-3">
-            <label class="form-label font-weight-bold">Giá bán:</label>
-            <input class="form-control rounded" formControlName="giaBan" />
-          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button
-          id="closeUpdateBtn"
+          id="closeUpdateCommonPropertiesModalBtn"
           type="button"
           class="btn btn-secondary rounded"
           data-bs-dismiss="modal"
-          (click)="initUpdateForm()"
         >
           Hủy
         </button>
         <button
           type="button"
           class="btn btn-primary rounded"
-          (click)="updateSpct()"
+          (click)="updateCommonProperties()"
         >
           Cập Nhật
         </button>

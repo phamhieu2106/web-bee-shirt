@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 
 import Swal, { SweetAlertResult } from "sweetalert2";
-import { ToastrService } from "ngx-toastr";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 
 import { SanPham } from "src/app/model/class/san-pham.class";
@@ -17,55 +16,15 @@ import { NotificationService } from "src/app/service/notification.service";
   styleUrls: ["./danh-sach-san-pham.component.css"],
 })
 export class DanhSachSanPhamComponent {
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: "auto",
-    minHeight: "200px",
-    maxHeight: "auto",
-    width: "auto",
-    minWidth: "0",
-    translate: "yes",
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: "Enter text here...",
-    defaultParagraphSeparator: "",
-    defaultFontName: "",
-    defaultFontSize: "",
-    fonts: [
-      { class: "arial", name: "Arial" },
-      { class: "times-new-roman", name: "Times New Roman" },
-      { class: "calibri", name: "Calibri" },
-      { class: "comic-sans-ms", name: "Comic Sans MS" },
-    ],
-    customClasses: [
-      {
-        name: "quote",
-        class: "quote",
-      },
-      {
-        name: "redText",
-        class: "redText",
-      },
-      {
-        name: "titleText",
-        class: "titleText",
-        tag: "h1",
-      },
-    ],
-    uploadUrl: "v1/image",
-    uploadWithCredentials: false,
-    sanitize: true,
-    toolbarPosition: "top",
-    toolbarHiddenButtons: [["bold", "italic"], ["fontSize"]],
-  };
-
   public pagedResponse: PagedResponse<SanPham>;
   public addForm: FormGroup;
   public updateForm: FormGroup;
   public searchKeyword: string = "";
   public statusFilter: number[] = [0, 1];
   public selectedDetails: SanPham;
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -74,10 +33,15 @@ export class DanhSachSanPhamComponent {
   ) {}
 
   ngOnInit(): void {
+    this.turnOnOverlay("Đang tải");
     this.getProductList();
     this.initAddForm();
     this.initUpdateForm();
     this.getListIdSanPhamInDiscount();
+
+    setTimeout(() => {
+      this.turnOffOverlay("");
+    }, 500);
   }
 
   // public function
@@ -107,11 +71,11 @@ export class DanhSachSanPhamComponent {
               this.pagedResponse.search
             );
             this.initAddForm();
-            document.getElementById("closeAddBtn").click();
+            document.getElementById("closeAddModalBtn").click();
             this.notifService.success("Thêm sản phẩm thành công!");
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
       }
@@ -124,15 +88,17 @@ export class DanhSachSanPhamComponent {
       ten: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       ma: new FormControl("", [
         Validators.required,
-        this.customNotBlankValidator,
+        Validators.pattern("^[a-zA-Z0-9#]+$"),
+        this.customRequiredValidator,
       ]),
       moTa: new FormControl("", [
         Validators.required,
-        this.customNotBlankValidator,
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+        this.customRequiredValidator,
       ]),
     });
   }
@@ -150,8 +116,8 @@ export class DanhSachSanPhamComponent {
         next: (response: PagedResponse<SanPham>) => {
           this.pagedResponse = response;
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
         },
       });
   }
@@ -194,19 +160,19 @@ export class DanhSachSanPhamComponent {
   }
 
   // 8
-  public openDetailsForm(id: number): void {
+  public openDetailsModal(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
         this.selectedDetails = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
 
   // 9
-  public openUpdateForm(id: number): void {
+  public openUpdateModal(id: number): void {
     this.sanPhamService.getById(id).subscribe({
       next: (response: SanPham) => {
         this.updateForm = new FormGroup({
@@ -214,21 +180,21 @@ export class DanhSachSanPhamComponent {
           ten: new FormControl(response.ten, [
             Validators.required,
             Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
           ma: new FormControl(response.ma, [
             Validators.required,
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
           moTa: new FormControl(response.moTa, [
             Validators.required,
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
           trangThai: new FormControl(response.trangThai),
         });
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -237,7 +203,7 @@ export class DanhSachSanPhamComponent {
   public changeStatus(id: number, value: boolean): void {
     Swal.fire({
       title:
-        "Thay đổi trạng thái của sản phẩm sẽ ảnh hưởng đến các SPCT liên quan. Bạn có đồng ý thay đổi không?",
+        "Thay đổi trạng thái của sản phẩm sẽ thay đổi trạng thái của SPCT. Bạn có đồng ý thay đổi không?",
       cancelButtonText: "Hủy",
       icon: "warning",
       showCancelButton: true,
@@ -247,16 +213,17 @@ export class DanhSachSanPhamComponent {
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.sanPhamService.changeStatus(id, value).subscribe({
-          next: (response: string) => {
-            this.notifService.success(response);
+          next: () => {
+            this.notifService.success("Cập nhật trạng thái thành công!");
             this.goToPage(
               this.pagedResponse.pageNumber,
               this.pagedResponse.pageSize,
-              this.pagedResponse.search
+              this.pagedResponse.search,
+              this.statusFilter
             );
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
       }
@@ -275,11 +242,11 @@ export class DanhSachSanPhamComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        // let trimmedTen = this.addForm.get("ten").value.trim();
-        // this.addForm.get("ten")?.setValue(trimmedTen);
+        let trimmedTen = this.updateForm.get("ten").value.trim();
+        this.updateForm.get("ten")?.setValue(trimmedTen);
 
-        // let trimmedMa = this.addForm.get("ma").value.trim();
-        // this.addForm.get("ma")?.setValue(trimmedMa);
+        let trimmedMa = this.updateForm.get("ma").value.trim();
+        this.updateForm.get("ma")?.setValue(trimmedMa);
 
         this.sanPhamService.update(this.updateForm.value).subscribe({
           next: (response: SanPham) => {
@@ -292,8 +259,8 @@ export class DanhSachSanPhamComponent {
             this.notifService.success("Cập nhật sản phẩm thành công!");
             document.getElementById("updateCloseBtn").click();
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
       }
@@ -318,8 +285,8 @@ export class DanhSachSanPhamComponent {
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -349,7 +316,7 @@ export class DanhSachSanPhamComponent {
   }
 
   // 4
-  private customNotBlankValidator(
+  private customRequiredValidator(
     control: FormControl
   ): { [key: string]: boolean } | null {
     const value = control.value;
@@ -358,5 +325,17 @@ export class DanhSachSanPhamComponent {
       return { customRequired: true };
     }
     return null;
+  }
+
+  // 5
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  // 6
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

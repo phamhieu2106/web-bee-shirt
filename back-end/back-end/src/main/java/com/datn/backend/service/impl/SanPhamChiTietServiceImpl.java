@@ -4,6 +4,7 @@ import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
 import com.datn.backend.dto.request.CapNhatSpctRequest;
 import com.datn.backend.dto.request.FilterSPCTParams;
+import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.exception.custom_exception.OperationNotAllowException;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
@@ -418,6 +419,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             spct.setHinhAnhs(newHinhAnhs);
             spctRepo.save(spct);
         }
+    }
+
+    @Transactional
+    @Override
+    public void updateCommonProperties(UpdateCommonPropertiesReq req) {
+        spctRepo.updateCommonProperties(req.getSanPhamId(), req.getKieuDangId(), req.getThietKeId(),
+                                        req.getCoAoId(), req.getTayAoId(), req.getChatLieuId());
     }
 
     @Override

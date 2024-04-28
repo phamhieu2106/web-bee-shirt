@@ -177,6 +177,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
       if (this.order.khachHang != null) {
         this.order.tenNguoiNhan = this.order.khachHang.hoTen + "";
         this.order.sdtNguoiNhan = this.order.khachHang.sdt + "";
+        this.order.emailNguoiNhan = this.order.khachHang.email + "";
       }
     } else {
       this.order.loaiHoaDon = "TAI_QUAY";
@@ -191,6 +192,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     if (this.order.loaiHoaDon == "GIAO_HANG") {
       this.order.tenNguoiNhan = khachHang.hoTen;
       this.order.sdtNguoiNhan = khachHang.sdt;
+      this.order.emailNguoiNhan = khachHang.email;
     }
   }
 
@@ -198,6 +200,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.order.khachHang = null;
     this.order.tenNguoiNhan = null;
     this.order.sdtNguoiNhan = null;
+    this.order.emailNguoiNhan = null;
     this.order.diaChiNguoiNhan = null;
     this.updateHoaDon();
   }
@@ -384,6 +387,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
   async datHang() {
     let regexSdt = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
     let regexHoTen = /^[\p{L}\s]*$/u;
+    let regexEmail = new RegExp("^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$");
 
     if (
       this.order.tenNguoiNhan == null ||
@@ -416,6 +420,13 @@ export class BanHangComponent implements OnInit, OnDestroy {
       this.order.diaChiNguoiNhan == undefined
     ) {
       this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    if (
+      this.order.emailNguoiNhan &&
+      !regexEmail.test(this.order.emailNguoiNhan)
+    ) {
+      this.notification.warning("Email người nhận không hợp lệ");
       return;
     }
     let diaChis = this.order.diaChiNguoiNhan.split(",");

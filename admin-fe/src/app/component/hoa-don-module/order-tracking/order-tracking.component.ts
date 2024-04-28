@@ -35,6 +35,8 @@ export class OrderTrackingComponent implements OnChanges {
     ],
   }); // form thêm LSHD
   public titleButton: string; // Đổi title button next
+  public isLoadding = false;
+  public overlayText = "Vui lòng chờ vài giây";
 
   constructor(
     private fb: FormBuilder,
@@ -73,6 +75,7 @@ export class OrderTrackingComponent implements OnChanges {
       Swal.fire("Số tiền thanh toán không hợp lệ.");
       return;
     }
+    this.turnOnOverlay("Vui lòng chờ vài giây !");
     this.hoaDonService
       .changeOrderStatus(
         this.hoaDon.id,
@@ -81,6 +84,8 @@ export class OrderTrackingComponent implements OnChanges {
       )
       .subscribe({
         next: (resp) => {
+          this.turnOffOverlay("");
+
           // Gán lại data cho HoaDon
           this.hoaDon.lichSuHoaDons.push(resp);
           this.hoaDon.trangThai = resp.trangThai;
@@ -180,5 +185,15 @@ export class OrderTrackingComponent implements OnChanges {
         this.notifService.error(errRes.error.message);
       },
     });
+  }
+
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  private turnOffOverlay(text: string): void {
+    this.overlayText = "";
+    this.isLoadding = false;
   }
 }

@@ -322,12 +322,15 @@ export class SuaPhieuComponent implements OnInit {
       }
 
        // Lấy ngày hiện tại
-       const currentDate = new Date();
+      const currentDate = new Date();
 
-       // Kiểm tra nếu ngày bắt đầu sau ngày hiện tại
-       if (ngayBatDau <= currentDate) {
-           return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
-       }
+      // Kiểm tra nếu ngày bắt đầu trước ngày hiện tại
+      const ngayMoi = new Date(ngayBatDau)
+    
+      if (ngayMoi <= currentDate) {
+        
+          return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
+      }
 
       const thoiGianBatDau = this.updateForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.updateForm.get("thoiGianKetThuc");

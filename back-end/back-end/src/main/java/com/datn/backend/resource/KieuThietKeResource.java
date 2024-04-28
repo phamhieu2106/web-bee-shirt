@@ -57,8 +57,8 @@ public class KieuThietKeResource {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+    public ResponseEntity<Void> changeStatus(@PathVariable("id") int id) {
         thietKeService.changeStatus(id);
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+        return ResponseEntity.ok().build();
     }
 }

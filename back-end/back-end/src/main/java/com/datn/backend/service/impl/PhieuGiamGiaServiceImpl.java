@@ -174,13 +174,30 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
     }
 
     @Override
-    public PhieuGiamGia remove(Integer id) {
-        return null;
+    public PhieuGiamGia remove(PhieuGiamGia phieu) {
+        return pggRepo.save(phieu);
     }
 
     @Override
     public PhieuGiamGia changeStatus(Integer id) {
+//        PhieuGiamGia phieuGiamGia = pggRepo.findById(id).get();
+//        System.out.println(phieuGiamGia);
+//        LocalDateTime currentTime = LocalDateTime.now();
+//
+//        if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
+//            phieuGiamGia.setTrangThai("Đã kết thúc");
+//        } else if (phieuGiamGia.getThoiGianBatDau() != null && currentTime.isBefore(phieuGiamGia.getThoiGianBatDau())) {
+//            phieuGiamGia.setTrangThai("Sắp diễn ra");
+//        } else if (phieuGiamGia.getThoiGianBatDau() != null && phieuGiamGia.getThoiGianKetThuc() != null &&
+//                currentTime.isAfter(phieuGiamGia.getThoiGianBatDau()) && currentTime.isBefore(phieuGiamGia.getThoiGianKetThuc())) {
+//            phieuGiamGia.setTrangThai("Đang diễn ra");
+//        } else {
+//            phieuGiamGia.setTrangThai("Đã hủy");
+//        }
+//        return pggRepo.save(phieuGiamGia);
+
         PhieuGiamGia phieuGiamGia = pggRepo.findById(id).get();
+
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (phieuGiamGia.getThoiGianKetThuc() != null && currentTime.isAfter(phieuGiamGia.getThoiGianKetThuc())) {
@@ -199,6 +216,16 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
     @Override
     public List<PhieuGiamGia> getAll() {
         return pggRepo.findAllBySoLuongGreaterThanAndTrangThaiIs(0, "Đang diễn ra");
+    }
+
+    @Override
+    public List<PhieuGiamGia> getChange() {
+        return pggRepo.getAllPhieu();
+    }
+
+    @Override
+    public PhieuGiamGia get1Phieu(Integer id) {
+        return pggRepo.findById(id).get();
     }
 
 

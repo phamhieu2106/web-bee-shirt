@@ -11,6 +11,7 @@ import com.datn.backend.service.PhieuGiamGiaKhachHangService;
 import com.datn.backend.service.PhieuGiamGiaServce;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.Scheduled;
+
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,6 +37,8 @@ public class PhieuGiamGiaResource {
     private final PhieuGiamGiaServce pggService;
     private final PhieuGiamGiaKhachHangService pggKhService;
 
+
+
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                  @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
@@ -42,6 +47,12 @@ public class PhieuGiamGiaResource {
                                                  @RequestParam(value = "loai", defaultValue = "", required = false) List<Integer> loai,
                                                  @RequestParam(value = "trangThai", required = false) List<String> trangThai) {
         return ResponseEntity.ok(pggService.getPagination(pageNumber, pageSize, search, kieu, loai, trangThai));
+    }
+
+
+
+    public void changePhieuGG(Integer id){
+        pggService.changeStatus(id);
     }
 
     @GetMapping("/filter")
@@ -58,6 +69,7 @@ public class PhieuGiamGiaResource {
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
+
         return ResponseEntity.ok(pggService.getAll());
     }
 

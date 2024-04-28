@@ -38,10 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -175,6 +172,7 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChi.setDuong(kh.getDuong().trim());
             diaChi.setMacDinh(true);
             diaChiRepo.save(diaChi);
+            khachHang.setDiaChis(Arrays.asList(diaChi));
         }
         if (!UtilityFunction.isNullOrEmpty(email)){
             emailService.sendPasswordCustomer(khachHang,kh.getMatKhau());

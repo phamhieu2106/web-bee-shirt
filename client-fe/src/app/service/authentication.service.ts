@@ -8,12 +8,13 @@ import { LoginRequest } from "../model/interface/login-request.interface";
 import { Customer } from "../model/class/customer.class";
 import { SignUpReq } from "../model/interface/sign-up-req.interface";
 import { ChangePwdReq2 } from "../model/interface/change-pwd-req2.interface";
+import { ChangePwdReq } from "../model/interface/change-pwd-req.interface";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthenticationService {
-  public readonly apiUrl = "http://localhost:8080";
+  public readonly apiUrl = "http://localhost:8080/auth/client";
 
   private token: string;
   // private loggedInUsername: string;
@@ -34,13 +35,9 @@ export class AuthenticationService {
 
   // 1
   public login(loginReq: LoginRequest): Observable<HttpResponse<Customer>> {
-    return this.http.post<Customer>(
-      `${this.apiUrl}/auth/customer/login`,
-      loginReq,
-      {
-        observe: "response",
-      }
-    );
+    return this.http.post<Customer>(`${this.apiUrl}/login`, loginReq, {
+      observe: "response",
+    });
   }
 
   // 2
@@ -102,19 +99,21 @@ export class AuthenticationService {
 
   // 9
   public signUp(req: SignUpReq): Observable<Customer> {
-    return this.http.post<Customer>(
-      `${this.apiUrl}/auth/customer/sign-up`,
-      req
-    );
+    return this.http.post<Customer>(`${this.apiUrl}/sign-up`, req);
   }
 
   // 10
   public checkEmailForForgetPassword(email: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/auth/send-verify-code/${email}`);
+    return this.http.get<any>(`${this.apiUrl}/send-verify-code/${email}`);
   }
 
   // 11
-  public changePassword2(req: ChangePwdReq2): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/change-pwd2`, req);
+  public changePasswordNoneLogged(req: ChangePwdReq2): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/change-pwd-none-log`, req);
+  }
+
+  // 12
+  public changePassword(req: ChangePwdReq): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/change-pwd`, req);
   }
 }

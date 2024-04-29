@@ -21,7 +21,7 @@ export class ProductService {
   ): Observable<PagedResponse<SanPham>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     return this.http.get<PagedResponse<SanPham>>(
-      `${this.apiUrl}/client/get-by-page${param}`
+      `${this.apiUrl}/get-by-page${param}`
     );
   }
 
@@ -58,6 +58,7 @@ export class ProductService {
     );
   }
 
+  // 5
   public getProductNameByProductDetails(id: number): Observable<string> {
     return this.http.get(`${this.apiUrl}/get-product-name/${id}`, {
       responseType: "text",

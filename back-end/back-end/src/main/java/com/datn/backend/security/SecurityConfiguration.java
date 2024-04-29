@@ -1,6 +1,5 @@
 package com.datn.backend.security;
 
-import com.datn.backend.constant.SecurityConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,13 +28,16 @@ public class SecurityConfiguration {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    // authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
+                    // authorize.requestMatchers(SecurityConstant.ADMIN_URLS).hasRole("ADMIN");
+                    // authorize.requestMatchers(SecurityConstant.STAFF_URLS).hasRole("STAFF");
+                    // authorize.requestMatchers(SecurityConstant.CLIENT_URLS).hasRole("CUSTOMER");
+                    // authorize.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
                     authorize.anyRequest().permitAll();
                 })
                 .sessionManagement(session ->

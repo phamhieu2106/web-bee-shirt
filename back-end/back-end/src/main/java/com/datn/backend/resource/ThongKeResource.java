@@ -20,13 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThongKeResource {
 
-    private ChartService chartService;
-
-    @Autowired
-    public ThongKeResource(ChartService chartService) {
-        super();
-        this.chartService = chartService;
-    }
+    private final ChartService chartService;
 
     @GetMapping("/hoa-don-hoan-thanh")
     public ResponseEntity<Long> countInvoiceComplete() {

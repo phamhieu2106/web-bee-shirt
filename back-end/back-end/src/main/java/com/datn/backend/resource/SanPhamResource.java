@@ -24,6 +24,7 @@ public class SanPhamResource {
 
     private final SanPhamService sanPhamService;
 
+    // admin resources
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                             @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
@@ -54,7 +55,7 @@ public class SanPhamResource {
         return ResponseEntity.ok(sanPhamService.update(sanPham));
     }
 
-    //  client
+    //  client resources
     @GetMapping("/client/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPageClient(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                   @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize) {

@@ -29,7 +29,6 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final CustomerImageRepository customerImageRepo;
-    private final AddressRepository diaChiRepo;
 
     @Override
     public void sendVerifyCodeForForgetPwd(String email) {
@@ -47,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void changePassword2(ChangePasswordReq2 req) {
+    public void changePasswordNoneLogged(ChangePasswordReq2 req) {
         KhachHang cust = customerRepo.getByEmail(req.getCustEmail());
         if (cust == null) {
             return;
@@ -61,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void changePassword(ChangePasswordReq req) {
+    public void changePasswordLogged(ChangePasswordReq req) {
         Account account = accountRepo.findById(req.getAccId()).get();
         boolean isMatch = passwordEncoder.matches(req.getOldPassword(), account.getMatKhau());
 

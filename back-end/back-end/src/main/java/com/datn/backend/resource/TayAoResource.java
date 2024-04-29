@@ -35,11 +35,6 @@ public class TayAoResource {
         return ResponseEntity.ok(tayAoService.getAll());
     }
 
-    @GetMapping("/all-active")
-    public ResponseEntity<List<TayAo>> getAllActive() {
-        return ResponseEntity.ok(tayAoService.getAll().stream().filter(TayAo::isTrangThai).toList());
-    }
-
     @PostMapping("/add")
     public ResponseEntity<TayAo> add(@RequestBody TayAo chatLieu) {
         return ResponseEntity.ok(tayAoService.add(chatLieu));
@@ -59,5 +54,11 @@ public class TayAoResource {
     @PutMapping("/update")
     public ResponseEntity<TayAo> update(@RequestBody TayAo chatLieu) {
         return ResponseEntity.ok(tayAoService.update(chatLieu));
+    }
+
+    // client resources
+    @GetMapping("/all-active")
+    public ResponseEntity<List<TayAo>> getAllActive() {
+        return ResponseEntity.ok(tayAoService.getAll().stream().filter(TayAo::isTrangThai).toList());
     }
 }

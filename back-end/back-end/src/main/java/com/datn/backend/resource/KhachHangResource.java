@@ -63,7 +63,7 @@ public class KhachHangResource {
         return ResponseEntity.ok(khachHangService.filter(pageNumber, pageSize, gioiTinhFilter, trangThaiFilter));
     }
 
-    @GetMapping("/get-all-avtive")
+    @GetMapping("/get-all-active")
     public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
@@ -85,5 +85,10 @@ public class KhachHangResource {
     @PostMapping("/update-info")
     public ResponseEntity<KhachHang> updateInfo(@RequestBody UpdateCustInfoReq req) {
         return ResponseEntity.ok(khachHangService.updateInfo(req));
+    }
+
+    @GetMapping("/cust-by-id/{id}")
+    public ResponseEntity<KhachHangResponse> getCustById(@PathVariable("id") int id) {
+        return ResponseEntity.ok(khachHangService.getById(id));
     }
 }

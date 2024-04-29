@@ -36,11 +36,6 @@ public class KieuDangResource {
         return ResponseEntity.ok(kieuDangService.getAll());
     }
 
-    @GetMapping("/all-active")
-    public ResponseEntity<List<KieuDang>> getAllActive() {
-        return ResponseEntity.ok(kieuDangService.getAll().stream().filter(KieuDang::isTrangThai).toList());
-    }
-
     @PostMapping("/add")
     public ResponseEntity<KieuDang> add(@RequestBody KieuDang kieuDang) {
         return ResponseEntity.ok(kieuDangService.add(kieuDang));
@@ -60,5 +55,11 @@ public class KieuDangResource {
     @PutMapping("/update")
     public ResponseEntity<KieuDang> update(@RequestBody KieuDang chatLieu) {
         return ResponseEntity.ok(kieuDangService.update(chatLieu));
+    }
+
+    // client resources
+    @GetMapping("/all-active")
+    public ResponseEntity<List<KieuDang>> getAllActive() {
+        return ResponseEntity.ok(kieuDangService.getAll().stream().filter(KieuDang::isTrangThai).toList());
     }
 }

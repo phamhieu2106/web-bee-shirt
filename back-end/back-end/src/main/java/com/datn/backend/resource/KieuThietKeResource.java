@@ -36,10 +36,6 @@ public class KieuThietKeResource {
         return ResponseEntity.ok(thietKeService.getAll());
     }
 
-    @GetMapping("/all-active")
-    public ResponseEntity<List<KieuThietKe>> getAllActive() {
-        return ResponseEntity.ok(thietKeService.getAll().stream().filter(KieuThietKe::isTrangThai).toList());
-    }
 
     @PostMapping("/add")
     public ResponseEntity<KieuThietKe> add(@RequestBody KieuThietKe chatLieu) {
@@ -60,5 +56,11 @@ public class KieuThietKeResource {
     public ResponseEntity<Void> changeStatus(@PathVariable("id") int id) {
         thietKeService.changeStatus(id);
         return ResponseEntity.ok().build();
+    }
+
+    // client resources
+    @GetMapping("/all-active")
+    public ResponseEntity<List<KieuThietKe>> getAllActive() {
+        return ResponseEntity.ok(thietKeService.getAll().stream().filter(KieuThietKe::isTrangThai).toList());
     }
 }

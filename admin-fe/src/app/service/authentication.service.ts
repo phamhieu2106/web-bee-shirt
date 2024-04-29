@@ -12,7 +12,7 @@ import { NhanVien } from "../model/class/nhan-vien.class";
   providedIn: "root",
 })
 export class AuthenticationService {
-  public apiUrl = "http://localhost:8080";
+  public apiUrl = "http://localhost:8080/auth/admin";
   private token: string;
   // private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
@@ -25,13 +25,9 @@ export class AuthenticationService {
   public login(
     loginRequest: AdminLoginReq
   ): Observable<HttpResponse<NhanVien>> {
-    return this.http.post<NhanVien>(
-      `${this.apiUrl}/auth/admin/login`,
-      loginRequest,
-      {
-        observe: "response",
-      }
-    );
+    return this.http.post<NhanVien>(`${this.apiUrl}/login`, loginRequest, {
+      observe: "response",
+    });
   }
 
   // 2

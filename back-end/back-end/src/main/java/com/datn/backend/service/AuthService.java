@@ -9,9 +9,9 @@ public interface AuthService {
 
     void sendVerifyCodeForForgetPwd(String email);
 
-    void changePassword(ChangePasswordReq req);
+    void changePasswordLogged(ChangePasswordReq req);
 
-    void changePassword2(ChangePasswordReq2 req);
+    void changePasswordNoneLogged(ChangePasswordReq2 req);
 
     KhachHang signUp(SignUpReq req);
 }

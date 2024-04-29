@@ -69,7 +69,7 @@ export class ChangePasswordComponent {
           newPassword: this.form.get("newPwd").value,
           verifyCode: this.form.get("verifyCode").value,
         };
-        this.authService.changePassword2(req).subscribe({
+        this.authService.changePasswordNoneLogged(req).subscribe({
           next: () => {
             this.notifService.success(
               "Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại!"

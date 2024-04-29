@@ -25,6 +25,7 @@ public class HinhAnhSanPhamResource {
         return hinhAnhService.getByMauSac(tenMau, sanPhamID);
     }
 
+    // client resources
     @GetMapping("/url-by-sp-ms/{productId}/{colorId}")
     public ResponseEntity<List<String>> getAllUrlBySanPhamAndMauSac(@PathVariable("productId") int productId,
                                                                     @PathVariable("colorId") int colorId) {

@@ -5,11 +5,9 @@ import com.datn.backend.dto.request.HoaDonChiTietRequest;
 import com.datn.backend.dto.response.HoaDonChiTietResponse;
 import com.datn.backend.exception.custom_exception.IdNotFoundException;
 import com.datn.backend.service.HoaDonChiTietService;
-import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hoa-don-chi-tiet")
 @RequiredArgsConstructor
-public class HoaDonChiTietResouce {
+public class HoaDonChiTietResource {
     private final HoaDonChiTietService hoaDonChiTietService;
 
     // add

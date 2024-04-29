@@ -121,9 +121,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     // client
     @Override
-    public PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize) {
+    public PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize,String search) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> sanPhamPage = sanPhamRepo.getByPageClient(pageable);
+        Page<SanPham> sanPhamPage = sanPhamRepo.getByPageClient(pageable,search);
 
         PagedResponse<SanPham> paged = new PagedResponse<>();
         paged.setPageNumber(pageNumber);

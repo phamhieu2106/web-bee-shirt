@@ -58,8 +58,10 @@ public class SanPhamResource {
     //  client resources
     @GetMapping("/client/get-by-page")
     public ResponseEntity<PagedResponse<SanPham>> getByPageClient(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                  @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize) {
-        return ResponseEntity.ok(sanPhamService.getByPageClient(pageNumber, pageSize));
+                                                                  @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize,
+                                                                  @RequestParam(value = "search", defaultValue = "", required = false) String search
+    ) {
+        return ResponseEntity.ok(sanPhamService.getByPageClient(pageNumber, pageSize,search));
     }
 
     @GetMapping("/client/filter")

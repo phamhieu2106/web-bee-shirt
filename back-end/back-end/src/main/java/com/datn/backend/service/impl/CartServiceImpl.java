@@ -4,8 +4,10 @@ import com.datn.backend.dto.request.AddCartItemReq;
 import com.datn.backend.exception.custom_exception.ResourceNotFoundException;
 import com.datn.backend.model.danh_sach.Cart;
 import com.datn.backend.model.danh_sach.CartItem;
+import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.CartItemRepository;
 import com.datn.backend.repository.CartRepository;
+import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class CartServiceImpl implements CartService {
 
     private final CartItemRepository cartItemRepo;
     private final CartRepository cartRepo;
+    private final KhachHangRepository customerRepo;
 
     @Override
     public List<CartItem> getAllCartItemsOf1Customer(int cusId) {
@@ -32,6 +35,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addCartItem(AddCartItemReq req) {
         Cart cart = cartRepo.getByKhachHangId(req.getCustomerId());
+
+        // check cart
+        if (cart == null) {
+            KhachHang cust = customerRepo.findById(req.getCustomerId()).get();
+            cart.setKhachHang(cust);
+            cart = cartRepo.save(cart);
+        }
 
         CartItem cartItem = new CartItem();
         cartItem.setSoLuong(req.getQuantity());

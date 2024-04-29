@@ -19,28 +19,19 @@ public class DotGiamGiaResource {
     private final DotGiamGiaService service;
 
     @GetMapping
-    public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber", defaultValue = "1", required = false)
-                                           int pageNumber,
-                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false)
-                                           int pageSize,
-                                           @RequestParam(value = "search", defaultValue = "", required = false)
-                                           String search) {
+    public ResponseEntity<?> getPagination(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                           @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(service.getPagination(pageNumber, pageSize, search));
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<?> getFilters(@RequestParam(value = "status", defaultValue = "3", required = false)
-                                        int status,
-                                        @RequestParam(value = "startDate", defaultValue = "2024-01-01", required = false)
-                                        String startDate,
-                                        @RequestParam(value = "endDate", defaultValue = "3000-01-01", required = false)
-                                        String endDate,
-                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
-                                        int pageNumber,
-                                        @RequestParam(value = "pageSize", defaultValue = "5", required = false)
-                                        int pageSize,
-                                        @RequestParam(value = "search", defaultValue = "", required = false)
-                                        String search) {
+    public ResponseEntity<?> getFilters(@RequestParam(value = "status", defaultValue = "3", required = false) int status,
+                                        @RequestParam(value = "startDate", defaultValue = "2024-01-01", required = false) String startDate,
+                                        @RequestParam(value = "endDate", defaultValue = "3000-01-01", required = false) String endDate,
+                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                        @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                        @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(service.getFilter(pageNumber, pageSize, search, status, startDate, endDate));
     }
 
@@ -65,23 +56,17 @@ public class DotGiamGiaResource {
     }
 
     @GetMapping("/sanphamchitiet")
-    public ResponseEntity<?> getSanPhamChiTiet(@RequestParam(value = "id", defaultValue = "", required = false)
-                                               List<Integer> id,
-                                               @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
-                                               int pageNumber,
-                                               @RequestParam(value = "pageSize", defaultValue = "9999", required = false)
-                                               int pageSize) {
+    public ResponseEntity<?> getSanPhamChiTiet(@RequestParam(value = "id", defaultValue = "", required = false) List<Integer> id,
+                                               @RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                               @RequestParam(value = "pageSize", defaultValue = "9999", required = false) int pageSize) {
         return ResponseEntity.ok(service.getAllSanPhamChiTiet(pageNumber, pageSize, id));
     }
 
     @GetMapping("/sanphamchitietupdate")
-    public ResponseEntity<?> getSanPhamChiTietForUpdate(@RequestParam(value = "id", defaultValue = "", required = false)
-                                                        List<Integer> id,
+    public ResponseEntity<?> getSanPhamChiTietForUpdate(@RequestParam(value = "id", defaultValue = "", required = false) List<Integer> id,
                                                         @RequestParam(value = "idDotGiamGia") Integer idDotGiamGia,
-                                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false)
-                                                        int pageNumber,
-                                                        @RequestParam(value = "pageSize", defaultValue = "9999", required = false)
-                                                        int pageSize) {
+                                                        @RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
+                                                        @RequestParam(value = "pageSize", defaultValue = "9999", required = false) int pageSize) {
         return ResponseEntity.ok(service.getAllSanPhamChiTietForUpdate(pageNumber, pageSize, id, idDotGiamGia));
     }
 

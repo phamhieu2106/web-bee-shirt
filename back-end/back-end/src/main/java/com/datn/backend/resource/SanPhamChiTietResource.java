@@ -32,6 +32,7 @@ public class SanPhamChiTietResource {
     private final SanPhamChiTietService spctService;
     private final ObjectMapper objectMapper;
 
+    // admin resources
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestParam("request") String requestStr,
                                       @RequestParam(value = "files", required = false) MultipartFile[] files) throws IOException {
@@ -80,11 +81,11 @@ public class SanPhamChiTietResource {
         return ResponseEntity.ok(spctService.getMinAndMaxPrice(productId));
     }
 
-    @GetMapping("/status/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
-        spctService.changeStatus(id);
-        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
-    }
+//    @GetMapping("/admin/status/{id}")
+//    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
+//        spctService.changeStatus(id);
+//        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
+//    }
 
     @GetMapping("/check-exist")
     public ResponseEntity<Boolean> checkExist(@RequestParam("spId") int spId,

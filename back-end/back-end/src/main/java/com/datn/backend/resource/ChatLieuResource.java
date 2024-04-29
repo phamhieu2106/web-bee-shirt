@@ -6,6 +6,7 @@ import com.datn.backend.model.san_pham.ChatLieu;
 import com.datn.backend.service.ChatLieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ public class ChatLieuResource {
 
     private final ChatLieuService chatLieuService;
 
+    // admin resources
     @GetMapping("/get-by-page")
     public ResponseEntity<PagedResponse<ChatLieu>> getByPage(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                              @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -35,13 +37,6 @@ public class ChatLieuResource {
     @GetMapping("/get-all")
     public ResponseEntity<List<ChatLieu>> getAll() {
         return ResponseEntity.ok(chatLieuService.getAll());
-    }
-
-    @GetMapping("/all-active")
-    public ResponseEntity<List<ChatLieu>> getAllActive() {
-        List<ChatLieu> all = chatLieuService.getAll();
-        List<ChatLieu> allActive = all.stream().filter(ChatLieu::isTrangThai).toList();
-        return ResponseEntity.ok(allActive);
     }
 
     @PostMapping("/add")
@@ -63,5 +58,13 @@ public class ChatLieuResource {
     @PutMapping("/update")
     public ResponseEntity<ChatLieu> update(@RequestBody ChatLieu chatLieu) {
         return ResponseEntity.ok(chatLieuService.update(chatLieu));
+    }
+
+    // client resources
+    @GetMapping("/all-active")
+    public ResponseEntity<List<ChatLieu>> getAllActive() {
+        List<ChatLieu> all = chatLieuService.getAll();
+        List<ChatLieu> allActive = all.stream().filter(ChatLieu::isTrangThai).toList();
+        return ResponseEntity.ok(allActive);
     }
 }

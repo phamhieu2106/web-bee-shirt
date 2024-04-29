@@ -15,6 +15,7 @@ declare var $: any;
 })
 export class SidebarComponent {
   public loggedUser: NhanVien;
+  public role: string;
 
   // constructor, ngOn
   constructor(
@@ -25,6 +26,7 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     this.loggedUser = this.authService.getUserFromStorage();
+    this.role = this.loggedUser.account.role.split("_")[1];
 
     this.setInitialSidebarState();
     this.setupSidebar();

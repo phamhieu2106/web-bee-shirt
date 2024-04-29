@@ -22,11 +22,7 @@ public class DiaChiResource {
     private final AddressRepository addressRepository;
     private final KhachHangRepository khachHangRepository;
 
-    @GetMapping("/get-all/{custId}")
-    public ResponseEntity<List<DiaChi>> getAllAddressOf1Customer(@PathVariable("custId") int custId) {
-        return ResponseEntity.ok(diaChiService.getAllAddressOf1Customer(custId));
-    }
-
+    // admin resources
     @PostMapping("/add/{id}")
     public ResponseEntity<DiaChiRequest> add(@PathVariable("id") int id,
                                              @RequestBody DiaChiRequest dc) {
@@ -94,5 +90,10 @@ public class DiaChiResource {
     @PostMapping("/client/add")
     public ResponseEntity<DiaChi> addAddress(@RequestBody AddAddressReq req) {
         return ResponseEntity.ok(diaChiService.addAddress(req));
+    }
+
+    @GetMapping("/get-all/{custId}")
+    public ResponseEntity<List<DiaChi>> getAllAddressOf1Customer(@PathVariable("custId") int custId) {
+        return ResponseEntity.ok(diaChiService.getAllAddressOf1Customer(custId));
     }
 }

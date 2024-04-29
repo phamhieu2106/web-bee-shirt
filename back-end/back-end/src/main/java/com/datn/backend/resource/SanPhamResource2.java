@@ -25,16 +25,12 @@ public class SanPhamResource2 {
     }
 
     @GetMapping("/itemInDiscount")
-    public ResponseEntity<List<ProductDiscountSummaryResponse>> getItemInDiscount(
-            @RequestParam("id") Integer id
-    ) {
+    public ResponseEntity<List<ProductDiscountSummaryResponse>> getItemInDiscount(@RequestParam("id") Integer id) {
         return ResponseEntity.ok(sanPhamService.getProductInDiscount(id));
     }
 
     @GetMapping("/nameItem")
-    public ResponseEntity<SanPhamResponse> getItemName(
-            @RequestParam("id") Integer id
-    ) {
+    public ResponseEntity<SanPhamResponse> getItemName(@RequestParam("id") Integer id) {
         return ResponseEntity.ok(sanPhamService.getNameSanPhamBySanPhamChiTietId(id));
     }
 }

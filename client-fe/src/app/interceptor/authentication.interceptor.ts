@@ -39,24 +39,24 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // Ignore requests that don't need authentication (e.g., login)
-    const loginUrl = `http://localhost:8080/auth`;
-    const productUrl = `http://localhost:8080/san-pham`;
-    const imageUrl = `http://localhost:8080/hinh-anh-sp`;
-    const spct = `http://localhost:8080/spct`;
-    const colorUrls = `http://localhost:8080/mau-sac`;
-    const sizeUrls = `http://localhost:8080/kich-co`;
-    const formUrls = `http://localhost:8080/kieu-dang`;
-    const designUrls = `http://localhost:8080/thiet-ke`;
-    const collarUrls = `http://localhost:8080/co-ao`;
-    const sleeveUrls = `http://localhost:8080/tay-ao`;
-    const materialUrls = `http://localhost:8080/chat-lieu`;
-    const saleEventlUrls = `http://localhost:8080/dot-giam-gia`;
-    const discountUrls = `http://localhost:8080/phieu-giam-gia`;
+    const authUrl = `http://localhost:8080/auth/client`;
+    const productUrl = `http://localhost:8080/san-pham/client`;
+    const imageUrl = `http://localhost:8080/hinh-anh-sp/client`;
+    const spct = `http://localhost:8080/spct/client`;
+    const colorUrls = `http://localhost:8080/mau-sac/client`;
+    const sizeUrls = `http://localhost:8080/kich-co/client`;
+    const formUrls = `http://localhost:8080/kieu-dang/client`;
+    const designUrls = `http://localhost:8080/thiet-ke/client`;
+    const collarUrls = `http://localhost:8080/co-ao/client`;
+    const sleeveUrls = `http://localhost:8080/tay-ao/client`;
+    const materialUrls = `http://localhost:8080/chat-lieu/client`;
+    const saleEventlUrls = `http://localhost:8080/dot-giam-gia/client`;
+    const discountUrls = `http://localhost:8080/phieu-giam-gia/client`;
     const notificationUrls = `http://localhost:8080/api/notification`;
-    const orderUrls = `http://localhost:8080/hoa-don`;
+    const orderUrls = `http://localhost:8080/hoa-don/client`;
 
     if (
-      request.url.startsWith(loginUrl) ||
+      request.url.startsWith(authUrl) ||
       request.url.startsWith(productUrl) ||
       request.url.startsWith(spct) ||
       request.url.startsWith(imageUrl) ||
@@ -75,25 +75,27 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
+    if (request.url.startsWith(authUrl)) {
+      return next.handle(request);
+    }
+
     // Set token for other requests
+    let authReq = request;
     this.authenticationService.loadTokenFromStorage();
     const token = this.authenticationService.getTokenFromStorage();
 
-    const authRequest = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    if (token != null) {
+      authReq = request.clone({
+        headers: request.headers.set("Authorization", `Bearer ${token}`),
+      });
+    }
 
-    return next.handle(authRequest);
+    // authReq = request.clone({
+    //   setHeaders: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+
+    return next.handle(authReq);
   }
-
-  // private checkUrl(urls: string, request: string): boolean {
-  //   for (let url of urls) {
-  //     if (url.startsWith(request)) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
 }

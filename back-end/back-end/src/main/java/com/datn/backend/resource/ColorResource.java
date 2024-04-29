@@ -26,6 +26,7 @@ public class ColorResource {
     private final MauSacService mauSacService;
     private final ObjectMapper objectMapper;
 
+    // admin resources
     @PostMapping("/add")
     public ResponseEntity<MauSac> add(@RequestParam("request") String mauSacReq,
                                       @RequestParam("mauSacImage") MultipartFile multipartFile) throws IOException {
@@ -45,10 +46,7 @@ public class ColorResource {
         return ResponseEntity.ok(mauSacService.getAll());
     }
 
-    @GetMapping("/all-active")
-    public ResponseEntity<List<MauSac>> getAllActiveColors() {
-        return ResponseEntity.ok(mauSacService.getAllActiveColors());
-    }
+
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<MauSac> add(@PathVariable("id") int id) {
@@ -72,5 +70,10 @@ public class ColorResource {
     @GetMapping("/colors-of-product/{productId}")
     public ResponseEntity<List<MauSac>> getAllColorOfProduct(@PathVariable("productId") int productId) {
         return ResponseEntity.ok(mauSacService.getAllColorOfProduct(productId));
+    }
+
+    @GetMapping("/all-active")
+    public ResponseEntity<List<MauSac>> getAllActiveColors() {
+        return ResponseEntity.ok(mauSacService.getAllActiveColors());
     }
 }

@@ -83,7 +83,6 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(pggService.changeStatus(id));
     }
 
-
     @PostMapping("/add")
     public ResponseEntity<?> add(@Valid @RequestBody PhieuGiamGiaRequest phieuGiamGia, BindingResult result) {
         return ResponseEntity.ok(pggService.add(phieuGiamGia));
@@ -139,10 +138,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(pggKhService.getPhieuKhachHang(id, check));
     }
 
-
-
-
-    @GetMapping("/get-avtive")
+    @GetMapping("/get-active")
     public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
                                                                            @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {

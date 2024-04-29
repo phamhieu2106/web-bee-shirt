@@ -3,11 +3,12 @@ import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
+import Swal, { SweetAlertResult } from "sweetalert2";
+
 import { ChangePwdReq } from "src/app/model/interface/change-pwd-req.interface";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { CustomerService } from "src/app/service/customer.service";
 import { NotificationService } from "src/app/service/notification.service";
-import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-password",
@@ -55,7 +56,7 @@ export class PasswordComponent {
           oldPassword: this.form.get("oldPwd").value.trim(),
           newPassword: this.form.get("newPwd").value.trim(),
         };
-        this.customerService.changePassword(req).subscribe({
+        this.authService.changePassword(req).subscribe({
           next: () => {
             this.notifService.success(
               "Đổi mật khẩu thành công. Vui lòng đăng nhập lại!"

@@ -97,7 +97,7 @@ export class DanhSachSanPhamComponent {
       ]),
       moTa: new FormControl("", [
         Validators.required,
-        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9,.-+\\s]+$"),
         this.customRequiredValidator,
       ]),
     });

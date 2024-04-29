@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,9 +42,7 @@ public class AuthResource {
     private final AuthService authService;
 
     @PostMapping("/admin/login")
-    public ResponseEntity<NhanVien> staffLogin(@RequestBody AdminLoginReq req) {
-        System.out.println(req.getUsername());
-        System.out.println(req.getPassword());
+    public ResponseEntity<NhanVien> adminLogin(@RequestBody AdminLoginReq req) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword());
         authManager.authenticate(authentication);
 
@@ -62,13 +59,9 @@ public class AuthResource {
         return new ResponseEntity<>(nhanVien, headers, HttpStatus.OK);
     }
 
-//    if (!account.getRole().equals(Role.ROLE_ADMIN.name())) {
-//        throw new AccessDeniedException("Bạn không có quyền truy cập vào trang web này!");
-//    }
-
     // client
-    @PostMapping("/customer/login")
-    public ResponseEntity<KhachHang> customerLogin(@RequestBody LoginRequest request) {
+    @PostMapping("/client/login")
+    public ResponseEntity<KhachHang> Login(@RequestBody LoginRequest request) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword());
         authManager.authenticate(authentication);
 
@@ -84,20 +77,20 @@ public class AuthResource {
         return new ResponseEntity<>(khachHang, headers, HttpStatus.OK);
     }
 
-    @PostMapping("/customer/sign-up")
+    @PostMapping("/sign-up")
     public ResponseEntity<KhachHang> signUp(@RequestBody SignUpReq req) {
         return ResponseEntity.ok(authService.signUp(req));
     }
 
-    @PostMapping("/change-pwd")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq req) {
-        authService.changePassword(req);
+    @PostMapping("/change-pwd-log")
+    public ResponseEntity<?> changePasswordLogged(@RequestBody ChangePasswordReq req) {
+        authService.changePasswordLogged(req);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/change-pwd2")
-    public ResponseEntity<?> changePassword2(@RequestBody ChangePasswordReq2 req) {
-        authService.changePassword2(req);
+    @PostMapping("/change-pwd-none-log")
+    public ResponseEntity<?> changePasswordNoneLogged(@RequestBody ChangePasswordReq2 req) {
+        authService.changePasswordNoneLogged(req);
         return ResponseEntity.ok().build();
     }
 

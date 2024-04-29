@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+
 import { HoaDon } from "../model/class/hoa-don.class";
 import { HoaDonChiTiet } from "../model/class/hoa-don-chi-tiet.class";
-import { Observable } from "rxjs";
 import { DiscountValid } from "../model/class/discount-valid.class";
-import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
@@ -48,7 +49,6 @@ export class BanHangService {
       khachHangId,
       giaDangGiam,
     };
-    // console.log(rawData);
 
     return this.http.post<DiscountValid>(
       this.baseUrl + "/get-discount-valid",

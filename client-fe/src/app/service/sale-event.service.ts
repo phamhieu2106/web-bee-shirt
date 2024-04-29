@@ -27,7 +27,7 @@ export class SaleEventService {
     );
   }
 
-  // 2
+  // 3
   public getSaleEventOfProdDetails2(
     prodId: number,
     colorId: number,

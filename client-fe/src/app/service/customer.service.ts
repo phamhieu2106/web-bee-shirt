@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { CustomerResponse } from "../model/interface/customer-response.interface";
 import { Customer } from "../model/class/customer.class";
 import { UpdateCustInfoReq } from "../model/interface/update-cust-info-req.interface";
-import { ChangePwdReq } from "../model/interface/change-pwd-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +18,7 @@ export class CustomerService {
   // public functions
   // 1
   public getById(id: number): Observable<CustomerResponse> {
-    return this.http.get<CustomerResponse>(`${this.apiUrl}/getById/${id}`);
+    return this.http.get<CustomerResponse>(`${this.apiUrl}/cust-by-id/${id}`);
   }
 
   // 2
@@ -35,10 +34,5 @@ export class CustomerService {
   // 3
   public updateInfo(req: UpdateCustInfoReq): Observable<Customer> {
     return this.http.post<Customer>(`${this.apiUrl}/update-info`, req);
-  }
-
-  // 4
-  public changePassword(req: ChangePwdReq): Observable<any> {
-    return this.http.post<any>(`http://localhost:8080/auth/change-pwd`, req);
   }
 }

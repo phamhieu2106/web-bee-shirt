@@ -83,7 +83,6 @@ public class HoaDonResource {
         return ResponseEntity.ok(hoaDonResponse);
     }
 
-    // delete
     @GetMapping("/get-order-quantity-all")
     public ResponseEntity<SoLuongDonHangResponse> getSoLuongDonHang() {
         SoLuongDonHangResponse soLuongDonHangResponse = hoaDonService.getSoLuongDonHang();

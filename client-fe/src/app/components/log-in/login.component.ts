@@ -11,6 +11,7 @@ import { AuthenticationService } from "src/app/service/authentication.service";
 import { CartService } from "src/app/service/cart.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { ProductService } from "src/app/service/product.service";
+import { TestService } from "src/app/service/test.service";
 
 @Component({
   selector: "app-login",
@@ -28,7 +29,8 @@ export class LoginComponent {
     private notifService: NotificationService,
     private authenticationService: AuthenticationService,
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private testService: TestService
   ) {}
 
   ngOnInit(): void {

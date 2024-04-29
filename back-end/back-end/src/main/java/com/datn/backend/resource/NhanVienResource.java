@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/nhan-vien")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class NhanVienResource {
 
     private final NhanVienService nhanVienService;

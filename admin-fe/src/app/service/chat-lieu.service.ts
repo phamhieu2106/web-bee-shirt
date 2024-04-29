@@ -26,6 +26,7 @@ export class ChatLieuService {
     );
   }
 
+  // 2
   public getAll(): Observable<ChatLieu[]> {
     return this.http.get<ChatLieu[]>(`${this.apiUrl}/get-all`);
   }

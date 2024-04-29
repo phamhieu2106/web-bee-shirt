@@ -19,7 +19,7 @@ export class OrderTrackingComponent {
   public totalSalePrice: number = 0;
   private webSocket!: WebSocket;
 
-  // constructor, ngON
+  // constructor, ngOn
   constructor(
     private activatedRoute: ActivatedRoute,
     private currencyPipe: CurrencyPipe,
@@ -101,6 +101,7 @@ export class OrderTrackingComponent {
     this.webSocket = new WebSocket("ws://localhost:8080/notification");
     this.webSocket.onopen = (event) => {};
     this.webSocket.onmessage = (event) => {
+      this.notifService.success((event.data as string).replaceAll(/"/, ""));
       this.getOrderByCode();
     };
     this.webSocket.onclose = (event) => {};

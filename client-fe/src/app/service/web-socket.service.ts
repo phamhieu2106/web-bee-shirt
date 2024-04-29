@@ -19,8 +19,8 @@ export class WebSocketService {
     this.webSocket.onclose = (event) => {};
   }
 
-  public sendMessage(chatMessage: ChatMessage) {
-    this.webSocket.send(JSON.stringify(chatMessage));
+  public sendMessage(message: string) {
+    this.webSocket.send(JSON.stringify(message));
   }
 
   public closeWebSocket() {

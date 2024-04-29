@@ -171,7 +171,7 @@ export class OrderTrackingComponent implements OnChanges {
   private sendMessage(order: HoaDon): void {
     const newNotif = new Notification(
       "ORDER_STATUS_UPDATED",
-      `Hóa đơn ${order.ma} đã được cập nhật trạng thái`,
+      `Hóa đơn ${order.ma} đã được cập nhật trạng thái!`,
       `/profile/order-tracking/${order.ma}`,
       order.khachHang.id
     );

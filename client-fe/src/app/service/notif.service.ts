@@ -24,4 +24,9 @@ export class NotifService {
   public setIsRead(notifId: number): Observable<Notification> {
     return this.http.get<Notification>(`${this.apiUrl}/set-read/${notifId}`);
   }
+
+  // 3
+  public createNewNotification(notification: Notification): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/create`, notification);
+  }
 }

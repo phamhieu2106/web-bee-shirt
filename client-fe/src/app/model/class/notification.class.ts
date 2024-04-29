@@ -6,4 +6,16 @@ export class Notification {
   relatedUrl: string;
   time: Date;
   custId: number;
+
+  constructor(
+    type: string,
+    content: string,
+    relatedUrl: string,
+    custId: number
+  ) {
+    this.type = type;
+    this.content = content;
+    this.relatedUrl = relatedUrl;
+    this.custId = custId;
+  }
 }

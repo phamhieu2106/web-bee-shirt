@@ -33,7 +33,7 @@ export class KhachHangService {
   ): Observable<PagedResponse<KhachHang>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<KhachHang>>(
-      `${this.apiUrl}/get-all-avtive${param}`
+      `${this.apiUrl}/get-all-active${param}`
     );
   }
 

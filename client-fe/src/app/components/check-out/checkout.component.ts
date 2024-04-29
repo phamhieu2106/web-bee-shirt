@@ -25,6 +25,10 @@ import { Discount } from "src/app/model/class/discount.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { AddAddressReq } from "src/app/model/interface/add-address-req.interface";
+import { WebSocketService } from "src/app/service/web-socket.service";
+import { Notification } from "src/app/model/class/notification.class";
+import { Order } from "src/app/model/class/order.class";
+import { NotifService } from "src/app/service/notif.service";
 
 @Component({
   selector: "app-checkout",
@@ -78,10 +82,13 @@ export class CheckoutComponent {
     private productService: ProductService,
     private orderService: OrderService,
     private discountService: DiscountService,
-    private saleEventService: SaleEventService
+    private saleEventService: SaleEventService,
+    private webSocketService: WebSocketService,
+    private notifService2: NotifService
   ) {}
 
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.loggedCust = this.authService.getCustomerFromStorage();
 
     this.cartService.cartItemsOfLoggedUser.subscribe(
@@ -697,5 +704,25 @@ export class CheckoutComponent {
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;
+  }
+
+  //
+  private sendMessage(order: Order): void {
+    const newNotif = new Notification(
+      "NEW_ORDER_CREATED",
+      `Bạn có đơn hàng mới!`,
+      `/hoa-don/chi-tiet-hoa-don/${order.ma}`,
+      order.khachHang.id
+    );
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage(
+          `Hóa đơn ${order.ma} đã được cập nhật trạng thái`
+        );
+      },
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
+    });
   }
 }

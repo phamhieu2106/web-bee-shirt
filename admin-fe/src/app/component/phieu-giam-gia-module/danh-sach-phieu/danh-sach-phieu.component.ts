@@ -32,7 +32,7 @@ export class DanhSachPhieuComponent {
 
   ngOnInit(): void {
     this.getPhieuGiamGiaList();
-    this.startPolling();
+
 
    
   }
@@ -186,20 +186,6 @@ public onChangePageSize(): void {
 
 
 
-  ngOnDestroy(): void {
-    // Huỷ subscription khi component được hủy bỏ
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
-  }
-  // change trạng thái
-  startPolling(): void {
-    this.pollingSubscription = this.phieuGiamGiaService.startPolling().subscribe((danhSachPhieuGiamGia: PhieuGiamGia[]) => {
-      danhSachPhieuGiamGia.forEach((phieu: PhieuGiamGia) => {
-        this.changeStatus(phieu.id);
-      });
-    });
-  }
 
 
   // Đổi màu

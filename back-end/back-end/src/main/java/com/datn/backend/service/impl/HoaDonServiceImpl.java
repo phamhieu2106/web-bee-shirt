@@ -189,9 +189,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         // chuyen trang thai hoan tien neu hoa don da chuyen khoan
         if (hoaDonUpdate.getLoaiHoaDon().equals(LoaiHoaDon.GIAO_HANG) &&
                 hoaDonUpdate.getThanhToans() != null &&
-                hoaDonUpdate.getThanhToans().size() == 1 &&
-                hoaDonUpdate.getThanhToans().get(0).getHinhThucThanhToan().getHinhThuc().equals(LoaiHinhThuc.CHUYEN_KHOAN)
+                hoaDonUpdate.getThanhToans().size() == 1
         ) {
+//            &&
+//            hoaDonUpdate.getThanhToans().get(0).getHinhThucThanhToan().getHinhThuc().equals(LoaiHinhThuc.CHUYEN_KHOAN
             TrangThaiHoaDon hoanTienStatus = TrangThaiHoaDon.CHO_HOAN_TIEN;
             hoaDonUpdate.setTrangThai(hoanTienStatus);
 

@@ -108,10 +108,7 @@ export class PhieuGiamGiaService {
     return this.http.get<PhieuGiamGia[]>(`${this.apiUrl}/get-all`);
   }
 
-  startPolling(): Observable<PhieuGiamGia[]> {
-    return interval(5000) // Cứ sau mỗi 5 giây, bạn có thể điều chỉnh thời gian
-      .pipe(switchMap(() => this.getPhieuGiamGiaList()));
-  }
+
 
   public update(id: number, phieu: PhieuGiamGia): Observable<PhieuGiamGia> {
     const thoiGianBatDau = new Date(phieu.thoiGianBatDau); // Chuyển đổi thành kiểu Date

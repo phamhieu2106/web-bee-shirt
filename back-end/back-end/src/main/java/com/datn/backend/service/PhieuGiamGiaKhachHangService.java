@@ -13,6 +13,7 @@ import java.util.List;
 public interface PhieuGiamGiaKhachHangService {
     List<PhieuGiamGiaKhachHang> getAll();
 
+
     void addPhieu(PhieuKhachHangRequest request);
 
 

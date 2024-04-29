@@ -18,11 +18,16 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia update(Integer id, PhieuGiamGiaRequest phieu);
 
-    PhieuGiamGia remove(Integer id);
+    PhieuGiamGia remove(PhieuGiamGia phieu);
 
     PhieuGiamGia changeStatus(Integer id);
 
     List<PhieuGiamGia> getAll();
+
+    List<PhieuGiamGia> getChange();
+
+    PhieuGiamGia get1Phieu(Integer id);
+
 
 
     PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search ,List<Integer> kieu,List<Integer> loai,List<String> trangThai);

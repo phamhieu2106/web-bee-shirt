@@ -92,12 +92,7 @@ export class ThemPhieuComponent implements OnInit {
 
         // Kiểm tra nếu checkbox "Gửi Mail Cho Khách Hàng" được chọn
 
-        Swal.fire({
-          icon: "success",
-          title: `Thêm thành công '${response.tenPhieuGiamGia}'!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        this.notifService.success("Thêm phiếu giảm giá thành công!");
         // Delay 3-4 giây trước khi chuyển đến trang danh sách
         setTimeout(() => {
           this.router.navigate(["phieu-giam-gia/ds-phieu-giam-gia"]);
@@ -108,23 +103,10 @@ export class ThemPhieuComponent implements OnInit {
           // Trích xuất thông điệp lỗi từ response
           this.errorMessage = error.error.message;
 
-          Swal.fire({
-            toast: true,
-            icon: "error",
-            position: "top-end",
-            title: this.errorMessage,
-            showConfirmButton: false,
-            timer: 3000,
-          });
+         
+          this.notifService.success(this.errorMessage);
         } else {
-          Swal.fire({
-            toast: true,
-            icon: "error",
-            position: "top-end",
-            title: "Thêm phiếu giảm giá thất bại",
-            showConfirmButton: false,
-            timer: 3000,
-          });
+          this.notifService.error("Thêm phiếu giảm giá thất bại!");
 
         }
       },
@@ -260,16 +242,18 @@ export class ThemPhieuComponent implements OnInit {
       // Kiểm tra nếu ô giá trị trống
       if (!ngayBatDau) {
         return { ngayBatDau: "Không bỏ trống trường này" };
-        
       }
 
-       // Lấy ngày hiện tại
-       const currentDate = new Date();
+      // Lấy ngày hiện tại
+      const currentDate = new Date();
 
-       // Kiểm tra nếu ngày bắt đầu sau ngày hiện tại
-       if (ngayBatDau <= currentDate) {
-           return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
-       }
+      // Kiểm tra nếu ngày bắt đầu trước ngày hiện tại
+      const ngayMoi = new Date(ngayBatDau)
+    
+      if (ngayMoi <= currentDate) {
+        
+          return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
+      }
 
       const thoiGianBatDau = this.addForm.get("thoiGianBatDau");
       const thoiGianKetThuc = this.addForm.get("thoiGianKetThuc");
@@ -295,7 +279,8 @@ export class ThemPhieuComponent implements OnInit {
 
       return null; // Trả về null nếu không có lỗi
     };
-  }
+}
+
 
   private validateTen(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -546,12 +531,14 @@ public changePageSize(e: any): void {
 
   confirmCreation() {
     Swal.fire({
-      toast: true,
-      title: "Bạn có đồng ý thêm không?",
+      title:
+        "Bạn có đồng ý thêm phiếu giảm giá không?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Đồng ý",
     }).then((result) => {
       if (result.value) {
         this.add();

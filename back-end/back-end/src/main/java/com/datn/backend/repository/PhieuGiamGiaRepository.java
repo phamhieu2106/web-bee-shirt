@@ -6,15 +6,31 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+            UPDATE phieu_giam_gia pgg
+             SET pgg.trang_thai =
+                 CASE\s
+                     WHEN NOW() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc THEN 'Đang diễn ra'
+                     WHEN NOW() < pgg.thoi_gian_bat_dau THEN 'Sắp diễn ra'
+                     WHEN NOW() > pgg.thoi_gian_ket_thuc THEN 'Đã kết thúc'
+                 END
+           
+             """, nativeQuery = true)
+    void updateDotGiamGiaSanPham();
 
     boolean existsByMaPhieuGiamGia(String maPhieu);
 
@@ -45,6 +61,11 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
                                      @Param("kieu") List<Integer> kieu,
                                      @Param("loai") List<Integer> loai,
                                      @Param("trangThai") List<String> trangThai);
+
+
+    @Query(value = "select * from phieu_giam_gia pgg ",
+            nativeQuery = true)
+    List<PhieuGiamGia> getAllPhieu();
 
     @Query(value = "select * from phieu_giam_gia pgg " +
             "where  (pgg.ten_phieu_giam_gia LIKE %:search% OR pgg.ma_phieu_giam_gia LIKE %:search%)  " +

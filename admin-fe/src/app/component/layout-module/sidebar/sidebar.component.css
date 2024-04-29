@@ -20,6 +20,12 @@
     
 }
 
+
+.show {
+    display: block !important; /* Hiển thị phần tử */
+    /* Bổ sung các thuộc tính CSS khác tùy thuộc vào yêu cầu của bạn */
+  }
+  
 .sidebar1 .head{
     display: flex;
     gap: 20px ;

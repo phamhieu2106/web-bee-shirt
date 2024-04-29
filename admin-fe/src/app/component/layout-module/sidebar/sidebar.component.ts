@@ -54,7 +54,8 @@ export class SidebarComponent {
 
   // 2
   private setupSidebar(): void {
-    $(".menu > ul > li").click((e: any) => {
+    $(".menu > .listSidebar ").click((e: any) => {
+      console.log(e.currentTarget)
       $(e.currentTarget).siblings().removeClass("active");
       $(e.currentTarget).toggleClass("active");
       $(e.currentTarget).find("ul").slideToggle();

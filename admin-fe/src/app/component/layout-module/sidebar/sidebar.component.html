@@ -17,8 +17,8 @@
       <div class="menu">
         <p class="title">Main</p>
 
-        <ul>
-          <li class="active">
+        <ul class="listSidebar">
+          <li class="active itemSideber" >
             <a [routerLink]="'thong-ke'" aria-expanded="false">
               <i class="icon ph-bold ph-house-simple"></i>
               <span class="text">Trang Chủ</span>
@@ -46,14 +46,14 @@
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'">
+          <li *ngIf="role === 'ADMIN' || role === 'STAFF'" >
             <a>
               <i class="icon ph ph-t-shirt"></i>
               <span class="text">Quản Lý Sản Phẩm</span>
               <i class="arrow ph-bold ph-caret-down"></i>
             </a>
 
-            <ul class="sub-menu">
+            <ul class="sub-menu" >
               <li>
                 <a [routerLink]="'sp/ds-san-pham'">
                   <span class="text">Sản Phẩm</span>
@@ -146,3 +146,4 @@
     </div>
   </div>
 </div>
+

@@ -17,9 +17,10 @@ export class ProductService {
   // 1
   public getByPageClient(
     pageNumber: number = 1,
-    pageSize: number = 8
+    pageSize: number = 8,
+    search: string = ""
   ): Observable<PagedResponse<SanPham>> {
-    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<SanPham>>(
       `${this.apiUrl}/get-by-page${param}`
     );

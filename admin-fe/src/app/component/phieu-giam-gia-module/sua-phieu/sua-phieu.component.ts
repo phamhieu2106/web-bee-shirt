@@ -584,12 +584,7 @@ export class SuaPhieuComponent implements OnInit {
         
         }
 
-        Swal.fire({
-          icon: "success",
-          title: `Sửa phiếu giảm giá thành công `,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        this.notifService.success("Sửa phiếu giảm giá thành công!");
         // Delay 3-4 giây trước khi chuyển đến trang danh sách
         setTimeout(() => {
           this.router.navigate(['phieu-giam-gia/ds-phieu-giam-gia']);
@@ -609,14 +604,7 @@ export class SuaPhieuComponent implements OnInit {
             timer: 3000,
           });
         } else {
-          Swal.fire({
-            toast: true,
-            icon: "error",
-            position: "top-end",
-            title: "Sửa phiếu giảm giá thất bại",
-            showConfirmButton: false,
-            timer: 3000,
-          });
+          this.notifService.success("Sửa phiếu giảm giá thất bại!");
 
         }
       },
@@ -646,12 +634,14 @@ export class SuaPhieuComponent implements OnInit {
   confirmCreation() {
 
     Swal.fire({
-      toast: true,
-      title: "Bạn có đồng ý sửa không?",
+      title:
+        "Bạn có đồng ý sửa phiếu giảm giá không?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Đồng ý",
     }).then((result) => {
       if (result.value) {
         this.updatePhieu();

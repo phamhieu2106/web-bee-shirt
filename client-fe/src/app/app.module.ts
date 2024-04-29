@@ -29,6 +29,8 @@ import { TrackingComponent } from './components/tracking/tracking.component';
 import { LienHeComponent } from './components/lien-he/lien-he.component';
 import { VeChungToiComponent } from './components/ve-chung-toi/ve-chung-toi.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { SearchProductComponent } from './components/search-product/search-product.component';
+import { ProductImageComponent } from './components/product-image/product-image.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     LienHeComponent,
     VeChungToiComponent,
     ChangePasswordComponent,
+    SearchProductComponent,
+    ProductImageComponent,
   ],
   imports: [
     BrowserModule,

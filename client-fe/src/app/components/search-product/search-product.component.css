@@ -1,0 +1,28 @@
+.search-input {
+    position: relative;
+}
+
+.product-suggestions {
+    position: absolute;
+    top: 100%;
+    width: 43%;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+    color: rgb(0, 0, 0) !important;
+}
+
+.suggestion-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+/* Tùy chỉnh màu khi di chuột qua */
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}

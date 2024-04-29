@@ -20,7 +20,7 @@ public interface SanPhamService {
     SanPham update(SanPham sanPham);
 
     // client
-    PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize);
+    PagedResponse<SanPham> getByPageClient(int pageNumber, int pageSize,String search);
 
     PagedResponse<SanPham> getByFilterForClient(int pageNumber,
                                                 int pageSize,

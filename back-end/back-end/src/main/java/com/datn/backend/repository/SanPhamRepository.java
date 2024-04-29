@@ -37,8 +37,9 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
                    SELECT DISTINCT sp.id, sp.ma, sp.ten, sp.trang_thai, sp.mo_ta, sp.created_at, sp.created_by, sp.updated_at, sp.last_updated_by
                    FROM san_pham sp
                    JOIN san_pham_chi_tiet ct ON sp.id = ct.san_pham_id
+                   WHERE sp.ten like %:search% or sp.ma like %:search%
                    """, nativeQuery = true)
-    Page<SanPham> getByPageClient(Pageable pageable);
+    Page<SanPham> getByPageClient(Pageable pageable,String search);
 
     @Query(value = """
             SELECT DISTINCT sp.id

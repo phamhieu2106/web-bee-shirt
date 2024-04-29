@@ -1,0 +1,38 @@
+<div class="">
+  <div class="search-input">
+    <input
+      type="text"
+      class="form-control rounded"
+      placeholder="Bạn cần tìm gì"
+      (focus)="showSuggest(true)"
+      (blur)="showSuggest(false)"
+      [(ngModel)]="search"
+      (ngModelChange)="getSanPhamList()"
+    />
+  </div>
+  <div
+    class="product-suggestions"
+    *ngIf="isShowSuggest && pagedResponse?.data?.length > 0"
+  >
+    <div
+      *ngFor="let sp of pagedResponse?.data; index as i"
+      class="suggestion-item row d-flex"
+      (click)="chooseProduct(sp.id)"
+    >
+      <div class="col-2 text-center">
+        <app-product-image
+          [url]="sp.sanPhamChiTiets[0].hinhAnhs[0].imageUrl"
+          [discount]="getDiscountMax(i)"
+          [widths]="90"
+          [heights]="90"
+        ></app-product-image>
+      </div>
+      <div class="col-6">
+        <div class="fw-bold">{{ sp.ten }}</div>
+      </div>
+      <div class="col-4 mr-auto">
+        <div>{{ displayPrice(sp) }}</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -66,8 +66,8 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
     this.service.getDotGiamGiaById(id).subscribe({
       next: async (value) => {
         this.dotGiamGiaUpdateRequest = value;
-        await this.getAllSanPham();
-        await this.service
+        this.getAllSanPham();
+        this.service
           .getAllListIdSanPhamChiTietByIdDotGiamGiaSanPham(id)
           .subscribe((data) => {
             this.dotGiamGiaUpdateRequest.listIdSanPhamChiTiet = data;
@@ -77,6 +77,13 @@ export class CapNhatDotGiamGiaComponent implements OnInit {
       },
       error(err) {
         console.log(err);
+      },
+      complete: () => {
+        if (this.dotGiamGiaUpdateRequest.trangThai == 0) {
+          this.toast.warning(
+            "Đợt giảm giá này không thể được cập nhật do đã kết thúc hoặc bị hủy"
+          );
+        }
       },
     });
   }

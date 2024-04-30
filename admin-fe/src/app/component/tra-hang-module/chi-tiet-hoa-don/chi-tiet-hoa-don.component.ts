@@ -348,7 +348,6 @@ export class ChiTietHoaDonComponent {
               this.bestVoucher = voucher;
             }
           });
-
         if (this.bestVoucher) {
           // Khi tìm được voucher tốt nhất sẽ kiểm tra kiểu voucher
           if (
@@ -359,7 +358,9 @@ export class ChiTietHoaDonComponent {
             // Tính tiền khách nợ và cửa hàng lỗ
             guestOwedMoney =
               this.newAmount * (this.hoaDon?.phieuGiamGia?.giaTri / 100);
-            shopLoss = this.newAmount * (this.bestVoucher?.giaTri / 100);
+            console.log(guestOwedMoney);
+            shopLoss = maxDiscount;
+
             // Gán voucher
             this.discountMoney = shopLoss;
             // Tính tiền trả lại

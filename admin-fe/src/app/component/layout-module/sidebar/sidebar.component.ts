@@ -56,12 +56,17 @@ export class SidebarComponent {
   }
 
   // 2
+
+  public checkSideBar = true
   private setupSidebar(): void {
+   
+   
     $(".menu > ul > li ").click((e: any) => {
+      
       console.log(e.currentTarget)
       $(e.currentTarget).siblings().removeClass("active");
       $(e.currentTarget).toggleClass("active");
-      $(e.currentTarget).find("ul").slideToggle();
+      $(e.currentTarget).find(".sub-menu ").slideToggle();
       $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
     });
 
@@ -69,6 +74,10 @@ export class SidebarComponent {
     $(".menu-btn").click(() => {
       $(".sidebar1").toggleClass("active");
     });
+  }
+
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
   }
 
   // 3

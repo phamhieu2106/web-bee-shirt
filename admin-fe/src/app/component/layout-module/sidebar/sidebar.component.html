@@ -18,7 +18,7 @@
         <p class="title">Main</p>
 
         <ul class="listSidebar" #listSidebar>
-          <li class="active itemSideber" >
+          <li class="active itemSideber" *ngIf="role === 'ADMIN' ">
             <a [routerLink]="'thong-ke'" aria-expanded="false">
               <i class="icon ph-bold ph-house-simple"></i>
               <span class="text">Trang Chủ</span>
@@ -55,49 +55,49 @@
 
             <ul class="sub-menu" >
               <li>
-                <a [routerLink]="'sp/ds-san-pham'">
+                <a (click)="stopPropagation($event)" [routerLink]="'sp/ds-san-pham'">
                   <span class="text">Sản Phẩm</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'mau-sac/ds-mau-sac'">
+                <a (click)="stopPropagation($event)" [routerLink]="'mau-sac/ds-mau-sac'">
                   <span class="text">Màu Sắc</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'kich-co/ds-kich-co'">
+                <a (click)="stopPropagation($event)" [routerLink]="'kich-co/ds-kich-co'">
                   <span class="text">Kích Cỡ</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'kieu-dang/ds-kieu-dang'">
+                <a (click)="stopPropagation($event)" [routerLink]="'kieu-dang/ds-kieu-dang'">
                   <span class="text">Kiểu Dáng</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'kieu-thiet-ke/ds-kieu-thiet-ke'">
+                <a (click)="stopPropagation($event)" [routerLink]="'kieu-thiet-ke/ds-kieu-thiet-ke'">
                   <span class="text">Kiểu Thiết Kế</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'kieu-tay-ao/ds-kieu-tay-ao'">
+                <a (click)="stopPropagation($event)" [routerLink]="'kieu-tay-ao/ds-kieu-tay-ao'">
                   <span class="text">Kiểu Tay Áo</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'kieu-co-ao/ds-kieu-co-ao'">
+                <a (click)="stopPropagation($event)" [routerLink]="'kieu-co-ao/ds-kieu-co-ao'">
                   <span class="text">Kiểu Cổ Áo</span>
                 </a>
               </li>
 
               <li>
-                <a [routerLink]="'chat-lieu/ds-chat-lieu'">
+                <a (click)="stopPropagation($event)" [routerLink]="'chat-lieu/ds-chat-lieu'">
                   <span class="text">Chất Liệu</span>
                 </a>
               </li>

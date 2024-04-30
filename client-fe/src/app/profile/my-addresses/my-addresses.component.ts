@@ -2,12 +2,13 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
+import Swal, { SweetAlertResult } from "sweetalert2";
+
 import { Address } from "src/app/model/class/address.class";
 import { AddressService } from "src/app/service/address.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { GiaoHangNhanhService } from "src/app/service/giao-hang-nhanh.service";
 import { NotificationService } from "src/app/service/notification.service";
-import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-my-addresses",
@@ -53,7 +54,7 @@ export class MyAddressesComponent {
     }
   }
 
-  //
+  // 2
   public toggleUpdateAddressesModal(value: boolean): void {
     this.isUpdateAddressModalShow = value;
     if (value) {
@@ -62,12 +63,12 @@ export class MyAddressesComponent {
     }
   }
 
-  // 2
+  // 3
   public formatAddress(address: Address): string {
     return `${address.duong}, ${address.xa}, ${address.huyen}, ${address.tinh}`;
   }
 
-  // 3
+  // 4
   public addAddress(): void {
     Swal.fire({
       title: "Thêm địa chỉ?",
@@ -103,7 +104,7 @@ export class MyAddressesComponent {
     });
   }
 
-  // 4
+  // 5
   public setDefaultAddress(addrId: number): void {
     Swal.fire({
       title: "Đặt địa chỉ này thành mặc định?",
@@ -137,7 +138,7 @@ export class MyAddressesComponent {
 
   // select address event functions
   // get districts by province
-  // 5
+  // 6
   public getAllDistrictsByProvince(formType: string): void {
     this.wards = [];
     this.getProvinceId(formType);
@@ -157,7 +158,7 @@ export class MyAddressesComponent {
       });
   }
 
-  // 5.1
+  // 6.1
   private getProvinceId(formType: string): void {
     for (let i = 0; i < this.provinces.length; i++) {
       const element = this.provinces[i];
@@ -177,7 +178,7 @@ export class MyAddressesComponent {
     }
   }
 
-  // 5.2
+  // 6.2
   private getProvinceName(formType: string): string {
     let provinceName =
       formType === "add"
@@ -193,7 +194,7 @@ export class MyAddressesComponent {
     return provinceName;
   }
 
-  // 6
+  // 7
   public getAllWardsByDistrict(formType: string): void {
     this.getDistrictId(formType);
     this.giaoHangNhanhService
@@ -212,7 +213,7 @@ export class MyAddressesComponent {
       });
   }
 
-  // 6.1
+  // 7.1
   private getDistrictId(formType: string): void {
     for (let i = 0; i < this.districts.length; i++) {
       const element = this.districts[i];
@@ -234,7 +235,7 @@ export class MyAddressesComponent {
     }
   }
 
-  // 6.2
+  // 7.2
   private getDistrictName(formType: string): string {
     let districtName =
       formType === "add"
@@ -248,7 +249,7 @@ export class MyAddressesComponent {
     return districtName;
   }
 
-  // 7
+  // 8
   public checkProvinceSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn tỉnh/thành phố trước!");
@@ -256,7 +257,7 @@ export class MyAddressesComponent {
     }
   }
 
-  // 8
+  // 9
   public checkDistrictSelection(): void {
     if (!this.provinceId) {
       this.notifService.warning("Vui lòng chọn quận/huyện trước!");
@@ -265,7 +266,7 @@ export class MyAddressesComponent {
   }
   // end: select address event functions
 
-  //
+  // 10
   public openUpdateModal(addrId: number): void {
     this.toggleUpdateAddressesModal(true);
     this.addressService.getById(addrId).subscribe({
@@ -295,6 +296,68 @@ export class MyAddressesComponent {
         this.getAllWardsByDistrict("update");
       },
       error: (err: any) => {},
+    });
+  }
+
+  // 11
+  public deleteAddress(addrId: number): void {
+    Swal.fire({
+      title: "Xóa địa chỉ này?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.addressService.deleteAddress(addrId).subscribe({
+          next: () => {
+            this.notifService.success("Địa chỉ đã được xóa!");
+            this.getAllAddresses();
+          },
+          error: (errorRes: HttpErrorResponse) => {
+            this.notifService.error(errorRes.error.message);
+          },
+        });
+      }
+    });
+  }
+
+  // 12
+  public updateAddress(): void {
+    Swal.fire({
+      title: "Cập nhật địa chỉ?",
+      cancelButtonText: "Hủy",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cập nhật",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        if (this.updateAddressForm.invalid) {
+          this.notifService.warning("Vui lòng điền đầy đủ thông tin!");
+          return;
+        }
+
+        this.addressService
+          .updateAddress(
+            this.updateAddressForm.get("id").value,
+            this.updateAddressForm.value
+          )
+          .subscribe({
+            next: () => {
+              this.getAllAddresses();
+              this.notifService.success("Cập nhật thành công!");
+              this.isUpdateAddressModalShow = false;
+              this.initUpdateAddressForm();
+            },
+            error: (errorRes: HttpErrorResponse) => {
+              this.notifService.error(errorRes.error.message);
+            },
+          });
+      }
     });
   }
 

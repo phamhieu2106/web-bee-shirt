@@ -8,5 +8,5 @@ public class AddNotificationReq {
     private String type;
     private String content;
     private String relatedUrl;
-    private int custId;
+    private Integer custId;
 }

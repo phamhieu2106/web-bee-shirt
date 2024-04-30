@@ -12,4 +12,6 @@ public interface NotificationService {
     List<Notification> getAllByCust(int custId);
 
     Notification setIsRead(int notifId);
+
+    List<Notification> getAllNotifOfStaff();
 }

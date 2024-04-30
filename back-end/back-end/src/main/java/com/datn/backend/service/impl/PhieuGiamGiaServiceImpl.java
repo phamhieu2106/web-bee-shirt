@@ -8,7 +8,7 @@ import com.datn.backend.dto.response.PhieuGiamGiaResponse;
 import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.repository.PhieuGiamGiaRepository;
-import com.datn.backend.service.PhieuGiamGiaServce;
+import com.datn.backend.service.PhieuGiamGiaService;
 import com.datn.backend.utility.UtilityFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
+public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
 
     private final PhieuGiamGiaRepository pggRepo;
@@ -487,5 +487,10 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaServce {
     @Override
     public List<PhieuGiamGia> getAllDiscountsOf1Cust(int custId) {
         return pggRepo.getAllDiscountsOf1Cust(custId);
+    }
+
+    @Override
+    public List<PhieuGiamGia> getAllDiscountsForNoneLog() {
+        return pggRepo.getAllDiscountsForNoneLog();
     }
 }

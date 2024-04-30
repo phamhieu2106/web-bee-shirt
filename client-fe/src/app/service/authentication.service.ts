@@ -17,7 +17,6 @@ export class AuthenticationService {
   public readonly apiUrl = "http://localhost:8080/auth/client";
 
   private token: string;
-  // private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
   public isLoggedInSubj = new BehaviorSubject<boolean>(false);
   public loggedCust = new BehaviorSubject<Customer>(null);

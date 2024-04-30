@@ -1,13 +1,17 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { MauSac } from "src/app/model/class/mau-sac.class";
 
+import { OwlOptions } from "ngx-owl-carousel-o";
+
+import { NotificationService } from "src/app/service/notification.service";
+import { MauSac } from "src/app/model/class/mau-sac.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { ProductService } from "src/app/service/product.service";
-
-import { OwlOptions } from "ngx-owl-carousel-o";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { DiscountService } from "src/app/service/discount.service";
+import { Discount } from "src/app/model/class/discount.class";
 
 @Component({
   selector: "app-home-page",
@@ -16,6 +20,8 @@ import { OwlOptions } from "ngx-owl-carousel-o";
 })
 export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
+  public isLoggedIn: boolean;
+  public discounts: Discount[] = [];
 
   customOptions: OwlOptions = {
     loop: true,
@@ -48,14 +54,22 @@ export class HomePageComponent {
   // constructor, ngOn
   constructor(
     private currencyPipe: CurrencyPipe,
-    private productService: ProductService
+    private productService: ProductService,
+    private notifService: NotificationService,
+    private authService: AuthenticationService,
+    private discountService: DiscountService
   ) {}
 
   ngOnInit(): void {
-    this.getSanPhamList();
+    this.authService.isLoggedInSubj.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    });
+
+    this.getIsLoggedInValue();
+    this.getProductList();
   }
 
-  // I. public functions
+  // public functions
   // 1
   public displayPrice(sanPham: SanPham): any {
     const priceArr = [];
@@ -85,7 +99,7 @@ export class HomePageComponent {
     return mauSacs;
   }
 
-  // II. private functions
+  // private functions
   // 1
   private checkExist(mauSacs: MauSac[], mauSacId: number): boolean {
     for (let m of mauSacs) {
@@ -97,14 +111,51 @@ export class HomePageComponent {
   }
 
   // 2
-  private getSanPhamList(): void {
+  private getProductList(): void {
     this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
       },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
+  }
+
+  // 3
+  private getDiscountOfNoneLog(): void {
+    this.discountService.getAllDiscountsForNoneLog().subscribe({
+      next: (discounts: Discount[]) => {
+        this.discounts = discounts;
+      },
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
+      },
+    });
+  }
+
+  // 4
+  private getDiscountOfLog(): void {
+    const custId = this.authService.getCustomerFromStorage()?.id;
+    if (custId) {
+      this.discountService.getAllDiscountsOf1Cust(custId).subscribe({
+        next: (discounts: Discount[]) => {
+          this.discounts = discounts;
+        },
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
+        },
+      });
+    }
+  }
+
+  // 5
+  private getIsLoggedInValue(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.getDiscountOfLog();
+    } else {
+      this.getDiscountOfNoneLog();
+    }
   }
 }

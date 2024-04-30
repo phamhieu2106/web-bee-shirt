@@ -17,7 +17,7 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGiaKhachHang;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.HoaDonChiTietService;
-import com.datn.backend.service.PhieuGiamGiaServce;
+import com.datn.backend.service.PhieuGiamGiaService;
 import com.datn.backend.utility.UtilityFunction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private final SanPhamChiTietRepository sanPhamChiTietRepo;
     private final DotGiamGiaSanPhamRepository dotGiamGiaSanPhamRepo;
     private final LichSuHoaDonRepository lichSuHoaDonRepo;
-    private final PhieuGiamGiaServce phieuGiamGiaServce;
+    private final PhieuGiamGiaService phieuGiamGiaService;
     private final PhieuGiamGiaRepository phieuGiamGiaRepo;
     private final PhieuGiamGiaKhachHangRepository phieuGiamGiaKhachHangRepository;
 
@@ -280,7 +280,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                 .giaTriDonHang(hoaDon.getTongTien())
                 .khachHangId(hoaDon.getKhachHang() == null ? null : hoaDon.getKhachHang().getId())
                 .build();
-        DiscountValidResponse discountValid = phieuGiamGiaServce.getDiscountValidUpdateHDCT(hoaDon.getId(), discountValidRequest);
+        DiscountValidResponse discountValid = phieuGiamGiaService.getDiscountValidUpdateHDCT(hoaDon.getId(), discountValidRequest);
 
         // update so luong phieu giam gia
         if (hoaDon.getPhieuGiamGia() == null && discountValid.getPhieuGiamGia() != null) {
@@ -356,7 +356,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
                 List<PhieuGiamGia> phieuGiamGias
                         = Arrays.asList(discountValid.getPhieuGiamGia(), hoaDon.getPhieuGiamGia());
 
-                PhieuGiamGia discountMax = phieuGiamGiaServce.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
+                PhieuGiamGia discountMax = phieuGiamGiaService.getDiscountMax(phieuGiamGias, discountValidRequest.getGiaTriDonHang());
                 if (!discountMax.getId().equals(hoaDon.getPhieuGiamGia().getId())) {
 
                     // hoán dôi 2 phiêu giảm gia

@@ -487,8 +487,8 @@
                       </div> -->
                     </form>
                     <div class="button">
-                      <button class="btn-save round" (click)="addAddress()">
-                        Lưu địa chỉ
+                      <button class="btn-save round" (click)="updateAddress()">
+                        Cập nhật địa chỉ
                       </button>
                     </div>
                   </div>
@@ -541,7 +541,10 @@
                   </div>
                 </div>
                 <div class="action-edit">
-                  <span (click)="openUpdateModal(a.id)">Sửa</span>
+                  <span class="me-5" (click)="openUpdateModal(a.id)">Sửa</span>
+                  <span (click)="deleteAddress(a.id)" *ngIf="!a.macDinh"
+                    >Xóa</span
+                  >
                 </div>
               </div>
             </div>

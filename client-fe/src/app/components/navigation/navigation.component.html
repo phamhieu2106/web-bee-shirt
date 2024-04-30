@@ -29,19 +29,6 @@
           </div>
 
           <div class="search">
-            <!-- <form action="/search" class="wanda-mxm-search">
-              <div class="search-inner">
-                <input
-                  name="q"
-                  autocomplete="off"
-                  class="searchinput"
-                  type="text"
-                  size="20"
-                  placeholder="Bạn đang tìm gì..."
-                  aria-label="Search"
-                />
-              </div>
-            </form> -->
             <app-search-product></app-search-product>
           </div>
 
@@ -53,11 +40,11 @@
 
               <div class="popUpDangNhap" *ngIf="isPopupShow && !isLoggedIn">
                 <div>
-                  <button class="btnDangNhap">
-                    <a [routerLink]="'/log-in'">Đăng Nhập</a>
+                  <button class="btnDangNhap" [routerLink]="'/log-in'">
+                    <a>Đăng Nhập</a>
                   </button>
-                  <button class="btnDangKy">
-                    <a [routerLink]="'/sign-up'">Đăng Ký</a>
+                  <button class="btnDangKy" [routerLink]="'/sign-up'">
+                    <a>Đăng Ký</a>
                   </button>
                   <span class="theoDoiDonHang">
                     <a [routerLink]="'/tracking'">Theo dõi đơn hàng</a>
@@ -106,7 +93,7 @@
             >
               <div class="iconnav">
                 <i class="iconThongBao fa-solid fa-bell"></i>
-                <span class="quantity1">{{ unreadQuantity }}</span>
+                <span class="quantity1">{{ unreadNotifQuantity }}</span>
               </div>
 
               <div class="popUpThongBao" *ngIf="isNoticesShow && isLoggedIn">

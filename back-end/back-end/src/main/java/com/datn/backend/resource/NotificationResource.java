@@ -38,4 +38,10 @@ public class NotificationResource {
     public ResponseEntity<Notification> setIsRead(@PathVariable("notifId") int notifId) {
         return ResponseEntity.ok(notificationService.setIsRead(notifId));
     }
+
+    // 4
+    @GetMapping("/notif-of-staff")
+    public ResponseEntity<List<Notification>> getAllNotifOfStaff() {
+        return ResponseEntity.ok(notificationService.getAllNotifOfStaff());
+    }
 }

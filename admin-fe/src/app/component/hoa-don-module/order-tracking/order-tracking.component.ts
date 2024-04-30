@@ -6,18 +6,17 @@ import {
   Output,
   SimpleChanges,
 } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
 import { FormBuilder, Validators } from "@angular/forms";
+
 import { HoaDonService } from "src/app/service/hoa-don.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { LichSuHoaDon } from "src/app/model/class/lich-su-hoa-don.class";
 import { PdfService } from "src/app/service/pdf.service";
-import Swal from "sweetalert2";
 import { Notification } from "src/app/model/class/notification.class";
-import { ChatMessage } from "src/app/model/class/chat-message.class";
 import { NotifService } from "src/app/service/notif.service";
 import { WebSocketService } from "src/app/service/web-socket.service";
-import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-order-tracking",
@@ -36,12 +35,11 @@ export class OrderTrackingComponent implements OnChanges {
   }); // form thêm LSHD
   public titleButton: string; // Đổi title button next
   public isLoadding = false;
-  public overlayText = "Vui lòng chờ vài giây";
+  public overlayText = "Vui lòng chờ!";
 
   constructor(
     private fb: FormBuilder,
     private hoaDonService: HoaDonService,
-    private notifycation: NotificationService,
     private pdfService: PdfService,
     private notifService2: NotifService,
     private notifService: NotificationService,
@@ -63,6 +61,7 @@ export class OrderTrackingComponent implements OnChanges {
   setIsNext(value: boolean) {
     this.isNext = value;
   }
+
   // Thay đổi trạng thái
   public changeOrderStatus(): void {
     if (
@@ -72,10 +71,10 @@ export class OrderTrackingComponent implements OnChanges {
         this.hoaDonService.getTienKhachThanhToan(this.hoaDon.thanhToans)
     ) {
       // kiem tra thanh toan cua khach
-      Swal.fire("Số tiền thanh toán không hợp lệ.");
+      this.notifService.error("Số tiền thanh toán không hợp lệ.");
       return;
     }
-    this.turnOnOverlay("Vui lòng chờ vài giây !");
+    this.turnOnOverlay("Vui lòng chờ!");
     this.hoaDonService
       .changeOrderStatus(
         this.hoaDon.id,
@@ -90,7 +89,7 @@ export class OrderTrackingComponent implements OnChanges {
           this.hoaDon.lichSuHoaDons.push(resp);
           this.hoaDon.trangThai = resp.trangThai;
           this.chageTitleButton();
-          this.notifycation.success("Cập nhật thành công");
+          this.notifService.success("Cập nhật thành công");
           // Default in phiếu gia khi xác nhận
           if (this.hoaDon.trangThai === "DA_XAC_NHAN") {
             this.pdfService.generatePDFPhieuGiao(this.hoaDon);
@@ -101,7 +100,7 @@ export class OrderTrackingComponent implements OnChanges {
           this.sendMessage(this.hoaDon);
         },
         error: (err) => {
-          this.notifycation.error(err.error.message);
+          this.notifService.error(err.error.message);
         },
       });
   }
@@ -115,11 +114,11 @@ export class OrderTrackingComponent implements OnChanges {
           this.hoaDon.lichSuHoaDons.push(resp);
           this.hoaDon.trangThai = resp.trangThai;
           this.chageTitleButton();
-          this.notifycation.success("Cập nhật thành công");
+          this.notifService.success("Cập nhật thành công");
           this.hoaDonChange.emit(this.hoaDon);
         },
         error: (err) => {
-          this.notifycation.error(err.error.message);
+          this.notifService.error(err.error.message);
         },
       });
   }

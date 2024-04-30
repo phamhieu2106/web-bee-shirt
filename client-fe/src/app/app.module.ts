@@ -13,8 +13,8 @@ import { NavigationComponent } from "./components/navigation/navigation.componen
 import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { HomePageComponent } from "./components/home-page/home-page.component";
-import { PhieuGiamGiaComponent } from "./component/phieu-giam-gia/phieu-giam-gia.component";
-import { DotGiamGiaComponent } from "./component/dot-giam-gia/dot-giam-gia.component";
+import { PhieuGiamGiaComponent } from "./child-component/phieu-giam-gia/phieu-giam-gia.component";
+import { DotGiamGiaComponent } from "./child-component/dot-giam-gia/dot-giam-gia.component";
 import { SanPhamChiTietComponent } from "./components/san-pham-chi-tiet/san-pham-chi-tiet.component";
 import { SanPhamComponent } from "./components/san-pham/san-pham.component";
 import { LoginComponent } from "./components/log-in/login.component";
@@ -23,14 +23,15 @@ import { AuthenticationInterceptor } from "./interceptor/authentication.intercep
 import { CheckoutComponent } from "./components/check-out/checkout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
 import { ProfileModule } from "./profile/profile.module";
-import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
-import { CheckOut2Component } from './components/check-out2/check-out2.component';
-import { TrackingComponent } from './components/tracking/tracking.component';
-import { LienHeComponent } from './components/lien-he/lien-he.component';
-import { VeChungToiComponent } from './components/ve-chung-toi/ve-chung-toi.component';
-import { ChangePasswordComponent } from './components/change-password/change-password.component';
-import { SearchProductComponent } from './components/search-product/search-product.component';
-import { ProductImageComponent } from './components/product-image/product-image.component';
+import { ForgetPasswordComponent } from "./components/forget-password/forget-password.component";
+import { CheckOut2Component } from "./components/check-out2/check-out2.component";
+import { TrackingComponent } from "./components/tracking/tracking.component";
+import { LienHeComponent } from "./components/lien-he/lien-he.component";
+import { VeChungToiComponent } from "./components/ve-chung-toi/ve-chung-toi.component";
+import { ChangePasswordComponent } from "./components/change-password/change-password.component";
+import { SearchProductComponent } from "./components/search-product/search-product.component";
+import { ProductImageComponent } from "./components/product-image/product-image.component";
+import { ActiveDiscountsSpctComponent } from "./child-component/active-discounts-spct/active-discounts-spct.component";
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { ProductImageComponent } from './components/product-image/product-image.
     ChangePasswordComponent,
     SearchProductComponent,
     ProductImageComponent,
+    ActiveDiscountsSpctComponent,
   ],
   imports: [
     BrowserModule,

@@ -37,7 +37,7 @@ export class NavigationComponent {
 
   private webSocket!: WebSocket;
   public notifications: Notification[] = [];
-  public unreadQuantity: number;
+  public unreadNotifQuantity: number;
 
   // constructor, ngOn
   constructor(
@@ -126,6 +126,7 @@ export class NavigationComponent {
         this.authService.logout();
         this.isLoggedIn = false;
         this.loggedCustomer = null;
+        this.authService.updateIsLoggedInSubj(false);
         this.router.navigate(["/log-in"]);
         this.notifService.success("Đăng xuất thành công!");
       }
@@ -410,6 +411,6 @@ export class NavigationComponent {
         count += 1;
       }
     }
-    this.unreadQuantity = count;
+    this.unreadNotifQuantity = count;
   }
 }

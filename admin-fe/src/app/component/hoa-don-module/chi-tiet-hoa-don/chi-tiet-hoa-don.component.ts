@@ -20,6 +20,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   orderNameTemp: string;
   orderPhoneNumberTemp: string;
   orderNoteTemp: string;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private hoaDonService: HoaDonService,
@@ -27,12 +28,13 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     private pdfTraHangService: PdfTraHangService,
     private notifycation: NotificationService
   ) {}
+
   ngOnDestroy(): void {}
+
   updateHoaDon(hoaDon: HoaDon) {
     this.hoaDonService.putHoaDon(hoaDon).subscribe({
       next: (resp) => {
         this.notifycation.success("Cập nhật hóa đơn thành công");
-        // console.log(resp);
         this.hoaDon = resp;
       },
       error: (err) => {
@@ -40,6 +42,7 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
       },
     });
   }
+
   ngOnInit() {
     let id = this.activatedRoute.snapshot.params["id"];
     this.getHoaDonById(id);
@@ -49,7 +52,6 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     this.hoaDonService.getById(id).subscribe({
       next: (resp) => {
         this.hoaDon = resp;
-        // console.log(resp);
         this.orderNameTemp = this.hoaDon.tenNguoiNhan;
         this.orderPhoneNumberTemp = this.hoaDon.sdtNguoiNhan;
         this.orderNoteTemp = this.hoaDon.ghiChu;
@@ -61,9 +63,11 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
   printHoaDon() {
     this.pdfService.generatePDFHoaDon(this.hoaDon);
   }
+
   printHoaDonTraHang() {
     this.pdfTraHangService.getHoaDonTraHang(this.hoaDon.id);
   }
+
   changeDiaChi() {
     const orderPhoneNumberRegex = /^(0[0-9])+([0-9]{8})\b/;
     if (!orderPhoneNumberRegex.test(this.orderPhoneNumberTemp)) {
@@ -120,7 +124,5 @@ export class ChiTietHoaDonComponent implements OnInit, OnDestroy {
     newDCVPVC.cuThe = diaChi.duong.trim();
 
     this.diaChiVaPhiVanChuyen = newDCVPVC;
-
-    // console.log(diaChi);
   }
 }

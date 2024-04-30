@@ -17,34 +17,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiaChiServiceImpl implements DiaChiService {
 
-    private final AddressRepository diaChiRepo;
+    private final AddressRepository addressRepo;
     private final KhachHangRepository khachHangRepo;
 
     @Override
     public DiaChi add(DiaChi dc) {
-        return diaChiRepo.save(dc);
+        return addressRepo.save(dc);
     }
 
     @Override
     public DiaChi updateDC(DiaChi dc) {
-        return diaChiRepo.save(dc);
+        return addressRepo.save(dc);
     }
 
     @Override
     public List<DiaChi> getAllAddressOf1Customer(int id) {
-        return diaChiRepo.getAllAddressOf1Customer(id);
+        return addressRepo.getAllAddressOf1Customer(id);
+    }
+
+    @Override
+    public void deleteAddress(int id) {
+        addressRepo.deleteById(id);
     }
 
     @Override
     public DiaChi getDCById(int id) {
-        return diaChiRepo.findById(id).get();
+        return addressRepo.findById(id).get();
     }
 
     @Override
     public DiaChi deleteDC(int id) {
         DiaChi diaChi = getDCById(id);
         if (!diaChi.isMacDinh()) {
-            diaChiRepo.delete(diaChi);
+            addressRepo.delete(diaChi);
         }
         return null;
     }
@@ -52,11 +57,11 @@ public class DiaChiServiceImpl implements DiaChiService {
     @Override
     @Transactional
     public DiaChi setDefault(int id) {
-        DiaChi address = diaChiRepo.findById(id)
+        DiaChi address = addressRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Địa chỉ ID: " + id + " không tồn tại"));
         address.setMacDinh(true);
-        diaChiRepo.setUnDefaultValue(address.getId(), address.getKhachHang().getId());
-        return diaChiRepo.save(address);
+        addressRepo.setUnDefaultValue(address.getId(), address.getKhachHang().getId());
+        return addressRepo.save(address);
     }
 
     @Override
@@ -74,10 +79,24 @@ public class DiaChiServiceImpl implements DiaChiService {
                 .macDinh(req.isMacDinh())
                 .khachHang(cust)
                 .build();
-        DiaChi savedAddress = diaChiRepo.save(address);
+        DiaChi savedAddress = addressRepo.save(address);
         if (req.isMacDinh()) {
             setDefault(savedAddress.getId());
         }
         return savedAddress;
+    }
+
+    @Override
+    public DiaChi updateAddress(int addrId, AddAddressReq req) {
+        DiaChi address = addressRepo.findById(addrId).get();
+
+        address.setHoTen(req.getHoTen());
+        address.setSdt(req.getSdt());
+        address.setTinh(req.getTinh());
+        address.setHuyen(req.getHuyen());
+        address.setXa(req.getXa());
+        address.setDuong(req.getDuong());
+
+        return addressRepo.save(address);
     }
 }

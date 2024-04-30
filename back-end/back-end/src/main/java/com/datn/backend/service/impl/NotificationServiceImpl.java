@@ -24,8 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification create(AddNotificationReq req) {
-        KhachHang cust = customerRepo.findById(req.getCustId())
-                .orElseThrow(() -> new ResourceNotFoundException("Khách hàng ID: " + req.getCustId() + " không tồn tại!"));
+        KhachHang cust = req.getCustId() != null ? customerRepo.findById(req.getCustId()).orElse(null) : null;
         Notification notification = Notification.builder()
                 .type(NotificationType.valueOf(req.getType()))
                 .isRead(false)
@@ -47,5 +46,10 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification setIsRead(int notifId) {
         notificationRepo.setIsRead(notifId);
         return notificationRepo.findById(notifId).get();
+    }
+
+    @Override
+    public List<Notification> getAllNotifOfStaff() {
+        return notificationRepo.getAllNotifOfStaff();
     }
 }

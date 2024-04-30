@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { Notification } from "../model/class/notification.class";
+import { AddNotificationReq } from "../model/interface/add-notifi-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -26,7 +27,9 @@ export class NotifService {
   }
 
   // 3
-  public createNewNotification(notification: Notification): Observable<any> {
+  public createNewNotification(
+    notification: AddNotificationReq
+  ): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/create`, notification);
   }
 }

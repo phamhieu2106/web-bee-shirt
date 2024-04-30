@@ -1,0 +1,119 @@
+<!-- phiếu giảm giá -->
+<div class="product-promotion">
+  <h3 class="product-promotion__heading">
+    <img
+      src="https://file.hstatic.net/1000253775/file/gift_new-removebg-preview_fce03d3cd9d24d0cb0be33ac068e41fc.png"
+      alt="Áo Hoodie Don"
+      width="22"
+      height="22"
+      class="mr-2"
+    />
+    KHUYẾN MÃI - ƯU ĐÃI
+  </h3>
+  <div class="product_coupon_new" *ngFor="let discount of discounts">
+    <ul class="product-promotion__box">
+      <li>
+        <span class="big-bold"
+          ><strong>{{ discount.maPhieuGiamGia }}</strong>
+          {{ getDiscountTitle(discount) }}</span
+        >
+      </li>
+    </ul>
+  </div>
+
+  <!-- <div class="product_coupon_new">
+    <ul class="product-promotion__box">
+      <li>
+        <span class="big-bold"
+          >Nhập mã <strong>W50</strong> GIẢM 50K đơn hàng từ 699K</span
+        >
+      </li>
+    </ul>
+  </div>
+
+  <div class="product_coupon_new">
+    <ul class="product-promotion__box">
+      <li>
+        <span class="big-bold"
+          >Nhập mã <strong>W100</strong> GIẢM 100K đơn hàng từ 1999K</span
+        >
+      </li>
+    </ul>
+  </div> -->
+
+  <div class="product_coupon_new">
+    <ul class="product-promotion__box">
+      <li>
+        <span class="big-bold"><strong>FREESHIP</strong> ĐƠN HÀNG TỪ 399K</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- <div class="coupon_new_copy clear mb-3">
+  <h4 style="font-size: 14px">Mã giảm giá bạn có thể sử dụng:</h4>
+  <div id="coupon_new_copy">
+    <div class="position_coupon">
+      <button data-code="W10" class="product-coupon" type="button">W10</button>
+      <div class="coupon_new_content">
+        <div>
+          Nhập
+          <strong> W10 </strong>
+          <p>
+            Lượt đã sử dụng (<span class="counter" id="counter1" data-value=""
+              >144</span
+            >)
+          </p>
+        </div>
+        <p>Giảm 10K đơn từ 99K (số lượng có hạn)</p>
+      </div>
+    </div>
+    <div class="position_coupon">
+      <button data-code="W50" class="product-coupon" type="button">W50</button>
+      <div class="coupon_new_content">
+        <div>
+          Nhập
+          <strong> W50 </strong>
+          <p>
+            Lượt đã sử dụng (<span class="counter" id="counter2" data-value=""
+              >142</span
+            >)
+          </p>
+        </div>
+        <p>Giảm 50K đơn từ 699K (số lượng có hạn)</p>
+      </div>
+    </div>
+    <div class="position_coupon">
+      <button data-code="W100" class="product-coupon" type="button">
+        W100
+      </button>
+      <div class="coupon_new_content">
+        <div>
+          Nhập
+          <strong> W100 </strong>
+          <p>
+            Lượt đã sử dụng (<span class="counter" id="counter3">138</span>)
+          </p>
+        </div>
+        <p>Giảm 100K đơn từ 1999K (số lượng có hạn)</p>
+      </div>
+    </div>
+    <div class="position_coupon">
+      <button data-code="GD10" class="product-coupon" type="button" disabled="">
+        GD10
+      </button>
+      <div class="coupon_new_content">
+        <div>
+          Nhập
+          <strong> GD10 </strong>
+          <p>
+            Lượt đã sử dụng (<span class="counter" id="counter4" data-value=""
+              >139</span
+            >)
+          </p>
+        </div>
+        <p>GIẢM 10% đơn từ 799K (số lượng có hạn)</p>
+      </div>
+    </div>
+  </div>
+</div> -->

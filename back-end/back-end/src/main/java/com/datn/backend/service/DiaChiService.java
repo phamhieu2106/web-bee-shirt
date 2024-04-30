@@ -13,6 +13,8 @@ public interface DiaChiService {
 
     List<DiaChi> getAllAddressOf1Customer(int id);
 
+    void deleteAddress(int id);
+
     DiaChi getDCById(int id);
 
     DiaChi deleteDC(int id);
@@ -20,4 +22,6 @@ public interface DiaChiService {
     DiaChi setDefault(int id);
 
     DiaChi addAddress(AddAddressReq req);
+
+    DiaChi updateAddress(int addrId, AddAddressReq req);
 }

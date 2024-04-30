@@ -92,8 +92,20 @@ public class DiaChiResource {
         return ResponseEntity.ok(diaChiService.addAddress(req));
     }
 
+    @PutMapping("/client/update/{addrId}")
+    public ResponseEntity<DiaChi> updateAddress(@PathVariable("addrId") int addrId,
+                                                @RequestBody AddAddressReq req) {
+        return ResponseEntity.ok(diaChiService.updateAddress(addrId, req));
+    }
+
     @GetMapping("/get-all/{custId}")
     public ResponseEntity<List<DiaChi>> getAllAddressOf1Customer(@PathVariable("custId") int custId) {
         return ResponseEntity.ok(diaChiService.getAllAddressOf1Customer(custId));
+    }
+
+    @DeleteMapping("/delete-by-id/{id}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable("id") int id) {
+        diaChiService.deleteAddress(id);
+        return ResponseEntity.ok().build();
     }
 }

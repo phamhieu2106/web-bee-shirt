@@ -10,7 +10,7 @@ import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface PhieuGiamGiaServce {
+public interface PhieuGiamGiaService {
 
     PhieuGiamGiaResponse getOne(Integer id);
 
@@ -28,15 +28,11 @@ public interface PhieuGiamGiaServce {
 
     PhieuGiamGia get1Phieu(Integer id);
 
-
-
     PagedResponse<PhieuGiamGia> getPagination(int pageNumber, int pageSize, String search ,List<Integer> kieu,List<Integer> loai,List<String> trangThai);
 
     PagedResponse<PhieuGiamGia> getFilter(int pageNumber, int pageSize, String search,List<Integer> kieu,List<Integer> loai,List<String> trangThai,String thoiGianBatDau,String thoiGianKetThuc);
 
     DiscountValidResponse getDiscountValid(DiscountValidRequest discountValidRequest);
-
-//    List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId);
 
     List<PhieuGiamGia> getDiscountsForLoggedCheckOut(BigDecimal dieuKien, int custId);
 
@@ -44,12 +40,11 @@ public interface PhieuGiamGiaServce {
 
     DiscountValidResponse getDiscountValidUpdateHDCT(Integer hoaDonId, DiscountValidRequest discountValidRequest);
 
-//    List<PhieuGiamGia> getDiscountsForCheckOut(BigDecimal dieuKien, int custId);
-
     List<PhieuGiamGia> getAllDiscountsOf1Cust(int custId);
+
+    List<PhieuGiamGia> getAllDiscountsForNoneLog();
 
     PhieuGiamGia getDiscountMax(List<PhieuGiamGia> phieuGiamGias, BigDecimal giaTriDonHang);
 
     long getDiscountValue(PhieuGiamGia pgg, BigDecimal giaTriDonHang);
-
 }

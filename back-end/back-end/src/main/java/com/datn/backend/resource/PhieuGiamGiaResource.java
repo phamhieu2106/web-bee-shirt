@@ -8,10 +8,9 @@ import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.phieu_giam_gia.PhieuGiamGia;
 import com.datn.backend.service.PhieuGiamGiaKhachHangService;
-import com.datn.backend.service.PhieuGiamGiaServce;
+import com.datn.backend.service.PhieuGiamGiaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.scheduling.annotation.Scheduled;
 
 
 import java.math.BigDecimal;
@@ -34,10 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PhieuGiamGiaResource {
 
-    private final PhieuGiamGiaServce pggService;
+    private final PhieuGiamGiaService pggService;
     private final PhieuGiamGiaKhachHangService pggKhService;
-
-
 
     @GetMapping("/ds-phieu-giam-gia")
     public ResponseEntity<?> getPhieuGiamGiaList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
@@ -49,9 +45,7 @@ public class PhieuGiamGiaResource {
         return ResponseEntity.ok(pggService.getPagination(pageNumber, pageSize, search, kieu, loai, trangThai));
     }
 
-
-
-    public void changePhieuGG(Integer id){
+    public void changePhieuGG(Integer id) {
         pggService.changeStatus(id);
     }
 
@@ -103,7 +97,7 @@ public class PhieuGiamGiaResource {
     }
 
     @DeleteMapping("/add-phieu")
-    public void xoaPhieuGiamGiaKhach(@PathVariable("id")Integer id) {
+    public void xoaPhieuGiamGiaKhach(@PathVariable("id") Integer id) {
         pggKhService.deletePhieu(id);
     }
 
@@ -124,23 +118,20 @@ public class PhieuGiamGiaResource {
 
     @GetMapping("/ds-khach-tang-co")
     public ResponseEntity<?> getPhieuTangKhachCo(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                               @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                               @RequestParam(value = "id", defaultValue = "", required = false) String id
-
-    ) {
+                                                 @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                 @RequestParam(value = "id", defaultValue = "", required = false) String id) {
         return ResponseEntity.ok(pggKhService.getPhieuCo(pageNumber, pageSize, id));
     }
 
     @GetMapping("/ds-tang")
     public ResponseEntity<?> getPhieuTangKhach(@RequestParam(value = "id", defaultValue = "", required = false) String id,
-                                               @RequestParam(value = "check", defaultValue = "", required = false) Boolean check
-    ) {
+                                               @RequestParam(value = "check", defaultValue = "", required = false) Boolean check) {
         return ResponseEntity.ok(pggKhService.getPhieuKhachHang(id, check));
     }
 
     @GetMapping("/get-active")
     public ResponseEntity<PagedResponse<KhachHang>> getKhachHangActiveList(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber,
-                                                                           @RequestParam(value = "pageSize", defaultValue = ApplicationConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
                                                                            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.ok(pggKhService.getAllActive(pageNumber, pageSize, search));
     }
@@ -165,5 +156,10 @@ public class PhieuGiamGiaResource {
     @GetMapping("/discounts-by-cust/{custId}")
     public ResponseEntity<List<PhieuGiamGia>> getAllDiscounts1Cust(@PathVariable("custId") int custId) {
         return ResponseEntity.ok(pggService.getAllDiscountsOf1Cust(custId));
+    }
+
+    @GetMapping("/none-log-discounts")
+    public ResponseEntity<List<PhieuGiamGia>> getAllDiscountsForNoneLog() {
+        return ResponseEntity.ok(pggService.getAllDiscountsForNoneLog());
     }
 }

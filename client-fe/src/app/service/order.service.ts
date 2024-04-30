@@ -15,10 +15,8 @@ export class OrderService {
 
   // public functions
   // 1
-  public placeOrderOnline(req: OnlineOrderRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/place-order-online`, req, {
-      responseType: "text",
-    });
+  public placeOrderOnline(req: OnlineOrderRequest): Observable<Order> {
+    return this.http.post<Order>(`${this.apiUrl}/place-order-online`, req);
   }
 
   // 2

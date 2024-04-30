@@ -306,8 +306,8 @@ export class SanPhamComponent {
             },
           });
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
         },
       });
   }

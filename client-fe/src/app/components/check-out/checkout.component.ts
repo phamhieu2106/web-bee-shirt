@@ -26,9 +26,9 @@ import { SaleEventService } from "src/app/service/sale-event.service";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { AddAddressReq } from "src/app/model/interface/add-address-req.interface";
 import { WebSocketService } from "src/app/service/web-socket.service";
-import { Notification } from "src/app/model/class/notification.class";
 import { Order } from "src/app/model/class/order.class";
 import { NotifService } from "src/app/service/notif.service";
+import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
 
 @Component({
   selector: "app-checkout",
@@ -352,11 +352,12 @@ export class CheckoutComponent {
 
         // call api
         this.orderService.placeOrderOnline(req).subscribe({
-          next: (orderCode: string) => {
+          next: (order: Order) => {
             this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/profile/order-tracking/${orderCode}`]);
+            this.router.navigate([`/profile/order-tracking/${order.ma}`]);
             this.cartService.updateCartItemsOfLoggedUser([]);
             this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+            this.sendMessage(order);
             this.turnOffOverlay("");
           },
           error: (errRes: HttpErrorResponse) => {
@@ -708,17 +709,15 @@ export class CheckoutComponent {
 
   //
   private sendMessage(order: Order): void {
-    const newNotif = new Notification(
-      "NEW_ORDER_CREATED",
-      `Bạn có đơn hàng mới!`,
-      `/hoa-don/chi-tiet-hoa-don/${order.ma}`,
-      order.khachHang.id
-    );
+    const newNotif: AddNotificationReq = {
+      type: "NEW_ORDER_CREATED",
+      content: `Bạn có đơn hàng mới từ khách hàng ${this.loggedCust.hoTen}!`,
+      relatedUrl: `/hoa-don/chi-tiet-hoa-don/${order.id}`,
+      custId: null,
+    };
     this.notifService2.createNewNotification(newNotif).subscribe({
       next: (data) => {
-        this.webSocketService.sendMessage(
-          `Hóa đơn ${order.ma} đã được cập nhật trạng thái`
-        );
+        this.webSocketService.sendMessage("Bạn có đơn hàng mới!");
       },
       error: (errRes: HttpErrorResponse) => {
         this.notifService.error(errRes.error.message);

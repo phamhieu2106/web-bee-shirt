@@ -39,4 +39,9 @@ export class DiscountService {
       `${this.apiUrl}/discounts-by-cust/${custId}`
     );
   }
+
+  // 4
+  public getAllDiscountsForNoneLog(): Observable<Discount[]> {
+    return this.http.get<Discount[]>(`${this.apiUrl}/none-log-discounts`);
+  }
 }

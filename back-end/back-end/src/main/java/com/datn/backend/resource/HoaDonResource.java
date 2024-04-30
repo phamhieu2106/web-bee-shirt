@@ -6,6 +6,7 @@ import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
+import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.service.HoaDonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class HoaDonResource {
             @RequestParam(defaultValue = "") String ngayTao,
             @RequestParam(defaultValue = "") String trangThai
     ) {
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable,search,loaiHoaDon,ngayTao, trangThai);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        PagedResponse<HoaDonResponse> hoaDons = hoaDonService.getAll(pageable, search, loaiHoaDon, ngayTao, trangThai);
         return ResponseEntity.ok(hoaDons);
     }
 
@@ -90,16 +91,17 @@ public class HoaDonResource {
     }
 
     @PostMapping("/place-order")
-    public ResponseEntity<HoaDonResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest placeOrderRequest){
+    public ResponseEntity<HoaDonResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest placeOrderRequest) {
         HoaDonResponse hoaDonResponse = hoaDonService.placeOrder(placeOrderRequest);
-        return ResponseEntity.ok(hoaDonResponse) ;
+        return ResponseEntity.ok(hoaDonResponse);
     }
 
     // client
     @PostMapping("/place-order-online")
-    public ResponseEntity<String> placeOrderOnline(@RequestBody OnlineOrderRequest req){
-        String savedOrderCode = hoaDonService.placeOrderOnline(req);
-        return ResponseEntity.ok(savedOrderCode);
+    public ResponseEntity<HoaDonResponse> placeOrderOnline(@RequestBody OnlineOrderRequest req) {
+        System.out.println("place-order-online");
+        HoaDonResponse savedOrder = hoaDonService.placeOrderOnline(req);
+        return ResponseEntity.ok(savedOrder);
     }
 
     @GetMapping("/get-by-code/{code}")

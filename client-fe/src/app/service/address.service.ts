@@ -37,4 +37,20 @@ export class AddressService {
   public getById(id: number): Observable<Address> {
     return this.http.get<Address>(`${this.apiUrl}/get-by-id/${id}`);
   }
+
+  // 5
+  public deleteAddress(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete-by-id/${id}`);
+  }
+
+  // 6
+  public updateAddress(
+    addrId: number,
+    req: AddAddressReq
+  ): Observable<Address> {
+    return this.http.put<Address>(
+      `${this.apiUrl}/client/update/${addrId}`,
+      req
+    );
+  }
 }

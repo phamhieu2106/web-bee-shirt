@@ -29,7 +29,7 @@ public interface HoaDonService {
 
     HoaDonResponse placeOrder(PlaceOrderRequest placeOrderRequest);
 
-    String placeOrderOnline(OnlineOrderRequest req);
+    HoaDonResponse placeOrderOnline(OnlineOrderRequest req);
 
     HoaDonResponse getByCode(String code);
 

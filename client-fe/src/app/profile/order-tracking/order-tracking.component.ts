@@ -2,7 +2,6 @@ import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { OrderDetails } from "src/app/model/class/order-details.class";
 import { OrderHistory } from "src/app/model/class/order-history.class";
 
 import { Order } from "src/app/model/class/order.class";
@@ -101,8 +100,8 @@ export class OrderTrackingComponent {
     this.webSocket = new WebSocket("ws://localhost:8080/notification");
     this.webSocket.onopen = (event) => {};
     this.webSocket.onmessage = (event) => {
-      this.notifService.success((event.data as string).replaceAll(/"/, ""));
       this.getOrderByCode();
+      this.notifService.success(event.data as string);
     };
     this.webSocket.onclose = (event) => {};
   }

@@ -27,4 +27,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
                    WHERE n.id > 0
                    """, nativeQuery = true)
     void readAll();
+
+    @Query(value = """
+                   SELECT *
+                   FROM notification
+                   WHERE cust_id IS NULL
+                   ORDER BY time DESC
+                   """, nativeQuery = true)
+    List<Notification> getAllNotifOfStaff();
 }

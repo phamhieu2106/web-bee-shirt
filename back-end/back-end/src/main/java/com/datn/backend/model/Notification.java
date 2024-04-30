@@ -2,6 +2,7 @@ package com.datn.backend.model;
 
 import com.datn.backend.enumeration.NotificationType;
 import com.datn.backend.model.khach_hang.KhachHang;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

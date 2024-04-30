@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="overflow-x-auto-mb">
+    <div class="wd-list-coupon d-flex">
+      <div class="item" *ngFor="let discount of discounts">
+        <div class="wd-coupon d-flex">
+          <div class="wd-coupon-left d-flex">
+            <strong> {{ discount.tenPhieuGiamGia }} </strong>
+          </div>
+          <div class="wd-coupon-right d-flex">
+            <div class="wd-coupon-right-top">
+              <div class="coupon_title">
+                <span class="big-bold">{{
+                  getBriefDiscountTitle(discount)
+                }}</span>
+              </div>
+              <small>{{ getDiscountTitle(discount) }}</small>
+            </div>
+
+            <div class="wd-coupon-right-bottom d-flex d-flex-center">
+              <div class="wd-coupon-detail d-flex">
+                <span
+                  >Mã:
+                  <strong>{{ discount.maPhieuGiamGia }}</strong>
+                </span>
+                <span
+                  >HSD:
+                  {{
+                    discount.thoiGianKetThuc | date : "dd-MM-yyyy HH:mm"
+                  }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

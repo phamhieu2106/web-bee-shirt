@@ -19,6 +19,10 @@ import { OrderService } from "src/app/service/order.service";
 import { SaleEventService } from "src/app/service/sale-event.service";
 import { forkJoin } from "rxjs";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
+import { Order } from "src/app/model/class/order.class";
+import { WebSocketService } from "src/app/service/web-socket.service";
+import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
+import { NotifService } from "src/app/service/notif.service";
 
 @Component({
   selector: "app-check-out2",
@@ -66,10 +70,13 @@ export class CheckOut2Component {
     private notifService: NotificationService,
     private discountService: DiscountService,
     private orderService: OrderService,
-    private saleEventService: SaleEventService
+    private saleEventService: SaleEventService,
+    private webSocketService: WebSocketService,
+    private notifService2: NotifService
   ) {}
 
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.cartService.cartItemsInLocalStorage.subscribe(
       (cartItems: CartItem[]) => {
         this.cartItems = cartItems;
@@ -213,11 +220,12 @@ export class CheckOut2Component {
 
         // call api
         this.orderService.placeOrderOnline(req).subscribe({
-          next: (orderCode: string) => {
+          next: (order: Order) => {
             this.notifService.success("Đặt hàng thành công!");
             this.router.navigate([`/`]);
             this.cartService.updateCartItemsInStorage([]);
             this.cartService.updateCartItemsQuantityInStorage(0);
+            this.sendMessage(order);
             this.turnOffOverlay("");
           },
           error: (errRes: HttpErrorResponse) => {
@@ -537,5 +545,24 @@ export class CheckOut2Component {
   private turnOffOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = false;
+  }
+
+  // 16
+  //
+  private sendMessage(order: Order): void {
+    const newNotif: AddNotificationReq = {
+      type: "NEW_ORDER_CREATED",
+      content: `Bạn có đơn hàng mới!`,
+      relatedUrl: `/hoa-don/chi-tiet-hoa-don/${order.id}`,
+      custId: null,
+    };
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage("Bạn có đơn hàng mới!");
+      },
+      error: (errRes: HttpErrorResponse) => {
+        this.notifService.error(errRes.error.message);
+      },
+    });
   }
 }

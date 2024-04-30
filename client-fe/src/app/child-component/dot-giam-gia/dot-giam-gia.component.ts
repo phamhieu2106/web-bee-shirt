@@ -51,6 +51,7 @@ export class DotGiamGiaComponent {
   public minutesDisplay: any;
   public secondsDisplay: any;
 
+  // constructor, ngOn
   constructor(
     private currencyPipe: CurrencyPipe,
     private productService: ProductService
@@ -96,6 +97,7 @@ export class DotGiamGiaComponent {
   }
 
   // public functions
+  // 1
   public displayPrice(sanPham: SanPham): any {
     const priceArr = [];
     for (let spct of sanPham.sanPhamChiTiets) {
@@ -113,6 +115,7 @@ export class DotGiamGiaComponent {
     );
   }
 
+  // 2
   public getMauSacList(sanPham: SanPham): MauSac[] {
     const mauSacs: MauSac[] = [];
     for (let spct of sanPham.sanPhamChiTiets) {
@@ -123,15 +126,8 @@ export class DotGiamGiaComponent {
     return mauSacs;
   }
 
-  private checkExist(mauSacs: MauSac[], mauSacId: number): boolean {
-    for (let m of mauSacs) {
-      if (m.id === mauSacId) {
-        return true;
-      }
-    }
-    return false;
-  }
   // private functions
+  // 1
   private getSanPhamList(): void {
     this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
@@ -141,5 +137,15 @@ export class DotGiamGiaComponent {
         console.log(error);
       },
     });
+  }
+
+  // 2
+  private checkExist(mauSacs: MauSac[], mauSacId: number): boolean {
+    for (let m of mauSacs) {
+      if (m.id === mauSacId) {
+        return true;
+      }
+    }
+    return false;
   }
 }

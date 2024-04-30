@@ -24,6 +24,8 @@ import { Customer } from "src/app/model/class/customer.class";
 import { AddCartItemReq } from "src/app/model/interface/add-cart-item-req.interface";
 import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { SaleEventService } from "src/app/service/sale-event.service";
+import { DiscountService } from "src/app/service/discount.service";
+import { Discount } from "src/app/model/class/discount.class";
 
 @Component({
   selector: "app-san-pham-chi-tiet",
@@ -50,6 +52,9 @@ export class SanPhamChiTietComponent {
   public material: string;
 
   public quantityToCart: number = 1;
+
+  public isLoggedIn: boolean;
+  discounts: Discount[] = [];
 
   sanPhamCT: OwlOptions = {
     loop: true,
@@ -90,11 +95,17 @@ export class SanPhamChiTietComponent {
     private productDetailsService: ProductDetailsService,
     private notifService: NotificationService,
     private cartService: CartService,
-    private authenticationService: AuthenticationService,
-    private saleEventService: SaleEventService
+    private authService: AuthenticationService,
+    private saleEventService: SaleEventService,
+    private discountService: DiscountService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedInSubj.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    });
+
+    this.getIsLoggedInValue();
     this.giDoCuaBinh();
     this.getProductById();
   }
@@ -236,7 +247,7 @@ export class SanPhamChiTietComponent {
     return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
   }
 
-  // 4
+  // 4.1
   public addToCart(): void {
     Swal.fire({
       title: "Thêm sản phẩm này vào giỏ hàng?",
@@ -248,7 +259,7 @@ export class SanPhamChiTietComponent {
       confirmButtonText: "Thêm",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        const loggedCust = this.authenticationService.getCustomerFromStorage();
+        const loggedCust = this.authService.getCustomerFromStorage();
         // not login
         if (!loggedCust) {
           this.addToCartLocal();
@@ -259,6 +270,7 @@ export class SanPhamChiTietComponent {
     });
   }
 
+  // 4.2
   private addToCartLocal(): void {
     this.productDetailsService
       .getByProductColorSize(
@@ -329,6 +341,7 @@ export class SanPhamChiTietComponent {
       });
   }
 
+  // 5
   private checkExistenceForLocalCart(
     proDetails: SanPhamChiTiet,
     cartItems: CartItem[]
@@ -503,7 +516,7 @@ export class SanPhamChiTietComponent {
       });
   }
 
-  // 5
+  //
   public minusQuantity(): void {
     if (this.quantityToCart === 1) {
       this.notifService.warning("Số lượng sản phẩm phải lớn hơn 0!");
@@ -512,7 +525,7 @@ export class SanPhamChiTietComponent {
     --this.quantityToCart;
   }
 
-  // 6
+  //
   public plusQuantity(): void {
     if (this.quantityToCart === this.curQuantity) {
       this.notifService.warning("Số lượng tồn của sản phẩm không đủ!");
@@ -623,7 +636,7 @@ export class SanPhamChiTietComponent {
     });
   }
 
-  //
+  // 2
   private assignProperties(): void {
     let anyProductDetails = this.sanPham.sanPhamChiTiets[0];
     this.form = anyProductDetails.kieuDang.ten;
@@ -633,6 +646,7 @@ export class SanPhamChiTietComponent {
     this.material = anyProductDetails.chatLieu.ten;
   }
 
+  // 3
   private giDoCuaBinh(): void {
     const productImg = document.getElementById(
       "product-img"
@@ -644,6 +658,43 @@ export class SanPhamChiTietComponent {
       imgElement.onclick = function () {
         productImg.src = imgElement.src;
       };
+    }
+  }
+
+  // 4
+  private getIsLoggedInValue(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.getDiscountOfLog();
+    } else {
+      this.getDiscountOfNoneLog();
+    }
+  }
+
+  // 5
+  private getDiscountOfNoneLog(): void {
+    this.discountService.getAllDiscountsForNoneLog().subscribe({
+      next: (discounts: Discount[]) => {
+        this.discounts = discounts;
+      },
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
+      },
+    });
+  }
+
+  // 6
+  private getDiscountOfLog(): void {
+    const custId = this.authService.getCustomerFromStorage()?.id;
+    if (custId) {
+      this.discountService.getAllDiscountsOf1Cust(custId).subscribe({
+        next: (discounts: Discount[]) => {
+          this.discounts = discounts;
+        },
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
+        },
+      });
     }
   }
 }

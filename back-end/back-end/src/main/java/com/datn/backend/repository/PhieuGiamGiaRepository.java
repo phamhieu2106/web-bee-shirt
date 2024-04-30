@@ -13,24 +13,34 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
-
+    //    @Query(value = """
+//            UPDATE phieu_giam_gia pgg
+//             SET pgg.trang_thai =
+//                 CASE\s
+//                     WHEN :now BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc THEN 'Đang diễn ra'
+//                     WHEN :now < pgg.thoi_gian_bat_dau THEN 'Sắp diễn ra'
+//                     WHEN NOW() > pgg.thoi_gian_ket_thuc THEN 'Đã kết thúc'
+//                 END
+//
+//             """, nativeQuery = true)
     @Modifying
     @Transactional
     @Query(value = """
             UPDATE phieu_giam_gia pgg
              SET pgg.trang_thai =
                  CASE\s
-                     WHEN NOW() BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc THEN 'Đang diễn ra'
-                     WHEN NOW() < pgg.thoi_gian_bat_dau THEN 'Sắp diễn ra'
-                     WHEN NOW() > pgg.thoi_gian_ket_thuc THEN 'Đã kết thúc'
+                     WHEN :now BETWEEN pgg.thoi_gian_bat_dau AND pgg.thoi_gian_ket_thuc THEN 'Đang diễn ra'
+                     WHEN :now < pgg.thoi_gian_bat_dau THEN 'Sắp diễn ra'
+                     WHEN :now > pgg.thoi_gian_ket_thuc THEN 'Đã kết thúc'
                  END
            
              """, nativeQuery = true)
-    void updateDotGiamGiaSanPham();
+    void updateDotGiamGiaSanPham(LocalDateTime now);
 
     boolean existsByMaPhieuGiamGia(String maPhieu);
 

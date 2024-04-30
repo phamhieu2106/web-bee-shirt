@@ -25,29 +25,29 @@
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'">
-            <a [routerLink]="'ban-hang'">
+          <li >
+            <a [routerLink]="'ban-hang'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-storefront"></i>
               <span class="text">Tại Quầy</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'">
-            <a [routerLink]="'tra-hang'">
+          <li >
+            <a [routerLink]="'tra-hang'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-storefront"></i>
               <span class="text">Trả Hàng</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'">
-            <a [routerLink]="'hoa-don/ql-hoa-don'">
+          <li >
+            <a [routerLink]="'hoa-don/ql-hoa-don'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-note"></i>
               <span class="text">Hóa Đơn</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'" >
-            <a>
+          <li  >
+            <a *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-t-shirt"></i>
               <span class="text">Quản Lý Sản Phẩm</span>
               <i class="arrow ph-bold ph-caret-down"></i>
@@ -104,29 +104,29 @@
             </ul>
           </li>
 
-          <li *ngIf="role === 'ADMIN' || role === 'STAFF'">
-            <a [routerLink]="'khach-hang/ds-khach-hang'">
+          <li>
+            <a [routerLink]="'khach-hang/ds-khach-hang'"  *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-user-circle-plus"></i>
               <span class="text">Khách Hàng</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN'">
-            <a [routerLink]="'nhan-vien/ds-nhan-vien'">
+          <li >
+            <a [routerLink]="'nhan-vien/ds-nhan-vien'" *ngIf="role === 'ADMIN'">
               <i class="icon ph ph-user"></i>
               <span class="text">Nhân Viên</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN'">
-            <a [routerLink]="'phieu-giam-gia/ds-phieu-giam-gia'">
+          <li>
+            <a [routerLink]="'phieu-giam-gia/ds-phieu-giam-gia'"  *ngIf="role === 'ADMIN'">
               <i class="icon ph ph-credit-card"></i>
               <span class="text">Phiếu Giảm Giá</span>
             </a>
           </li>
 
-          <li *ngIf="role === 'ADMIN'">
-            <a [routerLink]="'dot-giam-gia/ds-dot-giam-gia'">
+          <li>
+            <a [routerLink]="'dot-giam-gia/ds-dot-giam-gia'"  *ngIf="role === 'ADMIN'">
               <i class="icon ph ph-coins"></i>
               <span class="text">Đợt Giảm Giá</span>
             </a>

@@ -17,7 +17,7 @@ export class SidebarComponent {
   public loggedUser: NhanVien;
   public role: string;
 
-  @ViewChildren('listSidebar li') listItems: QueryList<ElementRef>;
+  @ViewChildren('listSidebar > li') listItems: QueryList<ElementRef>;
 
   // constructor, ngOn
   constructor(
@@ -57,14 +57,15 @@ export class SidebarComponent {
 
   // 2
   private setupSidebar(): void {
-    $(".menu > .listSidebar ").click((e: any) => {
-      // console.log(e.currentTarget)
-      // $(e.currentTarget).siblings().removeClass("active");
-      // $(e.currentTarget).toggleClass("active");
-      // $(e.currentTarget).find("ul").slideToggle();
-      // $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
+    $(".menu > ul > li ").click((e: any) => {
+      console.log(e.currentTarget)
+      $(e.currentTarget).siblings().removeClass("active");
+      $(e.currentTarget).toggleClass("active");
+      $(e.currentTarget).find("ul").slideToggle();
+      $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
     });
 
+    
     $(".menu-btn").click(() => {
       $(".sidebar1").toggleClass("active");
     });
@@ -75,13 +76,12 @@ export class SidebarComponent {
     $(".sidebar1").toggleClass("active");
   }
 
-  handleListClick(event: MouseEvent) {
-    const listItem = (event.target as HTMLElement).closest('li');
-    if (listItem) {
-      console.log(listItem);
-      // Để lấy ra các thuộc tính hoặc nội dung của thẻ li, bạn có thể sử dụng các phương thức và thuộc tính của DOM như innerHTML, className, etc.
-      console.log("Text content:", listItem.textContent);
-      console.log("Class name:", listItem.className);
-    }
+  ngAfterViewInit() {
+    this.listItems.forEach(item => {
+      this.renderer.listen(item.nativeElement, 'click', () => {
+        
+       console.log(item.nativeElement)
+      });
+    });
   }
 }

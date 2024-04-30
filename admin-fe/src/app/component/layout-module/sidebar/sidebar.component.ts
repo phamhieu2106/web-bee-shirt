@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ElementRef, QueryList, Renderer2, ViewChildren } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { AuthenticationService } from "src/app/service/authentication.service";
@@ -17,11 +17,14 @@ export class SidebarComponent {
   public loggedUser: NhanVien;
   public role: string;
 
+  @ViewChildren('listSidebar li') listItems: QueryList<ElementRef>;
+
   // constructor, ngOn
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -55,11 +58,11 @@ export class SidebarComponent {
   // 2
   private setupSidebar(): void {
     $(".menu > .listSidebar ").click((e: any) => {
-      console.log(e.currentTarget)
-      $(e.currentTarget).siblings().removeClass("active");
-      $(e.currentTarget).toggleClass("active");
-      $(e.currentTarget).find("ul").slideToggle();
-      $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
+      // console.log(e.currentTarget)
+      // $(e.currentTarget).siblings().removeClass("active");
+      // $(e.currentTarget).toggleClass("active");
+      // $(e.currentTarget).find("ul").slideToggle();
+      // $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
     });
 
     $(".menu-btn").click(() => {
@@ -70,5 +73,15 @@ export class SidebarComponent {
   // 3
   private setInitialSidebarState(): void {
     $(".sidebar1").toggleClass("active");
+  }
+
+  handleListClick(event: MouseEvent) {
+    const listItem = (event.target as HTMLElement).closest('li');
+    if (listItem) {
+      console.log(listItem);
+      // Để lấy ra các thuộc tính hoặc nội dung của thẻ li, bạn có thể sử dụng các phương thức và thuộc tính của DOM như innerHTML, className, etc.
+      console.log("Text content:", listItem.textContent);
+      console.log("Class name:", listItem.className);
+    }
   }
 }

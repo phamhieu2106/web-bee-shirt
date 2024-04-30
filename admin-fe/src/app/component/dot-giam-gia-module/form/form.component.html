@@ -110,7 +110,7 @@
         <button
           type="button"
           class="btn btn-success rounded"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || dotGiamGiaRequest?.trangThai == 0"
           (click)="handleSubmit()"
         >
           {{ formButton }}

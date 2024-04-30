@@ -20,19 +20,9 @@
             <div
               class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
             >
-              <!-- <div class="step completed">
-                <div class="step-icon-wrap">
-                  <div class="step-icon">
-                    <i class="fa-solid fa-cart-plus"></i>
-                  </div>
-                </div>
-                <h4 class="step-title">Đặt hàng</h4>
-                <span>{{ order?.createdAt }}</span>
-              </div> -->
-
               <div
                 class="step completed"
-                *ngFor="let oh of order?.lichSuHoaDons"
+                *ngFor="let oh of filterOrderHistory(order?.lichSuHoaDons)"
               >
                 <div class="step-icon-wrap">
                   <div class="step-icon">
@@ -237,7 +227,23 @@
             </tfoot>
           </table>
         </div>
+        <div class="mt-5">
+          <button
+            class="btn btn-outline-danger"
+            [disabled]="
+              !(
+                order?.trangThai === 'CHO_XAC_NHAN' ||
+                order?.trangThai === 'DA_XAC_NHAN' ||
+                order?.trangThai === 'CHO_GIAO'
+              )
+            "
+            (click)="cancelOrder()"
+          >
+            Hủy đơn hàng
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

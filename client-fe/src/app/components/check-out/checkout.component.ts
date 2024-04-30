@@ -671,7 +671,8 @@ export class CheckoutComponent {
         let temp =
           (this.selectedDiscount.giaTri * (this.realPrice - this.salePrice)) /
           100;
-        this.discountPrice =
+
+        temp =
           temp > this.selectedDiscount.giaTriMax
             ? this.selectedDiscount.giaTriMax
             : temp;

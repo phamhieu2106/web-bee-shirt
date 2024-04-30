@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 
 import { OnlineOrderRequest } from "../model/interface/online-order-request.interface";
 import { Order } from "../model/class/order.class";
+import { ChangeOrderStatusReq } from "../model/interface/change-order-status-req.interface";
 
 @Injectable({
   providedIn: "root",
@@ -37,5 +38,10 @@ export class OrderService {
   // 4
   public getNoneLoggedOrdersByPhone(phone: string): Observable<Order[]> {
     return this.http.get<Order[]>(`${this.apiUrl}/none-logged-orders/${phone}`);
+  }
+
+  // 5
+  public cancelOrder(req: ChangeOrderStatusReq): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/change-status/cancel`, req);
   }
 }

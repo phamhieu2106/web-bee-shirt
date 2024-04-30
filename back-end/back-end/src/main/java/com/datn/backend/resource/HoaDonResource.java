@@ -99,7 +99,6 @@ public class HoaDonResource {
     // client
     @PostMapping("/place-order-online")
     public ResponseEntity<HoaDonResponse> placeOrderOnline(@RequestBody OnlineOrderRequest req) {
-        System.out.println("place-order-online");
         HoaDonResponse savedOrder = hoaDonService.placeOrderOnline(req);
         return ResponseEntity.ok(savedOrder);
     }

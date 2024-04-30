@@ -1,6 +1,7 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { forkJoin } from "rxjs";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
 
@@ -12,6 +13,8 @@ import { ProductService } from "src/app/service/product.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { DiscountService } from "src/app/service/discount.service";
 import { Discount } from "src/app/model/class/discount.class";
+import { SaleEventService } from "src/app/service/sale-event.service";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 
 @Component({
   selector: "app-home-page",
@@ -22,6 +25,7 @@ export class HomePageComponent {
   public pagedResponse: PagedResponse<SanPham>;
   public isLoggedIn: boolean;
   public discounts: Discount[] = [];
+  @Input() saleProducts: SanPham[] = [];
 
   customOptions: OwlOptions = {
     loop: true,
@@ -57,7 +61,8 @@ export class HomePageComponent {
     private productService: ProductService,
     private notifService: NotificationService,
     private authService: AuthenticationService,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +120,22 @@ export class HomePageComponent {
     this.productService.getByPageClient().subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
+
+        // check product in sale or not
+        let observables = [];
+        for (let prod of response.data) {
+          observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
+        }
+        forkJoin(observables).subscribe({
+          next: (values: SaleEvent[]) => {
+            values.forEach((v, index) => {
+              response.data[index].saleEvent = v;
+            });
+            this.saleProducts = response.data.filter(
+              (p: SanPham) => p.saleEvent !== null
+            );
+          },
+        });
       },
       error: (errResp: HttpErrorResponse) => {
         this.notifService.error(errResp.error.message);

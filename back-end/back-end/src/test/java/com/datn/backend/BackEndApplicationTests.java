@@ -5,6 +5,7 @@ import com.datn.backend.model.Notification;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.repository.KhachHangRepository;
 import com.datn.backend.repository.NotificationRepository;
+import com.datn.backend.repository.SanPhamRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -19,23 +21,13 @@ import java.time.LocalDateTime;
 class BackEndApplicationTests {
 
     @Autowired
-    private NotificationRepository repository;
-
-    @Autowired
-    private KhachHangRepository repository2;
+    private SanPhamRepository sanPhamRepo;
 
     @Test
     void test() {
-        KhachHang kh = repository2.findById(6).get();
-
-        Notification notification = Notification.builder()
-                .type(NotificationType.valueOf("NEW_ORDER_CREATED"))
-                .isRead(false)
-                .content("Bạn có đơn hàng mới!")
-                .relatedUrl("/hoa-don/chi-tiet-hoa-don/${order.id}")
-                .time(LocalDateTime.now())
-                .customer(null)
-                .build();
-        repository.save(notification);
+        List<Integer> colorIds = List.of(14, 15);
+        List<Integer> sizeIds = List.of();
+        List<Integer> ids = sanPhamRepo.test(colorIds, sizeIds);
+        ids.forEach(System.err::println);
     }
 }

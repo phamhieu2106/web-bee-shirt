@@ -18,7 +18,7 @@ public enum TrangThaiHoaDon {
     HOAN_THANH("Hoàn thành", "TRA_HANG", "DANG_GIAO"), // hoàn thành
     HUY("Hủy", "HUY", "CHO_XAC_NHAN"), // Hủy
     TRA_HANG("Trả hàng", "TRA_HANG", "HOAN_THANH"), // Trả Hàng
-    HOAN_TIEN("Hoàn tiền", "", ""),
+    HOAN_TIEN("Hoàn tiền", "", ""), // không dùng
     CHO_HOAN_TIEN("Chờ hoàn tiền", "", ""),
     DA_HOAN_TIEN("Đã hoàn tiền", "", "");
 

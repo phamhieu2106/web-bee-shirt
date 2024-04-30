@@ -1,6 +1,6 @@
 import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { OwlOptions } from "ngx-owl-carousel-o";
 import { MauSac } from "src/app/model/class/mau-sac.class";
 
@@ -42,7 +42,7 @@ export class DotGiamGiaComponent {
     nav: true,
   };
 
-  public pagedResponse: PagedResponse<SanPham>;
+  @Input() saleProducts: SanPham[] = [];
   public hours: number = 0;
   public minutes: number = 0;
   public seconds: number = 0;
@@ -52,10 +52,7 @@ export class DotGiamGiaComponent {
   public secondsDisplay: any;
 
   // constructor, ngOn
-  constructor(
-    private currencyPipe: CurrencyPipe,
-    private productService: ProductService
-  ) {}
+  constructor(private currencyPipe: CurrencyPipe) {}
 
   ngOnInit(): void {
     this.getSanPhamList();
@@ -126,17 +123,37 @@ export class DotGiamGiaComponent {
     return mauSacs;
   }
 
+  public displayDiscountPrice(prod: SanPham): any {
+    const priceArr = [];
+    for (let spct of prod.sanPhamChiTiets) {
+      let saleEvent = prod.saleEvent;
+      priceArr.push(
+        Math.round((spct.giaBan * (100 - saleEvent.giaTriPhanTram)) / 100)
+      );
+    }
+    const minPrice = Math.min(...priceArr);
+    const maxPrice = Math.max(...priceArr);
+    if (minPrice === maxPrice) {
+      return this.currencyPipe.transform(minPrice, "VND", "symbol", "1.0-0");
+    }
+    return (
+      this.currencyPipe.transform(minPrice, "VND", "symbol", "1.0-0") +
+      " - " +
+      this.currencyPipe.transform(maxPrice, "VND", "symbol", "1.0-0")
+    );
+  }
+
   // private functions
   // 1
   private getSanPhamList(): void {
-    this.productService.getByPageClient().subscribe({
-      next: (response: PagedResponse<SanPham>) => {
-        this.pagedResponse = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-      },
-    });
+    // this.productService.getByPageClient().subscribe({
+    //   next: (response: PagedResponse<SanPham>) => {
+    //     this.pagedResponse = response;
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.log(error);
+    //   },
+    // });
   }
 
   // 2

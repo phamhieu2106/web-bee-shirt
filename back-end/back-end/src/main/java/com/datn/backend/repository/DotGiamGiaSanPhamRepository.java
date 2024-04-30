@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -29,14 +30,24 @@ public interface DotGiamGiaSanPhamRepository extends JpaRepository<DotGiamGiaSan
              JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
              SET dgg.trang_thai =
                  CASE\s
-                     WHEN NOW() BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc THEN 1
-                     WHEN NOW() < dggsp.thoi_gian_bat_dau THEN 2
-                     WHEN NOW() > dggsp.thoi_gian_ket_thuc THEN 0
+                     WHEN :now BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc THEN 1
+                     WHEN :now < dggsp.thoi_gian_bat_dau THEN 2
+                     WHEN :now > dggsp.thoi_gian_ket_thuc THEN 0
                  END
              WHERE dgg.trang_thai > 0;
              """, nativeQuery = true)
-    void updateDotGiamGiaSanPham();
-
+    void updateDotGiamGiaSanPham(LocalDateTime now);
+//    @Query(value = """
+//            UPDATE dot_giam_gia dgg
+//             JOIN dot_giam_gia_san_pham dggsp ON dggsp.dot_giam_gia_id = dgg.id
+//             SET dgg.trang_thai =
+//                 CASE\s
+//                     WHEN NOW() BETWEEN dggsp.thoi_gian_bat_dau AND dggsp.thoi_gian_ket_thuc THEN 1
+//                     WHEN NOW() < dggsp.thoi_gian_bat_dau THEN 2
+//                     WHEN NOW() > dggsp.thoi_gian_ket_thuc THEN 0
+//                 END
+//             WHERE dgg.trang_thai > 0;
+//             """, nativeQuery = true)
 
     @Query(value = """
             select dgg from DotGiamGia dgg

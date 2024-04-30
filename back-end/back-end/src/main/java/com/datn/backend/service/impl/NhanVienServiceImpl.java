@@ -64,7 +64,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         account.setTenDangNhap(request.getEmail().trim());
         account.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         account.setTrangThai(true);
-        account.setRole(Role.ROLE_ADMIN.name());
+        account.setRole(request.getRole());
 
         // nhan vien
         NhanVien nhanVien = new NhanVien();
@@ -206,6 +206,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 // acc.setTenDangNhap(request.getTenDangNhap());
                 acc.setTenDangNhap(request.getEmail().trim());
                 acc.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+                acc.setRole(request.getRole());
                 nv.setAccount(acc);
                 nhanVienRepo.save(nv);
                 return nv;

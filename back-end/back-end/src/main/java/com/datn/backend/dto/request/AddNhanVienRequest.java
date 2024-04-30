@@ -39,4 +39,6 @@ public class AddNhanVienRequest {
 
     @NotBlank(message = "Mật khẩu không được trống")
     private String matKhau;
+
+    private String role;
 }

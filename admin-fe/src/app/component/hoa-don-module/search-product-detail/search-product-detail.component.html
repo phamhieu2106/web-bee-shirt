@@ -166,6 +166,7 @@
             <th scope="col">Tay áo</th>
             <th scope="col">Cổ áo</th>
             <th scope="col">Chất liệu</th>
+            <th scope="col">Số lượng</th>
             <th scope="col">Giá</th>
           </tr>
         </thead>
@@ -196,6 +197,7 @@
             <td scope="col">{{ spct.tayAo.ten }}</td>
             <td scope="col">{{ spct.coAo.ten }}</td>
             <td scope="col">{{ spct.chatLieu.ten }}</td>
+            <td scope="col">{{ spct.soLuongTon }}</td>
             <td scope="col">
               <div class="">
                 <div class="gia-chua-giam pr-1" *ngIf="spct.dotGiamGia != null">

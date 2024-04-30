@@ -57,7 +57,7 @@ export class PhieuGiamGiaService {
   ): Observable<PagedResponse<KhachHang>> {
     const param = `?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`;
     return this.http.get<PagedResponse<KhachHang>>(
-      `${this.apiUrl}/get-avtive${param}`
+      `${this.apiUrl}/get-active${param}`
     );
   }
 

@@ -395,7 +395,7 @@
                           | currency : " " : "symbol" : "1.0-0")) +
                       " tối đa " +
                       (order.phieuGiamGia.giaTriMax == null
-                        ? 0
+                        ? order.phieuGiamGia.giaTri
                         : (order.phieuGiamGia.giaTriMax
                           | currency : " " : "symbol" : "1.0-0"))
                 }}
@@ -484,7 +484,7 @@
     style="display: none"
     aria-hidden="true"
   >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Thanh Toán</h5>

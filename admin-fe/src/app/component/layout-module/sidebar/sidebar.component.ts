@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ElementRef, QueryList, Renderer2, ViewChildren } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { AuthenticationService } from "src/app/service/authentication.service";
@@ -17,11 +17,14 @@ export class SidebarComponent {
   public loggedUser: NhanVien;
   public role: string;
 
+  @ViewChildren('listSidebar > li') listItems: QueryList<ElementRef>;
+
   // constructor, ngOn
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +57,7 @@ export class SidebarComponent {
 
   // 2
   private setupSidebar(): void {
-    $(".menu > .listSidebar ").click((e: any) => {
+    $(".menu > ul > li ").click((e: any) => {
       console.log(e.currentTarget)
       $(e.currentTarget).siblings().removeClass("active");
       $(e.currentTarget).toggleClass("active");
@@ -62,6 +65,7 @@ export class SidebarComponent {
       $(e.currentTarget).siblings().find("ul").find("li").removeClass("active");
     });
 
+    
     $(".menu-btn").click(() => {
       $(".sidebar1").toggleClass("active");
     });
@@ -70,5 +74,14 @@ export class SidebarComponent {
   // 3
   private setInitialSidebarState(): void {
     $(".sidebar1").toggleClass("active");
+  }
+
+  ngAfterViewInit() {
+    this.listItems.forEach(item => {
+      this.renderer.listen(item.nativeElement, 'click', () => {
+        
+       console.log(item.nativeElement)
+      });
+    });
   }
 }

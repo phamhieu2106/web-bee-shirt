@@ -304,6 +304,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             thanhToan.setTrangThai(true);
             thanhToan.setHinhThucThanhToan(httt);
             thanhToan.setHoaDon(hoaDon);
+            thanhToan.setMoTa(tt.getMoTa());
             return thanhToan;
         }).toList();
     }
@@ -448,7 +449,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .loaiHoaDon(LoaiHoaDon.valueOf(request.getLoaiHoaDon()))
                 .tenNguoiNhan(request.getTenNguoiNhan())
                 .sdtNguoiNhan(request.getSdtNguoiNhan())
-                .emailNguoiNhan(null)
+                .emailNguoiNhan(request.getEmailNguoiNhan())
                 .diaChiNguoiNhan(request.getDiaChiNguoiNhan().trim())
                 .tongTien(request.getTongTien())
                 .tienGiam(request.getTienGiam())

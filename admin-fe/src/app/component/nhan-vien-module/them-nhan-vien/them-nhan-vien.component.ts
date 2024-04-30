@@ -244,6 +244,7 @@ export class ThemNhanVienComponent {
         // Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
       ]),
       matKhau: new FormControl(""),
+      role: new FormControl("ROLE_STAFF"),
     });
   }
 

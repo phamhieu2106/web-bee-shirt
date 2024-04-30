@@ -79,14 +79,12 @@ export class SuaNhanVienComponent {
         Validators.required,
         Validators.pattern(this.emailRegex),
       ]),
-      diaChi: new FormControl(nhanVienUpdated?.diaChi, [
-        Validators.required,
-        Validators.pattern(/^[\p{L}\d]+(?:\s+[\p{L}\d]+)*$/u),
-      ]),
+      diaChi: new FormControl(nhanVienUpdated?.diaChi, [Validators.required]),
       // tenDangNhap: new FormControl(nhanVienUpdated?.tenDangNhap, [
       //   Validators.required,
       // ]),
       matKhau: new FormControl(nhanVienUpdated?.matKhau),
+      role: new FormControl(nhanVienUpdated?.role),
     });
   }
 

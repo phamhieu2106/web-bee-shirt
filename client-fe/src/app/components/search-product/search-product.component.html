@@ -23,16 +23,16 @@
         <app-product-image
           [url]="sp?.sanPhamChiTiets[0]?.hinhAnhs[0]?.imageUrl"
           [discount]="getDiscountMax(i)"
-          [widths]="90"
-          [heights]="90"
+          [widths]="100"
+          [heights]="100"
         ></app-product-image>
       </div>
-      <div class="col-6">
+      <div class="col-10">
         <div class="fw-bold">{{ sp.ten }}</div>
       </div>
-      <div class="col-4 mr-auto">
+      <!-- <div class="col-4 mr-auto">
         <div>{{ displayPrice(sp) }}</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

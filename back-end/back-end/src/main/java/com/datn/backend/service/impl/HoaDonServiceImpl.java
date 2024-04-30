@@ -304,6 +304,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             thanhToan.setTrangThai(true);
             thanhToan.setHinhThucThanhToan(httt);
             thanhToan.setHoaDon(hoaDon);
+            thanhToan.setMoTa(tt.getMoTa());
             return thanhToan;
         }).toList();
     }

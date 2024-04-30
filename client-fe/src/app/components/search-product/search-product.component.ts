@@ -2,9 +2,12 @@ import { CurrencyPipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { forkJoin } from "rxjs";
+import { SaleEvent } from "src/app/model/class/sale-event.class";
 import { SanPham } from "src/app/model/class/san-pham.class";
 import { PagedResponse } from "src/app/model/interface/paged-response.interface";
 import { ProductService } from "src/app/service/product.service";
+import { SaleEventService } from "src/app/service/sale-event.service";
 
 @Component({
   selector: "app-search-product",
@@ -20,7 +23,8 @@ export class SearchProductComponent {
   constructor(
     private currencyPipe: CurrencyPipe,
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private saleEventService: SaleEventService
   ) {}
 
   ngOnInit(): void {}
@@ -30,9 +34,9 @@ export class SearchProductComponent {
     }, 150);
   }
 
-  public displayPrice(sanPham: SanPham): any {
+  public displayPrice(prod: SanPham): any {
     const priceArr = [];
-    for (let spct of sanPham.sanPhamChiTiets) {
+    for (let spct of prod.sanPhamChiTiets) {
       priceArr.push(spct.giaBan);
     }
     const minPrice = Math.min(...priceArr);
@@ -51,6 +55,18 @@ export class SearchProductComponent {
     this.productService.getByPageClient(1, 10, this.search).subscribe({
       next: (response: PagedResponse<SanPham>) => {
         this.pagedResponse = response;
+        // check product in sale or not
+        let observables = [];
+        for (let prod of response.data) {
+          observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
+        }
+        forkJoin(observables).subscribe({
+          next: (values: SaleEvent[]) => {
+            values.forEach((v, index) => {
+              response.data[index].saleEvent = v;
+            });
+          },
+        });
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);

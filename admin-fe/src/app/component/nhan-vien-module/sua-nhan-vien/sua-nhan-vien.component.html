@@ -185,7 +185,8 @@
                           ? 'is-invalid'
                           : ''
                       "
-                      formControlName="email"
+                      [value]="updateForm.get('email').value"
+                      [disabled]="true"
                     />
                     <div class="invalid-feedback">Email không hợp lệ</div>
                   </div>

@@ -30,18 +30,17 @@ export class GiaoHangComponent implements OnInit, OnChanges {
 
   @Output() phiVanChuyen = new EventEmitter<number>();
   @Output() diaChi = new EventEmitter<string>();
+
   public diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-  // @Input({ required: true }) diaChiVaPhiVanChuyen: DiaChiVaPhiVanChuyen;
-  // @Output() diaChiVaPhiVanChuyenChange =
-  //   new EventEmitter<DiaChiVaPhiVanChuyen>();
+
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["khachHang"]) {
       this.diaChiVaPhiVanChuyen = new DiaChiVaPhiVanChuyen();
-      this.tenNguoiNhan = this.khachHang.hoTen;
-      this.sdtNguoiNhan = this.khachHang.sdt;
-      this.emailNguoiNhan = this.khachHang.email;
+      this.tenNguoiNhan = this.khachHang?.hoTen ? this.khachHang.hoTen : null;
+      this.sdtNguoiNhan = this.khachHang?.sdt ? this.khachHang.sdt : null;
+      this.emailNguoiNhan = this.khachHang?.email ? this.khachHang.email : null;
     }
   }
 
@@ -60,6 +59,7 @@ export class GiaoHangComponent implements OnInit, OnChanges {
     );
   }
   changeDiaChi(diaChi: DiaChi) {
+    // chọn địa chỉ
     let newDCVPVC = new DiaChiVaPhiVanChuyen();
     newDCVPVC.tinh = diaChi.tinh.trim();
     newDCVPVC.huyen = diaChi.huyen.trim();
@@ -81,5 +81,16 @@ export class GiaoHangComponent implements OnInit, OnChanges {
 
   onEmailNguoiNhanChange() {
     this.emailNguoiNhanChange.emit(this.emailNguoiNhan);
+  }
+
+  updateDiaChi(dc: DiaChiVaPhiVanChuyen) {
+    this.diaChiVaPhiVanChuyen = dc;
+    this.diaChi.emit(
+      `${
+        dc.cuThe == null || undefined ? "" : this.diaChiVaPhiVanChuyen.cuThe
+      },${dc?.xa ? dc.xa : ""},${dc.huyen ? dc.huyen : ""},${
+        dc.tinh ? dc.tinh : ""
+      }`
+    );
   }
 }

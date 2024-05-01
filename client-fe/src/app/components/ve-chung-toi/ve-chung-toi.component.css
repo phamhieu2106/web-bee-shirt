@@ -1,0 +1,11 @@
+.std {
+    padding: 0 56px;
+}
+
+.block-about-top {
+    margin-bottom: 50px;
+    padding-bottom: 37%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

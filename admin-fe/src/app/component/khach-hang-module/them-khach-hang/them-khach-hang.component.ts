@@ -136,20 +136,21 @@ export class ThemKhachHangComponent {
       return;
     }
     Swal.fire({
-      toast: true,
-      title: "Bạn có đồng ý thêm không?",
+      title: "Thêm khách hàng mới?",
+      cancelButtonText: "Hủy",
       icon: "warning",
-      position: "top",
       showCancelButton: true,
-      confirmButtonColor: "#F5B16D",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Thêm",
     }).then((result) => {
-      this.turnOnOverlay("Đang thêm khách hàng mới....");
       if (result.isConfirmed) {
         const randomPassword = this.generateRandomPassword();
         // Cập nhật giá trị của trường matKhau
         this.formAddKh.patchValue({
           matKhau: randomPassword,
         });
+        this.turnOnOverlay("Đang thêm...");
         this.khachHangService
           .add(this.formAddKh.value, this.selectFile)
           .subscribe({
@@ -169,15 +170,16 @@ export class ThemKhachHangComponent {
                   toast.onmouseleave = Swal.resumeTimer;
                 },
               });
-              this.send(
-                this.formAddKh.value.hoTen,
-                this.formAddKh.value.matKhau,
-                this.formAddKh.value.email
-              );
+              // this.send(
+              //   this.formAddKh.value.hoTen,
+              //   this.formAddKh.value.matKhau,
+              //   this.formAddKh.value.email
+              // );
+              this.turnOffOverlay("");
               this.router.navigate(["/khach-hang/ds-khach-hang"]);
             },
             error: (error: HttpErrorResponse) => {
-              // this.turnOffOverlay("");
+              this.turnOffOverlay("");
               if (error.status === 400) {
                 this.errorMessage = error.error.message;
                 Swal.fire({
@@ -205,15 +207,15 @@ export class ThemKhachHangComponent {
     });
   }
 
-  private send(hoTen: string, matKhau: string, email: string) {
-    emailjs.init("XlFoYJLd1vcoTgaEY");
-    emailjs.send("service_uxvm75s", "template_k18lsvj", {
-      from_name: this.authService.getUserFromStorage().hoTen,
-      to_name: hoTen,
-      message: matKhau,
-      to_email: email,
-    });
-  }
+  // private send(hoTen: string, matKhau: string, email: string) {
+  //   emailjs.init("XlFoYJLd1vcoTgaEY");
+  //   emailjs.send("service_uxvm75s", "template_k18lsvj", {
+  //     from_name: this.authService.getUserFromStorage().hoTen,
+  //     to_name: hoTen,
+  //     message: matKhau,
+  //     to_email: email,
+  //   });
+  // }
 
   private generateRandomPassword(): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

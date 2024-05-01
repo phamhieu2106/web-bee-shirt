@@ -65,6 +65,9 @@ export class KhachHangService {
     formData.append("khachHangImage", file);
     return this.http.put<KhachHang>(`${this.apiUrl}/update-kh/${id}`, formData);
   }
+  public changeSTT(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  }
 
   public filter(
     pageNumber: number = 1,

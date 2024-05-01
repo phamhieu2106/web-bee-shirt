@@ -13,6 +13,7 @@ import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.CustomerImage;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.AddressRepository;
@@ -104,6 +105,8 @@ public class KhachHangServiceImpl implements KhachHangService {
         cartRepo.save(new Cart(savedCus));
         favouriteListRepo.save(new FavouriteList(savedCus));
 
+        emailService.sendPasswordCustomer(khachHang, kh.getMatKhau());
+
         return savedCus;
     }
 
@@ -119,11 +122,11 @@ public class KhachHangServiceImpl implements KhachHangService {
         // check email
         String email = kh.getEmail().trim();
         if (!UtilityFunction.isNullOrEmpty(email)) {
-            if (khachHangRepo.existsByEmail(email)){
+            if (khachHangRepo.existsByEmail(email)) {
                 throw new RuntimeException("Email: " + email + " đã tồn tại.");
             }
 
-            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")){
+            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
                 throw new RuntimeException("Email: " + email + " không hợp lệ");
             }
         }
@@ -149,11 +152,11 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(custImg);
         khachHang.setAccount(account);
-        khachHang  = khachHangRepo.save(khachHang);
-        if (UtilityFunction.isNullOrEmpty(email)){
+        khachHang = khachHangRepo.save(khachHang);
+        if (UtilityFunction.isNullOrEmpty(email)) {
             // neu khong co email gui pass default sdt/DEFAULT_PASSWORD
             account.setMatKhau(passwordEncoder.encode(DEFAULT_PASSWORD));
-        }else {
+        } else {
             // neu co email tao mat khau moi va gui mail sdt/password
             account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
             khachHang.setEmail(email);
@@ -174,8 +177,8 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChiRepo.save(diaChi);
             khachHang.setDiaChis(Arrays.asList(diaChi));
         }
-        if (!UtilityFunction.isNullOrEmpty(email)){
-            emailService.sendPasswordCustomer(khachHang,kh.getMatKhau());
+        if (!UtilityFunction.isNullOrEmpty(email)) {
+            emailService.sendPasswordCustomer(khachHang, kh.getMatKhau());
         }
         return khachHang;
     }
@@ -239,10 +242,23 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHang delete(Integer id) {
-        Optional<KhachHang> kh = khachHangRepo.findById(id);
+        Optional<KhachHang> optionalKhachHang = khachHangRepo.findById(id);
 
-        khachHangRepo.deleteById(id);
-        return null;
+        if (optionalKhachHang.isPresent()) {
+            KhachHang khachHang = optionalKhachHang.map(kh -> {
+                Account acc = optionalKhachHang.get().getAccount();
+                acc.setTrangThai(!acc.isTrangThai());
+                kh.setAccount(acc);
+                if (kh.getTrangThai() == 0) {
+                    kh.setTrangThai(1);
+                } else kh.setTrangThai(0);
+                khachHangRepo.save(kh);
+                return kh;
+            }).get();
+            return khachHang;
+        } else {
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
+        }
     }
 
     @Override
@@ -268,7 +284,6 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         return pagedResponse;
     }
-
 
 
     @Override

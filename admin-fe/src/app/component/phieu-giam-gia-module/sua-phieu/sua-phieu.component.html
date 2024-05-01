@@ -12,42 +12,26 @@
             <form [formGroup]="updateForm">
               <div class="mb-3">
                 <label for="" class="labelChinh">Mã Phiếu: </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Mã phiếu giảm giá"
-                  [ngClass]="
+                <input type="text" class="form-control" placeholder="Mã phiếu giảm giá" [ngClass]="
                     updateForm.get('maPhieuGiamGia').invalid &&
                     updateForm.get('maPhieuGiamGia').touched
                       ? 'is-invalid'
                       : ''
-                  "
-                  formControlName="maPhieuGiamGia"
-                  readonly
-                />
+                  " formControlName="maPhieuGiamGia" readonly />
               </div>
 
               <div class="mb-3">
                 <label for="" class="labelChinh">Tên Phiếu:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Tên phiếu giảm giá"
-                  [ngClass]="
+                <input type="text" class="form-control" placeholder="Tên phiếu giảm giá" [ngClass]="
                     updateForm.get('tenPhieuGiamGia').invalid &&
                     updateForm.get('tenPhieuGiamGia').touched
                       ? 'is-invalid'
                       : ''
-                  "
-                  formControlName="tenPhieuGiamGia"
-                />
-                <div
-                  *ngIf="
+                  " formControlName="tenPhieuGiamGia" />
+                <div *ngIf="
                     updateForm.get('tenPhieuGiamGia').hasError('checkTen') &&
                     updateForm.get('tenPhieuGiamGia').touched
-                  "
-                  class="invalid-feedback"
-                >
+                  " class="invalid-feedback">
                   {{ updateForm.get("tenPhieuGiamGia").getError("checkTen") }}
                 </div>
               </div>
@@ -56,28 +40,13 @@
                 <label for="" class="labelChinh">Kiểu:</label> <br />
                 <div class="form-check form-check-inline">
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      name="kieu"
-                      id="%"
-                      type="radio"
-                      value="0"
-                      formControlName="kieu"
-                      (change)="onKieuChange()"
-                    />
+                    <input class="form-check-input" name="kieu" id="%" type="radio" value="0" formControlName="kieu"
+                      (change)="onKieuChange()" />
                     <label class="form-check-label" for="%"> % </label>
                   </div>
 
-                  <input
-                    class="form-check-input"
-                    id="tienMat"
-                    type="radio"
-                    name="kieu"
-                    value="1"
-                    formControlName="kieu"
-                    checked="true"
-                    (change)="onKieuChange()"
-                  />
+                  <input class="form-check-input" id="tienMat" type="radio" name="kieu" value="1" formControlName="kieu"
+                    checked="true" (change)="onKieuChange()" />
                   <label class="form-check-label" for="tienMat">
                     Tiền Mặt
                   </label>
@@ -87,86 +56,42 @@
               <div class="mb-3">
                 <label for="" class="labelChinh">Loại:</label> <br />
                 <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    id="congKhai"
-                    type="radio"
-                    name="loai"
-                    value="1"
-                    formControlName="loai"
-                    checked="true"
-                    (change)="onLoaiChange()"
-                  />
+                  <input class="form-check-input" id="congKhai" type="radio" name="loai" value="1"
+                    formControlName="loai" checked="true" (change)="onLoaiChange()" />
                   <label class="form-check-label" for="congKhai">
                     Công Khai
                   </label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    name="loai"
-                    id="caNhan"
-                    type="radio"
-                    value="0"
-                    formControlName="loai"
-                    (change)="onLoaiChange()"
-                  />
+                  <input class="form-check-input" name="loai" id="caNhan" type="radio" value="0" formControlName="loai"
+                    (change)="onLoaiChange()" />
                   <label class="form-check-label" for="caNhan"> Cá Nhân </label>
                 </div>
               </div>
 
               <div class="mb-3 row">
                 <div class="col-md-6">
-                  <label
-                    for=""
-                    class="labelChinh"
-                    *ngIf="updateForm.get('kieu').value === '0'"
-                    >Số % Chiết Khấu:</label
-                  >
+                  <label for="" class="labelChinh" *ngIf="updateForm.get('kieu').value === '0'">Số % Chiết Khấu:</label>
 
-                  <label
-                    for=""
-                    class="labelChinh"
-                    *ngIf="updateForm.get('kieu').value === '1'"
-                    >Số Tiền Chiết Khấu:</label
-                  >
+                  <label for="" class="labelChinh" *ngIf="updateForm.get('kieu').value === '1'">Số Tiền Chiết
+                    Khấu:</label>
                   <div class="input-group mb-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      class="form-control"
-                      placeholder="Giá trị"
-                      [ngClass]="
+                    <input type="number" class="form-control" class="form-control" placeholder="Giá trị" [ngClass]="
                         updateForm.get('giaTri').invalid &&
                         updateForm.get('giaTri').touched
                           ? 'is-invalid'
                           : ''
-                      "
-                      formControlName="giaTri"
-                      aria-label="Recipient's username"
-                      aria-describedby="basic-addon2"
-                      (blur)="checkGiaTriBlur()"
-                    />
-                    <span
-                      class="input-group-text"
-                      id="basic-addon2"
-                      *ngIf="updateForm.get('kieu').value === '1'"
-                      >VNĐ</span
-                    >
-                    <span
-                      class="input-group-text"
-                      id="basic-addon2"
-                      *ngIf="updateForm.get('kieu').value === '0'"
-                      >%</span
-                    >
+                      " formControlName="giaTri" aria-label="Recipient's username" aria-describedby="basic-addon2"
+                      (blur)="checkGiaTriBlur()" />
+                    <span class="input-group-text" id="basic-addon2"
+                      *ngIf="updateForm.get('kieu').value === '1'">VNĐ</span>
+                    <span class="input-group-text" id="basic-addon2"
+                      *ngIf="updateForm.get('kieu').value === '0'">%</span>
 
-                    <div
-                      *ngIf="
+                    <div *ngIf="
                         updateForm.get('giaTri').hasError('giaTri') &&
                         updateForm.get('giaTri').touched
-                      "
-                      class="invalid-feedback"
-                    >
+                      " class="invalid-feedback">
                       {{ updateForm.get("giaTri").getError("giaTri") }}
                     </div>
                   </div>
@@ -174,31 +99,18 @@
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Giá Trị Tối Đa:</label>
                   <div class="input-group mb-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      placeholder="Giá trị tối đa"
-                      id="giaTriMax"
-                      [ngClass]="{
+                    <input type="number" class="form-control" placeholder="Giá trị tối đa" id="giaTriMax" [ngClass]="{
                         'form-control': true,
                         'is-invalid':
                           updateForm.get('giaTriMax').invalid &&
                           updateForm.get('giaTriMax').touched
-                      }"
-                      formControlName="giaTriMax"
-                      aria-label="Recipient's username"
-                      aria-describedby="basic-addon2"
-                      [readonly]="checkGiaTri"
-                      (blur)="checkGiaTriToiDa()"
-                    />
+                      }" formControlName="giaTriMax" aria-label="Recipient's username" aria-describedby="basic-addon2"
+                      [readonly]="checkGiaTri" (blur)="checkGiaTriToiDa()" />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
-                    <div
-                      *ngIf="
+                    <div *ngIf="
                         updateForm.get('giaTriMax').hasError('invalidMax') &&
                         updateForm.get('giaTriMax').touched
-                      "
-                      class="invalid-feedback"
-                    >
+                      " class="invalid-feedback">
                       {{ updateForm.get("giaTriMax").getError("invalidMax") }}
                     </div>
                   </div>
@@ -208,70 +120,40 @@
               <div class="mb-3 row">
                 <div class="col-md-6">
                   <label for="" class="labelChinh">Lượt sử dụng:</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Số lượng"
-                    [ngClass]="
+                  <input type="number" class="form-control" placeholder="Số lượng" [ngClass]="
                       (updateForm.get('soLuong').invalid &&
                         updateForm.get('soLuong').touched) ||
                       (updateForm.get('soLuong').hasError('min') &&
                         updateForm.get('soLuong').touched)
                         ? 'is-invalid'
                         : ''
-                    "
-                    formControlName="soLuong"
-                    [readonly]="!checkSoLuong"
-                  />
+                    " formControlName="soLuong" [readonly]="!checkSoLuong" />
                   <div class="invalid-feedback">
-                    <span
-                      *ngIf="updateForm.get('soLuong').hasError('required')"
-                    >
-                      Không bỏ trống trường này</span
-                    >
+                    <span *ngIf="updateForm.get('soLuong').hasError('required')">
+                      Không bỏ trống trường này</span>
 
-                    <span *ngIf="updateForm.get('soLuong').hasError('min')"
-                      >Vui lòng nhập số và số > 0
+                    <span *ngIf="updateForm.get('soLuong').hasError('min')">Vui lòng nhập số và số > 0
                     </span>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label for="" class="labelChinh"
-                    >Số tiền chi tối thiểu:</label
-                  >
+                  <label for="" class="labelChinh">Số tiền chi tối thiểu:</label>
                   <div class="input-group mb-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      placeholder="Điều kiện"
-                      [ngClass]="
-                        updateForm.get('dieuKienGiam').invalid &&
+                    <input type="number" class="form-control" placeholder="Điều kiện"[ngClass]="{
+                      'form-control': true,
+                      'is-invalid':
+                      updateForm.get('dieuKienGiam').invalid &&
                         updateForm.get('dieuKienGiam').touched
-                          ? 'is-invalid'
-                          : ''
-                      "
-                      formControlName="dieuKienGiam"
-                      aria-label="Recipient's username"
-                      aria-describedby="basic-addon2"
-                      (blur)="checkGiaTriToiDa()"
-                      (blur)="checkGiaTriBlur()"
-                    />
+                    }" formControlName="dieuKienGiam" aria-label="Recipient's username"
+                      aria-describedby="basic-addon2" (blur)="checkGiaTriToiDa()" (blur)="checkGiaTriBlur()" />
                     <span class="input-group-text" id="basic-addon2">VNĐ</span>
 
-                    <div
-                      *ngIf="
-                        updateForm
-                          .get('dieuKienGiam')
-                          .hasError('invalidDieuKien') &&
-                        updateForm.get('dieuKienGiam').touched
-                      "
-                      class="invalid-feedback"
-                    >
-                      {{
-                        updateForm
-                          .get("dieuKienGiam")
-                          .getError("invalidDieuKien")
-                      }}
+                    <div class="invalid-feedback">
+                      <span *ngIf="updateForm.get('dieuKienGiam').hasError('required')">
+                        Không bỏ trống trường này</span>
+  
+                      <span *ngIf="updateForm.get('dieuKienGiam').hasError('min')">Vui lòng nhập số và số > 0
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -279,81 +161,48 @@
 
               <div class="mb-3">
                 <label>Ngày bắt đầu</label>
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  [ngClass]="
+                <input type="datetime-local" class="form-control" [ngClass]="
                     updateForm.get('thoiGianBatDau').invalid &&
                     updateForm.get('thoiGianBatDau').touched
                       ? 'is-invalid'
                       : ''
-                  "
-                  formControlName="thoiGianBatDau"
-                  (blur)="checkThoiGian()"
-                />
-                <div
-                  *ngIf="
+                  " formControlName="thoiGianBatDau" (blur)="checkThoiGian()" [readOnly]="checkNgayBatDau" />
+                <div *ngIf="
                     updateForm.get('thoiGianBatDau').hasError('ngayBatDau') &&
                     updateForm.get('thoiGianBatDau').touched
-                  "
-                  class="invalid-feedback"
-                >
+                  " class="invalid-feedback">
                   {{ updateForm.get("thoiGianBatDau").getError("ngayBatDau") }}
                 </div>
               </div>
 
               <div class="mb-3">
                 <label>Ngày kết thúc</label>
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  [ngClass]="
+                <input type="datetime-local" class="form-control" [ngClass]="
                     updateForm.get('thoiGianKetThuc').invalid &&
                     updateForm.get('thoiGianKetThuc').touched
                       ? 'is-invalid'
                       : ''
-                  "
-                  formControlName="thoiGianKetThuc"
-                  (blur)="checkThoiGian()"
-                />
-                <div
-                  *ngIf="
+                  " formControlName="thoiGianKetThuc" (blur)="checkThoiGian()" />
+                <div *ngIf="
                     updateForm.get('thoiGianKetThuc').hasError('ngayKetThuc') &&
                     updateForm.get('thoiGianKetThuc').touched
-                  "
-                  class="invalid-feedback"
-                >
+                  " class="invalid-feedback">
                   {{
-                    updateForm.get("thoiGianKetThuc").getError("ngayKetThuc")
+                  updateForm.get("thoiGianKetThuc").getError("ngayKetThuc")
                   }}
                 </div>
               </div>
               <div class="mb-3">
-                <input
-                  type="checkbox"
-                  name="sendMail"
-                  id="sendMail"
-                  class="form-check-inline"
-                  (change)="onSendMailChange($event)"
-                  [disabled]="checkMail"
-                />
+                <input type="checkbox" name="sendMail" id="sendMail" class="form-check-inline"
+                  (change)="onSendMailChange($event)" [disabled]="checkMail" />
                 <label for="sendMail">Gửi Mail Cho Khách Hàng</label>
               </div>
 
-              <button
-                type="button"
-                class="btn btn-create"
-                (click)="confirmCreation()"
-                [disabled]="!updateForm.valid"
-              >
+              <button type="button" class="btn btn-create" (click)="confirmCreation()" [disabled]="!updateForm.valid">
                 Sửa Phiếu
               </button>
 
-              <a
-                type="button"
-                class="btn btn-warning ml-3"
-                (click)="chuyenTrang()"
-              >
+              <a type="button" class="btn btn-warning ml-3" (click)="chuyenTrang()">
                 Quay Lại
               </a>
             </form>
@@ -378,19 +227,14 @@
                   <tbody>
                     <tr *ngFor="let kh of pagedResponse?.data">
                       <td>
-                        <input
-                          type="checkbox"
-                          [checked]="
+                        <input type="checkbox" [checked]="
                           selectedIds.length > 0 && isCustomerSelected(kh.khachHang.id)
-                        "
-                          (change)="onCheckboxChange(kh.khachHang.id)"
-                          disabled
-                        />
+                        " (change)="onCheckboxChange(kh.khachHang.id)" disabled />
                       </td>
 
                       <td>{{ kh.khachHang.hoTen }}</td>
                       <td>{{ kh.khachHang.sdt }}</td>
-                      <td>{{ kh.khachHang.gioiTinh }}</td>
+                      <td>{{ kh.khachHang.gioiTinh == true?"Nam":"Nữ"}}</td>
                       <td>{{ kh.khachHang.email }}</td>
                       <td>{{ kh.khachHang.ngaySinh }}</td>
                     </tr>
@@ -399,11 +243,7 @@
 
                 <ng-template #noData>
                   <tr>
-                    <td
-                      colspan="8"
-                      class="text-center"
-                      style="font-size: 20px; font-weight: bold"
-                    >
+                    <td colspan="8" class="text-center" style="font-size: 20px; font-weight: bold">
                       Không có dữ liệu
                     </td>
                   </tr>
@@ -413,10 +253,7 @@
                   <div class="col col-md-12 d-flex justify-content-between">
                     <div class="col-md-3">
                       <label class="my-1 mr-2">Số lượng: </label>
-                      <select
-                        class="custom-select my-1 mr-sm-2 col-md-5"
-                        (change)="changePageSize($event)"
-                      >
+                      <select class="custom-select my-1 mr-sm-2 col-md-5" (change)="changePageSize($event)">
                         >
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -426,64 +263,42 @@
                     <div class="">
                       <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                          <li
-                            class="page-item"
-                            [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
-                          >
-                            <a
-                              class="page-link pointer"
-                              (click)="
+                          <li class="page-item" [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''">
+                            <a class="page-link pointer" (click)="
                                 goToPage(
                                   pagedResponse?.pageNumber - 1,
                                   pagedResponse?.pageSize
                                   
                                 )
-                              "
-                              >Previous</a
-                            >
+                              ">Previous</a>
                           </li>
-                          <li
-                            class="page-item"
-                            *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
-                          >
-                            <a
-                              class="page-link pointer"
-                              [ngClass]="
+                          <li class="page-item" *ngFor="let pageNumber of pagedResponse?.pageNumberArr">
+                            <a class="page-link pointer" [ngClass]="
                                 pagedResponse?.pageNumber == pageNumber ? 'active' : ''
-                              "
-                              (click)="
+                              " (click)="
                                 goToPage(pageNumber, pagedResponse?.pageSize)
-                              "
-                              >{{ pageNumber }}</a
-                            >
+                              ">{{ pageNumber }}</a>
                           </li>
-                          <li
-                            class="page-item"
-                            [ngClass]="
+                          <li class="page-item" [ngClass]="
                               pagedResponse?.pageNumber == pagedResponse?.totalPages
                                 ? 'disabled'
                                 : ''
-                            "
-                          >
-                            <a
-                              class="page-link pointer"
-                              (click)="
+                            ">
+                            <a class="page-link pointer" (click)="
                                 goToPage(
                                   pagedResponse?.pageNumber + 1,
                                   pagedResponse?.pageSize
                                   
                                 )
-                              "
-                              >Next</a
-                            >
+                              ">Next</a>
                           </li>
                         </ul>
                       </nav>
                     </div>
                   </div>
-    
-    
-    
+
+
+
                 </div>
 
 
@@ -507,14 +322,10 @@
                   <tbody>
                     <tr *ngFor="let kh of pagedResponse2?.data">
                       <td>
-                        <input
-                          type="checkbox"
-                          (change)="onCheckboxChange(kh.id)"
-                          [disabled]="!isTableDisabled"
+                        <input type="checkbox" (change)="onCheckboxChange(kh.id)" [disabled]="!isTableDisabled"
                           [checked]="
                           selectedIds.length > 0 && isCustomerSelected(kh.id)
-                        "
-                        />
+                        " />
                       </td>
 
                       <td>{{ kh.hoTen }}</td>
@@ -522,17 +333,13 @@
                       <td>{{ kh.gioiTinh == true ? "Nam" : "Nữ" }}</td>
                       <td>{{ kh.email }}</td>
                       <td>{{ kh.ngaySinh }}</td>
-                      
+
                     </tr>
                   </tbody>
                 </table>
 
                 <tr *ngIf="soLuongCheck < 0">
-                  <td
-                    colspan="8"
-                    class="text-center"
-                    style="font-size: 20px; font-weight: bold"
-                  >
+                  <td colspan="8" class="text-center" style="font-size: 20px; font-weight: bold">
                     Không có dữ liệu
                   </td>
                 </tr>
@@ -541,10 +348,7 @@
                   <div class="col col-md-12 d-flex justify-content-between">
                     <div class="col-md-3">
                       <label class="my-1 mr-2">Số lượng: </label>
-                      <select
-                        class="custom-select my-1 mr-sm-2 col-md-5"
-                        (change)="changePageSize1($event)"
-                      >
+                      <select class="custom-select my-1 mr-sm-2 col-md-5" (change)="changePageSize1($event)">
                         >
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -554,56 +358,34 @@
                     <div class="">
                       <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                          <li
-                            class="page-item"
-                            [ngClass]="pagedResponse2?.pageNumber == 1 ? 'disabled' : ''"
-                          >
-                            <a
-                              class="page-link pointer"
-                              (click)="
+                          <li class="page-item" [ngClass]="pagedResponse2?.pageNumber == 1 ? 'disabled' : ''">
+                            <a class="page-link pointer" (click)="
                                 goToPage2(
                                   pagedResponse2?.pageNumber - 1,
                                   pagedResponse2?.pageSize
                                   
                                 )
-                              "
-                              >Previous</a
-                            >
+                              ">Previous</a>
                           </li>
-                          <li
-                            class="page-item"
-                            *ngFor="let pageNumber of pagedResponse2?.pageNumberArr"
-                          >
-                            <a
-                              class="page-link pointer"
-                              [ngClass]="
+                          <li class="page-item" *ngFor="let pageNumber of pagedResponse2?.pageNumberArr">
+                            <a class="page-link pointer" [ngClass]="
                                 pagedResponse2?.pageNumber == pageNumber ? 'active' : ''
-                              "
-                              (click)="
+                              " (click)="
                                 goToPage2(pageNumber, pagedResponse2?.pageSize)
-                              "
-                              >{{ pageNumber }}</a
-                            >
+                              ">{{ pageNumber }}</a>
                           </li>
-                          <li
-                            class="page-item"
-                            [ngClass]="
+                          <li class="page-item" [ngClass]="
                               pagedResponse2?.pageNumber == pagedResponse2?.totalPages
                                 ? 'disabled'
                                 : ''
-                            "
-                          >
-                            <a
-                              class="page-link pointer"
-                              (click)="
+                            ">
+                            <a class="page-link pointer" (click)="
                                 goToPage2(
                                   pagedResponse2?.pageNumber + 1,
                                   pagedResponse2?.pageSize
                                   
                                 )
-                              "
-                              >Next</a
-                            >
+                              ">Next</a>
                           </li>
                         </ul>
                       </nav>
@@ -613,6 +395,7 @@
 
 
 
+                </div>
               </div>
             </div>
           </div>
@@ -620,5 +403,4 @@
       </div>
     </div>
   </div>
-</div>
-<!-- Row ends -->
+  <!-- Row ends -->

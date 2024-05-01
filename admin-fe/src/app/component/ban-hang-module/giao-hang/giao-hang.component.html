@@ -59,6 +59,9 @@
 <div class="mt-5">
   <app-get-dia-chi-va-phi-van-chuyen
     [diaChiVaPhiVanChuyen]="diaChiVaPhiVanChuyen"
+    (diaChiVaPhiVanChuyenChange)="updateDiaChi($event)"
     (changePhiVanChuyen)="updatePhiVanChuyen($event)"
-  ></app-get-dia-chi-va-phi-van-chuyen>
+  >
+    ></app-get-dia-chi-va-phi-van-chuyen
+  >
 </div>

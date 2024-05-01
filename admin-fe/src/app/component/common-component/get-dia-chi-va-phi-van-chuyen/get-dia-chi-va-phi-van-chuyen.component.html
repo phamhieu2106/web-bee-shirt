@@ -9,6 +9,7 @@
           class="custom-select"
           [(ngModel)]="diaChiVaPhiVanChuyen.tinhId"
           (change)="getAllHuyenByTinh()"
+          (click)="setIsFillData(false)"
         >
           <option value="-1">
             {{ "Chọn tỉnh thành" }}
@@ -30,6 +31,7 @@
           class="custom-select"
           [(ngModel)]="diaChiVaPhiVanChuyen.huyenId"
           (change)="getAllXaByHuyen()"
+          (click)="setIsFillData(false)"
         >
           <option value="-1">Chọn quận huyện</option>
           <option
@@ -52,6 +54,7 @@
           class="custom-select"
           (change)="onFinishChooseDiaChi()"
           [(ngModel)]="diaChiVaPhiVanChuyen.xaCode"
+          (click)="setIsFillData(false)"
         >
           <option value="">Chọn xã phường</option>
           <option

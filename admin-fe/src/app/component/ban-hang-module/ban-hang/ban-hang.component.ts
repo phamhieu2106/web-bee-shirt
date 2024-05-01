@@ -3,7 +3,14 @@ import { PdfService } from "./../../../service/pdf.service";
 import { LocalStorageServiceService } from "./../../../service/local-storage-service.service";
 import { BanHangService } from "./../../../service/ban-hang.service";
 import { DiaChiVaPhiVanChuyen } from "src/app/model/class/dia-chi-va-phi-van-chuyen.class";
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { HoaDon } from "src/app/model/class/hoa-don.class";
 import { KhachHang } from "src/app/model/class/KhachHang.class";
 import { SanPhamChiTietService } from "src/app/service/san-pham-chi-tiet.service";
@@ -23,10 +30,10 @@ import { NotificationService } from "src/app/service/notification.service";
   styleUrls: ["./ban-hang.component.css"],
 })
 export class BanHangComponent implements OnInit, OnDestroy {
-  @ViewChild('orderTask') orderTask: ElementRef;
-  @ViewChild('slideShow') slideShow: ElementRef;
-  @ViewChild('prevButton') prevButton: ElementRef;
-  @ViewChild('nextButton') nextButton: ElementRef;
+  @ViewChild("orderTask") orderTask: ElementRef;
+  @ViewChild("slideShow") slideShow: ElementRef;
+  @ViewChild("prevButton") prevButton: ElementRef;
+  @ViewChild("nextButton") nextButton: ElementRef;
 
   icon: string = "  fa-solid fa-users";
   title: string = "Bán Hàng";
@@ -56,16 +63,15 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.localStorageService.saveData(this.key, this.orders);
   }
   ngAfterViewInit() {
-    this.prevButton.nativeElement.addEventListener('click', () => {
+    this.prevButton.nativeElement.addEventListener("click", () => {
       // Xử lý khi click vào button prev
-      this.onPrevButtonClick()
+      this.onPrevButtonClick();
     });
-  
-    this.nextButton.nativeElement.addEventListener('click', () => {
-      // Xử lý khi click vào button next
-    console.log(this.nextButton.nativeElement)
-    this.onNextButtonClick()
 
+    this.nextButton.nativeElement.addEventListener("click", () => {
+      // Xử lý khi click vào button next
+      console.log(this.nextButton.nativeElement);
+      this.onNextButtonClick();
     });
   }
 
@@ -75,7 +81,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     console.log(currentWidth);
     if (currentWidth >= 2300) {
       return;
-  }
+    }
 
     // Thay đổi kích thước bằng cách thêm 250px
     const newWidth = currentWidth + 150;
@@ -84,30 +90,40 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.orderTask.nativeElement.style.width = `${newWidth}px`;
 
     // Thêm transform
-    const currentTransform = parseFloat(this.orderTask.nativeElement.style.transform.replace('translateX(', '').replace('px)', '')) || 0;
+    const currentTransform =
+      parseFloat(
+        this.orderTask.nativeElement.style.transform
+          .replace("translateX(", "")
+          .replace("px)", "")
+      ) || 0;
     const newTransform = currentTransform - 150;
     this.orderTask.nativeElement.style.transform = `translateX(${newTransform}px)`;
-}
+  }
 
-onPrevButtonClick() {
-  // Lấy ra kích thước hiện tại của orderTask
-  const currentWidth = this.orderTask.nativeElement.offsetWidth;
-  console.log(currentWidth);
-  if (currentWidth <= 1500) {
-    return;
-}
+  onPrevButtonClick() {
+    // Lấy ra kích thước hiện tại của orderTask
+    const currentWidth = this.orderTask.nativeElement.offsetWidth;
+    console.log(currentWidth);
+    if (currentWidth <= 1500) {
+      return;
+    }
 
-  // Thay đổi kích thước bằng cách trừ 250px
-  const newWidth = currentWidth - 150;
+    // Thay đổi kích thước bằng cách trừ 250px
+    const newWidth = currentWidth - 150;
 
-  // Gán kích thước mới cho orderTask
-  this.orderTask.nativeElement.style.width = `${newWidth}px`;
+    // Gán kích thước mới cho orderTask
+    this.orderTask.nativeElement.style.width = `${newWidth}px`;
 
-  // Thêm transform
-  const currentTransform = parseFloat(this.orderTask.nativeElement.style.transform.replace('translateX(', '').replace('px)', '')) || 0;
-  const newTransform = currentTransform + 150;
-  this.orderTask.nativeElement.style.transform = `translateX(${newTransform}px)`;
-}
+    // Thêm transform
+    const currentTransform =
+      parseFloat(
+        this.orderTask.nativeElement.style.transform
+          .replace("translateX(", "")
+          .replace("px)", "")
+      ) || 0;
+    const newTransform = currentTransform + 150;
+    this.orderTask.nativeElement.style.transform = `translateX(${newTransform}px)`;
+  }
 
   @HostListener("window:beforeunload", ["$event"])
   beforeUnloadHandler(event: Event) {
@@ -135,15 +151,12 @@ onPrevButtonClick() {
       this.orders.forEach((order) => {
         if (order.hoaDonChiTiets.length > 0) {
           order.hoaDonChiTiets.forEach((hdct) => {
-            // this.spctService.getById(hdct.sanPhamChiTiet.id).subscribe({
-            //   next: (resp) => {
-            //     hdct.sanPhamChiTiet = resp;
-            //     hdct.giaBan = this.getGiaBan(resp);
-            //   },
-            //   error: (err) => console.log(err),
-            // });
             this.updateHDCT(hdct);
           });
+        }
+        if (order.loaiHoaDon === "GIAO_HANG") {
+          order.phiVanChuyen = 0;
+          order.diaChiNguoiNhan = null;
         }
       });
     }
@@ -182,6 +195,10 @@ onPrevButtonClick() {
     }
     this.orders.push(hoaDon);
     this.order = hoaDon;
+    console.log(this.getQuantityOrder(this.orders));
+  }
+  getQuantityOrder(orders: HoaDon[]) {
+    return orders?.length ? orders.length : 0;
   }
 
   deleteOrder(index: number) {
@@ -489,6 +506,18 @@ onPrevButtonClick() {
       return;
     }
     let diaChis = this.order.diaChiNguoiNhan.split(",");
+    if (diaChis[3] == null || diaChis[3] == undefined || diaChis[3] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    if (diaChis[2] == null || diaChis[2] == undefined || diaChis[2] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    if (diaChis[1] == null || diaChis[1] == undefined || diaChis[1] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
     if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
       this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
       return;
@@ -620,6 +649,8 @@ onPrevButtonClick() {
   }
 
   validateThongTinNhanHang() {
+    console.log(this.order.diaChiNguoiNhan);
+
     let regexSdt = new RegExp("^(0[0-9])+([0-9]{8})\\b$");
     let regexHoTen = /^[\p{L}\s]*$/u;
     // '^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$'
@@ -666,6 +697,18 @@ onPrevButtonClick() {
       return;
     }
     let diaChis = this.order.diaChiNguoiNhan.split(",");
+    if (diaChis[3] == null || diaChis[3] == undefined || diaChis[3] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    if (diaChis[2] == null || diaChis[2] == undefined || diaChis[2] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
+    if (diaChis[1] == null || diaChis[1] == undefined || diaChis[1] == "") {
+      this.notification.warning("Bạn chưa chọn địa chỉ người nhận");
+      return;
+    }
     if (diaChis[0] == null || diaChis[0] == undefined || diaChis[0] == "") {
       this.notification.warning("Bạn chưa nhập địa chỉ cụ thể");
       return;

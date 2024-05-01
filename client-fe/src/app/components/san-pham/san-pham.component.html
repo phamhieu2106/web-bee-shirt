@@ -20,6 +20,7 @@
         <div class="block-filter-content">
           <div id="layered-filter-state"></div>
           <dl class="filter-options" id="narrow-by-list">
+            <!-- MÀU SẮC -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -44,7 +45,7 @@
                         type="checkbox"
                         (change)="toggleProperty($event, 'color', color.id)"
                       />
-                      <label class="wrapperSide">
+                      <label class="wrapperSide" [title]="color.ten">
                         <img [src]="color.image.imageUrl" class="imgSide" />
                       </label>
                     </div>
@@ -53,6 +54,7 @@
               </dd>
             </div>
 
+            <!-- KÍCH CỠ -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -82,6 +84,7 @@
               </dd>
             </div>
 
+            <!-- KIỂU DÁNG -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -110,6 +113,8 @@
                 </div>
               </dd>
             </div>
+
+            <!-- THIẾT KẾ -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -140,6 +145,8 @@
                 </div>
               </dd>
             </div>
+
+            <!-- CỔ ÁO -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -168,6 +175,8 @@
                 </div>
               </dd>
             </div>
+
+            <!-- TAY ÁO -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -196,6 +205,8 @@
                 </div>
               </dd>
             </div>
+
+            <!-- KHOẢNG GIÁ -->
             <div class="filter-options-item">
               <dt
                 role="heading"
@@ -211,7 +222,15 @@
                   data-attribute-code="hand_style"
                   data-attribute-id="211"
                 >
-                  <div class="swatch-attribute-options clearfix"></div>
+                  <div class="swatch-attribute-options clearfix">
+                    <input type="checkbox" />
+                    <label>100 - 500k</label>
+                  </div>
+
+                  <div class="swatch-attribute-options clearfix">
+                    <input type="checkbox" />
+                    <label>500 - 1000k</label>
+                  </div>
                 </div>
               </dd>
             </div>
@@ -268,6 +287,7 @@
           <select
             class="custom-select my-1 mr-sm-2 col-md-5 form-control"
             id="inlineFormCustomSelectPref"
+            (change)="onChangePageSize($event)"
           >
             >
             <option value="5">5</option>
@@ -283,7 +303,7 @@
                 [ngClass]="pagedResponse?.pageNumber == 1 ? 'disabled' : ''"
               >
                 <a
-                  class="page-link pointer rounded"
+                  class="page-link pointer rounded pointer"
                   (click)="
                     goToPage(
                       pagedResponse?.pageNumber - 1,
@@ -298,7 +318,7 @@
                 *ngFor="let pageNumber of pagedResponse?.pageNumberArr"
               >
                 <a
-                  class="page-link pointer rounded"
+                  class="page-link pointer rounded pointer"
                   [ngClass]="
                     pagedResponse?.pageNumber == pageNumber ? 'active' : ''
                   "
@@ -315,7 +335,7 @@
                 "
               >
                 <a
-                  class="page-link pointer rounded"
+                  class="page-link pointer rounded pointer"
                   (click)="
                     goToPage(
                       pagedResponse?.pageNumber + 1,
@@ -332,3 +352,4 @@
     </div>
   </div>
 </section>
+<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

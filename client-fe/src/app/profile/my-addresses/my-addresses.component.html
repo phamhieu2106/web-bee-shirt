@@ -319,8 +319,8 @@
                             class="form-control"
                             formControlName="sdt"
                             [ngClass]="
-                              addAddressForm.get('sdt').invalid &&
-                              addAddressForm.get('sdt').touched
+                              updateAddressForm.get('sdt').invalid &&
+                              updateAddressForm.get('sdt').touched
                                 ? 'is-invalid'
                                 : ''
                             "
@@ -328,7 +328,7 @@
                           <div
                             class="invalid-feedback"
                             *ngIf="
-                              addAddressForm
+                              updateAddressForm
                                 .get('sdt')
                                 .hasError('customRequired')
                             "
@@ -338,7 +338,12 @@
                           <div
                             class="invalid-feedback"
                             *ngIf="
-                              addAddressForm.get('sdt').hasError('pattern')
+                              updateAddressForm
+                                .get('sdt')
+                                .hasError('pattern') &&
+                              !updateAddressForm
+                                .get('sdt')
+                                .hasError('customRequired')
                             "
                           >
                             SĐT không hợp lệ

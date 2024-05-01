@@ -14,7 +14,7 @@ import { ChangePwdReq } from "../model/interface/change-pwd-req.interface";
   providedIn: "root",
 })
 export class AuthenticationService {
-  public readonly apiUrl = "http://localhost:8080/auth/client";
+  public readonly apiUrl = "http://localhost:8080/auth";
 
   private token: string;
   private jwtHelper = new JwtHelperService();
@@ -34,7 +34,7 @@ export class AuthenticationService {
 
   // 1
   public login(loginReq: LoginRequest): Observable<HttpResponse<Customer>> {
-    return this.http.post<Customer>(`${this.apiUrl}/login`, loginReq, {
+    return this.http.post<Customer>(`${this.apiUrl}/client/login`, loginReq, {
       observe: "response",
     });
   }

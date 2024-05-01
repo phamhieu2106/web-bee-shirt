@@ -30,7 +30,7 @@
       <owl-carousel-o [options]="dotGiamGiaProduct">
         <ng-template
           carouselSlide
-          *ngFor="let sp of pagedResponse?.data"
+          *ngFor="let sp of saleProducts"
           style="background-color: black"
         >
           <div class="product">
@@ -38,9 +38,10 @@
               <a class="image_thumb">
                 <img [src]="sp?.sanPhamChiTiets[0]?.hinhAnhs[0]?.imageUrl" />
               </a>
-              <div class="saleProduct">50%</div>
+              <div class="saleProduct">{{ sp.saleEvent.giaTriPhanTram }} %</div>
             </div>
-            <div class="details">
+
+            <!-- <div class="details">
               <h3 class="nameProduct">
                 <a [routerLink]="'/san-pham/' + sp.id">{{ sp.ten }}</a>
               </h3>
@@ -49,6 +50,31 @@
                 <div
                   data-value="Đen"
                   class="swatch-element active"
+                  *ngFor="let color of getMauSacList(sp)"
+                >
+                  <img class="img-color" [src]="color.image.imageUrl" />
+                </div>
+              </div>
+            </div> -->
+
+            <div class="details">
+              <h3 class="nameProduct">
+                <a [routerLink]="'/san-pham/' + sp.id">{{ sp.ten }}</a>
+              </h3>
+
+              <p class="priceProduct" *ngIf="sp.saleEvent">
+                <s>{{ displayPrice(sp) }}</s>
+              </p>
+              <p class="priceProduct text-danger" *ngIf="sp.saleEvent">
+                {{ displayDiscountPrice(sp) }}
+              </p>
+              <p class="priceProduct" *ngIf="!sp.saleEvent">
+                {{ displayPrice(sp) }}
+              </p>
+
+              <div class="swatch-color-wrapper">
+                <div
+                  class="swatch-element"
                   *ngFor="let color of getMauSacList(sp)"
                 >
                   <img class="img-color" [src]="color.image.imageUrl" />

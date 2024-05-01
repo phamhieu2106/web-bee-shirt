@@ -40,6 +40,14 @@ export class SanPhamComponent {
   public activeCollars: CoAo[] = [];
   public activeMaterials: ChatLieu[] = [];
 
+  public initColorIds: number[] = [];
+  public initSizeIds: number[] = [];
+  public initFormIds: number[] = [];
+  public initDesignIds: number[] = [];
+  public initCollarIds: number[] = [];
+  public initSleeveIds: number[] = [];
+  public initMaterialIds: number[] = [];
+
   public selectedColorIds: number[] = [];
   public selectedSizeIds: number[] = [];
   public selectedFormIds: number[] = [];
@@ -47,6 +55,9 @@ export class SanPhamComponent {
   public selectedCollarIds: number[] = [];
   public selectedSleeveIds: number[] = [];
   public selectedMaterialIds: number[] = [];
+
+  public isLoadding = false;
+  public overlayText: string = "";
 
   // constructor, ngOn
   constructor(
@@ -64,8 +75,12 @@ export class SanPhamComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getInitProductList();
+    this.turnOnOverlay("Vui lòng chờ");
     this.getPropertiesForFilter();
+    setTimeout(() => {
+      this.getInitProductList();
+      this.turnOffOverlay("");
+    }, 1000);
   }
 
   // public functions
@@ -120,8 +135,10 @@ export class SanPhamComponent {
 
   // 3
   public toggleProperty(event: any, type: string, propertyId: number): void {
+    let isAllEmpty: boolean;
     const isChecked = event.target.checked;
 
+    // color
     if (type === "color") {
       if (
         !this.selectedColorIds.some((id: number) => id === propertyId) &&
@@ -132,9 +149,11 @@ export class SanPhamComponent {
         this.selectedColorIds = this.selectedColorIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // size
     if (type === "size") {
       if (
         !this.selectedSizeIds.some((id: number) => id === propertyId) &&
@@ -145,9 +164,11 @@ export class SanPhamComponent {
         this.selectedSizeIds = this.selectedSizeIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // form
     if (type === "form") {
       if (
         !this.selectedFormIds.some((id: number) => id === propertyId) &&
@@ -158,9 +179,11 @@ export class SanPhamComponent {
         this.selectedFormIds = this.selectedFormIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // design
     if (type === "design") {
       if (
         !this.selectedDesignIds.some((id: number) => id === propertyId) &&
@@ -171,9 +194,11 @@ export class SanPhamComponent {
         this.selectedDesignIds = this.selectedDesignIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // collar
     if (type === "collar") {
       if (
         !this.selectedCollarIds.some((id: number) => id === propertyId) &&
@@ -184,9 +209,11 @@ export class SanPhamComponent {
         this.selectedCollarIds = this.selectedCollarIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // sleeve
     if (type === "sleeve") {
       if (
         !this.selectedSleeveIds.some((id: number) => id === propertyId) &&
@@ -197,9 +224,11 @@ export class SanPhamComponent {
         this.selectedSleeveIds = this.selectedSleeveIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
+    // material
     if (type === "material") {
       if (
         !this.selectedMaterialIds.some((id: number) => id === propertyId) &&
@@ -210,56 +239,109 @@ export class SanPhamComponent {
         this.selectedMaterialIds = this.selectedMaterialIds.filter(
           (id: number) => id !== propertyId
         );
+        isAllEmpty = this.checkAllSelectedIdList();
       }
     }
 
-    this.productService
-      .getByFilterForClient(
-        1,
-        8,
-        this.selectedColorIds,
-        this.selectedSizeIds,
-        this.selectedFormIds,
-        this.selectedDesignIds,
-        this.selectedCollarIds,
-        this.selectedSleeveIds,
-        this.selectedMaterialIds,
-        0,
-        0
-      )
-      .subscribe({
-        next: (response: PagedResponse<SanPham>) => {
-          this.pagedResponse = response;
-        },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
-        },
-      });
+    if (isAllEmpty) {
+      this.getInitProductList();
+    } else {
+      this.productService
+        .getByFilterForClient(
+          1,
+          8,
+          this.selectedColorIds,
+          this.selectedSizeIds,
+          this.selectedFormIds,
+          this.selectedDesignIds,
+          this.selectedCollarIds,
+          this.selectedSleeveIds,
+          this.selectedMaterialIds,
+          0,
+          0
+        )
+        .subscribe({
+          next: (response: PagedResponse<SanPham>) => {
+            this.pagedResponse = response;
+            this.getSaleEventForProduct(this.pagedResponse);
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.notifService.error(errorResponse.error.message);
+          },
+        });
+    }
+  }
+
+  private checkAllSelectedIdList(): boolean {
+    if (
+      this.selectedColorIds.length === 0 &&
+      this.selectedSizeIds.length === 0 &&
+      this.selectedFormIds.length === 0 &&
+      this.selectedDesignIds.length === 0 &&
+      this.selectedCollarIds.length === 0 &&
+      this.selectedSleeveIds.length === 0 &&
+      this.selectedMaterialIds.length === 0
+    ) {
+      return true;
+    }
+    return false;
   }
 
   public goToPage(pageNumber: number, pageSize: number): void {
-    this.productService
-      .getByFilterForClient(
-        pageNumber,
-        pageSize,
-        this.selectedColorIds,
-        this.selectedSizeIds,
-        this.selectedFormIds,
-        this.selectedDesignIds,
-        this.selectedCollarIds,
-        this.selectedSleeveIds,
-        this.selectedMaterialIds,
-        0,
-        0
-      )
-      .subscribe({
-        next: (response: PagedResponse<SanPham>) => {
-          this.pagedResponse = response;
-        },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
-        },
-      });
+    const isAllEmpty = this.checkAllSelectedIdList();
+    if (isAllEmpty) {
+      this.productService
+        .getByFilterForClient(
+          pageNumber,
+          pageSize,
+          this.initColorIds,
+          this.initSizeIds,
+          this.initFormIds,
+          this.initDesignIds,
+          this.initCollarIds,
+          this.initSleeveIds,
+          this.initMaterialIds,
+          0,
+          0
+        )
+        .subscribe({
+          next: (response: PagedResponse<SanPham>) => {
+            this.pagedResponse = response;
+            this.getSaleEventForProduct(this.pagedResponse);
+          },
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
+          },
+        });
+    } else {
+      this.productService
+        .getByFilterForClient(
+          pageNumber,
+          pageSize,
+          this.selectedColorIds,
+          this.selectedSizeIds,
+          this.selectedFormIds,
+          this.selectedDesignIds,
+          this.selectedCollarIds,
+          this.selectedSleeveIds,
+          this.selectedMaterialIds,
+          0,
+          0
+        )
+        .subscribe({
+          next: (response: PagedResponse<SanPham>) => {
+            this.pagedResponse = response;
+            this.getSaleEventForProduct(this.pagedResponse);
+          },
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
+          },
+        });
+    }
+  }
+
+  public onChangePageSize(e: any): void {
+    this.goToPage(1, e.target.value);
   }
 
   // private functions
@@ -279,37 +361,53 @@ export class SanPhamComponent {
       .getByFilterForClient(
         1,
         8,
-        this.selectedColorIds,
-        this.selectedSizeIds,
-        this.selectedFormIds,
-        this.selectedDesignIds,
-        this.selectedCollarIds,
-        this.selectedSleeveIds,
-        this.selectedMaterialIds,
+        this.initColorIds,
+        this.initSizeIds,
+        this.initFormIds,
+        this.initDesignIds,
+        this.initCollarIds,
+        this.initSleeveIds,
+        this.initMaterialIds,
         0,
         0
       )
       .subscribe({
         next: (response: PagedResponse<SanPham>) => {
           this.pagedResponse = response;
+          this.getSaleEventForProduct(this.pagedResponse);
 
           // check product in sale or not
-          let observables = [];
-          for (let prod of response.data) {
-            observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
-          }
-          forkJoin(observables).subscribe({
-            next: (values: SaleEvent[]) => {
-              values.forEach((v, index) => {
-                response.data[index].saleEvent = v;
-              });
-            },
-          });
+          // let observables = [];
+          // for (let prod of response.data) {
+          //   observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
+          // }
+          // forkJoin(observables).subscribe({
+          //   next: (values: SaleEvent[]) => {
+          //     values.forEach((v, index) => {
+          //       response.data[index].saleEvent = v;
+          //     });
+          //   },
+          // });
         },
         error: (errResp: HttpErrorResponse) => {
           this.notifService.error(errResp.error.message);
         },
       });
+  }
+
+  private getSaleEventForProduct(pagedProducts: PagedResponse<SanPham>): void {
+    // check product in sale or not
+    let observables = [];
+    for (let prod of pagedProducts.data) {
+      observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
+    }
+    forkJoin(observables).subscribe({
+      next: (values: SaleEvent[]) => {
+        values.forEach((v, index) => {
+          pagedProducts.data[index].saleEvent = v;
+        });
+      },
+    });
   }
 
   // 3
@@ -329,6 +427,7 @@ export class SanPhamComponent {
     this.formService.getAllActive().subscribe({
       next: (response: KieuDang[]) => {
         this.activeForms = response;
+        this.initColorIds = response.map((kd: KieuDang) => kd.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -341,6 +440,7 @@ export class SanPhamComponent {
     this.designService.getAllActive().subscribe({
       next: (response: KieuThietKe[]) => {
         this.activeDesigns = response;
+        this.initDesignIds = response.map((tk: KieuThietKe) => tk.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -353,6 +453,7 @@ export class SanPhamComponent {
     this.sleeveService.getAllActive().subscribe({
       next: (response: TayAo[]) => {
         this.activeSleeves = response;
+        this.initSleeveIds = response.map((ta: TayAo) => ta.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -365,6 +466,7 @@ export class SanPhamComponent {
     this.collarService.getAllActive().subscribe({
       next: (response: CoAo[]) => {
         this.activeCollars = response;
+        this.initCollarIds = response.map((ca: CoAo) => ca.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -377,6 +479,7 @@ export class SanPhamComponent {
     this.materialService.getAllActive().subscribe({
       next: (response: ChatLieu[]) => {
         this.activeMaterials = response;
+        this.initMaterialIds = response.map((cl: ChatLieu) => cl.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -389,6 +492,7 @@ export class SanPhamComponent {
     this.colorService.getAllActiveColors().subscribe({
       next: (response: MauSac[]) => {
         this.activeColors = response;
+        this.initColorIds = response.map((ms: MauSac) => ms.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -401,6 +505,7 @@ export class SanPhamComponent {
     this.sizeService.getAllActiveSizes().subscribe({
       next: (response: KichCo[]) => {
         this.activeSizes = response;
+        this.initSizeIds = response.map((kc: KichCo) => kc.id);
       },
       error: (errorResponse: HttpErrorResponse) => {
         this.notifService.error(errorResponse.error.message);
@@ -438,5 +543,17 @@ export class SanPhamComponent {
         ddElement.style.display = "none";
       }
     }
+  }
+
+  //
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  //
+  private turnOffOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = false;
   }
 }

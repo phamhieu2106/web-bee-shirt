@@ -151,35 +151,35 @@ public class SanPhamServiceImpl implements SanPhamService {
                                                        BigDecimal maxPrice) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        if (colorIds.isEmpty()) {
-            colorIds = colorRepo.getAllActiveColorIds();
-        }
-        if (sizeIds.isEmpty()) {
-            sizeIds = sizeRepo.getAllActiveSizeIds();
-        }
-        if (formIds.isEmpty()) {
-            formIds = formRepo.getAllActiveFormIds();
-        }
-        if (designIds.isEmpty()) {
-            designIds = designRepo.getAllActiveDesignIds();
-        }
-        if (collarIds.isEmpty()) {
-            collarIds = collarRepo.getAllActiveCollarIds();
-        }
-        if (sleeveIds.isEmpty()) {
-            sleeveIds = sleeveRepo.getAllActiveSleeveIds();
-        }
-        if (materialIds.isEmpty()) {
-            materialIds = materialRepo.getAllActiveMaterialIds();
-        }
+//        if (colorIds.isEmpty()) {
+//            colorIds = colorRepo.getAllActiveColorIds();
+//        }
+//        if (sizeIds.isEmpty()) {
+//            sizeIds = sizeRepo.getAllActiveSizeIds();
+//        }
+//        if (formIds.isEmpty()) {
+//            formIds = formRepo.getAllActiveFormIds();
+//        }
+//        if (designIds.isEmpty()) {
+//            designIds = designRepo.getAllActiveDesignIds();
+//        }
+//        if (collarIds.isEmpty()) {
+//            collarIds = collarRepo.getAllActiveCollarIds();
+//        }
+//        if (sleeveIds.isEmpty()) {
+//            sleeveIds = sleeveRepo.getAllActiveSleeveIds();
+//        }
+//        if (materialIds.isEmpty()) {
+//            materialIds = materialRepo.getAllActiveMaterialIds();
+//        }
         if (minPrice.equals(BigDecimal.ZERO) || maxPrice.equals(BigDecimal.ZERO)) {
             minPrice = spctRepo.getMinPrice();
             maxPrice = spctRepo.getMaxPrice();
         }
 
         Page<Integer> idPages = sanPhamRepo.getByFilterForClient(pageable, colorIds, sizeIds,
-                                                                    formIds, designIds, collarIds,
-                                                                    sleeveIds, materialIds, minPrice, maxPrice);
+                                                                 formIds, designIds, collarIds,
+                                                                 sleeveIds, materialIds, minPrice, maxPrice);
         List<SanPham> sanPhamList = sanPhamRepo.getProductsByIds(idPages.getContent());
 
         PagedResponse<SanPham> paged = new PagedResponse<>();

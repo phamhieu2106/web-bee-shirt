@@ -156,4 +156,46 @@ export class DanhSachKhachHangComponent {
       },
     });
   }
+  public changeSTT(id: number): void {
+    Swal.fire({
+      toast: true,
+      title: "Bạn có đồng ý đổi trạng thái không?",
+      icon: "warning",
+      position: "top",
+      showCancelButton: true,
+      confirmButtonColor: "#F5B16D",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.khachHangService.changeSTT(id).subscribe({
+          next: () => {
+            Swal.fire({
+              toast: true,
+              icon: "success",
+              position: "top-end",
+              title: "Cập nhật trạng thái thành công",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+            this.goToPage(
+              this.pagedResponse.pageNumber,
+              this.pagedResponse.pageSize,
+              this.pagedResponse.search
+            );
+          },
+          error: (error: HttpErrorResponse) => {
+            Swal.fire({
+              toast: true,
+              icon: "error",
+              position: "top-end",
+              title: "Cập nhật trạng thái thất bại",
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            console.log(error);
+          },
+        });
+      }
+    });
+  }
 }

@@ -13,6 +13,7 @@ import com.datn.backend.model.danh_sach.FavouriteList;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
 import com.datn.backend.model.khach_hang.CustomerImage;
+import com.datn.backend.model.nhan_vien.NhanVien;
 import com.datn.backend.repository.AccountRepository;
 import com.datn.backend.repository.CartRepository;
 import com.datn.backend.repository.AddressRepository;
@@ -239,10 +240,23 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHang delete(Integer id) {
-        Optional<KhachHang> kh = khachHangRepo.findById(id);
+        Optional<KhachHang> optionalKhachHang = khachHangRepo.findById(id);
 
-        khachHangRepo.deleteById(id);
-        return null;
+        if (optionalKhachHang.isPresent()) {
+            KhachHang khachHang = optionalKhachHang.map(kh -> {
+                Account acc = optionalKhachHang.get().getAccount();
+                acc.setTrangThai(!acc.isTrangThai());
+                kh.setAccount(acc);
+                if(kh.getTrangThai()==0){
+                    kh.setTrangThai(1);
+                }else kh.setTrangThai(0);
+                khachHangRepo.save(kh);
+                return kh;
+            }).get();
+            return khachHang;
+        } else {
+            throw new ResourceNotFoundException("Không tìm thấy nhân viên có id " + id);
+        }
     }
 
     @Override

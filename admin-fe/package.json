@@ -28,6 +28,7 @@
     "date-fns": "^3.3.1",
     "highcharts": "^11.3.0",
     "ng-zorro-antd": "^16.2.2",
+    "ngx-owl-carousel-o": "^16.0.0",
     "ngx-scanner-qrcode": "^1.6.8",
     "ngx-toastr": "^17.0.2",
     "pdfmake": "^0.2.7",

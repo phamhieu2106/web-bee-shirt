@@ -19,6 +19,7 @@ import { LayoutModule } from "./component/layout-module/layout.module";
 import { AuthenticationInterceptor } from "./interceptor/authentication.interceptor";
 import { BanHangModule } from "./component/ban-hang-module/ban-hang.module";
 import { ThongKeModuleModule } from "./component/thong-ke-module/thong-ke-module.module";
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 import en from "@angular/common/locales/en";
 registerLocaleData(en);
@@ -48,6 +49,7 @@ import { TraHangModule } from "./component/tra-hang-module/tra-hang.module";
     AppRoutingModule,
     BanHangModule,
     TraHangModule,
+    CarouselModule
   ],
   providers: [
     provideNzI18n(en_US),

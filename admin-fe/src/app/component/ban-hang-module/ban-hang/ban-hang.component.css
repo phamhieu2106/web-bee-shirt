@@ -7,10 +7,64 @@
     background-color: rgba(255, 255, 255);
 }
 
+.timKiem {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.order-task {
+    display: flex;
+    width: 1500px;
+   
+
+}
+
+.slide-show {
+    width: 750px;
+    overflow: hidden;
+ 
+    position: relative;
+    padding: 0 15px;
+   
+
+}
+
+.btn-preV  , .btn-next{
+    border: none;
+   border-radius: 50%;
+}
+
+.btn-preV {
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+.btn-next {
+    position: absolute;
+    top: 10px;
+    right: 0;
+}
+
+.textName {
+    display: inline-block;
+    /* Đảm bảo phần tử có thể nhận chiều rộng */
+    max-width: 150px;
+    /* Đặt chiều rộng tối đa của phần tử */
+    white-space: nowrap;
+    /* Ngăn chữ từ việc xuống dòng */
+    overflow: hidden;
+    /* Ẩn phần chữ không hiển thị */
+    text-overflow: ellipsis;
+    /* Hiển thị "..." khi chữ bị ẩn đi */
+    font-weight: 500;
+}
+
 .product-suggestions {
-    width: 150%;
+    width: 100%;
     max-height: 350px;
-    overflow-y: auto
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .customer-suggerstions {
@@ -35,7 +89,9 @@
     margin: 3px;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     height: 40px;
+    width: 150px;
 }
 
 .order-number-active {
@@ -157,6 +213,7 @@ input[type=number] {
 .taskbar {
     padding: 10px;
     background-color: #574afb;
+    display: flex;
 }
 
 .dropdown input {

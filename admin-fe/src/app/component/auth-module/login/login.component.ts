@@ -51,11 +51,15 @@ export class LoginComponent {
 
           this.notifService.success("Đăng nhập thành công!");
           this.authenticationService.isLoggedInSubject.next(true);
-          this.router.navigate(["/thong-ke"]);
+          if (response.body.account.role === "ROLE_ADMIN") {
+            this.router.navigate(["/thong-ke"]);
+          } else {
+            this.router.navigate(["/ban-hang"]);
+          }
           this.isLoading = false;
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
           this.isLoading = false;
         },
       });

@@ -52,7 +52,7 @@
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="form.get('hoTen').hasError('required')"
+                  *ngIf="form.get('hoTen').hasError('customRequired')"
                 >
                   Họ tên không được bỏ trống
                 </div>
@@ -79,13 +79,16 @@
                 />
                 <div
                   class="invalid-feedback"
-                  *ngIf="form.get('sdt').hasError('required')"
+                  *ngIf="form.get('sdt').hasError('customRequired')"
                 >
                   SĐT không được bỏ trống
                 </div>
                 <div
                   class="invalid-feedback"
-                  *ngIf="form.get('sdt').hasError('pattern')"
+                  *ngIf="
+                    form.get('sdt').hasError('pattern') &&
+                    !form.get('sdt').hasError('customRequired')
+                  "
                 >
                   SĐT không đúng định dạng
                 </div>

@@ -18,86 +18,119 @@
         <p class="title">Main</p>
 
         <ul class="listSidebar" #listSidebar>
-          <li class="active itemSideber" *ngIf="role === 'ADMIN' ">
+          <li class="active itemSideber" *ngIf="role === 'ADMIN'">
             <a [routerLink]="'thong-ke'" aria-expanded="false">
               <i class="icon ph-bold ph-house-simple"></i>
               <span class="text">Trang Chủ</span>
             </a>
           </li>
 
-          <li >
-            <a [routerLink]="'ban-hang'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
+          <li>
+            <a
+              [routerLink]="'ban-hang'"
+              *ngIf="role === 'ADMIN' || role === 'STAFF'"
+            >
               <i class="icon ph ph-storefront"></i>
               <span class="text">Tại Quầy</span>
             </a>
           </li>
 
-          <li >
-            <a [routerLink]="'tra-hang'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
+          <li>
+            <a
+              [routerLink]="'tra-hang'"
+              *ngIf="role === 'ADMIN' || role === 'STAFF'"
+            >
               <i class="icon ph ph-storefront"></i>
               <span class="text">Trả Hàng</span>
             </a>
           </li>
 
-          <li >
-            <a [routerLink]="'hoa-don/ql-hoa-don'" *ngIf="role === 'ADMIN' || role === 'STAFF'">
+          <li>
+            <a
+              [routerLink]="'hoa-don/ql-hoa-don'"
+              *ngIf="role === 'ADMIN' || role === 'STAFF'"
+            >
               <i class="icon ph ph-note"></i>
               <span class="text">Hóa Đơn</span>
             </a>
           </li>
 
-          <li  >
+          <li>
             <a *ngIf="role === 'ADMIN' || role === 'STAFF'">
               <i class="icon ph ph-t-shirt"></i>
               <span class="text">Quản Lý Sản Phẩm</span>
               <i class="arrow ph-bold ph-caret-down"></i>
             </a>
 
-            <ul class="sub-menu" >
+            <ul class="sub-menu">
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'sp/ds-san-pham'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'sp/ds-san-pham'"
+                >
                   <span class="text">Sản Phẩm</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'mau-sac/ds-mau-sac'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'mau-sac/ds-mau-sac'"
+                >
                   <span class="text">Màu Sắc</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'kich-co/ds-kich-co'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'kich-co/ds-kich-co'"
+                >
                   <span class="text">Kích Cỡ</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'kieu-dang/ds-kieu-dang'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'kieu-dang/ds-kieu-dang'"
+                >
                   <span class="text">Kiểu Dáng</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'kieu-thiet-ke/ds-kieu-thiet-ke'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'kieu-thiet-ke/ds-kieu-thiet-ke'"
+                >
                   <span class="text">Kiểu Thiết Kế</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'kieu-tay-ao/ds-kieu-tay-ao'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'kieu-tay-ao/ds-kieu-tay-ao'"
+                >
                   <span class="text">Kiểu Tay Áo</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'kieu-co-ao/ds-kieu-co-ao'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'kieu-co-ao/ds-kieu-co-ao'"
+                >
                   <span class="text">Kiểu Cổ Áo</span>
                 </a>
               </li>
 
               <li>
-                <a (click)="stopPropagation($event)" [routerLink]="'chat-lieu/ds-chat-lieu'">
+                <a
+                  (click)="stopPropagation($event)"
+                  [routerLink]="'chat-lieu/ds-chat-lieu'"
+                >
                   <span class="text">Chất Liệu</span>
                 </a>
               </li>
@@ -105,13 +138,16 @@
           </li>
 
           <li>
-            <a [routerLink]="'khach-hang/ds-khach-hang'"  *ngIf="role === 'ADMIN' || role === 'STAFF'">
+            <a
+              [routerLink]="'khach-hang/ds-khach-hang'"
+              *ngIf="role === 'ADMIN' || role === 'STAFF'"
+            >
               <i class="icon ph ph-user-circle-plus"></i>
               <span class="text">Khách Hàng</span>
             </a>
           </li>
 
-          <li >
+          <li>
             <a [routerLink]="'nhan-vien/ds-nhan-vien'" *ngIf="role === 'ADMIN'">
               <i class="icon ph ph-user"></i>
               <span class="text">Nhân Viên</span>
@@ -119,14 +155,20 @@
           </li>
 
           <li>
-            <a [routerLink]="'phieu-giam-gia/ds-phieu-giam-gia'"  *ngIf="role === 'ADMIN'">
+            <a
+              [routerLink]="'phieu-giam-gia/ds-phieu-giam-gia'"
+              *ngIf="role === 'ADMIN'"
+            >
               <i class="icon ph ph-credit-card"></i>
               <span class="text">Phiếu Giảm Giá</span>
             </a>
           </li>
 
           <li>
-            <a [routerLink]="'dot-giam-gia/ds-dot-giam-gia'"  *ngIf="role === 'ADMIN'">
+            <a
+              [routerLink]="'dot-giam-gia/ds-dot-giam-gia'"
+              *ngIf="role === 'ADMIN'"
+            >
               <i class="icon ph ph-coins"></i>
               <span class="text">Đợt Giảm Giá</span>
             </a>
@@ -146,4 +188,3 @@
     </div>
   </div>
 </div>
-

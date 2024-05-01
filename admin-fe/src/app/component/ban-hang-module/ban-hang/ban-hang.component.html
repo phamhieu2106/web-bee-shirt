@@ -1,78 +1,51 @@
-<app-main-heading
-  [icon]="icon"
-  [mainHeading]="mainHeading"
-  [title]="title"
-></app-main-heading>
+<app-main-heading [icon]="icon" [mainHeading]="mainHeading" [title]="title"></app-main-heading>
 
-<div class="row gutters mt-4">
+<div class=" gutters mt-4">
   <div class="card">
     <!-- Taskbar -->
-    <div class="row taskbar">
+    <div class=" taskbar">
       <!-- Search Product taskbar -->
       <div class="p-1 col-5 align-content-center">
         <div class="dropdown d-flex input-group">
-          <input
-            type="text"
-            class="form-control dropdown-toggle rounded"
-            id="dropdownProduct"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            placeholder="Thêm sản phẩm"
-            (input)="getAllSpct()"
-            (focus)="getAllSpct()"
-            [(ngModel)]="searchProduct"
-          />
-          <div
-            class="dropdown-menu product-suggestions"
-            aria-labelledby="dropdownProduct"
-          >
-            <div
-              class="suggestion-item"
-              style="background-color: rgb(236, 236, 236)"
-            >
-              <div
-                class="text-center pt-3 pb-3"
-                data-toggle="modal"
-                data-target="#searchProductModal"
-              >
-                <i class="fa-solid fa-plus mr-3"></i>
-                <span class="h5">Tìm kiếm nâng cao</span>
+          <input type="text" class="form-control dropdown-toggle rounded" id="dropdownProduct" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" placeholder="Thêm sản phẩm" (input)="getAllSpct()"
+            (focus)="getAllSpct()" [(ngModel)]="searchProduct" />
+          <div class="dropdown-menu product-suggestions" aria-labelledby="dropdownProduct">
+            <div class="suggestion-item">
+              <div class="timKiem" data-toggle="modal" data-target="#searchProductModal">
+                <div>
+                  <i class="fa-solid fa-plus mr-3"></i>
+                  <span class="h5">Tìm kiếm nâng cao</span>
+                </div>
               </div>
             </div>
             <!-- Sản phẩm tìm kiếm -->
-            <div
-              class="suggestion-item row d-flex p-1"
-              *ngFor="let spct of spcts"
-              (click)="chooseProduct(spct)"
-            >
+            <div class="suggestion-item row d-flex p-1" *ngFor="let spct of spcts" (click)="chooseProduct(spct)">
               <div class="col-2 text-center">
-                <app-product-image
-                  [url]="spct.hinhAnhs[0].imageUrl"
-                  [discount]="
+                <app-product-image [url]="spct.hinhAnhs[0].imageUrl" [discount]="
                     spct.dotGiamGia == null
                       ? null
                       : spct.dotGiamGia.giaTriPhanTram
-                  "
-                  [widths]="90"
-                  [heights]="90"
-                  class="m-1"
-                ></app-product-image>
+                  " [widths]="90" [heights]="90" class="m-1"></app-product-image>
                 <!-- <img
                   class="thumbnail-san-pham"
                   [src]="spct.hinhAnhs[0].imageUrl"
                 /> -->
               </div>
-              <div class="col-5 p-2">
-                <div class="fw-bold">
-                  {{ spct.sanPham.ten }}
+              <div class="col-4 p-2 ">
+                <div >
+                  <span class="textName">
+                    {{ spct.sanPham.ten }}
+                  </span>
+
+
                 </div>
                 <div class="san-pham-ma">
                   {{ spct.sanPham.ma }}
                 </div>
               </div>
 
-              <div class="col-1">
+              <div class="col-2">
                 <span class="san-pham-mau-sac">{{ spct.mauSac.ten }}</span>
               </div>
               <div class="col-1">
@@ -80,17 +53,14 @@
               </div>
               <div class="col-3 mr-auto">
                 <div class="">
-                  <span
-                    class="gia-chua-giam pr-1"
-                    *ngIf="spct.dotGiamGia != null"
-                  >
+                  <span class="gia-chua-giam pr-1" *ngIf="spct.dotGiamGia != null">
                     {{ spct.giaBan | currency : "đ " : "symbol" : "1.0-0" }}
                   </span>
 
                   <span class="gia-da-giam pl-1">
                     {{
-                      (spct.dotGiamGia == null ? spct.giaBan : getGiaBan(spct))
-                        | currency : "đ " : "symbol" : "1.0-0"
+                    (spct.dotGiamGia == null ? spct.giaBan : getGiaBan(spct))
+                    | currency : "đ " : "symbol" : "1.0-0"
                     }}
                   </span>
                 </div>
@@ -102,33 +72,42 @@
         </div>
       </div>
       <!-- End search product taskbar -->
-      <!-- Order taskbar -->
-      <div class="col-7 row">
-        <div
-          class="col-2 order-number justify-content-between"
-          [class.order-number-active]="
-            order != null ? order.orderNameTemp == o.orderNameTemp : false
-          "
-          (click)="changeHoaDon(i)"
-          *ngFor="let o of orders; index as i"
-        >
-          <span class="fs-6">{{ o.orderNameTemp }}</span>
-          <span class="fs-5 cart-icon">
-            <i class="fa-solid fa-cart-shopping" style="color: #ffd700"></i>
-            <div class="cart-quantity">
-              {{ getSoLuongSanPham(o) }}
-            </div>
-          </span>
 
-          <button class="btn p-1" (click)="deleteOrder(i)">
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
+      <!-- Order taskbar -->
+      <div class="slide-show ml-5 mr-5" #slideShow>
+        <div class="order-task" #orderTask>
+          <div class=" order-number " [class.order-number-active]="
+              order != null ? order.orderNameTemp == o.orderNameTemp : false
+            " (click)="changeHoaDon(i)" *ngFor="let o of orders; index as i">
+            <span class="fs-6">{{ o.orderNameTemp }}</span>
+            <span class="fs-5 cart-icon">
+              <i class="fa-solid fa-cart-shopping" style="color: #ffd700"></i>
+              <div class="cart-quantity">
+                {{ getSoLuongSanPham(o) }}
+              </div>
+            </span>
+  
+            <button class="btn p-1" (click)="deleteOrder(i)">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </button>
+          </div>
         </div>
-        <div class="col-1">
-          <button class="btn btn-create" (click)="newHoaDon()">
-            <i class="fa-solid fa-plus text-light"></i>
-          </button>
-        </div>
+
+        <button class="btn-preV" #prevButton> 
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <button class="btn-next" #nextButton>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+     
+
+      </div>
+
+      <div class="">
+        <button class="btn btn-create" (click)="newHoaDon()">
+          <i class="fa-solid fa-plus text-light"></i>
+        </button>
       </div>
       <!-- End order taskbar -->
     </div>
@@ -136,7 +115,7 @@
   </div>
 </div>
 
-<div class="row gutters">
+<div class="row gutters" style="height: 85%;">
   <div class="card col-9">
     <!-- Items -->
     <table class="table table-hover">
@@ -151,54 +130,37 @@
       <tbody>
         <tr class="" *ngFor="let hdct of order?.hoaDonChiTiets; index as i">
           <td class="">
-            <button
-              type="button"
-              class="btn btn-outline-light btn-rounded"
-              (click)="deleteHDCT(i)"
-            >
+            <button type="button" class="btn btn-outline-light btn-rounded" (click)="deleteHDCT(i)">
               <i class="fa-solid fa-trash text-danger"></i>
             </button>
           </td>
           <td class="">
             <div class="">
               {{
-                hdct.sanPhamChiTiet.sanPham.ten +
-                  " [" +
-                  hdct.sanPhamChiTiet.kichCo.ten +
-                  " | " +
-                  hdct.sanPhamChiTiet.mauSac.ten +
-                  "]"
+              hdct.sanPhamChiTiet.sanPham.ten +
+              " [" +
+              hdct.sanPhamChiTiet.kichCo.ten +
+              " | " +
+              hdct.sanPhamChiTiet.mauSac.ten +
+              "]"
               }}
             </div>
           </td>
           <td class="">
             <div class="d-flex">
-              <button
-                class="btn btn-outline-dark btn-rounded p-1"
-                (click)="minusQuantity(hdct)"
-              >
+              <button class="btn btn-outline-dark btn-rounded p-1" (click)="minusQuantity(hdct)">
                 <i class="fa-solid fa-minus"></i>
               </button>
-              <input
-                type="number"
-                class="text-center form-control"
-                [(ngModel)]="hdct.soLuong"
-                (ngModelChange)="changeSoLuongHDCT(hdct)"
-                min="0"
-                step="1"
-                style="width: 50px"
-              />
-              <button
-                class="btn btn-outline-dark btn-rounded p-1"
-                (click)="plusQuantity(hdct)"
-              >
+              <input type="number" class="text-center form-control" [(ngModel)]="hdct.soLuong"
+                (ngModelChange)="changeSoLuongHDCT(hdct)" min="0" step="1" style="width: 50px" />
+              <button class="btn btn-outline-dark btn-rounded p-1" (click)="plusQuantity(hdct)">
                 <i class="fa-solid fa-plus"></i>
               </button>
             </div>
           </td>
           <td class="">
             {{
-              hdct.sanPhamChiTiet.giaBan | currency : " " : "symbol" : "1.0-0"
+            hdct.sanPhamChiTiet.giaBan | currency : " " : "symbol" : "1.0-0"
             }}
           </td>
           <td class="">
@@ -208,7 +170,7 @@
           </td>
           <td class="">
             {{
-              hdct.soLuong * hdct.giaBan | currency : " " : "symbol" : "1.0-0"
+            hdct.soLuong * hdct.giaBan | currency : " " : "symbol" : "1.0-0"
             }}
           </td>
         </tr>
@@ -220,24 +182,15 @@
     <!-- Khách hàng -->
     <div class="">
       <div class="user-choose" *ngIf="order != null && order.khachHang != null">
-        <div
-          class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-        >
+        <div class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
           <i class="fa-solid fa-user m-1 me-md-2"></i>
-          <a
-            [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id"
-            class="flex-grow-1"
-          >
+          <a [routerLink]="'/khach-hang/sua-khach-hang/' + order.khachHang.id" class="flex-grow-1">
             <p class="d-none d-md-block mb-0 fs-6" id="userFullName">
               <u>
                 {{ order.khachHang.hoTen }}
               </u>
             </p>
-            <p
-              class="d-none d-md-block mb-0 text-mute"
-              style="font-size: 12px"
-              id="userPhoneNumber"
-            >
+            <p class="d-none d-md-block mb-0 text-mute" style="font-size: 12px" id="userPhoneNumber">
               {{ order.khachHang.sdt }}
             </p>
           </a>
@@ -248,32 +201,17 @@
       </div>
 
       <div class="dropdown" *ngIf="order != null && order.khachHang == null">
-        <input
-          type="text"
-          class="form-control dropdown-toggle"
-          id="dropdownKhachHang"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          placeholder="Thêm khách hàng vào đơn"
-          (input)="getAllKhachHang()"
-          [(ngModel)]="searchKhachHang"
-        />
-        <div
-          class="dropdown-menu customer-suggerstions"
-          aria-labelledby="dropdownKhachHang"
-        >
+        <input type="text" class="form-control dropdown-toggle" id="dropdownKhachHang" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" placeholder="Thêm khách hàng vào đơn" (input)="getAllKhachHang()"
+          [(ngModel)]="searchKhachHang" />
+        <div class="dropdown-menu customer-suggerstions" aria-labelledby="dropdownKhachHang">
           <div class="suggestion-item text-center p-2">
             <div data-toggle="modal" data-target="#addCustomerModal">
               <i class="fa-solid fa-plus"></i>
               Thêm mới khách hàng
             </div>
           </div>
-          <div
-            class="suggestion-item p-2"
-            (click)="chooseKhachHang(kh)"
-            *ngFor="let kh of khachHangs"
-          >
+          <div class="suggestion-item p-2" (click)="chooseKhachHang(kh)" *ngFor="let kh of khachHangs">
             <div class="d-flex align-items-center">
               <i class="fa-solid fa-user mr-2"></i>
               <span class="fw-bold">{{ kh.hoTen }}</span>
@@ -288,13 +226,9 @@
     <!-- Tiền nong -->
     <div class="container-sidebar pr-2 fw-bold fs-6">
       <div class="d-flex justify-content-between m-1">
-        <span class="ml-auto fw-bold"
-          >Giao hàng:
-          <input
-            type="checkbox"
-            [checked]="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-            (change)="changeLoaiHoaDon($event)"
-          />
+        <span class="ml-auto fw-bold">Giao hàng:
+          <input type="checkbox" [checked]="order != null && order.loaiHoaDon == 'GIAO_HANG'"
+            (change)="changeLoaiHoaDon($event)" />
         </span>
       </div>
       <!-- <div class="sidebar-money-part m-1">
@@ -307,13 +241,10 @@
         <span class="sidebar-money-part-left">Tổng tiền:</span>
         <span class="sidebar-money-part-right">{{
           getTongTien() | currency : " " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
 
-      <div
-        class="sidebar-money-part m-1 align-items-center"
-        *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-      >
+      <div class="sidebar-money-part m-1 align-items-center" *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
         <!-- Show on selected Giao hàng -->
         <span class="sidebar-money-part-left">Phí vận chuyển:</span>
         <span class="sidebar-money-part-right">
@@ -324,8 +255,8 @@
         <span class="sidebar-money-part-left">Tiền giảm:</span>
         <span class="sidebar-money-part-right">{{
           (order != null ? order.tienGiam : 0)
-            | currency : " " : "symbol" : "1.0-0"
-        }}</span>
+          | currency : " " : "symbol" : "1.0-0"
+          }}</span>
         <!-- <input
           class="form-control"
           type="text"
@@ -341,29 +272,24 @@
         <span class="sidebar-money-part-left">Khách phải trả:</span>
         <span class="sidebar-money-part-right">{{
           getMustPay() | currency : " " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
       <div class="sidebar-money-part m-1">
         <span class="sidebar-money-part-left">Khách còn thiếu:</span>
         <span class="sidebar-money-part-right">{{
           getTienKhachConThieu() | currency : " " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
       <div class="sidebar-money-part m-1">
-        <span class="sidebar-money-part-left"
-          >Khách thanh toán:
-          <button
-            type="button"
-            class="btn btn-success pl-1 pr-1 pt-1 pb-1 rounded-2"
-            data-toggle="modal"
-            data-target="#thanhToanModal"
-          >
+        <span class="sidebar-money-part-left">Khách thanh toán:
+          <button type="button" class="btn btn-success pl-1 pr-1 pt-1 pb-1 rounded-2" data-toggle="modal"
+            data-target="#thanhToanModal">
             <i class="fa-solid fa-credit-card"></i>
           </button>
         </span>
         <span class="sidebar-money-part-right">{{
           getTienKhachThanhToan() | currency : " " : "symbol" : "1.0-0"
-        }}</span>
+          }}</span>
       </div>
 
       <div class="sidebar-money-part m-1">
@@ -371,60 +297,39 @@
           <span class="mr-2">Phiếu giảm giá:</span>
           <div class="d-flex">
             <div *ngIf="order?.phieuGiamGia" class="dropdown">
-              <button
-                class="btn btn-primary dropdown-toggle btn-sm"
-                type="button"
-                id="dropdownMenuButtonPGG"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
+              <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButtonPGG"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ order?.phieuGiamGia?.maPhieuGiamGia }}
               </button>
-              <div
-                class="dropdown-menu custom-tooltip"
-                aria-labelledby="dropdownMenuButtonPGG"
-              >
+              <div class="dropdown-menu custom-tooltip" aria-labelledby="dropdownMenuButtonPGG">
                 {{
-                  order == null || order.phieuGiamGia == null
-                    ? ""
-                    : "Giảm " +
-                      (order.phieuGiamGia.kieu == 0
-                        ? order.phieuGiamGia.giaTri + "%"
-                        : (order.phieuGiamGia.giaTri
-                          | currency : " " : "symbol" : "1.0-0")) +
-                      " tối đa " +
-                      (order.phieuGiamGia.giaTriMax == null
-                        ? order.phieuGiamGia.giaTri
-                        : (order.phieuGiamGia.giaTriMax
-                          | currency : " " : "symbol" : "1.0-0"))
+                order == null || order.phieuGiamGia == null
+                ? ""
+                : "Giảm " +
+                (order.phieuGiamGia.kieu == 0
+                ? order.phieuGiamGia.giaTri + "%"
+                : (order.phieuGiamGia.giaTri
+                | currency : " " : "symbol" : "1.0-0")) +
+                " tối đa " +
+                (order.phieuGiamGia.giaTriMax == null
+                ? order.phieuGiamGia.giaTri
+                : (order.phieuGiamGia.giaTriMax
+                | currency : " " : "symbol" : "1.0-0"))
                 }}
               </div>
             </div>
 
             <!-- Message -->
-            <div
-              class=""
-              *ngIf="
+            <div class="" *ngIf="
                 messagePgg != null &&
                 messagePgg != '' &&
                 messagePgg != undefined
-              "
-            >
-              <button
-                class="btn btn-warning dropdown-toggle btn-sm"
-                type="button"
-                id="dropdownMenuButtonPGGMessage"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
+              ">
+              <button class="btn btn-warning dropdown-toggle btn-sm" type="button" id="dropdownMenuButtonPGGMessage"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-solid fa-lightbulb"></i>
               </button>
-              <div
-                class="dropdown-menu custom-tooltip"
-                aria-labelledby="dropdownMenuButtonPGGMessage"
-              >
+              <div class="dropdown-menu custom-tooltip" aria-labelledby="dropdownMenuButtonPGGMessage">
                 {{ messagePgg }}
               </div>
             </div>
@@ -437,16 +342,10 @@
       <div *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
         <div class="sidebar-money-part m-1">
           <span class="sidebar-money-part-left">Địa chỉ:</span>
-          <span class="sidebar-money-part-right"
-            ><button
-              type="button"
-              class="btn btn-primary rounded-2 p-1"
-              data-toggle="modal"
-              data-target="#diaChiModal"
-            >
+          <span class="sidebar-money-part-right"><button type="button" class="btn btn-primary rounded-2 p-1"
+              data-toggle="modal" data-target="#diaChiModal">
               <i class="fa-solid fa-location-dot"></i> Chọn địa chỉ
-            </button></span
-          >
+            </button></span>
         </div>
       </div>
 
@@ -458,18 +357,12 @@
       </div>
       <div style="height: 140px"></div>
       <div class="h4 container-sidebar-mua-hang">
-        <button
-          class="btn btn-success btn-lg w-100 h-100"
-          (click)="muaHang()"
-          *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'"
-        >
+        <button class="btn btn-success btn-lg w-100 h-100" (click)="muaHang()"
+          *ngIf="order != null && order.loaiHoaDon == 'TAI_QUAY'">
           Mua Hàng
         </button>
-        <button
-          class="btn btn-success btn-lg w-100 h-100"
-          (click)="datHang()"
-          *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'"
-        >
+        <button class="btn btn-success btn-lg w-100 h-100" (click)="datHang()"
+          *ngIf="order != null && order.loaiHoaDon == 'GIAO_HANG'">
           Mua Hàng
         </button>
       </div>
@@ -477,39 +370,21 @@
   </div>
 
   <!-- Modal Thanh Toán-->
-  <div
-    class="modal fade"
-    id="thanhToanModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="thanhToanModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Thanh Toán</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="modal-body" *ngIf="order">
-          <app-thanh-toan
-            [(thanhToans)]="order.thanhToans"
-            [tongTien]="getMustPay()"
-          ></app-thanh-toan>
+          <app-thanh-toan [(thanhToans)]="order.thanhToans" [tongTien]="getMustPay()"></app-thanh-toan>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-success btn-rounded"
-            data-dismiss="modal"
-          >
+          <button type="button" class="btn btn-success btn-rounded" data-dismiss="modal">
             Ok
           </button>
         </div>
@@ -517,44 +392,22 @@
     </div>
   </div>
   <!-- Modal địa chỉ -->
-  <div
-    class="modal fade"
-    id="diaChiModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="diaChiModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-            id="closeModalChonDiaChi"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalChonDiaChi">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="modal-body">
-          <app-giao-hang
-            *ngIf="order"
-            [khachHang]="order.khachHang"
-            (phiVanChuyen)="caculatePhiVanChuyen($event)"
-            (diaChi)="getDiaChiNguoiNhan($event)"
-            [(tenNguoiNhan)]="order.tenNguoiNhan"
-            [(sdtNguoiNhan)]="order.sdtNguoiNhan"
-            [(emailNguoiNhan)]="order.emailNguoiNhan"
-          ></app-giao-hang>
+          <app-giao-hang *ngIf="order" [khachHang]="order.khachHang" (phiVanChuyen)="caculatePhiVanChuyen($event)"
+            (diaChi)="getDiaChiNguoiNhan($event)" [(tenNguoiNhan)]="order.tenNguoiNhan"
+            [(sdtNguoiNhan)]="order.sdtNguoiNhan" [(emailNguoiNhan)]="order.emailNguoiNhan"></app-giao-hang>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-primary btn-rounded"
-            (click)="validateThongTinNhanHang()"
-          >
+          <button type="button" class="btn btn-primary btn-rounded" (click)="validateThongTinNhanHang()">
             Xác nhận
           </button>
         </div>
@@ -562,63 +415,36 @@
     </div>
   </div>
   <!-- Search Product Modal -->
-  <div
-    class="modal fade product-modal"
-    id="searchProductModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade product-modal" id="searchProductModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Tìm kiếm nâng cao</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
-        <app-search-product-detail
-          (chooseProduct)="chooseProduct($event)"
-        ></app-search-product-detail>
+        <app-search-product-detail (chooseProduct)="chooseProduct($event)"></app-search-product-detail>
       </div>
     </div>
   </div>
   <!-- Add customer modal -->
-  <div
-    class="modal fade product-modal"
-    id="addCustomerModal"
-    tabindex="-1"
-    style="display: none"
-    aria-hidden="true"
-  >
+  <div class="modal fade product-modal" id="addCustomerModal" tabindex="-1" style="display: none" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             Thêm mới khách hàng
           </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-            id="closeModalThemKhachHang"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalThemKhachHang">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <!-- Main modal -->
         <div class="m-3">
-          <app-them-khach-hang
-            (createSuccess)="chooseKhachHang($event)"
-            (closeModal)="closeModal($event)"
-          ></app-them-khach-hang>
+          <app-them-khach-hang (createSuccess)="chooseKhachHang($event)"
+            (closeModal)="closeModal($event)"></app-them-khach-hang>
         </div>
       </div>
     </div>

@@ -63,7 +63,6 @@ export class SidebarComponent {
    
     $(".menu > ul > li ").click((e: any) => {
       
-      console.log(e.currentTarget)
       $(e.currentTarget).siblings().removeClass("active");
       $(e.currentTarget).toggleClass("active");
       $(e.currentTarget).find(".sub-menu ").slideToggle();

@@ -75,6 +75,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
                    SELECT *
                    FROM hoa_don
                    WHERE id_khach_hang IS NULL
+                   AND id_nhan_vien IS NULL
                    AND sdt_nguoi_nhan = :phone
                    """, nativeQuery = true)
     List<HoaDon> getNoneLoggedOrdersByPhone(@Param("phone") String phone);

@@ -18,7 +18,7 @@ export class TrackingComponent {
   public isLoadding = false;
   public overlayText: string = "";
 
-  public phoneOrder: string = "0921829101";
+  public phoneOrder: string = "";
   public orders: Order[] = [];
   public selectedOrder: Order;
 

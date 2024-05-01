@@ -45,8 +45,8 @@ export class MyAccountComponent {
       if (result.isConfirmed) {
         const req: UpdateCustInfoReq = {
           custId: this.loggedCust.id,
-          fullName: this.form.get("hoTen").value,
-          phone: this.form.get("sdt").value,
+          fullName: this.form.get("hoTen").value.trim(),
+          phone: this.form.get("sdt").value.trim(),
           birthday: this.form.get("ngaySinh").value,
           gender: this.form.get("gioiTinh").value,
         };
@@ -89,6 +89,7 @@ export class MyAccountComponent {
           hoTen: new FormControl(custRes.hoTen, [
             Validators.required,
             Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
+            this.customRequiredValidator,
           ]),
           ngaySinh: new FormControl(custRes.ngaySinh, [
             Validators.required,
@@ -97,12 +98,13 @@ export class MyAccountComponent {
           sdt: new FormControl(custRes.sdt, [
             Validators.required,
             Validators.pattern("^(0[1-9][0-9]{8})$"),
+            this.customRequiredValidator,
           ]),
           tenDangNhap: new FormControl(custRes.tenDangNhap),
         });
       },
-      error: (errRes: HttpErrorResponse) => {
-        this.notifService.error(errRes.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -116,6 +118,18 @@ export class MyAccountComponent {
 
     if (selectedDate >= currentDate) {
       return { invalidDate: true };
+    }
+    return null;
+  }
+
+  // 1.2
+  private customRequiredValidator(
+    control: FormControl
+  ): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value.trim() === "") {
+      return { customRequired: true };
     }
     return null;
   }

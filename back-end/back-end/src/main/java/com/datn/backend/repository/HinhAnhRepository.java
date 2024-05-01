@@ -34,4 +34,15 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh, Integer> {
             """, nativeQuery = true)
     List<String> getAllUrlBySanPhamAndMauSac(@Param("productId") int productId,
                                              @Param("colorId") int colorId);
+
+    @Query(value = """
+                   SELECT distinct t3.id, t3.image_id, t3.image_name, t3.image_url
+                   FROM san_pham_chi_tiet t1
+                   JOIN spct_hinhanh t2 ON t1.id = t2.spct_id
+                   JOIN hinh_anh t3 ON t2.hinhanh_id = t3.id
+                   WHERE san_pham_id = :prodId
+                   AND t1.mau_sac_id = :colorId
+                   """, nativeQuery = true)
+    List<HinhAnh> getImgsOf1ProductColor(@Param("prodId") int prodId,
+                                         @Param("colorId") int colorId);
 }

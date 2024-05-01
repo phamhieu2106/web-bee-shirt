@@ -2,7 +2,7 @@ package com.datn.backend.service.impl;
 
 import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
-import com.datn.backend.dto.request.CapNhatSpctRequest;
+import com.datn.backend.dto.request.UpdateSpctReq;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
@@ -100,10 +100,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             spctList.add(spct);
         }
 
-        for (MultipartFile file : multipartFiles) {
-            HinhAnh hinhAnh = saveHinhAnhImage(file);
-            hinhAnhs.add(hinhAnh);
+        if (multipartFiles != null) {
+            for (MultipartFile file : multipartFiles) {
+                HinhAnh hinhAnh = saveHinhAnhImage(file);
+                hinhAnhs.add(hinhAnh);
+            }
+        } else if (multipartFiles == null) {
+            List<HinhAnh> existImgs = hinhAnhRepo.getImgsOf1ProductColor(request.getSanPhamId(), request.getRequests().getMauSacId());
+            hinhAnhs.addAll(existImgs);
         }
+
         for (SanPhamChiTiet spct : spctList) {
             spct.setHinhAnhs(hinhAnhs);
         }
@@ -291,11 +297,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     @Transactional
-    public String update(CapNhatSpctRequest req) {
+    public String update(UpdateSpctReq req) {
         List result = new ArrayList();
         SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(req.getSanPhamId(), req.getMauSacId(), req.getKichCoId());
-        SanPhamChiTiet spctById = spctRepo.findById(req.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + req.getId() + " không tồn tại!"));
+        SanPhamChiTiet spctById = spctRepo.findById(req.getId()).get();
         boolean isMauSacChange = (req.getMauSacId() != spctById.getMauSac().getId());
 
         if (spctByMauSacAndKichCo != null && spctByMauSacAndKichCo.getId() != req.getId()) {
@@ -307,60 +312,41 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 spctById = (SanPhamChiTiet) result.get(1);
             }
 
-            int countBySanPham = spctRepo.countBySanPhamId(req.getSanPhamId());
-            if (!spctRepo.existsByKieuDangIdAndSanPhamId(req.getKieuDangId(), req.getSanPhamId()) && countBySanPham > 1) {
-                updateAllSpctOf1Sp(req, "kieuDang");
-            } else if (!spctRepo.existsByThietKeIdAndSanPhamId(req.getThietKeId(), req.getSanPhamId()) && countBySanPham > 1) {
-                updateAllSpctOf1Sp(req, "thietKe");
-            } else if (!spctRepo.existsByTayAoIdAndSanPhamId(req.getTayAoId(), req.getSanPhamId()) && countBySanPham > 1) {
-                updateAllSpctOf1Sp(req, "tayAo");
-            } else if (!spctRepo.existsByCoAoIdAndSanPhamId(req.getCoAoId(), req.getSanPhamId()) && countBySanPham > 1) {
-                updateAllSpctOf1Sp(req, "coAo");
-            } else if (!spctRepo.existsByChatLieuIdAndSanPhamId(req.getChatLieuId(), req.getSanPhamId()) && countBySanPham > 1) {
-                updateAllSpctOf1Sp(req, "chatLieu");
-            }
-
             spctById.setSoLuongTon(req.getSoLuong());
             spctById.setGiaNhap(req.getGiaNhap());
             spctById.setGiaBan(req.getGiaBan());
-
-            MauSac mauSac = mauSacRepo.findById(req.getMauSacId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Màu sắc ID: " + req.getMauSacId() + " không tồn tại!"));
-            spctById.setMauSac(mauSac);
-
-            KichCo kichCo = kichCoRepo.findById(req.getKichCoId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Kích cỡ ID: " + req.getKichCoId() + " không tồn tại!"));
-            spctById.setKichCo(kichCo);
+            spctById.setMauSac(mauSacRepo.findById(req.getMauSacId()).get());
+            spctById.setKichCo(kichCoRepo.findById(req.getKichCoId()).get());
 
             spctRepo.save(spctById);
             return (String) result.get(0);
         }
     }
 
-    private void updateAllSpctOf1Sp(CapNhatSpctRequest req, String field) {
-        List<SanPhamChiTiet> spcts = spctRepo.findBySanPhamId(req.getSanPhamId());
-
-        KieuDang kieuDang = kieuDangRepo.findById(req.getKieuDangId()).get();
-        KieuThietKe thietKe = kieuThietKeRepo.findById(req.getThietKeId()).get();
-        TayAo tayAo = tayAoRepo.findById(req.getTayAoId()).get();
-        CoAo coAo = coAoRepo.findById(req.getCoAoId()).get();
-        ChatLieu chatLieu = chatLieuRepo.findById(req.getChatLieuId()).get();
-
-        for (SanPhamChiTiet spct : spcts) {
-            if (field.equals("kieuDang")) {
-                spct.setKieuDang(kieuDang);
-            } else if (field.equals("thietKe")) {
-                spct.setThietKe(thietKe);
-            } else if (field.equals("tayAo")) {
-                spct.setTayAo(tayAo);
-            } else if (field.equals("coAo")) {
-                spct.setCoAo(coAo);
-            } else if (field.equals("chatLieu")) {
-                spct.setChatLieu(chatLieu);
-            }
-            spctRepo.save(spct);
-        }
-    }
+//    private void updateAllSpctOf1Sp(CapNhatSpctRequest req, String field) {
+//        List<SanPhamChiTiet> spcts = spctRepo.findBySanPhamId(req.getSanPhamId());
+//
+//        KieuDang kieuDang = kieuDangRepo.findById(req.getKieuDangId()).get();
+//        KieuThietKe thietKe = kieuThietKeRepo.findById(req.getThietKeId()).get();
+//        TayAo tayAo = tayAoRepo.findById(req.getTayAoId()).get();
+//        CoAo coAo = coAoRepo.findById(req.getCoAoId()).get();
+//        ChatLieu chatLieu = chatLieuRepo.findById(req.getChatLieuId()).get();
+//
+//        for (SanPhamChiTiet spct : spcts) {
+//            if (field.equals("kieuDang")) {
+//                spct.setKieuDang(kieuDang);
+//            } else if (field.equals("thietKe")) {
+//                spct.setThietKe(thietKe);
+//            } else if (field.equals("tayAo")) {
+//                spct.setTayAo(tayAo);
+//            } else if (field.equals("coAo")) {
+//                spct.setCoAo(coAo);
+//            } else if (field.equals("chatLieu")) {
+//                spct.setChatLieu(chatLieu);
+//            }
+//            spctRepo.save(spct);
+//        }
+//    }
 
     private List changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
         SanPhamChiTiet spct = spctRepo.findFirstBySanPhamIdAndMauSacId(sanPhamId, newMauSacId);

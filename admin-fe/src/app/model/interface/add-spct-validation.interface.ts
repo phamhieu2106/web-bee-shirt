@@ -1,5 +1,6 @@
 export interface AddSpctValidation {
-  error: boolean;
+  propertyError: boolean;
+  priceQuantityError: boolean;
   kieuDangId: boolean;
   thietKeId: boolean;
   tayAoId: boolean;

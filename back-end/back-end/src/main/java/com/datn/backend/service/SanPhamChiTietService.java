@@ -2,7 +2,7 @@ package com.datn.backend.service;
 
 import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
-import com.datn.backend.dto.request.CapNhatSpctRequest;
+import com.datn.backend.dto.request.UpdateSpctReq;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
@@ -27,7 +27,7 @@ public interface SanPhamChiTietService {
 
     void updateSpctNhanh(CapNhatNhanhSpctReq req);
 
-    String update(CapNhatSpctRequest req);
+    String update(UpdateSpctReq req);
     
     PagedResponse<SpctResponse> getAll(int pageNumber, int pageSize, String search);
 
@@ -40,6 +40,7 @@ public interface SanPhamChiTietService {
     void updateImages(MultipartFile[] files, int spId, int mauSacId) throws IOException;
 
     void updateCommonProperties(UpdateCommonPropertiesReq req);
+
 
     Integer getQuantityOfOne(int productId, int colorId, int sizeId);
 

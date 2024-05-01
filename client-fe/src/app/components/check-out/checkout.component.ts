@@ -29,6 +29,7 @@ import { WebSocketService } from "src/app/service/web-socket.service";
 import { Order } from "src/app/model/class/order.class";
 import { NotifService } from "src/app/service/notif.service";
 import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
+import { AddressShipFee } from "src/app/model/class/address-ship-fee.class";
 
 @Component({
   selector: "app-checkout",
@@ -55,6 +56,13 @@ export class CheckoutComponent {
   public districtId: number;
   public wardId: number;
 
+  public provincesForShipFee: any[];
+  public districtsForShipFee: any[];
+  public wardsForShipFee: any[];
+  public provinceIdForShipFee: number;
+  public districtIdForShipFee: number;
+  public wardIdForShipFee: number;
+
   public discounts: Discount[] = [];
   public selectedDiscount: Discount;
 
@@ -74,7 +82,7 @@ export class CheckoutComponent {
   constructor(
     private router: Router,
     private currencyPipe: CurrencyPipe,
-    private giaoHangNhanhService: GiaoHangNhanhService,
+    private ghnService: GiaoHangNhanhService,
     private addressService: AddressService,
     private authService: AuthenticationService,
     private notifService: NotificationService,
@@ -107,10 +115,10 @@ export class CheckoutComponent {
       }
     );
 
-    this.getAllAddressOfLoggedCust();
+    this.getAllProvinces();
+    this.getAllProvincesForShipFee();
     this.getCartItemsFromLoggedCustomer();
     this.initAddAddressForm();
-    this.getAllProvinces();
   }
 
   // public functions
@@ -155,6 +163,7 @@ export class CheckoutComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        this.turnOnOverlay("vui long doi");
         this.addressService.setDefaultAddress(addressId).subscribe({
           next: (defaultAddr: Address) => {
             // gán địa chỉ mặc định mới
@@ -170,9 +179,13 @@ export class CheckoutComponent {
               return addr;
             });
             this.notifService.success("Cập nhật địa chỉ mặc định thành công!");
+            setTimeout(() => {
+              this.fillData();
+              this.turnOffOverlay("");
+            });
           },
-          error: (errorRes: HttpErrorResponse) => {
-            this.notifService.error(errorRes.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
       }
@@ -180,7 +193,7 @@ export class CheckoutComponent {
   }
 
   // 7
-  public addNewAddress(): void {
+  public addAddress(): void {
     Swal.fire({
       title: "Thêm mới địa chỉ?",
       cancelButtonText: "Hủy",
@@ -197,12 +210,12 @@ export class CheckoutComponent {
         }
 
         const req: AddAddressReq = {
-          hoTen: this.addAddressForm.get("hoTen").value,
+          hoTen: this.addAddressForm.get("hoTen").value.trim(),
           sdt: this.addAddressForm.get("sdt").value,
           tinh: this.addAddressForm.get("tinh").value,
           huyen: this.addAddressForm.get("huyen").value,
           xa: this.addAddressForm.get("xa").value,
-          duong: this.addAddressForm.get("duong").value,
+          duong: this.addAddressForm.get("duong").value.trim(),
           macDinh: this.addAddressForm.get("macDinh").value,
           custId: this.loggedCust.id,
         };
@@ -217,8 +230,8 @@ export class CheckoutComponent {
             this.isAddAddressModalOpen = false;
             this.isAddressesModalOpen = true;
           },
-          error: (errRes: HttpErrorResponse) => {
-            this.notifService.error(errRes.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
       }
@@ -230,14 +243,12 @@ export class CheckoutComponent {
   public getAllDistrictsByProvince(): void {
     this.wards = [];
     this.getProvinceId();
-    this.giaoHangNhanhService
-      .getAllDistrictByProvinceID(this.provinceId)
-      .subscribe({
-        next: (resp: any) => {
-          this.districts = resp.data;
-          this.addAddressForm.get("tinh").setValue(this.getProvinceName());
-        },
-      });
+    this.ghnService.getAllDistrictByProvinceID(this.provinceId).subscribe({
+      next: (resp: any) => {
+        this.districts = resp.data;
+        this.addAddressForm.get("tinh").setValue(this.getProvinceName());
+      },
+    });
   }
 
   // 8.1
@@ -269,14 +280,12 @@ export class CheckoutComponent {
   // 9. get wards by select district
   public getAllWardsByDistrict(): void {
     this.getDistrictId();
-    this.giaoHangNhanhService
-      .getAllWardByDistrictID(this.districtId)
-      .subscribe({
-        next: (resp: any) => {
-          this.wards = resp.data;
-          this.addAddressForm.get("huyen").setValue(this.getDistrictName());
-        },
-      });
+    this.ghnService.getAllWardByDistrictID(this.districtId).subscribe({
+      next: (resp: any) => {
+        this.wards = resp.data;
+        this.addAddressForm.get("huyen").setValue(this.getDistrictName());
+      },
+    });
   }
 
   // 9.1
@@ -360,8 +369,8 @@ export class CheckoutComponent {
             this.sendMessage(order);
             this.turnOffOverlay("");
           },
-          error: (errRes: HttpErrorResponse) => {
-            this.notifService.error(errRes.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
             this.turnOffOverlay("");
           },
         });
@@ -446,9 +455,10 @@ export class CheckoutComponent {
         this.defaultAddr = addresses.filter(
           (address: Address) => address.macDinh
         )[0];
+        this.fillData();
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -629,7 +639,7 @@ export class CheckoutComponent {
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
-    this.giaoHangNhanhService.getAllProvince().subscribe({
+    this.ghnService.getAllProvince().subscribe({
       next: (resp) => {
         this.provinces = resp.data;
       },
@@ -639,8 +649,23 @@ export class CheckoutComponent {
     });
   }
 
+  // 8
+  private getAllProvincesForShipFee(): void {
+    this.districtsForShipFee = [];
+    this.wardsForShipFee = [];
+    this.ghnService.getAllProvince().subscribe({
+      next: (resp) => {
+        this.provincesForShipFee = resp.data;
+        this.getAllAddressOfLoggedCust();
+      },
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
+      },
+    });
+  }
+
   // calculate prices
-  //
+  // 9
   private getRealPrice(): number {
     let result: number = 0;
     for (const item of this.cartItems) {
@@ -649,7 +674,7 @@ export class CheckoutComponent {
     return result;
   }
 
-  //
+  // 10
   private getSalePrice(): number {
     let result: number = 0;
     for (const item of this.cartItems) {
@@ -664,7 +689,7 @@ export class CheckoutComponent {
     return result;
   }
 
-  //
+  // 11
   private getDiscountPrice(): number {
     if (this.selectedDiscount) {
       if (this.selectedDiscount.kieu === 0) {
@@ -684,19 +709,51 @@ export class CheckoutComponent {
     return 0;
   }
 
-  //
-  private getShipPrice(): number {
-    return 0;
-  }
-
-  //
+  // 12
   private getFinalPrice(): number {
     return (
       this.realPrice - this.salePrice - this.discountPrice + this.shipPrice
     );
   }
+
+  // 13
+  private async getShipPrice() {
+    const addrShip: AddressShipFee = {
+      tinh: this.defaultAddr.tinh,
+      tinhId: this.provinceIdForShipFee,
+      huyen: this.defaultAddr.huyen,
+      huyenId: this.districtIdForShipFee,
+      xa: this.defaultAddr.xa,
+      xaCode: `${this.wardIdForShipFee}`,
+      cuThe: this.defaultAddr.duong,
+      duKien: new Date(),
+      phiVanChuyen: 0,
+      service_id: 0,
+      service_type_id: 0,
+    };
+
+    try {
+      const shopId = 190872;
+      const from_district = 3440; // Xuân Phương - Nam từ Liêm
+      const respService = await this.ghnService
+        .getService(shopId, from_district, this.districtIdForShipFee)
+        .toPromise();
+
+      const service_id = respService.data[0].service_id;
+      addrShip.service_id = service_id;
+
+      const respFee = await this.ghnService
+        .getFee(addrShip, service_id)
+        .toPromise();
+      this.shipPrice = respFee.data.total;
+      this.finalPrice = this.getFinalPrice();
+    } catch (error) {
+      console.log("Lỗi tính phí vận chuyển");
+    }
+  }
   // end: calculate prices
 
+  // 14
   private turnOnOverlay(text: string): void {
     this.overlayText = text;
     this.isLoadding = true;
@@ -708,7 +765,7 @@ export class CheckoutComponent {
     this.isLoadding = false;
   }
 
-  //
+  // 16
   private sendMessage(order: Order): void {
     const newNotif: AddNotificationReq = {
       type: "NEW_ORDER_CREATED",
@@ -720,9 +777,86 @@ export class CheckoutComponent {
       next: (data) => {
         this.webSocketService.sendMessage("Bạn có đơn hàng mới!");
       },
-      error: (errRes: HttpErrorResponse) => {
-        this.notifService.error(errRes.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
+  }
+
+  // get data of addres and get ship price
+  // 17
+  async fillData() {
+    try {
+      await this.turnOnOverlay("Vui lòng chờ vài giây...");
+
+      // Tìm Tỉnh, Huyện, Xã
+      await this.findTinhId();
+      await this.getAllHuyenByTinh();
+      await this.findHuyenId();
+      await this.getAllXaByHuyen();
+      await this.findXaId();
+
+      // Xử lý hoàn thành
+      this.getShipPrice();
+      this.turnOffOverlay("");
+    } catch (error) {
+      console.log("Lỗi trong fillData:", error);
+      this.turnOffOverlay("Có lỗi xảy ra");
+    }
+  }
+
+  // 17.1
+  async findTinhId() {
+    const tinh = this.provincesForShipFee.find(
+      (element) => element.ProvinceName === this.defaultAddr.tinh
+    );
+    if (tinh) {
+      this.provinceIdForShipFee = tinh.ProvinceID;
+    }
+  }
+
+  // 17.2
+  async getAllHuyenByTinh() {
+    try {
+      const resp = await this.ghnService
+        .getAllDistrictByProvinceID(this.provinceIdForShipFee)
+        .toPromise();
+      this.districtsForShipFee = resp.data;
+      // this.diaChiVaPhiVanChuyen.tinh = this.getTenTinh();
+    } catch (error) {
+      console.log("Lỗi trong getAllHuyenByTinh:", error);
+    }
+  }
+
+  // 17.3
+  async findHuyenId() {
+    const huyen = this.districtsForShipFee.find(
+      (element) => element.DistrictName === this.defaultAddr.huyen
+    );
+    if (huyen) {
+      this.districtIdForShipFee = huyen.DistrictID;
+    }
+  }
+
+  // 17.4
+  async getAllXaByHuyen() {
+    try {
+      const resp = await this.ghnService
+        .getAllWardByDistrictID(this.districtIdForShipFee)
+        .toPromise();
+      this.wardsForShipFee = resp.data;
+    } catch (error) {
+      console.log("Lỗi trong getAllXaByHuyen:", error);
+    }
+  }
+
+  // 17.5
+  async findXaId() {
+    const xa = this.wardsForShipFee.find(
+      (element) => element.WardName === this.defaultAddr.xa
+    );
+    if (xa) {
+      this.wardIdForShipFee = xa.WardCode;
+    }
   }
 }

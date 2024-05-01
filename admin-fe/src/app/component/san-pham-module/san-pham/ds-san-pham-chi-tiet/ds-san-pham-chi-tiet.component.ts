@@ -274,11 +274,6 @@ export class DsSanPhamChiTietComponent {
       sanPhamId: new FormControl(this.sanPham?.id),
       mauSacId: new FormControl(0, [Validators.required]),
       kichCoId: new FormControl(0, [Validators.required]),
-      kieuDangId: new FormControl(0, [Validators.required]),
-      thietKeId: new FormControl(0, [Validators.required]),
-      tayAoId: new FormControl(0, [Validators.required]),
-      coAoId: new FormControl(0, [Validators.required]),
-      chatLieuId: new FormControl(0, [Validators.required]),
       giaNhap: new FormControl(0, [Validators.required]),
       giaBan: new FormControl(0, [Validators.required]),
       soLuong: new FormControl(0, [Validators.required]),
@@ -339,17 +334,19 @@ export class DsSanPhamChiTietComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        this.spctService.update(this.updateForm.value).subscribe({
-          next: (response: string) => {
-            this.notifService.success(response);
-            this.getProdAndMinMaxPrice();
-            document.getElementById("closeUpdateBtn").click();
-          },
-          error: (errResp: HttpErrorResponse) => {
-            const message = JSON.parse(errResp.error).message;
-            this.notifService.error(message);
-          },
-        });
+        console.log(this.updateForm.value);
+
+        // this.spctService.update(this.updateForm.value).subscribe({
+        //   next: (response: string) => {
+        //     this.notifService.success(response);
+        //     this.getProdAndMinMaxPrice();
+        //     document.getElementById("closeUpdateBtn").click();
+        //   },
+        //   error: (errResp: HttpErrorResponse) => {
+        //     const message = JSON.parse(errResp.error).message;
+        //     this.notifService.error(message);
+        //   },
+        // });
       }
     });
   }

@@ -1,5 +1,6 @@
 package com.datn.backend.repository;
 
+import com.datn.backend.model.san_pham.HinhAnh;
 import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -140,6 +141,8 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                                 @Param("coAoId") int coAoId,
                                 @Param("tayAoId") int tayAoId,
                                 @Param("chatLieuId") int chatLieuId);
+
+
 
     @Query("""
             select spct from SanPhamChiTiet spct

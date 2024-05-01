@@ -16,4 +16,13 @@ export class HinhAnhSanPhamService {
     let params = `?tenMau=${tenMau}&sanPhamID=${sanPhamID}`;
     return this.http.get<HinhAnh[]>(`${this.apiURL}/get-by-ms${params}`);
   }
+
+  public getImgsOf1ProductColor(
+    prodId: number,
+    colorId: number
+  ): Observable<HinhAnh[]> {
+    return this.http.get<HinhAnh[]>(
+      `${this.apiURL}/by-product-color/${prodId}/${colorId}`
+    );
+  }
 }

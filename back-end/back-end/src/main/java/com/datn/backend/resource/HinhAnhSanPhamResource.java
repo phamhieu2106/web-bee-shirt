@@ -25,6 +25,12 @@ public class HinhAnhSanPhamResource {
         return hinhAnhService.getByMauSac(tenMau, sanPhamID);
     }
 
+    @GetMapping("/by-product-color/{prodId}/{colorId}")
+    public ResponseEntity<List<HinhAnh>> getImgsOf1ProductColor(@PathVariable("prodId") int prodId,
+                                                                @PathVariable("colorId") int colorId) {
+        return ResponseEntity.ok(hinhAnhService.getImgsOf1ProductColor(prodId, colorId));
+    }
+
     // client resources
     @GetMapping("/url-by-sp-ms/{productId}/{colorId}")
     public ResponseEntity<List<String>> getAllUrlBySanPhamAndMauSac(@PathVariable("productId") int productId,

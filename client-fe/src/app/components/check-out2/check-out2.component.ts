@@ -23,6 +23,7 @@ import { Order } from "src/app/model/class/order.class";
 import { WebSocketService } from "src/app/service/web-socket.service";
 import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
 import { NotifService } from "src/app/service/notif.service";
+import { AddressShipFee } from "src/app/model/class/address-ship-fee.class";
 
 @Component({
   selector: "app-check-out2",
@@ -31,7 +32,6 @@ import { NotifService } from "src/app/service/notif.service";
 })
 export class CheckOut2Component {
   public addresses: Address[] = [];
-  public defaultAddr: Address;
 
   public cartItems: CartItem[] = [];
   public cartItemQuantity: number;
@@ -56,6 +56,7 @@ export class CheckOut2Component {
   public discountPrice: number = 0;
   public shipPrice: number = 0;
   public finalPrice: number = 0;
+  public isFreeShip: boolean;
 
   public paymentMethod = true;
   public isLoadding = false;
@@ -66,7 +67,7 @@ export class CheckOut2Component {
     private router: Router,
     private currencyPipe: CurrencyPipe,
     private cartService: CartService,
-    private giaoHangNhanhService: GiaoHangNhanhService,
+    private ghnService: GiaoHangNhanhService,
     private notifService: NotificationService,
     private discountService: DiscountService,
     private orderService: OrderService,
@@ -107,6 +108,7 @@ export class CheckOut2Component {
                 this.salePrice = this.getSalePrice();
                 this.discountPrice = this.getDiscountPrice();
                 this.finalPrice = this.getFinalPrice();
+                this.getShipPrice();
               }
             });
           },
@@ -184,6 +186,10 @@ export class CheckOut2Component {
 
   // 6
   public checkOut(): void {
+    console.log(this.realPrice - this.salePrice);
+    console.log(this.discountPrice);
+    console.log(this.shipPrice);
+
     Swal.fire({
       title: "Xác nhận thanh toán?",
       cancelButtonText: "Hủy",
@@ -222,7 +228,7 @@ export class CheckOut2Component {
         this.orderService.placeOrderOnline(req).subscribe({
           next: (order: Order) => {
             this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/`]);
+            this.router.navigate([`/tracking`]);
             this.cartService.updateCartItemsInStorage([]);
             this.cartService.updateCartItemsQuantityInStorage(0);
             this.sendMessage(order);
@@ -239,12 +245,30 @@ export class CheckOut2Component {
 
   // 7.1
   private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
+    // let result: OrderDetailsReq[] = [];
+    // for (let item of this.cartItems) {
+    //   let orderDetails: OrderDetailsReq = {
+    //     id: null,
+    //     soLuong: item.soLuong,
+    //     giaBan: item.spct.giaBan,
+    //     giaNhap: item.spct.giaNhap,
+    //     sanPhamChiTietId: item.spct.id,
+    //   };
+    //   result.push(orderDetails);
+    // }
+    // return result;
+
     let result: OrderDetailsReq[] = [];
     for (let item of this.cartItems) {
+      let price = item.spct.giaBan;
+      if (item.spct.saleEvent) {
+        price =
+          (item.spct.giaBan * (100 - item.spct.saleEvent.giaTriPhanTram)) / 100;
+      }
       let orderDetails: OrderDetailsReq = {
         id: null,
         soLuong: item.soLuong,
-        giaBan: item.spct.giaBan,
+        giaBan: price,
         giaNhap: item.spct.giaNhap,
         sanPhamChiTietId: item.spct.id,
       };
@@ -267,14 +291,12 @@ export class CheckOut2Component {
   public getAllDistrictsByProvince(): void {
     this.wards = [];
     this.getProvinceId();
-    this.giaoHangNhanhService
-      .getAllDistrictByProvinceID(this.provinceId)
-      .subscribe({
-        next: (resp: any) => {
-          this.districts = resp.data;
-          this.addressForm.get("tinh").setValue(this.getProvinceName());
-        },
-      });
+    this.ghnService.getAllDistrictByProvinceID(this.provinceId).subscribe({
+      next: (resp: any) => {
+        this.districts = resp.data;
+        this.addressForm.get("tinh").setValue(this.getProvinceName());
+      },
+    });
   }
 
   // 8.1
@@ -304,14 +326,12 @@ export class CheckOut2Component {
   // 9. get wards by select district
   public getAllWardsByDistrict(): void {
     this.getDistrictId();
-    this.giaoHangNhanhService
-      .getAllWardByDistrictID(this.districtId)
-      .subscribe({
-        next: (resp: any) => {
-          this.wards = resp.data;
-          this.addressForm.get("huyen").setValue(this.getDistrictName());
-        },
-      });
+    this.ghnService.getAllWardByDistrictID(this.districtId).subscribe({
+      next: (resp: any) => {
+        this.wards = resp.data;
+        this.addressForm.get("huyen").setValue(this.getDistrictName());
+      },
+    });
   }
 
   // 9.1
@@ -386,7 +406,7 @@ export class CheckOut2Component {
         let temp =
           (this.selectedDiscount.giaTri * (this.realPrice - this.salePrice)) /
           100;
-        this.discountPrice =
+        temp =
           temp > this.selectedDiscount.giaTriMax
             ? this.selectedDiscount.giaTriMax
             : temp;
@@ -399,9 +419,9 @@ export class CheckOut2Component {
   }
 
   // 4
-  private getShipPrice(): number {
-    return 0;
-  }
+  // private ghnService(): number {
+  //   return 0;
+  // }
 
   // 5
   private getFinalPrice(): number {
@@ -415,7 +435,7 @@ export class CheckOut2Component {
   private getAllProvinces(): void {
     this.districts = [];
     this.wards = [];
-    this.giaoHangNhanhService.getAllProvince().subscribe({
+    this.ghnService.getAllProvince().subscribe({
       next: (resp) => {
         this.provinces = resp.data;
       },
@@ -548,7 +568,6 @@ export class CheckOut2Component {
   }
 
   // 16
-  //
   private sendMessage(order: Order): void {
     const newNotif: AddNotificationReq = {
       type: "NEW_ORDER_CREATED",
@@ -564,5 +583,62 @@ export class CheckOut2Component {
         this.notifService.error(errRes.error.message);
       },
     });
+  }
+
+  // 17
+  public async getShipPrice() {
+    console.log(this.realPrice - this.salePrice - this.discountPrice);
+
+    if (this.realPrice - this.salePrice - this.discountPrice >= 2_000_000) {
+      this.isFreeShip = true;
+      this.shipPrice = 0;
+      this.finalPrice = this.getFinalPrice();
+      return;
+    } else {
+      this.isFreeShip = false;
+    }
+    this.findXaId();
+    const addrShip: AddressShipFee = {
+      tinh: this.addressForm.get("tinh")?.value,
+      tinhId: this.provinceId,
+      huyen: this.addressForm.get("huyen")?.value,
+      huyenId: this.districtId,
+      xa: this.addressForm.get("xa")?.value,
+      xaCode: `${this.wardId}`,
+      cuThe: this.addressForm.get("duong")?.value,
+      duKien: new Date(),
+      phiVanChuyen: 0,
+      service_id: 0,
+      service_type_id: 0,
+    };
+
+    try {
+      const shopId = 190872;
+      const from_district = 3440; // Xuân Phương - Nam từ Liêm
+      const respService = await this.ghnService
+        .getService(shopId, from_district, this.districtId)
+        .toPromise();
+
+      const service_id = respService.data[0].service_id;
+      addrShip.service_id = service_id;
+
+      const respFee = await this.ghnService
+        .getFee(addrShip, service_id)
+        .toPromise();
+      this.shipPrice = respFee.data.total;
+      this.finalPrice = this.getFinalPrice();
+    } catch (error) {
+      console.log("Lỗi tính phí vận chuyển");
+    }
+  }
+
+  // 17.1
+  async findXaId() {
+    const xa = this.wards.find(
+      (element) => element.WardName === this.addressForm.get("xa")?.value
+    );
+    if (xa) {
+      this.wardId = xa.WardCode;
+    }
   }
 }

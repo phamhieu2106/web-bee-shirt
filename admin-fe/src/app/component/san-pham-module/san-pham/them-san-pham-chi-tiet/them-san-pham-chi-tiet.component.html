@@ -675,25 +675,52 @@
         >
           <div>
             <img
-              class="thumbnail me-5"
               [id]="'selectedImgInModal' + curWorkingImgIndex + i"
+              class="thumbnail me-5"
+              src=""
+            />
+          </div>
+        </div>
+
+        <div
+          style="display: inline-block"
+          *ngFor="let f of curExistingImgList; let i = index"
+        >
+          <div>
+            <img
+              [ngClass]="isSelectAllImg[curWorkingImgIndex] ? '' : 'hidden'"
+              [id]="'selectedImgInModal2' + curWorkingImgIndex + i"
+              class="thumbnail me-5"
+              src=""
             />
           </div>
         </div>
 
         <!-- các ảnh đã chọn cùng màu -->
         <hr />
-        <h6>Danh sách ảnh đã có màu:</h6>
+        <h6>Danh sách ảnh của màu '{{ selectedTenMauSac }}':</h6>
         <div class="text-center">
-          <i *ngIf="existingImgList.length === 0">Chưa có ảnh nảo</i>
+          <i *ngIf="curExistingImgList.length === 0">Chưa có ảnh nào</i>
         </div>
         <div
           class="image-container"
-          *ngFor="let ei of existingImgList; let i = index"
+          *ngFor="let ei of curExistingImgList; let i = index"
         >
-          <img class="exist-img" [id]="'existingImg' + i" src="" />
-          <input type="checkbox" class="checkbox" />
+          <img
+            class="exist-img"
+            [id]="'existingImgInModal' + selectedIdMauSac + i"
+            [src]="ei.imageUrl"
+          />
         </div>
+        <br />
+        <button
+          *ngIf="curExistingImgList.length > 0"
+          class="btn btn-secondary rounded"
+          (click)="selectAllExistingImgs()"
+          [disabled]="isSelectAllImg[curWorkingImgIndex]"
+        >
+          Chọn toàn bộ ảnh đã có
+        </button>
 
         <!-- Danh sách ảnh tải lên -->
         <hr />
@@ -723,6 +750,7 @@
         <button
           class="btn btn-primary col-2 rounded"
           (click)="openFileInput(curWorkingImgIndex)"
+          [disabled]="curExistingImgList.length > 0"
         >
           Tải ảnh lên
         </button>

@@ -136,6 +136,12 @@ export class SignUpComponent {
       cancelButtonColor: "#d33",
       confirmButtonText: "Đăng ký",
     }).then((result: SweetAlertResult) => {
+      let trimmedHoTen = this.signUpForm.get("hoTen").value.trim();
+      this.signUpForm.get("hoTen")?.setValue(trimmedHoTen);
+
+      let trimmedEmail = this.signUpForm.get("email").value.trim();
+      this.signUpForm.get("email")?.setValue(trimmedEmail);
+
       if (result.isConfirmed) {
         this.authService.signUp(this.signUpForm.value).subscribe({
           next: (cust: Customer) => {
@@ -145,7 +151,7 @@ export class SignUpComponent {
           },
           error: (errRes: HttpErrorResponse) => {
             this.notifService.error(
-              `Đăng ký thất bại! ${errRes.error.message}`
+              `Đăng ký thất bại! \n${errRes.error.message}`
             );
           },
         });

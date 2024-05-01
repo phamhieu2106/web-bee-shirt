@@ -87,7 +87,7 @@ export class DanhSachSanPhamComponent {
     this.addForm = new FormGroup({
       ten: new FormControl("", [
         Validators.required,
-        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s]+$"),
+        Validators.pattern("^[a-zA-ZÀ-ỹ0-9\\s%]+$"),
         this.customRequiredValidator,
       ]),
       ma: new FormControl("", [

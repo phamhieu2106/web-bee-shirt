@@ -25,9 +25,5 @@ class BackEndApplicationTests {
 
     @Test
     void test() {
-        List<Integer> colorIds = List.of(14, 15);
-        List<Integer> sizeIds = List.of();
-        List<Integer> ids = sanPhamRepo.test(colorIds, sizeIds);
-        ids.forEach(System.err::println);
     }
 }

@@ -363,8 +363,8 @@
                             (change)="getAllDistrictsByProvince('update')"
                             formControlName="tinh"
                             [ngClass]="
-                              addAddressForm.get('tinh').invalid &&
-                              addAddressForm.get('tinh').touched
+                              updateAddressForm.get('tinh').invalid &&
+                              updateAddressForm.get('tinh').touched
                                 ? 'is-invalid'
                                 : ''
                             "
@@ -380,7 +380,7 @@
                           <div
                             class="invalid-feedback"
                             *ngIf="
-                              addAddressForm.get('tinh').hasError('required')
+                              updateAddressForm.get('tinh').hasError('required')
                             "
                           >
                             Tỉnh/Thành phố không được bỏ trống
@@ -396,8 +396,8 @@
                             formControlName="huyen"
                             (click)="checkProvinceSelection()"
                             [ngClass]="
-                              addAddressForm.get('huyen').invalid &&
-                              addAddressForm.get('huyen').touched
+                              updateAddressForm.get('huyen').invalid &&
+                              updateAddressForm.get('huyen').touched
                                 ? 'is-invalid'
                                 : ''
                             "
@@ -413,7 +413,9 @@
                           <div
                             class="invalid-feedback"
                             *ngIf="
-                              addAddressForm.get('huyen').hasError('required')
+                              updateAddressForm
+                                .get('huyen')
+                                .hasError('required')
                             "
                           >
                             Quận/Huyện không được bỏ trống
@@ -429,8 +431,8 @@
                           formControlName="xa"
                           (click)="checkDistrictSelection()"
                           [ngClass]="
-                            addAddressForm.get('xa').invalid &&
-                            addAddressForm.get('xa').touched
+                            updateAddressForm.get('xa').invalid &&
+                            updateAddressForm.get('xa').touched
                               ? 'is-invalid'
                               : ''
                           "
@@ -442,7 +444,9 @@
                         </select>
                         <div
                           class="invalid-feedback"
-                          *ngIf="addAddressForm.get('xa').hasError('required')"
+                          *ngIf="
+                            updateAddressForm.get('xa').hasError('required')
+                          "
                         >
                           Phường/Xã không được bỏ trống
                         </div>
@@ -456,8 +460,8 @@
                           class="form-control"
                           formControlName="duong"
                           [ngClass]="
-                            addAddressForm.get('duong').invalid &&
-                            addAddressForm.get('duong').touched
+                            updateAddressForm.get('duong').invalid &&
+                            updateAddressForm.get('duong').touched
                               ? 'is-invalid'
                               : ''
                           "
@@ -465,7 +469,7 @@
                         <div
                           class="invalid-feedback"
                           *ngIf="
-                            addAddressForm
+                            updateAddressForm
                               .get('duong')
                               .hasError('customRequired')
                           "
@@ -475,7 +479,7 @@
                         <div
                           class="invalid-feedback"
                           *ngIf="
-                            addAddressForm.get('duong').hasError('pattern')
+                            updateAddressForm.get('duong').hasError('pattern')
                           "
                         >
                           Số nhà - Đường/Địa chỉ chi tiết không được hợp lệ

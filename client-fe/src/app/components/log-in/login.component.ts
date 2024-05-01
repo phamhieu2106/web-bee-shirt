@@ -29,8 +29,7 @@ export class LoginComponent {
     private notifService: NotificationService,
     private authenticationService: AuthenticationService,
     private cartService: CartService,
-    private productService: ProductService,
-    private testService: TestService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -134,7 +133,7 @@ export class LoginComponent {
         Validators.required,
         Validators.pattern("^(0[1-9][0-9]{8})$"),
       ]),
-      password: new FormControl("123456", [Validators.required]),
+      password: new FormControl("A1234567", [Validators.required]),
     });
   }
 }

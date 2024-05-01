@@ -89,6 +89,12 @@ export class MyAddressesComponent {
           return;
         }
 
+        let trimmedHoTen = this.addAddressForm.get("hoTen").value.trim();
+        this.addAddressForm.get("hoTen")?.setValue(trimmedHoTen);
+
+        let trimmedDiaChi = this.addAddressForm.get("duong").value.trim();
+        this.addAddressForm.get("duong")?.setValue(trimmedDiaChi);
+
         this.addressService.addAddress(this.addAddressForm.value).subscribe({
           next: () => {
             this.getAllAddresses();
@@ -276,12 +282,12 @@ export class MyAddressesComponent {
           hoTen: new FormControl(addrRes.hoTen, [
             Validators.required,
             Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
           sdt: new FormControl(addrRes.sdt, [
             Validators.required,
             Validators.pattern("^(0[1-9][0-9]{8})$"),
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
           tinh: new FormControl(addrRes.tinh, [Validators.required]),
           huyen: new FormControl(addrRes.huyen, [Validators.required]),
@@ -289,7 +295,7 @@ export class MyAddressesComponent {
           duong: new FormControl(addrRes.duong, [
             Validators.required,
             Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
-            this.customNotBlankValidator,
+            this.customRequiredValidator,
           ]),
         });
         this.getAllDistrictsByProvince("update");
@@ -341,6 +347,12 @@ export class MyAddressesComponent {
           return;
         }
 
+        let trimmedHoTen = this.updateAddressForm.get("hoTen").value.trim();
+        this.updateAddressForm.get("hoTen")?.setValue(trimmedHoTen);
+
+        let trimmedDiaChi = this.updateAddressForm.get("duong").value.trim();
+        this.updateAddressForm.get("duong")?.setValue(trimmedDiaChi);
+
         this.addressService
           .updateAddress(
             this.updateAddressForm.get("id").value,
@@ -381,12 +393,12 @@ export class MyAddressesComponent {
       hoTen: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       sdt: new FormControl("", [
         Validators.required,
         Validators.pattern("^(0[1-9][0-9]{8})$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
@@ -394,7 +406,7 @@ export class MyAddressesComponent {
       duong: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       macDinh: new FormControl(false),
       custId: new FormControl("", [Validators.required]),
@@ -409,14 +421,14 @@ export class MyAddressesComponent {
       next: (resp) => {
         this.provinces = resp.data;
       },
-      error: (errorRes: HttpErrorResponse) => {
-        this.notifService.error(errorRes.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
 
   // 4
-  private customNotBlankValidator(
+  private customRequiredValidator(
     control: FormControl
   ): { [key: string]: boolean } | null {
     const value = control.value;
@@ -434,12 +446,12 @@ export class MyAddressesComponent {
       hoTen: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ\\s]+$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       sdt: new FormControl("", [
         Validators.required,
         Validators.pattern("^(0[1-9][0-9]{8})$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
       tinh: new FormControl("", [Validators.required]),
       huyen: new FormControl("", [Validators.required]),
@@ -447,7 +459,7 @@ export class MyAddressesComponent {
       duong: new FormControl("", [
         Validators.required,
         Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/.\\s]+$"),
-        this.customNotBlankValidator,
+        this.customRequiredValidator,
       ]),
     });
   }

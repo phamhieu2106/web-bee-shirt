@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 const routes: Routes = [
-  { path: "", redirectTo: "thong-ke", pathMatch: "full" },
+  { path: "", redirectTo: "ban-hang", pathMatch: "full" },
 ];
 
 @NgModule({

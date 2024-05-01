@@ -93,7 +93,10 @@
                           <div
                             class="invalid-feedback"
                             *ngIf="
-                              addAddressForm.get('sdt').hasError('pattern')
+                              addAddressForm.get('sdt').hasError('pattern') &&
+                              !addAddressForm
+                                .get('sdt')
+                                .hasError('customRequired')
                             "
                           >
                             SĐT không hợp lệ

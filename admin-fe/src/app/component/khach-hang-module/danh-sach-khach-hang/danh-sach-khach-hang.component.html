@@ -108,15 +108,18 @@
               </td>
               <td>{{ kh.ngaySinh | date : "dd-MM-yyyy" }}</td>
               <td>
-                <button class="{{
-                    kh.trangThai === 1
-                      ? 'btn btn-success btn-rounded'
-                      : 'btn btn-danger btn-rounded'
-                  }}">
-                  {{
-                  kh.trangThai === 1 ? "Đang hoạt động" : "Ngừng hoạt động"
-                  }}
-                </button>
+                <div class="">                 
+                  <label
+                    [class]="
+                      kh.trangThai
+                        ? 'btn btn-success btn-rounded'
+                        : 'btn btn-secondary btn-rounded'
+                    "
+                    (click)="changeSTT(kh.id)"
+                  >
+                    {{ kh.trangThai ? "Đang hoạt động" : "Ngừng hoạt động" }}
+                  </label>
+                </div>
               </td>
               <td>
                 <button class="btn btn-outline-light btn-rounded me-2" title="Xem chi tiết" data-toggle="modal"

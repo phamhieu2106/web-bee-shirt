@@ -105,6 +105,8 @@ public class KhachHangServiceImpl implements KhachHangService {
         cartRepo.save(new Cart(savedCus));
         favouriteListRepo.save(new FavouriteList(savedCus));
 
+        emailService.sendPasswordCustomer(khachHang, kh.getMatKhau());
+
         return savedCus;
     }
 
@@ -120,11 +122,11 @@ public class KhachHangServiceImpl implements KhachHangService {
         // check email
         String email = kh.getEmail().trim();
         if (!UtilityFunction.isNullOrEmpty(email)) {
-            if (khachHangRepo.existsByEmail(email)){
+            if (khachHangRepo.existsByEmail(email)) {
                 throw new RuntimeException("Email: " + email + " đã tồn tại.");
             }
 
-            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")){
+            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
                 throw new RuntimeException("Email: " + email + " không hợp lệ");
             }
         }
@@ -150,11 +152,11 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(custImg);
         khachHang.setAccount(account);
-        khachHang  = khachHangRepo.save(khachHang);
-        if (UtilityFunction.isNullOrEmpty(email)){
+        khachHang = khachHangRepo.save(khachHang);
+        if (UtilityFunction.isNullOrEmpty(email)) {
             // neu khong co email gui pass default sdt/DEFAULT_PASSWORD
             account.setMatKhau(passwordEncoder.encode(DEFAULT_PASSWORD));
-        }else {
+        } else {
             // neu co email tao mat khau moi va gui mail sdt/password
             account.setMatKhau(passwordEncoder.encode(kh.getMatKhau()));
             khachHang.setEmail(email);
@@ -175,8 +177,8 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChiRepo.save(diaChi);
             khachHang.setDiaChis(Arrays.asList(diaChi));
         }
-        if (!UtilityFunction.isNullOrEmpty(email)){
-            emailService.sendPasswordCustomer(khachHang,kh.getMatKhau());
+        if (!UtilityFunction.isNullOrEmpty(email)) {
+            emailService.sendPasswordCustomer(khachHang, kh.getMatKhau());
         }
         return khachHang;
     }
@@ -247,9 +249,9 @@ public class KhachHangServiceImpl implements KhachHangService {
                 Account acc = optionalKhachHang.get().getAccount();
                 acc.setTrangThai(!acc.isTrangThai());
                 kh.setAccount(acc);
-                if(kh.getTrangThai()==0){
+                if (kh.getTrangThai() == 0) {
                     kh.setTrangThai(1);
-                }else kh.setTrangThai(0);
+                } else kh.setTrangThai(0);
                 khachHangRepo.save(kh);
                 return kh;
             }).get();
@@ -282,7 +284,6 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         return pagedResponse;
     }
-
 
 
     @Override

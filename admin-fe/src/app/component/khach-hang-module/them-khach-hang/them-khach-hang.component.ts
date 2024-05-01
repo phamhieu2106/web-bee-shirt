@@ -170,11 +170,11 @@ export class ThemKhachHangComponent {
                   toast.onmouseleave = Swal.resumeTimer;
                 },
               });
-              this.send(
-                this.formAddKh.value.hoTen,
-                this.formAddKh.value.matKhau,
-                this.formAddKh.value.email
-              );
+              // this.send(
+              //   this.formAddKh.value.hoTen,
+              //   this.formAddKh.value.matKhau,
+              //   this.formAddKh.value.email
+              // );
               this.turnOffOverlay("");
               this.router.navigate(["/khach-hang/ds-khach-hang"]);
             },
@@ -207,15 +207,15 @@ export class ThemKhachHangComponent {
     });
   }
 
-  private send(hoTen: string, matKhau: string, email: string) {
-    emailjs.init("XlFoYJLd1vcoTgaEY");
-    emailjs.send("service_uxvm75s", "template_k18lsvj", {
-      from_name: this.authService.getUserFromStorage().hoTen,
-      to_name: hoTen,
-      message: matKhau,
-      to_email: email,
-    });
-  }
+  // private send(hoTen: string, matKhau: string, email: string) {
+  //   emailjs.init("XlFoYJLd1vcoTgaEY");
+  //   emailjs.send("service_uxvm75s", "template_k18lsvj", {
+  //     from_name: this.authService.getUserFromStorage().hoTen,
+  //     to_name: hoTen,
+  //     message: matKhau,
+  //     to_email: email,
+  //   });
+  // }
 
   private generateRandomPassword(): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

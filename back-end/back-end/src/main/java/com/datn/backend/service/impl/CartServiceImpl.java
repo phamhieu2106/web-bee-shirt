@@ -38,6 +38,7 @@ public class CartServiceImpl implements CartService {
 
         // check cart
         if (cart == null) {
+            cart = new Cart();
             KhachHang cust = customerRepo.findById(req.getCustomerId()).get();
             cart.setKhachHang(cust);
             cart = cartRepo.save(cart);

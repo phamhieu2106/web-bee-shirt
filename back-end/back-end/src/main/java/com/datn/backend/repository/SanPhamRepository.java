@@ -56,6 +56,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             )
             AND spct.gia_ban >= :minPrice
             AND spct.gia_ban <= :maxPrice
+            ORDER BY sp.id DESC
             """, nativeQuery = true)
     Page<Integer> getByFilterForClient(Pageable pageable,
                                        @Param("colorIds") List<Integer> colorIds,
@@ -67,18 +68,6 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
                                        @Param("materialIds") List<Integer> materialIds,
                                        @Param("minPrice") BigDecimal minPrice,
                                        @Param("maxPrice") BigDecimal maxPrice);
-
-//    @Query(value = """
-//            SELECT DISTINCT sp.id
-//            FROM san_pham sp
-//            JOIN san_pham_chi_tiet spct ON sp.id = spct.san_pham_id
-//            WHERE (
-//            	spct.mau_sac_id IN (:colorIds)
-//                OR spct.kich_co_id IN (:sizeIds)
-//            )
-//            """, nativeQuery = true)
-//    List<Integer> test(@Param("colorIds") List<Integer> colorIds,
-//                       @Param("sizeIds") List<Integer> sizeIds);
 
     @Query(value = """
             SELECT *

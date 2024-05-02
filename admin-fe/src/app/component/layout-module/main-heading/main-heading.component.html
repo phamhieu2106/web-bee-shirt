@@ -27,7 +27,8 @@
               <a
                 class="notification notification-flush notification-unread"
                 *ngFor="let notif of notifications"
-                [routerLink]="notif.relatedUrl"
+                [href]="notif.relatedUrl"
+                (click)="setIsRead(notif.id)"
               >
                 <div class="notification-avatar">
                   <div class="avatar avatar-2xl mr-3">

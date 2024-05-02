@@ -48,6 +48,8 @@ export class SanPhamComponent {
   public initSleeveIds: number[] = [];
   public initMaterialIds: number[] = [];
 
+  public minPrice: number = 0;
+  public maxPrice: number = 999_999_999;
   public selectedColorIds: number[] = [];
   public selectedSizeIds: number[] = [];
   public selectedFormIds: number[] = [];
@@ -84,6 +86,11 @@ export class SanPhamComponent {
   }
 
   // public functions
+  //
+  public formatPrice(price: number): any {
+    return this.currencyPipe.transform(price, "VND", "symbol", "1.0-0");
+  }
+
   // 1
   public displayPrice(prod: SanPham): any {
     const priceArr = [];
@@ -265,8 +272,8 @@ export class SanPhamComponent {
             this.pagedResponse = response;
             this.getSaleEventForProduct(this.pagedResponse);
           },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.notifService.error(errorResponse.error.message);
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
           },
         });
     }
@@ -301,8 +308,8 @@ export class SanPhamComponent {
           this.initCollarIds,
           this.initSleeveIds,
           this.initMaterialIds,
-          0,
-          0
+          this.minPrice,
+          this.maxPrice
         )
         .subscribe({
           next: (response: PagedResponse<SanPham>) => {
@@ -344,6 +351,60 @@ export class SanPhamComponent {
     this.goToPage(1, e.target.value);
   }
 
+  public filterByPrice(minPrice: number, maxPrice: number): void {
+    this.minPrice = minPrice;
+    this.maxPrice = maxPrice;
+    if (this.checkAllSelectedIdList()) {
+      this.productService
+        .getByFilterForClient(
+          1,
+          8,
+          this.initColorIds,
+          this.initSizeIds,
+          this.initFormIds,
+          this.initDesignIds,
+          this.initCollarIds,
+          this.initSleeveIds,
+          this.initMaterialIds,
+          minPrice,
+          maxPrice
+        )
+        .subscribe({
+          next: (response: PagedResponse<SanPham>) => {
+            this.pagedResponse = response;
+            this.getSaleEventForProduct(this.pagedResponse);
+          },
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
+          },
+        });
+    } else {
+      this.productService
+        .getByFilterForClient(
+          1,
+          8,
+          this.selectedColorIds,
+          this.selectedSizeIds,
+          this.selectedFormIds,
+          this.selectedDesignIds,
+          this.selectedCollarIds,
+          this.selectedSleeveIds,
+          this.selectedMaterialIds,
+          minPrice,
+          maxPrice
+        )
+        .subscribe({
+          next: (response: PagedResponse<SanPham>) => {
+            this.pagedResponse = response;
+            this.getSaleEventForProduct(this.pagedResponse);
+          },
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
+          },
+        });
+    }
+  }
+
   // private functions
   // 1
   private checkColorExist(mauSacs: MauSac[], mauSacId: number): boolean {
@@ -368,26 +429,13 @@ export class SanPhamComponent {
         this.initCollarIds,
         this.initSleeveIds,
         this.initMaterialIds,
-        0,
-        0
+        this.minPrice,
+        this.maxPrice
       )
       .subscribe({
         next: (response: PagedResponse<SanPham>) => {
           this.pagedResponse = response;
           this.getSaleEventForProduct(this.pagedResponse);
-
-          // check product in sale or not
-          // let observables = [];
-          // for (let prod of response.data) {
-          //   observables.push(this.saleEventService.getSaleEventOfProd(prod.id));
-          // }
-          // forkJoin(observables).subscribe({
-          //   next: (values: SaleEvent[]) => {
-          //     values.forEach((v, index) => {
-          //       response.data[index].saleEvent = v;
-          //     });
-          //   },
-          // });
         },
         error: (errResp: HttpErrorResponse) => {
           this.notifService.error(errResp.error.message);
@@ -429,8 +477,8 @@ export class SanPhamComponent {
         this.activeForms = response;
         this.initColorIds = response.map((kd: KieuDang) => kd.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -442,8 +490,8 @@ export class SanPhamComponent {
         this.activeDesigns = response;
         this.initDesignIds = response.map((tk: KieuThietKe) => tk.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -455,8 +503,8 @@ export class SanPhamComponent {
         this.activeSleeves = response;
         this.initSleeveIds = response.map((ta: TayAo) => ta.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -468,8 +516,8 @@ export class SanPhamComponent {
         this.activeCollars = response;
         this.initCollarIds = response.map((ca: CoAo) => ca.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -481,8 +529,8 @@ export class SanPhamComponent {
         this.activeMaterials = response;
         this.initMaterialIds = response.map((cl: ChatLieu) => cl.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -494,8 +542,8 @@ export class SanPhamComponent {
         this.activeColors = response;
         this.initColorIds = response.map((ms: MauSac) => ms.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
@@ -507,8 +555,8 @@ export class SanPhamComponent {
         this.activeSizes = response;
         this.initSizeIds = response.map((kc: KichCo) => kc.id);
       },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.notifService.error(errorResponse.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }

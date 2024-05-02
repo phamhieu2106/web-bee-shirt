@@ -142,6 +142,9 @@ export class SignUpComponent {
       let trimmedEmail = this.signUpForm.get("email").value.trim();
       this.signUpForm.get("email")?.setValue(trimmedEmail);
 
+      let trimmedDuong = this.signUpForm.get("duong").value.trim();
+      this.signUpForm.get("duong")?.setValue(trimmedDuong);
+
       if (result.isConfirmed) {
         this.authService.signUp(this.signUpForm.value).subscribe({
           next: (cust: Customer) => {
@@ -149,9 +152,9 @@ export class SignUpComponent {
             this.initSignUpForm();
             this.router.navigate(["/log-in"]);
           },
-          error: (errRes: HttpErrorResponse) => {
+          error: (errResp: HttpErrorResponse) => {
             this.notifService.error(
-              `Đăng ký thất bại! \n${errRes.error.message}`
+              `Đăng ký thất bại! \n${errResp.error.message}`
             );
           },
         });
@@ -191,6 +194,7 @@ export class SignUpComponent {
       xa: new FormControl("", [Validators.required]),
       duong: new FormControl("", [
         Validators.required,
+        this.customRequiredValidator,
         Validators.pattern("^[a-zA-ZÀ-ỹ0-9-_/,.\\s]+$"),
       ]),
     });

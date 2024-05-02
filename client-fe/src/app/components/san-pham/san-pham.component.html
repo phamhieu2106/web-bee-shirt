@@ -2,10 +2,10 @@
   <div class="row mb-2">
     <div class="col-md-2">
       <i class="bi bi-funnel-fill"></i>
-      Bộ Lọc
+      Bộ Lọc:
     </div>
     <div class="col-md-10 filterSanPham" style="padding: 0 35px">
-      <!-- <span>66 sản phẩm</span> -->
+      <span>{{ pagedResponse?.totalElements }} sản phẩm</span>
 
       <!-- <select class="formSelect">
         <option value="">Sắp xếp</option>
@@ -223,13 +223,58 @@
                   data-attribute-id="211"
                 >
                   <div class="swatch-attribute-options clearfix">
-                    <input type="checkbox" />
-                    <label>100 - 500k</label>
+                    <input
+                      type="radio"
+                      name="filterPrice"
+                      (change)="filterByPrice(0, 0)"
+                      checked
+                    />
+                    <label>Tất cả</label>
                   </div>
 
                   <div class="swatch-attribute-options clearfix">
-                    <input type="checkbox" />
-                    <label>500 - 1000k</label>
+                    <input
+                      type="radio"
+                      name="filterPrice"
+                      (change)="filterByPrice(0, 500000)"
+                    />
+                    <label
+                      >{{ formatPrice(0) }} -
+                      {{ formatPrice(500) + "k" }}</label
+                    >
+                  </div>
+
+                  <div class="swatch-attribute-options clearfix">
+                    <input
+                      type="radio"
+                      name="filterPrice"
+                      (change)="filterByPrice(500000, 1000000)"
+                    />
+                    <label
+                      >{{ formatPrice(500) + "k" }} -
+                      {{ formatPrice(1000) + "k" }}</label
+                    >
+                  </div>
+
+                  <div class="swatch-attribute-options clearfix">
+                    <input
+                      type="radio"
+                      name="filterPrice"
+                      (change)="filterByPrice(1000000, 2000000)"
+                    />
+                    <label
+                      >{{ formatPrice(1000) + "k" }} -
+                      {{ formatPrice(2000) + "k" }}</label
+                    >
+                  </div>
+
+                  <div class="swatch-attribute-options clearfix">
+                    <input
+                      type="radio"
+                      name="filterPrice"
+                      (change)="filterByPrice(2000000, 999999999)"
+                    />
+                    <label>> {{ formatPrice(2000) + "k" }}</label>
                   </div>
                 </div>
               </dd>
@@ -279,7 +324,10 @@
       </div>
 
       <!-- paginations -->
-      <div class="col col-md-12 d-flex justify-content-between mb-5">
+      <div
+        class="col col-md-12 d-flex justify-content-between mb-5"
+        *ngIf="pagedResponse?.data.length > 0"
+      >
         <div class="col-md-3">
           <label class="my-1 mr-2" for="inlineFormCustomSelectPref"
             >Số lượng:
@@ -349,7 +397,11 @@
           </nav>
         </div>
       </div>
+
+      <div class="text-center h3" *ngIf="pagedResponse?.data.length === 0">
+        <i>Không có sản phẩm nào!</i>
+      </div>
+      <app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>
     </div>
   </div>
 </section>
-<app-overlay *ngIf="isLoadding" [text]="overlayText"></app-overlay>

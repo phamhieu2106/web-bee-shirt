@@ -11,6 +11,11 @@ import { ChangeOrderStatusReq } from "src/app/model/interface/change-order-statu
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
 import { Payment } from "src/app/model/class/payment.class";
+import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
+import { Customer } from "src/app/model/class/customer.class";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { NotifService } from "src/app/service/notif.service";
+import { WebSocketService } from "src/app/service/web-socket.service";
 
 @Component({
   selector: "app-order-tracking",
@@ -18,6 +23,7 @@ import { Payment } from "src/app/model/class/payment.class";
   styleUrls: ["./order-tracking.component.css"],
 })
 export class OrderTrackingComponent {
+  public loggedCust: Customer;
   public order: Order;
   public totalSalePrice: number = 0;
   private webSocket!: WebSocket;
@@ -40,10 +46,14 @@ export class OrderTrackingComponent {
     private activatedRoute: ActivatedRoute,
     private currencyPipe: CurrencyPipe,
     private notifService: NotificationService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private authService: AuthenticationService,
+    private notifService2: NotifService,
+    private webSocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
+    this.loggedCust = this.authService.getCustomerFromStorage();
     this.getOrderByCode();
     this.openWebSocket();
   }
@@ -131,6 +141,7 @@ export class OrderTrackingComponent {
           next: () => {
             this.notifService.success("Hủy đơn hàng thành công!");
             this.getOrderByCode();
+            this.sendMessage();
             this.turnOffOverlay("");
           },
           error: (errResp: HttpErrorResponse) => {
@@ -139,6 +150,25 @@ export class OrderTrackingComponent {
           },
         });
       }
+    });
+  }
+
+  private sendMessage(): void {
+    const newNotif: AddNotificationReq = {
+      type: "CANCEL_ORDER",
+      content: `Khách hàng ${this.loggedCust.hoTen} đã hủy đơn hàng!`,
+      relatedUrl: `/hoa-don/chi-tiet-hoa-don/${this.order.id}`,
+      custId: null,
+    };
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage(
+          `Khách hàng ${this.loggedCust.hoTen} đã hủy đơn hàng!`
+        );
+      },
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
+      },
     });
   }
 
@@ -170,8 +200,6 @@ export class OrderTrackingComponent {
       this.orderService.getByCode(orderCode).subscribe({
         next: (order: Order) => {
           this.order = order;
-          console.log(this.order);
-
           //
           for (let od of this.order.hoaDonChiTiets) {
             if (od.sanPhamChiTiet.giaBan !== od.giaBan) {

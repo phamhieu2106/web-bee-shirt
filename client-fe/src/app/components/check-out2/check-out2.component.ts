@@ -263,8 +263,8 @@ export class CheckOut2Component {
               this.sendMessage(order);
               this.turnOffOverlay("");
             },
-            error: (errRes: HttpErrorResponse) => {
-              this.notifService.error(errRes.error.message);
+            error: (errResp: HttpErrorResponse) => {
+              this.notifService.error(errResp.error.message);
               this.turnOffOverlay("");
             },
           });
@@ -275,19 +275,6 @@ export class CheckOut2Component {
 
   // 7.1
   private mapCartItemsToOrderDetails(): OrderDetailsReq[] {
-    // let result: OrderDetailsReq[] = [];
-    // for (let item of this.cartItems) {
-    //   let orderDetails: OrderDetailsReq = {
-    //     id: null,
-    //     soLuong: item.soLuong,
-    //     giaBan: item.spct.giaBan,
-    //     giaNhap: item.spct.giaNhap,
-    //     sanPhamChiTietId: item.spct.id,
-    //   };
-    //   result.push(orderDetails);
-    // }
-    // return result;
-
     let result: OrderDetailsReq[] = [];
     for (let item of this.cartItems) {
       let price = item.spct.giaBan;
@@ -448,11 +435,6 @@ export class CheckOut2Component {
     return 0;
   }
 
-  // 4
-  // private ghnService(): number {
-  //   return 0;
-  // }
-
   // 5
   private getFinalPrice(): number {
     return (
@@ -609,16 +591,14 @@ export class CheckOut2Component {
       next: (data) => {
         this.webSocketService.sendMessage("Bạn có đơn hàng mới!");
       },
-      error: (errRes: HttpErrorResponse) => {
-        this.notifService.error(errRes.error.message);
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
       },
     });
   }
 
   // 17
   public async getShipPrice() {
-    console.log(this.realPrice - this.salePrice - this.discountPrice);
-
     if (this.realPrice - this.salePrice - this.discountPrice >= 2_000_000) {
       this.isFreeShip = true;
       this.shipPrice = 0;

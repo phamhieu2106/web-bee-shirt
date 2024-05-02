@@ -5,9 +5,12 @@ import { OrderHistory } from "src/app/model/class/order-history.class";
 
 import { Order } from "src/app/model/class/order.class";
 import { Payment } from "src/app/model/class/payment.class";
+import { AddNotificationReq } from "src/app/model/interface/add-notifi-req.interface";
 import { ChangeOrderStatusReq } from "src/app/model/interface/change-order-status-req.interface";
+import { NotifService } from "src/app/service/notif.service";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
+import { WebSocketService } from "src/app/service/web-socket.service";
 import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
@@ -41,10 +44,14 @@ export class TrackingComponent {
   constructor(
     private orderService: OrderService,
     private notifService: NotificationService,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private notifService2: NotifService,
+    private webSocketService: WebSocketService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.webSocketService.openWebSocket();
+  }
 
   // public functions
   // 1
@@ -179,6 +186,7 @@ export class TrackingComponent {
             this.notifService.success("Hủy đơn hàng thành công!");
             // this.getOrderByCode();
             this.turnOffOverlay("");
+            this.sendMessage(this.selectedOrder.id);
           },
           error: (errResp: HttpErrorResponse) => {
             this.notifService.error(errResp.error.message);
@@ -186,6 +194,23 @@ export class TrackingComponent {
           },
         });
       }
+    });
+  }
+
+  private sendMessage(orderId: number): void {
+    const newNotif: AddNotificationReq = {
+      type: "CANCEL_ORDER",
+      content: `Một khách hàng đã hủy đơn hàng!`,
+      relatedUrl: `/hoa-don/chi-tiet-hoa-don/${orderId}`,
+      custId: null,
+    };
+    this.notifService2.createNewNotification(newNotif).subscribe({
+      next: (data) => {
+        this.webSocketService.sendMessage("Một khách hàng đã hủy đơn hàng!");
+      },
+      error: (errResp: HttpErrorResponse) => {
+        this.notifService.error(errResp.error.message);
+      },
     });
   }
 

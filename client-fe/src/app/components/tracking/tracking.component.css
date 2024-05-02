@@ -404,3 +404,273 @@ img {
     background: rgba(218, 41, 28, 0.2);
     color: #DA291C;
 }
+
+.order-tracking-status-list-item {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    min-height: 78px;
+    display: flex;
+    padding-bottom: 15px;
+  }
+  
+  .order-tracking-status-list-item:last-child {
+    padding-bottom: 0;
+    min-height: 0;
+  }
+  
+  .order-tracking-status-list-item .icon {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #edf1f5;
+    margin: 0 12px;
+    position: relative;
+    z-index: 3;
+  }
+  
+  .order-tracking-status-list-item .icon img,
+  .order-tracking-status-list-item .icon svg {
+    display: block;
+  }
+  
+  .order-tracking-status-list-item strong {
+    display: block;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    margin-bottom: 6px;
+  }
+  
+  .order-tracking-status-list-item .date {
+    width: 65px;
+    min-width: 65px;
+  }
+  
+  .order-tracking-status-list-item .date .time {
+    display: block;
+    margin-top: 6px;
+  }
+  
+  .order-tracking-status-list-item .action-search {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1.5;
+    padding: 7px 15px;
+    background: #63b1bc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  
+  .order-tracking-status-list-item .detail {
+    position: relative;
+    flex-grow: 1;
+  }
+  
+  .order-tracking-status-list-item .detail:before {
+    content: "";
+    width: 1px;
+    height: 100%;
+    background-color: #edf1f5;
+    position: absolute;
+    left: -25px;
+    top: 13px;
+  }
+  
+  .order-tracking-status-list-item:last-child .detail:before {
+    content: none;
+  }
+  
+  .order-tracking-status-list-item.active .icon {
+    background-color: #e0eff2;
+  }
+  
+  .order-tracking-status-list-item.active .icon svg path {
+    stroke: #63b1bc;
+  }
+  
+  .order-tracking-status-list-item.active.shipping .icon {
+    background-color: #d5e9fe;
+  }
+  
+  .order-tracking-status-list-item.active.shipping .icon svg path {
+    stroke: #2e90fa;
+  }
+  
+  .order-tracking-status-list-item.active.delivered .icon {
+    background-color: #e3eedc;
+  }
+  
+  .order-tracking-status-list-item.active.delivered .icon svg path {
+    stroke: #74aa50;
+  }
+  
+  .order-tracking-status-list-item.cancel .icon,
+  .order-tracking-status-list-item.cancel.active .icon {
+    background-color: rgba(218, 41, 28, 0.2);
+  }
+  
+  .order-tracking-status-list-item.cancel .icon svg path,
+  .order-tracking-status-list-item.cancel.active .icon svg path {
+    stroke: #da291c;
+  }
+  
+  .order-tracking {
+    position: relative;
+    margin-left: auto;
+  }
+  
+  .order-tracking .order-tracking-status-list {
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(51, 63, 72, 0.1);
+    border-radius: 2px;
+    padding: 20px 16px;
+    z-index: 30;
+    right: 0;
+    top: 100%;
+    position: absolute;
+    width: 375px;
+    margin-top: 10px;
+    display: none;
+  }
+  
+  .order-tracking.active .order-tracking-status-list {
+    display: block;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    width: auto;
+  }
+  
+  
+  
+  
+  .steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center;
+  }
+  
+  .steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 80px;
+    text-align: center;
+  }
+  
+  .steps .step .step-icon-wrap::before,
+  .steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: "";
+    z-index: 1;
+  }
+  
+  .steps .step .step-icon-wrap::before {
+    left: 0;
+  }
+  
+  .steps .step .step-icon-wrap::after {
+    right: 0;
+  }
+  
+  .steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 38px;
+    line-height: 81px;
+    z-index: 5;
+  }
+  
+  .steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .steps .step:first-child .step-icon-wrap::before {
+    display: none;
+  }
+  
+  .steps .step:last-child .step-icon-wrap::after {
+    display: none;
+  }
+  
+  .steps .step.completed .step-icon-wrap::before,
+  .steps .step.completed .step-icon-wrap::after {
+    background-color: #000000;
+  }
+  
+  .steps .step.completed .step-icon {
+    border-color: #000000;
+    background-color: #000000;
+    color: #fff;
+  }
+  
+  .completed span {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+      display: none;
+    }
+  }
+  
+  .bg-faded,
+  .bg-secondary {
+    background-color: #f5f5f5 !important;
+  }

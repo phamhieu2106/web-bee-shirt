@@ -15,6 +15,7 @@ import { OrderService } from "src/app/service/order.service";
 export class MyOrdersComponent {
   public orderStatus: string = "ALL";
   public orders: Order[] = [];
+  private webSocket!: WebSocket;
 
   // constructor, ngOn
   constructor(
@@ -26,6 +27,7 @@ export class MyOrdersComponent {
 
   ngOnInit(): void {
     this.getOrdersByStatus(this.orderStatus);
+    this.openWebSocket();
   }
 
   // public functions
@@ -48,7 +50,14 @@ export class MyOrdersComponent {
       return "Hoàn thành";
     } else if (orderStatus === "HUY") {
       return "Hủy";
+    } else if (orderStatus === "TRA_HANG") {
+      return "Trả hàng";
+    } else if (orderStatus === "CHO_HOAN_TIEN") {
+      return "Chờ hoàn tiền";
+    } else if (orderStatus === "DA_HOAN_TIEN") {
+      return "Đã hoàn tiền";
     }
+
     return "";
   }
 
@@ -66,6 +75,12 @@ export class MyOrdersComponent {
       return "btn rounded order-hoan-thanh";
     } else if (orderStatus === "HUY") {
       return "btn rounded order-huy";
+    } else if (orderStatus === "TRA_HANG") {
+      return "fa-solid fa-rotate-left";
+    } else if (orderStatus === "CHO_HOAN_TIEN") {
+      return "fa-solid fa-comment-dollar";
+    } else if (orderStatus === "DA_HOAN_TIEN") {
+      return "fa-solid fa-money-bill-transfer";
     }
     return "";
   }
@@ -87,39 +102,13 @@ export class MyOrdersComponent {
   }
 
   // private functions
-
-  // public openCity(event: MouseEvent, cityName: string): void {
-  //   // Ngăn chặn sự kiện mặc định khi nhấp vào nút (nếu được gọi từ sự kiện click)
-  //   if (event) {
-  //     event.preventDefault();
-  //   }
-
-  //   // Ẩn tất cả các tab content
-  //   const tabContents = document.getElementsByClassName("tabcontent");
-  //   for (let i = 0; i < tabContents.length; i++) {
-  //     const tabContent = tabContents[i] as HTMLElement;
-  //     tabContent.style.display = "none";
-  //   }
-
-  //   // Xóa lớp active khỏi tất cả các tablinks
-  //   const tabLinks = document.getElementsByClassName("tablinks");
-  //   for (let i = 0; i < tabLinks.length; i++) {
-  //     const tabLink = tabLinks[i] as HTMLElement;
-  //     tabLink.classList.remove("active");
-  //   }
-
-  //   // Hiển thị tab content tương ứng với cityName
-  //   const cityElement = document.getElementById(cityName);
-  //   if (cityElement) {
-  //     cityElement.style.display = "block";
-  //   }
-
-  //   // Thêm lớp active cho tablink tương ứng
-  //   const activeTabLink = document.querySelector(
-  //     `.tablinks[onclick="openCity(event, '${cityName}')"]`
-  //   );
-  //   if (activeTabLink) {
-  //     activeTabLink.classList.add("active");
-  //   }
-  // }
+  // 1
+  private openWebSocket(): void {
+    this.webSocket = new WebSocket("ws://localhost:8080/notification");
+    this.webSocket.onopen = (event) => {};
+    this.webSocket.onmessage = (event) => {
+      this.getOrdersByStatus(this.orderStatus);
+    };
+    this.webSocket.onclose = (event) => {};
+  }
 }

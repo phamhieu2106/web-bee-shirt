@@ -29,6 +29,8 @@ export class HoanTienComponent {
   @Output() hoaDonChange = new EventEmitter<HoaDon>();
 
   thanhToanForm: FormGroup;
+  overlayText: string;
+  isLoadding: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -108,14 +110,19 @@ export class HoanTienComponent {
       confirmButtonText: "Đồng ý",
       cancelButtonText: "Hủy",
     }).then((result) => {
+      // start
+
+      this.turnOnOverlay("Vui lòng chờ");
       if (result.isConfirmed) {
         this.hoaDonService.refundMoney(newThanhToan, this.hoaDonId).subscribe({
           next: (resp) => {
             setTimeout(() => {
               this.hoaDonChange.emit(resp);
-            });
-            this.notification.success("Hoàn tiền thành công");
+            }, 300);
             document.getElementById("closeModalHoanTien").click();
+            this.notification.success("Hoàn tiền thành công");
+            this.turnOffOverlay("");
+
             this.resetForm();
           },
           error: (err) => {
@@ -135,5 +142,15 @@ export class HoanTienComponent {
 
   patchTienKhachDua(value: number) {
     this.thanhToanForm.get("tienKhachDua").patchValue(value);
+  }
+
+  private turnOnOverlay(text: string): void {
+    this.overlayText = text;
+    this.isLoadding = true;
+  }
+
+  private turnOffOverlay(text: string): void {
+    this.overlayText = "";
+    this.isLoadding = false;
   }
 }

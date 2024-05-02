@@ -1,5 +1,6 @@
 package com.datn.backend.service.impl;
 
+import com.datn.backend.app_configuration.VNPayConstant;
 import com.datn.backend.dto.request.*;
 import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
@@ -21,19 +22,34 @@ import com.datn.backend.model.san_pham.SanPhamChiTiet;
 import com.datn.backend.repository.*;
 import com.datn.backend.service.EmailService;
 import com.datn.backend.service.HoaDonService;
+import com.datn.backend.utility.Config;
 import com.datn.backend.utility.UtilityFunction;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -165,10 +181,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (hoaDonUpdate.getPhieuGiamGia() != null) {
             hoaDonUpdate.getPhieuGiamGia().setSoLuong(hoaDonUpdate.getPhieuGiamGia().getSoLuong() + 1);
 //            System.out.println(hoaDonUpdate.getPhieuGiamGia());
-            if ( hoaDonUpdate.getPhieuGiamGia().getLoai() == 0 &&  hoaDonUpdate.getKhachHang().getId() != null) {
+            if (hoaDonUpdate.getPhieuGiamGia().getLoai() == 0 && hoaDonUpdate.getKhachHang().getId() != null) {
                 //chuyen trang thai cua khach hang trong phieu giam gia
                 PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = pggKhRepo.findByPhieuGiamGiaIdAndKhachHangId(
-                        hoaDonUpdate.getPhieuGiamGia().getId(),hoaDonUpdate.getKhachHang().getId());
+                        hoaDonUpdate.getPhieuGiamGia().getId(), hoaDonUpdate.getKhachHang().getId());
                 phieuGiamGiaKhachHang.setTrangThai(1); //unUsed
                 pggKhRepo.save(phieuGiamGiaKhachHang);
             }
@@ -350,7 +366,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 }
 
                 //chuyen trang thai cua khach hang trong phieu giam gia
-                PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = pggKhRepo.findByPhieuGiamGiaIdAndKhachHangId(phieuGiamGia.getId(),khachHangId);
+                PhieuGiamGiaKhachHang phieuGiamGiaKhachHang = pggKhRepo.findByPhieuGiamGiaIdAndKhachHangId(phieuGiamGia.getId(), khachHangId);
                 phieuGiamGiaKhachHang.setTrangThai(0); //used
 
                 pggKhRepo.save(phieuGiamGiaKhachHang);
@@ -405,10 +421,10 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     public String generateMaHD() {
-        String random = UUID.randomUUID().toString().substring(0,7).toUpperCase();
+        String random = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
         String maHD = "HD" + random;
         while (hoaDonRepo.existsByMa(maHD)) {
-            random = UUID.randomUUID().toString().substring(0,7).toUpperCase();
+            random = UUID.randomUUID().toString().substring(0, 7).toUpperCase();
             maHD = "HD" + random;
         }
         return maHD;
@@ -531,6 +547,16 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // payment by vnpay
         if (!req.isPaymentMethod()) {
+            HinhThucThanhToan ck = hinhThucThanhToanRepo.findByHinhThuc(LoaiHinhThuc.CHUYEN_KHOAN).get();
+            ThanhToan payment = ThanhToan.builder()
+                    .maGiaoDich(RandomStringUtils.randomAlphanumeric(10))
+                    .moTa("thanh toan VNPay")
+                    .soTien(req.getTongTien().add(req.getPhiVanChuyen()))
+                    .trangThai(true)
+                    .hinhThucThanhToan(ck)
+                    .hoaDon(savedOrder)
+                    .build();
+            thanhToanRepo.save(payment);
         }
         return mapToHoaDonResponse(savedOrder);
     }
@@ -646,6 +672,68 @@ public class HoaDonServiceImpl implements HoaDonService {
             result.add(mapToHoaDonResponse(hd));
         }
         return result;
+    }
+
+    @Override
+    public String payWithVNPAYOnline(CreatePaymentVNPayReq payModel, HttpServletRequest request) throws UnsupportedEncodingException {
+        Random random = new Random();
+        int randomNumber = random.nextInt(90000) + 10000;
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String vnp_CreateDate = formatter.format(cld.getTime());
+
+        cld.add(Calendar.MINUTE, 5);
+
+        String vnp_ExpireDate = formatter.format(cld.getTime());
+
+        Map<String, String> vnp_Params = new HashMap<>();
+        vnp_Params.put("vnp_Version", VNPayConstant.vnp_Version);
+        vnp_Params.put("vnp_Command", VNPayConstant.vnp_Command);
+        vnp_Params.put("vnp_TmnCode", VNPayConstant.vnp_TmnCode);
+        vnp_Params.put("vnp_Amount", payModel.vnp_Amount + "00");
+        vnp_Params.put("vnp_BankCode", VNPayConstant.vnp_BankCode);
+        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+        vnp_Params.put("vnp_CurrCode", VNPayConstant.vnp_CurrCode);
+        vnp_Params.put("vnp_IpAddr", Config.getIpAddress(request));
+        vnp_Params.put("vnp_Locale", VNPayConstant.vnp_Locale);
+        vnp_Params.put("vnp_OrderInfo", payModel.vnp_OrderInfo);
+        vnp_Params.put("vnp_OrderType", payModel.vnp_OrderType);
+        vnp_Params.put("vnp_ReturnUrl", VNPayConstant.vnp_ReturnUrl);
+        vnp_Params.put("vnp_TxnRef", String.valueOf(randomNumber)); // String.valueOf(payModel.vnp_TxnRef)); // so nay la ma cua bill nen random de khong trung nhau
+        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+
+        List fieldList = new ArrayList(vnp_Params.keySet());
+        Collections.sort(fieldList);
+
+        StringBuilder hashData = new StringBuilder();
+        StringBuilder query = new StringBuilder();
+
+        Iterator itr = fieldList.iterator();
+        while (itr.hasNext()) {
+            String fieldName = (String) itr.next();
+            String fieldValue = vnp_Params.get(fieldName);
+            if (fieldValue != null && (fieldValue.length() > 0)) {
+                hashData.append(fieldName);
+                hashData.append("=");
+                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                query.append("=");
+                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+
+                if (itr.hasNext()) {
+                    query.append("&");
+                    hashData.append("&");
+                }
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = Config.hmacSHA512(VNPayConstant.vnp_HashSecret, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = VNPayConstant.vnp_Url + "?" + queryUrl;
+        System.out.println(paymentUrl);
+        return paymentUrl;
     }
 
     @Override

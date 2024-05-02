@@ -6,8 +6,10 @@ import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
 import com.datn.backend.model.hoa_don.HoaDon;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,6 +38,8 @@ public interface HoaDonService {
     List<HoaDonResponse> getOrdersForClient(int custId, String orderStatus);
 
     List<HoaDonResponse> getNoneLoggedOrdersByPhone(String phone);
+
+    String payWithVNPAYOnline(CreatePaymentVNPayReq payModel, HttpServletRequest request) throws UnsupportedEncodingException;
 
     HoaDonResponse refundMoney(ThanhToanRequest thanhToanRequest);
 }

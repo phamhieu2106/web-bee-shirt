@@ -6,6 +6,7 @@ export interface OnlineOrderRequest {
   tongTien: number;
   tienGiam: number;
   phiVanChuyen: number;
+  paymentMethod: boolean;
   hoaDonChiTiets: OrderDetailsReq[];
   khachHangId: number;
   phieuGiamGiaId: number;

@@ -4,6 +4,7 @@ import { Component } from "@angular/core";
 import { OrderHistory } from "src/app/model/class/order-history.class";
 
 import { Order } from "src/app/model/class/order.class";
+import { Payment } from "src/app/model/class/payment.class";
 import { ChangeOrderStatusReq } from "src/app/model/interface/change-order-status-req.interface";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
@@ -195,6 +196,23 @@ export class TrackingComponent {
     );
   }
 
+  public checkPaymentMethod(order: Order): string {
+    if (
+      order.thanhToans.some(
+        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "CHUYEN_KHOAN"
+      )
+    ) {
+      return "VNPAY";
+    } else if (
+      order.thanhToans.some(
+        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "TIEN_MAT"
+      ) ||
+      order.thanhToans.length === 0
+    ) {
+      return "TIEN_MAT";
+    }
+    return "";
+  }
   // private functions
   // 1
   private turnOnOverlay(text: string): void {

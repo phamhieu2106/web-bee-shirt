@@ -145,7 +145,7 @@ export class OrderTrackingComponent {
   public checkPaymentMethod(order: Order): string {
     if (
       order.thanhToans.some(
-        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "VNPAY"
+        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "CHUYEN_KHOAN"
       )
     ) {
       return "VNPAY";

@@ -6,8 +6,8 @@ import com.datn.backend.dto.response.HoaDonResponse;
 import com.datn.backend.dto.response.LichSuHoaDonResponse;
 import com.datn.backend.dto.response.PagedResponse;
 import com.datn.backend.dto.response.SoLuongDonHangResponse;
-import com.datn.backend.model.hoa_don.HoaDon;
 import com.datn.backend.service.HoaDonService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -117,5 +118,16 @@ public class HoaDonResource {
     @GetMapping("/none-logged-orders/{phone}")
     public ResponseEntity<List<HoaDonResponse>> getNoneLoggedOrdersByPhone(@PathVariable("phone") String phone) {
         return ResponseEntity.ok(hoaDonService.getNoneLoggedOrdersByPhone(phone));
+    }
+
+    // thanh toan voi vnpay
+    @PostMapping("/payment-vnpay")
+    public ResponseEntity paymentWithVNPay(@RequestBody CreatePaymentVNPayReq payModel,
+                                           HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(hoaDonService.payWithVNPAYOnline(payModel, request)) ;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -186,10 +186,6 @@ export class CheckOut2Component {
 
   // 6
   public checkOut(): void {
-    console.log(this.realPrice - this.salePrice);
-    console.log(this.discountPrice);
-    console.log(this.shipPrice);
-
     Swal.fire({
       title: "Xác nhận thanh toán?",
       cancelButtonText: "Hủy",
@@ -200,6 +196,7 @@ export class CheckOut2Component {
       confirmButtonText: "Xác nhận",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        // check information
         if (this.addressForm.invalid) {
           this.notifService.warning(
             "Vui lòng điền đầy đủ thông tin nhận hàng!"
@@ -208,37 +205,70 @@ export class CheckOut2Component {
         }
         this.turnOnOverlay("Hệ thống đang xử lý...");
 
-        const hoaDonChiTiets: OrderDetailsReq[] =
-          this.mapCartItemsToOrderDetails();
-        let req: OnlineOrderRequest = {
-          tongTien: this.realPrice - this.salePrice,
-          tienGiam: this.discountPrice,
-          phiVanChuyen: this.shipPrice,
-          hoaDonChiTiets: hoaDonChiTiets,
-          khachHangId: null,
-          phieuGiamGiaId: this.selectedDiscount?.id,
-          tenNguoiNhan: this.addressForm.get("hoTen")?.value,
-          sdtNguoiNhan: this.addressForm.get("sdt")?.value,
-          emailNguoiNhan: this.addressForm.get("email")?.value,
-          diaChiNguoiNhan: this.formatAddress(),
-          ghiChu: this.addressForm.get("ghiChu")?.value,
-        };
+        // payment
+        if (!this.paymentMethod) {
+          const data = { vnp_Amount: this.finalPrice };
+          this.orderService.paymentWithVNPay(data).subscribe({
+            next: (url: string) => {
+              window.location.replace(url);
+              const hoaDonChiTiets: OrderDetailsReq[] =
+                this.mapCartItemsToOrderDetails();
 
-        // call api
-        this.orderService.placeOrderOnline(req).subscribe({
-          next: (order: Order) => {
-            this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/tracking`]);
-            this.cartService.updateCartItemsInStorage([]);
-            this.cartService.updateCartItemsQuantityInStorage(0);
-            this.sendMessage(order);
-            this.turnOffOverlay("");
-          },
-          error: (errRes: HttpErrorResponse) => {
-            this.notifService.error(errRes.error.message);
-            this.turnOffOverlay("");
-          },
-        });
+              let req: OnlineOrderRequest = {
+                tongTien: this.realPrice - this.salePrice,
+                tienGiam: this.discountPrice,
+                phiVanChuyen: this.shipPrice,
+                paymentMethod: this.paymentMethod,
+                hoaDonChiTiets: hoaDonChiTiets,
+                khachHangId: null,
+                phieuGiamGiaId: this.selectedDiscount?.id,
+                tenNguoiNhan: this.addressForm.get("hoTen")?.value,
+                sdtNguoiNhan: this.addressForm.get("sdt")?.value,
+                emailNguoiNhan: this.addressForm.get("email")?.value,
+                diaChiNguoiNhan: this.formatAddress(),
+                ghiChu: this.addressForm.get("ghiChu")?.value,
+              };
+              localStorage.setItem("onlineOrderReq", JSON.stringify(req));
+              this.turnOffOverlay("");
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        } else {
+          const hoaDonChiTiets: OrderDetailsReq[] =
+            this.mapCartItemsToOrderDetails();
+          let req: OnlineOrderRequest = {
+            tongTien: this.realPrice - this.salePrice,
+            tienGiam: this.discountPrice,
+            phiVanChuyen: this.shipPrice,
+            paymentMethod: this.paymentMethod,
+            hoaDonChiTiets: hoaDonChiTiets,
+            khachHangId: null,
+            phieuGiamGiaId: this.selectedDiscount?.id,
+            tenNguoiNhan: this.addressForm.get("hoTen")?.value,
+            sdtNguoiNhan: this.addressForm.get("sdt")?.value,
+            emailNguoiNhan: this.addressForm.get("email")?.value,
+            diaChiNguoiNhan: this.formatAddress(),
+            ghiChu: this.addressForm.get("ghiChu")?.value,
+          };
+
+          // call api
+          this.orderService.placeOrderOnline(req).subscribe({
+            next: (order: Order) => {
+              this.notifService.success("Đặt hàng thành công!");
+              this.router.navigate([`/tracking`]);
+              this.cartService.updateCartItemsInStorage([]);
+              this.cartService.updateCartItemsQuantityInStorage(0);
+              this.sendMessage(order);
+              this.turnOffOverlay("");
+            },
+            error: (errRes: HttpErrorResponse) => {
+              this.notifService.error(errRes.error.message);
+              this.turnOffOverlay("");
+            },
+          });
+        }
       }
     });
   }

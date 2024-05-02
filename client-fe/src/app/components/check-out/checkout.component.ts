@@ -342,38 +342,71 @@ export class CheckoutComponent {
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.turnOnOverlay("Hệ thống đang xử lý...");
-        const hoaDonChiTiets: OrderDetailsReq[] =
-          this.mapCartItemsToOrderDetails();
 
-        let req: OnlineOrderRequest = {
-          tongTien: this.realPrice - this.salePrice,
-          tienGiam: this.discountPrice,
-          phiVanChuyen: this.shipPrice,
-          hoaDonChiTiets: hoaDonChiTiets,
-          khachHangId: this.loggedCust?.id,
-          phieuGiamGiaId: this.selectedDiscount?.id,
-          tenNguoiNhan: this.defaultAddr.hoTen,
-          sdtNguoiNhan: this.defaultAddr.sdt,
-          emailNguoiNhan: this.loggedCust.email,
-          diaChiNguoiNhan: this.formatAddress(this.defaultAddr),
-          ghiChu: this.note,
-        };
+        if (!this.paymentMethod) {
+          const data = { vnp_Amount: this.finalPrice };
+          this.orderService.paymentWithVNPay(data).subscribe({
+            next: (url: string) => {
+              window.location.replace(url);
+              const hoaDonChiTiets: OrderDetailsReq[] =
+                this.mapCartItemsToOrderDetails();
 
-        // call api
-        this.orderService.placeOrderOnline(req).subscribe({
-          next: (order: Order) => {
-            this.notifService.success("Đặt hàng thành công!");
-            this.router.navigate([`/profile/order-tracking/${order.ma}`]);
-            this.cartService.updateCartItemsOfLoggedUser([]);
-            this.cartService.updateCartItemsQuantityOfLoggedUser(0);
-            this.sendMessage(order);
-            this.turnOffOverlay("");
-          },
-          error: (errResp: HttpErrorResponse) => {
-            this.notifService.error(errResp.error.message);
-            this.turnOffOverlay("");
-          },
-        });
+              let req: OnlineOrderRequest = {
+                tongTien: this.realPrice - this.salePrice,
+                tienGiam: this.discountPrice,
+                phiVanChuyen: this.shipPrice,
+                paymentMethod: this.paymentMethod,
+                hoaDonChiTiets: hoaDonChiTiets,
+                khachHangId: this.loggedCust?.id,
+                phieuGiamGiaId: this.selectedDiscount?.id,
+                tenNguoiNhan: this.defaultAddr.hoTen,
+                sdtNguoiNhan: this.defaultAddr.sdt,
+                emailNguoiNhan: this.loggedCust.email,
+                diaChiNguoiNhan: this.formatAddress(this.defaultAddr),
+                ghiChu: this.note,
+              };
+              localStorage.setItem("onlineOrderReq", JSON.stringify(req));
+              this.turnOffOverlay("");
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        } else {
+          const hoaDonChiTiets: OrderDetailsReq[] =
+            this.mapCartItemsToOrderDetails();
+
+          let req: OnlineOrderRequest = {
+            tongTien: this.realPrice - this.salePrice,
+            tienGiam: this.discountPrice,
+            phiVanChuyen: this.shipPrice,
+            paymentMethod: this.paymentMethod,
+            hoaDonChiTiets: hoaDonChiTiets,
+            khachHangId: this.loggedCust?.id,
+            phieuGiamGiaId: this.selectedDiscount?.id,
+            tenNguoiNhan: this.defaultAddr.hoTen,
+            sdtNguoiNhan: this.defaultAddr.sdt,
+            emailNguoiNhan: this.loggedCust.email,
+            diaChiNguoiNhan: this.formatAddress(this.defaultAddr),
+            ghiChu: this.note,
+          };
+
+          // call api
+          this.orderService.placeOrderOnline(req).subscribe({
+            next: (order: Order) => {
+              this.notifService.success("Đặt hàng thành công!");
+              this.router.navigate([`/profile/order-tracking/${order.ma}`]);
+              this.cartService.updateCartItemsOfLoggedUser([]);
+              this.cartService.updateCartItemsQuantityOfLoggedUser(0);
+              this.sendMessage(order);
+              this.turnOffOverlay("");
+            },
+            error: (errResp: HttpErrorResponse) => {
+              this.notifService.error(errResp.error.message);
+              this.turnOffOverlay("");
+            },
+          });
+        }
       }
     });
   }

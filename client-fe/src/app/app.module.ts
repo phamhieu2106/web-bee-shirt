@@ -32,6 +32,7 @@ import { ChangePasswordComponent } from "./components/change-password/change-pas
 import { SearchProductComponent } from "./components/search-product/search-product.component";
 import { ProductImageComponent } from "./components/product-image/product-image.component";
 import { ActiveDiscountsSpctComponent } from "./child-component/active-discounts-spct/active-discounts-spct.component";
+import { VnpaySuccessComponent } from './components/vnpay-success/vnpay-success.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ActiveDiscountsSpctComponent } from "./child-component/active-discounts
     SearchProductComponent,
     ProductImageComponent,
     ActiveDiscountsSpctComponent,
+    VnpaySuccessComponent,
   ],
   imports: [
     BrowserModule,

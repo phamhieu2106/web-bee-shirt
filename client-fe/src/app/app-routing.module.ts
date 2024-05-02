@@ -13,6 +13,7 @@ import { TrackingComponent } from "./components/tracking/tracking.component";
 import { LienHeComponent } from "./components/lien-he/lien-he.component";
 import { VeChungToiComponent } from "./components/ve-chung-toi/ve-chung-toi.component";
 import { ChangePasswordComponent } from "./components/change-password/change-password.component";
+import { VnpaySuccessComponent } from "./components/vnpay-success/vnpay-success.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "homepage", pathMatch: "full" },
@@ -63,6 +64,10 @@ const routes: Routes = [
   {
     path: "change-password/:email",
     component: ChangePasswordComponent,
+  },
+  {
+    path: "vnpay-success",
+    component: VnpaySuccessComponent,
   },
 ];
 @NgModule({

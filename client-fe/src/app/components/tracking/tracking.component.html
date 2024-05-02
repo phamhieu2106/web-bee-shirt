@@ -2,8 +2,11 @@
   <div class="columns">
     <div class="column main">
       <input name="form_key" type="hidden" value="h439rDdQO2ep9GUo" />
-      <div id="authenticationPopup" data-bind="scope:'authenticationPopup', style: {display: 'none'}"
-        style="display: none"></div>
+      <div
+        id="authenticationPopup"
+        data-bind="scope:'authenticationPopup', style: {display: 'none'}"
+        style="display: none"
+      ></div>
 
       <div class="orders-tracking-wrapper">
         <form class="form-orders-tracking" novalidate="novalidate">
@@ -26,12 +29,21 @@
             <div class="field required">
               <label class="label"><span>Số điện thoại đặt hàng:</span></label>
               <div class="control required">
-                <input type="text" class="input-text mage-error rounded" id="telephone-track-order"
-                  placeholder="Số điện thoại" name="phoneOrder" [(ngModel)]="phoneOrder" />
+                <input
+                  type="text"
+                  class="input-text mage-error rounded"
+                  id="telephone-track-order"
+                  placeholder="Số điện thoại"
+                  name="phoneOrder"
+                  [(ngModel)]="phoneOrder"
+                />
               </div>
             </div>
             <div class="actions-toolbar">
-              <button class="action submit primary rounded" (click)="getOrdersByPhone()">
+              <button
+                class="action submit primary rounded"
+                (click)="getOrdersByPhone()"
+              >
                 <span>Kiểm tra</span>
               </button>
             </div>
@@ -40,17 +52,29 @@
 
         <div class="orders-tracking-results">
           <div class="content-empty" style="display: block" *ngIf="modes[0]">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M29.414 26.586L23.77 20.942C25.168 18.98 26 16.588 26 14C26 7.383 20.617 2 14 2C7.383 2 2 7.383 2 14C2 20.617 7.383 26 14 26C16.588 26 18.98 25.169 20.942 23.77L26.586 29.414C27.366 30.195 28.634 30.195 29.414 29.414C30.195 28.633 30.195 27.367 29.414 26.586ZM4 14C4 8.486 8.486 4 14 4C19.514 4 24 8.486 24 14C24 19.514 19.514 24 14 24C8.486 24 4 19.514 4 14Z"
-                fill="#A9A9A9"></path>
-              <path d="M13 20.659L6.606 17.919C6.238 17.761 6 17.399 6 17V10.625L13 13.657V20.659Z" fill="#A9A9A9">
-              </path>
+                fill="#A9A9A9"
+              ></path>
+              <path
+                d="M13 20.659L6.606 17.919C6.238 17.761 6 17.399 6 17V10.625L13 13.657V20.659Z"
+                fill="#A9A9A9"
+              ></path>
               <path
                 d="M7.03906 8.895L13.6061 6.081C13.8581 5.973 14.1421 5.973 14.3941 6.081L20.9981 8.911L14.0021 11.911L7.03906 8.895Z"
-                fill="#A9A9A9"></path>
-              <path d="M22 10.656V17C22 17.4 21.762 17.762 21.394 17.919L15 20.659V13.659L22 10.656Z" fill="#A9A9A9">
-              </path>
+                fill="#A9A9A9"
+              ></path>
+              <path
+                d="M22 10.656V17C22 17.4 21.762 17.762 21.394 17.919L15 20.659V13.659L22 10.656Z"
+                fill="#A9A9A9"
+              ></path>
             </svg>
           </div>
 
@@ -102,7 +126,8 @@
               <div class="card mb-5">
                 <div class="card-body">
                   <div
-                    class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                    class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"
+                  >
                     <div class="step completed">
                       <div class="step-icon-wrap">
                         <div class="step-icon">
@@ -113,7 +138,10 @@
                       <span>{{ selectedOrder?.createdAt }}</span>
                     </div>
 
-                    <div class="step completed" *ngFor="let oh of selectedOrder?.lichSuHoaDons">
+                    <div
+                      class="step completed"
+                      *ngFor="let oh of selectedOrder?.lichSuHoaDons"
+                    >
                       <div class="step-icon-wrap">
                         <div class="step-icon">
                           <i [ngClass]="getOrderStatusIcon(oh)"></i>
@@ -131,11 +159,21 @@
                   <div class="value">
                     <b>{{ selectedOrder.ma }}</b>
                     <div class="action-copy">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <g clip-path="url(#clip0_3850_11339)">
                           <path
                             d="M10.6668 5.33301V3.46634C10.6668 2.7196 10.6668 2.34624 10.5215 2.06102C10.3937 1.81014 10.1897 1.60616 9.93882 1.47833C9.6536 1.33301 9.28023 1.33301 8.5335 1.33301H3.46683C2.72009 1.33301 2.34672 1.33301 2.06151 1.47833C1.81063 1.60616 1.60665 1.81014 1.47882 2.06102C1.3335 2.34624 1.3335 2.7196 1.3335 3.46634V8.53301C1.3335 9.27974 1.3335 9.65311 1.47882 9.93833C1.60665 10.1892 1.81063 10.3932 2.06151 10.521C2.34672 10.6663 2.72009 10.6663 3.46683 10.6663H5.3335M7.46683 14.6663H12.5335C13.2802 14.6663 13.6536 14.6663 13.9388 14.521C14.1897 14.3932 14.3937 14.1892 14.5215 13.9383C14.6668 13.6531 14.6668 13.2797 14.6668 12.533V7.46634C14.6668 6.7196 14.6668 6.34624 14.5215 6.06102C14.3937 5.81014 14.1897 5.60616 13.9388 5.47833C13.6536 5.33301 13.2802 5.33301 12.5335 5.33301H7.46683C6.72009 5.33301 6.34672 5.33301 6.06151 5.47833C5.81063 5.60616 5.60665 5.81014 5.47882 6.06102C5.3335 6.34624 5.3335 6.7196 5.3335 7.46634V12.533C5.3335 13.2797 5.3335 13.6531 5.47882 13.9383C5.60665 14.1892 5.81063 14.3932 6.06151 14.521C6.34672 14.6663 6.72009 14.6663 7.46683 14.6663Z"
-                            stroke="#63B1BC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            stroke="#63B1BC"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
                         </g>
                         <defs>
                           <clipPath id="clip0_3850_11339">
@@ -164,17 +202,19 @@
                 </li>
                 <li>
                   <label>Thanh toán:</label>
-                  <div *ngIf="selectedOrder.thanhToans.length === 0">
+                  <div *ngIf="checkPaymentMethod(selectedOrder) === 'TIEN_MAT'">
                     Thanh toán khi nhận hàng (COD)
                   </div>
-                  <div *ngIf="selectedOrder.thanhToans.length > 0">VN PAY</div>
+                  <div *ngIf="checkPaymentMethod(selectedOrder) === 'VNPAY'">
+                    VN PAY
+                  </div>
                 </li>
                 <li>
                   <label>Trạng thái: </label>
                   <div class="value">
                     <span class="status cancel">{{
                       getOrderStatus(selectedOrder.trangThai)
-                      }}</span>
+                    }}</span>
                   </div>
                 </li>
               </ul>
@@ -189,31 +229,37 @@
                       <td class="col name">
                         <div class="order-product">
                           <div class="order-product-photo">
-                            <img class="rounded" [src]="od.sanPhamChiTiet.hinhAnhs[0].imageUrl" />
+                            <img
+                              class="rounded"
+                              [src]="od.sanPhamChiTiet.hinhAnhs[0].imageUrl"
+                            />
                           </div>
                           <div class="order-product-details">
                             <div class="order-product-name">
                               {{
-                              od.sanPhamChiTiet.sanPham.ten +
-                              " - " +
-                              od.sanPhamChiTiet.id
+                                od.sanPhamChiTiet.sanPham.ten +
+                                  " - " +
+                                  od.sanPhamChiTiet.id
                               }}
                             </div>
                             <div class="order-product-options">
                               <div class="order-product-option">
-                                <span style="
+                                <span
+                                  style="
                                     display: flex;
                                     flex-direction: row;
                                     align-items: center;
-                                  ">
+                                  "
+                                >
                                   <span>{{
                                     od.sanPhamChiTiet.mauSac.ten
-                                    }}</span></span>
+                                  }}</span></span
+                                >
                               </div>
                               <div class="order-product-option">
                                 <span>{{
                                   od.sanPhamChiTiet.kichCo.ten.split("-")[0]
-                                  }}</span>
+                                }}</span>
                               </div>
                             </div>
                           </div>
@@ -221,21 +267,40 @@
                       </td>
                       <td class="col qty">{{ od.soLuong }}</td>
                       <td class="col price">
-                        <span class="price" *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan">{{ formatPrice(od.giaBan)
-                          }}</span>
-                        <span class="old-price" *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan">{{
-                          formatPrice(od.sanPhamChiTiet.giaBan) }}</span>
-                        <span class="price" *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan">{{ formatPrice(od.giaBan)
-                          }}</span>
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan) }}</span
+                        >
+                        <span
+                          class="old-price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.sanPhamChiTiet.giaBan) }}</span
+                        >
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan) }}</span
+                        >
                       </td>
                       <td class="col price">
-                        <span class="price" *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan">{{ formatPrice(od.giaBan *
-                          od.soLuong) }}</span>
-                        <span class="old-price" *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan">{{
-                          formatPrice(od.sanPhamChiTiet.giaBan * od.soLuong)
-                          }}</span>
-                        <span class="price" *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan">{{ formatPrice(od.giaBan *
-                          od.soLuong) }}</span>
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                        >
+                        <span
+                          class="old-price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{
+                            formatPrice(od.sanPhamChiTiet.giaBan * od.soLuong)
+                          }}</span
+                        >
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -269,11 +334,11 @@
                       </th>
                       <td>
                         {{
-                        formatPrice(
-                        selectedOrder?.tongTien -
-                        selectedOrder?.tienGiam +
-                        selectedOrder?.phiVanChuyen
-                        )
+                          formatPrice(
+                            selectedOrder?.tongTien -
+                              selectedOrder?.tienGiam +
+                              selectedOrder?.phiVanChuyen
+                          )
                         }}
                       </td>
                     </tr>
@@ -282,13 +347,17 @@
               </div>
 
               <div class="mt-5">
-                <button class="btn btn-outline-danger" [disabled]="
+                <button
+                  class="btn btn-outline-danger"
+                  [disabled]="
                     !(
                       selectedOrder?.trangThai === 'CHO_XAC_NHAN' ||
                       selectedOrder?.trangThai === 'DA_XAC_NHAN' ||
                       selectedOrder?.trangThai === 'CHO_GIAO'
                     )
-                  " (click)="cancelOrder()">
+                  "
+                  (click)="cancelOrder()"
+                >
                   Hủy đơn hàng
                 </button>
               </div>

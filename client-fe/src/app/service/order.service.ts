@@ -44,4 +44,10 @@ export class OrderService {
   public cancelOrder(req: ChangeOrderStatusReq): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/change-status/cancel`, req);
   }
+
+  public paymentWithVNPay(req: any): Observable<string> {
+    return this.http.post(`${this.apiUrl}/payment-vnpay`, req, {
+      responseType: "text",
+    });
+  }
 }

@@ -39,7 +39,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     public List<SanPham> getAllSanPham() {
-        return sanPhamRepository.findAll();
+        return sanPhamRepository.findAllOrderByCreatedAt();
     }
 
     @Override

@@ -318,6 +318,21 @@ export class DsSanPhamChiTietComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
+        // replace comma
+        const giaNhap = (
+          document.getElementById(`giaNhapInput`) as HTMLInputElement
+        ).value.replaceAll(",", "");
+        const giaBan = (
+          document.getElementById(`giaBanInput`) as HTMLInputElement
+        ).value.replaceAll(",", "");
+        const soLuong = (
+          document.getElementById(`soLuongInput`) as HTMLInputElement
+        ).value.replaceAll(",", "");
+
+        this.updateForm.get("giaNhap")?.setValue(giaNhap);
+        this.updateForm.get("giaBan")?.setValue(giaBan);
+        this.updateForm.get("soLuong")?.setValue(soLuong);
+
         this.spctService.update(this.updateForm.value).subscribe({
           next: (response: string) => {
             this.notifService.success(response);
@@ -335,6 +350,7 @@ export class DsSanPhamChiTietComponent {
 
   // 13
   public changePageSize(e: any): void {
+    this.filterParams.pageNumber = 1;
     this.filterParams.pageSize = e.target.value;
     this.getProDetailsByFilterParams();
   }

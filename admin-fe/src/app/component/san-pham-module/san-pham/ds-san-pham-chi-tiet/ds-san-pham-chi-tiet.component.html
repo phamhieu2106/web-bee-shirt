@@ -526,19 +526,34 @@
           <!-- Số lượng -->
           <div class="col-6 mt-3">
             <label class="form-label font-weight-bold">Số lượng:</label>
-            <input class="form-control rounded" formControlName="soLuong" />
+            <input
+              id="soLuongInput"
+              class="form-control rounded"
+              formControlName="soLuong"
+              (input)="formatNumber($event, 'soLuongInput')"
+            />
           </div>
 
           <!-- Giá nhập -->
           <div class="col-6 mt-3">
             <label class="form-label font-weight-bold">Giá nhập:</label>
-            <input class="form-control rounded" formControlName="giaNhap" />
+            <input
+              id="giaNhapInput"
+              class="form-control rounded"
+              formControlName="giaNhap"
+              (input)="formatNumber($event, 'giaNhapInput')"
+            />
           </div>
 
           <!-- Giá bán -->
           <div class="col-6 mt-3">
             <label class="form-label font-weight-bold">Giá bán:</label>
-            <input class="form-control rounded" formControlName="giaBan" />
+            <input
+              id="giaBanInput"
+              class="form-control rounded"
+              formControlName="giaBan"
+              (input)="formatNumber($event, 'giaBanInput')"
+            />
           </div>
         </form>
       </div>

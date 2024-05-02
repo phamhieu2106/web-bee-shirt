@@ -563,9 +563,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             SanPhamChiTiet spct = spctRepo.findById(spctId)
                     .orElseThrow(() -> new ResourceNotFoundException("SPCT ID: " + spctId + " không tồn tại."));
             if (spct.getSoLuongTon() < req.getSoLuong()) {
-                throw new PlaceOrderException("Số lượng tồn SPCT ID: " + spctId + " không đủ.");
+                String msg = "Số lượng tồn sản phẩm: " + spct.getSanPham().getTen() + " không đủ!";
+                throw new PlaceOrderException(msg);
             } else if (!spct.isTrangThai()) {
-                throw new PlaceOrderException("SPCT ID: " + spctId + " đã ngừng bán.");
+                String msg = "Sản phẩm : " + spct.getSanPham().getTen() + " đã ngừng bán!";
+                throw new PlaceOrderException(msg);
             }
 
             HoaDonChiTiet hdct = new HoaDonChiTiet();

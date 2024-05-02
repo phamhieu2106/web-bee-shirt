@@ -63,6 +63,9 @@ export class ThemSanPhamChiTietComponent {
   public selectedImgFileList: File[][] = [];
   public curSelectedImgFileList: File[] = [];
 
+  public selectedImgList: HinhAnh[][] = [];
+  public curSelectedImgList: HinhAnh[] = [];
+
   public existingImgList: HinhAnh[][] = [];
   public curExistingImgList: HinhAnh[] = [];
   public isSelectAllImg: boolean[] = [];
@@ -137,6 +140,7 @@ export class ThemSanPhamChiTietComponent {
           .subscribe({
             next: (imgs: HinhAnh[]) => {
               this.existingImgList.push(imgs);
+              this.selectedImgList.push(imgs);
             },
           });
       }
@@ -176,10 +180,12 @@ export class ThemSanPhamChiTietComponent {
     }
     this.selectedColorList.splice(expectIndex, 1);
     this.selectedImgFileList.splice(expectIndex, 1);
+    this.selectedImgList.splice(expectIndex, 1);
     this.existingImgList.splice(expectIndex, 1);
     this.isSelectAllImg.splice(expectIndex, 1);
     this.uploadedImgFileList.splice(expectIndex, 1);
     this.removeColorSizeValidation(colorId, undefined, "color");
+    this.checkPriceQuantityImageOfProDetails();
   }
 
   // 6
@@ -207,6 +213,7 @@ export class ThemSanPhamChiTietComponent {
     // Gán lại ds ảnh đã chọn và ds ảnh đã upload của modal màu đang chọn vào
     this.curSelectedImgFileList =
       this.selectedImgFileList[this.curWorkingImgIndex];
+    this.curSelectedImgList = this.selectedImgList[this.curWorkingImgIndex];
     this.curExistingImgList = this.existingImgList[this.curWorkingImgIndex];
     this.curUploadImgFileList =
       this.uploadedImgFileList[this.curWorkingImgIndex];
@@ -334,11 +341,6 @@ export class ThemSanPhamChiTietComponent {
           `selectedImgInModal2${this.curWorkingImgIndex}${i}`
         ) as HTMLImageElement
       )["src"] = img.imageUrl;
-      // (
-      //   document.getElementById(
-      //     `selectedImgOutModal2${this.curWorkingImgIndex}${i}`
-      //   ) as HTMLImageElement
-      // )["src"] = img.imageUrl;
     }
     this.checkPriceQuantityImageOfProDetails();
   }
@@ -389,7 +391,7 @@ export class ThemSanPhamChiTietComponent {
         const isSpctExist = this.checkExistOfProdDetailsAndNotify();
 
         const error1 =
-          this.validation.propertyError && this.validation.priceQuantityError;
+          this.validation.propertyError || this.validation.priceQuantityError;
         if (error1 && !isSpctExist) {
           this.notifService.error("Vui lòng điền đầy đủ thông tin sản phẩm!");
           return;
@@ -513,6 +515,19 @@ export class ThemSanPhamChiTietComponent {
       selectedRow.remove();
       this.removeColorSizeValidation(colorId, sizeId, "other");
     }
+    const isAllRowsDeleted = this.checkDeleteAllOrNot(colorId);
+    if (isAllRowsDeleted) {
+      this.removeSelectedColor(colorId);
+    }
+  }
+
+  // 15.1
+  private checkDeleteAllOrNot(colorId: number): boolean {
+    const anyRow = document.querySelector(`.soLuong${colorId}`);
+    if (anyRow) {
+      return false;
+    }
+    return true;
   }
 
   // 16

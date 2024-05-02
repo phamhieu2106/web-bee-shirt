@@ -88,10 +88,12 @@
           </li>
           <li>
             <label>Hình thức thanh toán:</label>
-            <div class="value" *ngIf="order?.thanhToans.length === 0">
+            <div class="value" *ngIf="checkPaymentMethod(order) === 'TIEN_MAT'">
               Thanh toán khi nhận hàng (COD)
             </div>
-            <div class="value" *ngIf="order?.thanhToans.length > 0">VN Pay</div>
+            <div class="value" *ngIf="checkPaymentMethod(order) === 'VNPAY'">
+              VN Pay
+            </div>
           </li>
           <li>
             <label>Trạng thái: </label>

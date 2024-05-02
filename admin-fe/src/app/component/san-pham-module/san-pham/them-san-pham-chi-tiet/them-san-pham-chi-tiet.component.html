@@ -396,7 +396,11 @@
                 *ngFor="let sc of selectedColorList"
               >
                 <div class="img-container me-5 mb-2">
-                  <img class="selected-color-img" [src]="sc.image.imageUrl" />
+                  <img
+                    class="selected-color-img"
+                    [src]="sc.image.imageUrl"
+                    [title]="sc.ten"
+                  />
                   <div class="close-icon" (click)="removeSelectedColor(sc.id)">
                     &#10006;
                   </div>
@@ -628,6 +632,14 @@
                     "
                     [class]="'selectedImgOutModal' + colorIndex + sizeIndex"
                   />
+                  <img
+                    [ngClass]="isSelectAllImg[colorIndex] ? '' : 'hidden'"
+                    *ngFor="
+                      let i of existingImgList[colorIndex];
+                      let sizeIndex = index
+                    "
+                    [src]="i.imageUrl"
+                  />
                 </div>
               </div>
             </div>
@@ -684,14 +696,14 @@
 
         <div
           style="display: inline-block"
-          *ngFor="let f of curExistingImgList; let i = index"
+          *ngFor="let cei of curExistingImgList; let i = index"
         >
           <div>
             <img
               [ngClass]="isSelectAllImg[curWorkingImgIndex] ? '' : 'hidden'"
               [id]="'selectedImgInModal2' + curWorkingImgIndex + i"
               class="thumbnail me-5"
-              src=""
+              [src]="cei.imageUrl"
             />
           </div>
         </div>

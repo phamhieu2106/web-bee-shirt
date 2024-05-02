@@ -10,6 +10,7 @@ import { Order } from "src/app/model/class/order.class";
 import { ChangeOrderStatusReq } from "src/app/model/interface/change-order-status-req.interface";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
+import { Payment } from "src/app/model/class/payment.class";
 
 @Component({
   selector: "app-order-tracking",
@@ -139,6 +140,24 @@ export class OrderTrackingComponent {
         });
       }
     });
+  }
+
+  public checkPaymentMethod(order: Order): string {
+    if (
+      order.thanhToans.some(
+        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "VNPAY"
+      )
+    ) {
+      return "VNPAY";
+    } else if (
+      order.thanhToans.some(
+        (p: Payment) => p.hinhThucThanhToan.hinhThuc === "TIEN_MAT"
+      ) ||
+      order.thanhToans.length === 0
+    ) {
+      return "TIEN_MAT";
+    }
+    return "";
   }
 
   // private functions

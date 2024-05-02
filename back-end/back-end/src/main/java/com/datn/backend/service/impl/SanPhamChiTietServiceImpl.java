@@ -185,11 +185,22 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             int id = req.getIds().get(i);
             SanPhamChiTiet spct = getOneById(id);
 
+            checkUpdateSpctNhanh(req.getGiaNhaps().get(i), req.getGiaBans().get(i), req.getSoLuongs().get(i));
+
             spct.setGiaNhap(req.getGiaNhaps().get(i));
             spct.setGiaBan(req.getGiaBans().get(i));
             spct.setSoLuongTon(req.getSoLuongs().get(i));
 
             spctRepo.save(spct);
+        }
+    }
+
+    private void checkUpdateSpctNhanh(BigDecimal giaNhap, BigDecimal giaBan, Integer soLuong) {
+        if (giaNhap.compareTo(BigDecimal.ZERO) < 0 || giaBan.compareTo(BigDecimal.ZERO) < 0 || soLuong < 0) {
+            throw new RuntimeException("Giá nhập, giá bán, số lượng phải lớn hơn 0!");
+        }
+        if (giaNhap.compareTo(giaBan) > 0) {
+            throw new RuntimeException("Giá nhập phải nhỏ hơn giá bán!");
         }
     }
 
@@ -312,6 +323,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 message = changeImagesWhenColorChange(req.getSanPhamId(), req.getMauSacId(), spctById);
             }
 
+            checkUpdateSpctNhanh(req.getGiaNhap(), req.getGiaBan(), req.getSoLuong());
             spctById.setSoLuongTon(req.getSoLuong());
             spctById.setGiaNhap(req.getGiaNhap());
             spctById.setGiaBan(req.getGiaBan());

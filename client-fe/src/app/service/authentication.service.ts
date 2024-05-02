@@ -113,6 +113,6 @@ export class AuthenticationService {
 
   // 12
   public changePassword(req: ChangePwdReq): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/change-pwd`, req);
+    return this.http.post<any>(`${this.apiUrl}/change-pwd-log`, req);
   }
 }

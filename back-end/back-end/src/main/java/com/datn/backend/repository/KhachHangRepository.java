@@ -17,6 +17,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
     KhachHang getByEmail(String email);
 
+    KhachHang getBySdt(String phone);
+
     boolean existsByEmail(String email);
 
     boolean existsBySdt(String sdt);

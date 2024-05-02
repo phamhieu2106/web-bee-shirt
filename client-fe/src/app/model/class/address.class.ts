@@ -4,7 +4,7 @@ export class Address {
   id: number;
   hoTen: string;
   sdt: string;
-  tinh: number;
+  tinh: string;
   huyen: string;
   xa: string;
   duong: string;

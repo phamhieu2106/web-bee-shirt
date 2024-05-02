@@ -46,6 +46,8 @@ export class SuaPhieuComponent implements OnInit {
   checkMail:boolean
   giaTriNew: any;
 
+  checkNgayBatDau:boolean = false
+
  
 
 
@@ -61,6 +63,7 @@ export class SuaPhieuComponent implements OnInit {
 
   ngOnInit(): void {
     this.initUpdateForm();
+
    
     this.idPhieu = this.route.snapshot.params["id"];
     this.idKhach = this.idPhieu
@@ -89,6 +92,10 @@ export class SuaPhieuComponent implements OnInit {
           this.updateForm.get("giaTriMax").disable()
         }
 
+
+        if(this.phieu.trangThai =='Đang diễn ra'){
+          this.checkNgayBatDau = true
+        }
 
 
 
@@ -203,7 +210,8 @@ export class SuaPhieuComponent implements OnInit {
       soLuong: new FormControl(phieu?.soLuong, [Validators.required, Validators.min(1)]),
       thoiGianBatDau: new FormControl(phieu?.thoiGianBatDau, [Validators.required, this.validateNgayBatDau()]),
       thoiGianKetThuc: new FormControl(phieu?.thoiGianKetThuc, [Validators.required, this.validateNgay()]),
-      dieuKienGiam: new FormControl(phieu?.dieuKienGiam -0, [this.validateDieuKien()]),
+      dieuKienGiam: new FormControl(phieu?.dieuKienGiam -0, [ Validators.required,
+        Validators.min(0),]),
       giaTri: new FormControl(phieu?.giaTri -0 , [ this.validateVip()]),
       giaTriMax: new FormControl(phieu?.giaTriMax - 0, [this.validateMax()]),
     });
@@ -327,7 +335,7 @@ export class SuaPhieuComponent implements OnInit {
       // Kiểm tra nếu ngày bắt đầu trước ngày hiện tại
       const ngayMoi = new Date(ngayBatDau)
     
-      if (ngayMoi <= currentDate) {
+      if (ngayMoi <= currentDate && this.checkNgayBatDau == false) {
         
           return { ngayBatDau: "Ngày bắt đầu phải sau ngày hiện tại" };
       }

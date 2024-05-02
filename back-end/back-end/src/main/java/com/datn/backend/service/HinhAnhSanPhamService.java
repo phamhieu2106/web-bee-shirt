@@ -8,5 +8,7 @@ public interface HinhAnhSanPhamService {
 
     List<HinhAnh> getByMauSac(String tenMau, int sanPhamID);
 
+    List<HinhAnh> getImgsOf1ProductColor(int prodId, int colorId);
+
     List<String> getAllUrlBySanPhamAndMauSac(int productId, int colorId);
 }

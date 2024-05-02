@@ -2,7 +2,7 @@ package com.datn.backend.resource;
 
 import com.datn.backend.dto.request.AddSpctReq;
 import com.datn.backend.dto.request.CapNhatNhanhSpctReq;
-import com.datn.backend.dto.request.CapNhatSpctRequest;
+import com.datn.backend.dto.request.UpdateSpctReq;
 import com.datn.backend.dto.request.FilterSPCTParams;
 import com.datn.backend.dto.request.UpdateCommonPropertiesReq;
 import com.datn.backend.dto.response.PagedResponse;
@@ -71,21 +71,15 @@ public class SanPhamChiTietResource {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody CapNhatSpctRequest req) {
+    public ResponseEntity<String> update(@RequestBody UpdateSpctReq req) {
         String updateResult = spctService.update(req);
-        return ResponseEntity.ok("Cập nhật thành công! " + updateResult);
+        return ResponseEntity.ok(updateResult);
     }
 
     @GetMapping("/min-max-price/{productId}")
     public ResponseEntity<BigDecimal[]> getMinAndMaxPrice(@PathVariable("productId") int productId) {
         return ResponseEntity.ok(spctService.getMinAndMaxPrice(productId));
     }
-
-//    @GetMapping("/admin/status/{id}")
-//    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
-//        spctService.changeStatus(id);
-//        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
-//    }
 
     @GetMapping("/check-exist")
     public ResponseEntity<Boolean> checkExist(@RequestParam("spId") int spId,

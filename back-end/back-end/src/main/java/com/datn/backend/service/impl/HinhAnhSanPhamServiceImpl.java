@@ -20,6 +20,11 @@ public class HinhAnhSanPhamServiceImpl implements HinhAnhSanPhamService {
     }
 
     @Override
+    public List<HinhAnh> getImgsOf1ProductColor(int prodId, int colorId) {
+        return hinhAnhRepo.getImgsOf1ProductColor(prodId, colorId);
+    }
+
+    @Override
     public List<String> getAllUrlBySanPhamAndMauSac(int productId, int colorId) {
         return hinhAnhRepo.getAllUrlBySanPhamAndMauSac(productId, colorId);
     }

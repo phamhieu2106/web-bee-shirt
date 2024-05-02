@@ -234,10 +234,11 @@
                           </div>
                           <div class="order-product-details">
                             <div class="order-product-name">
-                              {{ od.sanPhamChiTiet.sanPham.ten }}
-                            </div>
-                            <div class="order-product-sku">
-                              {{ od.sanPhamChiTiet.sanPham.ma }}
+                              {{
+                                od.sanPhamChiTiet.sanPham.ten +
+                                  " - " +
+                                  od.sanPhamChiTiet.id
+                              }}
                             </div>
                             <div class="order-product-options">
                               <div class="order-product-option">
@@ -247,13 +248,10 @@
                                     flex-direction: row;
                                     align-items: center;
                                   "
-                                  ><span
-                                    class="swatch-option color"
-                                    style="
-                                      background-image: url('https://media.canifa.com/attribute/swatch/images/cb337.png');
-                                    "
-                                  ></span>
-                                  <span>CB337</span></span
+                                >
+                                  <span>{{
+                                    od.sanPhamChiTiet.mauSac.ten
+                                  }}</span></span
                                 >
                               </div>
                               <div class="order-product-option">
@@ -267,23 +265,64 @@
                       </td>
                       <td class="col qty">{{ od.soLuong }}</td>
                       <td class="col price">
-                        <span class="price">838.600 ₫</span>
-                        <span class="old-price">1.198.000 ₫</span>
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan) }}</span
+                        >
+                        <span
+                          class="old-price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.sanPhamChiTiet.giaBan) }}</span
+                        >
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan) }}</span
+                        >
+                      </td>
+                      <td class="col price">
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                        >
+                        <span
+                          class="old-price"
+                          *ngIf="od.giaBan !== od.sanPhamChiTiet.giaBan"
+                          >{{
+                            formatPrice(od.sanPhamChiTiet.giaBan * od.soLuong)
+                          }}</span
+                        >
+                        <span
+                          class="price"
+                          *ngIf="od.giaBan === od.sanPhamChiTiet.giaBan"
+                          >{{ formatPrice(od.giaBan * od.soLuong) }}</span
+                        >
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+
               <div class="order-details-totals">
                 <table>
                   <tbody>
                     <tr class="sub-totals">
-                      <th>Giá trị đơn hàng</th>
-                      <td>1.198.000 ₫</td>
+                      <th>Giá trị đơn hàng:</th>
+                      <td>{{ formatPrice(selectedOrder?.tongTien) }}</td>
                     </tr>
                     <tr class="sub-totals">
-                      <th>Chiết khấu</th>
-                      <td style="color: rgb(218, 41, 28)">359.400 ₫</td>
+                      <th>Giảm giá:</th>
+                      <td style="color: rgb(218, 41, 28)">
+                        {{ formatPrice(selectedOrder?.tienGiam) }}
+                      </td>
+                    </tr>
+                    <tr class="sub-totals">
+                      <th>Phí vận chuyển</th>
+                      <td>
+                        {{ formatPrice(selectedOrder?.phiVanChuyen) }}
+                      </td>
                     </tr>
                   </tbody>
                   <tfoot>
@@ -291,10 +330,34 @@
                       <th style="color: rgb(51, 63, 72)">
                         Tổng tiền thanh toán
                       </th>
-                      <td>838.600 ₫</td>
+                      <td>
+                        {{
+                          formatPrice(
+                            selectedOrder?.tongTien -
+                              selectedOrder?.tienGiam +
+                              selectedOrder?.phiVanChuyen
+                          )
+                        }}
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
+              </div>
+
+              <div class="mt-5">
+                <button
+                  class="btn btn-outline-danger"
+                  [disabled]="
+                    !(
+                      selectedOrder?.trangThai === 'CHO_XAC_NHAN' ||
+                      selectedOrder?.trangThai === 'DA_XAC_NHAN' ||
+                      selectedOrder?.trangThai === 'CHO_GIAO'
+                    )
+                  "
+                  (click)="cancelOrder()"
+                >
+                  Hủy đơn hàng
+                </button>
               </div>
             </div>
           </div>

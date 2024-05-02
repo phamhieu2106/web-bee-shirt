@@ -147,7 +147,8 @@ export class ThemPhieuComponent implements OnInit {
         this.validateNgay(),
       ]),
       dieuKienGiam: new FormControl("", [
-        this.validateDieuKien()
+         Validators.required,
+        Validators.min(0),
       ]),
       giaTri: new FormControl("", [Validators.required, this.validateVip()]),
       giaTriMax: new FormControl(this.giaTriToiDa, [

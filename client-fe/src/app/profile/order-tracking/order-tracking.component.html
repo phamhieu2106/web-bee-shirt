@@ -127,7 +127,6 @@
                             od.sanPhamChiTiet.id
                         }}
                       </div>
-                      <!-- <div class="order-product-sku">8TH23W003-CB337-L</div> -->
                       <div class="order-product-options">
                         <div class="order-product-option">
                           <span
@@ -136,12 +135,11 @@
                               flex-direction: row;
                               align-items: center;
                             "
-                            ><span
-                              class="swatch-option color"
-                              style="
-                                background-image: url('https://media.canifa.com/attribute/swatch/images/cb337.png');
-                              "
-                            ></span>
+                          >
+                            <img
+                              [src]="od.sanPhamChiTiet.mauSac?.image?.imageUrl"
+                              width="20px"
+                            />
                             <span>{{
                               od.sanPhamChiTiet.mauSac.ten
                             }}</span></span
@@ -204,7 +202,7 @@
             <tbody>
               <tr class="sub-totals">
                 <th>Giá trị đơn hàng:</th>
-                <td>{{ formatPrice(order?.tongTien + order?.tienGiam) }}</td>
+                <td>{{ formatPrice(order?.tongTien) }}</td>
               </tr>
               <tr class="sub-totals">
                 <th>Giảm giá:</th>
@@ -212,21 +210,28 @@
                   {{ formatPrice(order?.tienGiam) }}
                 </td>
               </tr>
-              <!-- <tr class="sub-totals">
-                <th>Giảm giá từ phiếu</th>
-                <td style="color: rgb(218, 41, 28)">
-                  {{ formatPrice(order?.tienGiam - totalSalePrice) }}
+              <tr class="sub-totals">
+                <th>Phí vận chuyển</th>
+                <td>
+                  {{ formatPrice(order?.phiVanChuyen) }}
                 </td>
-              </tr> -->
+              </tr>
             </tbody>
             <tfoot>
               <tr class="grand-totals">
                 <th style="color: rgb(51, 63, 72)">Tổng tiền thanh toán</th>
-                <td>{{ formatPrice(order?.tongTien) }}</td>
+                <td>
+                  {{
+                    formatPrice(
+                      order?.tongTien - order?.tienGiam + order?.phiVanChuyen
+                    )
+                  }}
+                </td>
               </tr>
             </tfoot>
           </table>
         </div>
+
         <div class="mt-5">
           <button
             class="btn btn-outline-danger"

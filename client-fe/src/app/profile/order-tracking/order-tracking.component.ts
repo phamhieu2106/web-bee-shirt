@@ -110,9 +110,6 @@ export class OrderTrackingComponent {
 
   // 5
   public cancelOrder(): void {
-    // số lượng tồn spct
-    // số lượng discount
-
     Swal.fire({
       title: "Hủy đơn hàng?",
       cancelButtonText: "Cancel",
@@ -154,6 +151,7 @@ export class OrderTrackingComponent {
       this.orderService.getByCode(orderCode).subscribe({
         next: (order: Order) => {
           this.order = order;
+          console.log(this.order);
 
           //
           for (let od of this.order.hoaDonChiTiets) {
@@ -163,8 +161,8 @@ export class OrderTrackingComponent {
             }
           }
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.notifService.error(errorResponse.error.message);
+        error: (errResp: HttpErrorResponse) => {
+          this.notifService.error(errResp.error.message);
         },
       });
     });

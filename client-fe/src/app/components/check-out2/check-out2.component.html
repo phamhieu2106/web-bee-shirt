@@ -312,6 +312,7 @@
                             <select
                               class="form-control"
                               (click)="checkDistrictSelection()"
+                              (change)="getShipPrice()"
                               formControlName="xa"
                               [ngClass]="
                                 addressForm.get('xa').invalid &&
@@ -601,7 +602,12 @@
                     <td>{{ formatPrice(discountPrice) }}</td>
                   </tr>
                   <tr>
-                    <th>Phí vận chuyển</th>
+                    <th>
+                      Phí vận chuyển
+                      <i class="text-danger" *ngIf="isFreeShip"
+                        >(Freeship cho đơn hàng từ 2tr)</i
+                      >
+                    </th>
                     <td>{{ formatPrice(shipPrice) }}</td>
                   </tr>
                 </tbody>

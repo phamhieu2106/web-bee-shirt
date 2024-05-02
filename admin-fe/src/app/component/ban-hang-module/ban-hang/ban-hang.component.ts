@@ -66,6 +66,7 @@ export class BanHangComponent implements OnInit, OnDestroy {
     this.prevButton.nativeElement.addEventListener("click", () => {
       // Xử lý khi click vào button prev
       this.onPrevButtonClick();
+      console.log(this.getQuantityOrder(this.orders))
     });
 
     this.nextButton.nativeElement.addEventListener("click", () => {
@@ -73,6 +74,8 @@ export class BanHangComponent implements OnInit, OnDestroy {
       console.log(this.nextButton.nativeElement);
       this.onNextButtonClick();
     });
+
+    
   }
 
   onNextButtonClick() {

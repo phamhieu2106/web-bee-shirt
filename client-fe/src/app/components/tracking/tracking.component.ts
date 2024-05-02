@@ -4,8 +4,10 @@ import { Component } from "@angular/core";
 import { OrderHistory } from "src/app/model/class/order-history.class";
 
 import { Order } from "src/app/model/class/order.class";
+import { ChangeOrderStatusReq } from "src/app/model/interface/change-order-status-req.interface";
 import { NotificationService } from "src/app/service/notification.service";
 import { OrderService } from "src/app/service/order.service";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-tracking",
@@ -21,6 +23,18 @@ export class TrackingComponent {
   public phoneOrder: string = "";
   public orders: Order[] = [];
   public selectedOrder: Order;
+
+  public orderStatusList = [
+    "CHO_XAC_NHAN",
+    "DA_XAC_NHAN",
+    "CHO_GIAO",
+    "DANG_GIAO",
+    "HOAN_THANH",
+    "HUY",
+    "TRA_HANG",
+    "CHO_HOAN_TIEN",
+    "DA_HOAN_TIEN",
+  ];
 
   // constructor, ngOn
   constructor(
@@ -85,6 +99,14 @@ export class TrackingComponent {
       return "Đang giao";
     } else if (orderStatus === "HOAN_THANH") {
       return "Hoàn thành";
+    } else if (orderStatus === "HUY") {
+      return "Hủy";
+    } else if (orderStatus === "TRA_HANG") {
+      return "Trả hàng";
+    } else if (orderStatus === "CHO_HOAN_TIEN") {
+      return "Chờ hoàn tiền";
+    } else if (orderStatus === "DA_HOAN_TIEN") {
+      return "Đã hoàn tiền";
     }
     return "";
   }
@@ -114,6 +136,14 @@ export class TrackingComponent {
       return "fa-solid fa-truck-fast";
     } else if (orderHistory.trangThai === "HOAN_THANH") {
       return "fa-solid fa-credit-card";
+    } else if (orderHistory.trangThai === "HUY") {
+      return "fa-solid fa-ban";
+    } else if (orderHistory.trangThai === "TRA_HANG") {
+      return "fa-solid fa-rotate-left";
+    } else if (orderHistory.trangThai === "CHO_HOAN_TIEN") {
+      return "fa-solid fa-comment-dollar";
+    } else if (orderHistory.trangThai === "DA_HOAN_TIEN") {
+      return "fa-solid fa-money-bill-transfer";
     }
     return "";
   }
@@ -123,6 +153,46 @@ export class TrackingComponent {
     for (let i = 0; i < this.modes.length; ++i) {
       this.modes[i] = mode === i ? true : false;
     }
+  }
+
+  // 7
+  public cancelOrder(): void {
+    Swal.fire({
+      title: "Hủy đơn hàng?",
+      cancelButtonText: "Cancel",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "OK",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.turnOnOverlay("Vui lòng chờ!");
+        const req: ChangeOrderStatusReq = {
+          idHoaDon: this.selectedOrder.id,
+          moTa: "123p1jppwkdpoakdsd",
+          isNext: false,
+        };
+        this.orderService.cancelOrder(req).subscribe({
+          next: () => {
+            this.notifService.success("Hủy đơn hàng thành công!");
+            // this.getOrderByCode();
+            this.turnOffOverlay("");
+          },
+          error: (errResp: HttpErrorResponse) => {
+            this.notifService.error(errResp.error.message);
+            this.turnOffOverlay("");
+          },
+        });
+      }
+    });
+  }
+
+  //
+  public filterOrderHistory(orderHistory: OrderHistory[]): OrderHistory[] {
+    return orderHistory?.filter((oh: OrderHistory) =>
+      this.orderStatusList.includes(oh.trangThai)
+    );
   }
 
   // private functions

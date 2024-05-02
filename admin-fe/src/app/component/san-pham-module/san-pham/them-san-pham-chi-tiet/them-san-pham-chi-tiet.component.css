@@ -118,3 +118,7 @@
 .selected-color-size {
   background-color: rgb(86, 86, 230);
 }
+
+.hidden {
+  display: none;
+}

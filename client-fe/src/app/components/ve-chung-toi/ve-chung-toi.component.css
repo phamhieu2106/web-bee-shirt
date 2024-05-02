@@ -1,0 +1,30 @@
+.std {
+    padding: 0 56px;
+}
+
+.block-about-top {
+    margin-bottom: 50px;
+    padding-bottom: 37%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.block-about-text {
+    max-width: 1170px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.block-about-text .text-center {
+    text-align: center;
+}
+
+.block-about-text .row {
+    margin-bottom: 70px;
+}
+
+.std img, .std svg {
+    display: block;
+    width: 100%;
+}

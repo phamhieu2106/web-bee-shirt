@@ -22,8 +22,10 @@ export class SanPhamChiTietService {
   public add(request: AddSPCTRequest, files: File[]): Observable<string> {
     const formData = new FormData();
     formData.append("request", JSON.stringify(request));
-    for (let file of files) {
-      formData.append("files", file);
+    if (files) {
+      for (let file of files) {
+        formData.append("files", file);
+      }
     }
     return this.http.post(`${this.apiUrl}/add`, formData, {
       responseType: "text",

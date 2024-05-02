@@ -3,6 +3,7 @@ package com.datn.backend.service.impl;
 import com.datn.backend.dto.request.ChangePasswordReq;
 import com.datn.backend.dto.request.ChangePasswordReq2;
 import com.datn.backend.dto.request.SignUpReq;
+import com.datn.backend.exception.custom_exception.ResourceExistsException;
 import com.datn.backend.model.Account;
 import com.datn.backend.model.khach_hang.DiaChi;
 import com.datn.backend.model.khach_hang.KhachHang;
@@ -73,6 +74,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public KhachHang signUp(SignUpReq req) {
+        checkPhoneAndEmailForSignUp(req);
+
         // account
         Account account = Account.builder()
                 .tenDangNhap(req.getSdt())
@@ -116,5 +119,22 @@ public class AuthServiceImpl implements AuthService {
         KhachHang savedCust = customerRepo.save(customer);
 
         return savedCust;
+    }
+
+    private void checkPhoneAndEmailForSignUp(SignUpReq req) {
+        KhachHang byPhone = customerRepo.getBySdt(req.getSdt());
+        KhachHang byEmail = customerRepo.getByEmail(req.getEmail());
+
+        if (byPhone != null && byEmail == null) {
+            throw new ResourceExistsException("Số điện thoại này đã được đăng ký!");
+        }
+
+        if (byPhone == null && byEmail != null) {
+            throw new ResourceExistsException("Email này đã được đăng ký!");
+        }
+
+        if (byPhone != null && byEmail != null) {
+            throw new ResourceExistsException("Số điện thoại và email này đã được đăng ký!");
+        }
     }
 }

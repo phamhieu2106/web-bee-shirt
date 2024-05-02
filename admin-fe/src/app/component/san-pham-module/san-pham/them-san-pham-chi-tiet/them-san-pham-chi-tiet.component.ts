@@ -46,6 +46,7 @@ export class ThemSanPhamChiTietComponent {
   public selectedIdMauSac: number;
   public propertyIdForm: FormGroup;
   public sanPham: SanPham;
+  public isSpctExist = false;
 
   public selectedColorList: MauSac[] = [];
   public selectedSizeList: KichCo[] = [];
@@ -64,6 +65,7 @@ export class ThemSanPhamChiTietComponent {
 
   public existingImgList: HinhAnh[][] = [];
   public curExistingImgList: HinhAnh[] = [];
+  public isSelectAllImg: boolean[] = [];
 
   public uploadedImgFileList: File[][] = [];
   public curUploadImgFileList: File[] = [];
@@ -83,7 +85,8 @@ export class ThemSanPhamChiTietComponent {
 
   public existSpct: SanPhamChiTiet;
   public validation: AddSpctValidation = {
-    error: false,
+    propertyError: false,
+    priceQuantityError: false,
     kieuDangId: false,
     thietKeId: false,
     tayAoId: false,
@@ -127,6 +130,17 @@ export class ThemSanPhamChiTietComponent {
       this.uploadedImgFileList.push([]);
       this.validation.priceQuantity.push(false);
       this.addColorSizeValidation(color.id, undefined, "color");
+
+      if (this.isSpctExist) {
+        this.hinhAnhSanPhamService
+          .getImgsOf1ProductColor(this.sanPham.id, color.id)
+          .subscribe({
+            next: (imgs: HinhAnh[]) => {
+              this.existingImgList.push(imgs);
+            },
+          });
+      }
+      this.isSelectAllImg.push(false);
     }
   }
 
@@ -162,6 +176,8 @@ export class ThemSanPhamChiTietComponent {
     }
     this.selectedColorList.splice(expectIndex, 1);
     this.selectedImgFileList.splice(expectIndex, 1);
+    this.existingImgList.splice(expectIndex, 1);
+    this.isSelectAllImg.splice(expectIndex, 1);
     this.uploadedImgFileList.splice(expectIndex, 1);
     this.removeColorSizeValidation(colorId, undefined, "color");
   }
@@ -191,6 +207,7 @@ export class ThemSanPhamChiTietComponent {
     // Gán lại ds ảnh đã chọn và ds ảnh đã upload của modal màu đang chọn vào
     this.curSelectedImgFileList =
       this.selectedImgFileList[this.curWorkingImgIndex];
+    this.curExistingImgList = this.existingImgList[this.curWorkingImgIndex];
     this.curUploadImgFileList =
       this.uploadedImgFileList[this.curWorkingImgIndex];
 
@@ -306,6 +323,25 @@ export class ThemSanPhamChiTietComponent {
     }
     return false;
   }
+
+  //
+  public selectAllExistingImgs(): void {
+    this.isSelectAllImg[this.curWorkingImgIndex] = true;
+    for (let i = 0; i < this.curExistingImgList.length; i++) {
+      let img = this.curExistingImgList[i];
+      (
+        document.getElementById(
+          `selectedImgInModal2${this.curWorkingImgIndex}${i}`
+        ) as HTMLImageElement
+      )["src"] = img.imageUrl;
+      // (
+      //   document.getElementById(
+      //     `selectedImgOutModal2${this.curWorkingImgIndex}${i}`
+      //   ) as HTMLImageElement
+      // )["src"] = img.imageUrl;
+    }
+    this.checkPriceQuantityImageOfProDetails();
+  }
   // end: functions xử lý sự kiện chọn ảnh
 
   // 12
@@ -352,8 +388,24 @@ export class ThemSanPhamChiTietComponent {
         this.checkPriceQuantityImageOfProDetails();
         const isSpctExist = this.checkExistOfProdDetailsAndNotify();
 
-        if (this.validation.error || isSpctExist) {
-          this.notifService.error("Thông tin sản phẩm chưa hợp lệ!");
+        const error1 =
+          this.validation.propertyError && this.validation.priceQuantityError;
+        if (error1 && !isSpctExist) {
+          this.notifService.error("Vui lòng điền đầy đủ thông tin sản phẩm!");
+          return;
+        }
+
+        if (!error1 && isSpctExist) {
+          this.notifService.error(
+            "Vui lòng xóa những sản phẩm chi tiết đã tồn tại!"
+          );
+          return;
+        }
+
+        if (error1 && isSpctExist) {
+          this.notifService.error(
+            "Vui lòng điền đầy đủ thông tin sản phẩm và xóa những sản phẩm chi tiết đã tồn tại!"
+          );
           return;
         }
 
@@ -424,9 +476,13 @@ export class ThemSanPhamChiTietComponent {
             requests: addSPCTSubRequest,
           };
 
-          observables.push(
-            this.spctService.add(addSpctReq, this.selectedImgFileList[i])
-          );
+          if (this.selectedImgFileList[i].length > 0) {
+            observables.push(
+              this.spctService.add(addSpctReq, this.selectedImgFileList[i])
+            );
+          } else {
+            observables.push(this.spctService.add(addSpctReq, null));
+          }
         }
 
         forkJoin(observables).subscribe({
@@ -531,6 +587,7 @@ export class ThemSanPhamChiTietComponent {
 
     const chinhSuaNhanhBtn = document.getElementById("chinhSuaNhanhBtn");
     chinhSuaNhanhBtn.click();
+    this.checkPriceQuantityImageOfProDetails();
     this.checkExistOfProdDetailsAndNotify();
   }
 
@@ -696,7 +753,8 @@ export class ThemSanPhamChiTietComponent {
           // hàm này kiểm tra xem SP hiện tại có SPCT nào chưa, nếu có => khởi tại lại 'propertyIdForm'
           this.spctService.getAnySpctBySanPhamId(prod.id).subscribe({
             next: (spctResponse: SanPhamChiTiet) => {
-              if (prod != null) {
+              if (spctResponse != null) {
+                this.isSpctExist = true;
                 this.existSpct = spctResponse;
 
                 this.propertyIdForm = new FormGroup({
@@ -708,6 +766,8 @@ export class ThemSanPhamChiTietComponent {
                   tayAoId: new FormControl(spctResponse.tayAo.id),
                   thietKeId: new FormControl(spctResponse.thietKe.id),
                 });
+
+                // lấy ảnh của các màu đã tồn tại
               }
             },
             error: (errResp: HttpErrorResponse) => {
@@ -835,27 +895,27 @@ export class ThemSanPhamChiTietComponent {
   // 16
   private checkPropertyValidatonForAddForm(): void {
     if (this.propertyIdForm.get("kieuDangId").value == 0) {
-      this.validation.error = true;
+      this.validation.propertyError = true;
       this.validation.kieuDangId = true;
     }
 
     if (this.propertyIdForm.get("thietKeId").value == 0) {
-      this.validation.error = true;
+      this.validation.propertyError = true;
       this.validation.thietKeId = true;
     }
 
     if (this.propertyIdForm.get("tayAoId").value == 0) {
-      this.validation.error = true;
+      this.validation.propertyError = true;
       this.validation.tayAoId = true;
     }
 
     if (this.propertyIdForm.get("coAoId").value == 0) {
-      this.validation.error = true;
+      this.validation.propertyError = true;
       this.validation.coAoId = true;
     }
 
     if (this.propertyIdForm.get("chatLieuId").value == 0) {
-      this.validation.error = true;
+      this.validation.propertyError = true;
       this.validation.chatLieuId = true;
     }
   }
@@ -866,13 +926,28 @@ export class ThemSanPhamChiTietComponent {
 
     // check image
     for (let i = 0; i < this.selectedImgFileList.length; i++) {
-      if (this.selectedImgFileList[i].length === 0) {
+      if (
+        this.selectedImgFileList[i].length === 0 &&
+        this.isSelectAllImg[i] === false
+      ) {
         hasError = true;
         this.validation.anh[i] = true;
-      } else {
+      } else if (
+        this.selectedImgFileList[i].length > 0 ||
+        this.isSelectAllImg[i] === true
+      ) {
         this.validation.anh[i] = false;
       }
     }
+
+    // for (let i = 0; i < this.isSelectAllImg.length; i++) {
+    //   if (this.isSelectAllImg[i] === false) {
+    //     hasError = true;
+    //     this.validation.anh[i] = true;
+    //   } else {
+    //     this.validation.anh[i] = false;
+    //   }
+    // }
 
     // check price & quantity
     for (let i = 0; i < this.selectedColorList.length; i++) {
@@ -909,9 +984,9 @@ export class ThemSanPhamChiTietComponent {
       this.selectedColorList.length === 0 ||
       this.selectedColorList.length === 0
     ) {
-      this.validation.error = true;
+      this.validation.priceQuantityError = true;
     } else {
-      this.validation.error = false;
+      this.validation.priceQuantityError = false;
     }
   }
 
@@ -987,25 +1062,25 @@ export class ThemSanPhamChiTietComponent {
   // 21
   private checkExistOfProdDetailsAndNotify(): boolean {
     if (this.colorSizeValidations.some((v: ColorSizeValidation) => v.isExist)) {
-      const duplicatedArr: ColorSizeValidation[] =
-        this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);
-      let message: string = "";
-      for (let i = 0; i < duplicatedArr.length; i++) {
-        const color = this.selectedColorList.find(
-          (v) => v.id === duplicatedArr[i].colorId
-        );
-        const size = this.selectedColorList.find(
-          (v) => v.id === duplicatedArr[i].sizeId
-        );
-        message += `${color.ten} - ${size.ten.split("-")[0]}`;
-        if (i !== duplicatedArr.length - 1) {
-          message += ", ";
-        }
-      }
-      if (message) {
-        message += " đã tồn tại!";
-        this.notifService.error(message);
-      }
+      // const duplicatedArr: ColorSizeValidation[] =
+      //   this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);
+      // let message: string = "";
+      // for (let i = 0; i < duplicatedArr.length; i++) {
+      //   const color = this.selectedColorList.find(
+      //     (v) => v.id === duplicatedArr[i].colorId
+      //   );
+      //   const size = this.selectedColorList.find(
+      //     (v) => v.id === duplicatedArr[i].sizeId
+      //   );
+      //   message += `${color.ten} - ${size.ten.split("-")[0]}`;
+      //   if (i !== duplicatedArr.length - 1) {
+      //     message += ", ";
+      //   }
+      // }
+      // if (message) {
+      //   message += " đã tồn tại!";
+      //   this.notifService.error(message);
+      // }
       return true;
     }
     return false;

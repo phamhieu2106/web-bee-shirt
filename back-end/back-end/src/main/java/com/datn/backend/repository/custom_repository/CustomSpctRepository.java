@@ -32,34 +32,7 @@ public class CustomSpctRepository {
             query = query + "\nAND ct.kich_co_id = :kichCoId";
             query = query.replace(":kichCoId", params.getSizeId());
         }
-
-        if (params.getFormId() != null) {
-            query = query + "\nAND ct.kieu_dang_id = :kieuDangId";
-            query = query.replace(":kieuDangId", params.getFormId());
-        }
-
-        if (params.getDesignId() != null) {
-            query = query + "\nAND ct.thiet_ke_id = :thietKeId";
-            query = query.replace(":thietKeId", params.getDesignId());
-        }
-
-        if (params.getSleeveId() != null) {
-            query = query + "\nAND ct.tay_ao_id = :tayAoId";
-            query = query.replace(":tayAoId", params.getSleeveId());
-        }
-
-        if (params.getCollarId() != null) {
-            query = query + "\nAND ct.co_ao_id = :coAoId";
-            query = query.replace(":coAoId", params.getCollarId());
-        }
-
-        if (params.getMaterialId() != null) {
-            query = query + "\nAND ct.chat_lieu_id = :chatLieuId";
-            query = query.replace(":chatLieuId", params.getMaterialId());
-        }
-
-        query = query + "\nAND ct.gia_ban >= :minPrice";
-        query = query + "\nAND ct.gia_ban <= :maxPrice";
+        query = query + "\nORDER BY ct.mau_sac_id";
 
         // get fields of PagedResponse<SanPhamChiTiet>
         List<SanPhamChiTiet> data = getContent(params, query);
@@ -83,8 +56,6 @@ public class CustomSpctRepository {
 
         List<SanPhamChiTiet> list = entityManager.createNativeQuery(query, SanPhamChiTiet.class)
                 .setParameter("sanPhamId", params.getProductId())
-                .setParameter("minPrice", params.getMinPrice())
-                .setParameter("maxPrice", params.getMaxPrice())
                 .setParameter("pageSize", params.getPageSize())
                 .setParameter("offset", offset)
                 .getResultList();
@@ -96,8 +67,6 @@ public class CustomSpctRepository {
         Integer[] result = new Integer[2];
         List<SanPhamChiTiet> list = entityManager.createNativeQuery(query, SanPhamChiTiet.class)
                 .setParameter("sanPhamId", params.getProductId())
-                .setParameter("minPrice", params.getMinPrice())
-                .setParameter("maxPrice", params.getMaxPrice())
                 .getResultList();
         result[0] = list.size();
 

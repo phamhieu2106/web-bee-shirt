@@ -299,7 +299,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
 
 
     @Query(value = """
-            SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+            SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                         FROM (
                             SELECT 1 AS Thang UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
                             SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL
@@ -315,28 +315,28 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
     List<BigDecimal> getListSalesInAnyYear(@Param("year") LocalDate year);
 
     @Query(value = """
-                    SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                    SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                                          FROM hoa_don
                                          JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                                          WHERE hoa_don.trang_thai = 'HOAN_THANH'
                                              AND created_at >= :startDate
                                              AND created_at <= DATE_ADD( :startDate , INTERVAL CEIL( :totalDays / 4) DAY)
                                          UNION ALL
-                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                                          FROM hoa_don
                                          JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                                          WHERE hoa_don.trang_thai = 'HOAN_THANH'
                                              AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 4) DAY)
                                              AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)
                                          UNION ALL
-                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                                          FROM hoa_don
                                          JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                                          WHERE hoa_don.trang_thai = 'HOAN_THANH'
                                          	AND created_at > DATE_ADD(:startDate, INTERVAL CEIL(:totalDays / 2) DAY)
                                              AND created_at <= DATE_ADD(:startDate, INTERVAL CEIL(:totalDays * 3 / 4) DAY)
                                          UNION ALL
-                                         SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+                                         SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                                             FROM hoa_don
                                             JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                                             WHERE hoa_don.trang_thai = 'HOAN_THANH'
@@ -347,7 +347,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
             , @Param("endDate") LocalDate endDate, @Param("totalDays") int totalDays);
 
     @Query(value = """
-            SELECT IFNULL(SUM(hdct.gia_ban), 0) as DoanhThu
+            SELECT IFNULL(SUM(hdct.gia_ban * hdct.so_luong), 0) as DoanhThu
                         FROM hoa_don
                         JOIN hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hoa_don.id
                         WHERE DAY(created_at) = DAY(LAST_DAY( :today ));
@@ -355,7 +355,7 @@ public interface ChartRepository extends JpaRepository<HoaDon, Integer> {
     BigDecimal getSaleLastDayOfAnyMonth(@Param("today") LocalDate today);
 
     @Query(value = """
-            SELECT COALESCE(SUM(hdct.gia_ban), 0) AS DoanhThu
+            SELECT COALESCE(SUM(hdct.gia_ban * hdct.so_luong), 0) AS DoanhThu
                         FROM (
                             SELECT 0 AS num UNION ALL
                             SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL

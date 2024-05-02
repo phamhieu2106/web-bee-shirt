@@ -79,11 +79,6 @@ export class DsSanPhamChiTietComponent {
     productId: 0,
     colorId: null,
     sizeId: null,
-    formId: null,
-    designId: null,
-    sleeveId: null,
-    collarId: null,
-    materialId: null,
   };
 
   // constructor, ngOn
@@ -300,17 +295,6 @@ export class DsSanPhamChiTietComponent {
           sanPhamId: new FormControl(this.sanPham?.id),
           mauSacId: new FormControl(response.mauSac.id, [Validators.required]),
           kichCoId: new FormControl(response.kichCo.id, [Validators.required]),
-          kieuDangId: new FormControl(response.kieuDang.id, [
-            Validators.required,
-          ]),
-          thietKeId: new FormControl(response.thietKe.id, [
-            Validators.required,
-          ]),
-          tayAoId: new FormControl(response.tayAo.id, [Validators.required]),
-          coAoId: new FormControl(response.coAo.id, [Validators.required]),
-          chatLieuId: new FormControl(response.chatLieu.id, [
-            Validators.required,
-          ]),
           giaNhap: new FormControl(response.giaNhap, [Validators.required]),
           giaBan: new FormControl(response.giaBan, [Validators.required]),
           soLuong: new FormControl(response.soLuongTon, [Validators.required]),
@@ -334,37 +318,19 @@ export class DsSanPhamChiTietComponent {
       confirmButtonText: "Cập nhật",
     }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        console.log(this.updateForm.value);
-
-        // this.spctService.update(this.updateForm.value).subscribe({
-        //   next: (response: string) => {
-        //     this.notifService.success(response);
-        //     this.getProdAndMinMaxPrice();
-        //     document.getElementById("closeUpdateBtn").click();
-        //   },
-        //   error: (errResp: HttpErrorResponse) => {
-        //     const message = JSON.parse(errResp.error).message;
-        //     this.notifService.error(message);
-        //   },
-        // });
+        this.spctService.update(this.updateForm.value).subscribe({
+          next: (response: string) => {
+            this.notifService.success(response);
+            this.getProdAndMinMaxPrice();
+            document.getElementById("closeUpdateBtn").click();
+          },
+          error: (errResp: HttpErrorResponse) => {
+            const message = JSON.parse(errResp.error).message;
+            this.notifService.error(message);
+          },
+        });
       }
     });
-  }
-
-  // 13
-  public onMinPriceChange(e: any): void {
-    this.changeableMinPrice = e.target.value;
-    this.minPrice = e.target.value;
-    this.filterParams.minPrice = e.target.value;
-    this.getProDetailsByFilterParams();
-  }
-
-  // 14
-  public onMaxPriceChange(e: any): void {
-    this.changeableMaxPrice = e.target.value;
-    this.maxPrice = e.target.value;
-    this.filterParams.maxPrice = e.target.value;
-    this.getProDetailsByFilterParams();
   }
 
   // 13
@@ -550,9 +516,6 @@ export class DsSanPhamChiTietComponent {
           this.maxPrice = response[1];
           this.changeableMaxPrice = response[1];
           this.minAndMaxPrice = response;
-
-          this.filterParams.minPrice = this.minPrice;
-          this.filterParams.maxPrice = this.maxPrice;
 
           // get spctList of sp
           this.getProDetailsByFilterParams();

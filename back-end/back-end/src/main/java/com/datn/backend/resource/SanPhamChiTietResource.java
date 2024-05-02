@@ -73,19 +73,13 @@ public class SanPhamChiTietResource {
     @PostMapping("/update")
     public ResponseEntity<String> update(@RequestBody UpdateSpctReq req) {
         String updateResult = spctService.update(req);
-        return ResponseEntity.ok("Cập nhật thành công! " + updateResult);
+        return ResponseEntity.ok(updateResult);
     }
 
     @GetMapping("/min-max-price/{productId}")
     public ResponseEntity<BigDecimal[]> getMinAndMaxPrice(@PathVariable("productId") int productId) {
         return ResponseEntity.ok(spctService.getMinAndMaxPrice(productId));
     }
-
-//    @GetMapping("/admin/status/{id}")
-//    public ResponseEntity<String> changeStatus(@PathVariable("id") int id) {
-//        spctService.changeStatus(id);
-//        return ResponseEntity.ok("Cập nhật trạng thái thành công!");
-//    }
 
     @GetMapping("/check-exist")
     public ResponseEntity<Boolean> checkExist(@RequestParam("spId") int spId,

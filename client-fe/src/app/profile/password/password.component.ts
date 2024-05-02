@@ -75,6 +75,11 @@ export class PasswordComponent {
     });
   }
 
+  //
+  public trimOldPwd(): void {
+    this.form.get("oldPwd").setValue(this.form.get("oldPwd").value.trim());
+  }
+
   // private functions
   //
   private initForm(): void {

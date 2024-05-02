@@ -443,7 +443,7 @@
     </div>
 
     <!-- bảng hiển thị các spct theo từng màu -->
-    <div *ngIf="selectedSizeList.length > 0">
+    <div *ngIf="selectedSizeList?.length > 0">
       <div
         class="card"
         *ngFor="let sc of selectedColorList; let colorIndex = index"
@@ -642,7 +642,7 @@
       class="btn btn-success rounded"
       (click)="add()"
       [disabled]="
-        !(selectedColorList.length > 0 && selectedSizeList.length > 0)
+        !(selectedColorList?.length > 0 && selectedSizeList?.length > 0)
       "
     >
       Thêm
@@ -667,7 +667,7 @@
         <!-- các ảnh đã chọn -->
         <h6>Danh sách ảnh đã chọn:</h6>
         <div class="text-center">
-          <i *ngIf="curSelectedImgFileList.length === 0">Chưa có ảnh nảo</i>
+          <i *ngIf="curSelectedImgFileList?.length === 0">Chưa có ảnh nảo</i>
         </div>
         <div
           style="display: inline-block"
@@ -700,7 +700,9 @@
         <hr />
         <h6>Danh sách ảnh của màu '{{ selectedTenMauSac }}':</h6>
         <div class="text-center">
-          <i *ngIf="curExistingImgList.length === 0">Chưa có ảnh nào</i>
+          <i *ngIf="curExistingImgList?.length === 0 || !curExistingImgList"
+            >Chưa có ảnh nào</i
+          >
         </div>
         <div
           class="image-container"
@@ -714,7 +716,7 @@
         </div>
         <br />
         <button
-          *ngIf="curExistingImgList.length > 0"
+          *ngIf="curExistingImgList?.length > 0"
           class="btn btn-secondary rounded"
           (click)="selectAllExistingImgs()"
           [disabled]="isSelectAllImg[curWorkingImgIndex]"
@@ -726,7 +728,7 @@
         <hr />
         <h6>Danh sách ảnh tải lên:</h6>
         <div class="text-center">
-          <i *ngIf="curUploadImgFileList.length === 0">Chưa có ảnh nảo</i>
+          <i *ngIf="curUploadImgFileList?.length === 0">Chưa có ảnh nảo</i>
         </div>
         <div
           class="image-container"
@@ -750,7 +752,7 @@
         <button
           class="btn btn-primary col-2 rounded"
           (click)="openFileInput(curWorkingImgIndex)"
-          [disabled]="curExistingImgList.length > 0"
+          [disabled]="curExistingImgList?.length > 0"
         >
           Tải ảnh lên
         </button>

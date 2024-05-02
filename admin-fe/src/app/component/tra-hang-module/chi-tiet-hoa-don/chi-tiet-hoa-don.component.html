@@ -17,7 +17,7 @@
                   this.hoaDon?.ma
                 }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Số Lượng Loại Sản Phẩm">{{
-                  this.hoaDon?.hoaDonChiTiets.length
+                  this.hoaDon?.hoaDonChiTiets?.length
                 }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Tên Khách Hàng">{{
                   this.hoaDon?.tenNguoiNhan
@@ -55,7 +55,7 @@
                   ></nz-badge>
                 </nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Mã Nhân Viên">
-                  {{ this.hoaDon?.nhanVien.id }}
+                  {{ this.hoaDon?.nhanVien?.id }}
                 </nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Tổng Đơn Hàng">{{
                   this.hoaDon?.tongTien | currency : "VND"
@@ -427,6 +427,20 @@
               >
               <br />
               <span nz-typography
+                ><u>Không đủ điều kiện áp dụng phiếu giảm giá</u></span
+              >
+              <div>
+                Tổng tiền trả = Tổng đơn hàng mua thực tế - tiền đơn được giảm
+              </div>
+              <br />
+              <span nz-typography
+                ><strong
+                  >Không đủ điều kiện áp dụng phiếu giảm giá cũ nhưng được áp
+                  dụng phiếu giảm giá mới</strong
+                ></span
+              >
+              <br />
+              <span nz-typography
                 ><u>Được áp dụng phiếu giảm giá mới loại %</u></span
               >
               <div>
@@ -448,20 +462,6 @@
     </ng-container>
   </div>
 </div>
-
-<ng-template #congThucTinhTien>
-  <ng-container [ngSwitch]="this.hoaDon">
-    <span *ngSwitchCase="!this.hoaDon?.phieuGiamGia">
-      Tổng tiền trả = giá sản phẩm * số lượng
-    </span>
-    <span
-      *ngSwitchCase="this.hoaDon?.phieuGiamGia && this.bestVoucher?.kieu === 0"
-    >
-      Tổng tiền trả = Tổng đơn hàng trả mua thực tế - tiền đơn được giảm + tiền
-      phiếu giảm giá mới
-    </span>
-  </ng-container>
-</ng-template>
 
 <ng-template #noData>
   <nz-empty></nz-empty>

@@ -83,4 +83,8 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             WHERE ct.id = :id
             """, nativeQuery = true)
     SanPham getProductByProductDetailsId(@Param("id") int id);
+
+
+    @Query(value = "SELECT sp FROM SanPham sp ORDER BY sp.createdAt DESC ")
+    List<SanPham> findAllOrderByCreatedAt();
 }

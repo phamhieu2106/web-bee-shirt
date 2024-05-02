@@ -152,6 +152,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTrangThai(1);
         khachHang.setImage(custImg);
         khachHang.setAccount(account);
+        khachHang.setTrangThai(1);
         khachHang = khachHangRepo.save(khachHang);
         if (UtilityFunction.isNullOrEmpty(email)) {
             // neu khong co email gui pass default sdt/DEFAULT_PASSWORD
@@ -174,6 +175,8 @@ public class KhachHangServiceImpl implements KhachHangService {
             diaChi.setXa(kh.getXa());
             diaChi.setDuong(kh.getDuong().trim());
             diaChi.setMacDinh(true);
+            diaChi.setHoTen(kh.getHoTen());
+            diaChi.setSdt(kh.getSdt());
             diaChiRepo.save(diaChi);
             khachHang.setDiaChis(Arrays.asList(diaChi));
         }

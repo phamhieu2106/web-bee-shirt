@@ -7,13 +7,17 @@
 .title-section span {
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 15px;
   color: black;
 }
 
+.tilte2020{
+  text-wrap: nowrap;
+}
 .wd-list-coupon {
   margin: 0 -7.5px;
   padding: 10px 0;
+display: flex;
 }
 
 @media only screen and (max-width: 992px) {
@@ -25,8 +29,7 @@
 }
 
 .wd-list-coupon .item {
-  flex: 0 0 25%;
-  width: 25%;
+
   padding: 0 7.5px;
   margin-bottom: 15px;
   position: relative;
@@ -56,14 +59,12 @@
 }
 
 .wd-list-coupon .wd-coupon-left {
-  flex: 0 0 30%;
-  width: 30%;
   align-items: center;
   justify-content: center;
   padding: 8px;
   border-left: 12px solid #fcbf49;
   border-right: 1px dashed #ccc;
-  font-size: 22px;
+  font-size: 15px;
   color: black;
 }
 

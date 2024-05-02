@@ -1,6 +1,6 @@
 <div class="container">
   <div class="overflow-x-auto-mb">
-    <div class="wd-list-coupon d-flex">
+    <div class="wd-list-coupon">
       <div class="item" *ngFor="let discount of discounts">
         <div class="wd-coupon d-flex">
           <div class="wd-coupon-left d-flex">
@@ -13,7 +13,7 @@
                   getBriefDiscountTitle(discount)
                 }}</span>
               </div>
-              <small>{{ getDiscountTitle(discount) }}</small>
+              <p class="tilte2020">{{ getDiscountTitle(discount) }}</p>
             </div>
 
             <div class="wd-coupon-right-bottom d-flex d-flex-center">

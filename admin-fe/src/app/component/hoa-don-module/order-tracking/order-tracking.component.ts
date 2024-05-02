@@ -107,6 +107,7 @@ export class OrderTrackingComponent implements OnChanges {
 
   // Xử lý khi hủy đơn
   cancelOrder() {
+    this.turnOnOverlay("Vui lòng chờ!");
     this.hoaDonService
       .cancelOrder(this.hoaDon.id, this.changeStatusForm.value.moTa)
       .subscribe({
@@ -116,6 +117,7 @@ export class OrderTrackingComponent implements OnChanges {
           this.chageTitleButton();
           this.notifService.success("Cập nhật thành công");
           this.hoaDonChange.emit(this.hoaDon);
+          this.turnOffOverlay("Vui lòng chờ!");
         },
         error: (err) => {
           this.notifService.error(err.error.message);

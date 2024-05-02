@@ -14,6 +14,8 @@
               hoaDon.trangThai == 'TRA_HANG' ||
               hoaDon.trangThai == 'DANG_GIAO' ||
               hoaDon.trangThai == 'HUY' ||
+              hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+              hoaDon.trangThai == 'DA_HOAN_TIEN' ||
               isGiaoHangAndChuyenKhoan(hoaDon)
             "
             data-toggle="modal"
@@ -74,6 +76,8 @@
                           hoaDon.trangThai == 'HUY' ||
                           hoaDon.trangThai == 'TRA_HANG' ||
                           hoaDon.trangThai == 'DANG_GIAO' ||
+                          hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+                          hoaDon.trangThai == 'DA_HOAN_TIEN' ||
                           isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       >
@@ -94,6 +98,8 @@
                           hoaDon.trangThai == 'HUY' ||
                           hoaDon.trangThai == 'TRA_HANG' ||
                           hoaDon.trangThai == 'DANG_GIAO' ||
+                          hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+                          hoaDon.trangThai == 'DA_HOAN_TIEN' ||
                           isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       />
@@ -106,6 +112,8 @@
                           hoaDon.trangThai == 'HUY' ||
                           hoaDon.trangThai == 'TRA_HANG' ||
                           hoaDon.trangThai == 'DANG_GIAO' ||
+                          hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+                          hoaDon.trangThai == 'DA_HOAN_TIEN' ||
                           isGiaoHangAndChuyenKhoan(hoaDon)
                         "
                       >
@@ -130,6 +138,8 @@
                         hoaDon.trangThai == 'HUY' ||
                         hoaDon.trangThai == 'TRA_HANG' ||
                         hoaDon.trangThai == 'DANG_GIAO' ||
+                        hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+                        hoaDon.trangThai == 'DA_HOAN_TIEN' ||
                         isGiaoHangAndChuyenKhoan(hoaDon)
                       "
                       (click)="deleteHDCT(hdct.id)"
@@ -201,7 +211,11 @@
                           <app-input-number
                             *ngIf="hoaDon.loaiHoaDon == 'GIAO_HANG'"
                             [value]="hoaDon.phiVanChuyen"
-                            [disabled]="isGiaoHangAndChuyenKhoan(hoaDon)"
+                            [disabled]="
+                              isGiaoHangAndChuyenKhoan(hoaDon) ||
+                              hoaDon.trangThai == 'CHO_HOAN_TIEN' ||
+                              hoaDon.trangThai == 'DA_HOAN_TIEN'
+                            "
                             (valueChange)="onPhiVanChuyenChange($event)"
                           ></app-input-number>
                         </p>

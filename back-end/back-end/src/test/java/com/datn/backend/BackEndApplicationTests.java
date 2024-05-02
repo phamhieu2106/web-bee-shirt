@@ -19,18 +19,4 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(value = false)
 class BackEndApplicationTests {
-
-    @Autowired
-    private SanPhamRepository sanPhamRepo;
-
-    @Test
-    void test() {
-<<<<<<< HEAD
-=======
-        List<Integer> colorIds = List.of(14, 15);
-        List<Integer> sizeIds = List.of();
-//        List<Integer> ids = sanPhamRepo.test(colorIds, sizeIds);
-//        ids.forEach(System.err::println);
->>>>>>> 6ecf653da4f4d133cec35aa4c072f1688f6c8531
-    }
 }

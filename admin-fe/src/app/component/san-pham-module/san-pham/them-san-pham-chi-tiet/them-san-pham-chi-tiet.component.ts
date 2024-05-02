@@ -388,32 +388,21 @@ export class ThemSanPhamChiTietComponent {
         this.checkPriceQuantityImageOfProDetails();
         const isSpctExist = this.checkExistOfProdDetailsAndNotify();
 
-        if (
-          (this.validation.propertyError ||
-            this.validation.priceQuantityError) &&
-          !isSpctExist
-        ) {
+        const error1 =
+          this.validation.propertyError && this.validation.priceQuantityError;
+        if (error1 && !isSpctExist) {
           this.notifService.error("Vui lòng điền đầy đủ thông tin sản phẩm!");
           return;
         }
 
-        if (
-          !(
-            this.validation.propertyError || this.validation.priceQuantityError
-          ) &&
-          isSpctExist
-        ) {
+        if (!error1 && isSpctExist) {
           this.notifService.error(
             "Vui lòng xóa những sản phẩm chi tiết đã tồn tại!"
           );
           return;
         }
 
-        if (
-          (this.validation.propertyError ||
-            this.validation.priceQuantityError) &&
-          isSpctExist
-        ) {
+        if (error1 && isSpctExist) {
           this.notifService.error(
             "Vui lòng điền đầy đủ thông tin sản phẩm và xóa những sản phẩm chi tiết đã tồn tại!"
           );
@@ -1072,8 +1061,6 @@ export class ThemSanPhamChiTietComponent {
 
   // 21
   private checkExistOfProdDetailsAndNotify(): boolean {
-    console.log("mau ton tai");
-
     if (this.colorSizeValidations.some((v: ColorSizeValidation) => v.isExist)) {
       // const duplicatedArr: ColorSizeValidation[] =
       //   this.colorSizeValidations.filter((v: ColorSizeValidation) => v.isExist);

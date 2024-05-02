@@ -50,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -298,7 +299,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     @Transactional
     public String update(UpdateSpctReq req) {
-        List result = new ArrayList();
+        String message = "";
         SanPhamChiTiet spctByMauSacAndKichCo = spctRepo.findBySanPhamIdAndMauSacIdAndKichCoId(req.getSanPhamId(), req.getMauSacId(), req.getKichCoId());
         SanPhamChiTiet spctById = spctRepo.findById(req.getId()).get();
         boolean isMauSacChange = (req.getMauSacId() != spctById.getMauSac().getId());
@@ -308,8 +309,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         } else {
             // nếu có thay đổi màu sắc
             if (isMauSacChange) {
-                result = changeImagesWhenColorChange(req.getSanPhamId(), req.getMauSacId(), spctById);
-                spctById = (SanPhamChiTiet) result.get(1);
+                message = changeImagesWhenColorChange(req.getSanPhamId(), req.getMauSacId(), spctById);
             }
 
             spctById.setSoLuongTon(req.getSoLuong());
@@ -319,50 +319,23 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             spctById.setKichCo(kichCoRepo.findById(req.getKichCoId()).get());
 
             spctRepo.save(spctById);
-            return (String) result.get(0);
+            return message.equals("") ? "Cập nhật thành công!" : "Cập nhật thành công!\n" + message;
         }
     }
 
-//    private void updateAllSpctOf1Sp(CapNhatSpctRequest req, String field) {
-//        List<SanPhamChiTiet> spcts = spctRepo.findBySanPhamId(req.getSanPhamId());
-//
-//        KieuDang kieuDang = kieuDangRepo.findById(req.getKieuDangId()).get();
-//        KieuThietKe thietKe = kieuThietKeRepo.findById(req.getThietKeId()).get();
-//        TayAo tayAo = tayAoRepo.findById(req.getTayAoId()).get();
-//        CoAo coAo = coAoRepo.findById(req.getCoAoId()).get();
-//        ChatLieu chatLieu = chatLieuRepo.findById(req.getChatLieuId()).get();
-//
-//        for (SanPhamChiTiet spct : spcts) {
-//            if (field.equals("kieuDang")) {
-//                spct.setKieuDang(kieuDang);
-//            } else if (field.equals("thietKe")) {
-//                spct.setThietKe(thietKe);
-//            } else if (field.equals("tayAo")) {
-//                spct.setTayAo(tayAo);
-//            } else if (field.equals("coAo")) {
-//                spct.setCoAo(coAo);
-//            } else if (field.equals("chatLieu")) {
-//                spct.setChatLieu(chatLieu);
-//            }
-//            spctRepo.save(spct);
-//        }
-//    }
-
-    private List changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
+    private String changeImagesWhenColorChange(int sanPhamId, int newMauSacId, SanPhamChiTiet updateSpct) {
         SanPhamChiTiet spct = spctRepo.findFirstBySanPhamIdAndMauSacId(sanPhamId, newMauSacId);
-        List result = new ArrayList<>();
-
+        String message = "";
         if (spct != null) {
             updateSpct.setHinhAnhs(new ArrayList<>());
             for (HinhAnh img : spct.getHinhAnhs()) {
                 updateSpct.setHinhAnh(img);
             }
-            result.add("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!");
+            message = "Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới đã tự động được thay đổi!";
         } else {
-            result.add("Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!");
+            message = "Bạn vừa thay đổi màu sắc. Ảnh của màu sắc mới chưa tồn tại, hãy thay đổi ảnh phù hợp cho màu sắc mới!";
         }
-        result.add(updateSpct);
-        return result;
+        return message;
     }
 
     @Override

@@ -551,7 +551,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             ThanhToan payment = ThanhToan.builder()
                     .maGiaoDich(RandomStringUtils.randomAlphanumeric(10))
                     .moTa("thanh toan VNPay")
-                    .soTien(req.getTongTien().add(req.getPhiVanChuyen()))
+                    .soTien(req.getTongTien().add(req.getPhiVanChuyen()).subtract(req.getTienGiam()))
                     .trangThai(true)
                     .hinhThucThanhToan(ck)
                     .hoaDon(savedOrder)

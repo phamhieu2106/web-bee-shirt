@@ -53,9 +53,10 @@ export class OrderTrackingComponent {
   ) {}
 
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
+    this.openWebSocket();
     this.loggedCust = this.authService.getCustomerFromStorage();
     this.getOrderByCode();
-    this.openWebSocket();
   }
 
   // public functions
@@ -174,16 +175,16 @@ export class OrderTrackingComponent {
 
   public checkPaymentMethod(order: Order): string {
     if (
-      order.thanhToans.some(
+      order?.thanhToans.some(
         (p: Payment) => p.hinhThucThanhToan.hinhThuc === "CHUYEN_KHOAN"
       )
     ) {
       return "VNPAY";
     } else if (
-      order.thanhToans.some(
+      order?.thanhToans.some(
         (p: Payment) => p.hinhThucThanhToan.hinhThuc === "TIEN_MAT"
       ) ||
-      order.thanhToans.length === 0
+      order?.thanhToans.length === 0
     ) {
       return "TIEN_MAT";
     }

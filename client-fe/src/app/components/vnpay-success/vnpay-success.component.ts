@@ -31,14 +31,15 @@ export class VnpaySuccessComponent {
     private notifService2: NotifService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.turnOnOverlay("Vui lòng chờ...");
     this.webSocketService.openWebSocket();
-    this.createOrder();
+    setTimeout(() => {
+      this.createOrder();
+    }, 5000);
   }
 
   private createOrder(): void {
-    this.turnOnOverlay("Vui lòng chờ...");
-
     const req: OnlineOrderRequest = JSON.parse(
       localStorage.getItem("onlineOrderReq")
     );

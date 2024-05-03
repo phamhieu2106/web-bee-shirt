@@ -14,7 +14,6 @@ export class WebSocketService {
       const msg = JSON.parse(event.data);
       this.messages.push(msg);
     };
-
     this.webSocket.onclose = (event) => {};
   }
 

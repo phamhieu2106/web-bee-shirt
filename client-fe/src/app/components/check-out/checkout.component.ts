@@ -344,7 +344,13 @@ export class CheckoutComponent {
         this.turnOnOverlay("Hệ thống đang xử lý...");
 
         if (!this.paymentMethod) {
-          const data = { vnp_Amount: this.finalPrice };
+          const data = {
+            vnp_Amount:
+              this.realPrice -
+              this.salePrice -
+              this.discountPrice +
+              this.shipPrice,
+          };
           this.orderService.paymentWithVNPay(data).subscribe({
             next: (url: string) => {
               window.location.replace(url);

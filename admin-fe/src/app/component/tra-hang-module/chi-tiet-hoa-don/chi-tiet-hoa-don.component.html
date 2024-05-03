@@ -51,7 +51,7 @@
                 <nz-descriptions-item nzTitle="Trạng Thái">
                   <nz-badge
                     nzStatus="processing"
-                    [nzText]="this.hoaDon?.trangThai"
+                    [nzText]="this.hoaDon?.trangThai ? 'Hoàn Thành' : ''"
                   ></nz-badge>
                 </nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Mã Nhân Viên">

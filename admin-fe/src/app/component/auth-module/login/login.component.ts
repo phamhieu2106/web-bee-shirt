@@ -78,7 +78,7 @@ export class LoginComponent {
   // 2
   private initLoginForm(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl("admin0203", [
+      username: new FormControl("duongviethung2003@gmail.com", [
         Validators.required,
         this.customNotBlankValidator,
       ]),

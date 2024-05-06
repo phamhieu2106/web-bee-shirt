@@ -1,6 +1,6 @@
 Hi there!
-This is my team project for E-commerce with product is Shirt when you can use as Client, Admin
-Techno:
-We using Java, Spring, Spring Boot, ResultAPI for backend and in Frontend we using Angular16 and Typescpirt with libary like AntDesign, Bootstrap and some open source template.
 ---
-If you want to know more about this project, please try to contact me. Glad to help you!!
+This is my team project for E-commerce with the product Shirt which you can use as a Client, Admin
+Techno:
+We use Java, Spring, Spring Boot, and ResultAPI for the backend, and in Frontend we use Angular16 and Typescpirt with libraries like AntDesign, Bootstrap, and some open-source templates.
+If you want to know more about this project contact me on Facebook or Github. Glad to help you!!

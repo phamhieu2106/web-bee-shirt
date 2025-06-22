@@ -1,6 +1,3 @@
 Hi there!
 ---
-This is my team project for E-commerce with the product Shirt which you can use as a Client, Admin
-Techno:
-We use Java, Spring, Spring Boot, and ResultAPI for the backend, and in Frontend we use Angular16 and Typescpirt with libraries like AntDesign, Bootstrap, and some open-source templates.
-If you want to know more about this project contact me on Facebook or Github. Glad to help you!!
+Website Bee Shirt is a sales management system for a clothing store, supporting both in-store and online sales. The website allows users to manage products, orders, customers, promotions, and product returns. It also provides statistical reports to help store owners track business performance. The project uses modern technologies such as Java Spring Boot for the backend, Angular for the frontend, and MySQL for the database.
